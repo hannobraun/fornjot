@@ -1,5 +1,6 @@
-use std::{collections::HashSet, ffi::OsStr, sync::mpsc, thread};
+use std::{collections::HashSet, ffi::OsStr, thread};
 
+use crossbeam_channel::{Receiver, TryRecvError};
 use fj_interop::status_report::StatusReport;
 use notify::Watcher as _;
 
@@ -8,14 +9,14 @@ use crate::{Error, Model};
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
-    channel: mpsc::Receiver<()>,
+    channel: Receiver<()>,
     model: Model,
 }
 
 impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(model: Model) -> Result<Self, Error> {
-        let (tx, rx) = mpsc::sync_channel(0);
+        let (tx, rx) = crossbeam_channel::bounded(0);
         let tx2 = tx.clone();
 
         let watch_path = model.src_path();
@@ -112,11 +113,11 @@ impl Watcher {
 
                 Ok(Some(shape))
             }
-            Err(mpsc::TryRecvError::Empty) => {
+            Err(TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
                 Ok(None)
             }
-            Err(mpsc::TryRecvError::Disconnected) => {
+            Err(TryRecvError::Disconnected) => {
                 // The other end has disconnected. This is probably the result
                 // of a panic on the other thread, or a program shutdown in
                 // progress. In any case, not much we can do here.
