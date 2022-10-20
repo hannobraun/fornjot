@@ -1,14 +1,14 @@
-use crate::objects::Cycle;
+use crate::objects::{Cycle, Objects};
 
 use super::Reverse;
 
 impl Reverse for Cycle {
-    fn reverse(self) -> Self {
+    fn reverse(self, objects: &Objects) -> Self {
         let surface = self.surface().clone();
 
         let mut edges = self
             .into_half_edges()
-            .map(|edge| edge.reverse())
+            .map(|edge| edge.reverse(objects))
             .collect::<Vec<_>>();
 
         edges.reverse();

@@ -40,7 +40,7 @@ impl Sweep for Face {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse()
+                self.clone().reverse(objects)
             }
         };
         faces.push(bottom_face);
@@ -49,7 +49,7 @@ impl Sweep for Face {
             let mut face = self.clone().translate(path, objects);
 
             if is_negative_sweep {
-                face = face.reverse();
+                face = face.reverse(objects);
             };
 
             face
@@ -60,7 +60,7 @@ impl Sweep for Face {
         for cycle in self.all_cycles() {
             for half_edge in cycle.half_edges() {
                 let half_edge = if is_negative_sweep {
-                    half_edge.clone().reverse()
+                    half_edge.clone().reverse(objects)
                 } else {
                     half_edge.clone()
                 };
@@ -105,7 +105,7 @@ mod tests {
         let bottom = Face::builder(&objects, surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build()
-            .reverse();
+            .reverse(&objects);
         let top = Face::builder(&objects, surface.translate(UP, &objects))
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
@@ -143,7 +143,7 @@ mod tests {
             Face::builder(&objects, surface.clone().translate(DOWN, &objects))
                 .with_exterior_polygon_from_points(TRIANGLE)
                 .build()
-                .reverse();
+                .reverse(&objects);
         let top = Face::builder(&objects, surface)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
@@ -162,7 +162,7 @@ mod tests {
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects)
-                .reverse();
+                .reverse(&objects);
             (half_edge, Color::default()).sweep(DOWN, &objects)
         });
 
