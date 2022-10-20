@@ -29,9 +29,9 @@ use crate::window::{self, Window};
 pub fn run(
     model: Model,
     shape_processor: ShapeProcessor,
-    mut status: StatusReport,
     invert_zoom: bool,
 ) -> Result<(), Error> {
+    let mut status = StatusReport::new();
     let watcher = Watcher::watch_model(model)?;
 
     let event_loop = EventLoop::new();
