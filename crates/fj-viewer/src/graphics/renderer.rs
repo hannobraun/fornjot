@@ -226,58 +226,46 @@ impl Renderer {
         // Need this block here, as a render pass only takes effect once it's
         // dropped.
         {
-            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: None,
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &color_view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                        store: true,
-                    },
-                })],
-                depth_stencil_attachment: Some(
-                    wgpu::RenderPassDepthStencilAttachment {
-                        view: &self.depth_view,
-                        depth_ops: Some(wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(1.0),
-                            store: true,
-                        }),
-                        stencil_ops: None,
-                    },
-                ),
-            });
+            let mut render_pass =
+                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: None,
+                    color_attachments: &[Some(
+                        wgpu::RenderPassColorAttachment {
+                            view: &color_view,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                                store: true,
+                            },
+                        },
+                    )],
+                    depth_stencil_attachment: Some(
+                        wgpu::RenderPassDepthStencilAttachment {
+                            view: &self.depth_view,
+                            depth_ops: Some(wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(1.0),
+                                store: true,
+                            }),
+                            stencil_ops: None,
+                        },
+                    ),
+                });
+
+            let drawables = Drawables::new(&self.geometries, &self.pipelines);
+
+            if config.draw_model {
+                drawables.model.draw(&self.bind_group, &mut render_pass);
+            }
+
+            if self.is_line_drawing_available() {
+                if config.draw_mesh {
+                    drawables.mesh.draw(&self.bind_group, &mut render_pass);
+                }
+                if config.draw_debug {
+                    drawables.lines.draw(&self.bind_group, &mut render_pass);
+                }
+            }
         };
-
-        let drawables = Drawables::new(&self.geometries, &self.pipelines);
-
-        if config.draw_model {
-            drawables.model.draw(
-                &mut encoder,
-                &color_view,
-                &self.depth_view,
-                &self.bind_group,
-            );
-        }
-
-        if self.is_line_drawing_available() {
-            if config.draw_mesh {
-                drawables.mesh.draw(
-                    &mut encoder,
-                    &color_view,
-                    &self.depth_view,
-                    &self.bind_group,
-                );
-            }
-            if config.draw_debug {
-                drawables.lines.draw(
-                    &mut encoder,
-                    &color_view,
-                    &self.depth_view,
-                    &self.bind_group,
-                );
-            }
-        }
 
         gui.draw(
             &self.device,
