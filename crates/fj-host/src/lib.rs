@@ -41,6 +41,7 @@ pub struct Model {
     src_path: PathBuf,
     lib_path: PathBuf,
     manifest_path: PathBuf,
+    parameters: Parameters,
 }
 
 impl Model {
@@ -48,7 +49,10 @@ impl Model {
     ///
     /// The path expected here is the root directory of the model's Cargo
     /// package, that is the folder containing `Cargo.toml`.
-    pub fn from_path(path: PathBuf) -> Result<Self, Error> {
+    pub fn from_path(
+        path: PathBuf,
+        parameters: Parameters,
+    ) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
         let metadata = cargo_metadata::MetadataCommand::new()
@@ -70,6 +74,7 @@ impl Model {
             src_path,
             lib_path,
             manifest_path: pkg.manifest_path.as_std_path().to_path_buf(),
+            parameters,
         })
     }
 
@@ -82,7 +87,6 @@ impl Model {
     /// model for changes, reloading it continually.
     pub fn load_once(
         &self,
-        arguments: &Parameters,
         status: &mut StatusReport,
     ) -> Result<fj::Shape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
@@ -164,7 +168,7 @@ impl Model {
                 lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
 
             let mut host = Host {
-                args: arguments,
+                args: &self.parameters,
                 model: None,
             };
 
@@ -189,10 +193,7 @@ impl Model {
     ///
     /// Consumes this instance of `Model` and returns a [`Watcher`], which can
     /// be queried for changes to the model.
-    pub fn load_and_watch(
-        self,
-        parameters: Parameters,
-    ) -> Result<Watcher, Error> {
+    pub fn load_and_watch(self) -> Result<Watcher, Error> {
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
 
@@ -262,7 +263,6 @@ impl Model {
             _watcher: Box::new(watcher),
             channel: rx,
             model: self,
-            parameters,
         })
     }
 }
@@ -316,7 +316,6 @@ pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
     channel: mpsc::Receiver<()>,
     model: Model,
-    parameters: Parameters,
 }
 
 impl Watcher {
@@ -330,8 +329,7 @@ impl Watcher {
     ) -> Result<Option<fj::Shape>, Error> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match self.model.load_once(&self.parameters, status)
-                {
+                let shape = match self.model.load_once(status) {
                     Ok(shape) => shape,
                     Err(Error::Compile) => {
                         // An error is being displayed to the user via the

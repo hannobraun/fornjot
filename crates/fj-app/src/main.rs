@@ -58,7 +58,7 @@ fn main() -> anyhow::Result<()> {
     {
         let mut model_path = path;
         model_path.push(model);
-        Model::from_path(model_path.clone()).with_context(|| {
+        Model::from_path(model_path.clone(), parameters).with_context(|| {
             if path_of_model.as_os_str().is_empty() {
                 format!(
                     "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()
@@ -80,7 +80,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let shape = model.load_once(&parameters, &mut status)?;
+        let shape = model.load_once(&mut status)?;
         let shape = shape_processor.process(&shape)?;
 
         export(&shape.mesh, &export_path)?;
@@ -90,7 +90,7 @@ fn main() -> anyhow::Result<()> {
 
     let invert_zoom = config.invert_zoom.unwrap_or(false);
 
-    let watcher = model.load_and_watch(parameters)?;
+    let watcher = model.load_and_watch()?;
     run(watcher, shape_processor, status, invert_zoom)?;
 
     Ok(())
