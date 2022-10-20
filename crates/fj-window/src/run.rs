@@ -27,7 +27,7 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    watcher: Option<Watcher>,
+    watcher: Watcher,
     shape_processor: ShapeProcessor,
     mut status: StatusReport,
     invert_zoom: bool,
@@ -49,50 +49,48 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        if let Some(watcher) = &watcher {
-            match watcher.receive_shape(&mut status) {
-                Ok(shape) => {
-                    if let Some(shape) = shape {
-                        match shape_processor.process(&shape) {
-                            Ok(shape) => {
-                                viewer.handle_shape_update(shape);
-                            }
-                            Err(err) => {
-                                // Can be cleaned up, once `Report` is stable:
-                                // https://doc.rust-lang.org/std/error/struct.Report.html
+        match watcher.receive_shape(&mut status) {
+            Ok(shape) => {
+                if let Some(shape) = shape {
+                    match shape_processor.process(&shape) {
+                        Ok(shape) => {
+                            viewer.handle_shape_update(shape);
+                        }
+                        Err(err) => {
+                            // Can be cleaned up, once `Report` is stable:
+                            // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                                println!("Shape processing error: {}", err);
+                            println!("Shape processing error: {}", err);
 
-                                let mut current_err = &err as &dyn error::Error;
-                                while let Some(err) = current_err.source() {
-                                    println!();
-                                    println!("Caused by:");
-                                    println!("    {}", err);
+                            let mut current_err = &err as &dyn error::Error;
+                            while let Some(err) = current_err.source() {
+                                println!();
+                                println!("Caused by:");
+                                println!("    {}", err);
 
-                                    current_err = err;
-                                }
+                                current_err = err;
                             }
                         }
                     }
                 }
-                Err(err) => {
-                    // Can be cleaned up, once `Report` is stable:
-                    // https://doc.rust-lang.org/std/error/struct.Report.html
+            }
+            Err(err) => {
+                // Can be cleaned up, once `Report` is stable:
+                // https://doc.rust-lang.org/std/error/struct.Report.html
 
-                    println!("Error receiving updated shape: {}", err);
+                println!("Error receiving updated shape: {}", err);
 
-                    let mut current_err = &err as &dyn error::Error;
-                    while let Some(err) = current_err.source() {
-                        println!();
-                        println!("Caused by:");
-                        println!("    {}", err);
+                let mut current_err = &err as &dyn error::Error;
+                while let Some(err) = current_err.source() {
+                    println!();
+                    println!("Caused by:");
+                    println!("    {}", err);
 
-                        current_err = err;
-                    }
-
-                    *control_flow = ControlFlow::Exit;
-                    return;
+                    current_err = err;
                 }
+
+                *control_flow = ControlFlow::Exit;
+                return;
             }
         }
 

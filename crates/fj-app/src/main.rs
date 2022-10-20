@@ -91,7 +91,7 @@ fn main() -> anyhow::Result<()> {
     let invert_zoom = config.invert_zoom.unwrap_or(false);
 
     let watcher = model.load_and_watch(parameters)?;
-    run(Some(watcher), shape_processor, status, invert_zoom)?;
+    run(watcher, shape_processor, status, invert_zoom)?;
 
     Ok(())
 }
