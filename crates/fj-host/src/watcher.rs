@@ -98,7 +98,7 @@ impl Watcher {
     ) -> Result<Option<fj::Shape>, Error> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match self.model.load(status) {
+                let shape = match self.model.load() {
                     Ok(shape) => shape,
                     Err(Error::Compile { output }) => {
                         status.clear_status();
@@ -113,6 +113,14 @@ impl Watcher {
                         return Err(err);
                     }
                 };
+
+                status.update_status(
+                    format!(
+                        "Model compiled successfully in {}!",
+                        shape.compile_time
+                    )
+                    .as_str(),
+                );
 
                 Ok(Some(shape.shape))
             }

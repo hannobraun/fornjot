@@ -6,7 +6,6 @@ use std::{
 };
 
 use fj::{abi, version::RawVersion};
-use fj_interop::status_report::StatusReport;
 
 use crate::{host::Host, platform::HostPlatform, Parameters};
 
@@ -57,10 +56,7 @@ impl Model {
     ///
     /// The passed arguments are provided to the model. Returns the shape that
     /// the model returns.
-    pub fn load(
-        &self,
-        status: &mut StatusReport,
-    ) -> Result<LoadedShape, Error> {
+    pub fn load(&self) -> Result<LoadedShape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
         let cargo_output = Command::new("cargo")
@@ -84,9 +80,6 @@ impl Model {
             .unwrap()
             .1
             .trim();
-        status.update_status(
-            format!("Model compiled successfully in {seconds_taken}!").as_str(),
-        );
 
         // So, strictly speaking this is all unsound:
         // - `Library::new` requires us to abide by the arbitrary requirements

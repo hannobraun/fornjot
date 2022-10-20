@@ -29,7 +29,7 @@ use tracing_subscriber::EnvFilter;
 use crate::{args::Args, config::Config};
 
 fn main() -> anyhow::Result<()> {
-    let mut status = StatusReport::new();
+    let status = StatusReport::new();
     // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
     // above.
     //
@@ -80,7 +80,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let shape = model.load(&mut status)?;
+        let shape = model.load()?;
         let shape = shape_processor.process(&shape.shape)?;
 
         export(&shape.mesh, &export_path)?;
