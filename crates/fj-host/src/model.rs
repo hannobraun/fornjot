@@ -82,14 +82,11 @@ impl Model {
                     .as_str(),
             );
         } else {
-            let output = match command.output() {
-                Ok(output) => {
-                    String::from_utf8(output.stderr).unwrap_or_else(|_| {
-                        String::from("Failed to fetch command output")
-                    })
-                }
-                Err(_) => String::from("Failed to fetch command output"),
-            };
+            let output =
+                String::from_utf8(cargo_output.stderr).unwrap_or_else(|_| {
+                    String::from("Failed to fetch command output")
+                });
+
             status.clear_status();
             status.update_status(&format!(
                 "Failed to compile model:\n{}",
