@@ -19,13 +19,13 @@ impl<'r> Drawables<'r> {
     }
 }
 
-pub struct Drawable<'r> {
-    pub geometry: &'r Geometry,
-    pub pipeline: &'r Pipeline,
+pub struct Drawable<'a> {
+    pub geometry: &'a Geometry,
+    pub pipeline: &'a Pipeline,
 }
 
-impl<'r> Drawable<'r> {
-    fn new(geometry: &'r Geometry, pipeline: &'r Pipeline) -> Self {
+impl<'a> Drawable<'a> {
+    fn new(geometry: &'a Geometry, pipeline: &'a Pipeline) -> Self {
         Self { geometry, pipeline }
     }
 
