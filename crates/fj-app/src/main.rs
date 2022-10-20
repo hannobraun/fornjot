@@ -58,7 +58,7 @@ fn main() -> anyhow::Result<()> {
     {
         let mut model_path = path;
         model_path.push(model);
-        Some(Model::from_path(model_path.clone()).with_context(|| {
+        Model::from_path(model_path.clone()).with_context(|| {
             if path_of_model.as_os_str().is_empty() {
                 format!(
                     "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()
@@ -68,7 +68,7 @@ fn main() -> anyhow::Result<()> {
                 "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path_of_model.display(), model.display()
             )
         }
-        })?)
+        })?
     } else {
         return Err(anyhow!(
             "You must specify a model to start Fornjot.\n\
@@ -80,13 +80,6 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let model = model.ok_or_else(|| {
-            anyhow!(
-                "No model specified, and no default model configured.\n\
-            Specify a model by passing `--model path/to/model`."
-            )
-        })?;
-
         let shape = model.load_once(&parameters, &mut status)?;
         let shape = shape_processor.process(&shape)?;
 
@@ -97,12 +90,8 @@ fn main() -> anyhow::Result<()> {
 
     let invert_zoom = config.invert_zoom.unwrap_or(false);
 
-    if let Some(model) = model {
-        let watcher = model.load_and_watch(parameters)?;
-        run(Some(watcher), shape_processor, status, invert_zoom)?;
-    } else {
-        run(None, shape_processor, status, invert_zoom)?;
-    }
+    let watcher = model.load_and_watch(parameters)?;
+    run(Some(watcher), shape_processor, status, invert_zoom)?;
 
     Ok(())
 }
