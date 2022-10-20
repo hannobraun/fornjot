@@ -129,7 +129,7 @@ pub trait ObjectIters<'r> {
     }
 
     /// Iterator over all vertices
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
+    fn vertex_iter(&'r self) -> Iter<&'r Handle<Vertex>> {
         let mut iter = Iter::empty();
 
         for object in self.referenced_objects() {
@@ -276,7 +276,7 @@ impl<'r> ObjectIters<'r> for Handle<Surface> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Vertex {
+impl<'r> ObjectIters<'r> for Handle<Vertex> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         vec![
             self.curve() as &dyn ObjectIters,
@@ -284,7 +284,7 @@ impl<'r> ObjectIters<'r> for Vertex {
         ]
     }
 
-    fn vertex_iter(&'r self) -> Iter<&'r Vertex> {
+    fn vertex_iter(&'r self) -> Iter<&'r Handle<Vertex>> {
         Iter::from_object(self)
     }
 }
@@ -591,7 +591,7 @@ mod tests {
         let global_vertex = GlobalVertex::from_position([0., 0., 0.], &objects);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex, &objects);
-        let object = Vertex::new([0.], curve, surface_vertex);
+        let object = Vertex::new([0.], curve, surface_vertex, &objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

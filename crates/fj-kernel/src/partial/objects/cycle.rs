@@ -88,7 +88,7 @@ impl PartialCycle {
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
-                        Vertex::partial()
+                        Handle::<Vertex>::partial()
                             .with_curve(Some(curve.clone()))
                             .with_position(Some([position]))
                             .with_surface_form(Some(surface_form))

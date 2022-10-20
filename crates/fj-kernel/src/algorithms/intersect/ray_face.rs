@@ -6,6 +6,7 @@ use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
     objects::{Face, HalfEdge, Vertex},
     path::GlobalPath,
+    storage::Handle,
 };
 
 use super::{HorizontalRayToTheRight, Intersect};
@@ -136,7 +137,7 @@ pub enum RayFaceIntersection {
     RayHitsEdge(HalfEdge),
 
     /// The ray hits a vertex
-    RayHitsVertex(Vertex),
+    RayHitsVertex(Handle<Vertex>),
 }
 
 #[cfg(test)]

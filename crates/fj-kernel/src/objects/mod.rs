@@ -126,6 +126,9 @@ pub struct Objects {
 
     /// Store for surfaces
     pub surfaces: Surfaces,
+
+    /// Store for vertices
+    pub vertices: Store<Vertex>,
 }
 
 impl Objects {

@@ -91,8 +91,10 @@ impl<'a> ShellBuilder<'a> {
 
                     HalfEdge::partial()
                         .with_vertices(Some([
-                            Vertex::partial().with_surface_form(Some(from)),
-                            Vertex::partial().with_surface_form(Some(to)),
+                            Handle::<Vertex>::partial()
+                                .with_surface_form(Some(from)),
+                            Handle::<Vertex>::partial()
+                                .with_surface_form(Some(to)),
                         ]))
                         .as_line_segment()
                         .build(self.objects)
@@ -128,8 +130,10 @@ impl<'a> ShellBuilder<'a> {
                         HalfEdge::partial()
                             .with_curve(Some(curve))
                             .with_vertices(Some([
-                                Vertex::partial().with_surface_form(Some(from)),
-                                Vertex::partial().with_surface_form(Some(to)),
+                                Handle::<Vertex>::partial()
+                                    .with_surface_form(Some(from)),
+                                Handle::<Vertex>::partial()
+                                    .with_surface_form(Some(to)),
                             ]))
                             .as_line_segment()
                             .build(self.objects)
@@ -148,8 +152,10 @@ impl<'a> ShellBuilder<'a> {
                     let from = from.surface_form().clone();
                     let to = to.surface_form().clone();
 
-                    let from = Vertex::partial().with_surface_form(Some(from));
-                    let to = Vertex::partial().with_surface_form(Some(to));
+                    let from = Handle::<Vertex>::partial()
+                        .with_surface_form(Some(from));
+                    let to =
+                        Handle::<Vertex>::partial().with_surface_form(Some(to));
 
                     HalfEdge::partial()
                         .with_vertices(Some([from, to]))
@@ -231,7 +237,7 @@ impl<'a> ShellBuilder<'a> {
                     (vertex_b, surface_vertex_b),
                 ]
                 .map(|(vertex, surface_form)| {
-                    Vertex::partial()
+                    Handle::<Vertex>::partial()
                         .with_position(Some(vertex.position()))
                         .with_surface_form(Some(surface_form))
                 });

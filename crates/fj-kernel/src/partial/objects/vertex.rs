@@ -86,7 +86,7 @@ impl PartialVertex {
     /// Panics, if no position has been provided.
     ///
     /// Panics, if no curve has been provided.
-    pub fn build(self, objects: &Objects) -> Vertex {
+    pub fn build(self, objects: &Objects) -> Handle<Vertex> {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
@@ -110,12 +110,12 @@ impl PartialVertex {
             })
             .into_full(objects);
 
-        Vertex::new(position, curve, surface_form)
+        Vertex::new(position, curve, surface_form, objects)
     }
 }
 
-impl From<&Vertex> for PartialVertex {
-    fn from(vertex: &Vertex) -> Self {
+impl From<&Handle<Vertex>> for PartialVertex {
+    fn from(vertex: &Handle<Vertex>) -> Self {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),

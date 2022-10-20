@@ -214,9 +214,14 @@ mod tests {
             Point::from([Scalar::ZERO + deviation]),
             curve.clone(),
             a_surface,
+            &objects,
         );
-        let b =
-            Vertex::new(Point::from([Scalar::ONE]), curve.clone(), b_surface);
+        let b = Vertex::new(
+            Point::from([Scalar::ONE]),
+            curve.clone(),
+            b_surface,
+            &objects,
+        );
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::partial()

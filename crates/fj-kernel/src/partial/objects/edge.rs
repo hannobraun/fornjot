@@ -21,7 +21,7 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybePartial<Handle<Curve>>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: [Option<MaybePartial<Vertex>>; 2],
+    pub vertices: [Option<MaybePartial<Handle<Vertex>>>; 2],
 
     /// The global form of the [`HalfEdge`]
     ///
@@ -68,7 +68,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given from vertex
     pub fn with_back_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: Option<impl Into<MaybePartial<Handle<Vertex>>>>,
     ) -> Self {
         if let Some(vertex) = vertex {
             let [from, _] = &mut self.vertices;
@@ -80,7 +80,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given from vertex
     pub fn with_front_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: Option<impl Into<MaybePartial<Handle<Vertex>>>>,
     ) -> Self {
         if let Some(vertex) = vertex {
             let [_, to] = &mut self.vertices;
@@ -92,7 +92,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
+        vertices: Option<[impl Into<MaybePartial<Handle<Vertex>>>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| vertices.map(Into::into));
         if let Some([back, front]) = vertices {
@@ -150,7 +150,7 @@ impl PartialHalfEdge {
             .build(objects);
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
-            Vertex::partial()
+            Handle::<Vertex>::partial()
                 .with_position(Some(point_curve))
                 .with_curve(Some(curve.clone()))
                 .with_surface_form(Some(surface_vertex.clone()))
@@ -174,7 +174,7 @@ impl PartialHalfEdge {
                 .with_surface(surface.clone())
                 .with_position(Some(point));
 
-            Vertex::partial().with_surface_form(Some(surface_form))
+            Handle::<Vertex>::partial().with_surface_form(Some(surface_form))
         });
 
         self.with_vertices(Some(vertices)).as_line_segment()
@@ -346,7 +346,7 @@ impl PartialGlobalEdge {
     pub fn from_curve_and_vertices(
         self,
         curve: &Curve,
-        vertices: &[Vertex; 2],
+        vertices: &[Handle<Vertex>; 2],
     ) -> Self {
         self.with_curve(Some(curve.global_form().clone()))
             .with_vertices(Some(
