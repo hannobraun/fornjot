@@ -17,7 +17,6 @@
 
 mod platform;
 
-use fj_interop::status_report::StatusReport;
 use std::{
     collections::{HashMap, HashSet},
     ffi::OsStr,
@@ -31,6 +30,7 @@ use std::{
 };
 
 use fj::{abi, version::RawVersion};
+use fj_interop::status_report::StatusReport;
 use notify::Watcher as _;
 use thiserror::Error;
 
