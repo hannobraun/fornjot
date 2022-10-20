@@ -100,10 +100,13 @@ impl Watcher {
             Ok(()) => {
                 let shape = match self.model.load(status) {
                     Ok(shape) => shape,
-                    Err(Error::Compile) => {
-                        // An error is being displayed to the user via the
-                        // `StatusReport that is passed to `load_once` above, so
-                        // no need to do anything else here.
+                    Err(Error::Compile { output }) => {
+                        status.clear_status();
+                        status.update_status(&format!(
+                            "Failed to compile model:\n{}",
+                            output
+                        ));
+
                         return Ok(None);
                     }
                     Err(err) => {

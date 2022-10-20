@@ -83,12 +83,7 @@ impl Model {
                     String::from("Failed to fetch command output")
                 });
 
-            status.clear_status();
-            status.update_status(&format!(
-                "Failed to compile model:\n{}",
-                output
-            ));
-            return Err(Error::Compile);
+            return Err(Error::Compile { output });
         }
 
         // So, strictly speaking this is all unsound:
@@ -196,7 +191,10 @@ fn ambiguous_path_error(
 pub enum Error {
     /// Model failed to compile
     #[error("Error compiling model")]
-    Compile,
+    Compile {
+        /// The compiler output
+        output: String,
+    },
 
     /// I/O error while loading the model
     #[error("I/O error while loading model")]
