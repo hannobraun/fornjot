@@ -58,7 +58,7 @@ fn main() -> anyhow::Result<()> {
     {
         let mut model_path = path;
         model_path.push(model);
-        Model::from_path(model_path.clone(), parameters).with_context(|| {
+        Model::new(model_path.clone(), parameters).with_context(|| {
             if path_of_model.as_os_str().is_empty() {
                 format!(
                     "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()

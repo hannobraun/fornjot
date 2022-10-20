@@ -49,10 +49,7 @@ impl Model {
     ///
     /// The path expected here is the root directory of the model's Cargo
     /// package, that is the folder containing `Cargo.toml`.
-    pub fn from_path(
-        path: PathBuf,
-        parameters: Parameters,
-    ) -> Result<Self, Error> {
+    pub fn new(path: PathBuf, parameters: Parameters) -> Result<Self, Error> {
         let crate_dir = path.canonicalize()?;
 
         let metadata = cargo_metadata::MetadataCommand::new()
