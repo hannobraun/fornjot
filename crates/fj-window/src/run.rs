@@ -118,8 +118,6 @@ pub fn run(
             }
         }
 
-        watcher.receive_shape();
-
         if let Event::WindowEvent { event, .. } = &event {
             // In theory we could/should check if `egui` wants "exclusive" use
             // of this event here. But with the current integration with Fornjot

@@ -1,6 +1,6 @@
 use std::{collections::HashSet, ffi::OsStr, thread};
 
-use crossbeam_channel::{Receiver, Sender, TryRecvError};
+use crossbeam_channel::Receiver;
 use notify::Watcher as _;
 
 use crate::{Error, LoadedShape, Model};
@@ -8,10 +8,6 @@ use crate::{Error, LoadedShape, Model};
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
-    channel: Receiver<()>,
-    model: Model,
-
-    event_tx: Sender<WatcherEvent>,
     event_rx: Receiver<WatcherEvent>,
 }
 
@@ -90,12 +86,41 @@ impl Watcher {
             watch_tx_2.send(()).expect("Channel is disconnected")
         });
 
+        // Listen on the watcher channel and rebuild the model. This happens in
+        // a separate thread from the watcher to allow us to trigger compiles
+        // without the watcher having registered a change, as is done above.
+        thread::spawn(move || loop {
+            let () = watch_rx
+                .recv()
+                .expect("Expected channel to never disconnect");
+
+            let shape = match model.load() {
+                Ok(shape) => shape,
+                Err(Error::Compile { output }) => {
+                    event_tx
+                        .send(WatcherEvent::StatusUpdate(format!(
+                            "Failed to compile model:\n{}",
+                            output
+                        )))
+                        .expect("Expected channel to never disconnect");
+
+                    return;
+                }
+                Err(err) => {
+                    event_tx
+                        .send(WatcherEvent::Error(err))
+                        .expect("Expected channel to never disconnect");
+                    return;
+                }
+            };
+
+            event_tx
+                .send(WatcherEvent::Shape(shape))
+                .expect("Expected channel to never disconnect");
+        });
+
         Ok(Self {
             _watcher: Box::new(watcher),
-            channel: watch_rx,
-            model,
-
-            event_tx,
             event_rx,
         })
     }
@@ -103,49 +128,6 @@ impl Watcher {
     /// Access a channel for receiving status updates
     pub fn events(&self) -> Receiver<WatcherEvent> {
         self.event_rx.clone()
-    }
-
-    /// Receive an updated shape that the reloaded model created
-    ///
-    /// Returns `None`, if the model has not changed since the last time this
-    /// method was called.
-    pub fn receive_shape(&self) {
-        match self.channel.try_recv() {
-            Ok(()) => {
-                let shape = match self.model.load() {
-                    Ok(shape) => shape,
-                    Err(Error::Compile { output }) => {
-                        self.event_tx
-                            .send(WatcherEvent::StatusUpdate(format!(
-                                "Failed to compile model:\n{}",
-                                output
-                            )))
-                            .expect("Expected channel to never disconnect");
-
-                        return;
-                    }
-                    Err(err) => {
-                        self.event_tx
-                            .send(WatcherEvent::Error(err))
-                            .expect("Expected channel to never disconnect");
-                        return;
-                    }
-                };
-
-                self.event_tx
-                    .send(WatcherEvent::Shape(shape))
-                    .expect("Expected channel to never disconnect");
-            }
-            Err(TryRecvError::Empty) => {
-                // Nothing to receive from the channel.
-            }
-            Err(TryRecvError::Disconnected) => {
-                // The other end has disconnected. This is probably the result
-                // of a panic on the other thread, or a program shutdown in
-                // progress. In any case, not much we can do here.
-                panic!();
-            }
-        }
     }
 }
 
