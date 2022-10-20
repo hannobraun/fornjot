@@ -175,7 +175,7 @@ impl Model {
                 }
             }
 
-            let model = host.model.take().ok_or(Error::NoModelRegistered)?;
+            let model = host.take_model().ok_or(Error::NoModelRegistered)?;
 
             model.shape(&host).map_err(Error::Shape)?
         };
@@ -296,6 +296,12 @@ pub enum Error {
 struct Host<'a> {
     args: &'a Parameters,
     model: Option<Box<dyn fj::models::Model>>,
+}
+
+impl Host<'_> {
+    pub fn take_model(&mut self) -> Option<Box<dyn fj::models::Model>> {
+        self.model.take()
+    }
 }
 
 impl<'a> fj::models::Host for Host<'a> {
