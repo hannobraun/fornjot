@@ -65,9 +65,8 @@ impl Model {
             .args(["--manifest-path", &manifest_path])
             .args(["--crate-type", "cdylib"])
             .output()?;
-        let exit_status = cargo_output.status;
 
-        if exit_status.success() {
+        if cargo_output.status.success() {
             let seconds_taken = str::from_utf8(&cargo_output.stderr)
                 .unwrap()
                 .rsplit_once(' ')
