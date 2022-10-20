@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::{Watcher, WatcherEvent};
+use fj_host::{Model, Watcher, WatcherEvent};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -27,11 +27,13 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    watcher: Watcher,
+    model: Model,
     shape_processor: ShapeProcessor,
     mut status: StatusReport,
     invert_zoom: bool,
 ) -> Result<(), Error> {
+    let watcher = Watcher::watch_model(model)?;
+
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
@@ -289,6 +291,10 @@ fn input_event<T>(
 /// Error in main loop
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error loading model
+    #[error("Error loading model")]
+    Model(#[from] fj_host::Error),
+
     /// Error initializing window
     #[error("Error initializing window")]
     WindowInit(#[from] window::Error),
