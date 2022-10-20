@@ -75,6 +75,10 @@ impl Model {
         })
     }
 
+    pub(crate) fn src_path(&self) -> PathBuf {
+        self.src_path.clone()
+    }
+
     /// Load the model once
     ///
     /// The passed arguments are provided to the model. Returns the shape that
@@ -239,7 +243,7 @@ impl Watcher {
         let (tx, rx) = mpsc::sync_channel(0);
         let tx2 = tx.clone();
 
-        let watch_path = model.src_path.clone();
+        let watch_path = model.src_path();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
