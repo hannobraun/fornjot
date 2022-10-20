@@ -552,6 +552,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "cross-compiler"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "crossbeam-channel"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
