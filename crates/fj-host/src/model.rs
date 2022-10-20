@@ -57,10 +57,7 @@ impl Model {
     ///
     /// The passed arguments are provided to the model. Returns the shape that
     /// the model returns.
-    pub fn load_once(
-        &self,
-        status: &mut StatusReport,
-    ) -> Result<fj::Shape, Error> {
+    pub fn load(&self, status: &mut StatusReport) -> Result<fj::Shape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
         let mut command_root = Command::new("cargo");

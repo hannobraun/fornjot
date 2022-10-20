@@ -97,7 +97,7 @@ impl Watcher {
     ) -> Result<Option<fj::Shape>, Error> {
         match self.channel.try_recv() {
             Ok(()) => {
-                let shape = match self.model.load_once(status) {
+                let shape = match self.model.load(status) {
                     Ok(shape) => shape,
                     Err(Error::Compile) => {
                         // An error is being displayed to the user via the

@@ -80,7 +80,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let shape = model.load_once(&mut status)?;
+        let shape = model.load(&mut status)?;
         let shape = shape_processor.process(&shape)?;
 
         export(&shape.mesh, &export_path)?;
