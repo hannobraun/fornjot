@@ -223,7 +223,31 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
-        self.clear_views(&mut encoder, &color_view);
+        // Need this block here, as a render pass only takes effect once it's
+        // dropped.
+        {
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &color_view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        store: true,
+                    },
+                })],
+                depth_stencil_attachment: Some(
+                    wgpu::RenderPassDepthStencilAttachment {
+                        view: &self.depth_view,
+                        depth_ops: Some(wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(1.0),
+                            store: true,
+                        }),
+                        stencil_ops: None,
+                    },
+                ),
+            });
+        };
 
         let drawables = Drawables::new(&self.geometries, &self.pipelines);
 
@@ -298,34 +322,6 @@ impl Renderer {
         });
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
-    }
-
-    fn clear_views(
-        &self,
-        encoder: &mut wgpu::CommandEncoder,
-        view: &wgpu::TextureView,
-    ) {
-        encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-            label: None,
-            color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                view,
-                resolve_target: None,
-                ops: wgpu::Operations {
-                    load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                    store: true,
-                },
-            })],
-            depth_stencil_attachment: Some(
-                wgpu::RenderPassDepthStencilAttachment {
-                    view: &self.depth_view,
-                    depth_ops: Some(wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(1.0),
-                        store: true,
-                    }),
-                    stencil_ops: None,
-                },
-            ),
-        });
     }
 
     /// Returns true if the renderer's adapter can draw lines
