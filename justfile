@@ -5,4 +5,4 @@ build:
     cargo clippy --all-features -- -D warnings
     cargo test --all-features
     cargo doc --no-deps --document-private-items --all-features --workspace
-    cargo run -p export-validator
+    cargo run --package export-validator
