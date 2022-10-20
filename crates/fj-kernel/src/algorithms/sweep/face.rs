@@ -84,6 +84,7 @@ mod tests {
         algorithms::{reverse::Reverse, transform::TransformObject},
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
+        storage::Handle,
     };
 
     use super::Sweep;
@@ -120,7 +121,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::partial()
+            let half_edge = Handle::<HalfEdge>::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects);
@@ -158,7 +159,7 @@ mod tests {
             // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
             let [a, b] = [window[0], window[1]];
 
-            let half_edge = HalfEdge::partial()
+            let half_edge = Handle::<HalfEdge>::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects)

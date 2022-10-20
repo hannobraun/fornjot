@@ -12,7 +12,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for (Handle<Vertex>, Handle<Surface>) {
-    type Swept = HalfEdge;
+    type Swept = Handle<HalfEdge>;
 
     fn sweep_with_cache(
         self,
@@ -117,7 +117,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(vertices, edge_global)
+        HalfEdge::new(vertices, edge_global, objects)
     }
 }
 
@@ -181,7 +181,7 @@ mod tests {
 
         let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
 
-        let expected_half_edge = HalfEdge::partial()
+        let expected_half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
             .build(&objects);

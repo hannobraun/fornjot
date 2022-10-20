@@ -134,7 +134,7 @@ pub enum RayFaceIntersection {
     RayHitsFaceAndAreParallel,
 
     /// The ray hits an edge
-    RayHitsEdge(HalfEdge),
+    RayHitsEdge(Handle<HalfEdge>),
 
     /// The ray hits a vertex
     RayHitsVertex(Handle<Vertex>),

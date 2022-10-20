@@ -69,7 +69,7 @@ impl<'a> ShellBuilder<'a> {
                 .half_edges()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
-                    HalfEdge::partial()
+                    Handle::<HalfEdge>::partial()
                         .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
@@ -89,7 +89,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_position(Some(from.position() + [Z, edge_length]))
                         .with_surface(Some(surface.clone()));
 
-                    HalfEdge::partial()
+                    Handle::<HalfEdge>::partial()
                         .with_vertices(Some([
                             Handle::<Vertex>::partial()
                                 .with_surface_form(Some(from)),
@@ -127,7 +127,7 @@ impl<'a> ShellBuilder<'a> {
                                 side_up_prev.curve().global_form().clone(),
                             ));
 
-                        HalfEdge::partial()
+                        Handle::<HalfEdge>::partial()
                             .with_curve(Some(curve))
                             .with_vertices(Some([
                                 Handle::<Vertex>::partial()
@@ -157,7 +157,7 @@ impl<'a> ShellBuilder<'a> {
                     let to =
                         Handle::<Vertex>::partial().with_surface_form(Some(to));
 
-                    HalfEdge::partial()
+                    Handle::<HalfEdge>::partial()
                         .with_vertices(Some([from, to]))
                         .as_line_segment()
                         .build(self.objects)
@@ -243,7 +243,7 @@ impl<'a> ShellBuilder<'a> {
                 });
 
                 edges.push(
-                    HalfEdge::partial()
+                    Handle::<HalfEdge>::partial()
                         .with_vertices(Some(vertices))
                         .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()

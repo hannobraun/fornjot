@@ -8,11 +8,12 @@ use crate::{
         Vertex,
     },
     path::SurfacePath,
+    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (HalfEdge, Color) {
+impl Sweep for (Handle<HalfEdge>, Color) {
     type Swept = Face;
 
     fn sweep_with_cache(
@@ -82,7 +83,7 @@ impl Sweep for (HalfEdge, Color) {
                 })
             };
 
-            HalfEdge::new(vertices, edge.global_form().clone())
+            HalfEdge::new(vertices, edge.global_form().clone(), objects)
         };
 
         let side_edges = bottom_edge.vertices().clone().map(|vertex| {
@@ -145,7 +146,7 @@ impl Sweep for (HalfEdge, Color) {
                 })
             };
 
-            HalfEdge::new(vertices, global)
+            HalfEdge::new(vertices, global, objects)
         };
 
         let cycle = {
@@ -198,7 +199,7 @@ mod tests {
     fn sweep() {
         let objects = Objects::new();
 
-        let half_edge = HalfEdge::partial()
+        let half_edge = Handle::<HalfEdge>::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
@@ -208,11 +209,11 @@ mod tests {
         let expected_face = {
             let surface = objects.surfaces.xz_plane();
 
-            let bottom = HalfEdge::partial()
+            let bottom = Handle::<HalfEdge>::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [1., 0.]])
                 .build(&objects);
-            let side_up = HalfEdge::partial()
+            let side_up = Handle::<HalfEdge>::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(
                     Handle::<Vertex>::partial().with_surface_form(Some(
@@ -227,7 +228,7 @@ mod tests {
                 ))
                 .as_line_segment()
                 .build(&objects);
-            let top = HalfEdge::partial()
+            let top = Handle::<HalfEdge>::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(
                     Handle::<Vertex>::partial().with_surface_form(Some(
@@ -243,7 +244,7 @@ mod tests {
                 .as_line_segment()
                 .build(&objects)
                 .reverse(&objects);
-            let side_down = HalfEdge::partial()
+            let side_down = Handle::<HalfEdge>::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(
                     Handle::<Vertex>::partial().with_surface_form(Some(

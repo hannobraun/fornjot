@@ -9,7 +9,7 @@ use super::{HalfEdge, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     surface: Handle<Surface>,
-    half_edges: Vec<HalfEdge>,
+    half_edges: Vec<Handle<HalfEdge>>,
 }
 
 impl Cycle {
@@ -21,7 +21,7 @@ impl Cycle {
     /// the next one.
     pub fn new(
         surface: Handle<Surface>,
-        half_edges: impl IntoIterator<Item = HalfEdge>,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
@@ -81,7 +81,7 @@ impl Cycle {
     }
 
     /// Access the half-edges that make up the cycle
-    pub fn half_edges(&self) -> impl Iterator<Item = &HalfEdge> + '_ {
+    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<HalfEdge>> + '_ {
         self.half_edges.iter()
     }
 
@@ -150,7 +150,7 @@ impl Cycle {
     }
 
     /// Consume the cycle and return its half-edges
-    pub fn into_half_edges(self) -> impl Iterator<Item = HalfEdge> {
+    pub fn into_half_edges(self) -> impl Iterator<Item = Handle<HalfEdge>> {
         self.half_edges.into_iter()
     }
 }

@@ -6,11 +6,12 @@ use crate::{
     algorithms::intersect::{HorizontalRayToTheRight, Intersect},
     objects::HalfEdge,
     path::SurfacePath,
+    storage::Handle,
 };
 
 use super::ray_segment::RaySegmentIntersection;
 
-impl Intersect for (&HorizontalRayToTheRight<2>, &HalfEdge) {
+impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
     type Intersection = RaySegmentIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {

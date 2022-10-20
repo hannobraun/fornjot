@@ -266,7 +266,7 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, objects: &Objects) -> HalfEdge {
+    pub fn build(self, objects: &Objects) -> Handle<HalfEdge> {
         let surface = self.surface;
         let curve = self
             .curve
@@ -288,12 +288,12 @@ impl PartialHalfEdge {
             })
             .into_full(objects);
 
-        HalfEdge::new(vertices, global_form)
+        HalfEdge::new(vertices, global_form, objects)
     }
 }
 
-impl From<&HalfEdge> for PartialHalfEdge {
-    fn from(half_edge: &HalfEdge) -> Self {
+impl From<&Handle<HalfEdge>> for PartialHalfEdge {
+    fn from(half_edge: &Handle<HalfEdge>) -> Self {
         let [back_vertex, front_vertex] =
             half_edge.vertices().clone().map(Into::into);
 
