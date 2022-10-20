@@ -66,18 +66,7 @@ impl Model {
             .args(["--crate-type", "cdylib"])
             .output()?;
 
-        if cargo_output.status.success() {
-            let seconds_taken = str::from_utf8(&cargo_output.stderr)
-                .unwrap()
-                .rsplit_once(' ')
-                .unwrap()
-                .1
-                .trim();
-            status.update_status(
-                format!("Model compiled successfully in {seconds_taken}!")
-                    .as_str(),
-            );
-        } else {
+        if !cargo_output.status.success() {
             let output =
                 String::from_utf8(cargo_output.stderr).unwrap_or_else(|_| {
                     String::from("Failed to fetch command output")
@@ -85,6 +74,16 @@ impl Model {
 
             return Err(Error::Compile { output });
         }
+
+        let seconds_taken = str::from_utf8(&cargo_output.stderr)
+            .unwrap()
+            .rsplit_once(' ')
+            .unwrap()
+            .1
+            .trim();
+        status.update_status(
+            format!("Model compiled successfully in {seconds_taken}!").as_str(),
+        );
 
         // So, strictly speaking this is all unsound:
         // - `Library::new` requires us to abide by the arbitrary requirements
