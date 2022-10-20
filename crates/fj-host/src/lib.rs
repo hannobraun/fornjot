@@ -163,10 +163,7 @@ impl Model {
             let init: libloading::Symbol<abi::InitFunction> =
                 lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
 
-            let mut host = Host {
-                args: &self.parameters,
-                model: None,
-            };
+            let mut host = Host::new(&self.parameters);
 
             match init(&mut abi::Host::from(&mut host)) {
                 abi::ffi_safe::Result::Ok(_metadata) => {}
@@ -298,7 +295,14 @@ struct Host<'a> {
     model: Option<Box<dyn fj::models::Model>>,
 }
 
-impl Host<'_> {
+impl<'a> Host<'a> {
+    pub fn new(parameters: &'a Parameters) -> Self {
+        Self {
+            args: parameters,
+            model: None,
+        }
+    }
+
     pub fn take_model(&mut self) -> Option<Box<dyn fj::models::Model>> {
         self.model.take()
     }
