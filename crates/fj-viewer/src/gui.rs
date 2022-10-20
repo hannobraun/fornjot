@@ -15,7 +15,7 @@
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
 use fj_interop::status_report::StatusReport;
-use fj_math::Aabb;
+use fj_math::{Aabb, Scalar};
 
 use crate::graphics::DrawConfig;
 
@@ -87,17 +87,10 @@ impl Gui {
     ) {
         self.context.begin_frame(egui_input);
 
-        fn get_bbox_size_text(aabb: &Aabb<3>) -> String {
-            /* Render size of model bounding box */
-            let bbsize = aabb.size().components;
-            let info = format!(
-                "Model bounding box size:\n{:0.1} {:0.1} {:0.1}",
-                bbsize[0].into_f32(),
-                bbsize[1].into_f32(),
-                bbsize[2].into_f32()
-            );
-            info
-        }
+        let bounding_box_size = {
+            let [x, y, z] = aabb.size().components.map(Scalar::into_f32);
+            format!("Model bounding box size:\n{x:0.1} {y:0.1} {z:0.1}")
+        };
 
         egui::SidePanel::left("fj-left-panel").show(&self.context, |ui| {
             ui.add_space(16.0);
@@ -116,7 +109,7 @@ impl Gui {
                         "Rendering device does not have line rendering feature support"
                     );
                 ui.add_space(16.0);
-                ui.strong(get_bbox_size_text(aabb));
+                ui.strong(bounding_box_size);
             });
 
             ui.add_space(16.0);
