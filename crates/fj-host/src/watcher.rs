@@ -104,7 +104,7 @@ impl Watcher {
     ///
     /// Returns `None`, if the model has not changed since the last time this
     /// method was called.
-    pub fn receive_shape(&self) -> Result<(), Error> {
+    pub fn receive_shape(&self) {
         match self.channel.try_recv() {
             Ok(()) => {
                 let shape = match self.model.load() {
@@ -117,22 +117,22 @@ impl Watcher {
                             )))
                             .expect("Expected channel to never disconnect");
 
-                        return Ok(());
+                        return;
                     }
                     Err(err) => {
-                        return Err(err);
+                        self.event_tx
+                            .send(WatcherEvent::Error(err))
+                            .expect("Expected channel to never disconnect");
+                        return;
                     }
                 };
 
                 self.event_tx
                     .send(WatcherEvent::Shape(shape))
                     .expect("Expected channel to never disconnect");
-
-                Ok(())
             }
             Err(TryRecvError::Empty) => {
                 // Nothing to receive from the channel.
-                Ok(())
             }
             Err(TryRecvError::Disconnected) => {
                 // The other end has disconnected. This is probably the result
@@ -151,4 +151,7 @@ pub enum WatcherEvent {
 
     /// A shape has been loaded from the model
     Shape(LoadedShape),
+
+    /// An error
+    Error(Error),
 }

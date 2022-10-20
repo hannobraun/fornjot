@@ -97,27 +97,28 @@ pub fn run(
                         }
                     }
                 }
+                WatcherEvent::Error(err) => {
+                    // Can be cleaned up, once `Report` is stable:
+                    // https://doc.rust-lang.org/std/error/struct.Report.html
+
+                    println!("Error receiving updated shape: {}", err);
+
+                    let mut current_err = &err as &dyn error::Error;
+                    while let Some(err) = current_err.source() {
+                        println!();
+                        println!("Caused by:");
+                        println!("    {}", err);
+
+                        current_err = err;
+                    }
+
+                    *control_flow = ControlFlow::Exit;
+                    return;
+                }
             }
         }
 
-        if let Err(err) = watcher.receive_shape() {
-            // Can be cleaned up, once `Report` is stable:
-            // https://doc.rust-lang.org/std/error/struct.Report.html
-
-            println!("Error receiving updated shape: {}", err);
-
-            let mut current_err = &err as &dyn error::Error;
-            while let Some(err) = current_err.source() {
-                println!();
-                println!("Caused by:");
-                println!("    {}", err);
-
-                current_err = err;
-            }
-
-            *control_flow = ControlFlow::Exit;
-            return;
-        }
+        watcher.receive_shape();
 
         if let Event::WindowEvent { event, .. } = &event {
             // In theory we could/should check if `egui` wants "exclusive" use
