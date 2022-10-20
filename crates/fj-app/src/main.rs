@@ -70,7 +70,11 @@ fn main() -> anyhow::Result<()> {
         }
         })?)
     } else {
-        None
+        return Err(anyhow!(
+            "You must specify a model to start Fornjot.\n\
+            - Pass a model as a command-line argument. See `fj-app --help`.\n\
+            - Specify a default model in the configuration file."
+        ));
     };
 
     if let Some(export_path) = args.export {
