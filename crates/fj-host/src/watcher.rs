@@ -81,6 +81,9 @@ impl Watcher {
         // watching, we'll trigger the initial load here, after having started
         // watching.
         //
+        // This happens in a separate thread, because the channel is bounded and
+        // has no buffer.
+        //
         // Will panic, if the receiving end has panicked. Not much we can do
         // about that, if it happened.
         thread::spawn(move || {
