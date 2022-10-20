@@ -60,9 +60,9 @@ impl Model {
     pub fn load(&self, status: &mut StatusReport) -> Result<fj::Shape, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
-        let mut command_root = Command::new("cargo");
+        let mut command = Command::new("cargo");
 
-        let command = command_root
+        let command = command
             .arg("rustc")
             .args(["--manifest-path", &manifest_path])
             .args(["--crate-type", "cdylib"]);
