@@ -20,8 +20,8 @@ impl Watcher {
     pub fn watch_model(model: Model) -> Result<Self, Error> {
         let (event_tx, event_rx) = crossbeam_channel::bounded(1);
 
-        let (tx, rx) = crossbeam_channel::bounded(0);
-        let tx2 = tx.clone();
+        let (watch_tx, watch_rx) = crossbeam_channel::bounded(0);
+        let watch_tx_2 = watch_tx.clone();
 
         let watch_path = model.src_path();
 
@@ -70,7 +70,7 @@ impl Watcher {
                     // application is being shut down.
                     //
                     // Either way, not much we can do about it here.
-                    tx.send(()).expect("Channel is disconnected");
+                    watch_tx.send(()).expect("Channel is disconnected");
                 }
             },
         )?;
@@ -83,11 +83,13 @@ impl Watcher {
         //
         // Will panic, if the receiving end has panicked. Not much we can do
         // about that, if it happened.
-        thread::spawn(move || tx2.send(()).expect("Channel is disconnected"));
+        thread::spawn(move || {
+            watch_tx_2.send(()).expect("Channel is disconnected")
+        });
 
         Ok(Self {
             _watcher: Box::new(watcher),
-            channel: rx,
+            channel: watch_rx,
             model,
 
             event_tx,
