@@ -115,6 +115,9 @@ pub struct Objects {
     /// Store for [`Curve`]s
     pub curves: Store<Curve>,
 
+    /// Store for [`Cycle`]s
+    pub cycles: Store<Cycle>,
+
     /// Store for [`GlobalCurve`]s
     pub global_curves: Store<GlobalCurve>,
 
