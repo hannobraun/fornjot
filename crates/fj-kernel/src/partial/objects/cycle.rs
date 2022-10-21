@@ -17,7 +17,7 @@ pub struct PartialCycle {
     pub surface: Option<Handle<Surface>>,
 
     /// The half-edges that make up the [`Cycle`]
-    pub half_edges: Vec<MaybePartial<Handle<HalfEdge>>>,
+    pub half_edges: Vec<MaybePartial<HalfEdge>>,
 }
 
 impl PartialCycle {
@@ -32,9 +32,7 @@ impl PartialCycle {
     /// Update the partial cycle with the given half-edges
     pub fn with_half_edges(
         mut self,
-        half_edge: impl IntoIterator<
-            Item = impl Into<MaybePartial<Handle<HalfEdge>>>,
-        >,
+        half_edge: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
     ) -> Self {
         self.half_edges
             .extend(half_edge.into_iter().map(Into::into));
@@ -44,7 +42,7 @@ impl PartialCycle {
     /// Update the partial cycle with a polygonal chain from the provided points
     pub fn with_poly_chain(
         mut self,
-        vertices: impl IntoIterator<Item = MaybePartial<Handle<SurfaceVertex>>>,
+        vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
     ) -> Self {
         let iter = self
             .half_edges
@@ -59,7 +57,7 @@ impl PartialCycle {
             .into_iter()
             .chain(vertices);
 
-        let mut previous: Option<MaybePartial<Handle<SurfaceVertex>>> = None;
+        let mut previous: Option<MaybePartial<SurfaceVertex>> = None;
 
         for vertex_next in iter {
             if let Some(vertex_prev) = previous {
@@ -84,20 +82,20 @@ impl PartialCycle {
 
                 previous = Some(to.clone());
 
-                let curve = Handle::<Curve>::partial()
+                let curve = Curve::partial()
                     .with_surface(Some(surface.clone()))
                     .as_line_from_points([position_prev, position_next]);
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
-                        Handle::<Vertex>::partial()
+                        Vertex::partial()
                             .with_curve(Some(curve.clone()))
                             .with_position(Some([position]))
                             .with_surface_form(Some(surface_form))
                     });
 
                 self.half_edges.push(
-                    Handle::<HalfEdge>::partial()
+                    HalfEdge::partial()
                         .with_curve(Some(curve))
                         .with_vertices(Some([from, to]))
                         .into(),
@@ -118,7 +116,7 @@ impl PartialCycle {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.with_poly_chain(points.into_iter().map(|position| {
-            Handle::<SurfaceVertex>::partial()
+            SurfaceVertex::partial()
                 .with_position(Some(position))
                 .into()
         }))
@@ -151,7 +149,7 @@ impl PartialCycle {
                 self.surface.clone().expect("Need surface to close cycle");
 
             self.half_edges.push(
-                Handle::<HalfEdge>::partial()
+                HalfEdge::partial()
                     .with_surface(Some(surface))
                     .as_line_segment_from_points(vertices)
                     .into(),
@@ -230,8 +228,8 @@ impl PartialCycle {
     }
 }
 
-impl From<&Handle<Cycle>> for PartialCycle {
-    fn from(cycle: &Handle<Cycle>) -> Self {
+impl From<&Cycle> for PartialCycle {
+    fn from(cycle: &Cycle) -> Self {
         Self {
             surface: Some(cycle.surface().clone()),
             half_edges: cycle.half_edges().cloned().map(Into::into).collect(),

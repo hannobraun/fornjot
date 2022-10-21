@@ -152,7 +152,6 @@ mod tests {
     use crate::{
         objects::{Curve, Face, Objects},
         partial::HasPartial,
-        storage::Handle,
     };
 
     use super::CurveFaceIntersection;
@@ -163,7 +162,7 @@ mod tests {
 
         let surface = objects.surfaces.xy_plane();
 
-        let curve = Handle::<Curve>::partial()
+        let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_line_from_points([[-3., 0.], [-2., 0.]])
             .build(&objects);

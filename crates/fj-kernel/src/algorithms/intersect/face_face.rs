@@ -62,7 +62,6 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         objects::{Curve, Face, Objects},
         partial::HasPartial,
-        storage::Handle,
     };
 
     use super::FaceFaceIntersection;
@@ -112,7 +111,7 @@ mod tests {
         let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
 
         let expected_curves = surfaces.map(|surface| {
-            Handle::<Curve>::partial()
+            Curve::partial()
                 .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&objects)

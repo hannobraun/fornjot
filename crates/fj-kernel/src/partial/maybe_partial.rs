@@ -19,10 +19,10 @@ use super::{HasPartial, Partial};
 ///
 /// The set of available convenience methods is far from complete. Please feel
 /// free to just add more, if you need them.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum MaybePartial<T: HasPartial> {
     /// A full object
-    Full(T),
+    Full(Handle<T>),
 
     /// A partial object
     Partial(T::Partial),
@@ -48,7 +48,7 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(self, objects: &Objects) -> T {
+    pub fn into_full(self, objects: &Objects) -> Handle<T> {
         match self {
             Self::Partial(partial) => partial.build(objects),
             Self::Full(full) => full,
@@ -68,11 +68,11 @@ impl<T: HasPartial> MaybePartial<T> {
     }
 }
 
-impl<T> From<T> for MaybePartial<T>
+impl<T> From<Handle<T>> for MaybePartial<T>
 where
     T: HasPartial,
 {
-    fn from(full: T) -> Self {
+    fn from(full: Handle<T>) -> Self {
         Self::Full(full)
     }
 }
@@ -80,7 +80,7 @@ where
 // Unfortunately, we can't add a blanket implementation from `T::Partial` for
 // `MaybePartial<T>`, as that would conflict.
 
-impl MaybePartial<Handle<Curve>> {
+impl MaybePartial<Curve> {
     /// Access the global form
     pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
         match self {
@@ -92,7 +92,7 @@ impl MaybePartial<Handle<Curve>> {
     }
 }
 
-impl MaybePartial<Handle<GlobalEdge>> {
+impl MaybePartial<GlobalEdge> {
     /// Access the curve
     pub fn curve(&self) -> Option<&Handle<GlobalCurve>> {
         match self {
@@ -114,9 +114,9 @@ impl MaybePartial<Handle<GlobalEdge>> {
     }
 }
 
-impl MaybePartial<Handle<HalfEdge>> {
+impl MaybePartial<HalfEdge> {
     /// Access the back vertex
-    pub fn back(&self) -> Option<MaybePartial<Handle<Vertex>>> {
+    pub fn back(&self) -> Option<MaybePartial<Vertex>> {
         match self {
             Self::Full(full) => Some(full.back().clone().into()),
             Self::Partial(partial) => {
@@ -127,7 +127,7 @@ impl MaybePartial<Handle<HalfEdge>> {
     }
 
     /// Access the front vertex
-    pub fn front(&self) -> Option<MaybePartial<Handle<Vertex>>> {
+    pub fn front(&self) -> Option<MaybePartial<Vertex>> {
         match self {
             Self::Full(full) => Some(full.front().clone().into()),
             Self::Partial(partial) => {
@@ -138,7 +138,7 @@ impl MaybePartial<Handle<HalfEdge>> {
     }
 
     /// Access the vertices
-    pub fn vertices(&self) -> [Option<MaybePartial<Handle<Vertex>>>; 2] {
+    pub fn vertices(&self) -> [Option<MaybePartial<Vertex>>; 2] {
         match self {
             Self::Full(full) => {
                 full.vertices().clone().map(|vertex| Some(vertex.into()))
@@ -148,7 +148,7 @@ impl MaybePartial<Handle<HalfEdge>> {
     }
 }
 
-impl MaybePartial<Handle<SurfaceVertex>> {
+impl MaybePartial<SurfaceVertex> {
     /// Access the position
     pub fn position(&self) -> Option<Point<2>> {
         match self {
@@ -166,9 +166,9 @@ impl MaybePartial<Handle<SurfaceVertex>> {
     }
 }
 
-impl MaybePartial<Handle<Vertex>> {
+impl MaybePartial<Vertex> {
     /// Access the surface form
-    pub fn surface_form(&self) -> Option<MaybePartial<Handle<SurfaceVertex>>> {
+    pub fn surface_form(&self) -> Option<MaybePartial<SurfaceVertex>> {
         match self {
             Self::Full(full) => Some(full.surface_form().clone().into()),
             Self::Partial(partial) => partial.surface_form.clone(),

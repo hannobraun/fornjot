@@ -19,19 +19,19 @@ pub struct PartialVertex {
     /// The curve that the [`Vertex`] is defined in
     ///
     /// Must be provided before [`PartialVertex::build`] is called.
-    pub curve: Option<MaybePartial<Handle<Curve>>>,
+    pub curve: Option<MaybePartial<Curve>>,
 
     /// The surface form of the [`Vertex`]
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Curve`].
-    pub surface_form: Option<MaybePartial<Handle<SurfaceVertex>>>,
+    pub surface_form: Option<MaybePartial<SurfaceVertex>>,
 
     /// The global form of the [`Vertex`]
     ///
     /// Can be provided, if already available, or acquired through the surface
     /// form.
-    pub global_form: Option<MaybePartial<Handle<GlobalVertex>>>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialVertex {
@@ -49,7 +49,7 @@ impl PartialVertex {
     /// Provide a curve for the partial vertex
     pub fn with_curve(
         mut self,
-        curve: Option<impl Into<MaybePartial<Handle<Curve>>>>,
+        curve: Option<impl Into<MaybePartial<Curve>>>,
     ) -> Self {
         if let Some(curve) = curve {
             self.curve = Some(curve.into());
@@ -60,7 +60,7 @@ impl PartialVertex {
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,
-        surface_form: Option<impl Into<MaybePartial<Handle<SurfaceVertex>>>>,
+        surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
     ) -> Self {
         if let Some(surface_form) = surface_form {
             self.surface_form = Some(surface_form.into());
@@ -71,7 +71,7 @@ impl PartialVertex {
     /// Provide a global form for the partial vertex
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<Handle<GlobalVertex>>>>,
+        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
             self.global_form = Some(global_form.into());
@@ -97,7 +97,7 @@ impl PartialVertex {
 
         let surface_form = self
             .surface_form
-            .unwrap_or_else(|| Handle::<SurfaceVertex>::partial().into())
+            .unwrap_or_else(|| SurfaceVertex::partial().into())
             .update_partial(|partial| {
                 let position = partial.position.unwrap_or_else(|| {
                     curve.path().point_from_path_coords(position)
@@ -114,8 +114,8 @@ impl PartialVertex {
     }
 }
 
-impl From<&Handle<Vertex>> for PartialVertex {
-    fn from(vertex: &Handle<Vertex>) -> Self {
+impl From<&Vertex> for PartialVertex {
+    fn from(vertex: &Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
@@ -144,7 +144,7 @@ pub struct PartialSurfaceVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Surface`].
-    pub global_form: Option<MaybePartial<Handle<GlobalVertex>>>,
+    pub global_form: Option<MaybePartial<GlobalVertex>>,
 }
 
 impl PartialSurfaceVertex {
@@ -170,7 +170,7 @@ impl PartialSurfaceVertex {
     /// Provide a global form for the partial surface vertex
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<Handle<GlobalVertex>>>>,
+        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
             self.global_form = Some(global_form.into());
@@ -196,7 +196,7 @@ impl PartialSurfaceVertex {
         let global_form = self
             .global_form
             .unwrap_or_else(|| {
-                Handle::<GlobalVertex>::partial()
+                GlobalVertex::partial()
                     .from_surface_and_position(&surface, position)
                     .into()
             })
@@ -206,8 +206,8 @@ impl PartialSurfaceVertex {
     }
 }
 
-impl From<&Handle<SurfaceVertex>> for PartialSurfaceVertex {
-    fn from(surface_vertex: &Handle<SurfaceVertex>) -> Self {
+impl From<&SurfaceVertex> for PartialSurfaceVertex {
+    fn from(surface_vertex: &SurfaceVertex) -> Self {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(surface_vertex.surface().clone()),
@@ -242,7 +242,7 @@ impl PartialGlobalVertex {
     /// Update partial global vertex from the given curve and position on it
     pub fn from_curve_and_position(
         self,
-        curve: impl Into<MaybePartial<Handle<Curve>>>,
+        curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
     ) -> Self {
         let curve = curve.into().into_partial();
@@ -278,8 +278,8 @@ impl PartialGlobalVertex {
     }
 }
 
-impl From<&Handle<GlobalVertex>> for PartialGlobalVertex {
-    fn from(global_vertex: &Handle<GlobalVertex>) -> Self {
+impl From<&GlobalVertex> for PartialGlobalVertex {
+    fn from(global_vertex: &GlobalVertex) -> Self {
         Self {
             position: Some(global_vertex.position()),
         }

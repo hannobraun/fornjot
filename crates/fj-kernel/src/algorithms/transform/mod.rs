@@ -16,6 +16,7 @@ use fj_math::{Transform, Vector};
 use crate::{
     objects::Objects,
     partial::{HasPartial, MaybePartial, Partial},
+    storage::Handle,
 };
 
 /// Transform an object
@@ -57,7 +58,7 @@ pub trait TransformObject: Sized {
     }
 }
 
-impl<T> TransformObject for T
+impl<T> TransformObject for Handle<T>
 where
     T: HasPartial,
     T::Partial: TransformObject,
@@ -71,7 +72,8 @@ where
 
 impl<T> TransformObject for MaybePartial<T>
 where
-    T: HasPartial + TransformObject,
+    T: HasPartial,
+    Handle<T>: TransformObject,
     T::Partial: TransformObject,
 {
     fn transform(self, transform: &Transform, objects: &Objects) -> Self {

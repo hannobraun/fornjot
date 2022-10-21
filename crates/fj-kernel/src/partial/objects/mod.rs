@@ -27,7 +27,7 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, objects: &Objects) -> Self::Full {
+                fn build(self, objects: &Objects) -> Handle<Self::Full> {
                     self.build(objects)
                 }
             }
@@ -42,11 +42,11 @@ macro_rules! impl_traits {
 }
 
 impl_traits!(
-    Handle<Curve>, PartialCurve;
-    Handle<Cycle>, PartialCycle;
-    Handle<GlobalEdge>, PartialGlobalEdge;
-    Handle<GlobalVertex>, PartialGlobalVertex;
-    Handle<HalfEdge>, PartialHalfEdge;
-    Handle<SurfaceVertex>, PartialSurfaceVertex;
-    Handle<Vertex>, PartialVertex;
+    Curve, PartialCurve;
+    Cycle, PartialCycle;
+    GlobalEdge, PartialGlobalEdge;
+    GlobalVertex, PartialGlobalVertex;
+    HalfEdge, PartialHalfEdge;
+    SurfaceVertex, PartialSurfaceVertex;
+    Vertex, PartialVertex;
 );

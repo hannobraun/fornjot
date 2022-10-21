@@ -90,7 +90,6 @@ mod tests {
         algorithms::transform::TransformObject,
         objects::{Curve, Objects},
         partial::HasPartial,
-        storage::Handle,
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -117,11 +116,11 @@ mod tests {
             None,
         );
 
-        let expected_xy = Handle::<Curve>::partial()
+        let expected_xy = Curve::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
             .build(&objects);
-        let expected_xz = Handle::<Curve>::partial()
+        let expected_xz = Curve::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
             .build(&objects);

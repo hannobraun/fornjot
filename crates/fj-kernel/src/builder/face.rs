@@ -33,7 +33,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.exterior = Some(
-            Handle::<Cycle>::partial()
+            Cycle::partial()
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
@@ -48,7 +48,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.interiors.push(
-            Handle::<Cycle>::partial()
+            Cycle::partial()
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
