@@ -1,3 +1,5 @@
+use fj_interop::ext::ArrayExt;
+
 use crate::{
     objects::{Curve, Face, Objects},
     storage::Handle,
@@ -31,16 +33,10 @@ impl FaceFaceIntersection {
             SurfaceSurfaceIntersection::compute(surfaces, objects)?
                 .intersection_curves;
 
-        // Can be cleaned up, once `zip` is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-        let curve_face_intersections = {
-            let [curve_a, curve_b] = &intersection_curves;
-            let [face_a, face_b] = faces;
-
-            [(curve_a, face_a), (curve_b, face_b)].map(|(curve, face)| {
-                CurveFaceIntersection::compute(curve, face)
-            })
-        };
+        let curve_face_intersections = intersection_curves
+            .each_ref_ext()
+            .zip_ext(faces)
+            .map(|(curve, face)| CurveFaceIntersection::compute(curve, face));
 
         let intersection_intervals = {
             let [a, b] = curve_face_intersections;

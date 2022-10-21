@@ -1,3 +1,6 @@
+use std::array;
+
+use fj_interop::ext::ArrayExt;
 use fj_math::Scalar;
 
 use crate::{
@@ -193,28 +196,23 @@ impl<'a> ShellBuilder<'a> {
             top_edges.reverse();
 
             let surface_vertices = {
+                let points = [[-h, -h], [-h, h], [h, h], [h, -h]];
+
                 let mut edges = top_edges.iter();
+                let half_edges = array::from_fn(|_| edges.next().unwrap());
 
-                let a = edges.next().unwrap();
-                let b = edges.next().unwrap();
-                let c = edges.next().unwrap();
-                let d = edges.next().unwrap();
-
-                // Can be cleaned up, once `zip` is stable:
-                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
                 let [a, b, c, d] =
-                    [([-h, -h], a), ([-h, h], b), ([h, h], c), ([h, -h], d)]
-                        .map(|(point, edge)| {
-                            let vertex = edge.back();
+                    points.zip_ext(half_edges).map(|(point, edge)| {
+                        let vertex = edge.back();
 
-                            Handle::<SurfaceVertex>::partial()
-                                .with_position(Some(point))
-                                .with_surface(Some(surface.clone()))
-                                .with_global_form(Some(
-                                    vertex.global_form().clone(),
-                                ))
-                                .build(self.objects)
-                        });
+                        Handle::<SurfaceVertex>::partial()
+                            .with_position(Some(point))
+                            .with_surface(Some(surface.clone()))
+                            .with_global_form(Some(
+                                vertex.global_form().clone(),
+                            ))
+                            .build(self.objects)
+                    });
 
                 [a.clone(), b, c, d, a]
             };
@@ -228,19 +226,15 @@ impl<'a> ShellBuilder<'a> {
                 let surface_vertices =
                     [surface_vertices[0].clone(), surface_vertices[1].clone()];
 
-                // Can be cleaned up, once `zip` is stable:
-                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-                let [vertex_a, vertex_b] = edge.vertices().clone();
-                let [surface_vertex_a, surface_vertex_b] = surface_vertices;
-                let vertices = [
-                    (vertex_a, surface_vertex_a),
-                    (vertex_b, surface_vertex_b),
-                ]
-                .map(|(vertex, surface_form)| {
-                    Handle::<Vertex>::partial()
-                        .with_position(Some(vertex.position()))
-                        .with_surface_form(Some(surface_form))
-                });
+                let vertices = edge
+                    .vertices()
+                    .each_ref_ext()
+                    .zip_ext(surface_vertices)
+                    .map(|(vertex, surface_form)| {
+                        Handle::<Vertex>::partial()
+                            .with_position(Some(vertex.position()))
+                            .with_surface_form(Some(surface_form))
+                    });
 
                 edges.push(
                     Handle::<HalfEdge>::partial()
