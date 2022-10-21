@@ -7,7 +7,8 @@ impl Reverse for Cycle {
         let surface = self.surface().clone();
 
         let mut edges = self
-            .into_half_edges()
+            .half_edges()
+            .cloned()
             .map(|edge| edge.reverse(objects))
             .collect::<Vec<_>>();
 

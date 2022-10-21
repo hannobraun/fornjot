@@ -137,9 +137,4 @@ impl Cycle {
 
         unreachable!("Encountered invalid cycle: {self:#?}");
     }
-
-    /// Consume the cycle and return its half-edges
-    pub fn into_half_edges(self) -> impl Iterator<Item = Handle<HalfEdge>> {
-        self.half_edges.into_iter()
-    }
 }
