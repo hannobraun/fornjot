@@ -70,11 +70,23 @@ pub trait SliceExt<T> {
     ///
     /// <https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks>
     fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N>;
+
+    /// Stable replacement for `array_windows`
+    ///
+    /// <https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows>
+    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<T, N>;
 }
 
 impl<T> SliceExt<T> for &[T] {
     fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N> {
         ArrayChunks {
+            slice: self,
+            index: 0,
+        }
+    }
+
+    fn array_windows_ext<const N: usize>(&self) -> ArrayWindows<T, N> {
+        ArrayWindows {
             slice: self,
             index: 0,
         }
@@ -97,6 +109,28 @@ impl<'a, T, const N: usize> Iterator for ArrayChunks<'a, T, N> {
 
         let next = &self.slice[self.index..self.index + N];
         self.index += N;
+
+        let next = next.try_into().unwrap();
+        Some(next)
+    }
+}
+
+/// Returned by [`SliceExt::array_windows_ext`]
+pub struct ArrayWindows<'a, T: 'a, const N: usize> {
+    slice: &'a [T],
+    index: usize,
+}
+
+impl<'a, T, const N: usize> Iterator for ArrayWindows<'a, T, N> {
+    type Item = &'a [T; N];
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index + N > self.slice.len() {
+            return None;
+        }
+
+        let next = &self.slice[self.index..self.index + N];
+        self.index += 1;
 
         let next = next.try_into().unwrap();
         Some(next)
