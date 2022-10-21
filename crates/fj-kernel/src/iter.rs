@@ -365,7 +365,6 @@ mod tests {
             Shell, Sketch, Solid, SurfaceVertex, Vertex,
         },
         partial::HasPartial,
-        storage::Handle,
     };
 
     use super::ObjectIters as _;
@@ -375,7 +374,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = Handle::<Curve>::partial()
+        let object = Curve::partial()
             .with_surface(Some(surface))
             .as_u_axis()
             .build(&objects);
@@ -398,7 +397,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = Handle::<Cycle>::partial()
+        let object = Cycle::partial()
             .with_surface(Some(surface))
             .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .close_with_line_segment()
@@ -481,7 +480,7 @@ mod tests {
     fn half_edge() {
         let objects = Objects::new();
 
-        let object = Handle::<HalfEdge>::partial()
+        let object = HalfEdge::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
@@ -584,7 +583,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Handle::<Curve>::partial()
+        let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);

@@ -203,7 +203,7 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{objects::Objects, partial::HasPartial, storage::Handle};
+    use crate::{objects::Objects, partial::HasPartial};
 
     use super::HalfEdge;
 
@@ -216,11 +216,11 @@ mod tests {
         let a = [0., 0.];
         let b = [1., 0.];
 
-        let a_to_b = Handle::<HalfEdge>::partial()
+        let a_to_b = HalfEdge::partial()
             .with_surface(Some(surface.clone()))
             .as_line_segment_from_points([a, b])
             .build(&objects);
-        let b_to_a = Handle::<HalfEdge>::partial()
+        let b_to_a = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([b, a])
             .build(&objects);

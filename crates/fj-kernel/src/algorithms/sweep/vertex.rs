@@ -162,7 +162,6 @@ mod tests {
         algorithms::sweep::Sweep,
         objects::{Curve, HalfEdge, Objects, Vertex},
         partial::HasPartial,
-        storage::Handle,
     };
 
     #[test]
@@ -170,18 +169,18 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xz_plane();
-        let curve = Handle::<Curve>::partial()
+        let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
             .build(&objects);
-        let vertex = Handle::<Vertex>::partial()
+        let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
             .build(&objects);
 
         let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
 
-        let expected_half_edge = Handle::<HalfEdge>::partial()
+        let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
             .build(&objects);

@@ -19,15 +19,15 @@ pub struct PartialHalfEdge {
     pub surface: Option<Handle<Surface>>,
 
     /// The curve that the [`HalfEdge`] is defined in
-    pub curve: Option<MaybePartial<Handle<Curve>>>,
+    pub curve: Option<MaybePartial<Curve>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: [Option<MaybePartial<Handle<Vertex>>>; 2],
+    pub vertices: [Option<MaybePartial<Vertex>>; 2],
 
     /// The global form of the [`HalfEdge`]
     ///
     /// Can be computed by [`PartialHalfEdge::build`], if not available.
-    pub global_form: Option<MaybePartial<Handle<GlobalEdge>>>,
+    pub global_form: Option<MaybePartial<GlobalEdge>>,
 }
 
 impl PartialHalfEdge {
@@ -58,7 +58,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given curve
     pub fn with_curve(
         mut self,
-        curve: Option<impl Into<MaybePartial<Handle<Curve>>>>,
+        curve: Option<impl Into<MaybePartial<Curve>>>,
     ) -> Self {
         if let Some(curve) = curve {
             self.curve = Some(curve.into());
@@ -69,7 +69,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given from vertex
     pub fn with_back_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Handle<Vertex>>>>,
+        vertex: Option<impl Into<MaybePartial<Vertex>>>,
     ) -> Self {
         if let Some(vertex) = vertex {
             let [from, _] = &mut self.vertices;
@@ -81,7 +81,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given from vertex
     pub fn with_front_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Handle<Vertex>>>>,
+        vertex: Option<impl Into<MaybePartial<Vertex>>>,
     ) -> Self {
         if let Some(vertex) = vertex {
             let [_, to] = &mut self.vertices;
@@ -93,7 +93,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[impl Into<MaybePartial<Handle<Vertex>>>; 2]>,
+        vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
     ) -> Self {
         let vertices = vertices.map(|vertices| vertices.map(Into::into));
         if let Some([back, front]) = vertices {
@@ -105,7 +105,7 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given global form
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<Handle<GlobalEdge>>>>,
+        global_form: Option<impl Into<MaybePartial<GlobalEdge>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
             self.global_form = Some(global_form.into());
@@ -125,7 +125,7 @@ impl PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Self {
-        let curve = Handle::<Curve>::partial()
+        let curve = Curve::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
@@ -139,19 +139,19 @@ impl PartialHalfEdge {
             .extract_global_vertices()
             .map(|[global_form, _]| MaybePartial::from(global_form))
             .unwrap_or_else(|| {
-                Handle::<GlobalVertex>::partial()
+                GlobalVertex::partial()
                     .from_curve_and_position(curve.clone(), a_curve)
                     .into()
             });
 
-        let surface_vertex = Handle::<SurfaceVertex>::partial()
+        let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
             .with_surface(self.surface.clone())
             .with_global_form(Some(global_vertex))
             .build(objects);
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
-            Handle::<Vertex>::partial()
+            Vertex::partial()
                 .with_position(Some(point_curve))
                 .with_curve(Some(curve.clone()))
                 .with_surface_form(Some(surface_vertex.clone()))
@@ -171,11 +171,11 @@ impl PartialHalfEdge {
     ) -> Self {
         let surface = self.surface.clone();
         let vertices = points.map(|point| {
-            let surface_form = Handle::<SurfaceVertex>::partial()
+            let surface_form = SurfaceVertex::partial()
                 .with_surface(surface.clone())
                 .with_position(Some(point));
 
-            Handle::<Vertex>::partial().with_surface_form(Some(surface_form))
+            Vertex::partial().with_surface_form(Some(surface_form))
         });
 
         self.with_vertices(Some(vertices)).as_line_segment()
@@ -205,7 +205,7 @@ impl PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let curve = Handle::<Curve>::partial()
+        let curve = Curve::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(Some(surface))
             .as_line_from_points(points);
@@ -279,7 +279,7 @@ impl PartialHalfEdge {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| Handle::<GlobalEdge>::partial().into())
+            .unwrap_or_else(|| GlobalEdge::partial().into())
             .update_partial(|partial| {
                 partial.from_curve_and_vertices(&curve, &vertices)
             })
@@ -289,8 +289,8 @@ impl PartialHalfEdge {
     }
 }
 
-impl From<&Handle<HalfEdge>> for PartialHalfEdge {
-    fn from(half_edge: &Handle<HalfEdge>) -> Self {
+impl From<&HalfEdge> for PartialHalfEdge {
+    fn from(half_edge: &HalfEdge) -> Self {
         let [back_vertex, front_vertex] =
             half_edge.vertices().clone().map(Into::into);
 
@@ -364,8 +364,8 @@ impl PartialGlobalEdge {
     }
 }
 
-impl From<&Handle<GlobalEdge>> for PartialGlobalEdge {
-    fn from(global_edge: &Handle<GlobalEdge>) -> Self {
+impl From<&GlobalEdge> for PartialGlobalEdge {
+    fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
             vertices: Some(

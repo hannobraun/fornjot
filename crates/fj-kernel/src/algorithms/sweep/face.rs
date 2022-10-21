@@ -84,7 +84,6 @@ mod tests {
         algorithms::{reverse::Reverse, transform::TransformObject},
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
-        storage::Handle,
     };
 
     use super::Sweep;
@@ -116,7 +115,7 @@ mod tests {
 
         let triangle = TRIANGLE.as_slice();
         let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = Handle::<HalfEdge>::partial()
+            let half_edge = HalfEdge::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects);
@@ -149,7 +148,7 @@ mod tests {
 
         let triangle = TRIANGLE.as_slice();
         let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = Handle::<HalfEdge>::partial()
+            let half_edge = HalfEdge::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
                 .build(&objects)

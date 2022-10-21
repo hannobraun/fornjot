@@ -96,8 +96,8 @@ impl PartialCurve {
     }
 }
 
-impl From<&Handle<Curve>> for PartialCurve {
-    fn from(curve: &Handle<Curve>) -> Self {
+impl From<&Curve> for PartialCurve {
+    fn from(curve: &Curve) -> Self {
         Self {
             path: Some(curve.path()),
             surface: Some(curve.surface().clone()),

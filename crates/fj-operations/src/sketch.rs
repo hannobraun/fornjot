@@ -5,7 +5,6 @@ use fj_kernel::{
     },
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
-    storage::Handle,
 };
 use fj_math::{Aabb, Point};
 
@@ -27,7 +26,7 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let half_edge = Handle::<HalfEdge>::partial()
+                let half_edge = HalfEdge::partial()
                     .with_surface(Some(surface.clone()))
                     .as_circle_from_radius(circle.radius(), objects)
                     .build(objects);

@@ -10,7 +10,6 @@ use crate::{
         Vertex,
     },
     partial::HasPartial,
-    storage::Handle,
 };
 
 /// API for building a [`Shell`]
@@ -72,7 +71,7 @@ impl<'a> ShellBuilder<'a> {
                 .half_edges()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
-                    Handle::<HalfEdge>::partial()
+                    HalfEdge::partial()
                         .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
@@ -88,16 +87,14 @@ impl<'a> ShellBuilder<'a> {
                     let [_, from] = bottom.vertices();
 
                     let from = from.surface_form().clone();
-                    let to = Handle::<SurfaceVertex>::partial()
+                    let to = SurfaceVertex::partial()
                         .with_position(Some(from.position() + [Z, edge_length]))
                         .with_surface(Some(surface.clone()));
 
-                    Handle::<HalfEdge>::partial()
+                    HalfEdge::partial()
                         .with_vertices(Some([
-                            Handle::<Vertex>::partial()
-                                .with_surface_form(Some(from)),
-                            Handle::<Vertex>::partial()
-                                .with_surface_form(Some(to)),
+                            Vertex::partial().with_surface_form(Some(from)),
+                            Vertex::partial().with_surface_form(Some(to)),
                         ]))
                         .as_line_segment()
                         .build(self.objects)
@@ -118,25 +115,22 @@ impl<'a> ShellBuilder<'a> {
                         let [to, _] = bottom.vertices();
 
                         let to = to.surface_form().clone();
-                        let from = Handle::<SurfaceVertex>::partial()
+                        let from = SurfaceVertex::partial()
                             .with_position(Some(
                                 to.position() + [Z, edge_length],
                             ))
                             .with_surface(Some(surface.clone()))
                             .with_global_form(Some(from.global_form().clone()));
 
-                        let curve = Handle::<Curve>::partial()
-                            .with_global_form(Some(
-                                side_up_prev.curve().global_form().clone(),
-                            ));
+                        let curve = Curve::partial().with_global_form(Some(
+                            side_up_prev.curve().global_form().clone(),
+                        ));
 
-                        Handle::<HalfEdge>::partial()
+                        HalfEdge::partial()
                             .with_curve(Some(curve))
                             .with_vertices(Some([
-                                Handle::<Vertex>::partial()
-                                    .with_surface_form(Some(from)),
-                                Handle::<Vertex>::partial()
-                                    .with_surface_form(Some(to)),
+                                Vertex::partial().with_surface_form(Some(from)),
+                                Vertex::partial().with_surface_form(Some(to)),
                             ]))
                             .as_line_segment()
                             .build(self.objects)
@@ -155,12 +149,10 @@ impl<'a> ShellBuilder<'a> {
                     let from = from.surface_form().clone();
                     let to = to.surface_form().clone();
 
-                    let from = Handle::<Vertex>::partial()
-                        .with_surface_form(Some(from));
-                    let to =
-                        Handle::<Vertex>::partial().with_surface_form(Some(to));
+                    let from = Vertex::partial().with_surface_form(Some(from));
+                    let to = Vertex::partial().with_surface_form(Some(to));
 
-                    Handle::<HalfEdge>::partial()
+                    HalfEdge::partial()
                         .with_vertices(Some([from, to]))
                         .as_line_segment()
                         .build(self.objects)
@@ -174,7 +166,7 @@ impl<'a> ShellBuilder<'a> {
                 .zip(sides_down)
                 .zip(surfaces)
                 .map(|((((bottom, side_up), top), side_down), surface)| {
-                    let cycle = Handle::<Cycle>::partial()
+                    let cycle = Cycle::partial()
                         .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects);
@@ -205,7 +197,7 @@ impl<'a> ShellBuilder<'a> {
                     points.zip_ext(half_edges).map(|(point, edge)| {
                         let vertex = edge.back();
 
-                        Handle::<SurfaceVertex>::partial()
+                        SurfaceVertex::partial()
                             .with_position(Some(point))
                             .with_surface(Some(surface.clone()))
                             .with_global_form(Some(
@@ -228,13 +220,13 @@ impl<'a> ShellBuilder<'a> {
                     .each_ref_ext()
                     .zip_ext(surface_vertices.clone())
                     .map(|(vertex, surface_form)| {
-                        Handle::<Vertex>::partial()
+                        Vertex::partial()
                             .with_position(Some(vertex.position()))
                             .with_surface_form(Some(surface_form))
                     });
 
                 edges.push(
-                    Handle::<HalfEdge>::partial()
+                    HalfEdge::partial()
                         .with_vertices(Some(vertices))
                         .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()
