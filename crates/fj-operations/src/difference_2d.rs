@@ -1,4 +1,4 @@
-use fj_interop::{debug::DebugInfo, mesh::Color};
+use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::{
         reverse::Reverse,
@@ -28,12 +28,12 @@ impl Shape for fj::Difference2d {
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        // Can be cleaned up, once `each_ref` and `try_map` are stable:
-        // - https://doc.rust-lang.org/std/primitive.array.html#method.each_ref
-        // - https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let [a, b] = self.shapes();
-        let [a, b] =
-            [a, b].map(|shape| shape.compute_brep(config, objects, debug_info));
+        // Can be cleaned up, once `try_map` is stable:
+        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
+        let [a, b] = self
+            .shapes()
+            .each_ref_ext()
+            .map(|shape| shape.compute_brep(config, objects, debug_info));
         let [a, b] = [a?, b?];
 
         if let Some(face) = a.face_iter().next() {
