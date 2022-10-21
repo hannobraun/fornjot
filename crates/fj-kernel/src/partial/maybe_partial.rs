@@ -19,7 +19,7 @@ use super::{HasPartial, Partial};
 ///
 /// The set of available convenience methods is far from complete. Please feel
 /// free to just add more, if you need them.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum MaybePartial<T: HasPartial> {
     /// A full object
     Full(T),
