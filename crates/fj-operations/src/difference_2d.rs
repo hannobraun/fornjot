@@ -28,13 +28,9 @@ impl Shape for fj::Difference2d {
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        // Can be cleaned up, once `try_map` is stable:
-        // https://doc.rust-lang.org/std/primitive.array.html#method.try_map
-        let [a, b] = self
-            .shapes()
-            .each_ref_ext()
-            .map(|shape| shape.compute_brep(config, objects, debug_info));
-        let [a, b] = [a?, b?];
+        let [a, b] = self.shapes().each_ref_ext().try_map_ext(|shape| {
+            shape.compute_brep(config, objects, debug_info)
+        })?;
 
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
