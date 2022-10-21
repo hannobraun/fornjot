@@ -1,6 +1,6 @@
 use std::array;
 
-use fj_interop::ext::ArrayExt;
+use fj_interop::ext::{ArrayExt, SliceExt};
 use fj_math::Scalar;
 
 use crate::{
@@ -218,18 +218,15 @@ impl<'a> ShellBuilder<'a> {
             };
 
             let mut edges = Vec::new();
-            for (surface_vertices, edge) in
-                surface_vertices.windows(2).zip(top_edges)
+            for (surface_vertices, edge) in surface_vertices
+                .as_slice()
+                .array_windows_ext()
+                .zip(top_edges)
             {
-                // This can't panic, as we passed `2` to `windows`. Can be
-                // cleaned up, once `array_windows` is stable.
-                let surface_vertices =
-                    [surface_vertices[0].clone(), surface_vertices[1].clone()];
-
                 let vertices = edge
                     .vertices()
                     .each_ref_ext()
-                    .zip_ext(surface_vertices)
+                    .zip_ext(surface_vertices.clone())
                     .map(|(vertex, surface_form)| {
                         Handle::<Vertex>::partial()
                             .with_position(Some(vertex.position()))

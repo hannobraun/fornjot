@@ -1,3 +1,4 @@
+use fj_interop::ext::SliceExt;
 use fj_math::{Point, PolyChain, Segment, Triangle};
 
 use crate::algorithms::intersect::{
@@ -47,10 +48,8 @@ impl Polygon {
 
         let mut might_be_hole = true;
 
-        for edge in [a, b, c, a].windows(2) {
-            // This can't panic, as we passed `2` to `windows`. It can be
-            // cleaned up a bit, once `array_windows` is stable.
-            let edge = Segment::from([edge[0], edge[1]]);
+        for &edge in [a, b, c, a].as_slice().array_windows_ext() {
+            let edge = Segment::from(edge);
 
             let is_exterior_edge = self.contains_exterior_edge(edge);
             let is_interior_edge = self.contains_interior_edge(edge);
