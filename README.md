@@ -31,7 +31,7 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lt
 
 Fornjot is **under active development, but still experimental**. Efforts are currently focused on providing a [stable set of basic CAD features](https://github.com/hannobraun/Fornjot/milestone/1).
 
-If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
+If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitations pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
 To learn about the project's longer-term direction, please refer to the [roadmap](https://www.fornjot.app/roadmap/).
 
@@ -65,9 +65,9 @@ This is the code for the [spacer model](/models/spacer).
 
 ### Basic modeling features
 
-At this point, Fornjot supports basic 2D shapes (sketches made from lines segments, circles, limited combinations between them), sweeping those 2D shapes along a straight path to create a 3D shape, and some very incomplete support for constructive solid geometry (CSG).
+At this point, Fornjot supports basic 2D shapes (sketches made from lines segments, circles, and limited combinations between them) and sweeping those 2D shapes along a straight path to create a 3D shape.
 
-The short- to mid-term priority is to provide solid CSG support, more flexible sketches, and more flexible sweeps (along a circle or helix). Long-term, the plan is to keep adding more advanced CAD modeling features, to support even complex models and workflows.
+The short- to mid-term priority is to provide CSG support, more flexible sketches, and more flexible sweeps (along a circle or helix). Long-term, the plan is to keep adding more advanced CAD modeling features, to support even complex models and workflows.
 
 ### Supports the major desktop platforms
 
@@ -152,7 +152,7 @@ If you are interested in helping out, just fork one of the GitHub repositories a
 
 If you don't know what to work on, check out the [`good first issues`](https://github.com/hannobraun/Fornjot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). To get an overview over current priorities, take a look at the [open milestones](https://github.com/hannobraun/Fornjot/milestones).
 
-If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), or just ask! See the Community section above, for how to get in touch.
+If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), [or just ask](https://www.fornjot.app/community/)!
 
 
 ## License
