@@ -31,7 +31,7 @@ impl Shape for fj::Sketch {
                     .with_surface(Some(surface.clone()))
                     .as_circle_from_radius(circle.radius(), objects)
                     .build(objects);
-                let cycle = Cycle::new(surface, [half_edge]);
+                let cycle = Cycle::new(surface, [half_edge], objects);
 
                 Face::from_exterior(cycle).with_color(Color(self.color()))
             }

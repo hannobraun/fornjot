@@ -150,7 +150,7 @@ impl<'r> ObjectIters<'r> for Handle<Curve> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Cycle {
+impl<'r> ObjectIters<'r> for Handle<Cycle> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
@@ -398,7 +398,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = Cycle::partial()
+        let object = Handle::<Cycle>::partial()
             .with_surface(Some(surface))
             .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .close_with_line_segment()

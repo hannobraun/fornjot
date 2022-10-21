@@ -20,10 +20,10 @@ pub struct FaceBuilder<'a> {
     ///
     /// Must be provided by the caller, directly or using one of the `with_`
     /// methods, before [`FaceBuilder::build`] is called.
-    pub exterior: Option<Cycle>,
+    pub exterior: Option<Handle<Cycle>>,
 
     /// The interior cycles that form holes in the [`Face`]
-    pub interiors: Vec<Cycle>,
+    pub interiors: Vec<Handle<Cycle>>,
 }
 
 impl<'a> FaceBuilder<'a> {
@@ -33,7 +33,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.exterior = Some(
-            Cycle::partial()
+            Handle::<Cycle>::partial()
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
@@ -48,7 +48,7 @@ impl<'a> FaceBuilder<'a> {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.interiors.push(
-            Cycle::partial()
+            Handle::<Cycle>::partial()
                 .with_surface(Some(self.surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()

@@ -1,8 +1,11 @@
-use crate::objects::{Cycle, Objects};
+use crate::{
+    objects::{Cycle, Objects},
+    storage::Handle,
+};
 
 use super::Reverse;
 
-impl Reverse for Cycle {
+impl Reverse for Handle<Cycle> {
     fn reverse(self, objects: &Objects) -> Self {
         let surface = self.surface().clone();
 
@@ -14,6 +17,6 @@ impl Reverse for Cycle {
 
         edges.reverse();
 
-        Cycle::new(surface, edges)
+        Cycle::new(surface, edges, objects)
     }
 }

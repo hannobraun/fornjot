@@ -34,8 +34,8 @@ use super::{Cycle, Objects, Surface};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Handle<Surface>,
-    exterior: Cycle,
-    interiors: Vec<Cycle>,
+    exterior: Handle<Cycle>,
+    interiors: Vec<Handle<Cycle>>,
     color: Color,
 }
 
@@ -54,7 +54,7 @@ impl Face {
     ///
     /// Creates the face with no interiors and the default color. This can be
     /// overridden using the `with_` methods.
-    pub fn from_exterior(exterior: Cycle) -> Self {
+    pub fn from_exterior(exterior: Handle<Cycle>) -> Self {
         Self {
             surface: exterior.surface().clone(),
             exterior,
@@ -75,7 +75,7 @@ impl Face {
     /// the exterior cycle.
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = Cycle>,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
         for interior in interiors.into_iter() {
             assert_eq!(
@@ -109,19 +109,19 @@ impl Face {
     }
 
     /// Access the cycle that bounds the face on the outside
-    pub fn exterior(&self) -> &Cycle {
+    pub fn exterior(&self) -> &Handle<Cycle> {
         &self.exterior
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
-    pub fn interiors(&self) -> impl Iterator<Item = &Cycle> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
         self.interiors.iter()
     }
 
     /// Access all cycles of this face
-    pub fn all_cycles(&self) -> impl Iterator<Item = &Cycle> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
         [self.exterior()].into_iter().chain(self.interiors())
     }
 
