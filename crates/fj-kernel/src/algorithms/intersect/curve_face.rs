@@ -1,5 +1,6 @@
 use std::vec;
 
+use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
 use crate::objects::{Curve, Face};
@@ -51,17 +52,10 @@ impl CurveFaceIntersection {
 
         intersections.sort();
 
-        // Can be cleaned up, once `array_chunks` is stable:
-        // https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks
         let intervals = intersections
-            .chunks(2)
-            .map(|chunk| {
-                // Can't panic, as we passed `2` to `chunks`.
-                CurveFaceIntersectionInterval {
-                    start: chunk[0],
-                    end: chunk[1],
-                }
-            })
+            .as_slice()
+            .array_chunks_ext()
+            .map(|&[start, end]| CurveFaceIntersectionInterval { start, end })
             .collect();
 
         CurveFaceIntersection { intervals }

@@ -78,7 +78,7 @@ impl Sweep for Face {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::mesh::Color;
+    use fj_interop::{ext::SliceExt, mesh::Color};
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
@@ -114,13 +114,8 @@ mod tests {
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
 
-        let mut side_faces = TRIANGLE.windows(2).map(|window| {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable:
-            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-            let [a, b] = [window[0], window[1]];
-
+        let triangle = TRIANGLE.as_slice();
+        let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = Handle::<HalfEdge>::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])
@@ -152,13 +147,8 @@ mod tests {
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
 
-        let mut side_faces = TRIANGLE.windows(2).map(|window| {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable:
-            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-            let [a, b] = [window[0], window[1]];
-
+        let triangle = TRIANGLE.as_slice();
+        let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = Handle::<HalfEdge>::partial()
                 .with_surface(Some(objects.surfaces.xy_plane()))
                 .as_line_segment_from_points([a, b])

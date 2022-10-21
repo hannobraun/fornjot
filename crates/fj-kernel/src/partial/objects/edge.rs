@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -248,11 +249,7 @@ impl PartialHalfEdge {
                     .unwrap_or([None, None])
             };
 
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a, b] = vertices;
-            let [a_global, b_global] = global_forms;
-            [(a, a_global), (b, b_global)].map(|(vertex, global_form)| {
+            vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
                 vertex.update_partial(|partial| {
                     partial.with_global_form(global_form)
                 })

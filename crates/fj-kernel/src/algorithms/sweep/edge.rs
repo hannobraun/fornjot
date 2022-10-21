@@ -1,4 +1,4 @@
-use fj_interop::mesh::Color;
+use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Line, Scalar, Vector};
 
 use crate::{
@@ -59,28 +59,23 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                // Can be cleaned up, once `zip` is stable:
-                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-                let [a_vertex, b_vertex] = vertices;
-                let [a_surface, b_surface] = points_surface;
-                let vertices_with_surface_points =
-                    [(a_vertex, a_surface), (b_vertex, b_surface)];
+                vertices.each_ref_ext().zip_ext(points_surface).map(
+                    |(vertex, point_surface)| {
+                        let surface_vertex = SurfaceVertex::new(
+                            point_surface,
+                            surface.clone(),
+                            vertex.global_form().clone(),
+                            objects,
+                        );
 
-                vertices_with_surface_points.map(|(vertex, point_surface)| {
-                    let surface_vertex = SurfaceVertex::new(
-                        point_surface,
-                        surface.clone(),
-                        vertex.global_form().clone(),
-                        objects,
-                    );
-
-                    Vertex::new(
-                        vertex.position(),
-                        curve.clone(),
-                        surface_vertex,
-                        objects,
-                    )
-                })
+                        Vertex::new(
+                            vertex.position(),
+                            curve.clone(),
+                            surface_vertex,
+                            objects,
+                        )
+                    },
+                )
             };
 
             HalfEdge::new(vertices, edge.global_form().clone(), objects)
@@ -129,22 +124,17 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 objects,
             );
 
-            let vertices = {
-                // Can be cleaned up, once `zip` is stable:
-                // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-                let [a_vertex, b_vertex] = bottom_vertices;
-                let [a_surface, b_surface] = surface_vertices;
-                let vertices = [(a_vertex, a_surface), (b_vertex, b_surface)];
-
-                vertices.map(|(vertex, surface_form)| {
+            let vertices = bottom_vertices
+                .each_ref_ext()
+                .zip_ext(surface_vertices)
+                .map(|(vertex, surface_form)| {
                     Vertex::new(
                         vertex.position(),
                         curve.clone(),
                         surface_form,
                         objects,
                     )
-                })
-            };
+                });
 
             HalfEdge::new(vertices, global, objects)
         };

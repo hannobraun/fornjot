@@ -161,6 +161,7 @@ pub enum ValidationError {
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use fj_math::{Point, Scalar};
 
     use crate::{
@@ -190,24 +191,19 @@ mod tests {
             Curve::new(surface.clone(), path, global_form, &objects)
         };
 
-        let [a_global, b_global] = points_global
+        let vertices_global = points_global
             .map(|point| GlobalVertex::from_position(point, &objects));
 
-        let [a_surface, b_surface] = {
-            // Can be cleaned up, once `zip` is stable:
-            // https://doc.rust-lang.org/std/primitive.array.html#method.zip
-            let [a_surface, b_surface] = points_surface;
-            [(a_surface, a_global), (b_surface, b_global)].map(
-                |(point_surface, vertex_global)| {
-                    SurfaceVertex::new(
-                        point_surface,
-                        surface.clone(),
-                        vertex_global,
-                        &objects,
-                    )
-                },
-            )
-        };
+        let [a_surface, b_surface] = points_surface
+            .zip_ext(vertices_global)
+            .map(|(point_surface, vertex_global)| {
+                SurfaceVertex::new(
+                    point_surface,
+                    surface.clone(),
+                    vertex_global,
+                    &objects,
+                )
+            });
 
         let deviation = Scalar::from_f64(0.25);
 

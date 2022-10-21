@@ -1,3 +1,4 @@
+use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
 
@@ -37,13 +38,7 @@ impl Cycle {
 
         if half_edges.len() != 1 {
             // Verify that all edges connect.
-            for half_edges in half_edges.windows(2) {
-                // Can't panic, as we passed `2` to `windows`.
-                //
-                // Can be cleaned up, once `array_windows` is stable"
-                // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-                let [a, b] = [&half_edges[0], &half_edges[1]];
-
+            for [a, b] in half_edges.as_slice().array_windows_ext() {
                 let [_, prev] = a.vertices();
                 let [next, _] = b.vertices();
 
@@ -124,13 +119,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for half_edge in self.half_edges.windows(2) {
-            // Can't panic, as we passed `2` to `windows`.
-            //
-            // Can be cleaned up, once `array_windows` is stable:
-            // https://doc.rust-lang.org/std/primitive.slice.html#method.array_windows
-            let [a, b] = [&half_edge[0], &half_edge[1]];
-
+        for [a, b] in self.half_edges.as_slice().array_windows_ext() {
             let [a, b] = [a, b].map(|half_edge| {
                 let [vertex, _] = half_edge.vertices();
                 vertex.surface_form().position()
