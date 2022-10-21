@@ -63,3 +63,42 @@ impl<T> ArrayExt<T, 4> for [T; 4] {
         [(a, e), (b, f), (c, g), (d, h)]
     }
 }
+
+/// Extension trait for arrays
+pub trait SliceExt<T> {
+    /// Stable replacement for `array_chunks`
+    ///
+    /// <https://doc.rust-lang.org/std/primitive.slice.html#method.array_chunks>
+    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N>;
+}
+
+impl<T> SliceExt<T> for &[T] {
+    fn array_chunks_ext<const N: usize>(&self) -> ArrayChunks<T, N> {
+        ArrayChunks {
+            slice: self,
+            index: 0,
+        }
+    }
+}
+
+/// Returned by [`SliceExt::array_chunks_ext`]
+pub struct ArrayChunks<'a, T: 'a, const N: usize> {
+    slice: &'a [T],
+    index: usize,
+}
+
+impl<'a, T, const N: usize> Iterator for ArrayChunks<'a, T, N> {
+    type Item = &'a [T; N];
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index + N > self.slice.len() {
+            return None;
+        }
+
+        let next = &self.slice[self.index..self.index + N];
+        self.index += N;
+
+        let next = next.try_into().unwrap();
+        Some(next)
+    }
+}
