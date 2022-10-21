@@ -162,7 +162,7 @@ impl PartialCycle {
     }
 
     /// Build a full [`Cycle`] from the partial cycle
-    pub fn build(mut self, objects: &Objects) -> Cycle {
+    pub fn build(mut self, objects: &Objects) -> Handle<Cycle> {
         let surface = self.surface.expect("Need surface to build `Cycle`");
         let surface_for_edges = surface.clone();
         let half_edges = {
@@ -226,12 +226,12 @@ impl PartialCycle {
             half_edges
         };
 
-        Cycle::new(surface, half_edges)
+        Cycle::new(surface, half_edges, objects)
     }
 }
 
-impl From<&Cycle> for PartialCycle {
-    fn from(cycle: &Cycle) -> Self {
+impl From<&Handle<Cycle>> for PartialCycle {
+    fn from(cycle: &Handle<Cycle>) -> Self {
         Self {
             surface: Some(cycle.surface().clone()),
             half_edges: cycle.half_edges().cloned().map(Into::into).collect(),

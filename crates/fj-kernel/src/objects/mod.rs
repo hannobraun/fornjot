@@ -112,28 +112,31 @@ use crate::{
 /// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 #[derive(Debug, Default)]
 pub struct Objects {
-    /// Store for curves
+    /// Store for [`Curve`]s
     pub curves: Store<Curve>,
 
-    /// Store for global curves
+    /// Store for [`Cycle`]s
+    pub cycles: Store<Cycle>,
+
+    /// Store for [`GlobalCurve`]s
     pub global_curves: Store<GlobalCurve>,
 
-    /// Store for global edges
+    /// Store for [`GlobalEdge`]s
     pub global_edges: Store<GlobalEdge>,
 
-    /// Store for global vertices
+    /// Store for [`GlobalVertex`] objects
     pub global_vertices: Store<GlobalVertex>,
 
-    /// Store for half-edges
+    /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,
 
-    /// Store for surface vertices
+    /// Store for [`SurfaceVertex`] objects
     pub surface_vertices: Store<SurfaceVertex>,
 
-    /// Store for surfaces
+    /// Store for [`Surface`]s
     pub surfaces: Surfaces,
 
-    /// Store for vertices
+    /// Store for [`Vertex`] objects
     pub vertices: Store<Vertex>,
 }
 

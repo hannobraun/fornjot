@@ -43,7 +43,7 @@ macro_rules! impl_traits {
 
 impl_traits!(
     Handle<Curve>, PartialCurve;
-    Cycle, PartialCycle;
+    Handle<Cycle>, PartialCycle;
     Handle<GlobalEdge>, PartialGlobalEdge;
     Handle<GlobalVertex>, PartialGlobalVertex;
     Handle<HalfEdge>, PartialHalfEdge;

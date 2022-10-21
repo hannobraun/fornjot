@@ -174,7 +174,7 @@ impl<'a> ShellBuilder<'a> {
                 .zip(sides_down)
                 .zip(surfaces)
                 .map(|((((bottom, side_up), top), side_down), surface)| {
-                    let cycle = Cycle::partial()
+                    let cycle = Handle::<Cycle>::partial()
                         .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects);
@@ -242,7 +242,7 @@ impl<'a> ShellBuilder<'a> {
                 );
             }
 
-            Face::from_exterior(Cycle::new(surface, edges))
+            Face::from_exterior(Cycle::new(surface, edges, self.objects))
         };
 
         let mut faces = Vec::new();

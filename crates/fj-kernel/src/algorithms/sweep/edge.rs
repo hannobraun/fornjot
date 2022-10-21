@@ -166,7 +166,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 i += 1;
             }
 
-            Cycle::new(surface, edges)
+            Cycle::new(surface, edges, objects)
         };
 
         Face::from_exterior(cycle).with_color(color)
@@ -250,7 +250,11 @@ mod tests {
                 .build(&objects)
                 .reverse(&objects);
 
-            let cycle = Cycle::new(surface, [bottom, side_up, top, side_down]);
+            let cycle = Cycle::new(
+                surface,
+                [bottom, side_up, top, side_down],
+                &objects,
+            );
 
             Face::from_exterior(cycle)
         };
