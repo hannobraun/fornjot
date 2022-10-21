@@ -15,7 +15,16 @@
 //! implemented, as of this writing.
 
 mod coherence;
+mod curve;
+mod cycle;
+mod edge;
+mod face;
+mod shell;
+mod sketch;
+mod solid;
+mod surface;
 mod uniqueness;
+mod vertex;
 
 pub use self::{
     coherence::{CoherenceIssues, VertexCoherenceMismatch},
