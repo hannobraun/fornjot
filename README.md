@@ -1,6 +1,6 @@
 # Fornjot
 
-[**Blog**](https://www.fornjot.app/blog/) | [**Matrix**](https://matrix.to/#/#fornjot:braun-odw.eu) | [**Discussions**](https://github.com/hannobraun/Fornjot/discussions) | [**Contribution Guide**](CONTRIBUTING.md)
+[**Blog**](https://www.fornjot.app/blog/) | [**Community**](https://www.fornjot.app/community/) | [**Contribution Guide**](CONTRIBUTING.md)
 
 ## About
 
@@ -21,7 +21,6 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lt
 ## Table of Contents
 
 - [**Status**](#status)
-- [**Overview**](#overview)
 - [**Features**](#features)
 - [**Usage**](#usage)
 - [**Community**](#community)
@@ -32,38 +31,9 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@lt
 
 Fornjot is **under active development, but still experimental**. Efforts are currently focused on providing a [stable set of basic CAD features](https://github.com/hannobraun/Fornjot/milestone/1).
 
-If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitation pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
+If you are interested in Fornjot and are considering to use it, you should fully expect to run into limitations pretty much immediately. Unless you are willing to contribute to its development, it would be better to wait for a year or ten, to let it mature. For more information on current limitations and improvements that could be implemented in the near future, [check out the open issues](https://github.com/hannobraun/Fornjot/issues).
 
 To learn about the project's longer-term direction, please refer to the [roadmap](https://www.fornjot.app/roadmap/).
-
-
-## Overview
-
-Fornjot is both an application, as well as an ecosystem of components that make up this application, but can be used independently. All those components are located in the `crates/` directory within the repository.
-
-Here's an overview over all of the crates, with a short description of what they do:
-
-- [`fj-math`]: Math primitives used by the rest of the Fornjot ecosystem.
-- [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
-- [`fj-kernel`]: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
-- [`fj-operations`]: CAD operations, built on top of `fj-kernel`. Link between the kernel, and the API that users use to define models.
-- [`fj-export`]: Exports Fornjot models to external data formats.
-- [`fj-host`]: Loads Fornjot models and watches them for changes.
-- [`fj-viewer`]: Displays Fornjot models.
-- [`fj-window`]: Embed `fj-viewer` in a Winit-based window.
-- [`fj-app`]: The Fornjot CAD application.
-- [`fj`]: End-user API for defining Fornjot models.
-
-[`fj`]: https://crates.io/crates/fj
-[`fj-app`]: https://crates.io/crates/fj-app
-[`fj-export`]: https://crates.io/crates/fj-export
-[`fj-host`]: https://crates.io/crates/fj-host
-[`fj-interop`]: https://crates.io/crates/fj-interop
-[`fj-kernel`]: https://crates.io/crates/fj-kernel
-[`fj-math`]: https://crates.io/crates/fj-math
-[`fj-operations`]: https://crates.io/crates/fj-operations
-[`fj-viewer`]: https://crates.io/crates/fj-viewer
-[`fj-window`]: https://crates.io/crates/fj-window
 
 
 ## Features
@@ -77,12 +47,12 @@ use fj::syntax::*;
 
 #[fj::model]
 pub fn model(
-    #[value(default = 1.0, min = inner * 1.01)] outer: f64,
-    #[value(default = 0.5, max = outer * 0.99)] inner: f64,
-    #[value(default = 1.0)] height: f64,
+    #[param(default = 1.0, min = inner * 1.01)] outer: f64,
+    #[param(default = 0.5, max = outer * 0.99)] inner: f64,
+    #[param(default = 1.0)] height: f64,
 ) -> fj::Shape {
-    let outer_edge = fj::Circle::from_radius(outer);
-    let inner_edge = fj::Circle::from_radius(inner);
+    let outer_edge = fj::Sketch::from_circle(fj::Circle::from_radius(outer));
+    let inner_edge = fj::Sketch::from_circle(fj::Circle::from_radius(inner));
 
     let footprint = outer_edge.difference(&inner_edge);
     let spacer = footprint.sweep([0., 0., height]);
@@ -95,9 +65,9 @@ This is the code for the [spacer model](/models/spacer).
 
 ### Basic modeling features
 
-At this point, Fornjot supports basic 2D shapes (sketches made from lines segments, circles, limited combinations between them), sweeping those 2D shapes along a straight path to create a 3D shape, and some very incomplete support for constructive solid geometry (CSG).
+At this point, Fornjot supports basic 2D shapes (sketches made from lines segments, circles, and limited combinations between them) and sweeping those 2D shapes along a straight path to create a 3D shape.
 
-The short- to mid-term priority is to provide solid CSG support, more flexible sketches, and more flexible sweeps (along a circle or helix). Long-term, the plan is to keep adding more advanced CAD modeling features, to support even complex models and workflows.
+The short- to mid-term priority is to provide CSG support, more flexible sketches, and more flexible sweeps (along a circle or helix). Long-term, the plan is to keep adding more advanced CAD modeling features, to support even complex models and workflows.
 
 ### Supports the major desktop platforms
 
@@ -170,21 +140,7 @@ fj-app --model my-model --parameters "width=3.0,height=5.0"
 
 If you are interested in Fornjot, please consider joining the community. We'd love to have you!
 
-### Questions, Feedback, Discussions
-
-The following venues are best-suited for questions, feedback, or general discussions:
-
-- [Matrix channel](https://matrix.to/#/#fornjot:braun-odw.eu)
-- [GitHub Discussions](https://github.com/hannobraun/Fornjot/discussions)
-
-### Bugs, Feature Requests
-
-If you found a bug or have a specific feature request, please use issues on GitHub:
-
-- [List of open issues](https://github.com/hannobraun/Fornjot/issues)
-- [Open a new issue](https://github.com/hannobraun/Fornjot/issues/new)
-
-Feel free to check existing issues and add your voice there, if you find one that fits. But if you are unsure or don't have the time for that, don't let that stop you. We'd rather have duplicate issues than not hear about a bug at all.
+Please check out [the community page on the website](https://www.fornjot.app/community/) for information on where to find us!
 
 
 ## Get Involved
@@ -196,7 +152,7 @@ If you are interested in helping out, just fork one of the GitHub repositories a
 
 If you don't know what to work on, check out the [`good first issues`](https://github.com/hannobraun/Fornjot/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). To get an overview over current priorities, take a look at the [open milestones](https://github.com/hannobraun/Fornjot/milestones).
 
-If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), or just ask! See the Community section above, for how to get in touch.
+If you need some more guidance, check out the [contribution guide](CONTRIBUTING.md), [or just ask](https://www.fornjot.app/community/)!
 
 
 ## License
