@@ -18,7 +18,10 @@ pub struct Solid {
 impl Solid {
     /// Build a `Solid` using [`SolidBuilder`]
     pub fn builder(objects: &Objects) -> SolidBuilder {
-        SolidBuilder { objects }
+        SolidBuilder {
+            objects,
+            shells: BTreeSet::new(),
+        }
     }
 
     /// Construct an empty instance of `Solid`
