@@ -133,6 +133,9 @@ pub struct Objects {
     /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,
 
+    /// Store for [`Sketch`]es
+    pub sketches: Store<Sketch>,
+
     /// Store for [`SurfaceVertex`] objects
     pub surface_vertices: Store<SurfaceVertex>,
 
