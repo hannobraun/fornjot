@@ -166,6 +166,14 @@ impl Extend<Handle<Face>> for Faces {
     }
 }
 
+impl FromIterator<Handle<Face>> for Faces {
+    fn from_iter<T: IntoIterator<Item = Handle<Face>>>(iter: T) -> Self {
+        let mut faces = Self::new();
+        faces.extend(iter);
+        faces
+    }
+}
+
 impl IntoIterator for Faces {
     type Item = Handle<Face>;
     type IntoIter = btree_set::IntoIter<Handle<Face>>;
