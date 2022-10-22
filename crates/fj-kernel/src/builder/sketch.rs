@@ -17,6 +17,12 @@ pub struct SketchBuilder<'a> {
 }
 
 impl<'a> SketchBuilder<'a> {
+    /// Build the [`Sketch`] with the provided [`Surface`]
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+        self.surface = Some(surface);
+        self
+    }
+
     /// Construct a polygon from a list of points
     pub fn build_polygon_from_points(
         self,
