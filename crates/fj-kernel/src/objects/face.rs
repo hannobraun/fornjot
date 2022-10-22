@@ -55,11 +55,15 @@ impl Face {
     /// Creates the face with no interiors and the default color. This can be
     /// overridden using the `with_` methods.
     pub fn new(exterior: Handle<Cycle>) -> Self {
+        let surface = exterior.surface().clone();
+        let interiors = Vec::new();
+        let color = Color::default();
+
         Self {
-            surface: exterior.surface().clone(),
+            surface,
             exterior,
-            interiors: Vec::new(),
-            color: Color::default(),
+            interiors,
+            color,
         }
     }
 
