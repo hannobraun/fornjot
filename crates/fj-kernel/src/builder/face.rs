@@ -27,6 +27,12 @@ pub struct FaceBuilder<'a> {
 }
 
 impl<'a> FaceBuilder<'a> {
+    /// Build the [`Face`] with the provided surface
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+        self.surface = Some(surface);
+        self
+    }
+
     /// Build the [`Face`] with an exterior polygon from the provided points
     pub fn with_exterior_polygon_from_points(
         mut self,
