@@ -16,7 +16,7 @@ impl Sweep for Sketch {
         let path = path.into();
 
         let mut shells = Vec::new();
-        for face in self.into_faces() {
+        for face in self.faces().clone() {
             let shell = face.sweep_with_cache(path, cache, objects);
             shells.push(shell);
         }

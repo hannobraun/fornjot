@@ -34,9 +34,4 @@ impl Sketch {
     pub fn faces(&self) -> &Faces {
         &self.faces
     }
-
-    /// Convert the sketch into a list of faces
-    pub fn into_faces(self) -> Faces {
-        self.faces
-    }
 }

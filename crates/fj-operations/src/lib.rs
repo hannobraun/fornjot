@@ -66,7 +66,8 @@ impl Shape for fj::Shape {
             Self::Shape2d(shape) => shape
                 .compute_brep(config, objects, debug_info)?
                 .into_inner()
-                .into_faces()
+                .faces()
+                .clone()
                 .validate_with_config(config),
             Self::Group(shape) => {
                 shape.compute_brep(config, objects, debug_info)
