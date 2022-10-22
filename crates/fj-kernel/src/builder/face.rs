@@ -33,6 +33,12 @@ impl<'a> FaceBuilder<'a> {
         self
     }
 
+    /// Build the [`Face`] with the provided exterior
+    pub fn with_exterior(mut self, exterior: Handle<Cycle>) -> Self {
+        self.exterior = Some(exterior);
+        self
+    }
+
     /// Build the [`Face`] with an exterior polygon from the provided points
     pub fn with_exterior_polygon_from_points(
         mut self,

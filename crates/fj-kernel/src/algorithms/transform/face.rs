@@ -26,7 +26,9 @@ impl TransformObject for Face {
 
         let color = self.color();
 
-        Face::new(exterior)
+        Face::builder(objects)
+            .with_exterior(exterior)
+            .build()
             .with_interiors(interiors)
             .with_color(color)
     }
