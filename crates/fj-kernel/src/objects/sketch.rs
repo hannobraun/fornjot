@@ -24,22 +24,10 @@ impl Sketch {
     }
 
     /// Construct an empty instance of `Sketch`
-    pub fn new() -> Self {
+    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
         Self {
-            faces: Faces::new(),
+            faces: faces.into_iter().collect(),
         }
-    }
-
-    /// Add faces to the sketch
-    ///
-    /// Consumes the sketch and returns the updated instance.
-    pub fn with_faces(
-        mut self,
-        faces: impl IntoIterator<Item = Handle<Face>>,
-    ) -> Self {
-        let faces = faces.into_iter().map(Into::into);
-        self.faces.extend(faces);
-        self
     }
 
     /// Access the sketch's faces
@@ -50,11 +38,5 @@ impl Sketch {
     /// Convert the sketch into a list of faces
     pub fn into_faces(self) -> Faces {
         self.faces
-    }
-}
-
-impl Default for Sketch {
-    fn default() -> Self {
-        Self::new()
     }
 }

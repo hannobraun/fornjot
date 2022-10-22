@@ -53,6 +53,6 @@ impl<'a> SketchBuilder<'a> {
 
     /// Build the [`Sketch`]
     pub fn build(self) -> Sketch {
-        Sketch::new().with_faces(self.faces)
+        Sketch::new(self.faces)
     }
 }
