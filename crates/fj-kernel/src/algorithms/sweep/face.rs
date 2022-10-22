@@ -10,7 +10,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for Handle<Face> {
-    type Swept = Shell;
+    type Swept = Handle<Shell>;
 
     fn sweep_with_cache(
         self,

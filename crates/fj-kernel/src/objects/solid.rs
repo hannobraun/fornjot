@@ -12,7 +12,7 @@ use super::{Face, Objects, Shell};
 /// not currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    shells: BTreeSet<Shell>,
+    shells: BTreeSet<Handle<Shell>>,
 }
 
 impl Solid {
@@ -33,20 +33,19 @@ impl Solid {
     /// Consumes the solid and returns the updated instance.
     pub fn with_shells(
         mut self,
-        shells: impl IntoIterator<Item = impl Into<Shell>>,
+        shells: impl IntoIterator<Item = Handle<Shell>>,
     ) -> Self {
-        let shells = shells.into_iter().map(Into::into);
         self.shells.extend(shells);
         self
     }
 
     /// Access the solid's shells
-    pub fn shells(&self) -> impl Iterator<Item = &Shell> {
+    pub fn shells(&self) -> impl Iterator<Item = &Handle<Shell>> {
         self.shells.iter()
     }
 
     /// Convert the solid into a list of shells
-    pub fn into_shells(self) -> impl Iterator<Item = Shell> {
+    pub fn into_shells(self) -> impl Iterator<Item = Handle<Shell>> {
         self.shells.into_iter()
     }
 

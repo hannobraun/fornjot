@@ -23,10 +23,13 @@ impl Shell {
     }
 
     /// Construct an empty instance of `Shell`
-    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
-        Self {
+    pub fn new(
+        faces: impl IntoIterator<Item = Handle<Face>>,
+        objects: &Objects,
+    ) -> Handle<Self> {
+        objects.shells.insert(Self {
             faces: faces.into_iter().collect(),
-        }
+        })
     }
 
     /// Access the shell's faces

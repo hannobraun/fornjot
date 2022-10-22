@@ -218,7 +218,7 @@ impl<'r> ObjectIters<'r> for Handle<HalfEdge> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Shell {
+impl<'r> ObjectIters<'r> for Handle<Shell> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
