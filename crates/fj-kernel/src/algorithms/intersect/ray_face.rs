@@ -11,7 +11,7 @@ use crate::{
 
 use super::{HorizontalRayToTheRight, Intersect};
 
-impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
+impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
     type Intersection = RayFaceIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {

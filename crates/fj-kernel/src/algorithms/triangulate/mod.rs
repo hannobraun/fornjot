@@ -85,6 +85,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, Tolerance},
         objects::{Face, Objects},
+        storage::Handle,
     };
 
     use super::Triangulate;
@@ -217,8 +218,8 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: impl Into<Face>) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(face: Handle<Face>) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(face.into().approx(tolerance).triangulate())
+        Ok(face.approx(tolerance).triangulate())
     }
 }

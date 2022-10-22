@@ -34,7 +34,7 @@ impl Sketch {
     /// Consumes the sketch and returns the updated instance.
     pub fn with_faces(
         mut self,
-        faces: impl IntoIterator<Item = impl Into<Face>>,
+        faces: impl IntoIterator<Item = Handle<Face>>,
     ) -> Self {
         let faces = faces.into_iter().map(Into::into);
         self.faces.extend(faces);

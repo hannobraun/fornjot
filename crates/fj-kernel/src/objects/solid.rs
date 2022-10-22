@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::builder::SolidBuilder;
+use crate::{builder::SolidBuilder, storage::Handle};
 
 use super::{Face, Objects, Shell};
 
@@ -51,7 +51,7 @@ impl Solid {
     }
 
     /// Find the given face in this solid
-    pub fn find_face(&self, face: &Face) -> Option<Face> {
+    pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         for shell in self.shells() {
             if let Some(face) = shell.find_face(face) {
                 return Some(face);

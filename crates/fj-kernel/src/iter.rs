@@ -166,7 +166,7 @@ impl<'r> ObjectIters<'r> for Handle<Cycle> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Face {
+impl<'r> ObjectIters<'r> for Handle<Face> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = vec![self.surface() as &dyn ObjectIters];
 

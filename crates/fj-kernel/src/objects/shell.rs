@@ -1,4 +1,4 @@
-use crate::builder::ShellBuilder;
+use crate::{builder::ShellBuilder, storage::Handle};
 
 use super::{face::Faces, Face, Objects};
 
@@ -31,7 +31,7 @@ impl Shell {
     /// Consumes the shell and returns the updated instance.
     pub fn with_faces(
         mut self,
-        faces: impl IntoIterator<Item = impl Into<Face>>,
+        faces: impl IntoIterator<Item = Handle<Face>>,
     ) -> Self {
         let faces = faces.into_iter().map(Into::into);
         self.faces.extend(faces);
@@ -49,7 +49,7 @@ impl Shell {
     }
 
     /// Find the given face in this shell
-    pub fn find_face(&self, face: &Face) -> Option<Face> {
+    pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         self.faces().find(face)
     }
 }

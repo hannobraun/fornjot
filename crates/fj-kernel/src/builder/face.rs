@@ -89,12 +89,12 @@ impl<'a> FaceBuilder<'a> {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(self) -> Face {
+    pub fn build(self) -> Handle<Face> {
         let exterior = self
             .exterior
             .expect("Can't build `Face` without exterior cycle");
         let color = self.color.unwrap_or_default();
 
-        Face::new(exterior, self.interiors, color)
+        Face::new(exterior, self.interiors, color, self.objects)
     }
 }

@@ -4,11 +4,12 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{Face, Objects, Shell},
     path::GlobalPath,
+    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Face {
+impl Sweep for Handle<Face> {
     type Swept = Shell;
 
     fn sweep_with_cache(
