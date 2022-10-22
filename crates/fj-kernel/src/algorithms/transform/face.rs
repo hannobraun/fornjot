@@ -28,8 +28,8 @@ impl TransformObject for Face {
 
         Face::builder(objects)
             .with_exterior(exterior)
-            .build()
             .with_interiors(interiors)
+            .build()
             .with_color(color)
     }
 }

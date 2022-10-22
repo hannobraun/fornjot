@@ -54,6 +54,15 @@ impl<'a> FaceBuilder<'a> {
         self
     }
 
+    /// Build the [`Face`] with the provided interior polygons
+    pub fn with_interiors(
+        mut self,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+    ) -> Self {
+        self.interiors.extend(interiors);
+        self
+    }
+
     /// Build the [`Face`] with an interior polygon from the provided points
     pub fn with_interior_polygon_from_points(
         mut self,
