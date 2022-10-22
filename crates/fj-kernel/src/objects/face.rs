@@ -47,6 +47,7 @@ impl Face {
             surface: None,
             exterior: None,
             interiors: Vec::new(),
+            color: None,
         }
     }
 

@@ -11,7 +11,7 @@ impl Reverse for Face {
         Face::builder(objects)
             .with_exterior(exterior)
             .with_interiors(interiors)
-            .build()
             .with_color(self.color())
+            .build()
     }
 }

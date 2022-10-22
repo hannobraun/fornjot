@@ -171,8 +171,8 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
         Face::builder(objects)
             .with_exterior(cycle)
-            .build()
             .with_color(color)
+            .build()
     }
 }
 

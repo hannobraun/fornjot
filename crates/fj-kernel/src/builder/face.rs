@@ -1,3 +1,4 @@
+use fj_interop::mesh::Color;
 use fj_math::Point;
 
 use crate::{
@@ -24,6 +25,9 @@ pub struct FaceBuilder<'a> {
 
     /// The interior cycles that form holes in the [`Face`]
     pub interiors: Vec<Handle<Cycle>>,
+
+    /// The color of the [`Face`]
+    pub color: Option<Color>,
 }
 
 impl<'a> FaceBuilder<'a> {
@@ -78,11 +82,19 @@ impl<'a> FaceBuilder<'a> {
         self
     }
 
+    /// Build the [`Face`] with the provided color
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.color = Some(color);
+        self
+    }
+
     /// Construct a polygon from a list of points
     pub fn build(self) -> Face {
         let exterior = self
             .exterior
             .expect("Can't build `Face` without exterior cycle");
-        Face::new(exterior, self.interiors)
+        let color = self.color.unwrap_or_default();
+
+        Face::new(exterior, self.interiors).with_color(color)
     }
 }
