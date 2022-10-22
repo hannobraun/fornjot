@@ -25,10 +25,13 @@ impl Solid {
     }
 
     /// Construct an empty instance of `Solid`
-    pub fn new(shells: impl IntoIterator<Item = Handle<Shell>>) -> Self {
-        Self {
+    pub fn new(
+        shells: impl IntoIterator<Item = Handle<Shell>>,
+        objects: &Objects,
+    ) -> Handle<Self> {
+        objects.solids.insert(Self {
             shells: shells.into_iter().collect(),
-        }
+        })
     }
 
     /// Access the solid's shells

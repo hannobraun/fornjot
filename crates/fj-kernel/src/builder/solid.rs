@@ -41,7 +41,7 @@ impl<'a> SolidBuilder<'a> {
     }
 
     /// Build the [`Solid`]
-    pub fn build(self) -> Solid {
-        Solid::new(self.shells)
+    pub fn build(self) -> Handle<Solid> {
+        Solid::new(self.shells, self.objects)
     }
 }

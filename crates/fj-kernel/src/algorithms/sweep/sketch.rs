@@ -8,7 +8,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for Handle<Sketch> {
-    type Swept = Solid;
+    type Swept = Handle<Solid>;
 
     fn sweep_with_cache(
         self,

@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::{
@@ -25,7 +27,7 @@ impl Shape for fj::Sweep {
         let path = Vector::from(self.path());
 
         let solid = sketch.sweep(path, objects);
-        solid.validate_with_config(config)
+        solid.deref().clone().validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
