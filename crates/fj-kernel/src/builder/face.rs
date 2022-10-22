@@ -95,6 +95,6 @@ impl<'a> FaceBuilder<'a> {
             .expect("Can't build `Face` without exterior cycle");
         let color = self.color.unwrap_or_default();
 
-        Face::new(exterior, self.interiors).with_color(color)
+        Face::new(exterior, self.interiors, color)
     }
 }

@@ -62,10 +62,10 @@ impl Face {
     pub fn new(
         exterior: Handle<Cycle>,
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        color: Color,
     ) -> Self {
         let surface = exterior.surface().clone();
         let mut interiors = Vec::new();
-        let color = Color::default();
 
         for interior in the_interiors.into_iter() {
             assert_eq!(
@@ -88,14 +88,6 @@ impl Face {
             interiors,
             color,
         }
-    }
-
-    /// Update the color of the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    pub fn with_color(mut self, color: Color) -> Self {
-        self.color = color;
-        self
     }
 
     /// Access this face's surface
