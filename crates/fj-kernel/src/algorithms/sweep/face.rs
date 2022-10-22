@@ -73,7 +73,7 @@ impl Sweep for Handle<Face> {
             }
         }
 
-        Shell::new().with_faces(faces)
+        Shell::builder(objects).with_faces(faces).build()
     }
 }
 

@@ -10,6 +10,7 @@ use crate::{
         SurfaceVertex, Vertex,
     },
     partial::HasPartial,
+    storage::Handle,
 };
 
 /// API for building a [`Shell`]
@@ -24,6 +25,15 @@ pub struct ShellBuilder<'a> {
 }
 
 impl<'a> ShellBuilder<'a> {
+    /// Build the [`Shell`] with the provided faces
+    pub fn with_faces(
+        mut self,
+        faces: impl IntoIterator<Item = Handle<Face>>,
+    ) -> Self {
+        self.faces.extend(faces);
+        self
+    }
+
     /// Create a cube from the length of its edges
     pub fn with_cube_from_edge_length(
         mut self,
