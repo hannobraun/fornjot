@@ -163,7 +163,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -183,7 +184,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -206,7 +208,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -226,7 +229,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -257,7 +261,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -286,7 +291,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],
@@ -308,7 +314,8 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
                 [1., -1.],

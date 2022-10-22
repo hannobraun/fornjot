@@ -41,66 +41,53 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(objects: &Objects, surface: Handle<Surface>) -> FaceBuilder {
+    pub fn builder(objects: &Objects) -> FaceBuilder {
         FaceBuilder {
             objects,
-            surface,
+            surface: None,
             exterior: None,
             interiors: Vec::new(),
+            color: None,
         }
     }
 
     /// Construct a new instance of `Face`
     ///
-    /// Creates the face with no interiors and the default color. This can be
-    /// overridden using the `with_` methods.
-    pub fn from_exterior(exterior: Handle<Cycle>) -> Self {
-        Self {
-            surface: exterior.surface().clone(),
-            exterior,
-            interiors: Vec::new(),
-            color: Color::default(),
-        }
-    }
-
-    /// Add interior cycles to the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    ///
     /// # Panics
     ///
-    /// Panics, if the added cycles are not defined in the face's surface.
+    /// Panics, if the provided cycles are not defined in the same surface.
     ///
     /// Panics, if the winding of the interior cycles is not opposite that of
     /// the exterior cycle.
-    pub fn with_interiors(
-        mut self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+    pub fn new(
+        exterior: Handle<Cycle>,
+        the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        color: Color,
     ) -> Self {
-        for interior in interiors.into_iter() {
+        let surface = exterior.surface().clone();
+        let mut interiors = Vec::new();
+
+        for interior in the_interiors.into_iter() {
             assert_eq!(
-                self.surface().id(),
+                surface.id(),
                 interior.surface().id(),
                 "Cycles that bound a face must be in face's surface"
             );
             assert_ne!(
-                self.exterior().winding(),
+                exterior.winding(),
                 interior.winding(),
                 "Interior cycles must have opposite winding of exterior cycle"
             );
 
-            self.interiors.push(interior);
+            interiors.push(interior);
         }
 
-        self
-    }
-
-    /// Update the color of the face
-    ///
-    /// Consumes the face and returns the updated instance.
-    pub fn with_color(mut self, color: Color) -> Self {
-        self.color = color;
-        self
+        Self {
+            surface,
+            exterior,
+            interiors,
+            color,
+        }
     }
 
     /// Access this face's surface

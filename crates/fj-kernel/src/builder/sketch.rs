@@ -22,7 +22,8 @@ impl<'a> SketchBuilder<'a> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
-        let face = Face::builder(self.objects, self.surface)
+        let face = Face::builder(self.objects)
+            .with_surface(self.surface)
             .with_exterior_polygon_from_points(points)
             .build();
         Sketch::new().with_faces([face])

@@ -102,11 +102,13 @@ mod tests {
             .build_polygon_from_points(TRIANGLE)
             .sweep(UP, &objects);
 
-        let bottom = Face::builder(&objects, surface.clone())
+        let bottom = Face::builder(&objects)
+            .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build()
             .reverse(&objects);
-        let top = Face::builder(&objects, surface.translate(UP, &objects))
+        let top = Face::builder(&objects)
+            .with_surface(surface.translate(UP, &objects))
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
 
@@ -134,12 +136,13 @@ mod tests {
             .build_polygon_from_points(TRIANGLE)
             .sweep(DOWN, &objects);
 
-        let bottom =
-            Face::builder(&objects, surface.clone().translate(DOWN, &objects))
-                .with_exterior_polygon_from_points(TRIANGLE)
-                .build()
-                .reverse(&objects);
-        let top = Face::builder(&objects, surface)
+        let bottom = Face::builder(&objects)
+            .with_surface(surface.clone().translate(DOWN, &objects))
+            .with_exterior_polygon_from_points(TRIANGLE)
+            .build()
+            .reverse(&objects);
+        let top = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
 

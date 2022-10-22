@@ -169,7 +169,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             Cycle::new(surface, edges, objects)
         };
 
-        Face::from_exterior(cycle).with_color(color)
+        Face::builder(objects)
+            .with_exterior(cycle)
+            .with_color(color)
+            .build()
     }
 }
 
@@ -245,7 +248,7 @@ mod tests {
                 &objects,
             );
 
-            Face::from_exterior(cycle)
+            Face::builder(&objects).with_exterior(cycle).build()
         };
 
         assert_eq!(face, expected_face);

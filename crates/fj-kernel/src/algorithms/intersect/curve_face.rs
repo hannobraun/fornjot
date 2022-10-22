@@ -182,7 +182,8 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
             .build();

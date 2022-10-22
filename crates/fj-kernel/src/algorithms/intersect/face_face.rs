@@ -79,7 +79,8 @@ mod tests {
         ];
         let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
             .map(|surface| {
-                Face::builder(&objects, surface)
+                Face::builder(&objects)
+                    .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .build()
             });
@@ -103,7 +104,8 @@ mod tests {
         let surfaces =
             [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::builder(&objects, surface)
+            Face::builder(&objects)
+                .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
                 .build()
         });
