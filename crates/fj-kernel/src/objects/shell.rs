@@ -16,7 +16,10 @@ pub struct Shell {
 impl Shell {
     /// Build a `Shell` using [`ShellBuilder`]
     pub fn builder(objects: &Objects) -> ShellBuilder {
-        ShellBuilder { objects }
+        ShellBuilder {
+            objects,
+            faces: Faces::new(),
+        }
     }
 
     /// Construct an empty instance of `Shell`
