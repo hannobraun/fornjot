@@ -10,6 +10,6 @@ impl TransformObject for Sketch {
             .into_faces()
             .into_iter()
             .map(|face| face.transform(transform, objects));
-        Self::new().with_faces(faces)
+        Self::builder(objects).with_faces(faces).build()
     }
 }

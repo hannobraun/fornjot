@@ -26,6 +26,15 @@ impl<'a> SketchBuilder<'a> {
         self
     }
 
+    /// Build the [`Sketch`] with the provided faces
+    pub fn with_faces(
+        mut self,
+        faces: impl IntoIterator<Item = Handle<Face>>,
+    ) -> Self {
+        self.faces.extend(faces);
+        self
+    }
+
     /// Construct a polygon from a list of points
     pub fn with_polygon_from_points(
         mut self,

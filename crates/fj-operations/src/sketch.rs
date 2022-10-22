@@ -49,7 +49,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = Sketch::new().with_faces([face]);
+        let sketch = Sketch::builder(objects).with_faces([face]).build();
         sketch.validate_with_config(config)
     }
 

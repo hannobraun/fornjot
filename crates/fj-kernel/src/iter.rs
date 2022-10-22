@@ -527,7 +527,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
-        let object = Sketch::new().with_faces([face]);
+        let object = Sketch::builder(&objects).with_faces([face]).build();
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
