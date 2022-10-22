@@ -20,9 +20,11 @@ impl Shape for fj::Sweep {
         debug_info: &mut DebugInfo,
     ) -> Result<Validated<Self::Brep>, ValidationError> {
         let sketch = self.shape().compute_brep(config, objects, debug_info)?;
+        let sketch = objects.sketches.insert(sketch.into_inner());
+
         let path = Vector::from(self.path());
 
-        let solid = sketch.into_inner().sweep(path, objects);
+        let solid = sketch.sweep(path, objects);
         solid.validate_with_config(config)
     }
 

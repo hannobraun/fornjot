@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     algorithms::validate::{
@@ -50,7 +52,7 @@ impl Shape for fj::Sketch {
         };
 
         let sketch = Sketch::builder(objects).with_faces([face]).build();
-        sketch.validate_with_config(config)
+        sketch.deref().clone().validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

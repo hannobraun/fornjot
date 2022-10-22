@@ -52,7 +52,7 @@ impl<'a> SketchBuilder<'a> {
     }
 
     /// Build the [`Sketch`]
-    pub fn build(self) -> Sketch {
-        Sketch::new(self.faces)
+    pub fn build(self) -> Handle<Sketch> {
+        Sketch::new(self.faces, self.objects)
     }
 }

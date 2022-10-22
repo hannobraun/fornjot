@@ -1,10 +1,13 @@
 use fj_math::Vector;
 
-use crate::objects::{Objects, Sketch, Solid};
+use crate::{
+    objects::{Objects, Sketch, Solid},
+    storage::Handle,
+};
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Sketch {
+impl Sweep for Handle<Sketch> {
     type Swept = Solid;
 
     fn sweep_with_cache(
