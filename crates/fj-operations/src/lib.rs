@@ -76,7 +76,7 @@ impl Shape for fj::Shape {
                 .compute_brep(config, objects, debug_info)?
                 .into_inner()
                 .into_shells()
-                .map(|shell| shell.into_faces())
+                .map(|shell| shell.faces().clone())
                 .reduce(|mut a, b| {
                     a.extend(b);
                     a

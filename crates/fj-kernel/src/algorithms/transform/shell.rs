@@ -7,7 +7,8 @@ use super::TransformObject;
 impl TransformObject for Shell {
     fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let faces = self
-            .into_faces()
+            .faces()
+            .clone()
             .into_iter()
             .map(|face| face.transform(transform, objects));
         Self::builder(objects).with_faces(faces).build()

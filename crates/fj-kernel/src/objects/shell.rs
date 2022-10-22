@@ -34,11 +34,6 @@ impl Shell {
         &self.faces
     }
 
-    /// Convert the shell into a list of faces
-    pub fn into_faces(self) -> Faces {
-        self.faces
-    }
-
     /// Find the given face in this shell
     pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         self.faces().find(face)
