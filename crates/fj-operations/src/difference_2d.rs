@@ -78,7 +78,7 @@ impl Shape for fj::Difference2d {
             );
 
             faces.push(
-                Face::from_exterior(exterior)
+                Face::new(exterior)
                     .with_interiors(interiors)
                     .with_color(Color(self.color())),
             );

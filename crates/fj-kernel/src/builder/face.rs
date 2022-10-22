@@ -62,6 +62,6 @@ impl<'a> FaceBuilder<'a> {
         let exterior = self
             .exterior
             .expect("Can't build `Face` without exterior cycle");
-        Face::from_exterior(exterior).with_interiors(self.interiors)
+        Face::new(exterior).with_interiors(self.interiors)
     }
 }

@@ -54,7 +54,7 @@ impl Face {
     ///
     /// Creates the face with no interiors and the default color. This can be
     /// overridden using the `with_` methods.
-    pub fn from_exterior(exterior: Handle<Cycle>) -> Self {
+    pub fn new(exterior: Handle<Cycle>) -> Self {
         Self {
             surface: exterior.surface().clone(),
             exterior,

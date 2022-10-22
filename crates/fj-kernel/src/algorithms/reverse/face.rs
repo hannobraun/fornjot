@@ -8,7 +8,7 @@ impl Reverse for Face {
         let interiors =
             self.interiors().map(|cycle| cycle.clone().reverse(objects));
 
-        Face::from_exterior(exterior)
+        Face::new(exterior)
             .with_interiors(interiors)
             .with_color(self.color())
     }

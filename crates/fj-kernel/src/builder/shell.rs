@@ -171,7 +171,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects);
 
-                    Face::from_exterior(cycle)
+                    Face::new(cycle)
                 });
 
             (sides, tops)
@@ -234,7 +234,7 @@ impl<'a> ShellBuilder<'a> {
                 );
             }
 
-            Face::from_exterior(Cycle::new(surface, edges, self.objects))
+            Face::new(Cycle::new(surface, edges, self.objects))
         };
 
         let mut faces = Vec::new();
