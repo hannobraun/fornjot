@@ -9,6 +9,6 @@ impl TransformObject for Solid {
         let faces = self
             .into_shells()
             .map(|shell| shell.transform(transform, objects));
-        Self::new().with_shells(faces)
+        Self::builder(objects).with_shells(faces).build()
     }
 }

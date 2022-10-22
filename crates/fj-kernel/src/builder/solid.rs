@@ -19,6 +19,15 @@ pub struct SolidBuilder<'a> {
 }
 
 impl<'a> SolidBuilder<'a> {
+    /// Build the [`Solid`] with the provided shells
+    pub fn with_shells(
+        mut self,
+        shells: impl IntoIterator<Item = Handle<Shell>>,
+    ) -> Self {
+        self.shells.extend(shells);
+        self
+    }
+
     /// Create a cube from the length of its edges
     pub fn with_cube_from_edge_length(
         mut self,

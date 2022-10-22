@@ -24,6 +24,6 @@ impl Sweep for Handle<Sketch> {
             shells.push(shell);
         }
 
-        Solid::new().with_shells(shells)
+        Solid::builder(objects).with_shells(shells).build()
     }
 }
