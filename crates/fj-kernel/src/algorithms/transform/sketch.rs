@@ -1,15 +1,19 @@
 use fj_math::Transform;
 
-use crate::objects::{Objects, Sketch};
+use crate::{
+    objects::{Objects, Sketch},
+    storage::Handle,
+};
 
 use super::TransformObject;
 
-impl TransformObject for Sketch {
+impl TransformObject for Handle<Sketch> {
     fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let faces = self
-            .into_faces()
+            .faces()
             .into_iter()
+            .cloned()
             .map(|face| face.transform(transform, objects));
-        Self::new().with_faces(faces)
+        Sketch::builder(objects).with_faces(faces).build()
     }
 }

@@ -3,11 +3,12 @@ use fj_math::Transform;
 use crate::{
     objects::{Face, Faces, Objects},
     partial::HasPartial,
+    storage::Handle,
 };
 
 use super::TransformObject;
 
-impl TransformObject for Face {
+impl TransformObject for Handle<Face> {
     fn transform(self, transform: &Transform, objects: &Objects) -> Self {
         let surface = self.surface().clone().transform(transform, objects);
         let exterior = self

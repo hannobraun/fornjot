@@ -63,7 +63,8 @@ impl Face {
         exterior: Handle<Cycle>,
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
-    ) -> Self {
+        objects: &Objects,
+    ) -> Handle<Self> {
         let surface = exterior.surface().clone();
         let mut interiors = Vec::new();
 
@@ -82,12 +83,12 @@ impl Face {
             interiors.push(interior);
         }
 
-        Self {
+        objects.faces.insert(Self {
             surface,
             exterior,
             interiors,
             color,
-        }
+        })
     }
 
     /// Access this face's surface
@@ -138,7 +139,7 @@ impl Face {
 /// A collection of faces
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Faces {
-    inner: BTreeSet<Face>,
+    inner: BTreeSet<Handle<Face>>,
 }
 
 impl Faces {
@@ -148,7 +149,7 @@ impl Faces {
     }
 
     /// Find the given face
-    pub fn find(&self, face: &Face) -> Option<Face> {
+    pub fn find(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         for f in self {
             if f == face {
                 return Some(f.clone());
@@ -159,15 +160,23 @@ impl Faces {
     }
 }
 
-impl Extend<Face> for Faces {
-    fn extend<T: IntoIterator<Item = Face>>(&mut self, iter: T) {
+impl Extend<Handle<Face>> for Faces {
+    fn extend<T: IntoIterator<Item = Handle<Face>>>(&mut self, iter: T) {
         self.inner.extend(iter)
     }
 }
 
+impl FromIterator<Handle<Face>> for Faces {
+    fn from_iter<T: IntoIterator<Item = Handle<Face>>>(iter: T) -> Self {
+        let mut faces = Self::new();
+        faces.extend(iter);
+        faces
+    }
+}
+
 impl IntoIterator for Faces {
-    type Item = Face;
-    type IntoIter = btree_set::IntoIter<Face>;
+    type Item = Handle<Face>;
+    type IntoIter = btree_set::IntoIter<Handle<Face>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.into_iter()
@@ -175,8 +184,8 @@ impl IntoIterator for Faces {
 }
 
 impl<'a> IntoIterator for &'a Faces {
-    type Item = &'a Face;
-    type IntoIter = btree_set::Iter<'a, Face>;
+    type Item = &'a Handle<Face>;
+    type IntoIter = btree_set::Iter<'a, Handle<Face>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.iter()

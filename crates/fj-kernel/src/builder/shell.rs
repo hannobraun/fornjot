@@ -6,10 +6,11 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{
-        Curve, Cycle, Face, HalfEdge, Objects, Shell, Surface, SurfaceVertex,
-        Vertex,
+        Curve, Cycle, Face, Faces, HalfEdge, Objects, Shell, Surface,
+        SurfaceVertex, Vertex,
     },
     partial::HasPartial,
+    storage::Handle,
 };
 
 /// API for building a [`Shell`]
@@ -18,14 +19,26 @@ use crate::{
 pub struct ShellBuilder<'a> {
     /// The stores that the created objects are put in
     pub objects: &'a Objects,
+
+    /// The faces that make up the [`Shell`]
+    pub faces: Faces,
 }
 
 impl<'a> ShellBuilder<'a> {
+    /// Build the [`Shell`] with the provided faces
+    pub fn with_faces(
+        mut self,
+        faces: impl IntoIterator<Item = Handle<Face>>,
+    ) -> Self {
+        self.faces.extend(faces);
+        self
+    }
+
     /// Create a cube from the length of its edges
-    pub fn build_cube_from_edge_length(
-        self,
+    pub fn with_cube_from_edge_length(
+        mut self,
         edge_length: impl Into<Scalar>,
-    ) -> Shell {
+    ) -> Self {
         let edge_length = edge_length.into();
 
         // Let's define some short-hands. We're going to need them a lot.
@@ -240,11 +253,15 @@ impl<'a> ShellBuilder<'a> {
                 .build()
         };
 
-        let mut faces = Vec::new();
-        faces.push(bottom);
-        faces.extend(sides);
-        faces.push(top);
+        self.faces.extend([bottom]);
+        self.faces.extend(sides);
+        self.faces.extend([top]);
 
-        Shell::new().with_faces(faces)
+        self
+    }
+
+    /// Build the [`Shell`]
+    pub fn build(self) -> Handle<Shell> {
+        Shell::new(self.faces, self.objects)
     }
 }

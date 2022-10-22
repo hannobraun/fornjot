@@ -1,6 +1,6 @@
 use crate::{builder::SketchBuilder, storage::Handle};
 
-use super::{face::Faces, Face, Objects, Surface};
+use super::{face::Faces, Face, Objects};
 
 /// A 2-dimensional shape
 ///
@@ -15,45 +15,26 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder(
-        objects: &Objects,
-        surface: Handle<Surface>,
-    ) -> SketchBuilder {
-        SketchBuilder { objects, surface }
-    }
-
-    /// Construct an empty instance of `Sketch`
-    pub fn new() -> Self {
-        Self {
+    pub fn builder(objects: &Objects) -> SketchBuilder {
+        SketchBuilder {
+            objects,
+            surface: None,
             faces: Faces::new(),
         }
     }
 
-    /// Add faces to the sketch
-    ///
-    /// Consumes the sketch and returns the updated instance.
-    pub fn with_faces(
-        mut self,
-        faces: impl IntoIterator<Item = impl Into<Face>>,
-    ) -> Self {
-        let faces = faces.into_iter().map(Into::into);
-        self.faces.extend(faces);
-        self
+    /// Construct an empty instance of `Sketch`
+    pub fn new(
+        faces: impl IntoIterator<Item = Handle<Face>>,
+        objects: &Objects,
+    ) -> Handle<Self> {
+        objects.sketches.insert(Self {
+            faces: faces.into_iter().collect(),
+        })
     }
 
     /// Access the sketch's faces
     pub fn faces(&self) -> &Faces {
         &self.faces
-    }
-
-    /// Convert the sketch into a list of faces
-    pub fn into_faces(self) -> Faces {
-        self.faces
-    }
-}
-
-impl Default for Sketch {
-    fn default() -> Self {
-        Self::new()
     }
 }

@@ -14,7 +14,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for (Handle<HalfEdge>, Color) {
-    type Swept = Face;
+    type Swept = Handle<Face>;
 
     fn sweep_with_cache(
         self,

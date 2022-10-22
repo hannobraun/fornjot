@@ -118,6 +118,9 @@ pub struct Objects {
     /// Store for [`Cycle`]s
     pub cycles: Store<Cycle>,
 
+    /// Store for [`Face`]s
+    pub faces: Store<Face>,
+
     /// Store for [`GlobalCurve`]s
     pub global_curves: Store<GlobalCurve>,
 
@@ -129,6 +132,15 @@ pub struct Objects {
 
     /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,
+
+    /// Store for [`Shell`]s
+    pub shells: Store<Shell>,
+
+    /// Store for [`Sketch`]es
+    pub sketches: Store<Sketch>,
+
+    /// Store for [`Solid`]s
+    pub solids: Store<Solid>,
 
     /// Store for [`SurfaceVertex`] objects
     pub surface_vertices: Store<SurfaceVertex>,

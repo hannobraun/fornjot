@@ -1,8 +1,11 @@
-use crate::objects::{Face, Objects};
+use crate::{
+    objects::{Face, Objects},
+    storage::Handle,
+};
 
 use super::Reverse;
 
-impl Reverse for Face {
+impl Reverse for Handle<Face> {
     fn reverse(self, objects: &Objects) -> Self {
         let exterior = self.exterior().clone().reverse(objects);
         let interiors =

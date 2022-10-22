@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::builder::SolidBuilder;
+use crate::{builder::SolidBuilder, storage::Handle};
 
 use super::{Face, Objects, Shell};
 
@@ -12,46 +12,35 @@ use super::{Face, Objects, Shell};
 /// not currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    shells: BTreeSet<Shell>,
+    shells: BTreeSet<Handle<Shell>>,
 }
 
 impl Solid {
     /// Build a `Solid` using [`SolidBuilder`]
     pub fn builder(objects: &Objects) -> SolidBuilder {
-        SolidBuilder { objects }
-    }
-
-    /// Construct an empty instance of `Solid`
-    pub fn new() -> Self {
-        Self {
+        SolidBuilder {
+            objects,
             shells: BTreeSet::new(),
         }
     }
 
-    /// Add shells to the solid
-    ///
-    /// Consumes the solid and returns the updated instance.
-    pub fn with_shells(
-        mut self,
-        shells: impl IntoIterator<Item = impl Into<Shell>>,
-    ) -> Self {
-        let shells = shells.into_iter().map(Into::into);
-        self.shells.extend(shells);
-        self
+    /// Construct an empty instance of `Solid`
+    pub fn new(
+        shells: impl IntoIterator<Item = Handle<Shell>>,
+        objects: &Objects,
+    ) -> Handle<Self> {
+        objects.solids.insert(Self {
+            shells: shells.into_iter().collect(),
+        })
     }
 
     /// Access the solid's shells
-    pub fn shells(&self) -> impl Iterator<Item = &Shell> {
+    pub fn shells(&self) -> impl Iterator<Item = &Handle<Shell>> {
         self.shells.iter()
     }
 
-    /// Convert the solid into a list of shells
-    pub fn into_shells(self) -> impl Iterator<Item = Shell> {
-        self.shells.into_iter()
-    }
-
     /// Find the given face in this solid
-    pub fn find_face(&self, face: &Face) -> Option<Face> {
+    pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         for shell in self.shells() {
             if let Some(face) = shell.find_face(face) {
                 return Some(face);
@@ -59,11 +48,5 @@ impl Solid {
         }
 
         None
-    }
-}
-
-impl Default for Solid {
-    fn default() -> Self {
-        Self::new()
     }
 }

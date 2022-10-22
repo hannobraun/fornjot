@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::{
@@ -86,8 +88,8 @@ impl Shape for fj::Difference2d {
             );
         }
 
-        let difference = Sketch::new().with_faces(faces);
-        difference.validate_with_config(config)
+        let difference = Sketch::builder(objects).with_faces(faces).build();
+        difference.deref().clone().validate_with_config(config)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

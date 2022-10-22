@@ -11,7 +11,7 @@ use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
 };
 
-impl Intersect for (&Face, &Point<2>) {
+impl Intersect for (&Handle<Face>, &Point<2>) {
     type Intersection = FacePointIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {

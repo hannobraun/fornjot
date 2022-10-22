@@ -166,7 +166,7 @@ impl<'r> ObjectIters<'r> for Handle<Cycle> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Face {
+impl<'r> ObjectIters<'r> for Handle<Face> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = vec![self.surface() as &dyn ObjectIters];
 
@@ -218,7 +218,7 @@ impl<'r> ObjectIters<'r> for Handle<HalfEdge> {
     }
 }
 
-impl<'r> ObjectIters<'r> for Shell {
+impl<'r> ObjectIters<'r> for Handle<Shell> {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
@@ -254,8 +254,8 @@ impl<'r> ObjectIters<'r> for Solid {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for face in self.shells() {
-            objects.push(face as &dyn ObjectIters);
+        for shell in self.shells() {
+            objects.push(shell as &dyn ObjectIters);
         }
 
         objects
@@ -503,7 +503,9 @@ mod tests {
     fn shell() {
         let objects = Objects::new();
 
-        let object = Shell::builder(&objects).build_cube_from_edge_length(1.);
+        let object = Shell::builder(&objects)
+            .with_cube_from_edge_length(1.)
+            .build();
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -527,7 +529,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
-        let object = Sketch::new().with_faces([face]);
+        let object = Sketch::builder(&objects).with_faces([face]).build();
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -546,7 +548,9 @@ mod tests {
     fn solid() {
         let objects = Objects::new();
 
-        let object = Solid::builder(&objects).build_cube_from_edge_length(1.);
+        let object = Solid::builder(&objects)
+            .with_cube_from_edge_length(1.)
+            .build();
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

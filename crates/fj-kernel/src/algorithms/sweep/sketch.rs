@@ -1,11 +1,14 @@
 use fj_math::Vector;
 
-use crate::objects::{Objects, Sketch, Solid};
+use crate::{
+    objects::{Objects, Sketch, Solid},
+    storage::Handle,
+};
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Sketch {
-    type Swept = Solid;
+impl Sweep for Handle<Sketch> {
+    type Swept = Handle<Solid>;
 
     fn sweep_with_cache(
         self,
@@ -16,11 +19,11 @@ impl Sweep for Sketch {
         let path = path.into();
 
         let mut shells = Vec::new();
-        for face in self.into_faces() {
+        for face in self.faces().clone() {
             let shell = face.sweep_with_cache(path, cache, objects);
             shells.push(shell);
         }
 
-        Solid::new().with_shells(shells)
+        Solid::builder(objects).with_shells(shells).build()
     }
 }

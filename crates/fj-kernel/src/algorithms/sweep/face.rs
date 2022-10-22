@@ -4,12 +4,13 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     objects::{Face, Objects, Shell},
     path::GlobalPath,
+    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Face {
-    type Swept = Shell;
+impl Sweep for Handle<Face> {
+    type Swept = Handle<Shell>;
 
     fn sweep_with_cache(
         self,
@@ -72,7 +73,7 @@ impl Sweep for Face {
             }
         }
 
-        Shell::new().with_faces(faces)
+        Shell::builder(objects).with_faces(faces).build()
     }
 }
 
@@ -98,8 +99,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects, surface.clone())
-            .build_polygon_from_points(TRIANGLE)
+        let solid = Sketch::builder(&objects)
+            .with_surface(surface.clone())
+            .with_polygon_from_points(TRIANGLE)
+            .build()
             .sweep(UP, &objects);
 
         let bottom = Face::builder(&objects)
@@ -132,8 +135,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects, surface.clone())
-            .build_polygon_from_points(TRIANGLE)
+        let solid = Sketch::builder(&objects)
+            .with_surface(surface.clone())
+            .with_polygon_from_points(TRIANGLE)
+            .build()
             .sweep(DOWN, &objects);
 
         let bottom = Face::builder(&objects)
