@@ -133,6 +133,9 @@ pub struct Objects {
     /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,
 
+    /// Store for [`Shell`]s
+    pub shells: Store<Shell>,
+
     /// Store for [`Sketch`]es
     pub sketches: Store<Sketch>,
 
