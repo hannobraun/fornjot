@@ -139,6 +139,9 @@ pub struct Objects {
     /// Store for [`Sketch`]es
     pub sketches: Store<Sketch>,
 
+    /// Store for [`Solid`]s
+    pub solids: Store<Solid>,
+
     /// Store for [`SurfaceVertex`] objects
     pub surface_vertices: Store<SurfaceVertex>,
 
