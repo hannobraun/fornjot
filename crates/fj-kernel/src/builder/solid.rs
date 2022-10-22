@@ -42,6 +42,6 @@ impl<'a> SolidBuilder<'a> {
 
     /// Build the [`Solid`]
     pub fn build(self) -> Solid {
-        Solid::new().with_shells(self.shells)
+        Solid::new(self.shells)
     }
 }

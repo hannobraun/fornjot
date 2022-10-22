@@ -25,21 +25,10 @@ impl Solid {
     }
 
     /// Construct an empty instance of `Solid`
-    pub fn new() -> Self {
+    pub fn new(shells: impl IntoIterator<Item = Handle<Shell>>) -> Self {
         Self {
-            shells: BTreeSet::new(),
+            shells: shells.into_iter().collect(),
         }
-    }
-
-    /// Add shells to the solid
-    ///
-    /// Consumes the solid and returns the updated instance.
-    pub fn with_shells(
-        mut self,
-        shells: impl IntoIterator<Item = Handle<Shell>>,
-    ) -> Self {
-        self.shells.extend(shells);
-        self
     }
 
     /// Access the solid's shells
@@ -61,11 +50,5 @@ impl Solid {
         }
 
         None
-    }
-}
-
-impl Default for Solid {
-    fn default() -> Self {
-        Self::new()
     }
 }
