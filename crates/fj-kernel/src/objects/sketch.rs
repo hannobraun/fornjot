@@ -19,6 +19,7 @@ impl Sketch {
         SketchBuilder {
             objects,
             surface: None,
+            faces: Faces::new(),
         }
     }
 

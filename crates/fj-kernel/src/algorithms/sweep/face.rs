@@ -101,7 +101,8 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder(&objects)
             .with_surface(surface.clone())
-            .build_polygon_from_points(TRIANGLE)
+            .with_polygon_from_points(TRIANGLE)
+            .build()
             .sweep(UP, &objects);
 
         let bottom = Face::builder(&objects)
@@ -136,7 +137,8 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder(&objects)
             .with_surface(surface.clone())
-            .build_polygon_from_points(TRIANGLE)
+            .with_polygon_from_points(TRIANGLE)
+            .build()
             .sweep(DOWN, &objects);
 
         let bottom = Face::builder(&objects)
