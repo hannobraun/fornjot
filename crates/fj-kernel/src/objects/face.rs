@@ -44,7 +44,7 @@ impl Face {
     pub fn builder(objects: &Objects, surface: Handle<Surface>) -> FaceBuilder {
         FaceBuilder {
             objects,
-            surface,
+            surface: Some(surface),
             exterior: None,
             interiors: Vec::new(),
         }

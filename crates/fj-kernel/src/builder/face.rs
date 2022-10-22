@@ -14,7 +14,7 @@ pub struct FaceBuilder<'a> {
     pub objects: &'a Objects,
 
     /// The surface that the [`Face`] is defined in
-    pub surface: Handle<Surface>,
+    pub surface: Option<Handle<Surface>>,
 
     /// The exterior cycle that bounds the [`Face`] on the outside
     ///
@@ -34,7 +34,7 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.exterior = Some(
             Cycle::partial()
-                .with_surface(Some(self.surface.clone()))
+                .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.objects),
@@ -49,7 +49,7 @@ impl<'a> FaceBuilder<'a> {
     ) -> Self {
         self.interiors.push(
             Cycle::partial()
-                .with_surface(Some(self.surface.clone()))
+                .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.objects),
