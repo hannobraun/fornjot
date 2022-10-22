@@ -36,11 +36,6 @@ impl Solid {
         self.shells.iter()
     }
 
-    /// Convert the solid into a list of shells
-    pub fn into_shells(self) -> impl Iterator<Item = Handle<Shell>> {
-        self.shells.into_iter()
-    }
-
     /// Find the given face in this solid
     pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         for shell in self.shells() {
