@@ -254,8 +254,8 @@ impl<'r> ObjectIters<'r> for Solid {
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for face in self.shells() {
-            objects.push(face as &dyn ObjectIters);
+        for shell in self.shells() {
+            objects.push(shell as &dyn ObjectIters);
         }
 
         objects
