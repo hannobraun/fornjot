@@ -13,7 +13,7 @@ pub struct SketchBuilder<'a> {
     pub objects: &'a Objects,
 
     /// The surface that the [`Sketch`] is defined in
-    pub surface: Handle<Surface>,
+    pub surface: Option<Handle<Surface>>,
 }
 
 impl<'a> SketchBuilder<'a> {
@@ -22,8 +22,11 @@ impl<'a> SketchBuilder<'a> {
         self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Sketch {
+        let surface = self
+            .surface
+            .expect("Can't build `Sketch` without `Surface`");
         let face = Face::builder(self.objects)
-            .with_surface(self.surface)
+            .with_surface(surface)
             .with_exterior_polygon_from_points(points)
             .build();
         Sketch::new().with_faces([face])

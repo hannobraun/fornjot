@@ -19,7 +19,10 @@ impl Sketch {
         objects: &Objects,
         surface: Handle<Surface>,
     ) -> SketchBuilder {
-        SketchBuilder { objects, surface }
+        SketchBuilder {
+            objects,
+            surface: Some(surface),
+        }
     }
 
     /// Construct an empty instance of `Sketch`
