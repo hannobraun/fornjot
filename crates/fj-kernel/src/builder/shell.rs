@@ -39,7 +39,8 @@ impl<'a> ShellBuilder<'a> {
                 .xy_plane()
                 .translate([Z, Z, -h], self.objects);
 
-            Face::builder(self.objects, surface)
+            Face::builder(self.objects)
+                .with_surface(surface)
                 .with_exterior_polygon_from_points([
                     [-h, -h],
                     [h, -h],

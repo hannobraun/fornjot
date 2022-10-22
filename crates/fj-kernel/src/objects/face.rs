@@ -41,10 +41,10 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(objects: &Objects, surface: Handle<Surface>) -> FaceBuilder {
+    pub fn builder(objects: &Objects) -> FaceBuilder {
         FaceBuilder {
             objects,
-            surface: Some(surface),
+            surface: None,
             exterior: None,
             interiors: Vec::new(),
         }

@@ -145,7 +145,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
             .build();
         let point = Point::from([2., 1.]);
@@ -159,7 +160,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
             .build();
         let point = Point::from([1., 1.]);
@@ -176,7 +178,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
             .build();
         let point = Point::from([1., 2.]);
@@ -193,7 +196,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
                 [2., 1.],
@@ -215,7 +219,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
                 [2., 1.],
@@ -237,7 +242,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
                 [2., 1.],
@@ -260,7 +266,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
             .build();
         let point = Point::from([1., 0.]);
@@ -286,7 +293,8 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects, surface)
+        let face = Face::builder(&objects)
+            .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build();
         let point = Point::from([1., 0.]);
