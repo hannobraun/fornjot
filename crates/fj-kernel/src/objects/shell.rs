@@ -23,22 +23,10 @@ impl Shell {
     }
 
     /// Construct an empty instance of `Shell`
-    pub fn new() -> Self {
+    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
         Self {
-            faces: Faces::new(),
+            faces: faces.into_iter().collect(),
         }
-    }
-
-    /// Add faces to the shell
-    ///
-    /// Consumes the shell and returns the updated instance.
-    pub fn with_faces(
-        mut self,
-        faces: impl IntoIterator<Item = Handle<Face>>,
-    ) -> Self {
-        let faces = faces.into_iter().map(Into::into);
-        self.faces.extend(faces);
-        self
     }
 
     /// Access the shell's faces
@@ -54,11 +42,5 @@ impl Shell {
     /// Find the given face in this shell
     pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         self.faces().find(face)
-    }
-}
-
-impl Default for Shell {
-    fn default() -> Self {
-        Self::new()
     }
 }

@@ -262,6 +262,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Shell {
-        Shell::new().with_faces(self.faces)
+        Shell::new(self.faces)
     }
 }
