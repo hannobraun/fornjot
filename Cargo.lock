@@ -1006,6 +1006,7 @@ dependencies = [
 name = "fj-interop"
 version = "0.20.0"
 dependencies = [
+ "chrono",
  "fj-math",
 ]
 
