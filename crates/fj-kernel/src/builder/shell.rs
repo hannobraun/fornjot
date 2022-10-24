@@ -50,7 +50,8 @@ impl<'a> ShellBuilder<'a> {
                 .objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, -h], self.objects);
+                .translate([Z, Z, -h], self.objects)
+                .unwrap();
 
             Face::builder(self.objects)
                 .with_surface(surface)
@@ -196,7 +197,8 @@ impl<'a> ShellBuilder<'a> {
                 .objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, h], self.objects);
+                .translate([Z, Z, h], self.objects)
+                .unwrap();
 
             let mut top_edges = top_edges;
             top_edges.reverse();

@@ -17,6 +17,7 @@ use crate::{
     objects::Objects,
     partial::{HasPartial, MaybePartial, Partial},
     storage::Handle,
+    validate::ValidationError,
 };
 
 /// Transform an object
@@ -30,30 +31,31 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    #[must_use]
-    fn transform(self, transform: &Transform, objects: &Objects) -> Self;
+    fn transform(
+        self,
+        transform: &Transform,
+        objects: &Objects,
+    ) -> Result<Self, ValidationError>;
 
     /// Translate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
-    #[must_use]
     fn translate(
         self,
         offset: impl Into<Vector<3>>,
         objects: &Objects,
-    ) -> Self {
+    ) -> Result<Self, ValidationError> {
         self.transform(&Transform::translation(offset), objects)
     }
 
     /// Rotate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
-    #[must_use]
     fn rotate(
         self,
         axis_angle: impl Into<Vector<3>>,
         objects: &Objects,
-    ) -> Self {
+    ) -> Result<Self, ValidationError> {
         self.transform(&Transform::rotation(axis_angle), objects)
     }
 }
@@ -63,10 +65,15 @@ where
     T: HasPartial,
     T::Partial: TransformObject,
 {
-    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
-        self.to_partial()
-            .transform(transform, objects)
-            .build(objects)
+    fn transform(
+        self,
+        transform: &Transform,
+        objects: &Objects,
+    ) -> Result<Self, ValidationError> {
+        Ok(self
+            .to_partial()
+            .transform(transform, objects)?
+            .build(objects))
     }
 }
 
@@ -76,11 +83,17 @@ where
     Handle<T>: TransformObject,
     T::Partial: TransformObject,
 {
-    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
+    fn transform(
+        self,
+        transform: &Transform,
+        objects: &Objects,
+    ) -> Result<Self, ValidationError> {
         match self {
-            Self::Full(full) => Self::Full(full.transform(transform, objects)),
+            Self::Full(full) => {
+                Ok(Self::Full(full.transform(transform, objects)?))
+            }
             Self::Partial(partial) => {
-                Self::Partial(partial.transform(transform, objects))
+                Ok(Self::Partial(partial.transform(transform, objects)?))
             }
         }
     }
