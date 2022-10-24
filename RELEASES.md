@@ -102,11 +102,6 @@ Additionally, post it in the following places:
   https://twitter.com/hannobraun
 - Mastodon
   https://fosstodon.org/@hannobraun
-- Reddit
-  - https://www.reddit.com/r/rust/
-    - Use previous post as template
-    - Make sure title describes how it relates to Rust
-    - Add comment with short explanation, offer to answer questions
 - Rust Users
   https://users.rust-lang.org/t/fornjot-code-cad-in-rust-weekly-dev-log/71783
 
