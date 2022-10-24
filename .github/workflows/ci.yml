@@ -1,7 +1,3 @@
----
-# Source: https://github.com/hendrikmaus/rust-workflows
-#
-# Continuous Integration Workflow For Rust
 name: CI
 
 # Define the triggers; usually merges to the repository
