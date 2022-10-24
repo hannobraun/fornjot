@@ -7,6 +7,7 @@ use crate::{
     },
     path::SurfacePath,
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -19,7 +20,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -61,7 +62,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let (edge_global, vertices_global) = vertex
             .global_form()
             .clone()
-            .sweep_with_cache(path, cache, objects);
+            .sweep_with_cache(path, cache, objects)?;
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -117,7 +118,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(vertices, edge_global, objects)
+        Ok(HalfEdge::new(vertices, edge_global, objects))
     }
 }
 
@@ -129,7 +130,7 @@ impl Sweep for Handle<GlobalVertex> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let curve = GlobalCurve::new(objects);
 
         let a = self.clone();
@@ -150,7 +151,7 @@ impl Sweep for Handle<GlobalVertex> {
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
         // ordered vertices in addition.
-        (global_edge, vertices)
+        Ok((global_edge, vertices))
     }
 }
 
@@ -165,7 +166,7 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface() {
+    fn vertex_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xz_plane();
@@ -178,12 +179,14 @@ mod tests {
             .with_curve(Some(curve))
             .build(&objects);
 
-        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
+        let half_edge =
+            (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
 
         let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
             .build(&objects);
         assert_eq!(half_edge, expected_half_edge);
+        Ok(())
     }
 }

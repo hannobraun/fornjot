@@ -13,6 +13,7 @@ use fj_math::Vector;
 use crate::{
     objects::{GlobalVertex, Objects},
     storage::{Handle, ObjectId},
+    validate::ValidationError,
 };
 
 /// Sweep an object along a path to create another object
@@ -25,7 +26,7 @@ pub trait Sweep: Sized {
         self,
         path: impl Into<Vector<3>>,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let mut cache = SweepCache::default();
         self.sweep_with_cache(path, &mut cache, objects)
     }
@@ -36,7 +37,7 @@ pub trait Sweep: Sized {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept;
+    ) -> Result<Self::Swept, ValidationError>;
 }
 
 /// A cache used for sweeping

@@ -9,6 +9,7 @@ use crate::{
     },
     path::SurfacePath,
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -21,12 +22,14 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface =
-            edge.curve().clone().sweep_with_cache(path, cache, objects);
+        let surface = edge
+            .curve()
+            .clone()
+            .sweep_with_cache(path, cache, objects)?;
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -81,9 +84,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             HalfEdge::new(vertices, edge.global_form().clone(), objects)
         };
 
-        let side_edges = bottom_edge.vertices().clone().map(|vertex| {
-            (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
-        });
+        let side_edges =
+            bottom_edge.vertices().clone().try_map_ext(|vertex| {
+                (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
+            })?;
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
@@ -169,10 +173,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             Cycle::new(surface, edges, objects)
         };
 
-        Face::builder(objects)
+        Ok(Face::builder(objects)
             .with_exterior(cycle)
             .with_color(color)
-            .build()
+            .build())
     }
 }
 
@@ -188,7 +192,7 @@ mod tests {
     };
 
     #[test]
-    fn sweep() {
+    fn sweep() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let half_edge = HalfEdge::partial()
@@ -196,7 +200,8 @@ mod tests {
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
 
-        let face = (half_edge, Color::default()).sweep([0., 0., 1.], &objects);
+        let face =
+            (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
 
         let expected_face = {
             let surface = objects.surfaces.xz_plane();
@@ -252,5 +257,6 @@ mod tests {
         };
 
         assert_eq!(face, expected_face);
+        Ok(())
     }
 }

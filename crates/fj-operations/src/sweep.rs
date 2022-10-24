@@ -24,7 +24,7 @@ impl Shape for fj::Sweep {
 
         let path = Vector::from(self.path());
 
-        let solid = sketch.sweep(path, objects);
+        let solid = sketch.sweep(path, objects)?;
         solid.deref().clone().validate_with_config(config)
     }
 
