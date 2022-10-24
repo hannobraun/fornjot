@@ -35,25 +35,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
 
       - name: Binaries | Compile
-        uses: actions-rs/cargo@v1
-        with:
-          args: --release --target ${{ matrix.target }}
-          command: build
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Binaries | Prepare upload
         run: |
@@ -84,17 +72,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-
       - name: Operator | Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
         with:
           key: release-operator-01
 

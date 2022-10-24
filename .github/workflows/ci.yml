@@ -1,7 +1,3 @@
----
-# Source: https://github.com/hendrikmaus/rust-workflows
-#
-# Continuous Integration Workflow For Rust
 name: CI
 
 # Define the triggers; usually merges to the repository
@@ -24,73 +20,26 @@ defaults:
     shell: bash
 
 jobs:
-  fmt:
-    name: Format
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-      - name: Run `cargo fmt`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: fmt
-          args: --all -- --check
-
-  clippy:
-    name: Clippy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-      - name: Install Clippy
-        run: rustup component add clippy
       - name: Set up Rust cache
-        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
-      - name: Run `cargo clippy`
-        uses: actions-rs/clippy-check@b5b5f21f4797c02da247df37026fcd0a5024aa4d
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features -- -D warnings
-
-  docs:
-    name: Docs
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-      - name: Set up Rust cache
-        uses: Swatinem/rust-cache@v1
-      - name: Run `cargo doc`
-        uses: actions-rs/cargo@v1
-        with:
-          command: doc
-          args: --no-deps --document-private-items --all-features --workspace
+        uses: Swatinem/rust-cache@v2
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Run Clippy
+        run: cargo clippy --all-features -- -D warnings
+      - name: Reject uncommitted changes
+        run: git diff --exit-code
+      - name: Build documentation
+        run: cargo doc --no-deps --document-private-items --all-features --workspace
         env:
           RUSTDOCFLAGS: -D warnings
+      - name: Run `cross-compiler`
+        run: cargo run --package cross-compiler
 
   test:
     name: Test
@@ -104,55 +53,14 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
       - name: Set up Rust cache
-        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+        uses: Swatinem/rust-cache@v2
       - name: Run `cargo build`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: build
-          args: --all-features
-      - name: Reject uncommitted changes
-        run: git diff --exit-code
+        run: cargo build --all-features
       - name: Run `cargo test`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: test
-          args: --all-features
+        run: cargo test --all-features
       - name: Run `export-validator`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: run
-          args: --package export-validator
+        run: cargo run --package export-validator
         # Export Validator doesn't support Windows yet. Issue:
         # https://github.com/hannobraun/Fornjot/issues/920
         if: ${{ matrix.os != 'windows-latest' }}
-
-  wasm:
-    name: Cross-compile
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-      - name: Set up Rust cache
-        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
-      - name: Run `cross-compiler`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: run
-          args: --package cross-compiler
