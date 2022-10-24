@@ -41,10 +41,7 @@ jobs:
           key: ${{ matrix.target }}
 
       - name: Binaries | Compile
-        uses: actions-rs/cargo@v1
-        with:
-          args: --release --target ${{ matrix.target }}
-          command: build
+        run: cargo build --release --target ${{ matrix.target }}
 
       - name: Binaries | Prepare upload
         run: |

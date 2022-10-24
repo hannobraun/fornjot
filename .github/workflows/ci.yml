@@ -33,27 +33,15 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Check formatting
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: fmt
-          args: --all -- --check
+        run: cargo fmt --all -- --check
       - name: Run Clippy
-        uses: actions-rs/clippy-check@b5b5f21f4797c02da247df37026fcd0a5024aa4d
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features -- -D warnings
+        run: cargo clippy --all-features -- -D warnings
       - name: Build documentation
-        uses: actions-rs/cargo@v1
-        with:
-          command: doc
-          args: --no-deps --document-private-items --all-features --workspace
+        run: cargo doc --no-deps --document-private-items --all-features --workspace
         env:
           RUSTDOCFLAGS: -D warnings
       - name: Run `cross-compiler`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: run
-          args: --package cross-compiler
+        run: cargo run --package cross-compiler
 
   test:
     name: Test
@@ -70,22 +58,13 @@ jobs:
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Run `cargo build`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: build
-          args: --all-features
+        run: cargo build --all-features
       - name: Reject uncommitted changes
         run: git diff --exit-code
       - name: Run `cargo test`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: test
-          args: --all-features
+        run: cargo test --all-features
       - name: Run `export-validator`
-        uses: actions-rs/cargo@4ff6ec2846f6e7217c1a9b0b503506665f134c4b
-        with:
-          command: run
-          args: --package export-validator
+        run: cargo run --package export-validator
         # Export Validator doesn't support Windows yet. Issue:
         # https://github.com/hannobraun/Fornjot/issues/920
         if: ${{ matrix.os != 'windows-latest' }}
