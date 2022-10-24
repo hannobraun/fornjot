@@ -30,14 +30,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Check formatting
@@ -75,14 +67,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-      - name: Set up toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
       - name: Set up Rust cache
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Run `cargo build`

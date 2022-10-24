@@ -35,15 +35,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
-
       - name: Cache
         uses: Swatinem/rust-cache@v1
         with:
@@ -83,15 +74,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup Toolchain
-        uses: oxidecomputer/actions-rs_toolchain@oxide/master
-        # see https://github.com/actions-rs/toolchain/pull/209
-        # uses: actions-rs/toolchain@v1
-        with:
-          override: true
-          profile: minimal
-          target: ${{ matrix.target }}
 
       - name: Operator | Cache
         uses: Swatinem/rust-cache@v1
