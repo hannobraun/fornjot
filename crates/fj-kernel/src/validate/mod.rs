@@ -44,8 +44,8 @@ pub trait Validate: Sized {
     /// The following calls are equivalent:
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
@@ -53,8 +53,8 @@ pub trait Validate: Sized {
     /// ```
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
@@ -189,13 +189,13 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
             SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         path::SurfacePath,
+        validate::{Validate, ValidationConfig, ValidationError},
     };
 
     #[test]

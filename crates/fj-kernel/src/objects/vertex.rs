@@ -121,7 +121,7 @@ impl SurfaceVertex {
 /// between distinct vertices can be configured using the respective field in
 /// [`ValidationConfig`].
 ///
-/// [`ValidationConfig`]: crate::algorithms::validate::ValidationConfig
+/// [`ValidationConfig`]: crate::validate::ValidationConfig
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
     position: Point<3>,

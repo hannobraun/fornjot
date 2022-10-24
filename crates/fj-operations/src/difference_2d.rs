@@ -2,12 +2,10 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
-    algorithms::{
-        reverse::Reverse,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
-    },
+    algorithms::reverse::Reverse,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 

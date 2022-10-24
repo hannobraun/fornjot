@@ -2,11 +2,9 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    algorithms::validate::{
-        Validate, Validated, ValidationConfig, ValidationError,
-    },
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Point};
 

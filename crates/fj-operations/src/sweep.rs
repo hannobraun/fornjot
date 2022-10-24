@@ -2,11 +2,9 @@ use std::ops::Deref;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{
-        sweep::Sweep,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
-    },
+    algorithms::sweep::Sweep,
     objects::{Objects, Solid},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Vector};
 

@@ -26,10 +26,8 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::validate::{
-        Validate, Validated, ValidationConfig, ValidationError,
-    },
     objects::{Faces, Objects, Sketch},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 

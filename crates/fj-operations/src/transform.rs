@@ -1,10 +1,8 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::{
-        transform::TransformObject,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
-    },
+    algorithms::transform::TransformObject,
     objects::{Faces, Objects},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::{Aabb, Transform, Vector};
 
