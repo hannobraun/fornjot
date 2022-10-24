@@ -36,6 +36,8 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Run Clippy
         run: cargo clippy --all-features -- -D warnings
+      - name: Reject uncommitted changes
+        run: git diff --exit-code
       - name: Build documentation
         run: cargo doc --no-deps --document-private-items --all-features --workspace
         env:
@@ -59,8 +61,6 @@ jobs:
         uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
       - name: Run `cargo build`
         run: cargo build --all-features
-      - name: Reject uncommitted changes
-        run: git diff --exit-code
       - name: Run `cargo test`
         run: cargo test --all-features
       - name: Run `export-validator`
