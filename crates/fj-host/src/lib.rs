@@ -16,7 +16,6 @@
 #![warn(missing_docs)]
 
 mod evaluator;
-mod host;
 mod model;
 mod parameters;
 mod platform;
