@@ -156,8 +156,8 @@ impl Renderer {
         })
     }
 
-    pub(crate) fn init_gui(&self) -> Gui {
-        Gui::new(&self.device, self.surface_config.format)
+    pub(crate) fn init_gui(&self, pixels_per_point: f32) -> Gui {
+        Gui::new(&self.device, self.surface_config.format, pixels_per_point)
     }
 
     /// Updates the geometry of the model being rendered.
