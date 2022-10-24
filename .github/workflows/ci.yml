@@ -31,7 +31,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Set up Rust cache
-        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+        uses: Swatinem/rust-cache@v2
       - name: Check formatting
         run: cargo fmt --all -- --check
       - name: Run Clippy
@@ -58,7 +58,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Set up Rust cache
-        uses: Swatinem/rust-cache@1232abb8968faf344409165de17cbf9e7f340fd8
+        uses: Swatinem/rust-cache@v2
       - name: Run `cargo build`
         run: cargo build --all-features
       - name: Run `cargo test`

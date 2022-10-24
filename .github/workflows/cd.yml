@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
 
@@ -73,7 +73,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Operator | Cache
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
         with:
           key: release-operator-01
 
