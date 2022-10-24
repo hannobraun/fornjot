@@ -12,7 +12,7 @@ categories.workspace = true
 
 
 [dependencies]
-anyhow = "1.0.65"
+anyhow = "1.0.66"
 fj.workspace = true
 fj-export.workspace = true
 fj-host.workspace = true
