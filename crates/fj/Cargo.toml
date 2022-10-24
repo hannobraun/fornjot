@@ -14,7 +14,7 @@ categories.workspace = true
 fj-proc.workspace = true
 
 [dependencies.serde]
-version = "1.0.144"
+version = "1.0.147"
 features = ["derive"]
 optional = true
 
