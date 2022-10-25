@@ -115,7 +115,7 @@ impl Watcher {
             };
 
             event_tx
-                .send(WatcherEvent::Shape(shape))
+                .send(WatcherEvent::Evaluation(shape))
                 .expect("Expected channel to never disconnect");
         });
 
@@ -137,7 +137,7 @@ pub enum WatcherEvent {
     StatusUpdate(String),
 
     /// A shape has been loaded from the model
-    Shape(Evaluation),
+    Evaluation(Evaluation),
 
     /// An error
     Error(Error),

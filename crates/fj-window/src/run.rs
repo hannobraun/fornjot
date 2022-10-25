@@ -72,7 +72,7 @@ pub fn run(
                 WatcherEvent::StatusUpdate(status_update) => {
                     status.update_status(&status_update)
                 }
-                WatcherEvent::Shape(shape) => {
+                WatcherEvent::Evaluation(shape) => {
                     status.update_status(&format!(
                         "Model compiled successfully in {}!",
                         shape.compile_time
