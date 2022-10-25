@@ -1,25 +1,24 @@
-use std::{collections::HashSet, ffi::OsStr, thread};
+use std::{collections::HashSet, ffi::OsStr, path::Path, thread};
 
-use crossbeam_channel::Receiver;
 use notify::Watcher as _;
 
-use crate::{Error, Evaluation, Model};
+use crate::{Error, Evaluation, Evaluator};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
     _watcher: Box<dyn notify::Watcher>,
-    event_rx: Receiver<WatcherEvent>,
 }
 
 impl Watcher {
     /// Watch the provided model for changes
-    pub fn watch_model(model: Model) -> Result<Self, Error> {
-        let (event_tx, event_rx) = crossbeam_channel::bounded(0);
+    pub fn watch_model(
+        watch_path: impl AsRef<Path>,
+        evaluator: &Evaluator,
+    ) -> Result<Self, Error> {
+        let watch_path = watch_path.as_ref();
 
-        let (watch_tx, watch_rx) = crossbeam_channel::bounded(0);
-        let watch_tx_2 = watch_tx.clone();
-
-        let watch_path = model.watch_path();
+        let watch_tx = evaluator.trigger();
+        let watch_tx_2 = evaluator.trigger();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -71,7 +70,7 @@ impl Watcher {
             },
         )?;
 
-        watcher.watch(&watch_path, notify::RecursiveMode::Recursive)?;
+        watcher.watch(watch_path, notify::RecursiveMode::Recursive)?;
 
         // To prevent a race condition between the initial load and the start of
         // watching, we'll trigger the initial load here, after having started
@@ -86,48 +85,9 @@ impl Watcher {
             watch_tx_2.send(()).expect("Channel is disconnected")
         });
 
-        // Listen on the watcher channel and rebuild the model. This happens in
-        // a separate thread from the watcher to allow us to trigger compiles
-        // without the watcher having registered a change, as is done above.
-        thread::spawn(move || loop {
-            let () = watch_rx
-                .recv()
-                .expect("Expected channel to never disconnect");
-
-            let evaluation = match model.evaluate() {
-                Ok(evaluation) => evaluation,
-                Err(Error::Compile { output }) => {
-                    event_tx
-                        .send(WatcherEvent::StatusUpdate(format!(
-                            "Failed to compile model:\n{}",
-                            output
-                        )))
-                        .expect("Expected channel to never disconnect");
-
-                    return;
-                }
-                Err(err) => {
-                    event_tx
-                        .send(WatcherEvent::Error(err))
-                        .expect("Expected channel to never disconnect");
-                    return;
-                }
-            };
-
-            event_tx
-                .send(WatcherEvent::Evaluation(evaluation))
-                .expect("Expected channel to never disconnect");
-        });
-
         Ok(Self {
             _watcher: Box::new(watcher),
-            event_rx,
         })
-    }
-
-    /// Access a channel for receiving status updates
-    pub fn events(&self) -> Receiver<WatcherEvent> {
-        self.event_rx.clone()
     }
 }
 

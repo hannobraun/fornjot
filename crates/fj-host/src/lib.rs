@@ -15,6 +15,7 @@
 
 #![warn(missing_docs)]
 
+mod evaluator;
 mod host;
 mod model;
 mod parameters;
@@ -22,6 +23,7 @@ mod platform;
 mod watcher;
 
 pub use self::{
+    evaluator::Evaluator,
     model::{Error, Evaluation, Model},
     parameters::Parameters,
     watcher::{Watcher, WatcherEvent},
