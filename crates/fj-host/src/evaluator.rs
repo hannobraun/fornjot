@@ -31,13 +31,13 @@ impl Evaluator {
                         )))
                         .expect("Expected channel to never disconnect");
 
-                    return;
+                    continue;
                 }
                 Err(err) => {
                     event_tx
                         .send(ModelEvent::Error(err))
                         .expect("Expected channel to never disconnect");
-                    return;
+                    continue;
                 }
             };
 
