@@ -49,20 +49,12 @@ fn main() -> anyhow::Result<()> {
         tolerance: args.tolerance,
     };
 
-    let path_of_model = path.default_path().canonicalize().unwrap_or_default();
-
     let model = {
         let model_path = path.path();
         Model::new(model_path.clone(), parameters).with_context(|| {
-            if path_of_model.as_os_str().is_empty() {
-                format!(
-                    "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", path.model_path_without_default().display()
-                )
-            } else {
-                format!(
-                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path_of_model.display(), path.model_path_without_default().display()
+            format!(
+                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path.default_path().display(), path.model_path_without_default().display()
             )
-        }
         })?
     };
 

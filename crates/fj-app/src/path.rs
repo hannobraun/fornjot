@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use anyhow::anyhow;
+use anyhow::{anyhow, Context};
 
 use crate::{args::Args, config::Config};
 
@@ -18,6 +18,14 @@ impl ModelPath {
             .default_path
             .clone()
             .unwrap_or_else(|| PathBuf::from(""));
+        let default_path = default_path.canonicalize().with_context(|| {
+            format!(
+                "Converting `default-path` from `fj.toml` (`{}`) into absolute \
+                path",
+                default_path.display(),
+            )
+        })?;
+
         let model_path = args
             .model
             .as_ref()
