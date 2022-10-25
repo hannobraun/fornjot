@@ -42,15 +42,12 @@ impl ModelPath {
         })
     }
 
-    pub fn path(&self) -> PathBuf {
-        self.default_path
+    pub fn load_model(&self, parameters: Parameters) -> anyhow::Result<Model> {
+        let path = self
+            .default_path
             .clone()
             .unwrap_or_else(PathBuf::new)
-            .join(&self.model_path)
-    }
-
-    pub fn load_model(&self, parameters: Parameters) -> anyhow::Result<Model> {
-        let path = self.path();
+            .join(&self.model_path);
 
         let mut error = String::new();
         write!(
