@@ -1,4 +1,7 @@
-use std::{fmt::Write, path::PathBuf};
+use std::{
+    fmt::{self, Write},
+    path::{Path, PathBuf},
+};
 
 use anyhow::{anyhow, Context};
 use fj_host::{Model, Parameters};
@@ -52,44 +55,60 @@ impl ModelPath {
             .unwrap_or_else(PathBuf::new)
             .join(&self.model_path);
 
-        let mut error = String::new();
-        write!(
-            error,
-            "Failed to load model: `{}`",
-            self.model_path.display()
-        )?;
-        write!(error, "\n- Path of model: {}", path.display())?;
-
-        let mut suggestions = String::new();
-        write!(suggestions, "Suggestions:")?;
-        write!(
-            suggestions,
-            "\n- Did you mis-type the model path `{}`?",
-            self.model_path.display()
-        )?;
-
-        if let Some((default_path_rel, default_path_abs)) = &default_path {
-            write!(
-                error,
-                "\n- Searching inside default path from configuration: {}",
-                default_path_abs.display(),
-            )?;
-
-            write!(
-                suggestions,
-                "\n- Did you mis-type the default path `{}`?",
-                default_path_rel.display()
-            )?;
-            write!(
-                suggestions,
-                "\n- Did you accidentally pick up a local configuration file?"
-            )?;
-        }
-
-        let model = Model::new(&path, parameters)
-            .with_context(|| format!("{error}\n\n{suggestions}"))?;
+        let model = Model::new(&path, parameters).with_context(|| {
+            load_error_context(default_path, &self.model_path, path)
+        })?;
         Ok(model)
     }
+}
+
+fn load_error_context(
+    default_path: Option<(&PathBuf, PathBuf)>,
+    model_path: &Path,
+    path: PathBuf,
+) -> String {
+    load_error_context_inner(default_path, model_path, path)
+        .expect("Expected `write!` to `String` to never fail")
+}
+
+fn load_error_context_inner(
+    default_path: Option<(&PathBuf, PathBuf)>,
+    model_path: &Path,
+    path: PathBuf,
+) -> Result<String, fmt::Error> {
+    let mut error = String::new();
+    write!(error, "Failed to load model: `{}`", model_path.display())?;
+    write!(error, "\n- Path of model: {}", path.display())?;
+
+    let mut suggestions = String::new();
+    write!(suggestions, "Suggestions:")?;
+    write!(
+        suggestions,
+        "\n- Did you mis-type the model path `{}`?",
+        model_path.display()
+    )?;
+
+    if let Some((default_path_rel, default_path_abs)) = &default_path {
+        write!(
+            error,
+            "\n- Searching inside default path from configuration: {}",
+            default_path_abs.display(),
+        )?;
+
+        write!(
+            suggestions,
+            "\n- Did you mis-type the default path `{}`?",
+            default_path_rel.display()
+        )?;
+        write!(
+            suggestions,
+            "\n- Did you accidentally pick up a local configuration file?"
+        )?;
+    }
+
+    let context = format!("{error}\n\n{suggestions}");
+
+    Ok(context)
 }
 
 fn no_model_error() -> anyhow::Error {
