@@ -201,14 +201,13 @@ pub fn run(
                     viewer.handle_screen_resize(size);
                 }
 
+                let pixels_per_point = window.window().scale_factor() as f32;
+
+                egui_winit_state.set_pixels_per_point(pixels_per_point);
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                viewer.draw(
-                    window.window().scale_factor() as f32,
-                    &mut status,
-                    egui_input,
-                );
+                viewer.draw(pixels_per_point, &mut status, egui_input);
             }
             _ => {}
         }

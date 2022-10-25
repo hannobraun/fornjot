@@ -79,12 +79,14 @@ impl Gui {
 
     pub(crate) fn update(
         &mut self,
+        pixels_per_point: f32,
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
         aabb: &Aabb<3>,
         status: &StatusReport,
         line_drawing_available: bool,
     ) {
+        self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
         let bounding_box_size = {
