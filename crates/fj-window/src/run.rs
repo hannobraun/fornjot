@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::{Evaluator, Model, ModelEvent, Watcher};
+use fj_host::{Host, Model, ModelEvent};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -32,16 +32,13 @@ pub fn run(
     invert_zoom: bool,
 ) -> Result<(), Error> {
     let mut status = StatusReport::new();
-
-    let watch_path = model.watch_path();
-    let evaluator = Evaluator::from_model(model);
-    let _watcher = Watcher::watch_model(&watch_path, &evaluator)?;
+    let host = Host::from_model(model)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    let events = evaluator.events();
+    let events = host.events();
 
     let mut held_mouse_button = None;
 
