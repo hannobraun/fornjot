@@ -33,19 +33,22 @@ impl ModelPath {
         let default_path = self
             .default_path
             .as_ref()
-            .map(|path| {
-                path.canonicalize().with_context(|| {
+            .map(|path| -> anyhow::Result<_> {
+                let rel = path;
+                let abs = path.canonicalize().with_context(|| {
                     format!(
                         "Converting `default-path` from `fj.toml` (`{}`) into \
                         absolute path",
                         path.display(),
                     )
-                })
+                })?;
+                Ok((rel, abs))
             })
             .transpose()?;
 
         let path = default_path
             .clone()
+            .map(|(_, abs)| abs)
             .unwrap_or_else(PathBuf::new)
             .join(&self.model_path);
 
@@ -65,11 +68,11 @@ impl ModelPath {
             self.model_path.display()
         )?;
 
-        if let Some(default_path) = &default_path {
+        if let Some((_, default_path_abs)) = &default_path {
             write!(
                 error,
                 "\n- Searching inside default path from configuration: {}",
-                default_path.display(),
+                default_path_abs.display(),
             )?;
 
             write!(suggestions, "\n- Did you mis-type the default path?")?;
