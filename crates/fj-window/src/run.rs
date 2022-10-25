@@ -72,13 +72,13 @@ pub fn run(
                 WatcherEvent::StatusUpdate(status_update) => {
                     status.update_status(&status_update)
                 }
-                WatcherEvent::Evaluation(shape) => {
+                WatcherEvent::Evaluation(evaluation) => {
                     status.update_status(&format!(
                         "Model compiled successfully in {}!",
-                        shape.compile_time
+                        evaluation.compile_time
                     ));
 
-                    match shape_processor.process(&shape.shape) {
+                    match shape_processor.process(&evaluation.shape) {
                         Ok(shape) => {
                             viewer.handle_shape_update(shape);
                         }
