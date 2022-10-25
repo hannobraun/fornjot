@@ -204,6 +204,7 @@ pub fn run(
 
                 let pixels_per_point = window.window().scale_factor() as f32;
 
+                egui_winit_state.set_pixels_per_point(pixels_per_point);
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
