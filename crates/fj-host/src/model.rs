@@ -53,7 +53,8 @@ impl Model {
         })
     }
 
-    pub(crate) fn watch_path(&self) -> PathBuf {
+    /// Access the path that needs to be watched for changes
+    pub fn watch_path(&self) -> PathBuf {
         self.src_path.clone()
     }
 
