@@ -5,7 +5,7 @@ use anyhow::{anyhow, Context};
 use crate::{args::Args, config::Config};
 
 pub struct ModelPath {
-    default_path: PathBuf,
+    default_path: Option<PathBuf>,
     model_path: PathBuf,
 }
 
@@ -17,14 +17,16 @@ impl ModelPath {
         let default_path = config
             .default_path
             .clone()
-            .unwrap_or_else(|| PathBuf::from(""));
-        let default_path = default_path.canonicalize().with_context(|| {
-            format!(
-                "Converting `default-path` from `fj.toml` (`{}`) into absolute \
-                path",
-                default_path.display(),
-            )
-        })?;
+            .map(|path| {
+                path.canonicalize().with_context(|| {
+                    format!(
+                        "Converting `default-path` from `fj.toml` (`{}`) into \
+                        absolute path",
+                        path.display(),
+                    )
+                })
+            })
+            .transpose()?;
 
         let model_path = args
             .model
@@ -40,7 +42,7 @@ impl ModelPath {
     }
 
     pub fn default_path(&self) -> PathBuf {
-        self.default_path.clone()
+        self.default_path.clone().unwrap_or_else(PathBuf::new)
     }
 
     pub fn model_path_without_default(&self) -> &Path {
@@ -48,7 +50,10 @@ impl ModelPath {
     }
 
     pub fn path(&self) -> PathBuf {
-        self.default_path.join(&self.model_path)
+        self.default_path
+            .clone()
+            .unwrap_or_else(PathBuf::new)
+            .join(&self.model_path)
     }
 }
 
