@@ -30,7 +30,7 @@ impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        pixels_per_point: f32,
+        _: f32,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -51,7 +51,6 @@ impl Gui {
         // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
 
         let context = egui::Context::default();
-        context.set_pixels_per_point(pixels_per_point);
 
         // We need to hold on to this, otherwise it might cause the egui font
         // texture to get dropped after drawing one frame.
@@ -81,12 +80,14 @@ impl Gui {
 
     pub(crate) fn update(
         &mut self,
+        pixels_per_point: f32,
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
         aabb: &Aabb<3>,
         status: &StatusReport,
         line_drawing_available: bool,
     ) {
+        self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
         let bounding_box_size = {

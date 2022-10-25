@@ -135,6 +135,7 @@ impl Viewer {
         self.camera.update_planes(&aabb);
 
         self.gui.update(
+            pixels_per_point,
             egui_input,
             &mut self.draw_config,
             &aabb,
