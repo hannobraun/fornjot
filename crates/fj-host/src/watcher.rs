@@ -94,7 +94,7 @@ impl Watcher {
                 .recv()
                 .expect("Expected channel to never disconnect");
 
-            let shape = match model.load() {
+            let shape = match model.evaluate() {
                 Ok(shape) => shape,
                 Err(Error::Compile { output }) => {
                     event_tx
