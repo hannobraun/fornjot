@@ -63,7 +63,7 @@ impl Evaluator {
     }
 }
 
-/// An event emitted by the [`Watcher`]
+/// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
     /// A status update about the model
     StatusUpdate(String),
