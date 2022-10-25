@@ -68,14 +68,18 @@ impl ModelPath {
             self.model_path.display()
         )?;
 
-        if let Some((_, default_path_abs)) = &default_path {
+        if let Some((default_path_rel, default_path_abs)) = &default_path {
             write!(
                 error,
                 "\n- Searching inside default path from configuration: {}",
                 default_path_abs.display(),
             )?;
 
-            write!(suggestions, "\n- Did you mis-type the default path?")?;
+            write!(
+                suggestions,
+                "\n- Did you mis-type the default path `{}`?",
+                default_path_rel.display()
+            )?;
             write!(
                 suggestions,
                 "\n- Did you accidentally pick up a local configuration file?"
