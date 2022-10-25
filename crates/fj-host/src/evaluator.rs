@@ -2,7 +2,7 @@ use std::thread;
 
 use crossbeam_channel::{Receiver, Sender};
 
-use crate::{Error, Model, ModelEvent};
+use crate::{Error, Evaluation, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
@@ -61,4 +61,16 @@ impl Evaluator {
     pub fn events(&self) -> Receiver<ModelEvent> {
         self.event_rx.clone()
     }
+}
+
+/// An event emitted by the [`Watcher`]
+pub enum ModelEvent {
+    /// A status update about the model
+    StatusUpdate(String),
+
+    /// The model has been evaluated
+    Evaluation(Evaluation),
+
+    /// An error
+    Error(Error),
 }

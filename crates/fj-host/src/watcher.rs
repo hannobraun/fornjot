@@ -2,7 +2,7 @@ use std::{collections::HashSet, ffi::OsStr, path::Path, thread};
 
 use notify::Watcher as _;
 
-use crate::{Error, Evaluation, Evaluator};
+use crate::{Error, Evaluator};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -89,16 +89,4 @@ impl Watcher {
             _watcher: Box::new(watcher),
         })
     }
-}
-
-/// An event emitted by the [`Watcher`]
-pub enum ModelEvent {
-    /// A status update about the model
-    StatusUpdate(String),
-
-    /// The model has been evaluated
-    Evaluation(Evaluation),
-
-    /// An error
-    Error(Error),
 }
