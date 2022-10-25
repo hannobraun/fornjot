@@ -10,7 +10,7 @@ use crate::{args::Args, config::Config};
 
 pub struct ModelPath {
     default_path: Option<PathBuf>,
-    model_path: PathBuf,
+    model_path: ModelPathSource,
 }
 
 impl ModelPath {
@@ -19,12 +19,18 @@ impl ModelPath {
         config: &Config,
     ) -> anyhow::Result<Self> {
         let default_path = config.default_path.clone();
-        let model_path = args
+
+        let model_path_from_args = args
             .model
             .as_ref()
-            .or(config.default_model.as_ref())
-            .ok_or_else(no_model_error)?
-            .clone();
+            .map(|model| ModelPathSource::Args(model.clone()));
+        let model_path_from_config = config
+            .default_model
+            .as_ref()
+            .map(|model| ModelPathSource::Config(model.clone()));
+        let model_path = model_path_from_args
+            .or(model_path_from_config)
+            .ok_or_else(no_model_error)?;
 
         Ok(Self {
             default_path,
@@ -53,7 +59,7 @@ impl ModelPath {
             .clone()
             .map(|(_, abs)| abs)
             .unwrap_or_else(PathBuf::new)
-            .join(&self.model_path);
+            .join(self.model_path.path());
 
         let model = Model::new(&path, parameters).with_context(|| {
             load_error_context(default_path, &self.model_path, path)
@@ -62,9 +68,23 @@ impl ModelPath {
     }
 }
 
+enum ModelPathSource {
+    Args(PathBuf),
+    Config(PathBuf),
+}
+
+impl ModelPathSource {
+    fn path(&self) -> &Path {
+        match self {
+            ModelPathSource::Args(path) => path,
+            ModelPathSource::Config(path) => path,
+        }
+    }
+}
+
 fn load_error_context(
     default_path: Option<(&PathBuf, PathBuf)>,
-    model_path: &Path,
+    model_path: &ModelPathSource,
     path: PathBuf,
 ) -> String {
     load_error_context_inner(default_path, model_path, path)
@@ -73,11 +93,15 @@ fn load_error_context(
 
 fn load_error_context_inner(
     default_path: Option<(&PathBuf, PathBuf)>,
-    model_path: &Path,
+    model_path: &ModelPathSource,
     path: PathBuf,
 ) -> Result<String, fmt::Error> {
     let mut error = String::new();
-    write!(error, "Failed to load model: `{}`", model_path.display())?;
+    write!(
+        error,
+        "Failed to load model: `{}`",
+        model_path.path().display()
+    )?;
     write!(error, "\n- Path of model: {}", path.display())?;
 
     let mut suggestions = String::new();
@@ -85,7 +109,7 @@ fn load_error_context_inner(
     write!(
         suggestions,
         "\n- Did you mis-type the model path `{}`?",
-        model_path.display()
+        model_path.path().display()
     )?;
 
     if let Some((default_path_rel, default_path_abs)) = &default_path {
