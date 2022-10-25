@@ -122,7 +122,7 @@ impl Viewer {
     /// Draw the graphics
     pub fn draw(
         &mut self,
-        scale_factor: f32,
+        pixels_per_point: f32,
         status: &mut StatusReport,
         egui_input: egui::RawInput,
     ) {
@@ -145,7 +145,7 @@ impl Viewer {
         if let Err(err) = self.renderer.draw(
             &self.camera,
             &self.draw_config,
-            scale_factor,
+            pixels_per_point,
             &mut self.gui,
         ) {
             warn!("Draw error: {}", err);
