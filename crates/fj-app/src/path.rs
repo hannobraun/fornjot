@@ -1,6 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::{anyhow, Context};
+use fj_host::{Model, Parameters};
 
 use crate::{args::Args, config::Config};
 
@@ -54,6 +55,12 @@ impl ModelPath {
             .clone()
             .unwrap_or_else(PathBuf::new)
             .join(&self.model_path)
+    }
+
+    pub fn load_model(&self, parameters: Parameters) -> anyhow::Result<Model> {
+        let path = self.path();
+        let model = Model::new(&path, parameters)?;
+        Ok(model)
     }
 }
 
