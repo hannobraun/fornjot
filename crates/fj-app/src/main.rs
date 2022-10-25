@@ -14,14 +14,13 @@
 
 mod args;
 mod config;
+mod path;
 
-use std::path::PathBuf;
-
-use anyhow::{anyhow, Context as _};
 use fj_export::export;
-use fj_host::{Model, Parameters};
+use fj_host::Parameters;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_window::run::run;
+use path::ModelPath;
 use tracing_subscriber::fmt::format;
 use tracing_subscriber::EnvFilter;
 
@@ -43,37 +42,13 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let path = config.default_path.unwrap_or_else(|| PathBuf::from(""));
+    let model_path = ModelPath::from_args_and_config(&args, &config)?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
-    let path_of_model = path.canonicalize().unwrap_or_default();
-
-    let model = if let Some(model) =
-        args.model.or(config.default_model).as_ref()
-    {
-        let mut model_path = path;
-        model_path.push(model);
-        Model::new(model_path.clone(), parameters).with_context(|| {
-            if path_of_model.as_os_str().is_empty() {
-                format!(
-                    "Model is not defined, can't find model defined inside the default-model also, add model like \n cargo run -- -m {}", model.display()
-                )
-            } else {
-                format!(
-                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path_of_model.display(), model.display()
-            )
-        }
-        })?
-    } else {
-        return Err(anyhow!(
-            "You must specify a model to start Fornjot.\n\
-            - Pass a model as a command-line argument. See `fj-app --help`.\n\
-            - Specify a default model in the configuration file."
-        ));
-    };
+    let model = model_path.load_model(parameters)?;
 
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
