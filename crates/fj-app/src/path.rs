@@ -102,6 +102,14 @@ fn load_error_context_inner(
         "Failed to load model: `{}`",
         model_path.path().display()
     )?;
+    match model_path {
+        ModelPathSource::Args(_) => {
+            write!(error, "\n- Passed via command-line argument")?
+        }
+        ModelPathSource::Config(_) => {
+            write!(error, "\n- Specified as default model in configuration")?
+        }
+    }
     write!(error, "\n- Path of model: {}", path.display())?;
 
     let mut suggestions = String::new();
