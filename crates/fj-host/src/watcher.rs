@@ -136,7 +136,7 @@ pub enum WatcherEvent {
     /// A status update about the model
     StatusUpdate(String),
 
-    /// A shape has been loaded from the model
+    /// The model has been evaluated
     Evaluation(Evaluation),
 
     /// An error

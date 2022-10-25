@@ -57,10 +57,7 @@ impl Model {
         self.src_path.clone()
     }
 
-    /// Load the model once
-    ///
-    /// The passed arguments are provided to the model. Returns the shape that
-    /// the model returns.
+    /// Evaluate the model
     pub fn evaluate(&self) -> Result<Evaluation, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
@@ -145,7 +142,7 @@ impl Model {
     }
 }
 
-/// A loaded shape, together with additional metadata
+/// The result of evaluating a model
 ///
 /// See [`Model::evaluate`].
 pub struct Evaluation {
