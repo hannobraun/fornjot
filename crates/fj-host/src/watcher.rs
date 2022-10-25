@@ -19,7 +19,7 @@ impl Watcher {
         let (watch_tx, watch_rx) = crossbeam_channel::bounded(0);
         let watch_tx_2 = watch_tx.clone();
 
-        let watch_path = model.src_path();
+        let watch_path = model.watch_path();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {

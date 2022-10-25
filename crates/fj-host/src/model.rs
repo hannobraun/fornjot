@@ -53,7 +53,7 @@ impl Model {
         })
     }
 
-    pub(crate) fn src_path(&self) -> PathBuf {
+    pub(crate) fn watch_path(&self) -> PathBuf {
         self.src_path.clone()
     }
 
