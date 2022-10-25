@@ -3,7 +3,7 @@ use std::{collections::HashSet, ffi::OsStr, thread};
 use crossbeam_channel::Receiver;
 use notify::Watcher as _;
 
-use crate::{Error, LoadedShape, Model};
+use crate::{Error, Evaluation, Model};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -137,7 +137,7 @@ pub enum WatcherEvent {
     StatusUpdate(String),
 
     /// A shape has been loaded from the model
-    Shape(LoadedShape),
+    Shape(Evaluation),
 
     /// An error
     Error(Error),

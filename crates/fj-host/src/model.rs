@@ -61,7 +61,7 @@ impl Model {
     ///
     /// The passed arguments are provided to the model. Returns the shape that
     /// the model returns.
-    pub fn evaluate(&self) -> Result<LoadedShape, Error> {
+    pub fn evaluate(&self) -> Result<Evaluation, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
         let cargo_output = Command::new("cargo")
@@ -138,7 +138,7 @@ impl Model {
             model.shape(&host).map_err(Error::Shape)?
         };
 
-        Ok(LoadedShape {
+        Ok(Evaluation {
             shape,
             compile_time: seconds_taken.into(),
         })
@@ -148,7 +148,7 @@ impl Model {
 /// A loaded shape, together with additional metadata
 ///
 /// See [`Model::evaluate`].
-pub struct LoadedShape {
+pub struct Evaluation {
     /// The shape
     pub shape: fj::Shape,
 
