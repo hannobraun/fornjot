@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::{fmt::Write, path::PathBuf};
 
 use anyhow::{anyhow, Context};
 use fj_host::{Model, Parameters};
@@ -42,14 +42,6 @@ impl ModelPath {
         })
     }
 
-    pub fn default_path(&self) -> PathBuf {
-        self.default_path.clone().unwrap_or_else(PathBuf::new)
-    }
-
-    pub fn model_path_without_default(&self) -> &Path {
-        &self.model_path
-    }
-
     pub fn path(&self) -> PathBuf {
         self.default_path
             .clone()
@@ -59,7 +51,39 @@ impl ModelPath {
 
     pub fn load_model(&self, parameters: Parameters) -> anyhow::Result<Model> {
         let path = self.path();
-        let model = Model::new(&path, parameters)?;
+
+        let mut error = String::new();
+        write!(
+            error,
+            "Failed to load model: `{}`",
+            self.model_path.display()
+        )?;
+        write!(error, "\n- Path of model: {}", path.display())?;
+
+        let mut suggestions = String::new();
+        write!(suggestions, "Suggestions:")?;
+        write!(
+            suggestions,
+            "\n- Did you mis-type the model path `{}`?",
+            self.model_path.display()
+        )?;
+
+        if let Some(default_path) = &self.default_path {
+            write!(
+                error,
+                "\n- Searching inside default path from configuration: {}",
+                default_path.display(),
+            )?;
+
+            write!(suggestions, "\n- Did you mis-type the default path?")?;
+            write!(
+                suggestions,
+                "\n- Did you accidentally pick up a local configuration file?"
+            )?;
+        }
+
+        let model = Model::new(&path, parameters)
+            .with_context(|| format!("{error}\n\n{suggestions}"))?;
         Ok(model)
     }
 }

@@ -16,7 +16,6 @@ mod args;
 mod config;
 mod path;
 
-use anyhow::Context as _;
 use fj_export::export;
 use fj_host::Parameters;
 use fj_operations::shape_processor::ShapeProcessor;
@@ -49,13 +48,7 @@ fn main() -> anyhow::Result<()> {
         tolerance: args.tolerance,
     };
 
-    let model = {
-        model_path.load_model(parameters).with_context(|| {
-            format!(
-                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.path().display(), model_path.default_path().display(), model_path.model_path_without_default().display()
-            )
-        })?
-    };
+    let model = model_path.load_model(parameters)?;
 
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
