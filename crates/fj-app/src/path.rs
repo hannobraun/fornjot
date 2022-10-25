@@ -15,20 +15,7 @@ impl ModelPath {
         args: &Args,
         config: &Config,
     ) -> anyhow::Result<Self> {
-        let default_path = config
-            .default_path
-            .clone()
-            .map(|path| {
-                path.canonicalize().with_context(|| {
-                    format!(
-                        "Converting `default-path` from `fj.toml` (`{}`) into \
-                        absolute path",
-                        path.display(),
-                    )
-                })
-            })
-            .transpose()?;
-
+        let default_path = config.default_path.clone();
         let model_path = args
             .model
             .as_ref()
@@ -43,8 +30,21 @@ impl ModelPath {
     }
 
     pub fn load_model(&self, parameters: Parameters) -> anyhow::Result<Model> {
-        let path = self
+        let default_path = self
             .default_path
+            .as_ref()
+            .map(|path| {
+                path.canonicalize().with_context(|| {
+                    format!(
+                        "Converting `default-path` from `fj.toml` (`{}`) into \
+                        absolute path",
+                        path.display(),
+                    )
+                })
+            })
+            .transpose()?;
+
+        let path = default_path
             .clone()
             .unwrap_or_else(PathBuf::new)
             .join(&self.model_path);
@@ -65,7 +65,7 @@ impl ModelPath {
             self.model_path.display()
         )?;
 
-        if let Some(default_path) = &self.default_path {
+        if let Some(default_path) = &default_path {
             write!(
                 error,
                 "\n- Searching inside default path from configuration: {}",
