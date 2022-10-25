@@ -62,7 +62,6 @@ fn main() -> anyhow::Result<()> {
     }
 
     let invert_zoom = config.invert_zoom.unwrap_or(false);
-
     run(model, shape_processor, invert_zoom)?;
 
     Ok(())
