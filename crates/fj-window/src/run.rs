@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::{Model, Watcher, WatcherEvent};
+use fj_host::{Host, Model, ModelEvent};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -32,13 +32,13 @@ pub fn run(
     invert_zoom: bool,
 ) -> Result<(), Error> {
     let mut status = StatusReport::new();
-    let watcher = Watcher::watch_model(model)?;
+    let host = Host::from_model(model)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    let events = watcher.events();
+    let events = host.events();
 
     let mut held_mouse_button = None;
 
@@ -69,16 +69,16 @@ pub fn run(
             };
 
             match event {
-                WatcherEvent::StatusUpdate(status_update) => {
+                ModelEvent::StatusUpdate(status_update) => {
                     status.update_status(&status_update)
                 }
-                WatcherEvent::Shape(shape) => {
+                ModelEvent::Evaluation(evaluation) => {
                     status.update_status(&format!(
                         "Model compiled successfully in {}!",
-                        shape.compile_time
+                        evaluation.compile_time
                     ));
 
-                    match shape_processor.process(&shape.shape) {
+                    match shape_processor.process(&evaluation.shape) {
                         Ok(shape) => {
                             viewer.handle_shape_update(shape);
                         }
@@ -99,7 +99,7 @@ pub fn run(
                         }
                     }
                 }
-                WatcherEvent::Error(err) => {
+                ModelEvent::Error(err) => {
                     // Can be cleaned up, once `Report` is stable:
                     // https://doc.rust-lang.org/std/error/struct.Report.html
 

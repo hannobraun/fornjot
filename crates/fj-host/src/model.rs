@@ -7,7 +7,7 @@ use std::{
 
 use fj::{abi, version::RawVersion};
 
-use crate::{host::Host, platform::HostPlatform, Parameters};
+use crate::{platform::HostPlatform, Parameters};
 
 /// Represents a Fornjot model
 pub struct Model {
@@ -53,15 +53,13 @@ impl Model {
         })
     }
 
-    pub(crate) fn src_path(&self) -> PathBuf {
+    /// Access the path that needs to be watched for changes
+    pub fn watch_path(&self) -> PathBuf {
         self.src_path.clone()
     }
 
-    /// Load the model once
-    ///
-    /// The passed arguments are provided to the model. Returns the shape that
-    /// the model returns.
-    pub fn load(&self) -> Result<LoadedShape, Error> {
+    /// Evaluate the model
+    pub fn evaluate(&self) -> Result<Evaluation, Error> {
         let manifest_path = self.manifest_path.display().to_string();
 
         let cargo_output = Command::new("cargo")
@@ -138,22 +136,52 @@ impl Model {
             model.shape(&host).map_err(Error::Shape)?
         };
 
-        Ok(LoadedShape {
+        Ok(Evaluation {
             shape,
             compile_time: seconds_taken.into(),
         })
     }
 }
 
-/// A loaded shape, together with additional metadata
+/// The result of evaluating a model
 ///
-/// See [`Model::load`].
-pub struct LoadedShape {
+/// See [`Model::evaluate`].
+pub struct Evaluation {
     /// The shape
     pub shape: fj::Shape,
 
     /// The time it took to compile the shape, from the Cargo output
     pub compile_time: String,
+}
+
+pub struct Host<'a> {
+    args: &'a Parameters,
+    model: Option<Box<dyn fj::models::Model>>,
+}
+
+impl<'a> Host<'a> {
+    pub fn new(parameters: &'a Parameters) -> Self {
+        Self {
+            args: parameters,
+            model: None,
+        }
+    }
+
+    pub fn take_model(&mut self) -> Option<Box<dyn fj::models::Model>> {
+        self.model.take()
+    }
+}
+
+impl<'a> fj::models::Host for Host<'a> {
+    fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) {
+        self.model = Some(model);
+    }
+}
+
+impl<'a> fj::models::Context for Host<'a> {
+    fn get_argument(&self, name: &str) -> Option<&str> {
+        self.args.get(name).map(|s| s.as_str())
+    }
 }
 
 fn package_associated_with_directory<'m>(

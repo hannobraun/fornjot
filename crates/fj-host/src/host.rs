@@ -1,31 +1,31 @@
-use crate::Parameters;
+use crossbeam_channel::Receiver;
 
-pub struct Host<'a> {
-    args: &'a Parameters,
-    model: Option<Box<dyn fj::models::Model>>,
+use crate::{Error, Evaluator, Model, ModelEvent, Watcher};
+
+/// A Fornjot model host
+pub struct Host {
+    evaluator: Evaluator,
+    _watcher: Watcher,
 }
 
-impl<'a> Host<'a> {
-    pub fn new(parameters: &'a Parameters) -> Self {
-        Self {
-            args: parameters,
-            model: None,
-        }
+impl Host {
+    /// Create a new instance of `Host`
+    ///
+    /// This is only useful, if you want to continuously watch the model for
+    /// changes. If you don't just keep using `Model`.
+    pub fn from_model(model: Model) -> Result<Self, Error> {
+        let watch_path = model.watch_path();
+        let evaluator = Evaluator::from_model(model);
+        let _watcher = Watcher::watch_model(&watch_path, &evaluator)?;
+
+        Ok(Self {
+            evaluator,
+            _watcher,
+        })
     }
 
-    pub fn take_model(&mut self) -> Option<Box<dyn fj::models::Model>> {
-        self.model.take()
-    }
-}
-
-impl<'a> fj::models::Host for Host<'a> {
-    fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) {
-        self.model = Some(model);
-    }
-}
-
-impl<'a> fj::models::Context for Host<'a> {
-    fn get_argument(&self, name: &str) -> Option<&str> {
-        self.args.get(name).map(|s| s.as_str())
+    /// Access a channel with evaluation events
+    pub fn events(&self) -> Receiver<ModelEvent> {
+        self.evaluator.events()
     }
 }

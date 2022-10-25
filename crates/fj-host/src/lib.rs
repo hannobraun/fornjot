@@ -15,6 +15,7 @@
 
 #![warn(missing_docs)]
 
+mod evaluator;
 mod host;
 mod model;
 mod parameters;
@@ -22,7 +23,9 @@ mod platform;
 mod watcher;
 
 pub use self::{
-    model::{Error, LoadedShape, Model},
+    evaluator::{Evaluator, ModelEvent},
+    host::Host,
+    model::{Error, Evaluation, Model},
     parameters::Parameters,
-    watcher::{Watcher, WatcherEvent},
+    watcher::Watcher,
 };
