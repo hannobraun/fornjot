@@ -50,10 +50,9 @@ fn main() -> anyhow::Result<()> {
     };
 
     let model = {
-        let model_path = path.path();
         path.load_model(parameters).with_context(|| {
             format!(
-                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.display(), path.default_path().display(), path.model_path_without_default().display()
+                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", path.path().display(), path.default_path().display(), path.model_path_without_default().display()
             )
         })?
     };
