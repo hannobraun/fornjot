@@ -43,16 +43,16 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let path = ModelPath::from_args_and_config(&args, &config)?;
+    let model_path = ModelPath::from_args_and_config(&args, &config)?;
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
     let model = {
-        path.load_model(parameters).with_context(|| {
+        model_path.load_model(parameters).with_context(|| {
             format!(
-                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", path.path().display(), path.default_path().display(), path.model_path_without_default().display()
+                "Failed to load model: {0}\ninside default models directory: '{1}'\nCan mainly caused by: \n1. Model '{2}' can not be found inside '{1}'\n2.'{2}' can be mis-typed see inside '{1}' for a match\n3. Define model is '{2}' couldn\'t be found ((defined in command-line arguments))", model_path.path().display(), model_path.default_path().display(), model_path.model_path_without_default().display()
             )
         })?
     };
