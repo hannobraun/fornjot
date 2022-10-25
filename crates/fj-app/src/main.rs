@@ -53,8 +53,8 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let shape = model.evaluate()?;
-        let shape = shape_processor.process(&shape.shape)?;
+        let evaluation = model.evaluate()?;
+        let shape = shape_processor.process(&evaluation.shape)?;
 
         export(&shape.mesh, &export_path)?;
 
