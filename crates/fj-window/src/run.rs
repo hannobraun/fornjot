@@ -36,8 +36,7 @@ pub fn run(
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer =
-        block_on(Viewer::new(&window, window.window().scale_factor() as f32))?;
+    let mut viewer = block_on(Viewer::new(&window))?;
 
     let events = watcher.events();
 

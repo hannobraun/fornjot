@@ -30,7 +30,6 @@ impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        _: f32,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is

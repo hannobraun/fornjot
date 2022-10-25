@@ -38,12 +38,9 @@ pub struct Viewer {
 
 impl Viewer {
     /// Construct a new instance of `Viewer`
-    pub async fn new(
-        screen: &impl Screen,
-        pixels_per_point: f32,
-    ) -> Result<Self, RendererInitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
-        let gui = renderer.init_gui(pixels_per_point);
+        let gui = renderer.init_gui();
 
         Ok(Self {
             camera: Camera::default(),
