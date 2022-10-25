@@ -27,7 +27,12 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, objects: &Objects) -> Handle<Self::Full> {
+                fn build(self, objects: &Objects)
+                    -> Result<
+                        Handle<Self::Full>,
+                        crate::validate::ValidationError
+                    >
+                {
                     self.build(objects)
                 }
             }

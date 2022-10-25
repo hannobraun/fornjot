@@ -82,18 +82,18 @@ mod tests {
     use super::CurveEdgeIntersection;
 
     #[test]
-    fn compute_edge_in_front_of_curve_origin() {
+    fn compute_edge_in_front_of_curve_origin() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[1., -1.], [1., 1.]])
-            .build(&objects);
+            .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -103,21 +103,22 @@ mod tests {
                 point_on_curve: Point::from([1.])
             })
         );
+        Ok(())
     }
 
     #[test]
-    fn compute_edge_behind_curve_origin() {
+    fn compute_edge_behind_curve_origin() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., -1.], [-1., 1.]])
-            .build(&objects);
+            .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -127,40 +128,42 @@ mod tests {
                 point_on_curve: Point::from([-1.])
             })
         );
+        Ok(())
     }
 
     #[test]
-    fn compute_edge_parallel_to_curve() {
+    fn compute_edge_parallel_to_curve() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., -1.], [1., -1.]])
-            .build(&objects);
+            .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert!(intersection.is_none());
+        Ok(())
     }
 
     #[test]
-    fn compute_edge_on_curve() {
+    fn compute_edge_on_curve() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[-1., 0.], [1., 0.]])
-            .build(&objects);
+            .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -170,5 +173,6 @@ mod tests {
                 points_on_curve: [Point::from([-1.]), Point::from([1.]),]
             })
         );
+        Ok(())
     }
 }

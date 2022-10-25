@@ -119,11 +119,11 @@ mod tests {
         let expected_xy = Curve::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let expected_xz = Curve::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz], &objects),

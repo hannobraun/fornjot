@@ -173,11 +173,11 @@ mod tests {
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
-            .build(&objects);
+            .build(&objects)?;
 
         let half_edge =
             (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
@@ -185,7 +185,7 @@ mod tests {
         let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
-            .build(&objects);
+            .build(&objects)?;
         assert_eq!(half_edge, expected_half_edge);
         Ok(())
     }

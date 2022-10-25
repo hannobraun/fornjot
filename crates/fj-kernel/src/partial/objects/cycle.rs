@@ -6,6 +6,7 @@ use crate::{
     },
     partial::{HasPartial, MaybePartial},
     storage::Handle,
+    validate::ValidationError,
 };
 
 /// A partial [`Cycle`]
@@ -160,7 +161,10 @@ impl PartialCycle {
     }
 
     /// Build a full [`Cycle`] from the partial cycle
-    pub fn build(mut self, objects: &Objects) -> Handle<Cycle> {
+    pub fn build(
+        mut self,
+        objects: &Objects,
+    ) -> Result<Handle<Cycle>, ValidationError> {
         let surface = self.surface.expect("Need surface to build `Cycle`");
         let surface_for_edges = surface.clone();
         let half_edges = {
@@ -175,12 +179,14 @@ impl PartialCycle {
                         (half_edge, vertex, surface_vertex)
                     })
                 })
-                .map(|(half_edge, vertex, surface_vertex)| {
+                .map(|(half_edge, vertex, surface_vertex)|
+                    -> Result<_, ValidationError>
+                {
                     let surface_vertex = surface_vertex
                         .update_partial(|surface_vertex| {
                             surface_vertex.with_surface(Some(surface.clone()))
                         })
-                        .into_full(objects);
+                        .into_full(objects)?;
 
                     *half_edge =
                         half_edge.clone().update_partial(|half_edge| {
@@ -193,12 +199,15 @@ impl PartialCycle {
                             ))
                         });
 
-                    surface_vertex
-                });
+                    Ok(surface_vertex)
+                })
+                .transpose()?;
 
             let (half_edges, _) = self.half_edges.into_iter().fold(
-                (Vec::new(), last_vertex),
-                |(mut half_edges, previous_vertex), half_edge| {
+                Ok((Vec::new(), last_vertex)),
+                |result: Result<_, ValidationError>, half_edge| {
+                    let (mut half_edges, previous_vertex) = result?;
+
                     let half_edge = half_edge
                         .update_partial(|half_edge| {
                             let [back, _] = half_edge.vertices.clone();
@@ -212,19 +221,19 @@ impl PartialCycle {
                                 .with_surface(Some(surface_for_edges.clone()))
                                 .with_back_vertex(back)
                         })
-                        .into_full(objects);
+                        .into_full(objects)?;
 
                     let front = half_edge.front().surface_form().clone();
                     half_edges.push(half_edge);
 
-                    (half_edges, Some(front))
+                    Ok((half_edges, Some(front)))
                 },
-            );
+            )?;
 
             half_edges
         };
 
-        Cycle::new(surface, half_edges, objects)
+        Ok(Cycle::new(surface, half_edges, objects))
     }
 }
 

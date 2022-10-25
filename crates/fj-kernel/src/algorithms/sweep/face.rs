@@ -126,7 +126,7 @@ mod tests {
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
                     .as_line_segment_from_points([a, b])
-                    .build(&objects);
+                    .build(&objects)?;
                 (half_edge, Color::default()).sweep(UP, &objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
@@ -168,7 +168,7 @@ mod tests {
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
                     .as_line_segment_from_points([a, b])
-                    .build(&objects)
+                    .build(&objects)?
                     .reverse(&objects);
                 (half_edge, Color::default()).sweep(DOWN, &objects)
             })

@@ -21,15 +21,15 @@ impl TransformObject for Handle<Face> {
             .to_partial()
             .transform(transform, objects)?
             .with_surface(Some(surface.clone()))
-            .build(objects);
+            .build(objects)?;
         let interiors = self
             .interiors()
             .map(|cycle| -> Result<_, ValidationError> {
-                Ok(cycle
+                cycle
                     .to_partial()
                     .transform(transform, objects)?
                     .with_surface(Some(surface.clone()))
-                    .build(objects))
+                    .build(objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
 

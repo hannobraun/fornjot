@@ -199,7 +199,7 @@ mod tests {
     };
 
     #[test]
-    fn coherence_edge() {
+    fn coherence_edge() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -246,7 +246,7 @@ mod tests {
 
         let global_edge = GlobalEdge::partial()
             .from_curve_and_vertices(&curve, &vertices)
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::new(vertices, global_edge, &objects);
 
         let result =
@@ -261,6 +261,7 @@ mod tests {
             ..ValidationConfig::default()
         });
         assert!(result.is_err());
+        Ok(())
     }
 
     #[test]

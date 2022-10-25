@@ -56,6 +56,7 @@ impl FaceFaceIntersection {
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -91,7 +92,7 @@ mod tests {
     }
 
     #[test]
-    fn compute_one_intersection() {
+    fn compute_one_intersection() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         #[rustfmt::skip]
@@ -112,12 +113,12 @@ mod tests {
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
 
-        let expected_curves = surfaces.map(|surface| {
+        let expected_curves = surfaces.try_map_ext(|surface| {
             Curve::partial()
                 .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&objects)
-        });
+        })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
         assert_eq!(
@@ -127,5 +128,6 @@ mod tests {
                 intersection_intervals: expected_intervals
             })
         );
+        Ok(())
     }
 }

@@ -53,7 +53,8 @@ impl<'a> FaceBuilder<'a> {
                 .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
-                .build(self.objects),
+                .build(self.objects)
+                .unwrap(),
         );
         self
     }
@@ -77,7 +78,8 @@ impl<'a> FaceBuilder<'a> {
                 .with_surface(self.surface.clone())
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
-                .build(self.objects),
+                .build(self.objects)
+                .unwrap(),
         );
         self
     }

@@ -70,10 +70,9 @@ where
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        Ok(self
-            .to_partial()
+        self.to_partial()
             .transform(transform, objects)?
-            .build(objects))
+            .build(objects)
     }
 }
 

@@ -4,6 +4,7 @@ use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
     path::SurfacePath,
     storage::{Handle, HandleWrapper},
+    validate::ValidationError,
 };
 
 /// A partial [`Curve`]
@@ -83,7 +84,10 @@ impl PartialCurve {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self, objects: &Objects) -> Handle<Curve> {
+    pub fn build(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<Curve>, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
@@ -92,7 +96,7 @@ impl PartialCurve {
             .global_form
             .unwrap_or_else(|| GlobalCurve::new(objects).into());
 
-        Curve::new(surface, path, global_form, objects)
+        Ok(Curve::new(surface, path, global_form, objects))
     }
 }
 

@@ -6,6 +6,7 @@ use crate::{
         Surface, SurfaceVertex, Vertex,
     },
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{HasPartial, Partial};
@@ -48,10 +49,13 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(self, objects: &Objects) -> Handle<T> {
+    pub fn into_full(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<T>, ValidationError> {
         match self {
             Self::Partial(partial) => partial.build(objects),
-            Self::Full(full) => full,
+            Self::Full(full) => Ok(full),
         }
     }
 

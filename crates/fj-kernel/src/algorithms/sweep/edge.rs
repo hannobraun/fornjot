@@ -198,7 +198,7 @@ mod tests {
         let half_edge = HalfEdge::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
             .as_line_segment_from_points([[0., 0.], [1., 0.]])
-            .build(&objects);
+            .build(&objects)?;
 
         let face =
             (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
@@ -209,7 +209,7 @@ mod tests {
             let bottom = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .as_line_segment_from_points([[0., 0.], [1., 0.]])
-                .build(&objects);
+                .build(&objects)?;
             let side_up = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
@@ -221,7 +221,7 @@ mod tests {
                     ),
                 )))
                 .as_line_segment()
-                .build(&objects);
+                .build(&objects)?;
             let top = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
@@ -233,7 +233,7 @@ mod tests {
                     Some(side_up.front().surface_form().clone()),
                 )))
                 .as_line_segment()
-                .build(&objects)
+                .build(&objects)?
                 .reverse(&objects);
             let side_down = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
@@ -244,7 +244,7 @@ mod tests {
                     Some(top.front().surface_form().clone()),
                 )))
                 .as_line_segment()
-                .build(&objects)
+                .build(&objects)?
                 .reverse(&objects);
 
             let cycle = Cycle::new(
