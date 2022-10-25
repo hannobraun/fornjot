@@ -26,5 +26,5 @@ pub use self::{
     evaluator::Evaluator,
     model::{Error, Evaluation, Model},
     parameters::Parameters,
-    watcher::{Watcher, WatcherEvent},
+    watcher::{ModelEvent, Watcher},
 };

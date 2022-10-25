@@ -92,7 +92,7 @@ impl Watcher {
 }
 
 /// An event emitted by the [`Watcher`]
-pub enum WatcherEvent {
+pub enum ModelEvent {
     /// A status update about the model
     StatusUpdate(String),
 

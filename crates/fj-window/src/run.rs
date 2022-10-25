@@ -5,7 +5,7 @@
 
 use std::error;
 
-use fj_host::{Evaluator, Model, Watcher, WatcherEvent};
+use fj_host::{Evaluator, Model, ModelEvent, Watcher};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -72,10 +72,10 @@ pub fn run(
             };
 
             match event {
-                WatcherEvent::StatusUpdate(status_update) => {
+                ModelEvent::StatusUpdate(status_update) => {
                     status.update_status(&status_update)
                 }
-                WatcherEvent::Evaluation(evaluation) => {
+                ModelEvent::Evaluation(evaluation) => {
                     status.update_status(&format!(
                         "Model compiled successfully in {}!",
                         evaluation.compile_time
@@ -102,7 +102,7 @@ pub fn run(
                         }
                     }
                 }
-                WatcherEvent::Error(err) => {
+                ModelEvent::Error(err) => {
                     // Can be cleaned up, once `Report` is stable:
                     // https://doc.rust-lang.org/std/error/struct.Report.html
 

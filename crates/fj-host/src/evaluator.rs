@@ -2,12 +2,12 @@ use std::thread;
 
 use crossbeam_channel::{Receiver, Sender};
 
-use crate::{Error, Model, WatcherEvent};
+use crate::{Error, Model, ModelEvent};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
     trigger_tx: Sender<()>,
-    event_rx: Receiver<WatcherEvent>,
+    event_rx: Receiver<ModelEvent>,
 }
 
 impl Evaluator {
@@ -25,7 +25,7 @@ impl Evaluator {
                 Ok(evaluation) => evaluation,
                 Err(Error::Compile { output }) => {
                     event_tx
-                        .send(WatcherEvent::StatusUpdate(format!(
+                        .send(ModelEvent::StatusUpdate(format!(
                             "Failed to compile model:\n{}",
                             output
                         )))
@@ -35,14 +35,14 @@ impl Evaluator {
                 }
                 Err(err) => {
                     event_tx
-                        .send(WatcherEvent::Error(err))
+                        .send(ModelEvent::Error(err))
                         .expect("Expected channel to never disconnect");
                     return;
                 }
             };
 
             event_tx
-                .send(WatcherEvent::Evaluation(evaluation))
+                .send(ModelEvent::Evaluation(evaluation))
                 .expect("Expected channel to never disconnect");
         });
 
@@ -58,7 +58,7 @@ impl Evaluator {
     }
 
     /// Access a channel for receiving status updates
-    pub fn events(&self) -> Receiver<WatcherEvent> {
+    pub fn events(&self) -> Receiver<ModelEvent> {
         self.event_rx.clone()
     }
 }
