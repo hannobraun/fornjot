@@ -231,17 +231,6 @@ fn ambiguous_path_error(
 /// An error that can occur when loading or reloading a model
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    /// Model failed to compile
-    #[error("Error compiling model")]
-    Compile {
-        /// The compiler output
-        output: String,
-    },
-
-    /// I/O error while loading the model
-    #[error("I/O error while loading model")]
-    Io(#[from] io::Error),
-
     /// Failed to load the model's dynamic library
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
@@ -255,6 +244,17 @@ pub enum Error {
         /// The model version
         model: String,
     },
+
+    /// Model failed to compile
+    #[error("Error compiling model")]
+    Compile {
+        /// The compiler output
+        output: String,
+    },
+
+    /// I/O error while loading the model
+    #[error("I/O error while loading model")]
+    Io(#[from] io::Error),
 
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]
