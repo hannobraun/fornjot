@@ -8,6 +8,7 @@ use crate::{
     },
     partial::{HasPartial, MaybePartial},
     storage::{Handle, HandleWrapper},
+    validate::ValidationError,
 };
 
 /// A partial [`HalfEdge`]
@@ -124,7 +125,7 @@ impl PartialHalfEdge {
         mut self,
         radius: impl Into<Scalar>,
         objects: &Objects,
-    ) -> Self {
+    ) -> Result<Self, ValidationError> {
         let curve = Curve::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
@@ -148,7 +149,7 @@ impl PartialHalfEdge {
             .with_position(Some(path.point_from_path_coords(a_curve)))
             .with_surface(self.surface.clone())
             .with_global_form(Some(global_vertex))
-            .build(objects);
+            .build(objects)?;
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
             Vertex::partial()
@@ -161,7 +162,7 @@ impl PartialHalfEdge {
         self.curve = Some(curve.into());
         self.vertices = [Some(back), Some(front)];
 
-        self
+        Ok(self)
     }
 
     /// Update partial half-edge as a line segment, from the given points
@@ -226,7 +227,11 @@ impl PartialHalfEdge {
                 let must_switch_order = {
                     let objects = Objects::new();
                     let vertices = vertices.clone().map(|vertex| {
-                        vertex.into_full(&objects).global_form().clone()
+                        vertex
+                            .into_full(&objects)
+                            .unwrap()
+                            .global_form()
+                            .clone()
                     });
 
                     let (_, must_switch_order) =
@@ -263,19 +268,22 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, objects: &Objects) -> Handle<HalfEdge> {
+    pub fn build(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<HalfEdge>, ValidationError> {
         let surface = self.surface;
         let curve = self
             .curve
             .expect("Can't build `HalfEdge` without curve")
             .update_partial(|curve| curve.with_surface(surface))
-            .into_full(objects);
-        let vertices = self.vertices.map(|vertex| {
+            .into_full(objects)?;
+        let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
                 .expect("Can't build `HalfEdge` without vertices")
                 .update_partial(|vertex| vertex.with_curve(Some(curve.clone())))
                 .into_full(objects)
-        });
+        })?;
 
         let global_form = self
             .global_form
@@ -283,9 +291,9 @@ impl PartialHalfEdge {
             .update_partial(|partial| {
                 partial.from_curve_and_vertices(&curve, &vertices)
             })
-            .into_full(objects);
+            .into_full(objects)?;
 
-        HalfEdge::new(vertices, global_form, objects)
+        Ok(HalfEdge::new(vertices, global_form, objects))
     }
 }
 
@@ -352,7 +360,10 @@ impl PartialGlobalEdge {
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
-    pub fn build(self, objects: &Objects) -> Handle<GlobalEdge> {
+    pub fn build(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<GlobalEdge>, ValidationError> {
         let curve = self
             .curve
             .expect("Can't build `GlobalEdge` without `GlobalCurve`");
@@ -360,7 +371,7 @@ impl PartialGlobalEdge {
             .vertices
             .expect("Can't build `GlobalEdge` without vertices");
 
-        GlobalEdge::new(curve, vertices, objects)
+        Ok(GlobalEdge::new(curve, vertices, objects))
     }
 }
 

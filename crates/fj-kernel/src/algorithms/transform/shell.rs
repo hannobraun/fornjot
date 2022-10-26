@@ -3,17 +3,25 @@ use fj_math::Transform;
 use crate::{
     objects::{Objects, Shell},
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::TransformObject;
 
 impl TransformObject for Handle<Shell> {
-    fn transform(self, transform: &Transform, objects: &Objects) -> Self {
+    fn transform(
+        self,
+        transform: &Transform,
+        objects: &Objects,
+    ) -> Result<Self, ValidationError> {
         let faces = self
             .faces()
             .clone()
             .into_iter()
-            .map(|face| face.transform(transform, objects));
-        Shell::builder(objects).with_faces(faces).build()
+            .map(|face| -> Result<_, ValidationError> {
+                face.transform(transform, objects)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(Shell::builder(objects).with_faces(faces).build())
     }
 }

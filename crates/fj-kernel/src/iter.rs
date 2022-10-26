@@ -585,14 +585,14 @@ mod tests {
     }
 
     #[test]
-    fn vertex() {
+    fn vertex() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let global_vertex = GlobalVertex::from_position([0., 0., 0.], &objects);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex, &objects);
@@ -609,5 +609,7 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(1, object.vertex_iter().count());
+
+        Ok(())
     }
 }

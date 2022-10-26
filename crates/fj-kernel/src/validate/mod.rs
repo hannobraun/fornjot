@@ -15,7 +15,16 @@
 //! implemented, as of this writing.
 
 mod coherence;
+mod curve;
+mod cycle;
+mod edge;
+mod face;
+mod shell;
+mod sketch;
+mod solid;
+mod surface;
 mod uniqueness;
+mod vertex;
 
 pub use self::{
     coherence::{CoherenceIssues, VertexCoherenceMismatch},
@@ -26,7 +35,7 @@ use std::{collections::HashSet, ops::Deref};
 
 use fj_math::Scalar;
 
-use crate::iter::ObjectIters;
+use crate::{iter::ObjectIters, storage::Store};
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -35,8 +44,8 @@ pub trait Validate: Sized {
     /// The following calls are equivalent:
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
@@ -44,8 +53,8 @@ pub trait Validate: Sized {
     /// ```
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
     /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
@@ -87,6 +96,21 @@ where
 
         Ok(Validated(self))
     }
+}
+
+/// Validate an object
+pub trait Validate2: Sized {
+    /// Validate the object using default configuration
+    fn validate(&self, store: &Store<Self>) -> Result<(), ValidationError> {
+        self.validate_with_config(store, &ValidationConfig::default())
+    }
+
+    /// Validate the object
+    fn validate_with_config(
+        &self,
+        store: &Store<Self>,
+        config: &ValidationConfig,
+    ) -> Result<(), ValidationError>;
 }
 
 /// Configuration required for the validation process
@@ -165,17 +189,17 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::validate::{Validate, ValidationConfig, ValidationError},
         objects::{
             Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
             SurfaceVertex, Vertex,
         },
         partial::HasPartial,
         path::SurfacePath,
+        validate::{Validate, ValidationConfig, ValidationError},
     };
 
     #[test]
-    fn coherence_edge() {
+    fn coherence_edge() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -222,7 +246,7 @@ mod tests {
 
         let global_edge = GlobalEdge::partial()
             .from_curve_and_vertices(&curve, &vertices)
-            .build(&objects);
+            .build(&objects)?;
         let half_edge = HalfEdge::new(vertices, global_edge, &objects);
 
         let result =
@@ -237,6 +261,7 @@ mod tests {
             ..ValidationConfig::default()
         });
         assert!(result.is_err());
+        Ok(())
     }
 
     #[test]

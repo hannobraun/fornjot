@@ -7,8 +7,8 @@ use std::collections::BTreeSet;
 use fj_interop::mesh::Color;
 
 use crate::{
-    algorithms::validate::ValidationConfig,
     objects::{Face, Faces, Handedness},
+    validate::ValidationConfig,
 };
 
 use super::{
