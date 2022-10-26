@@ -67,12 +67,24 @@ impl Renderer {
             desired_features.intersection(available_features)
         };
 
+        let limits = {
+            // This is the lowest of the available defaults. It should guarantee
+            // that we can run pretty much everywhere.
+            let lowest_limits = wgpu::Limits::downlevel_webgl2_defaults();
+
+            // However, these lowest limits aren't necessarily capable of
+            // supporting the screen resolution of our current platform, so
+            // let's amend them.
+            let supported_limits = adapter.limits();
+            lowest_limits.using_resolution(supported_limits)
+        };
+
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
                     features,
-                    limits: wgpu::Limits::default(),
+                    limits,
                 },
                 None,
             )
