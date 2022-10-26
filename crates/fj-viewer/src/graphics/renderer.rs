@@ -14,7 +14,7 @@ use crate::{
 use super::{
     draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DEPTH_FORMAT,
+    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
@@ -315,7 +315,7 @@ impl Renderer {
                 depth_or_array_layers: 1,
             },
             mip_level_count: 1,
-            sample_count: 1,
+            sample_count: SAMPLE_COUNT,
             dimension: wgpu::TextureDimension::D2,
             format: DEPTH_FORMAT,
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
