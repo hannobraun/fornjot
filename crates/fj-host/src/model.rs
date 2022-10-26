@@ -267,7 +267,7 @@ pub enum Error {
     },
 
     /// Model failed to compile
-    #[error("Error compiling model")]
+    #[error("Error compiling model\n{output}")]
     Compile {
         /// The compiler output
         output: String,
