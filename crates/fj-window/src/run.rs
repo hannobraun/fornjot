@@ -113,9 +113,6 @@ pub fn run(
 
                         current_err = err;
                     }
-
-                    *control_flow = ControlFlow::Exit;
-                    return;
                 }
             }
         }
