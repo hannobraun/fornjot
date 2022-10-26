@@ -94,3 +94,7 @@ path = "crates/fj-viewer"
 [workspace.dependencies.fj-window]
 version = "0.21.0"
 path = "crates/fj-window"
+
+
+[patch.crates-io.robust-predicates]
+git = "https://github.com/hannobraun/robust-predicates.git"
