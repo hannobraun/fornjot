@@ -237,6 +237,7 @@ impl Gui {
             ui.group(|ui| {
                 ui.add(egui::Label::new(
                     egui::RichText::new(format!("Status:{}", status.status()))
+                        .monospace()
                         .color(egui::Color32::BLACK)
                         .background_color(egui::Color32::WHITE),
                 ))

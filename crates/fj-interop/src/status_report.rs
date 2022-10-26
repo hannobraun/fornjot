@@ -18,10 +18,19 @@ impl StatusReport {
 
     /// Update the status
     pub fn update_status(&mut self, status: &str) {
-        let date = Local::now();
-        let status =
-            format!("\n{} {}", date.format("[%H:%M:%S]"), status.to_owned());
-        self.status.push_back(status);
+        let date = {
+            let date = Local::now();
+            format!("{}", date.format("[%H:%M:%S]"))
+        };
+        let empty_space = " ".repeat(date.chars().count());
+
+        let mut rendered = String::new();
+        for (i, line) in status.lines().enumerate() {
+            let prefix = if i == 0 { &date } else { &empty_space };
+            rendered.push_str(&format!("\n{prefix} {line}"));
+        }
+
+        self.status.push_back(rendered);
         if self.status.len() > 5 {
             for _ in 0..(self.status.len() - 5) {
                 self.status.pop_front();
