@@ -69,9 +69,6 @@ pub fn run(
             };
 
             match event {
-                ModelEvent::StatusUpdate(status_update) => {
-                    status.update_status(&status_update)
-                }
                 ModelEvent::Evaluation(evaluation) => {
                     status.update_status(&format!(
                         "Model compiled successfully in {}!",
