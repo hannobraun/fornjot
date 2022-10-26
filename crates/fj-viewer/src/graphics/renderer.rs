@@ -187,9 +187,8 @@ impl Renderer {
 
         self.surface.configure(&self.device, &self.surface_config);
 
-        let depth_view =
+        self.depth_view =
             Self::create_depth_buffer(&self.device, &self.surface_config);
-        self.depth_view = depth_view;
     }
 
     /// Draws the renderer, camera, and config state to the window.
