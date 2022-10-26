@@ -18,9 +18,12 @@ impl StatusReport {
 
     /// Update the status
     pub fn update_status(&mut self, status: &str) {
-        let date = Local::now();
-        let status =
-            format!("\n{} {}", date.format("[%H:%M:%S]"), status.to_owned());
+        let date = {
+            let date = Local::now();
+            format!("{} ", date.format("[%H:%M:%S]"))
+        };
+
+        let status = format!("\n{} {}", date, status.to_owned());
         self.status.push_back(status);
         if self.status.len() > 5 {
             for _ in 0..(self.status.len() - 5) {
