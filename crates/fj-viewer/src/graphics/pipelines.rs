@@ -3,7 +3,7 @@ use std::mem::size_of;
 use super::{
     shaders::{Shader, Shaders},
     vertices::Vertex,
-    DEPTH_FORMAT,
+    DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 #[derive(Debug)]
@@ -108,9 +108,9 @@ impl Pipeline {
                     bias: wgpu::DepthBiasState::default(),
                 }),
                 multisample: wgpu::MultisampleState {
-                    count: 1,
+                    count: SAMPLE_COUNT,
                     mask: !0,
-                    alpha_to_coverage_enabled: false,
+                    alpha_to_coverage_enabled: true,
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,

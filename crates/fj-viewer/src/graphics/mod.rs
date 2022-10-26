@@ -16,3 +16,4 @@ pub use self::{
 };
 
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+const SAMPLE_COUNT: u32 = 4;
