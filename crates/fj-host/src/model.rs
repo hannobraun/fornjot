@@ -120,8 +120,9 @@ impl Model {
                 return Err(Error::VersionMismatch { host, model });
             }
 
-            let init: libloading::Symbol<abi::InitFunction> =
-                lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
+            let init: libloading::Symbol<abi::InitFunction> = lib
+                .get(abi::INIT_FUNCTION_NAME.as_bytes())
+                .map_err(Error::LoadingInit)?;
 
             let mut host = Host::new(&self.parameters);
 
@@ -248,9 +249,12 @@ pub enum Error {
     )]
     LoadingVersion(#[source] libloading::Error),
 
-    /// Failed to load the model's dynamic library
-    #[error("Error loading model from dynamic library")]
-    LibLoading(#[from] libloading::Error),
+    /// Error loading the model's `init` function
+    #[error(
+        "Failed to load the model's `init` function\n\
+        - Did you define a model function using `#[fj::model]`?"
+    )]
+    LoadingInit(#[source] libloading::Error),
 
     /// Host version and model version do not match
     #[error("Host version ({host}) and model version ({model}) do not match")]
