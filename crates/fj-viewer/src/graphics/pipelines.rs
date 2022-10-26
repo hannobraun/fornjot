@@ -110,7 +110,7 @@ impl Pipeline {
                 multisample: wgpu::MultisampleState {
                     count: SAMPLE_COUNT,
                     mask: !0,
-                    alpha_to_coverage_enabled: false,
+                    alpha_to_coverage_enabled: true,
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
