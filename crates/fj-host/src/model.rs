@@ -101,7 +101,8 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(&self.lib_path)?;
+            let lib = libloading::Library::new(&self.lib_path)
+                .map_err(Error::LoadingLibrary)?;
 
             let version_pkg: libloading::Symbol<fn() -> RawVersion> =
                 lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
@@ -231,6 +232,14 @@ fn ambiguous_path_error(
 /// An error that can occur when loading or reloading a model
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error loading model library
+    #[error(
+        "Failed to load model library\n\
+        This might be a bug in Fornjot, or, at the very least, this error \
+        message should be improved. Please report this!"
+    )]
+    LoadingLibrary(#[source] libloading::Error),
+
     /// Error loading Fornjot version that the model uses
     #[error(
         "Failed to load the Fornjot version that the model uses\n\
