@@ -104,7 +104,7 @@ impl Model {
             let lib = libloading::Library::new(&self.lib_path)?;
 
             let version_pkg: libloading::Symbol<fn() -> RawVersion> =
-                lib.get(b"version_pkg")?;
+                lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
 
             let version_pkg = version_pkg();
             if fj::version::VERSION_PKG != version_pkg.as_str() {
@@ -231,6 +231,14 @@ fn ambiguous_path_error(
 /// An error that can occur when loading or reloading a model
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error loading Fornjot version that the model uses
+    #[error(
+        "Failed to load the Fornjot version that the model uses\n\
+        - Is your model using the `fj` library? All models must!\n\
+        - Was your model created with a really old version of Fornjot?"
+    )]
+    LoadingVersion(#[source] libloading::Error),
+
     /// Failed to load the model's dynamic library
     #[error("Error loading model from dynamic library")]
     LibLoading(#[from] libloading::Error),
