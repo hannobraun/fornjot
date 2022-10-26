@@ -10,7 +10,7 @@ use std::process::Command;
 use anyhow::anyhow;
 
 fn main() -> anyhow::Result<()> {
-    let targets = ["wasm32-unknown-unknown"];
+    let targets = ["aarch64-linux-android", "wasm32-unknown-unknown"];
     let crates = [
         "fj",
         "fj-export",
