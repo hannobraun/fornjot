@@ -104,8 +104,11 @@ where
 
 /// Validate an object
 pub trait Validate2: Sized {
+    /// The error that validation of the implementing type can result in
+    type Error: Into<ValidationError>;
+
     /// Validate the object using default configuration
-    fn validate(&self, store: &Store<Self>) -> Result<(), ValidationError> {
+    fn validate(&self, store: &Store<Self>) -> Result<(), Self::Error> {
         self.validate_with_config(store, &ValidationConfig::default())
     }
 
@@ -114,7 +117,7 @@ pub trait Validate2: Sized {
         &self,
         store: &Store<Self>,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError>;
+    ) -> Result<(), Self::Error>;
 }
 
 /// Configuration required for the validation process
