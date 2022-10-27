@@ -4,7 +4,7 @@ use pretty_assertions::assert_eq;
 
 use crate::{path::SurfacePath, storage::Handle};
 
-use super::{HalfEdge, Objects, Surface};
+use super::{HalfEdge, Surface};
 
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -23,8 +23,7 @@ impl Cycle {
     pub fn new(
         surface: Handle<Surface>,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
         // Verify, that the curves of all edges are defined in the correct
@@ -65,10 +64,10 @@ impl Cycle {
             }
         }
 
-        objects.cycles.insert(Self {
+        Self {
             surface,
             half_edges,
-        })
+        }
     }
 
     /// Access the surface that this cycle is in

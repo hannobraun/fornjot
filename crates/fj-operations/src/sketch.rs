@@ -30,7 +30,8 @@ impl Shape for fj::Sketch {
                     .with_surface(Some(surface.clone()))
                     .as_circle_from_radius(circle.radius(), objects)?
                     .build(objects)?;
-                let cycle = Cycle::new(surface, [half_edge], objects);
+                let cycle =
+                    objects.cycles.insert(Cycle::new(surface, [half_edge]));
 
                 Face::builder(objects)
                     .with_exterior(cycle)
