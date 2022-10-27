@@ -215,7 +215,7 @@ impl PartialSurfaceVertex {
             position,
             surface,
             global_form,
-        )))
+        ))?)
     }
 }
 

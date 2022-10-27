@@ -100,6 +100,7 @@ use fj_math::Vector;
 use crate::{
     path::GlobalPath,
     storage::{Handle, Store},
+    validate::Validate2,
 };
 
 /// The available object stores
@@ -340,8 +341,10 @@ impl SurfaceVertices {
     pub fn insert(
         &self,
         surface_vertex: SurfaceVertex,
-    ) -> Handle<SurfaceVertex> {
-        self.store.insert(surface_vertex)
+    ) -> Result<Handle<SurfaceVertex>, <SurfaceVertex as Validate2>::Error>
+    {
+        surface_vertex.validate()?;
+        Ok(self.store.insert(surface_vertex))
     }
 }
 

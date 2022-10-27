@@ -238,13 +238,13 @@ mod tests {
 
         let [a_surface, b_surface] = points_surface
             .zip_ext(vertices_global)
-            .map(|(point_surface, vertex_global)| {
+            .try_map_ext(|(point_surface, vertex_global)| {
                 objects.surface_vertices.insert(SurfaceVertex::new(
                     point_surface,
                     surface.clone(),
                     vertex_global,
                 ))
-            });
+            })?;
 
         let deviation = Scalar::from_f64(0.25);
 

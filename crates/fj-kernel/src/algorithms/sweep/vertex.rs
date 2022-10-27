@@ -106,7 +106,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
                     position,
                     surface,
                     global_form,
-                )),
+                ))?,
             ]
         };
 

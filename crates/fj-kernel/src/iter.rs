@@ -600,7 +600,7 @@ mod tests {
             .insert(GlobalVertex::from_position([0., 0., 0.]))?;
         let surface_vertex = objects
             .surface_vertices
-            .insert(SurfaceVertex::new([0., 0.], surface, global_vertex));
+            .insert(SurfaceVertex::new([0., 0.], surface, global_vertex))?;
         let object =
             objects
                 .vertices

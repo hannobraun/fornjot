@@ -61,23 +61,26 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                vertices.each_ref_ext().zip_ext(points_surface).map(
-                    |(vertex, point_surface)| {
+                vertices
+                    .each_ref_ext()
+                    .zip_ext(points_surface)
+                    .try_map_ext(
+                    |(vertex, point_surface)| -> Result<_, ValidationError> {
                         let surface_vertex = objects.surface_vertices.insert(
                             SurfaceVertex::new(
                                 point_surface,
                                 surface.clone(),
                                 vertex.global_form().clone(),
                             ),
-                        );
+                        )?;
 
-                        objects.vertices.insert(Vertex::new(
+                        Ok(objects.vertices.insert(Vertex::new(
                             vertex.position(),
                             curve.clone(),
                             surface_vertex,
-                        ))
+                        )))
                     },
-                )
+                )?
             };
 
             objects
