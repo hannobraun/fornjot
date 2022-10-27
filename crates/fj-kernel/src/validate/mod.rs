@@ -31,7 +31,7 @@ pub use self::{
     uniqueness::UniquenessIssues,
 };
 
-use std::{collections::HashSet, ops::Deref};
+use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
 use fj_math::Scalar;
 
@@ -185,6 +185,12 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+}
+
+impl From<Infallible> for ValidationError {
+    fn from(infallible: Infallible) -> Self {
+        match infallible {}
+    }
 }
 
 #[cfg(test)]
