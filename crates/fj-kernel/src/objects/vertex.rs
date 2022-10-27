@@ -129,12 +129,9 @@ pub struct GlobalVertex {
 
 impl GlobalVertex {
     /// Construct a `GlobalVertex` from a position
-    pub fn from_position(
-        position: impl Into<Point<3>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
-        objects.global_vertices.insert(Self { position })
+        Self { position }
     }
 
     /// Access the position of the vertex

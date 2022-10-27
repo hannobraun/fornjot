@@ -48,7 +48,9 @@ pub trait Validate: Sized {
     /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate();
     /// ```
     /// ``` rust
@@ -57,7 +59,9 @@ pub trait Validate: Sized {
     /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
     fn validate(self) -> Result<Validated<Self>, ValidationError> {
@@ -218,8 +222,11 @@ mod tests {
             ))
         };
 
-        let vertices_global = points_global
-            .map(|point| GlobalVertex::from_position(point, &objects));
+        let vertices_global = points_global.map(|point| {
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(point))
+        });
 
         let [a_surface, b_surface] = points_surface
             .zip_ext(vertices_global)
@@ -286,11 +293,19 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex::from_position(a, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(a)),
+        );
         shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex::from_position(b, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(b)),
+        );
         let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

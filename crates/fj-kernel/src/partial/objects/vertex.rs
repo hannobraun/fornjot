@@ -284,7 +284,9 @@ impl PartialGlobalVertex {
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        Ok(GlobalVertex::from_position(position, objects))
+        Ok(objects
+            .global_vertices
+            .insert(GlobalVertex::from_position(position)))
     }
 }
 

@@ -137,10 +137,9 @@ impl Sweep for Handle<GlobalVertex> {
             .global_vertex
             .entry(self.id())
             .or_insert_with(|| {
-                GlobalVertex::from_position(
+                objects.global_vertices.insert(GlobalVertex::from_position(
                     self.position() + path.into(),
-                    objects,
-                )
+                ))
             })
             .clone();
 
