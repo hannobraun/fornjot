@@ -13,15 +13,21 @@ impl Host {
     ///
     /// This is only useful, if you want to continuously watch the model for
     /// changes. If you don't just keep using `Model`.
-    pub fn from_model(model: Model) -> Result<Self, Error> {
-        let watch_path = model.watch_path();
-        let evaluator = Evaluator::from_model(model);
-        let _watcher = Watcher::watch_model(&watch_path, &evaluator)?;
+    pub fn from_model(model: Option<Model>) -> Option<Result<Self, Error>> {
+        if let Some(model) = model {
+            let watch_path = model.watch_path();
+            let evaluator = Evaluator::from_model(model);
+            let _watcher = match Watcher::watch_model(&watch_path, &evaluator) {
+                Ok(_watcher) => _watcher,
+                Err(e) => return Some(Err(e)),
+            };
 
-        Ok(Self {
-            evaluator,
-            _watcher,
-        })
+            return Some(Ok(Self {
+                evaluator,
+                _watcher,
+            }));
+        }
+        None
     }
 
     /// Access a channel with evaluation events

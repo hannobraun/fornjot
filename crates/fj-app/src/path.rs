@@ -14,10 +14,7 @@ pub struct ModelPath {
 }
 
 impl ModelPath {
-    pub fn from_args_and_config(
-        args: &Args,
-        config: &Config,
-    ) -> anyhow::Result<Self> {
+    pub fn from_args_and_config(args: &Args, config: &Config) -> Option<Self> {
         let default_path = config.default_path.clone();
 
         let model_path_from_args = args
@@ -28,11 +25,9 @@ impl ModelPath {
             .default_model
             .as_ref()
             .map(|model| ModelPathSource::Config(model.clone()));
-        let model_path = model_path_from_args
-            .or(model_path_from_config)
-            .ok_or_else(no_model_error)?;
+        let model_path = model_path_from_args.or(model_path_from_config)?;
 
-        Ok(Self {
+        Some(Self {
             default_path,
             model_path,
         })

@@ -42,18 +42,18 @@ fn main() -> anyhow::Result<()> {
 
     let args = Args::parse();
     let config = Config::load()?;
-    let model_path = ModelPath::from_args_and_config(&args, &config)?;
+    let model_path = ModelPath::from_args_and_config(&args, &config);
     let parameters = args.parameters.unwrap_or_else(Parameters::empty);
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
 
-    let model = model_path.load_model(parameters)?;
+    let model = model_path.map(|m| m.load_model(parameters)).transpose()?;
 
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let evaluation = model.evaluate()?;
+        let evaluation = model.unwrap().evaluate()?;
         let shape = shape_processor.process(&evaluation.shape)?;
 
         export(&shape.mesh, &export_path)?;

@@ -27,18 +27,21 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    model: Model,
+    model: Option<Model>,
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
     let mut status = StatusReport::new();
-    let host = Host::from_model(model)?;
+    let host = Host::from_model(model).transpose()?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    let events = host.events();
+    let events = match host {
+        Some(ref host) => Some(host.events()),
+        None => None,
+    };
 
     let mut held_mouse_button = None;
 
@@ -54,17 +57,22 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         loop {
-            let event = events
-                .try_recv()
-                .map_err(|err| {
-                    if err.is_disconnected() {
-                        panic!("Expected channel to never disconnect");
-                    }
-                })
-                .ok();
+            let event = events.as_ref().map(|events| {
+                events
+                    .try_recv()
+                    .map_err(|err| {
+                        if err.is_disconnected() {
+                            panic!("Expected channel to never disconnect");
+                        }
+                    })
+                    .ok()
+            });
 
             let event = match event {
-                Some(status_update) => status_update,
+                Some(event) => match event {
+                    Some(status_update) => status_update,
+                    None => break,
+                },
                 None => break,
             };
 
