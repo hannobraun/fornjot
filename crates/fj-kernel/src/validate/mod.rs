@@ -14,7 +14,6 @@
 //! Please note that not all of these validation categories are fully
 //! implemented, as of this writing.
 
-mod coherence;
 mod curve;
 mod cycle;
 mod edge;
@@ -26,10 +25,7 @@ mod surface;
 mod uniqueness;
 mod vertex;
 
-pub use self::{
-    coherence::{CoherenceIssues, VertexCoherenceMismatch},
-    uniqueness::UniquenessIssues,
-};
+pub use self::uniqueness::UniquenessIssues;
 
 use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
@@ -95,9 +91,6 @@ where
             )?;
 
             global_vertices.insert(*global_vertex);
-        }
-        for vertex in self.vertex_iter() {
-            coherence::validate_vertex(vertex, config.identical_max_distance)?;
         }
 
         Ok(Validated(self))
@@ -178,10 +171,6 @@ impl<T> Deref for Validated<T> {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Coherence validation failed
-    #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceIssues),
-
     /// Geometric validation failed
     #[error("Geometric validation failed")]
     Geometric,
