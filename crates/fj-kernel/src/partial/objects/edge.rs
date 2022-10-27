@@ -375,7 +375,7 @@ impl PartialGlobalEdge {
 
         Ok(objects
             .global_edges
-            .insert(GlobalEdge::new(curve, vertices)))
+            .insert(GlobalEdge::new(curve, vertices))?)
     }
 }
 

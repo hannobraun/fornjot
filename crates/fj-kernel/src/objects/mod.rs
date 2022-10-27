@@ -235,8 +235,12 @@ pub struct GlobalEdges {
 
 impl GlobalEdges {
     /// Insert a [`GlobalEdge`] into the store
-    pub fn insert(&self, global_edge: GlobalEdge) -> Handle<GlobalEdge> {
-        self.store.insert(global_edge)
+    pub fn insert(
+        &self,
+        global_edge: GlobalEdge,
+    ) -> Result<Handle<GlobalEdge>, <GlobalEdge as Validate2>::Error> {
+        global_edge.validate()?;
+        Ok(self.store.insert(global_edge))
     }
 }
 

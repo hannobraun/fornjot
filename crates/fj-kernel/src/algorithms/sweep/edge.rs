@@ -130,7 +130,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 surface_vertices
                     .clone()
                     .map(|surface_vertex| surface_vertex.global_form().clone()),
-            ));
+            ))?;
 
             let vertices = bottom_vertices
                 .each_ref_ext()
