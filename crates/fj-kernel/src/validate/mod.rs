@@ -35,7 +35,7 @@ use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
 use fj_math::Scalar;
 
-use crate::{iter::ObjectIters, storage::Store};
+use crate::iter::ObjectIters;
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -108,14 +108,13 @@ pub trait Validate2: Sized {
     type Error: Into<ValidationError>;
 
     /// Validate the object using default configuration
-    fn validate(&self, store: &Store<Self>) -> Result<(), Self::Error> {
-        self.validate_with_config(store, &ValidationConfig::default())
+    fn validate(&self) -> Result<(), Self::Error> {
+        self.validate_with_config(&ValidationConfig::default())
     }
 
     /// Validate the object
     fn validate_with_config(
         &self,
-        store: &Store<Self>,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error>;
 }

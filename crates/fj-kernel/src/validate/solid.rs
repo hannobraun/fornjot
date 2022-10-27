@@ -1,6 +1,6 @@
 use std::convert::Infallible;
 
-use crate::{objects::Solid, storage::Store};
+use crate::objects::Solid;
 
 use super::{Validate2, ValidationConfig};
 
@@ -9,7 +9,6 @@ impl Validate2 for Solid {
 
     fn validate_with_config(
         &self,
-        _: &Store<Self>,
         _: &ValidationConfig,
     ) -> Result<(), Self::Error> {
         Ok(())
