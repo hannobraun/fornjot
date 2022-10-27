@@ -159,7 +159,7 @@ impl Objects {
     }
 }
 
-/// The store for [`Surface`]s
+/// Store for [`Surface`]s
 #[derive(Debug)]
 pub struct Surfaces {
     store: Store<Surface>,
@@ -170,7 +170,7 @@ pub struct Surfaces {
 }
 
 impl Surfaces {
-    /// Insert a surface into the store
+    /// Insert a [`Surface`] into the store
     pub fn insert(&self, surface: Surface) -> Handle<Surface> {
         self.store.insert(surface)
     }
