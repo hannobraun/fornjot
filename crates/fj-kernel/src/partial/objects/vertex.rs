@@ -114,7 +114,9 @@ impl PartialVertex {
             })
             .into_full(objects)?;
 
-        Ok(Vertex::new(position, curve, surface_form, objects))
+        Ok(objects
+            .vertices
+            .insert(Vertex::new(position, curve, surface_form)))
     }
 }
 

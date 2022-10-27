@@ -601,7 +601,10 @@ mod tests {
         let surface_vertex = objects
             .surface_vertices
             .insert(SurfaceVertex::new([0., 0.], surface, global_vertex));
-        let object = Vertex::new([0.], curve, surface_vertex, &objects);
+        let object =
+            objects
+                .vertices
+                .insert(Vertex::new([0.], curve, surface_vertex));
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

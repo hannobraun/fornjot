@@ -240,18 +240,16 @@ mod tests {
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = Vertex::new(
+        let a = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ZERO + deviation]),
             curve.clone(),
             a_surface,
-            &objects,
-        );
-        let b = Vertex::new(
+        ));
+        let b = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ONE]),
             curve.clone(),
             b_surface,
-            &objects,
-        );
+        ));
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::partial()
