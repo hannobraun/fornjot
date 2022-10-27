@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Point, Scalar, Vector};
 use try_insert_ext::EntryInsertExt;
 
@@ -111,13 +112,13 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.map(|surface_form| {
+        let vertices = vertices_surface.try_map_ext(|surface_form| {
             objects.vertices.insert(Vertex::new(
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
             ))
-        });
+        })?;
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.

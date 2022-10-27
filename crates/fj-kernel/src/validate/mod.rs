@@ -252,12 +252,12 @@ mod tests {
             Point::from([Scalar::ZERO + deviation]),
             curve.clone(),
             a_surface,
-        ));
+        ))?;
         let b = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ONE]),
             curve.clone(),
             b_surface,
-        ));
+        ))?;
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::partial()

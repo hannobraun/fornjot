@@ -412,7 +412,11 @@ pub struct Vertices {
 
 impl Vertices {
     /// Insert a [`Vertex`] into the store
-    pub fn insert(&self, vertex: Vertex) -> Handle<Vertex> {
-        self.store.insert(vertex)
+    pub fn insert(
+        &self,
+        vertex: Vertex,
+    ) -> Result<Handle<Vertex>, <Vertex as Validate2>::Error> {
+        vertex.validate()?;
+        Ok(self.store.insert(vertex))
     }
 }

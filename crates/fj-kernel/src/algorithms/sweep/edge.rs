@@ -78,7 +78,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                             vertex.position(),
                             curve.clone(),
                             surface_vertex,
-                        )))
+                        ))?)
                     },
                 )?
             };
@@ -138,13 +138,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             let vertices = bottom_vertices
                 .each_ref_ext()
                 .zip_ext(surface_vertices)
-                .map(|(vertex, surface_form)| {
+                .try_map_ext(|(vertex, surface_form)| {
                     objects.vertices.insert(Vertex::new(
                         vertex.position(),
                         curve.clone(),
                         surface_form,
                     ))
-                });
+                })?;
 
             objects.half_edges.insert(HalfEdge::new(vertices, global))?
         };
