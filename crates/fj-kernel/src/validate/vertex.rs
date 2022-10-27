@@ -1,8 +1,11 @@
-use std::convert::Infallible;
+use std::{convert::Infallible, ops::Deref};
 
 use fj_math::{Point, Scalar};
 
-use crate::objects::{GlobalVertex, SurfaceVertex, Vertex};
+use crate::{
+    objects::{GlobalVertex, Surface, SurfaceVertex, Vertex},
+    storage::Handle,
+};
 
 use super::{Validate2, ValidationConfig};
 
@@ -13,6 +16,15 @@ impl Validate2 for Vertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
+        let curve_surface = self.curve().surface();
+        let surface_form_surface = self.surface_form().surface();
+        if curve_surface.id() != surface_form_surface.id() {
+            return Err(VertexValidationError::SurfaceMismatch {
+                curve_surface: curve_surface.clone(),
+                surface_form_surface: surface_form_surface.clone(),
+            });
+        }
+
         let curve_position_as_surface =
             self.curve().path().point_from_path_coords(self.position());
         let surface_position = self.surface_form().position();
@@ -35,6 +47,22 @@ impl Validate2 for Vertex {
 /// [`Vertex`] validation failed
 #[derive(Debug, thiserror::Error)]
 pub enum VertexValidationError {
+    /// Mismatch between the surface's of the curve and surface form
+    #[error(
+        "Surface form of vertex must be defined on same surface as curve\n\
+        `Surface` of curve: {curve_surface:?} -> {:?}\n\
+        `Surface` of surface form: {surface_form_surface:?} -> {:?}",
+        .curve_surface.deref(),
+        .surface_form_surface.deref(),
+    )]
+    SurfaceMismatch {
+        /// The surface of the vertex' curve
+        curve_surface: Handle<Surface>,
+
+        /// The surface of the vertex' surface form
+        surface_form_surface: Handle<Surface>,
+    },
+
     /// Mismatch between position of the vertex and position of its surface form
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
@@ -125,6 +153,39 @@ mod tests {
         partial::HasPartial,
         validate::Validate2,
     };
+
+    #[test]
+    fn vertex_surface_mismatch() -> anyhow::Result<()> {
+        let objects = Objects::new();
+
+        let valid = Vertex::new(
+            [0.],
+            Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_u_axis()
+                .build(&objects)?,
+            SurfaceVertex::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .with_position(Some([0., 0.]))
+                .build(&objects)?,
+        );
+        let invalid = Vertex::new(
+            [0.],
+            Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_u_axis()
+                .build(&objects)?,
+            SurfaceVertex::partial()
+                .with_surface(Some(objects.surfaces.xz_plane()))
+                .with_position(Some([0., 0.]))
+                .build(&objects)?,
+        );
+
+        assert!(valid.validate().is_ok());
+        assert!(invalid.validate().is_err());
+
+        Ok(())
+    }
 
     #[test]
     fn vertex_position_mismatch() -> anyhow::Result<()> {

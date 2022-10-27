@@ -1,5 +1,4 @@
 use fj_math::Point;
-use pretty_assertions::assert_eq;
 
 use crate::storage::Handle;
 
@@ -28,12 +27,6 @@ impl Vertex {
         surface_form: Handle<SurfaceVertex>,
     ) -> Self {
         let position = position.into();
-
-        assert_eq!(
-            curve.surface().id(),
-            surface_form.surface().id(),
-            "Surface form of vertex must be defined on same surface as curve",
-        );
 
         Self {
             position,
