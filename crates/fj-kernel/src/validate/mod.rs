@@ -33,7 +33,7 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
-use self::vertex::{SurfaceVertexPositionMismatch, VertexPositionMismatch};
+use self::vertex::{SurfaceVertexPositionMismatch, VertexValidationError};
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -185,7 +185,7 @@ pub enum ValidationError {
 
     /// `Vertex` position didn't match `SurfaceVertex`
     #[error(transparent)]
-    VertexPositionMismatch(#[from] VertexPositionMismatch),
+    Vertex(#[from] VertexValidationError),
 }
 
 impl From<Infallible> for ValidationError {

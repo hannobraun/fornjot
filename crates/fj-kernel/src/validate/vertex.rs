@@ -7,7 +7,7 @@ use crate::objects::{GlobalVertex, SurfaceVertex, Vertex};
 use super::{Validate2, ValidationConfig};
 
 impl Validate2 for Vertex {
-    type Error = VertexPositionMismatch;
+    type Error = VertexValidationError;
 
     fn validate_with_config(
         &self,
@@ -20,7 +20,7 @@ impl Validate2 for Vertex {
         let distance = curve_position_as_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
-            return Err(VertexPositionMismatch {
+            return Err(VertexValidationError::PositionMismatch {
                 vertex: self.clone(),
                 surface_vertex: self.surface_form().clone_object(),
                 curve_position_as_surface,
@@ -33,25 +33,27 @@ impl Validate2 for Vertex {
 }
 
 #[derive(Debug, thiserror::Error)]
-#[error(
-    "`Vertex` position doesn't match position of its surface form\n\
-    `Vertex`: {vertex:#?}\n\
-    `SurfaceVertex`: {surface_vertex:#?}\n\
-    `Vertex` position as surface: {curve_position_as_surface:?}\n\
-    Distance between the positions: {distance}"
-)]
-pub struct VertexPositionMismatch {
-    /// The vertex
-    pub vertex: Vertex,
+pub enum VertexValidationError {
+    #[error(
+        "`Vertex` position doesn't match position of its surface form\n\
+        `Vertex`: {vertex:#?}\n\
+        `SurfaceVertex`: {surface_vertex:#?}\n\
+        `Vertex` position as surface: {curve_position_as_surface:?}\n\
+        Distance between the positions: {distance}"
+    )]
+    PositionMismatch {
+        /// The vertex
+        vertex: Vertex,
 
-    /// The mismatched surface vertex
-    pub surface_vertex: SurfaceVertex,
+        /// The mismatched surface vertex
+        surface_vertex: SurfaceVertex,
 
-    /// The curve position converted into a surface position
-    pub curve_position_as_surface: Point<2>,
+        /// The curve position converted into a surface position
+        curve_position_as_surface: Point<2>,
 
-    /// The distance between the positions
-    pub distance: Scalar,
+        /// The distance between the positions
+        distance: Scalar,
+    },
 }
 
 impl Validate2 for SurfaceVertex {
