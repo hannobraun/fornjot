@@ -121,13 +121,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     .insert(Curve::new(surface.clone(), path, global))
             };
 
-            let global = GlobalEdge::new(
+            let global = objects.global_edges.insert(GlobalEdge::new(
                 curve.global_form().clone(),
                 surface_vertices
                     .clone()
                     .map(|surface_vertex| surface_vertex.global_form().clone()),
-                objects,
-            );
+            ));
 
             let vertices = bottom_vertices
                 .each_ref_ext()

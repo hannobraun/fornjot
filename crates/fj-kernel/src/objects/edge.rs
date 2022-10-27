@@ -141,12 +141,11 @@ impl GlobalEdge {
     pub fn new(
         curve: impl Into<HandleWrapper<GlobalCurve>>,
         vertices: [Handle<GlobalVertex>; 2],
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let curve = curve.into();
         let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
 
-        objects.global_edges.insert(Self { curve, vertices })
+        Self { curve, vertices }
     }
 
     /// Access the curve that defines the edge's geometry

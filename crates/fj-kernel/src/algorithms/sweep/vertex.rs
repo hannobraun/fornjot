@@ -147,7 +147,9 @@ impl Sweep for Handle<GlobalVertex> {
             .clone();
 
         let vertices = [a, b];
-        let global_edge = GlobalEdge::new(curve, vertices.clone(), objects);
+        let global_edge = objects
+            .global_edges
+            .insert(GlobalEdge::new(curve, vertices.clone()));
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the

@@ -371,7 +371,9 @@ impl PartialGlobalEdge {
             .vertices
             .expect("Can't build `GlobalEdge` without vertices");
 
-        Ok(GlobalEdge::new(curve, vertices, objects))
+        Ok(objects
+            .global_edges
+            .insert(GlobalEdge::new(curve, vertices)))
     }
 }
 
