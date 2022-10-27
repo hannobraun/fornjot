@@ -140,7 +140,7 @@ pub struct Objects {
     pub sketches: Store<Sketch>,
 
     /// Store for [`Solid`]s
-    pub solids: Store<Solid>,
+    pub solids: Solids,
 
     /// Store for [`SurfaceVertex`] objects
     pub surface_vertices: SurfaceVertices,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`Solid`]s
+#[derive(Debug, Default)]
+pub struct Solids {
+    store: Store<Solid>,
+}
+
+impl Solids {
+    /// Insert a [`Solid`] into the store
+    pub fn insert(&self, solid: Solid) -> Handle<Solid> {
+        self.store.insert(solid)
     }
 }
 
