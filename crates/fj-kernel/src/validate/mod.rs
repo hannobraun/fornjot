@@ -211,7 +211,11 @@ mod tests {
             let path = SurfacePath::line_from_points(points_surface);
             let global_form = objects.global_curves.insert(GlobalCurve);
 
-            Curve::new(surface.clone(), path, global_form, &objects)
+            objects.curves.insert(Curve::new(
+                surface.clone(),
+                path,
+                global_form,
+            ))
         };
 
         let vertices_global = points_global

@@ -88,12 +88,11 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let curve = {
             let line = Line::from_points(points_surface);
 
-            Curve::new(
+            objects.curves.insert(Curve::new(
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-                objects,
-            )
+            ))
         };
 
         let vertices_surface = {

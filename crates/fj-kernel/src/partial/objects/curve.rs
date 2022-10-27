@@ -96,7 +96,9 @@ impl PartialCurve {
             objects.global_curves.insert(GlobalCurve).into()
         });
 
-        Ok(Curve::new(surface, path, global_form, objects))
+        Ok(objects
+            .curves
+            .insert(Curve::new(surface, path, global_form)))
     }
 }
 
