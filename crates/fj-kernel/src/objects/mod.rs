@@ -201,8 +201,12 @@ pub struct Faces {
 
 impl Faces {
     /// Insert a [`Face`] into the store
-    pub fn insert(&self, face: Face) -> Handle<Face> {
-        self.store.insert(face)
+    pub fn insert(
+        &self,
+        face: Face,
+    ) -> Result<Handle<Face>, <Face as Validate2>::Error> {
+        face.validate()?;
+        Ok(self.store.insert(face))
     }
 }
 
