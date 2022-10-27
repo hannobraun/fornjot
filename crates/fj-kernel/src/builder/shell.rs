@@ -78,6 +78,7 @@ impl<'a> ShellBuilder<'a> {
                     self.objects
                         .surfaces
                         .insert(Surface::plane_from_points([a, b, c]))
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 

@@ -360,8 +360,12 @@ pub struct Surfaces {
 
 impl Surfaces {
     /// Insert a [`Surface`] into the store
-    pub fn insert(&self, surface: Surface) -> Handle<Surface> {
-        self.store.insert(surface)
+    pub fn insert(
+        &self,
+        surface: Surface,
+    ) -> Result<Handle<Surface>, <Surface as Validate2>::Error> {
+        surface.validate()?;
+        Ok(self.store.insert(surface))
     }
 
     /// Access the xy-plane

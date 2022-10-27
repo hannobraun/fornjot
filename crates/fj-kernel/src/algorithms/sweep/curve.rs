@@ -65,6 +65,6 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        Ok(objects.surfaces.insert(Surface::new(u, path)))
+        Ok(objects.surfaces.insert(Surface::new(u, path))?)
     }
 }
