@@ -24,13 +24,10 @@ impl Sketch {
     }
 
     /// Construct an empty instance of `Sketch`
-    pub fn new(
-        faces: impl IntoIterator<Item = Handle<Face>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
-        objects.sketches.insert(Self {
+    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+        Self {
             faces: faces.into_iter().collect(),
-        })
+        }
     }
 
     /// Access the sketch's faces
