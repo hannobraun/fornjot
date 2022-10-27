@@ -25,15 +25,16 @@ mod surface;
 mod uniqueness;
 mod vertex;
 
-pub use self::uniqueness::UniquenessIssues;
+pub use self::{
+    uniqueness::UniquenessIssues,
+    vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
+};
 
 use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
 use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
-
-use self::vertex::{SurfaceVertexPositionMismatch, VertexValidationError};
 
 /// Validate an object
 pub trait Validate: Sized {

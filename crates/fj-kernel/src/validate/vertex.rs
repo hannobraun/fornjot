@@ -32,8 +32,10 @@ impl Validate2 for Vertex {
     }
 }
 
+/// [`Vertex`] validation failed
 #[derive(Debug, thiserror::Error)]
 pub enum VertexValidationError {
+    /// Mismatch between position of the vertex and position of its surface form
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
         `Vertex`: {vertex:#?}\n\
@@ -82,6 +84,7 @@ impl Validate2 for SurfaceVertex {
     }
 }
 
+/// Mismatch between position of surface vertex and position of its global form
 #[derive(Debug, thiserror::Error)]
 #[error(
     "`SurfaceVertex` position doesn't match position of its global form\n\
