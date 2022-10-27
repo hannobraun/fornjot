@@ -87,7 +87,7 @@ pub use self::{
     curve::{Curve, GlobalCurve},
     cycle::Cycle,
     edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
-    face::{Face, Faces, Handedness},
+    face::{Face, FaceSet, Handedness},
     shell::Shell,
     sketch::Sketch,
     solid::Solid,
