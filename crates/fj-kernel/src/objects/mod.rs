@@ -125,7 +125,7 @@ pub struct Objects {
     pub global_curves: Store<GlobalCurve>,
 
     /// Store for [`GlobalEdge`]s
-    pub global_edges: Store<GlobalEdge>,
+    pub global_edges: GlobalEdges,
 
     /// Store for [`GlobalVertex`] objects
     pub global_vertices: GlobalVertices,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`GlobalEdge`]s
+#[derive(Debug, Default)]
+pub struct GlobalEdges {
+    store: Store<GlobalEdge>,
+}
+
+impl GlobalEdges {
+    /// Insert a [`GlobalEdge`] into the store
+    pub fn insert(&self, global_edge: GlobalEdge) -> Handle<GlobalEdge> {
+        self.store.insert(global_edge)
     }
 }
 
