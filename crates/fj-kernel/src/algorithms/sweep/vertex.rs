@@ -101,7 +101,11 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
             [
                 vertex.surface_form().clone(),
-                SurfaceVertex::new(position, surface, global_form, objects),
+                objects.surface_vertices.insert(SurfaceVertex::new(
+                    position,
+                    surface,
+                    global_form,
+                )),
             ]
         };
 

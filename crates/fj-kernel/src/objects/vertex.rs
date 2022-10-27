@@ -78,14 +78,13 @@ impl SurfaceVertex {
         position: impl Into<Point<2>>,
         surface: Handle<Surface>,
         global_form: Handle<GlobalVertex>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let position = position.into();
-        objects.surface_vertices.insert(Self {
+        Self {
             position,
             surface,
             global_form,
-        })
+        }
     }
 
     /// Access the position of the vertex on the surface

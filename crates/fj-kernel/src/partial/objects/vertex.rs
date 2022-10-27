@@ -209,7 +209,11 @@ impl PartialSurfaceVertex {
             })
             .into_full(objects)?;
 
-        Ok(SurfaceVertex::new(position, surface, global_form, objects))
+        Ok(objects.surface_vertices.insert(SurfaceVertex::new(
+            position,
+            surface,
+            global_form,
+        )))
     }
 }
 

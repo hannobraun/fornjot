@@ -63,11 +63,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
                 vertices.each_ref_ext().zip_ext(points_surface).map(
                     |(vertex, point_surface)| {
-                        let surface_vertex = SurfaceVertex::new(
-                            point_surface,
-                            surface.clone(),
-                            vertex.global_form().clone(),
-                            objects,
+                        let surface_vertex = objects.surface_vertices.insert(
+                            SurfaceVertex::new(
+                                point_surface,
+                                surface.clone(),
+                                vertex.global_form().clone(),
+                            ),
                         );
 
                         Vertex::new(
