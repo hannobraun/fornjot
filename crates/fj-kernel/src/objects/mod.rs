@@ -116,7 +116,7 @@ pub struct Objects {
     pub curves: Store<Curve>,
 
     /// Store for [`Cycle`]s
-    pub cycles: Store<Cycle>,
+    pub cycles: Cycles,
 
     /// Store for [`Face`]s
     pub faces: Faces,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`Cycle`]s
+#[derive(Debug, Default)]
+pub struct Cycles {
+    store: Store<Cycle>,
+}
+
+impl Cycles {
+    /// Insert a [`Cycle`] into the store
+    pub fn insert(&self, cycle: Cycle) -> Handle<Cycle> {
+        self.store.insert(cycle)
     }
 }
 
