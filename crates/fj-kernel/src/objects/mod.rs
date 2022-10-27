@@ -303,8 +303,12 @@ pub struct Sketches {
 
 impl Sketches {
     /// Insert a [`Sketch`] into the store
-    pub fn insert(&self, sketch: Sketch) -> Handle<Sketch> {
-        self.store.insert(sketch)
+    pub fn insert(
+        &self,
+        sketch: Sketch,
+    ) -> Result<Handle<Sketch>, <Sketch as Validate2>::Error> {
+        sketch.validate()?;
+        Ok(self.store.insert(sketch))
     }
 }
 

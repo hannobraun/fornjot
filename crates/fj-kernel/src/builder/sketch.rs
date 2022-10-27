@@ -53,6 +53,9 @@ impl<'a> SketchBuilder<'a> {
 
     /// Build the [`Sketch`]
     pub fn build(self) -> Handle<Sketch> {
-        self.objects.sketches.insert(Sketch::new(self.faces))
+        self.objects
+            .sketches
+            .insert(Sketch::new(self.faces))
+            .unwrap()
     }
 }
