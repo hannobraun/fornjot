@@ -1,4 +1,5 @@
 use fj_math::{Line, Point, Scalar, Vector};
+use try_insert_ext::EntryInsertExt;
 
 use crate::{
     objects::{
@@ -141,11 +142,11 @@ impl Sweep for Handle<GlobalVertex> {
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| {
+            .or_try_insert_with(|| {
                 objects.global_vertices.insert(GlobalVertex::from_position(
                     self.position() + path.into(),
                 ))
-            })
+            })?
             .clone();
 
         let vertices = [a, b];

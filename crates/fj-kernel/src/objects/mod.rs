@@ -252,8 +252,12 @@ pub struct GlobalVertices {
 
 impl GlobalVertices {
     /// Insert a [`GlobalVertex`] into the store
-    pub fn insert(&self, global_vertex: GlobalVertex) -> Handle<GlobalVertex> {
-        self.store.insert(global_vertex)
+    pub fn insert(
+        &self,
+        global_vertex: GlobalVertex,
+    ) -> Result<Handle<GlobalVertex>, <GlobalVertex as Validate2>::Error> {
+        global_vertex.validate()?;
+        Ok(self.store.insert(global_vertex))
     }
 }
 

@@ -230,11 +230,11 @@ mod tests {
             ))?
         };
 
-        let vertices_global = points_global.map(|point| {
+        let vertices_global = points_global.try_map_ext(|point| {
             objects
                 .global_vertices
                 .insert(GlobalVertex::from_position(point))
-        });
+        })?;
 
         let [a_surface, b_surface] = points_surface
             .zip_ext(vertices_global)

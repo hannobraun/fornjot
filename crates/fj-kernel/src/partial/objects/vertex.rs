@@ -292,7 +292,7 @@ impl PartialGlobalVertex {
 
         Ok(objects
             .global_vertices
-            .insert(GlobalVertex::from_position(position)))
+            .insert(GlobalVertex::from_position(position))?)
     }
 }
 
