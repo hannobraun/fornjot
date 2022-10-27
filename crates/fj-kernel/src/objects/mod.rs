@@ -137,7 +137,7 @@ pub struct Objects {
     pub shells: Store<Shell>,
 
     /// Store for [`Sketch`]es
-    pub sketches: Store<Sketch>,
+    pub sketches: Sketches,
 
     /// Store for [`Solid`]s
     pub solids: Solids,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`Sketch`]es
+#[derive(Debug, Default)]
+pub struct Sketches {
+    store: Store<Sketch>,
+}
+
+impl Sketches {
+    /// Insert a [`Sketch`] into the store
+    pub fn insert(&self, sketch: Sketch) -> Handle<Sketch> {
+        self.store.insert(sketch)
     }
 }
 
