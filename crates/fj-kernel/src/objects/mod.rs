@@ -218,8 +218,12 @@ pub struct GlobalCurves {
 
 impl GlobalCurves {
     /// Insert a [`GlobalCurve`] into the store
-    pub fn insert(&self, global_curve: GlobalCurve) -> Handle<GlobalCurve> {
-        self.store.insert(global_curve)
+    pub fn insert(
+        &self,
+        global_curve: GlobalCurve,
+    ) -> Result<Handle<GlobalCurve>, <GlobalCurve as Validate2>::Error> {
+        global_curve.validate()?;
+        Ok(self.store.insert(global_curve))
     }
 }
 
