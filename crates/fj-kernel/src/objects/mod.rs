@@ -286,8 +286,12 @@ pub struct Shells {
 
 impl Shells {
     /// Insert a [`Shell`] into the store
-    pub fn insert(&self, shell: Shell) -> Handle<Shell> {
-        self.store.insert(shell)
+    pub fn insert(
+        &self,
+        shell: Shell,
+    ) -> Result<Handle<Shell>, <Shell as Validate2>::Error> {
+        shell.validate()?;
+        Ok(self.store.insert(shell))
     }
 }
 
