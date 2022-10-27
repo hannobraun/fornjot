@@ -167,8 +167,12 @@ pub struct Curves {
 
 impl Curves {
     /// Insert a [`Curve`] into the store
-    pub fn insert(&self, curve: Curve) -> Handle<Curve> {
-        self.store.insert(curve)
+    pub fn insert(
+        &self,
+        curve: Curve,
+    ) -> Result<Handle<Curve>, <Curve as Validate2>::Error> {
+        curve.validate()?;
+        Ok(self.store.insert(curve))
     }
 }
 

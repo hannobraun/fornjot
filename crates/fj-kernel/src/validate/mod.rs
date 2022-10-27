@@ -227,7 +227,7 @@ mod tests {
                 surface.clone(),
                 path,
                 global_form,
-            ))
+            ))?
         };
 
         let vertices_global = points_global.map(|point| {

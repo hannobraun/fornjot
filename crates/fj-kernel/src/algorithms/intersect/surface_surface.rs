@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
@@ -56,14 +57,14 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.map(|(surface, plane)| {
+        let curves = surfaces_and_planes.try_map_ext(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = objects.global_curves.insert(GlobalCurve);
 
             objects
                 .curves
                 .insert(Curve::new(surface, path, global_form))
-        });
+        })?;
 
         Ok(Some(Self {
             intersection_curves: curves,

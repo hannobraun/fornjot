@@ -92,7 +92,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-            ))
+            ))?
         };
 
         let vertices_surface = {
