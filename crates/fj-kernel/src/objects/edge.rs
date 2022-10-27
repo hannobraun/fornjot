@@ -4,7 +4,7 @@ use pretty_assertions::{assert_eq, assert_ne};
 
 use crate::storage::{Handle, HandleWrapper};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Objects, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -32,8 +32,7 @@ impl HalfEdge {
     pub fn new(
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         // Make sure `curve` and `vertices` match.
         assert_eq!(
             a.curve().id(),
@@ -75,10 +74,10 @@ impl HalfEdge {
             "Vertices of an edge must not be coincident on curve"
         );
 
-        objects.half_edges.insert(Self {
+        Self {
             vertices: [a, b],
             global_form,
-        })
+        }
     }
 
     /// Access the curve that defines the half-edge's geometry

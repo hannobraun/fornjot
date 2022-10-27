@@ -80,7 +80,9 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 )
             };
 
-            HalfEdge::new(vertices, edge.global_form().clone(), objects)
+            objects
+                .half_edges
+                .insert(HalfEdge::new(vertices, edge.global_form().clone()))
         };
 
         let side_edges =
@@ -139,7 +141,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     ))
                 });
 
-            HalfEdge::new(vertices, global, objects)
+            objects.half_edges.insert(HalfEdge::new(vertices, global))
         };
 
         let cycle = {

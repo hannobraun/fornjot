@@ -255,7 +255,9 @@ mod tests {
         let global_edge = GlobalEdge::partial()
             .from_curve_and_vertices(&curve, &vertices)
             .build(&objects)?;
-        let half_edge = HalfEdge::new(vertices, global_edge, &objects);
+        let half_edge = objects
+            .half_edges
+            .insert(HalfEdge::new(vertices, global_edge));
 
         let result =
             half_edge.clone().validate_with_config(&ValidationConfig {
