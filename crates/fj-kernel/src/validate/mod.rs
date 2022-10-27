@@ -14,7 +14,6 @@
 //! Please note that not all of these validation categories are fully
 //! implemented, as of this writing.
 
-mod coherence;
 mod curve;
 mod cycle;
 mod edge;
@@ -27,8 +26,8 @@ mod uniqueness;
 mod vertex;
 
 pub use self::{
-    coherence::{CoherenceIssues, VertexCoherenceMismatch},
     uniqueness::UniquenessIssues,
+    vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
 };
 
 use std::{collections::HashSet, convert::Infallible, ops::Deref};
@@ -93,9 +92,6 @@ where
             )?;
 
             global_vertices.insert(*global_vertex);
-        }
-        for vertex in self.vertex_iter() {
-            coherence::validate_vertex(vertex, config.identical_max_distance)?;
         }
 
         Ok(Validated(self))
@@ -176,10 +172,6 @@ impl<T> Deref for Validated<T> {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Coherence validation failed
-    #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceIssues),
-
     /// Geometric validation failed
     #[error("Geometric validation failed")]
     Geometric,
@@ -187,6 +179,14 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+
+    /// `SurfaceVertex` position didn't match `GlobalVertex`
+    #[error(transparent)]
+    SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
+
+    /// `Vertex` position didn't match `SurfaceVertex`
+    #[error(transparent)]
+    Vertex(#[from] VertexValidationError),
 }
 
 impl From<Infallible> for ValidationError {
@@ -197,90 +197,12 @@ impl From<Infallible> for ValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::{Point, Scalar};
 
     use crate::{
-        objects::{
-            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-            SurfaceVertex, Vertex,
-        },
-        partial::HasPartial,
-        path::SurfacePath,
+        objects::{GlobalVertex, Objects},
         validate::{Validate, ValidationConfig, ValidationError},
     };
-
-    #[test]
-    fn coherence_edge() -> anyhow::Result<()> {
-        let objects = Objects::new();
-
-        let surface = objects.surfaces.xy_plane();
-
-        let points_surface = [[0., 0.], [1., 0.]];
-        let points_global = [[0., 0., 0.], [1., 0., 0.]];
-
-        let curve = {
-            let path = SurfacePath::line_from_points(points_surface);
-            let global_form = objects.global_curves.insert(GlobalCurve)?;
-
-            objects.curves.insert(Curve::new(
-                surface.clone(),
-                path,
-                global_form,
-            ))?
-        };
-
-        let vertices_global = points_global.try_map_ext(|point| {
-            objects
-                .global_vertices
-                .insert(GlobalVertex::from_position(point))
-        })?;
-
-        let [a_surface, b_surface] = points_surface
-            .zip_ext(vertices_global)
-            .try_map_ext(|(point_surface, vertex_global)| {
-                objects.surface_vertices.insert(SurfaceVertex::new(
-                    point_surface,
-                    surface.clone(),
-                    vertex_global,
-                ))
-            })?;
-
-        let deviation = Scalar::from_f64(0.25);
-
-        let a = objects.vertices.insert(Vertex::new(
-            Point::from([Scalar::ZERO + deviation]),
-            curve.clone(),
-            a_surface,
-        ))?;
-        let b = objects.vertices.insert(Vertex::new(
-            Point::from([Scalar::ONE]),
-            curve.clone(),
-            b_surface,
-        ))?;
-        let vertices = [a, b];
-
-        let global_edge = GlobalEdge::partial()
-            .from_curve_and_vertices(&curve, &vertices)
-            .build(&objects)?;
-        let half_edge = objects
-            .half_edges
-            .insert(HalfEdge::new(vertices, global_edge));
-
-        let result =
-            half_edge.clone().validate_with_config(&ValidationConfig {
-                identical_max_distance: deviation * 2.,
-                ..ValidationConfig::default()
-            });
-        assert!(result.is_ok());
-
-        let result = half_edge.validate_with_config(&ValidationConfig {
-            identical_max_distance: deviation / 2.,
-            ..ValidationConfig::default()
-        });
-        assert!(result.is_err());
-        Ok(())
-    }
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
