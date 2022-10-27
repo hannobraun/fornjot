@@ -7,7 +7,7 @@ mod edge;
 mod face;
 
 /// Reverse the direction/orientation of an object
-pub trait Reverse {
+pub trait Reverse: Sized {
     /// Reverse the direction/orientation of the object
     #[must_use]
     fn reverse(self, objects: &Objects) -> Self;
