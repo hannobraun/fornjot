@@ -320,8 +320,12 @@ pub struct Solids {
 
 impl Solids {
     /// Insert a [`Solid`] into the store
-    pub fn insert(&self, solid: Solid) -> Handle<Solid> {
-        self.store.insert(solid)
+    pub fn insert(
+        &self,
+        solid: Solid,
+    ) -> Result<Handle<Solid>, <Solid as Validate2>::Error> {
+        solid.validate()?;
+        Ok(self.store.insert(solid))
     }
 }
 
