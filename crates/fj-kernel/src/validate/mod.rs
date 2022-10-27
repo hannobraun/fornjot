@@ -37,7 +37,7 @@ use fj_math::Scalar;
 
 use crate::iter::ObjectIters;
 
-use self::vertex::SurfaceVertexPositionMismatch;
+use self::vertex::{SurfaceVertexPositionMismatch, VertexPositionMismatch};
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -193,6 +193,10 @@ pub enum ValidationError {
     /// `SurfaceVertex` position didn't match `GlobalVertex`
     #[error(transparent)]
     SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
+
+    /// `Vertex` position didn't match `SurfaceVertex`
+    #[error(transparent)]
+    VertexPositionMismatch(#[from] VertexPositionMismatch),
 }
 
 impl From<Infallible> for ValidationError {
