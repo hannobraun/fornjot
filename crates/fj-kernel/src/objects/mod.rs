@@ -134,7 +134,7 @@ pub struct Objects {
     pub half_edges: Store<HalfEdge>,
 
     /// Store for [`Shell`]s
-    pub shells: Store<Shell>,
+    pub shells: Shells,
 
     /// Store for [`Sketch`]es
     pub sketches: Sketches,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`Shell`]s
+#[derive(Debug, Default)]
+pub struct Shells {
+    store: Store<Shell>,
+}
+
+impl Shells {
+    /// Insert a [`Shell`] into the store
+    pub fn insert(&self, shell: Shell) -> Handle<Shell> {
+        self.store.insert(shell)
     }
 }
 
