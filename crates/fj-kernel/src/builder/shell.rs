@@ -273,6 +273,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Handle<Shell> {
-        Shell::new(self.faces, self.objects)
+        self.objects.shells.insert(Shell::new(self.faces))
     }
 }
