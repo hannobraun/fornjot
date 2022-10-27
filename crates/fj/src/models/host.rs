@@ -11,18 +11,6 @@ pub trait Host {
     fn register_boxed_model(&mut self, model: Box<dyn Model>);
 }
 
-impl<H: Host + ?Sized> Host for &'_ mut H {
-    fn register_boxed_model(&mut self, model: Box<dyn Model>) {
-        (*self).register_boxed_model(model);
-    }
-}
-
-impl<H: Host + ?Sized> Host for Box<H> {
-    fn register_boxed_model(&mut self, model: Box<dyn Model>) {
-        (**self).register_boxed_model(model);
-    }
-}
-
 /// Extension methods to augment the [`Host`] API.
 pub trait HostExt {
     /// Register a model with the Fornjot runtime.
