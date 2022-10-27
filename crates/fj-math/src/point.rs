@@ -60,7 +60,7 @@ impl<const D: usize> Point<D> {
     }
 
     /// Gives the distance between two points.
-    pub fn distance(&self, other: &Point<D>) -> Scalar {
+    pub fn distance_to(&self, other: &Point<D>) -> Scalar {
         (self.coords - other.coords).magnitude()
     }
 }
