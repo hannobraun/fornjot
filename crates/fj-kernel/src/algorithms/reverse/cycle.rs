@@ -17,6 +17,6 @@ impl Reverse for Handle<Cycle> {
 
         edges.reverse();
 
-        Cycle::new(surface, edges, objects)
+        objects.cycles.insert(Cycle::new(surface, edges))
     }
 }

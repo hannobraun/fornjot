@@ -63,8 +63,7 @@ impl Face {
         exterior: Handle<Cycle>,
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let surface = exterior.surface().clone();
         let mut interiors = Vec::new();
 
@@ -83,12 +82,12 @@ impl Face {
             interiors.push(interior);
         }
 
-        objects.faces.insert(Self {
+        Self {
             surface,
             exterior,
             interiors,
             color,
-        })
+        }
     }
 
     /// Access this face's surface

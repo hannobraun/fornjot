@@ -48,7 +48,9 @@ pub trait Validate: Sized {
     /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate();
     /// ```
     /// ``` rust
@@ -57,7 +59,9 @@ pub trait Validate: Sized {
     /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
     fn validate(self) -> Result<Validated<Self>, ValidationError> {
@@ -209,45 +213,51 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let global_form = GlobalCurve::new(&objects);
+            let global_form = objects.global_curves.insert(GlobalCurve);
 
-            Curve::new(surface.clone(), path, global_form, &objects)
+            objects.curves.insert(Curve::new(
+                surface.clone(),
+                path,
+                global_form,
+            ))
         };
 
-        let vertices_global = points_global
-            .map(|point| GlobalVertex::from_position(point, &objects));
+        let vertices_global = points_global.map(|point| {
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(point))
+        });
 
         let [a_surface, b_surface] = points_surface
             .zip_ext(vertices_global)
             .map(|(point_surface, vertex_global)| {
-                SurfaceVertex::new(
+                objects.surface_vertices.insert(SurfaceVertex::new(
                     point_surface,
                     surface.clone(),
                     vertex_global,
-                    &objects,
-                )
+                ))
             });
 
         let deviation = Scalar::from_f64(0.25);
 
-        let a = Vertex::new(
+        let a = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ZERO + deviation]),
             curve.clone(),
             a_surface,
-            &objects,
-        );
-        let b = Vertex::new(
+        ));
+        let b = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ONE]),
             curve.clone(),
             b_surface,
-            &objects,
-        );
+        ));
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::partial()
             .from_curve_and_vertices(&curve, &vertices)
             .build(&objects)?;
-        let half_edge = HalfEdge::new(vertices, global_edge, &objects);
+        let half_edge = objects
+            .half_edges
+            .insert(HalfEdge::new(vertices, global_edge));
 
         let result =
             half_edge.clone().validate_with_config(&ValidationConfig {
@@ -282,11 +292,19 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex::from_position(a, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(a)),
+        );
         shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex::from_position(b, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(b)),
+        );
         let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

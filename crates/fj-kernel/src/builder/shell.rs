@@ -258,7 +258,9 @@ impl<'a> ShellBuilder<'a> {
             }
 
             Face::builder(self.objects)
-                .with_exterior(Cycle::new(surface, edges, self.objects))
+                .with_exterior(
+                    self.objects.cycles.insert(Cycle::new(surface, edges)),
+                )
                 .build()
         };
 
@@ -271,6 +273,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Handle<Shell> {
-        Shell::new(self.faces, self.objects)
+        self.objects.shells.insert(Shell::new(self.faces))
     }
 }

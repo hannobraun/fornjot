@@ -114,7 +114,9 @@ impl PartialVertex {
             })
             .into_full(objects)?;
 
-        Ok(Vertex::new(position, curve, surface_form, objects))
+        Ok(objects
+            .vertices
+            .insert(Vertex::new(position, curve, surface_form)))
     }
 }
 
@@ -209,7 +211,11 @@ impl PartialSurfaceVertex {
             })
             .into_full(objects)?;
 
-        Ok(SurfaceVertex::new(position, surface, global_form, objects))
+        Ok(objects.surface_vertices.insert(SurfaceVertex::new(
+            position,
+            surface,
+            global_form,
+        )))
     }
 }
 
@@ -284,7 +290,9 @@ impl PartialGlobalVertex {
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        Ok(GlobalVertex::from_position(position, objects))
+        Ok(objects
+            .global_vertices
+            .insert(GlobalVertex::from_position(position)))
     }
 }
 

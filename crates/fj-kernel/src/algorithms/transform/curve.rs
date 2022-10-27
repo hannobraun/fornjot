@@ -23,7 +23,7 @@ impl TransformObject for Handle<GlobalCurve> {
         // All we need to do here is create a new `GlobalCurve` instance, to
         // make sure the transformed `GlobalCurve` has a different identity than
         // the original one.
-        Ok(GlobalCurve::new(objects))
+        Ok(objects.global_curves.insert(GlobalCurve))
     }
 }
 
