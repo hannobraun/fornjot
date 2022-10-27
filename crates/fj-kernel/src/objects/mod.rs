@@ -113,7 +113,7 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct Objects {
     /// Store for [`Curve`]s
-    pub curves: Store<Curve>,
+    pub curves: Curves,
 
     /// Store for [`Cycle`]s
     pub cycles: Cycles,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`Curve`]s
+#[derive(Debug, Default)]
+pub struct Curves {
+    store: Store<Curve>,
+}
+
+impl Curves {
+    /// Insert a [`Curve`] into the store
+    pub fn insert(&self, curve: Curve) -> Handle<Curve> {
+        self.store.insert(curve)
     }
 }
 
