@@ -2,7 +2,7 @@ use std::fmt;
 
 use fj_math::{Point, Scalar};
 
-use crate::objects::{Curve, Vertex};
+use crate::objects::Vertex;
 
 pub fn validate_vertex(
     vertex: &Vertex,
@@ -38,44 +38,9 @@ pub fn validate_vertex(
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum CoherenceIssues {
-    /// Mismatch between the surface and global forms of a curve
-    #[error("Mismatch between surface and global forms of curve")]
-    Curve(#[from] CurveCoherenceMismatch),
-
     /// Mismatch between the local and global coordinates of a vertex
     #[error("Mismatch between local and global coordinates of vertex")]
     Vertex(#[from] VertexCoherenceMismatch),
-}
-
-/// A mismatch between the surface and global forms of a curve
-///
-/// Used in [`CoherenceIssues`].
-#[derive(Debug, thiserror::Error)]
-pub struct CurveCoherenceMismatch {
-    /// The curve coordinate for which a mismatch was found
-    pub point_curve: Point<1>,
-
-    /// The curve coordinate, converted to surface coordinates
-    pub point_surface: Point<2>,
-
-    /// The surface coordinates, converted to global coordinates
-    pub point_surface_as_global: Point<3>,
-
-    /// The curve coordinate, converted to global coordinates
-    pub point_global: Point<3>,
-
-    /// The incoherent curve
-    pub curve: Curve,
-}
-
-impl fmt::Display for CurveCoherenceMismatch {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "local: {:?} (converted to surface: {:?}; to global: {:?}), global: {:?},",
-            self.point_curve, self.point_surface, self.point_surface_as_global, self.point_global,
-        )
-    }
 }
 
 /// A mismatch between the local and global forms of a vertex

@@ -31,11 +31,11 @@ pub use self::{
     uniqueness::UniquenessIssues,
 };
 
-use std::{collections::HashSet, ops::Deref};
+use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
 use fj_math::Scalar;
 
-use crate::{iter::ObjectIters, storage::Store};
+use crate::iter::ObjectIters;
 
 /// Validate an object
 pub trait Validate: Sized {
@@ -104,17 +104,19 @@ where
 
 /// Validate an object
 pub trait Validate2: Sized {
+    /// The error that validation of the implementing type can result in
+    type Error: Into<ValidationError>;
+
     /// Validate the object using default configuration
-    fn validate(&self, store: &Store<Self>) -> Result<(), ValidationError> {
-        self.validate_with_config(store, &ValidationConfig::default())
+    fn validate(&self) -> Result<(), Self::Error> {
+        self.validate_with_config(&ValidationConfig::default())
     }
 
     /// Validate the object
     fn validate_with_config(
         &self,
-        store: &Store<Self>,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError>;
+    ) -> Result<(), Self::Error>;
 }
 
 /// Configuration required for the validation process
@@ -185,6 +187,12 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+}
+
+impl From<Infallible> for ValidationError {
+    fn from(infallible: Infallible) -> Self {
+        match infallible {}
+    }
 }
 
 #[cfg(test)]

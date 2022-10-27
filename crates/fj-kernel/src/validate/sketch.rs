@@ -1,13 +1,16 @@
-use crate::{objects::Sketch, storage::Store};
+use std::convert::Infallible;
 
-use super::{Validate2, ValidationConfig, ValidationError};
+use crate::objects::Sketch;
+
+use super::{Validate2, ValidationConfig};
 
 impl Validate2 for Sketch {
+    type Error = Infallible;
+
     fn validate_with_config(
         &self,
-        _: &Store<Self>,
         _: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
+    ) -> Result<(), Self::Error> {
         Ok(())
     }
 }
