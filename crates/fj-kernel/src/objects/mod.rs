@@ -149,7 +149,7 @@ pub struct Objects {
     pub surfaces: Surfaces,
 
     /// Store for [`Vertex`] objects
-    pub vertices: Store<Vertex>,
+    pub vertices: Vertices,
 }
 
 impl Objects {
@@ -224,5 +224,18 @@ impl Default for Surfaces {
             xz_plane,
             yz_plane,
         }
+    }
+}
+
+/// Store for [`Vertex`] objects
+#[derive(Debug, Default)]
+pub struct Vertices {
+    store: Store<Vertex>,
+}
+
+impl Vertices {
+    /// Insert a [`Vertex`] into the store
+    pub fn insert(&self, vertex: Vertex) -> Handle<Vertex> {
+        self.store.insert(vertex)
     }
 }
