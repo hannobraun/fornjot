@@ -167,7 +167,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 if prev_last.surface_form().id()
                     != next_first.surface_form().id()
                 {
-                    edges[j] = edges[j].clone().reverse(objects);
+                    edges[j] = edges[j].clone().reverse(objects)?;
                 }
 
                 i += 1;
@@ -237,7 +237,7 @@ mod tests {
                 )))
                 .as_line_segment()
                 .build(&objects)?
-                .reverse(&objects);
+                .reverse(&objects)?;
             let side_down = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
@@ -248,7 +248,7 @@ mod tests {
                 )))
                 .as_line_segment()
                 .build(&objects)?
-                .reverse(&objects);
+                .reverse(&objects)?;
 
             let cycle = objects
                 .cycles
