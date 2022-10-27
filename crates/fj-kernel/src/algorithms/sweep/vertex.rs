@@ -123,7 +123,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         // assembling the pieces we've already created.
         Ok(objects
             .half_edges
-            .insert(HalfEdge::new(vertices, edge_global)))
+            .insert(HalfEdge::new(vertices, edge_global))?)
     }
 }
 

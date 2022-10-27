@@ -295,7 +295,7 @@ impl PartialHalfEdge {
 
         Ok(objects
             .half_edges
-            .insert(HalfEdge::new(vertices, global_form)))
+            .insert(HalfEdge::new(vertices, global_form))?)
     }
 }
 

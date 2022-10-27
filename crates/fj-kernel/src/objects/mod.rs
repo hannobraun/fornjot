@@ -269,8 +269,12 @@ pub struct HalfEdges {
 
 impl HalfEdges {
     /// Insert a [`HalfEdge`] into the store
-    pub fn insert(&self, half_edge: HalfEdge) -> Handle<HalfEdge> {
-        self.store.insert(half_edge)
+    pub fn insert(
+        &self,
+        half_edge: HalfEdge,
+    ) -> Result<Handle<HalfEdge>, <HalfEdge as Validate2>::Error> {
+        half_edge.validate()?;
+        Ok(self.store.insert(half_edge))
     }
 }
 
