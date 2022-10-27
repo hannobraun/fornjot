@@ -209,7 +209,7 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let global_form = GlobalCurve::new(&objects);
+            let global_form = objects.global_curves.insert(GlobalCurve);
 
             Curve::new(surface.clone(), path, global_form, &objects)
         };

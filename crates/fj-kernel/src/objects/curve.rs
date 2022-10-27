@@ -47,10 +47,3 @@ impl Curve {
 /// A curve, defined in global (3D) coordinates
 #[derive(Clone, Copy, Debug)]
 pub struct GlobalCurve;
-
-impl GlobalCurve {
-    /// Construct a new instance of `Handle` and add it to the store
-    pub fn new(objects: &Objects) -> Handle<Self> {
-        objects.global_curves.insert(GlobalCurve)
-    }
-}

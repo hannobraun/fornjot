@@ -443,7 +443,7 @@ mod tests {
     fn global_curve() {
         let objects = Objects::new();
 
-        let object = GlobalCurve::new(&objects);
+        let object = objects.global_curves.insert(GlobalCurve);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
