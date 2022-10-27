@@ -114,9 +114,11 @@ impl PartialVertex {
             })
             .into_full(objects)?;
 
-        Ok(objects
-            .vertices
-            .insert(Vertex::new(position, curve, surface_form)))
+        Ok(objects.vertices.insert(Vertex::new(
+            position,
+            curve,
+            surface_form,
+        ))?)
     }
 }
 
@@ -215,7 +217,7 @@ impl PartialSurfaceVertex {
             position,
             surface,
             global_form,
-        )))
+        ))?)
     }
 }
 
@@ -292,7 +294,7 @@ impl PartialGlobalVertex {
 
         Ok(objects
             .global_vertices
-            .insert(GlobalVertex::from_position(position)))
+            .insert(GlobalVertex::from_position(position))?)
     }
 }
 

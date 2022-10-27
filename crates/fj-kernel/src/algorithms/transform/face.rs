@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Face, Faces, Objects},
+    objects::{Face, FaceSet, Objects},
     partial::HasPartial,
     storage::Handle,
     validate::ValidationError,
@@ -43,13 +43,13 @@ impl TransformObject for Handle<Face> {
     }
 }
 
-impl TransformObject for Faces {
+impl TransformObject for FaceSet {
     fn transform(
         self,
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let mut faces = Faces::new();
+        let mut faces = FaceSet::new();
         faces.extend(
             self.into_iter()
                 .map(|face| -> Result<_, ValidationError> {

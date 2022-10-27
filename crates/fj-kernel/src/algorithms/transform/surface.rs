@@ -17,6 +17,6 @@ impl TransformObject for Handle<Surface> {
         Ok(objects.surfaces.insert(Surface::new(
             self.u().transform(transform, objects)?,
             transform.transform_vector(&self.v()),
-        )))
+        ))?)
     }
 }

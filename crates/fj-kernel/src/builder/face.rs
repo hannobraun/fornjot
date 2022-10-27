@@ -100,5 +100,6 @@ impl<'a> FaceBuilder<'a> {
         self.objects
             .faces
             .insert(Face::new(exterior, self.interiors, color))
+            .unwrap()
     }
 }

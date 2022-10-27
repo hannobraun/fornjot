@@ -54,35 +54,38 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     surface.clone(),
                     path,
                     edge.curve().global_form().clone(),
-                ))
+                ))?
             };
 
             let vertices = {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                vertices.each_ref_ext().zip_ext(points_surface).map(
-                    |(vertex, point_surface)| {
+                vertices
+                    .each_ref_ext()
+                    .zip_ext(points_surface)
+                    .try_map_ext(
+                    |(vertex, point_surface)| -> Result<_, ValidationError> {
                         let surface_vertex = objects.surface_vertices.insert(
                             SurfaceVertex::new(
                                 point_surface,
                                 surface.clone(),
                                 vertex.global_form().clone(),
                             ),
-                        );
+                        )?;
 
-                        objects.vertices.insert(Vertex::new(
+                        Ok(objects.vertices.insert(Vertex::new(
                             vertex.position(),
                             curve.clone(),
                             surface_vertex,
-                        ))
+                        ))?)
                     },
-                )
+                )?
             };
 
             objects
                 .half_edges
-                .insert(HalfEdge::new(vertices, edge.global_form().clone()))
+                .insert(HalfEdge::new(vertices, edge.global_form().clone()))?
         };
 
         let side_edges =
@@ -118,9 +121,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         points_curve_and_surface,
                     ));
 
-                objects
-                    .curves
-                    .insert(Curve::new(surface.clone(), path, global))
+                objects.curves.insert(Curve::new(
+                    surface.clone(),
+                    path,
+                    global,
+                ))?
             };
 
             let global = objects.global_edges.insert(GlobalEdge::new(
@@ -128,20 +133,20 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 surface_vertices
                     .clone()
                     .map(|surface_vertex| surface_vertex.global_form().clone()),
-            ));
+            ))?;
 
             let vertices = bottom_vertices
                 .each_ref_ext()
                 .zip_ext(surface_vertices)
-                .map(|(vertex, surface_form)| {
+                .try_map_ext(|(vertex, surface_form)| {
                     objects.vertices.insert(Vertex::new(
                         vertex.position(),
                         curve.clone(),
                         surface_form,
                     ))
-                });
+                })?;
 
-            objects.half_edges.insert(HalfEdge::new(vertices, global))
+            objects.half_edges.insert(HalfEdge::new(vertices, global))?
         };
 
         let cycle = {
@@ -165,13 +170,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 if prev_last.surface_form().id()
                     != next_first.surface_form().id()
                 {
-                    edges[j] = edges[j].clone().reverse(objects);
+                    edges[j] = edges[j].clone().reverse(objects)?;
                 }
 
                 i += 1;
             }
 
-            objects.cycles.insert(Cycle::new(surface, edges))
+            objects.cycles.insert(Cycle::new(surface, edges))?
         };
 
         Ok(Face::builder(objects)
@@ -235,7 +240,7 @@ mod tests {
                 )))
                 .as_line_segment()
                 .build(&objects)?
-                .reverse(&objects);
+                .reverse(&objects)?;
             let side_down = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
@@ -246,11 +251,12 @@ mod tests {
                 )))
                 .as_line_segment()
                 .build(&objects)?
-                .reverse(&objects);
+                .reverse(&objects)?;
 
-            let cycle = objects
-                .cycles
-                .insert(Cycle::new(surface, [bottom, side_up, top, side_down]));
+            let cycle = objects.cycles.insert(Cycle::new(
+                surface,
+                [bottom, side_up, top, side_down],
+            ))?;
 
             Face::builder(&objects).with_exterior(cycle).build()
         };

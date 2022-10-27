@@ -1,6 +1,6 @@
 use crate::{builder::ShellBuilder, storage::Handle};
 
-use super::{face::Faces, Face, Objects};
+use super::{face::FaceSet, Face, Objects};
 
 /// A 3-dimensional closed shell
 ///
@@ -10,7 +10,7 @@ use super::{face::Faces, Face, Objects};
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Shell {
-    faces: Faces,
+    faces: FaceSet,
 }
 
 impl Shell {
@@ -18,7 +18,7 @@ impl Shell {
     pub fn builder(objects: &Objects) -> ShellBuilder {
         ShellBuilder {
             objects,
-            faces: Faces::new(),
+            faces: FaceSet::new(),
         }
     }
 
@@ -30,7 +30,7 @@ impl Shell {
     }
 
     /// Access the shell's faces
-    pub fn faces(&self) -> &Faces {
+    pub fn faces(&self) -> &FaceSet {
         &self.faces
     }
 

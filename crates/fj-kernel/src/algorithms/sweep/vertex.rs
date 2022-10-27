@@ -1,4 +1,6 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Point, Scalar, Vector};
+use try_insert_ext::EntryInsertExt;
 
 use crate::{
     objects::{
@@ -92,7 +94,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-            ))
+            ))?
         };
 
         let vertices_surface = {
@@ -105,24 +107,24 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
                     position,
                     surface,
                     global_form,
-                )),
+                ))?,
             ]
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.map(|surface_form| {
+        let vertices = vertices_surface.try_map_ext(|surface_form| {
             objects.vertices.insert(Vertex::new(
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
             ))
-        });
+        })?;
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
         Ok(objects
             .half_edges
-            .insert(HalfEdge::new(vertices, edge_global)))
+            .insert(HalfEdge::new(vertices, edge_global))?)
     }
 }
 
@@ -135,23 +137,23 @@ impl Sweep for Handle<GlobalVertex> {
         cache: &mut SweepCache,
         objects: &Objects,
     ) -> Result<Self::Swept, ValidationError> {
-        let curve = objects.global_curves.insert(GlobalCurve);
+        let curve = objects.global_curves.insert(GlobalCurve)?;
 
         let a = self.clone();
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| {
+            .or_try_insert_with(|| {
                 objects.global_vertices.insert(GlobalVertex::from_position(
                     self.position() + path.into(),
                 ))
-            })
+            })?
             .clone();
 
         let vertices = [a, b];
         let global_edge = objects
             .global_edges
-            .insert(GlobalEdge::new(curve, vertices.clone()));
+            .insert(GlobalEdge::new(curve, vertices.clone()))?;
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the

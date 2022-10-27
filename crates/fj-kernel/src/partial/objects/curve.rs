@@ -92,13 +92,14 @@ impl PartialCurve {
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
-        let global_form = self.global_form.unwrap_or_else(|| {
-            objects.global_curves.insert(GlobalCurve).into()
-        });
+        let global_form = match self.global_form {
+            Some(global_form) => global_form,
+            None => objects.global_curves.insert(GlobalCurve)?.into(),
+        };
 
         Ok(objects
             .curves
-            .insert(Curve::new(surface, path, global_form)))
+            .insert(Curve::new(surface, path, global_form))?)
     }
 }
 

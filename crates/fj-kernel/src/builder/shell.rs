@@ -6,7 +6,7 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{
-        Curve, Cycle, Face, Faces, HalfEdge, Objects, Shell, Surface,
+        Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
     },
     partial::HasPartial,
@@ -21,7 +21,7 @@ pub struct ShellBuilder<'a> {
     pub objects: &'a Objects,
 
     /// The faces that make up the [`Shell`]
-    pub faces: Faces,
+    pub faces: FaceSet,
 }
 
 impl<'a> ShellBuilder<'a> {
@@ -78,6 +78,7 @@ impl<'a> ShellBuilder<'a> {
                     self.objects
                         .surfaces
                         .insert(Surface::plane_from_points([a, b, c]))
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -259,7 +260,10 @@ impl<'a> ShellBuilder<'a> {
 
             Face::builder(self.objects)
                 .with_exterior(
-                    self.objects.cycles.insert(Cycle::new(surface, edges)),
+                    self.objects
+                        .cycles
+                        .insert(Cycle::new(surface, edges))
+                        .unwrap(),
                 )
                 .build()
         };
@@ -273,6 +277,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Handle<Shell> {
-        self.objects.shells.insert(Shell::new(self.faces))
+        self.objects.shells.insert(Shell::new(self.faces)).unwrap()
     }
 }

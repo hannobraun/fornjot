@@ -221,30 +221,30 @@ mod tests {
 
         let curve = {
             let path = SurfacePath::line_from_points(points_surface);
-            let global_form = objects.global_curves.insert(GlobalCurve);
+            let global_form = objects.global_curves.insert(GlobalCurve)?;
 
             objects.curves.insert(Curve::new(
                 surface.clone(),
                 path,
                 global_form,
-            ))
+            ))?
         };
 
-        let vertices_global = points_global.map(|point| {
+        let vertices_global = points_global.try_map_ext(|point| {
             objects
                 .global_vertices
                 .insert(GlobalVertex::from_position(point))
-        });
+        })?;
 
         let [a_surface, b_surface] = points_surface
             .zip_ext(vertices_global)
-            .map(|(point_surface, vertex_global)| {
+            .try_map_ext(|(point_surface, vertex_global)| {
                 objects.surface_vertices.insert(SurfaceVertex::new(
                     point_surface,
                     surface.clone(),
                     vertex_global,
                 ))
-            });
+            })?;
 
         let deviation = Scalar::from_f64(0.25);
 
@@ -252,12 +252,12 @@ mod tests {
             Point::from([Scalar::ZERO + deviation]),
             curve.clone(),
             a_surface,
-        ));
+        ))?;
         let b = objects.vertices.insert(Vertex::new(
             Point::from([Scalar::ONE]),
             curve.clone(),
             b_surface,
-        ));
+        ))?;
         let vertices = [a, b];
 
         let global_edge = GlobalEdge::partial()
