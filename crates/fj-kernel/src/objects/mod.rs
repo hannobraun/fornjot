@@ -184,8 +184,12 @@ pub struct Cycles {
 
 impl Cycles {
     /// Insert a [`Cycle`] into the store
-    pub fn insert(&self, cycle: Cycle) -> Handle<Cycle> {
-        self.store.insert(cycle)
+    pub fn insert(
+        &self,
+        cycle: Cycle,
+    ) -> Result<Handle<Cycle>, <Cycle as Validate2>::Error> {
+        cycle.validate()?;
+        Ok(self.store.insert(cycle))
     }
 }
 
