@@ -131,7 +131,7 @@ pub struct Objects {
     pub global_vertices: Store<GlobalVertex>,
 
     /// Store for [`HalfEdge`]s
-    pub half_edges: Store<HalfEdge>,
+    pub half_edges: HalfEdges,
 
     /// Store for [`Shell`]s
     pub shells: Shells,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`HalfEdge`]s
+#[derive(Debug, Default)]
+pub struct HalfEdges {
+    store: Store<HalfEdge>,
+}
+
+impl HalfEdges {
+    /// Insert a [`HalfEdge`] into the store
+    pub fn insert(&self, half_edge: HalfEdge) -> Handle<HalfEdge> {
+        self.store.insert(half_edge)
     }
 }
 
