@@ -122,7 +122,7 @@ pub struct Objects {
     pub faces: Store<Face>,
 
     /// Store for [`GlobalCurve`]s
-    pub global_curves: Store<GlobalCurve>,
+    pub global_curves: GlobalCurves,
 
     /// Store for [`GlobalEdge`]s
     pub global_edges: GlobalEdges,
@@ -156,6 +156,19 @@ impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
+    }
+}
+
+/// Store for [`GlobalCurve`]s
+#[derive(Debug, Default)]
+pub struct GlobalCurves {
+    store: Store<GlobalCurve>,
+}
+
+impl GlobalCurves {
+    /// Insert a [`GlobalCurve`] into the store
+    pub fn insert(&self, global_curve: GlobalCurve) -> Handle<GlobalCurve> {
+        self.store.insert(global_curve)
     }
 }
 
