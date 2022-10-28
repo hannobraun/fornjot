@@ -152,7 +152,7 @@ pub struct PartialSurfaceVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Surface`].
-    pub global_form: Option<MaybePartial<GlobalVertex>>,
+    pub global_form: MaybePartial<GlobalVertex>,
 }
 
 impl PartialSurfaceVertex {
@@ -181,7 +181,7 @@ impl PartialSurfaceVertex {
         global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
-            self.global_form = Some(global_form.into());
+            self.global_form = global_form.into();
         }
         self
     }
@@ -206,10 +206,8 @@ impl PartialSurfaceVertex {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| {
-                GlobalVertex::partial()
-                    .from_surface_and_position(&surface, position)
-                    .into()
+            .update_partial(|global_form| {
+                global_form.from_surface_and_position(&surface, position)
             })
             .into_full(objects)?;
 
@@ -226,7 +224,7 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
         Self {
             position: Some(surface_vertex.position()),
             surface: Some(surface_vertex.surface().clone()),
-            global_form: Some((surface_vertex.global_form().clone()).into()),
+            global_form: (surface_vertex.global_form().clone()).into(),
         }
     }
 }

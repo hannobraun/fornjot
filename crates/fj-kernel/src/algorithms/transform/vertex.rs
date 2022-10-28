@@ -53,10 +53,7 @@ impl TransformObject for PartialSurfaceVertex {
             .surface
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
-        let global_form = self
-            .global_form
-            .map(|global_form| global_form.transform(transform, objects))
-            .transpose()?;
+        let global_form = self.global_form.transform(transform, objects)?;
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
