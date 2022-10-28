@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{HasPartial, MaybePartial},
+    partial::MaybePartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -26,7 +26,7 @@ pub struct PartialVertex {
     ///
     /// Can be provided, if already available, or computed from the position on
     /// the [`Curve`].
-    pub surface_form: Option<MaybePartial<SurfaceVertex>>,
+    pub surface_form: MaybePartial<SurfaceVertex>,
 
     /// The global form of the [`Vertex`]
     ///
@@ -64,7 +64,7 @@ impl PartialVertex {
         surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
     ) -> Self {
         if let Some(surface_form) = surface_form {
-            self.surface_form = Some(surface_form.into());
+            self.surface_form = surface_form.into();
         }
         self
     }
@@ -101,7 +101,6 @@ impl PartialVertex {
 
         let surface_form = self
             .surface_form
-            .unwrap_or_else(|| SurfaceVertex::partial().into())
             .update_partial(|partial| {
                 let position = partial.position.unwrap_or_else(|| {
                     curve.path().point_from_path_coords(position)
@@ -127,7 +126,7 @@ impl From<&Vertex> for PartialVertex {
         Self {
             position: Some(vertex.position()),
             curve: Some(vertex.curve().clone().into()),
-            surface_form: Some(vertex.surface_form().clone().into()),
+            surface_form: vertex.surface_form().clone().into(),
             global_form: Some((vertex.global_form().clone()).into()),
         }
     }

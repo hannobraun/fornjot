@@ -20,13 +20,9 @@ impl TransformObject for PartialVertex {
             .transpose()?;
         let surface_form = self
             .surface_form
-            .map(|surface_form| -> Result<_, ValidationError> {
-                Ok(surface_form
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .into())
-            })
-            .transpose()?;
+            .into_partial()
+            .transform(transform, objects)?
+            .into();
         let global_form = self
             .global_form
             .map(|global_form| global_form.transform(transform, objects))
