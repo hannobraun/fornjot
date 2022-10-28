@@ -53,7 +53,6 @@ impl PartialCycle {
                     vertex.expect("Need half-edge vertices to extend cycle")
                 });
                 last.surface_form()
-                    .expect("Need surface vertex to extend cycle")
             })
             .into_iter()
             .chain(vertices);
@@ -142,7 +141,6 @@ impl PartialCycle {
             let vertices = [last, first].map(|vertex| {
                 vertex
                     .surface_form()
-                    .expect("Need surface vertex to close cycle")
                     .position()
                     .expect("Need surface position to close cycle")
             });
@@ -174,10 +172,9 @@ impl PartialCycle {
                 .and_then(|half_edge| {
                     half_edge.front().map(|vertex| (half_edge, vertex))
                 })
-                .and_then(|(half_edge, vertex)| {
-                    vertex.surface_form().map(|surface_vertex| {
-                        (half_edge, vertex, surface_vertex)
-                    })
+                .map(|(half_edge, vertex)| {
+                    let surface_vertex = vertex.surface_form();
+                    (half_edge, vertex, surface_vertex)
                 })
                 .map(|(half_edge, vertex, surface_vertex)|
                     -> Result<_, ValidationError>

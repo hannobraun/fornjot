@@ -187,11 +187,8 @@ impl PartialHalfEdge {
         let [from, to] = self.vertices.clone().map(|vertex| {
             vertex.expect("Can't infer line segment without vertices")
         });
-        let [from_surface, to_surface] = [&from, &to].map(|vertex| {
-            vertex
-                .surface_form()
-                .expect("Can't infer line segment without two surface vertices")
-        });
+        let [from_surface, to_surface] =
+            [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
             .surface
