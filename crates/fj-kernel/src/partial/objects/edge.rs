@@ -252,8 +252,8 @@ impl PartialHalfEdge {
             };
 
             vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
-                vertex.update_partial(|partial| {
-                    partial.with_global_form(global_form)
+                vertex.update_partial(|vertex| {
+                    vertex.with_global_form(global_form)
                 })
             })
         };
