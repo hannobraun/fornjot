@@ -30,8 +30,8 @@ impl TransformObject for PartialHalfEdge {
                     .into())
             })
             .transpose()?;
-        let vertices = self.vertices.clone().try_map_ext(|vertices| {
-            vertices
+        let vertices = self.vertices.clone().try_map_ext(|vertex| {
+            vertex
                 .map(|vertex| -> Result<_, ValidationError> {
                     Ok(vertex
                         .into_partial()
