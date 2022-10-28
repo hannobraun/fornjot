@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Transform;
 
 use crate::{
-    objects::{Curve, Objects},
+    objects::Objects,
     partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     validate::ValidationError,
 };
@@ -19,34 +19,28 @@ impl TransformObject for PartialHalfEdge {
             .surface
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
-        let curve = self
+        let curve: MaybePartial<_> = self
             .curve
             .clone()
-            .map(|curve| -> Result<_, ValidationError> {
-                Ok(curve
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .with_surface(surface.clone())
-                    .into())
-            })
-            .transpose()?;
+            .into_partial()
+            .transform(transform, objects)?
+            .with_surface(surface.clone())
+            .into();
         let vertices = self.vertices.clone().try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 Ok(vertex
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_curve(curve.clone())
+                    .with_curve(Some(curve.clone()))
                     .into())
             },
         )?;
-        let global_form =
-            self.global_form
-                .into_partial()
-                .transform(transform, objects)?
-                .with_curve(curve.as_ref().and_then(
-                    |curve: &MaybePartial<Curve>| curve.global_form(),
-                ))
-                .into();
+        let global_form = self
+            .global_form
+            .into_partial()
+            .transform(transform, objects)?
+            .with_curve(curve.global_form())
+            .into();
 
         Ok(Self {
             surface,

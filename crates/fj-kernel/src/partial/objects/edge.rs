@@ -20,7 +20,7 @@ pub struct PartialHalfEdge {
     pub surface: Option<Handle<Surface>>,
 
     /// The curve that the [`HalfEdge`] is defined in
-    pub curve: Option<MaybePartial<Curve>>,
+    pub curve: MaybePartial<Curve>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
     pub vertices: [MaybePartial<Vertex>; 2],
@@ -36,7 +36,7 @@ impl PartialHalfEdge {
     ///
     /// If a global curve is available through both, the curve is preferred.
     pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
-        let global_curve_from_curve = || self.curve.as_ref()?.global_form();
+        let global_curve_from_curve = || self.curve.global_form();
         let global_curve_from_global_form =
             || self.global_form.curve().cloned();
 
@@ -62,7 +62,7 @@ impl PartialHalfEdge {
         curve: Option<impl Into<MaybePartial<Curve>>>,
     ) -> Self {
         if let Some(curve) = curve {
-            self.curve = Some(curve.into());
+            self.curve = curve.into();
         }
         self
     }
@@ -159,7 +159,7 @@ impl PartialHalfEdge {
                 .into()
         });
 
-        self.curve = Some(curve.into());
+        self.curve = curve.into();
         self.vertices = [back, front];
 
         Ok(self)
@@ -260,7 +260,7 @@ impl PartialHalfEdge {
             })
         };
 
-        self.curve = Some(curve.into());
+        self.curve = curve.into();
         self.vertices = [back, front];
 
         self
@@ -274,7 +274,6 @@ impl PartialHalfEdge {
         let surface = self.surface;
         let curve = self
             .curve
-            .expect("Can't build `HalfEdge` without curve")
             .update_partial(|curve| curve.with_surface(surface))
             .into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
@@ -303,7 +302,7 @@ impl From<&HalfEdge> for PartialHalfEdge {
 
         Self {
             surface: Some(half_edge.curve().surface().clone()),
-            curve: Some(half_edge.curve().clone().into()),
+            curve: half_edge.curve().clone().into(),
             vertices: [back_vertex, front_vertex],
             global_form: half_edge.global_form().clone().into(),
         }
