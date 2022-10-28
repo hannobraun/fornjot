@@ -130,12 +130,12 @@ impl MaybePartial<GlobalEdge> {
 
 impl MaybePartial<HalfEdge> {
     /// Access the front vertex
-    pub fn front(&self) -> Option<MaybePartial<Vertex>> {
+    pub fn front(&self) -> MaybePartial<Vertex> {
         match self {
-            Self::Full(full) => Some(full.front().clone().into()),
+            Self::Full(full) => full.front().clone().into(),
             Self::Partial(partial) => {
                 let [_, front] = &partial.vertices;
-                Some(front.clone())
+                front.clone()
             }
         }
     }

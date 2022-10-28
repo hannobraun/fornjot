@@ -169,8 +169,9 @@ impl PartialCycle {
             let last_vertex = self
                 .half_edges
                 .last_mut()
-                .and_then(|half_edge| {
-                    half_edge.front().map(|vertex| (half_edge, vertex))
+                .map(|half_edge| {
+                    let vertex = half_edge.front();
+                    (half_edge, vertex)
                 })
                 .map(|(half_edge, vertex)| {
                     let surface_vertex = vertex.surface_form();
