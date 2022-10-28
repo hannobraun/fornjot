@@ -72,6 +72,16 @@ impl<T: HasPartial> MaybePartial<T> {
     }
 }
 
+impl<T> Default for MaybePartial<T>
+where
+    T: HasPartial,
+    T::Partial: Default,
+{
+    fn default() -> Self {
+        Self::Partial(T::Partial::default())
+    }
+}
+
 impl<T> From<Handle<T>> for MaybePartial<T>
 where
     T: HasPartial,
