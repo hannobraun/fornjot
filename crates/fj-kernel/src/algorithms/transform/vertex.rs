@@ -23,10 +23,6 @@ impl TransformObject for PartialVertex {
             .into_partial()
             .transform(transform, objects)?
             .into();
-        let global_form = self
-            .global_form
-            .map(|global_form| global_form.transform(transform, objects))
-            .transpose()?;
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
@@ -34,7 +30,6 @@ impl TransformObject for PartialVertex {
             position: self.position,
             curve,
             surface_form,
-            global_form,
         })
     }
 }
