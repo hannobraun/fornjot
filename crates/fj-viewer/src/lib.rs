@@ -15,7 +15,6 @@
 #![warn(missing_docs)]
 
 mod camera;
-mod file_dialog;
 mod graphics;
 mod gui;
 mod input;

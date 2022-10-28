@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anyhow::{anyhow, Context};
+use anyhow::Context;
 use fj_host::{Model, Parameters};
 
 use crate::{args::Args, config::Config};
@@ -136,12 +136,4 @@ fn load_error_context_inner(
     let context = format!("{error}\n\n{suggestions}");
 
     Ok(context)
-}
-
-fn no_model_error() -> anyhow::Error {
-    anyhow!(
-        "You must specify a model to start Fornjot.\n\
-        - Pass a model as a command-line argument. See `fj-app --help`.\n\
-        - Specify a default model in the configuration file."
-    )
 }

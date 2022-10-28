@@ -16,6 +16,7 @@ mod args;
 mod config;
 mod path;
 
+use anyhow::{anyhow, Context};
 use fj_export::export;
 use fj_host::Parameters;
 use fj_operations::shape_processor::ShapeProcessor;
@@ -53,7 +54,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(export_path) = args.export {
         // export only mode. just load model, process, export and exit
 
-        let evaluation = model.unwrap().evaluate()?;
+        let evaluation = model.with_context(no_model_error)?.evaluate()?;
         let shape = shape_processor.process(&evaluation.shape)?;
 
         export(&shape.mesh, &export_path)?;
@@ -65,4 +66,12 @@ fn main() -> anyhow::Result<()> {
     run(model, shape_processor, invert_zoom)?;
 
     Ok(())
+}
+
+fn no_model_error() -> anyhow::Error {
+    anyhow!(
+        "You must specify a model to start Fornjot.\n\
+        - Pass a model as a command-line argument. See `fj-app --help`.\n\
+        - Specify a default model in the configuration file."
+    )
 }

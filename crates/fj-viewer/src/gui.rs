@@ -14,14 +14,15 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
-use std::path::PathBuf;
+use std::{env::current_dir, path::PathBuf};
 
 use crossbeam_channel::{Receiver, Sender};
+use rfd::FileDialog;
 
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Scalar};
 
-use crate::{file_dialog::show_file_dialog, graphics::DrawConfig};
+use crate::graphics::DrawConfig;
 
 /// Event that are passed between the event_loop and gui
 pub enum GuiEvent {
@@ -115,7 +116,7 @@ impl Gui {
         line_drawing_available: bool,
     ) {
         loop {
-            let event = self
+            let gui_event = self
                 .event_rx
                 .try_recv()
                 .map_err(|err| {
@@ -125,12 +126,12 @@ impl Gui {
                 })
                 .ok();
 
-            let event = match event {
+            let gui_event = match gui_event {
                 Some(gui_event) => gui_event,
                 None => break,
             };
 
-            match event {
+            match gui_event {
                 GuiEvent::AskModel => self.state.has_model = false,
                 _ => {}
             }
@@ -301,7 +302,7 @@ impl Gui {
                             "No model selected please choose a model to view.",
                         );
                         if ui
-                            .button(egui::RichText::new("Pick a file"))
+                            .button(egui::RichText::new("Pick a model"))
                             .clicked()
                         {
                             let model_dir = show_file_dialog();
@@ -352,6 +353,12 @@ impl Gui {
             None,
         );
     }
+}
+
+fn show_file_dialog() -> Option<PathBuf> {
+    FileDialog::new()
+        .set_directory(current_dir().unwrap_or_else(|_| PathBuf::from("/")))
+        .pick_folder()
 }
 
 impl std::fmt::Debug for Gui {

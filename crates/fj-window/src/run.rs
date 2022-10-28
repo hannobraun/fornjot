@@ -32,7 +32,6 @@ pub fn run(
     invert_zoom: bool,
 ) -> Result<(), Error> {
     let (send_gui, gui_event_rx) = crossbeam_channel::bounded::<GuiEvent>(5);
-
     let (gui_event_tx, recv_gui) = crossbeam_channel::bounded::<GuiEvent>(5);
 
     if model.is_none() {
@@ -49,10 +48,7 @@ pub fn run(
     let mut viewer =
         block_on(Viewer::new(&window, gui_event_rx, gui_event_tx))?;
 
-    let mut events = match host {
-        Some(ref host) => Some(host.events()),
-        None => None,
-    };
+    let mut events = host.as_ref().map(|host| host.events());
 
     let mut held_mouse_button = None;
 
@@ -81,12 +77,18 @@ pub fn run(
                 GuiEvent::LoadModel(model_path) => {
                     let model =
                         Model::new(model_path, Parameters::empty()).unwrap();
-                    host =
-                        Some(Host::from_model(Some(model)).unwrap().unwrap());
-                    events = match host {
-                        Some(ref host) => Some(host.events()),
-                        None => None,
-                    };
+                    match Host::from_model(Some(model)).unwrap() {
+                        Ok(new_host) => {
+                            host = Some(new_host);
+                            events = host.as_ref().map(|host| host.events());
+                        }
+                        Err(_) => {
+                            status.update_status("Error creating host.");
+                            send_gui
+                                .send(GuiEvent::AskModel)
+                                .expect("Channel is disconnected");
+                        }
+                    }
                 }
                 _ => {}
             }
@@ -105,11 +107,8 @@ pub fn run(
             });
 
             let event = match event {
-                Some(event) => match event {
-                    Some(status_update) => status_update,
-                    None => break,
-                },
-                None => break,
+                Some(Some(status_update)) => status_update,
+                _ => break,
             };
 
             match event {
