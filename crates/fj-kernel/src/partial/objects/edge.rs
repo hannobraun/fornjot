@@ -28,7 +28,7 @@ pub struct PartialHalfEdge {
     /// The global form of the [`HalfEdge`]
     ///
     /// Can be computed by [`PartialHalfEdge::build`], if not available.
-    pub global_form: Option<MaybePartial<GlobalEdge>>,
+    pub global_form: MaybePartial<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
@@ -38,14 +38,14 @@ impl PartialHalfEdge {
     pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
         let global_curve_from_curve = || self.curve.as_ref()?.global_form();
         let global_curve_from_global_form =
-            || self.global_form.as_ref()?.curve().cloned();
+            || self.global_form.curve().cloned();
 
         global_curve_from_curve().or_else(global_curve_from_global_form)
     }
 
     /// Access the vertices of the global form, if available
     pub fn extract_global_vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
-        self.global_form.as_ref()?.vertices().cloned()
+        self.global_form.vertices().cloned()
     }
 
     /// Update the partial half-edge with the given surface
@@ -109,7 +109,7 @@ impl PartialHalfEdge {
         global_form: Option<impl Into<MaybePartial<GlobalEdge>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
-            self.global_form = Some(global_form.into());
+            self.global_form = global_form.into();
         }
         self
     }
@@ -288,7 +288,6 @@ impl PartialHalfEdge {
 
         let global_form = self
             .global_form
-            .unwrap_or_else(|| GlobalEdge::partial().into())
             .update_partial(|partial| {
                 partial.from_curve_and_vertices(&curve, &vertices)
             })
@@ -309,7 +308,7 @@ impl From<&HalfEdge> for PartialHalfEdge {
             surface: Some(half_edge.curve().surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
             vertices: [Some(back_vertex), Some(front_vertex)],
-            global_form: Some(half_edge.global_form().clone().into()),
+            global_form: half_edge.global_form().clone().into(),
         }
     }
 }

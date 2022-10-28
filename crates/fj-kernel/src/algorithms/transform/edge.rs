@@ -41,18 +41,14 @@ impl TransformObject for PartialHalfEdge {
                 })
                 .transpose()
         })?;
-        let global_form = self
-            .global_form
-            .map(|global_form| -> Result<_, ValidationError> {
-                Ok(global_form
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .with_curve(curve.as_ref().and_then(
-                        |curve: &MaybePartial<Curve>| curve.global_form(),
-                    ))
-                    .into())
-            })
-            .transpose()?;
+        let global_form =
+            self.global_form
+                .into_partial()
+                .transform(transform, objects)?
+                .with_curve(curve.as_ref().and_then(
+                    |curve: &MaybePartial<Curve>| curve.global_form(),
+                ))
+                .into();
 
         Ok(Self {
             surface,
