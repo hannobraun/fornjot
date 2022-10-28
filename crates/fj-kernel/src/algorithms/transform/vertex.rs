@@ -14,23 +14,12 @@ impl TransformObject for PartialVertex {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self
-            .curve
-            .map(|curve| curve.transform(transform, objects))
-            .transpose()?;
+        let curve = self.curve.transform(transform, objects)?;
         let surface_form = self
             .surface_form
-            .map(|surface_form| -> Result<_, ValidationError> {
-                Ok(surface_form
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .into())
-            })
-            .transpose()?;
-        let global_form = self
-            .global_form
-            .map(|global_form| global_form.transform(transform, objects))
-            .transpose()?;
+            .into_partial()
+            .transform(transform, objects)?
+            .into();
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
@@ -38,7 +27,6 @@ impl TransformObject for PartialVertex {
             position: self.position,
             curve,
             surface_form,
-            global_form,
         })
     }
 }
@@ -53,10 +41,7 @@ impl TransformObject for PartialSurfaceVertex {
             .surface
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
-        let global_form = self
-            .global_form
-            .map(|global_form| global_form.transform(transform, objects))
-            .transpose()?;
+        let global_form = self.global_form.transform(transform, objects)?;
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
