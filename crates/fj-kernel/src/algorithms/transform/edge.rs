@@ -30,17 +30,15 @@ impl TransformObject for PartialHalfEdge {
                     .into())
             })
             .transpose()?;
-        let vertices = self.vertices.clone().try_map_ext(|vertex| {
-            vertex
-                .map(|vertex| -> Result<_, ValidationError> {
-                    Ok(vertex
-                        .into_partial()
-                        .transform(transform, objects)?
-                        .with_curve(curve.clone())
-                        .into())
-                })
-                .transpose()
-        })?;
+        let vertices = self.vertices.clone().try_map_ext(
+            |vertex| -> Result<_, ValidationError> {
+                Ok(vertex
+                    .into_partial()
+                    .transform(transform, objects)?
+                    .with_curve(curve.clone())
+                    .into())
+            },
+        )?;
         let global_form =
             self.global_form
                 .into_partial()

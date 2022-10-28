@@ -208,15 +208,13 @@ impl PartialCycle {
                     let half_edge = half_edge
                         .update_partial(|half_edge| {
                             let [back, _] = half_edge.vertices.clone();
-                            let back = back.map(|vertex| {
-                                vertex.update_partial(|partial| {
-                                    partial.with_surface_form(previous_vertex)
-                                })
+                            let back = back.update_partial(|partial| {
+                                partial.with_surface_form(previous_vertex)
                             });
 
                             half_edge
                                 .with_surface(Some(surface_for_edges.clone()))
-                                .with_back_vertex(back)
+                                .with_back_vertex(Some(back))
                         })
                         .into_full(objects)?;
 

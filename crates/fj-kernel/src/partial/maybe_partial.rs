@@ -135,7 +135,7 @@ impl MaybePartial<HalfEdge> {
             Self::Full(full) => Some(full.back().clone().into()),
             Self::Partial(partial) => {
                 let [back, _] = &partial.vertices;
-                back.clone()
+                Some(back.clone())
             }
         }
     }
@@ -146,7 +146,7 @@ impl MaybePartial<HalfEdge> {
             Self::Full(full) => Some(full.front().clone().into()),
             Self::Partial(partial) => {
                 let [_, front] = &partial.vertices;
-                front.clone()
+                Some(front.clone())
             }
         }
     }
@@ -157,7 +157,7 @@ impl MaybePartial<HalfEdge> {
             Self::Full(full) => {
                 full.vertices().clone().map(|vertex| Some(vertex.into()))
             }
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Partial(partial) => partial.vertices.clone().map(Some),
         }
     }
 }

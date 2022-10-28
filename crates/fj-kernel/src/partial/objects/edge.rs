@@ -23,7 +23,7 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybePartial<Curve>>,
 
     /// The vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub vertices: [Option<MaybePartial<Vertex>>; 2],
+    pub vertices: [MaybePartial<Vertex>; 2],
 
     /// The global form of the [`HalfEdge`]
     ///
@@ -74,7 +74,7 @@ impl PartialHalfEdge {
     ) -> Self {
         if let Some(vertex) = vertex {
             let [from, _] = &mut self.vertices;
-            *from = Some(vertex.into());
+            *from = vertex.into();
         }
         self
     }
@@ -86,7 +86,7 @@ impl PartialHalfEdge {
     ) -> Self {
         if let Some(vertex) = vertex {
             let [_, to] = &mut self.vertices;
-            *to = Some(vertex.into());
+            *to = vertex.into();
         }
         self
     }
@@ -98,7 +98,7 @@ impl PartialHalfEdge {
     ) -> Self {
         let vertices = vertices.map(|vertices| vertices.map(Into::into));
         if let Some([back, front]) = vertices {
-            self.vertices = [Some(back), Some(front)];
+            self.vertices = [back, front];
         }
         self
     }
@@ -160,7 +160,7 @@ impl PartialHalfEdge {
         });
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(back), Some(front)];
+        self.vertices = [back, front];
 
         Ok(self)
     }
@@ -184,9 +184,7 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn as_line_segment(mut self) -> Self {
-        let [from, to] = self.vertices.clone().map(|vertex| {
-            vertex.expect("Can't infer line segment without vertices")
-        });
+        let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
 
@@ -263,7 +261,7 @@ impl PartialHalfEdge {
         };
 
         self.curve = Some(curve.into());
-        self.vertices = [Some(back), Some(front)];
+        self.vertices = [back, front];
 
         self
     }
@@ -281,7 +279,6 @@ impl PartialHalfEdge {
             .into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
-                .expect("Can't build `HalfEdge` without vertices")
                 .update_partial(|vertex| vertex.with_curve(Some(curve.clone())))
                 .into_full(objects)
         })?;
@@ -307,7 +304,7 @@ impl From<&HalfEdge> for PartialHalfEdge {
         Self {
             surface: Some(half_edge.curve().surface().clone()),
             curve: Some(half_edge.curve().clone().into()),
-            vertices: [Some(back_vertex), Some(front_vertex)],
+            vertices: [back_vertex, front_vertex],
             global_form: half_edge.global_form().clone().into(),
         }
     }
