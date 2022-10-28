@@ -20,7 +20,7 @@ pub struct PartialVertex {
     /// The curve that the [`Vertex`] is defined in
     ///
     /// Must be provided before [`PartialVertex::build`] is called.
-    pub curve: Option<MaybePartial<Curve>>,
+    pub curve: MaybePartial<Curve>,
 
     /// The surface form of the [`Vertex`]
     ///
@@ -47,7 +47,7 @@ impl PartialVertex {
         curve: Option<impl Into<MaybePartial<Curve>>>,
     ) -> Self {
         if let Some(curve) = curve {
-            self.curve = Some(curve.into());
+            self.curve = curve.into();
         }
         self
     }
@@ -77,10 +77,7 @@ impl PartialVertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
-        let curve = self
-            .curve
-            .expect("Can't build `Vertex` without `Curve`")
-            .into_full(objects)?;
+        let curve = self.curve.into_full(objects)?;
 
         let surface_form = self
             .surface_form
@@ -107,7 +104,7 @@ impl From<&Vertex> for PartialVertex {
     fn from(vertex: &Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
-            curve: Some(vertex.curve().clone().into()),
+            curve: vertex.curve().clone().into(),
             surface_form: vertex.surface_form().clone().into(),
         }
     }
