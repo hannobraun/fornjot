@@ -49,9 +49,7 @@ impl PartialCycle {
             .half_edges
             .last()
             .map(|half_edge| {
-                let [_, last] = half_edge.vertices().map(|vertex| {
-                    vertex.expect("Need half-edge vertices to extend cycle")
-                });
+                let [_, last] = half_edge.vertices();
                 last.surface_form()
             })
             .into_iter()
@@ -129,13 +127,8 @@ impl PartialCycle {
         let first = self.half_edges.first();
         let last = self.half_edges.last();
 
-        let vertices = [first, last].map(|option| {
-            option.map(|half_edge| {
-                half_edge
-                    .vertices()
-                    .map(|vertex| vertex.expect("Need vertices to close cycle"))
-            })
-        });
+        let vertices = [first, last]
+            .map(|option| option.map(|half_edge| half_edge.vertices()));
 
         if let [Some([first, _]), Some([_, last])] = vertices {
             let vertices = [last, first].map(|vertex| {
