@@ -5,11 +5,11 @@
 
 use std::error;
 
-use fj_host::{Host, Model, ModelEvent};
+use fj_host::{Host, Model, ModelEvent, Parameters};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    GuiEvent, InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize, Viewer,
 };
 use futures::executor::block_on;
@@ -31,14 +31,25 @@ pub fn run(
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
+    let (send_gui, gui_event_rx) = crossbeam_channel::bounded::<GuiEvent>(5);
+
+    let (gui_event_tx, recv_gui) = crossbeam_channel::bounded::<GuiEvent>(5);
+
+    if model.is_none() {
+        send_gui
+            .send(GuiEvent::AskModel)
+            .expect("Channel is disconnected");
+    }
+
     let mut status = StatusReport::new();
-    let host = Host::from_model(model).transpose()?;
+    let mut host = Host::from_model(model).transpose()?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer = block_on(Viewer::new(&window))?;
+    let mut viewer =
+        block_on(Viewer::new(&window, gui_event_rx, gui_event_tx))?;
 
-    let events = match host {
+    let mut events = match host {
         Some(ref host) => Some(host.events()),
         None => None,
     };
@@ -55,6 +66,31 @@ pub fn run(
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
+
+        let gui_event = recv_gui
+            .try_recv()
+            .map_err(|err| {
+                if err.is_disconnected() {
+                    panic!("Expected channel to never disconnect");
+                }
+            })
+            .ok();
+
+        if let Some(gui_event) = gui_event {
+            match gui_event {
+                GuiEvent::LoadModel(model_path) => {
+                    let model =
+                        Model::new(model_path, Parameters::empty()).unwrap();
+                    host =
+                        Some(Host::from_model(Some(model)).unwrap().unwrap());
+                    events = match host {
+                        Some(ref host) => Some(host.events()),
+                        None => None,
+                    };
+                }
+                _ => {}
+            }
+        }
 
         loop {
             let event = events.as_ref().map(|events| {

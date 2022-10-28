@@ -14,22 +14,47 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
+use std::path::PathBuf;
+
+use crossbeam_channel::{Receiver, Sender};
+
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Scalar};
 
-use crate::graphics::DrawConfig;
+use crate::{file_dialog::show_file_dialog, graphics::DrawConfig};
+
+/// Event that are passed between the event_loop and gui
+pub enum GuiEvent {
+    AskModel,
+    LoadModel(PathBuf),
+}
+
+struct GuiState {
+    has_model: bool,
+}
+
+impl Default for GuiState {
+    fn default() -> Self {
+        Self { has_model: true }
+    }
+}
 
 /// The GUI
 pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
+    event_rx: Receiver<GuiEvent>,
+    event_tx: Sender<GuiEvent>,
+    state: GuiState,
 }
 
 impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
+        event_rx: Receiver<GuiEvent>,
+        event_tx: Sender<GuiEvent>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -69,6 +94,9 @@ impl Gui {
             context,
             render_pass,
             options: Default::default(),
+            event_rx,
+            event_tx,
+            state: Default::default(),
         }
     }
 
@@ -86,6 +114,28 @@ impl Gui {
         status: &StatusReport,
         line_drawing_available: bool,
     ) {
+        loop {
+            let event = self
+                .event_rx
+                .try_recv()
+                .map_err(|err| {
+                    if err.is_disconnected() {
+                        panic!("Expected channel to never disconnect");
+                    }
+                })
+                .ok();
+
+            let event = match event {
+                Some(gui_event) => gui_event,
+                None => break,
+            };
+
+            match event {
+                GuiEvent::AskModel => self.state.has_model = false,
+                _ => {}
+            }
+        }
+
         self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
@@ -241,6 +291,31 @@ impl Gui {
                 ))
             })
         });
+
+        if !self.state.has_model {
+            egui::Area::new("ask-model")
+                .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
+                .show(&self.context, |ui| {
+                    ui.vertical_centered(|ui| {
+                        ui.label(
+                            "No model selected please choose a model to view.",
+                        );
+                        if ui
+                            .button(egui::RichText::new("Pick a file"))
+                            .clicked()
+                        {
+                            let model_dir = show_file_dialog();
+                            if let Some(model_dir) = model_dir {
+                                self.event_tx
+                                    .send(GuiEvent::LoadModel(model_dir))
+                                    .expect("Channel is disconnected");
+
+                                self.state.has_model = true;
+                            }
+                        }
+                    })
+                });
+        }
     }
 
     pub(crate) fn draw(

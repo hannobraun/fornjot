@@ -1,5 +1,6 @@
 use std::{io, mem::size_of};
 
+use crossbeam_channel::{Receiver, Sender};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
@@ -7,7 +8,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
-    gui::Gui,
+    gui::{Gui, GuiEvent},
     screen::{Screen, ScreenSize},
 };
 
@@ -156,8 +157,12 @@ impl Renderer {
         })
     }
 
-    pub(crate) fn init_gui(&self) -> Gui {
-        Gui::new(&self.device, self.surface_config.format)
+    pub(crate) fn init_gui(
+        &self,
+        event_rx: Receiver<GuiEvent>,
+        event_tx: Sender<GuiEvent>,
+    ) -> Gui {
+        Gui::new(&self.device, self.surface_config.format, event_rx, event_tx)
     }
 
     /// Updates the geometry of the model being rendered.

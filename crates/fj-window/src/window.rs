@@ -1,7 +1,10 @@
 //! CAD viewer utility windowing abstraction
 
 use fj_viewer::{Screen, ScreenSize};
-use winit::{event_loop::EventLoop, window::WindowBuilder};
+use winit::{
+    event_loop::EventLoop,
+    window::{Fullscreen, WindowBuilder},
+};
 
 /// Window abstraction providing details such as the width or height and easing initialization.
 pub struct Window(winit::window::Window);
@@ -12,6 +15,7 @@ impl Window {
         let window = WindowBuilder::new()
             .with_title("Fornjot")
             .with_maximized(true)
+            .with_fullscreen(Some(Fullscreen::Borderless(None)))
             .with_decorations(true)
             .with_transparent(false)
             .build(event_loop)?;
