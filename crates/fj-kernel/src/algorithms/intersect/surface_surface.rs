@@ -1,9 +1,11 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
     path::{GlobalPath, SurfacePath},
     storage::Handle,
+    validate::ValidationError,
 };
 
 /// The intersection between two surfaces
@@ -18,7 +20,7 @@ impl SurfaceSurfaceIntersection {
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
         objects: &Objects,
-    ) -> Option<Self> {
+    ) -> Result<Option<Self>, ValidationError> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -45,7 +47,7 @@ impl SurfaceSurfaceIntersection {
             // I'll just leave it like that, until we had the opportunity to
             // collect some experience with this code.
             // - @hannobraun
-            return None;
+            return Ok(None);
         }
 
         let origin = (b_normal * a_distance - a_normal * b_distance)
@@ -55,16 +57,18 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.map(|(surface, plane)| {
+        let curves = surfaces_and_planes.try_map_ext(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
-            let global_form = GlobalCurve::new(objects);
+            let global_form = objects.global_curves.insert(GlobalCurve)?;
 
-            Curve::new(surface, path, global_form, objects)
-        });
+            objects
+                .curves
+                .insert(Curve::new(surface, path, global_form))
+        })?;
 
-        Some(Self {
+        Ok(Some(Self {
             intersection_curves: curves,
-        })
+        }))
     }
 }
 
@@ -95,7 +99,7 @@ mod tests {
     use super::SurfaceSurfaceIntersection;
 
     #[test]
-    fn plane_plane() {
+    fn plane_plane() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let xy = objects.surfaces.xy_plane();
@@ -109,27 +113,28 @@ mod tests {
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
                         &objects
-                    )
+                    )?
                 ],
                 &objects
-            ),
+            )?,
             None,
         );
 
         let expected_xy = Curve::partial()
             .with_surface(Some(xy.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let expected_xz = Curve::partial()
             .with_surface(Some(xz.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &objects),
+            SurfaceSurfaceIntersection::compute([xy, xz], &objects)?,
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })
         );
+        Ok(())
     }
 }

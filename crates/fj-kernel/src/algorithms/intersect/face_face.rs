@@ -3,6 +3,7 @@ use fj_interop::ext::ArrayExt;
 use crate::{
     objects::{Curve, Face, Objects},
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
@@ -26,12 +27,17 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(faces: [&Face; 2], objects: &Objects) -> Option<Self> {
+    pub fn compute(
+        faces: [&Face; 2],
+        objects: &Objects,
+    ) -> Result<Option<Self>, ValidationError> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
-            SurfaceSurfaceIntersection::compute(surfaces, objects)?
-                .intersection_curves;
+            match SurfaceSurfaceIntersection::compute(surfaces, objects)? {
+                Some(intersection) => intersection.intersection_curves,
+                None => return Ok(None),
+            };
 
         let curve_face_intersections = intersection_curves
             .each_ref_ext()
@@ -44,18 +50,19 @@ impl FaceFaceIntersection {
         };
 
         if intersection_intervals.is_empty() {
-            return None;
+            return Ok(None);
         }
 
-        Some(Self {
+        Ok(Some(Self {
             intersection_curves,
             intersection_intervals,
-        })
+        }))
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -67,7 +74,7 @@ mod tests {
     use super::FaceFaceIntersection;
 
     #[test]
-    fn compute_no_intersection() {
+    fn compute_no_intersection() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         #[rustfmt::skip]
@@ -85,13 +92,15 @@ mod tests {
                     .build()
             });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
 
         assert!(intersection.is_none());
+
+        Ok(())
     }
 
     #[test]
-    fn compute_one_intersection() {
+    fn compute_one_intersection() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         #[rustfmt::skip]
@@ -110,14 +119,14 @@ mod tests {
                 .build()
         });
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
 
-        let expected_curves = surfaces.map(|surface| {
+        let expected_curves = surfaces.try_map_ext(|surface| {
             Curve::partial()
                 .with_surface(Some(surface))
                 .as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&objects)
-        });
+        })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
         assert_eq!(
@@ -127,5 +136,6 @@ mod tests {
                 intersection_intervals: expected_intervals
             })
         );
+        Ok(())
     }
 }

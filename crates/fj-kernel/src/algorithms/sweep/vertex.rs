@@ -1,4 +1,6 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Point, Scalar, Vector};
+use try_insert_ext::EntryInsertExt;
 
 use crate::{
     objects::{
@@ -7,6 +9,7 @@ use crate::{
     },
     path::SurfacePath,
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -19,7 +22,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -61,7 +64,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let (edge_global, vertices_global) = vertex
             .global_form()
             .clone()
-            .sweep_with_cache(path, cache, objects);
+            .sweep_with_cache(path, cache, objects)?;
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -87,12 +90,11 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let curve = {
             let line = Line::from_points(points_surface);
 
-            Curve::new(
+            objects.curves.insert(Curve::new(
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-                objects,
-            )
+            ))?
         };
 
         let vertices_surface = {
@@ -101,23 +103,28 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
             [
                 vertex.surface_form().clone(),
-                SurfaceVertex::new(position, surface, global_form, objects),
+                objects.surface_vertices.insert(SurfaceVertex::new(
+                    position,
+                    surface,
+                    global_form,
+                ))?,
             ]
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.map(|surface_form| {
-            Vertex::new(
+        let vertices = vertices_surface.try_map_ext(|surface_form| {
+            objects.vertices.insert(Vertex::new(
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
-                objects,
-            )
-        });
+            ))
+        })?;
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(vertices, edge_global, objects)
+        Ok(objects
+            .half_edges
+            .insert(HalfEdge::new(vertices, edge_global))?)
     }
 }
 
@@ -129,28 +136,29 @@ impl Sweep for Handle<GlobalVertex> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
-        let curve = GlobalCurve::new(objects);
+    ) -> Result<Self::Swept, ValidationError> {
+        let curve = objects.global_curves.insert(GlobalCurve)?;
 
         let a = self.clone();
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| {
-                GlobalVertex::from_position(
+            .or_try_insert_with(|| {
+                objects.global_vertices.insert(GlobalVertex::from_position(
                     self.position() + path.into(),
-                    objects,
-                )
-            })
+                ))
+            })?
             .clone();
 
         let vertices = [a, b];
-        let global_edge = GlobalEdge::new(curve, vertices.clone(), objects);
+        let global_edge = objects
+            .global_edges
+            .insert(GlobalEdge::new(curve, vertices.clone()))?;
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
         // ordered vertices in addition.
-        (global_edge, vertices)
+        Ok((global_edge, vertices))
     }
 }
 
@@ -165,25 +173,27 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface() {
+    fn vertex_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xz_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(Some(curve))
-            .build(&objects);
+            .build(&objects)?;
 
-        let half_edge = (vertex, surface.clone()).sweep([0., 0., 1.], &objects);
+        let half_edge =
+            (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
 
         let expected_half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
             .as_line_segment_from_points([[0., 0.], [0., 1.]])
-            .build(&objects);
+            .build(&objects)?;
         assert_eq!(half_edge, expected_half_edge);
+        Ok(())
     }
 }

@@ -157,7 +157,7 @@ mod tests {
     use super::CurveFaceIntersection;
 
     #[test]
-    fn compute() {
+    fn compute() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -165,7 +165,7 @@ mod tests {
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .as_line_from_points([[-3., 0.], [-2., 0.]])
-            .build(&objects);
+            .build(&objects)?;
 
         #[rustfmt::skip]
         let exterior = [
@@ -191,6 +191,7 @@ mod tests {
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
         assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
+        Ok(())
     }
 
     #[test]

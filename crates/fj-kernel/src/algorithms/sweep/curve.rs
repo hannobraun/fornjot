@@ -4,6 +4,7 @@ use crate::{
     objects::{Curve, Objects, Surface},
     path::{GlobalPath, SurfacePath},
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -16,7 +17,7 @@ impl Sweep for Handle<Curve> {
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         match self.surface().u() {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
@@ -64,6 +65,6 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        objects.surfaces.insert(Surface::new(u, path))
+        Ok(objects.surfaces.insert(Surface::new(u, path))?)
     }
 }

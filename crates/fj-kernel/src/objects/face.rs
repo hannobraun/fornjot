@@ -63,8 +63,7 @@ impl Face {
         exterior: Handle<Cycle>,
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let surface = exterior.surface().clone();
         let mut interiors = Vec::new();
 
@@ -83,12 +82,12 @@ impl Face {
             interiors.push(interior);
         }
 
-        objects.faces.insert(Self {
+        Self {
             surface,
             exterior,
             interiors,
             color,
-        })
+        }
     }
 
     /// Access this face's surface
@@ -138,11 +137,11 @@ impl Face {
 
 /// A collection of faces
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Faces {
+pub struct FaceSet {
     inner: BTreeSet<Handle<Face>>,
 }
 
-impl Faces {
+impl FaceSet {
     /// Create an empty instance of `Faces`
     pub fn new() -> Self {
         Self::default()
@@ -160,13 +159,13 @@ impl Faces {
     }
 }
 
-impl Extend<Handle<Face>> for Faces {
+impl Extend<Handle<Face>> for FaceSet {
     fn extend<T: IntoIterator<Item = Handle<Face>>>(&mut self, iter: T) {
         self.inner.extend(iter)
     }
 }
 
-impl FromIterator<Handle<Face>> for Faces {
+impl FromIterator<Handle<Face>> for FaceSet {
     fn from_iter<T: IntoIterator<Item = Handle<Face>>>(iter: T) -> Self {
         let mut faces = Self::new();
         faces.extend(iter);
@@ -174,7 +173,7 @@ impl FromIterator<Handle<Face>> for Faces {
     }
 }
 
-impl IntoIterator for Faces {
+impl IntoIterator for FaceSet {
     type Item = Handle<Face>;
     type IntoIter = btree_set::IntoIter<Handle<Face>>;
 
@@ -183,7 +182,7 @@ impl IntoIterator for Faces {
     }
 }
 
-impl<'a> IntoIterator for &'a Faces {
+impl<'a> IntoIterator for &'a FaceSet {
     type Item = &'a Handle<Face>;
     type IntoIter = btree_set::Iter<'a, Handle<Face>>;
 

@@ -97,13 +97,10 @@ pub fn run(
 
                 let event = match event {
                     Some(status_update) => status_update,
-                    _ => break,
+                    None => break,
                 };
 
                 match event {
-                    ModelEvent::StatusUpdate(status_update) => {
-                        status.update_status(&status_update)
-                    }
                     ModelEvent::Evaluation(evaluation) => {
                         status.update_status(&format!(
                             "Model compiled successfully in {}!",
@@ -131,6 +128,7 @@ pub fn run(
                             }
                         }
                     }
+
                     ModelEvent::Error(err) => {
                         // Can be cleaned up, once `Report` is stable:
                         // https://doc.rust-lang.org/std/error/struct.Report.html
@@ -145,9 +143,6 @@ pub fn run(
 
                             current_err = err;
                         }
-
-                        *control_flow = ControlFlow::Exit;
-                        return;
                     }
                 }
             }

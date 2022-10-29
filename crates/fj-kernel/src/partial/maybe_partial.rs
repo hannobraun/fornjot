@@ -6,6 +6,7 @@ use crate::{
         Surface, SurfaceVertex, Vertex,
     },
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{HasPartial, Partial};
@@ -48,10 +49,13 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(self, objects: &Objects) -> Handle<T> {
+    pub fn into_full(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<T>, ValidationError> {
         match self {
             Self::Partial(partial) => partial.build(objects),
-            Self::Full(full) => full,
+            Self::Full(full) => Ok(full),
         }
     }
 
@@ -65,6 +69,16 @@ impl<T: HasPartial> MaybePartial<T> {
             Self::Partial(partial) => partial,
             Self::Full(full) => full.to_partial(),
         }
+    }
+}
+
+impl<T> Default for MaybePartial<T>
+where
+    T: HasPartial,
+    T::Partial: Default,
+{
+    fn default() -> Self {
+        Self::Partial(T::Partial::default())
     }
 }
 
@@ -115,21 +129,10 @@ impl MaybePartial<GlobalEdge> {
 }
 
 impl MaybePartial<HalfEdge> {
-    /// Access the back vertex
-    pub fn back(&self) -> Option<MaybePartial<Vertex>> {
-        match self {
-            Self::Full(full) => Some(full.back().clone().into()),
-            Self::Partial(partial) => {
-                let [back, _] = &partial.vertices;
-                back.clone()
-            }
-        }
-    }
-
     /// Access the front vertex
-    pub fn front(&self) -> Option<MaybePartial<Vertex>> {
+    pub fn front(&self) -> MaybePartial<Vertex> {
         match self {
-            Self::Full(full) => Some(full.front().clone().into()),
+            Self::Full(full) => full.front().clone().into(),
             Self::Partial(partial) => {
                 let [_, front] = &partial.vertices;
                 front.clone()
@@ -138,11 +141,9 @@ impl MaybePartial<HalfEdge> {
     }
 
     /// Access the vertices
-    pub fn vertices(&self) -> [Option<MaybePartial<Vertex>>; 2] {
+    pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
         match self {
-            Self::Full(full) => {
-                full.vertices().clone().map(|vertex| Some(vertex.into()))
-            }
+            Self::Full(full) => full.vertices().clone().map(Into::into),
             Self::Partial(partial) => partial.vertices.clone(),
         }
     }
@@ -168,9 +169,9 @@ impl MaybePartial<SurfaceVertex> {
 
 impl MaybePartial<Vertex> {
     /// Access the surface form
-    pub fn surface_form(&self) -> Option<MaybePartial<SurfaceVertex>> {
+    pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
         match self {
-            Self::Full(full) => Some(full.surface_form().clone().into()),
+            Self::Full(full) => full.surface_form().clone().into(),
             Self::Partial(partial) => partial.surface_form.clone(),
         }
     }

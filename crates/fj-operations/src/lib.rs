@@ -26,10 +26,8 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::validate::{
-        Validate, Validated, ValidationConfig, ValidationError,
-    },
-    objects::{Faces, Objects, Sketch},
+    objects::{FaceSet, Objects, Sketch},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -54,7 +52,7 @@ pub trait Shape {
 }
 
 impl Shape for fj::Shape {
-    type Brep = Faces;
+    type Brep = FaceSet;
 
     fn compute_brep(
         &self,

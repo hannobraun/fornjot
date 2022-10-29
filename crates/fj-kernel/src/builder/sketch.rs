@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Faces, Objects, Sketch, Surface},
+    objects::{Face, FaceSet, Objects, Sketch, Surface},
     storage::Handle,
 };
 
@@ -16,7 +16,7 @@ pub struct SketchBuilder<'a> {
     pub surface: Option<Handle<Surface>>,
 
     /// The faces that make up the [`Sketch`]
-    pub faces: Faces,
+    pub faces: FaceSet,
 }
 
 impl<'a> SketchBuilder<'a> {
@@ -53,6 +53,9 @@ impl<'a> SketchBuilder<'a> {
 
     /// Build the [`Sketch`]
     pub fn build(self) -> Handle<Sketch> {
-        Sketch::new(self.faces, self.objects)
+        self.objects
+            .sketches
+            .insert(Sketch::new(self.faces))
+            .unwrap()
     }
 }

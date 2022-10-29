@@ -94,3 +94,4 @@ pub mod objects;
 pub mod partial;
 pub mod path;
 pub mod storage;
+pub mod validate;

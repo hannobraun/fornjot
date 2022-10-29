@@ -5,6 +5,7 @@ use crate::{
     objects::{Face, Objects, Shell},
     path::GlobalPath,
     storage::Handle,
+    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -17,7 +18,7 @@ impl Sweep for Handle<Face> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &Objects,
-    ) -> Self::Swept {
+    ) -> Result<Self::Swept, ValidationError> {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -41,16 +42,16 @@ impl Sweep for Handle<Face> {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse(objects)
+                self.clone().reverse(objects)?
             }
         };
         faces.push(bottom_face);
 
         let top_face = {
-            let mut face = self.clone().translate(path, objects);
+            let mut face = self.clone().translate(path, objects)?;
 
             if is_negative_sweep {
-                face = face.reverse(objects);
+                face = face.reverse(objects)?;
             };
 
             face
@@ -61,19 +62,19 @@ impl Sweep for Handle<Face> {
         for cycle in self.all_cycles() {
             for half_edge in cycle.half_edges() {
                 let half_edge = if is_negative_sweep {
-                    half_edge.clone().reverse(objects)
+                    half_edge.clone().reverse(objects)?
                 } else {
                     half_edge.clone()
                 };
 
                 let face = (half_edge, self.color())
-                    .sweep_with_cache(path, cache, objects);
+                    .sweep_with_cache(path, cache, objects)?;
 
                 faces.push(face);
             }
         }
 
-        Shell::builder(objects).with_faces(faces).build()
+        Ok(Shell::builder(objects).with_faces(faces).build())
     }
 }
 
@@ -95,7 +96,7 @@ mod tests {
     const DOWN: [f64; 3] = [0., 0., -1.];
 
     #[test]
-    fn sweep_up() {
+    fn sweep_up() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -103,15 +104,15 @@ mod tests {
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE)
             .build()
-            .sweep(UP, &objects);
+            .sweep(UP, &objects)?;
 
         let bottom = Face::builder(&objects)
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build()
-            .reverse(&objects);
+            .reverse(&objects)?;
         let top = Face::builder(&objects)
-            .with_surface(surface.translate(UP, &objects))
+            .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build();
 
@@ -119,19 +120,25 @@ mod tests {
         assert!(solid.find_face(&top).is_some());
 
         let triangle = TRIANGLE.as_slice();
-        let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = HalfEdge::partial()
-                .with_surface(Some(objects.surfaces.xy_plane()))
-                .as_line_segment_from_points([a, b])
-                .build(&objects);
-            (half_edge, Color::default()).sweep(UP, &objects)
-        });
+        let side_faces = triangle
+            .array_windows_ext()
+            .map(|&[a, b]| {
+                let half_edge = HalfEdge::partial()
+                    .with_surface(Some(objects.surfaces.xy_plane()))
+                    .as_line_segment_from_points([a, b])
+                    .build(&objects)?;
+                (half_edge, Color::default()).sweep(UP, &objects)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
 
-        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
+        assert!(side_faces
+            .into_iter()
+            .all(|face| solid.find_face(&face).is_some()));
+        Ok(())
     }
 
     #[test]
-    fn sweep_down() {
+    fn sweep_down() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -139,13 +146,13 @@ mod tests {
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE)
             .build()
-            .sweep(DOWN, &objects);
+            .sweep(DOWN, &objects)?;
 
         let bottom = Face::builder(&objects)
-            .with_surface(surface.clone().translate(DOWN, &objects))
+            .with_surface(surface.clone().translate(DOWN, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build()
-            .reverse(&objects);
+            .reverse(&objects)?;
         let top = Face::builder(&objects)
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
@@ -155,15 +162,21 @@ mod tests {
         assert!(solid.find_face(&top).is_some());
 
         let triangle = TRIANGLE.as_slice();
-        let mut side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = HalfEdge::partial()
-                .with_surface(Some(objects.surfaces.xy_plane()))
-                .as_line_segment_from_points([a, b])
-                .build(&objects)
-                .reverse(&objects);
-            (half_edge, Color::default()).sweep(DOWN, &objects)
-        });
+        let side_faces = triangle
+            .array_windows_ext()
+            .map(|&[a, b]| {
+                let half_edge = HalfEdge::partial()
+                    .with_surface(Some(objects.surfaces.xy_plane()))
+                    .as_line_segment_from_points([a, b])
+                    .build(&objects)?
+                    .reverse(&objects)?;
+                (half_edge, Color::default()).sweep(DOWN, &objects)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
 
-        assert!(side_faces.all(|face| solid.find_face(&face).is_some()));
+        assert!(side_faces
+            .into_iter()
+            .all(|face| solid.find_face(&face).is_some()));
+        Ok(())
     }
 }

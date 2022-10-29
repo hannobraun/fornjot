@@ -5,9 +5,9 @@ use fj_kernel::{
     algorithms::{
         approx::{InvalidTolerance, Tolerance},
         triangulate::Triangulate,
-        validate::{ValidationConfig, ValidationError},
     },
     objects::Objects,
+    validate::{ValidationConfig, ValidationError},
 };
 use fj_math::Scalar;
 

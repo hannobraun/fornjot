@@ -23,16 +23,6 @@ impl Evaluator {
 
             let evaluation = match model.evaluate() {
                 Ok(evaluation) => evaluation,
-                Err(Error::Compile { output }) => {
-                    event_tx
-                        .send(ModelEvent::StatusUpdate(format!(
-                            "Failed to compile model:\n{}",
-                            output
-                        )))
-                        .expect("Expected channel to never disconnect");
-
-                    continue;
-                }
                 Err(err) => {
                     event_tx
                         .send(ModelEvent::Error(err))
@@ -65,9 +55,6 @@ impl Evaluator {
 
 /// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
-    /// A status update about the model
-    StatusUpdate(String),
-
     /// The model has been evaluated
     Evaluation(Evaluation),
 

@@ -14,15 +14,23 @@
 //! Please note that not all of these validation categories are fully
 //! implemented, as of this writing.
 
-mod coherence;
+mod curve;
+mod cycle;
+mod edge;
+mod face;
+mod shell;
+mod sketch;
+mod solid;
+mod surface;
 mod uniqueness;
+mod vertex;
 
 pub use self::{
-    coherence::{CoherenceIssues, VertexCoherenceMismatch},
     uniqueness::UniquenessIssues,
+    vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
 };
 
-use std::{collections::HashSet, ops::Deref};
+use std::{collections::HashSet, convert::Infallible, ops::Deref};
 
 use fj_math::Scalar;
 
@@ -35,20 +43,24 @@ pub trait Validate: Sized {
     /// The following calls are equivalent:
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate();
     /// ```
     /// ``` rust
     /// # use fj_kernel::{
-    /// #     algorithms::validate::{Validate, ValidationConfig},
     /// #     objects::{GlobalVertex, Objects},
+    /// #     validate::{Validate, ValidationConfig},
     /// # };
     /// # let objects = Objects::new();
-    /// # let object = GlobalVertex::from_position([0., 0., 0.], &objects);
+    /// # let object = objects.global_vertices.insert(
+    /// #     GlobalVertex::from_position([0., 0., 0.])
+    /// # );
     /// object.validate_with_config(&ValidationConfig::default());
     /// ```
     fn validate(self) -> Result<Validated<Self>, ValidationError> {
@@ -81,12 +93,26 @@ where
 
             global_vertices.insert(*global_vertex);
         }
-        for vertex in self.vertex_iter() {
-            coherence::validate_vertex(vertex, config.identical_max_distance)?;
-        }
 
         Ok(Validated(self))
     }
+}
+
+/// Validate an object
+pub trait Validate2: Sized {
+    /// The error that validation of the implementing type can result in
+    type Error: Into<ValidationError>;
+
+    /// Validate the object using default configuration
+    fn validate(&self) -> Result<(), Self::Error> {
+        self.validate_with_config(&ValidationConfig::default())
+    }
+
+    /// Validate the object
+    fn validate_with_config(
+        &self,
+        config: &ValidationConfig,
+    ) -> Result<(), Self::Error>;
 }
 
 /// Configuration required for the validation process
@@ -146,10 +172,6 @@ impl<T> Deref for Validated<T> {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Coherence validation failed
-    #[error("Coherence validation failed")]
-    Coherence(#[from] CoherenceIssues),
-
     /// Geometric validation failed
     #[error("Geometric validation failed")]
     Geometric,
@@ -157,87 +179,30 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+
+    /// `SurfaceVertex` position didn't match `GlobalVertex`
+    #[error(transparent)]
+    SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
+
+    /// `Vertex` position didn't match `SurfaceVertex`
+    #[error(transparent)]
+    Vertex(#[from] VertexValidationError),
+}
+
+impl From<Infallible> for ValidationError {
+    fn from(infallible: Infallible) -> Self {
+        match infallible {}
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::validate::{Validate, ValidationConfig, ValidationError},
-        objects::{
-            Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-            SurfaceVertex, Vertex,
-        },
-        partial::HasPartial,
-        path::SurfacePath,
+        objects::{GlobalVertex, Objects},
+        validate::{Validate, ValidationConfig, ValidationError},
     };
-
-    #[test]
-    fn coherence_edge() {
-        let objects = Objects::new();
-
-        let surface = objects.surfaces.xy_plane();
-
-        let points_surface = [[0., 0.], [1., 0.]];
-        let points_global = [[0., 0., 0.], [1., 0., 0.]];
-
-        let curve = {
-            let path = SurfacePath::line_from_points(points_surface);
-            let global_form = GlobalCurve::new(&objects);
-
-            Curve::new(surface.clone(), path, global_form, &objects)
-        };
-
-        let vertices_global = points_global
-            .map(|point| GlobalVertex::from_position(point, &objects));
-
-        let [a_surface, b_surface] = points_surface
-            .zip_ext(vertices_global)
-            .map(|(point_surface, vertex_global)| {
-                SurfaceVertex::new(
-                    point_surface,
-                    surface.clone(),
-                    vertex_global,
-                    &objects,
-                )
-            });
-
-        let deviation = Scalar::from_f64(0.25);
-
-        let a = Vertex::new(
-            Point::from([Scalar::ZERO + deviation]),
-            curve.clone(),
-            a_surface,
-            &objects,
-        );
-        let b = Vertex::new(
-            Point::from([Scalar::ONE]),
-            curve.clone(),
-            b_surface,
-            &objects,
-        );
-        let vertices = [a, b];
-
-        let global_edge = GlobalEdge::partial()
-            .from_curve_and_vertices(&curve, &vertices)
-            .build(&objects);
-        let half_edge = HalfEdge::new(vertices, global_edge, &objects);
-
-        let result =
-            half_edge.clone().validate_with_config(&ValidationConfig {
-                identical_max_distance: deviation * 2.,
-                ..ValidationConfig::default()
-            });
-        assert!(result.is_ok());
-
-        let result = half_edge.validate_with_config(&ValidationConfig {
-            identical_max_distance: deviation / 2.,
-            ..ValidationConfig::default()
-        });
-        assert!(result.is_err());
-    }
 
     #[test]
     fn uniqueness_vertex() -> anyhow::Result<()> {
@@ -257,11 +222,19 @@ mod tests {
         };
 
         // Adding a vertex should work.
-        shape.push(GlobalVertex::from_position(a, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(a)),
+        );
         shape.clone().validate_with_config(&config)?;
 
         // Adding a second vertex that is considered identical should fail.
-        shape.push(GlobalVertex::from_position(b, &objects));
+        shape.push(
+            objects
+                .global_vertices
+                .insert(GlobalVertex::from_position(b)),
+        );
         let result = shape.validate_with_config(&config);
         assert!(matches!(result, Err(ValidationError::Uniqueness(_))));
 

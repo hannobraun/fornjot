@@ -1194,6 +1194,7 @@ dependencies = [
  "robust-predicates",
  "spade",
  "thiserror",
+ "try-insert-ext",
 ]
 
 [[package]]
@@ -3778,6 +3779,12 @@ dependencies = [
  "tracing-core",
  "tracing-log",
 ]
+
+[[package]]
+name = "try-insert-ext"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "213664d0ee69fc59a5fb6cdf16786db532bd0aba3792091e3e874cd581dc0ed2"
 
 [[package]]
 name = "try-lock"

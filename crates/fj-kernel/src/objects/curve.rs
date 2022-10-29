@@ -3,7 +3,7 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::{Objects, Surface};
+use super::Surface;
 
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -19,13 +19,12 @@ impl Curve {
         surface: Handle<Surface>,
         path: SurfacePath,
         global_form: impl Into<HandleWrapper<GlobalCurve>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
-        objects.curves.insert(Self {
+    ) -> Self {
+        Self {
             surface,
             path,
             global_form: global_form.into(),
-        })
+        }
     }
 
     /// Access the path that defines this curve
@@ -47,10 +46,3 @@ impl Curve {
 /// A curve, defined in global (3D) coordinates
 #[derive(Clone, Copy, Debug)]
 pub struct GlobalCurve;
-
-impl GlobalCurve {
-    /// Construct a new instance of `Handle` and add it to the store
-    pub fn new(objects: &Objects) -> Handle<Self> {
-        objects.global_curves.insert(GlobalCurve)
-    }
-}

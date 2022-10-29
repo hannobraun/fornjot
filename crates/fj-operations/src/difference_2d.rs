@@ -2,12 +2,10 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
-    algorithms::{
-        reverse::Reverse,
-        validate::{Validate, Validated, ValidationConfig, ValidationError},
-    },
+    algorithms::reverse::Reverse,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
+    validate::{Validate, Validated, ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -48,7 +46,7 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors.push(cycle.clone().reverse(objects));
+                    interiors.push(cycle.clone().reverse(objects)?);
                 }
             }
 
@@ -59,7 +57,7 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(face.exterior().clone().reverse(objects));
+                interiors.push(face.exterior().clone().reverse(objects)?);
             }
 
             // Faces only support one exterior, while the code here comes from

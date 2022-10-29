@@ -1,6 +1,6 @@
 use crate::{builder::SketchBuilder, storage::Handle};
 
-use super::{face::Faces, Face, Objects};
+use super::{face::FaceSet, Face, Objects};
 
 /// A 2-dimensional shape
 ///
@@ -10,7 +10,7 @@ use super::{face::Faces, Face, Objects};
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    faces: Faces,
+    faces: FaceSet,
 }
 
 impl Sketch {
@@ -19,22 +19,19 @@ impl Sketch {
         SketchBuilder {
             objects,
             surface: None,
-            faces: Faces::new(),
+            faces: FaceSet::new(),
         }
     }
 
     /// Construct an empty instance of `Sketch`
-    pub fn new(
-        faces: impl IntoIterator<Item = Handle<Face>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
-        objects.sketches.insert(Self {
+    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+        Self {
             faces: faces.into_iter().collect(),
-        })
+        }
     }
 
     /// Access the sketch's faces
-    pub fn faces(&self) -> &Faces {
+    pub fn faces(&self) -> &FaceSet {
         &self.faces
     }
 }

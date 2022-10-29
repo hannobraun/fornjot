@@ -6,7 +6,7 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     objects::{
-        Curve, Cycle, Face, Faces, HalfEdge, Objects, Shell, Surface,
+        Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
     },
     partial::HasPartial,
@@ -21,7 +21,7 @@ pub struct ShellBuilder<'a> {
     pub objects: &'a Objects,
 
     /// The faces that make up the [`Shell`]
-    pub faces: Faces,
+    pub faces: FaceSet,
 }
 
 impl<'a> ShellBuilder<'a> {
@@ -50,7 +50,8 @@ impl<'a> ShellBuilder<'a> {
                 .objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, -h], self.objects);
+                .translate([Z, Z, -h], self.objects)
+                .unwrap();
 
             Face::builder(self.objects)
                 .with_surface(surface)
@@ -77,6 +78,7 @@ impl<'a> ShellBuilder<'a> {
                     self.objects
                         .surfaces
                         .insert(Surface::plane_from_points([a, b, c]))
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -90,6 +92,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_global_form(Some(half_edge.global_form().clone()))
                         .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
                         .build(self.objects)
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -112,6 +115,7 @@ impl<'a> ShellBuilder<'a> {
                         ]))
                         .as_line_segment()
                         .build(self.objects)
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -148,6 +152,7 @@ impl<'a> ShellBuilder<'a> {
                             ]))
                             .as_line_segment()
                             .build(self.objects)
+                            .unwrap()
                     })
                     .collect::<Vec<_>>()
             };
@@ -170,6 +175,7 @@ impl<'a> ShellBuilder<'a> {
                         .with_vertices(Some([from, to]))
                         .as_line_segment()
                         .build(self.objects)
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -183,7 +189,8 @@ impl<'a> ShellBuilder<'a> {
                     let cycle = Cycle::partial()
                         .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
-                        .build(self.objects);
+                        .build(self.objects)
+                        .unwrap();
 
                     Face::builder(self.objects).with_exterior(cycle).build()
                 });
@@ -196,7 +203,8 @@ impl<'a> ShellBuilder<'a> {
                 .objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, h], self.objects);
+                .translate([Z, Z, h], self.objects)
+                .unwrap();
 
             let mut top_edges = top_edges;
             top_edges.reverse();
@@ -218,6 +226,7 @@ impl<'a> ShellBuilder<'a> {
                                 vertex.global_form().clone(),
                             ))
                             .build(self.objects)
+                            .unwrap()
                     });
 
                 [a.clone(), b, c, d, a]
@@ -244,12 +253,18 @@ impl<'a> ShellBuilder<'a> {
                         .with_vertices(Some(vertices))
                         .with_global_form(Some(edge.global_form().clone()))
                         .as_line_segment()
-                        .build(self.objects),
+                        .build(self.objects)
+                        .unwrap(),
                 );
             }
 
             Face::builder(self.objects)
-                .with_exterior(Cycle::new(surface, edges, self.objects))
+                .with_exterior(
+                    self.objects
+                        .cycles
+                        .insert(Cycle::new(surface, edges))
+                        .unwrap(),
+                )
                 .build()
         };
 
@@ -262,6 +277,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Handle<Shell> {
-        Shell::new(self.faces, self.objects)
+        self.objects.shells.insert(Shell::new(self.faces)).unwrap()
     }
 }

@@ -101,10 +101,11 @@ impl Model {
         // to switch to a better technique:
         // https://github.com/hannobraun/Fornjot/issues/71
         let shape = unsafe {
-            let lib = libloading::Library::new(&self.lib_path)?;
+            let lib = libloading::Library::new(&self.lib_path)
+                .map_err(Error::LoadingLibrary)?;
 
             let version_pkg: libloading::Symbol<fn() -> RawVersion> =
-                lib.get(b"version_pkg")?;
+                lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
 
             let version_pkg = version_pkg();
             if fj::version::VERSION_PKG != version_pkg.as_str() {
@@ -119,8 +120,9 @@ impl Model {
                 return Err(Error::VersionMismatch { host, model });
             }
 
-            let init: libloading::Symbol<abi::InitFunction> =
-                lib.get(abi::INIT_FUNCTION_NAME.as_bytes())?;
+            let init: libloading::Symbol<abi::InitFunction> = lib
+                .get(abi::INIT_FUNCTION_NAME.as_bytes())
+                .map_err(Error::LoadingInit)?;
 
             let mut host = Host::new(&self.parameters);
 
@@ -231,20 +233,28 @@ fn ambiguous_path_error(
 /// An error that can occur when loading or reloading a model
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    /// Model failed to compile
-    #[error("Error compiling model")]
-    Compile {
-        /// The compiler output
-        output: String,
-    },
+    /// Error loading model library
+    #[error(
+        "Failed to load model library\n\
+        This might be a bug in Fornjot, or, at the very least, this error \
+        message should be improved. Please report this!"
+    )]
+    LoadingLibrary(#[source] libloading::Error),
 
-    /// I/O error while loading the model
-    #[error("I/O error while loading model")]
-    Io(#[from] io::Error),
+    /// Error loading Fornjot version that the model uses
+    #[error(
+        "Failed to load the Fornjot version that the model uses\n\
+        - Is your model using the `fj` library? All models must!\n\
+        - Was your model created with a really old version of Fornjot?"
+    )]
+    LoadingVersion(#[source] libloading::Error),
 
-    /// Failed to load the model's dynamic library
-    #[error("Error loading model from dynamic library")]
-    LibLoading(#[from] libloading::Error),
+    /// Error loading the model's `init` function
+    #[error(
+        "Failed to load the model's `init` function\n\
+        - Did you define a model function using `#[fj::model]`?"
+    )]
+    LoadingInit(#[source] libloading::Error),
 
     /// Host version and model version do not match
     #[error("Host version ({host}) and model version ({model}) do not match")]
@@ -255,6 +265,17 @@ pub enum Error {
         /// The model version
         model: String,
     },
+
+    /// Model failed to compile
+    #[error("Error compiling model\n{output}")]
+    Compile {
+        /// The compiler output
+        output: String,
+    },
+
+    /// I/O error while loading the model
+    #[error("I/O error while loading model")]
+    Io(#[from] io::Error),
 
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]

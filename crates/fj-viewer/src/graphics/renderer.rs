@@ -15,7 +15,7 @@ use crate::{
 use super::{
     draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DEPTH_FORMAT,
+    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
@@ -27,6 +27,7 @@ pub struct Renderer {
     queue: wgpu::Queue,
 
     surface_config: wgpu::SurfaceConfiguration,
+    frame_buffer: wgpu::TextureView,
     depth_view: wgpu::TextureView,
 
     uniform_buffer: wgpu::Buffer,
@@ -68,12 +69,24 @@ impl Renderer {
             desired_features.intersection(available_features)
         };
 
+        let limits = {
+            // This is the lowest of the available defaults. It should guarantee
+            // that we can run pretty much everywhere.
+            let lowest_limits = wgpu::Limits::downlevel_webgl2_defaults();
+
+            // However, these lowest limits aren't necessarily capable of
+            // supporting the screen resolution of our current platform, so
+            // let's amend them.
+            let supported_limits = adapter.limits();
+            lowest_limits.using_resolution(supported_limits)
+        };
+
         let (device, queue) = adapter
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
                     features,
-                    limits: wgpu::Limits::default(),
+                    limits,
                 },
                 None,
             )
@@ -95,6 +108,7 @@ impl Renderer {
         };
         surface.configure(&device, &surface_config);
 
+        let frame_buffer = Self::create_frame_buffer(&device, &surface_config);
         let depth_view = Self::create_depth_buffer(&device, &surface_config);
 
         let uniform_buffer =
@@ -147,6 +161,7 @@ impl Renderer {
             queue,
 
             surface_config,
+            frame_buffer,
             depth_view,
 
             uniform_buffer,
@@ -180,9 +195,10 @@ impl Renderer {
 
         self.surface.configure(&self.device, &self.surface_config);
 
-        let depth_view =
+        self.frame_buffer =
+            Self::create_frame_buffer(&self.device, &self.surface_config);
+        self.depth_view =
             Self::create_depth_buffer(&self.device, &self.surface_config);
-        self.depth_view = depth_view;
     }
 
     /// Draws the renderer, camera, and config state to the window.
@@ -236,11 +252,12 @@ impl Renderer {
                     label: None,
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
-                            view: &color_view,
-                            resolve_target: None,
+                            view: &self.frame_buffer,
+                            resolve_target: Some(&color_view),
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                                store: true,
+                                // Not necessary, due to MSAA being enabled.
+                                store: false,
                             },
                         },
                     )],
@@ -297,6 +314,26 @@ impl Renderer {
         Ok(())
     }
 
+    fn create_frame_buffer(
+        device: &wgpu::Device,
+        surface_config: &wgpu::SurfaceConfiguration,
+    ) -> wgpu::TextureView {
+        let texture = device.create_texture(&wgpu::TextureDescriptor {
+            label: None,
+            size: wgpu::Extent3d {
+                width: surface_config.width,
+                height: surface_config.height,
+                depth_or_array_layers: 1,
+            },
+            mip_level_count: 1,
+            sample_count: SAMPLE_COUNT,
+            dimension: wgpu::TextureDimension::D2,
+            format: surface_config.format,
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+        });
+        texture.create_view(&wgpu::TextureViewDescriptor::default())
+    }
+
     fn create_depth_buffer(
         device: &wgpu::Device,
         surface_config: &wgpu::SurfaceConfiguration,
@@ -309,7 +346,7 @@ impl Renderer {
                 depth_or_array_layers: 1,
             },
             mip_level_count: 1,
-            sample_count: 1,
+            sample_count: SAMPLE_COUNT,
             dimension: wgpu::TextureDimension::D2,
             format: DEPTH_FORMAT,
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,

@@ -1,14 +1,13 @@
 //! Reverse the direction/orientation of objects
 
-use crate::objects::Objects;
+use crate::{objects::Objects, validate::ValidationError};
 
 mod cycle;
 mod edge;
 mod face;
 
 /// Reverse the direction/orientation of an object
-pub trait Reverse {
+pub trait Reverse: Sized {
     /// Reverse the direction/orientation of the object
-    #[must_use]
-    fn reverse(self, objects: &Objects) -> Self;
+    fn reverse(self, objects: &Objects) -> Result<Self, ValidationError>;
 }

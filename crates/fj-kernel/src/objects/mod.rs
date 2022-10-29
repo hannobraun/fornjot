@@ -87,7 +87,7 @@ pub use self::{
     curve::{Curve, GlobalCurve},
     cycle::Cycle,
     edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
-    face::{Face, Faces, Handedness},
+    face::{Face, FaceSet, Handedness},
     shell::Shell,
     sketch::Sketch,
     solid::Solid,
@@ -100,6 +100,7 @@ use fj_math::Vector;
 use crate::{
     path::GlobalPath,
     storage::{Handle, Store},
+    validate::Validate2,
 };
 
 /// The available object stores
@@ -113,43 +114,43 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct Objects {
     /// Store for [`Curve`]s
-    pub curves: Store<Curve>,
+    pub curves: Curves,
 
     /// Store for [`Cycle`]s
-    pub cycles: Store<Cycle>,
+    pub cycles: Cycles,
 
     /// Store for [`Face`]s
-    pub faces: Store<Face>,
+    pub faces: Faces,
 
     /// Store for [`GlobalCurve`]s
-    pub global_curves: Store<GlobalCurve>,
+    pub global_curves: GlobalCurves,
 
     /// Store for [`GlobalEdge`]s
-    pub global_edges: Store<GlobalEdge>,
+    pub global_edges: GlobalEdges,
 
     /// Store for [`GlobalVertex`] objects
-    pub global_vertices: Store<GlobalVertex>,
+    pub global_vertices: GlobalVertices,
 
     /// Store for [`HalfEdge`]s
-    pub half_edges: Store<HalfEdge>,
+    pub half_edges: HalfEdges,
 
     /// Store for [`Shell`]s
-    pub shells: Store<Shell>,
+    pub shells: Shells,
 
     /// Store for [`Sketch`]es
-    pub sketches: Store<Sketch>,
+    pub sketches: Sketches,
 
     /// Store for [`Solid`]s
-    pub solids: Store<Solid>,
+    pub solids: Solids,
 
     /// Store for [`SurfaceVertex`] objects
-    pub surface_vertices: Store<SurfaceVertex>,
+    pub surface_vertices: SurfaceVertices,
 
     /// Store for [`Surface`]s
     pub surfaces: Surfaces,
 
     /// Store for [`Vertex`] objects
-    pub vertices: Store<Vertex>,
+    pub vertices: Vertices,
 }
 
 impl Objects {
@@ -159,7 +160,195 @@ impl Objects {
     }
 }
 
-/// The store for [`Surface`]s
+/// Store for [`Curve`]s
+#[derive(Debug, Default)]
+pub struct Curves {
+    store: Store<Curve>,
+}
+
+impl Curves {
+    /// Insert a [`Curve`] into the store
+    pub fn insert(
+        &self,
+        curve: Curve,
+    ) -> Result<Handle<Curve>, <Curve as Validate2>::Error> {
+        curve.validate()?;
+        Ok(self.store.insert(curve))
+    }
+}
+
+/// Store for [`Cycle`]s
+#[derive(Debug, Default)]
+pub struct Cycles {
+    store: Store<Cycle>,
+}
+
+impl Cycles {
+    /// Insert a [`Cycle`] into the store
+    pub fn insert(
+        &self,
+        cycle: Cycle,
+    ) -> Result<Handle<Cycle>, <Cycle as Validate2>::Error> {
+        cycle.validate()?;
+        Ok(self.store.insert(cycle))
+    }
+}
+
+/// Store for [`Face`]s
+#[derive(Debug, Default)]
+pub struct Faces {
+    store: Store<Face>,
+}
+
+impl Faces {
+    /// Insert a [`Face`] into the store
+    pub fn insert(
+        &self,
+        face: Face,
+    ) -> Result<Handle<Face>, <Face as Validate2>::Error> {
+        face.validate()?;
+        Ok(self.store.insert(face))
+    }
+}
+
+/// Store for [`GlobalCurve`]s
+#[derive(Debug, Default)]
+pub struct GlobalCurves {
+    store: Store<GlobalCurve>,
+}
+
+impl GlobalCurves {
+    /// Insert a [`GlobalCurve`] into the store
+    pub fn insert(
+        &self,
+        global_curve: GlobalCurve,
+    ) -> Result<Handle<GlobalCurve>, <GlobalCurve as Validate2>::Error> {
+        global_curve.validate()?;
+        Ok(self.store.insert(global_curve))
+    }
+}
+
+/// Store for [`GlobalEdge`]s
+#[derive(Debug, Default)]
+pub struct GlobalEdges {
+    store: Store<GlobalEdge>,
+}
+
+impl GlobalEdges {
+    /// Insert a [`GlobalEdge`] into the store
+    pub fn insert(
+        &self,
+        global_edge: GlobalEdge,
+    ) -> Result<Handle<GlobalEdge>, <GlobalEdge as Validate2>::Error> {
+        global_edge.validate()?;
+        Ok(self.store.insert(global_edge))
+    }
+}
+
+/// Store for [`GlobalVertex`] objects
+#[derive(Debug, Default)]
+pub struct GlobalVertices {
+    store: Store<GlobalVertex>,
+}
+
+impl GlobalVertices {
+    /// Insert a [`GlobalVertex`] into the store
+    pub fn insert(
+        &self,
+        global_vertex: GlobalVertex,
+    ) -> Result<Handle<GlobalVertex>, <GlobalVertex as Validate2>::Error> {
+        global_vertex.validate()?;
+        Ok(self.store.insert(global_vertex))
+    }
+}
+
+/// Store for [`HalfEdge`]s
+#[derive(Debug, Default)]
+pub struct HalfEdges {
+    store: Store<HalfEdge>,
+}
+
+impl HalfEdges {
+    /// Insert a [`HalfEdge`] into the store
+    pub fn insert(
+        &self,
+        half_edge: HalfEdge,
+    ) -> Result<Handle<HalfEdge>, <HalfEdge as Validate2>::Error> {
+        half_edge.validate()?;
+        Ok(self.store.insert(half_edge))
+    }
+}
+
+/// Store for [`Shell`]s
+#[derive(Debug, Default)]
+pub struct Shells {
+    store: Store<Shell>,
+}
+
+impl Shells {
+    /// Insert a [`Shell`] into the store
+    pub fn insert(
+        &self,
+        shell: Shell,
+    ) -> Result<Handle<Shell>, <Shell as Validate2>::Error> {
+        shell.validate()?;
+        Ok(self.store.insert(shell))
+    }
+}
+
+/// Store for [`Sketch`]es
+#[derive(Debug, Default)]
+pub struct Sketches {
+    store: Store<Sketch>,
+}
+
+impl Sketches {
+    /// Insert a [`Sketch`] into the store
+    pub fn insert(
+        &self,
+        sketch: Sketch,
+    ) -> Result<Handle<Sketch>, <Sketch as Validate2>::Error> {
+        sketch.validate()?;
+        Ok(self.store.insert(sketch))
+    }
+}
+
+/// Store for [`Solid`]s
+#[derive(Debug, Default)]
+pub struct Solids {
+    store: Store<Solid>,
+}
+
+impl Solids {
+    /// Insert a [`Solid`] into the store
+    pub fn insert(
+        &self,
+        solid: Solid,
+    ) -> Result<Handle<Solid>, <Solid as Validate2>::Error> {
+        solid.validate()?;
+        Ok(self.store.insert(solid))
+    }
+}
+
+/// Store for [`SurfaceVertex`] objects
+#[derive(Debug, Default)]
+pub struct SurfaceVertices {
+    store: Store<SurfaceVertex>,
+}
+
+impl SurfaceVertices {
+    /// Insert a [`SurfaceVertex`] into the store
+    pub fn insert(
+        &self,
+        surface_vertex: SurfaceVertex,
+    ) -> Result<Handle<SurfaceVertex>, <SurfaceVertex as Validate2>::Error>
+    {
+        surface_vertex.validate()?;
+        Ok(self.store.insert(surface_vertex))
+    }
+}
+
+/// Store for [`Surface`]s
 #[derive(Debug)]
 pub struct Surfaces {
     store: Store<Surface>,
@@ -170,9 +359,13 @@ pub struct Surfaces {
 }
 
 impl Surfaces {
-    /// Insert a surface into the store
-    pub fn insert(&self, surface: Surface) -> Handle<Surface> {
-        self.store.insert(surface)
+    /// Insert a [`Surface`] into the store
+    pub fn insert(
+        &self,
+        surface: Surface,
+    ) -> Result<Handle<Surface>, <Surface as Validate2>::Error> {
+        surface.validate()?;
+        Ok(self.store.insert(surface))
     }
 
     /// Access the xy-plane
@@ -208,5 +401,22 @@ impl Default for Surfaces {
             xz_plane,
             yz_plane,
         }
+    }
+}
+
+/// Store for [`Vertex`] objects
+#[derive(Debug, Default)]
+pub struct Vertices {
+    store: Store<Vertex>,
+}
+
+impl Vertices {
+    /// Insert a [`Vertex`] into the store
+    pub fn insert(
+        &self,
+        vertex: Vertex,
+    ) -> Result<Handle<Vertex>, <Vertex as Validate2>::Error> {
+        vertex.validate()?;
+        Ok(self.store.insert(vertex))
     }
 }

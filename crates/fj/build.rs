@@ -8,6 +8,9 @@ fn main() {
 
     println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
     println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full_string);
+
+    // Make sure the build script doesn't run too often.
+    println!("cargo:rerun-if-changed=Cargo.toml");
 }
 
 struct Version {

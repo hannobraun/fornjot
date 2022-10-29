@@ -1,9 +1,8 @@
 use fj_math::Point;
-use pretty_assertions::assert_eq;
 
 use crate::storage::Handle;
 
-use super::{Curve, Objects, Surface};
+use super::{Curve, Surface};
 
 /// A vertex
 ///
@@ -26,21 +25,14 @@ impl Vertex {
         position: impl Into<Point<1>>,
         curve: Handle<Curve>,
         surface_form: Handle<SurfaceVertex>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let position = position.into();
 
-        assert_eq!(
-            curve.surface().id(),
-            surface_form.surface().id(),
-            "Surface form of vertex must be defined on same surface as curve",
-        );
-
-        objects.vertices.insert(Self {
+        Self {
             position,
             curve,
             surface_form,
-        })
+        }
     }
 
     /// Access the position of the vertex on the curve
@@ -78,14 +70,13 @@ impl SurfaceVertex {
         position: impl Into<Point<2>>,
         surface: Handle<Surface>,
         global_form: Handle<GlobalVertex>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    ) -> Self {
         let position = position.into();
-        objects.surface_vertices.insert(Self {
+        Self {
             position,
             surface,
             global_form,
-        })
+        }
     }
 
     /// Access the position of the vertex on the surface
@@ -121,7 +112,7 @@ impl SurfaceVertex {
 /// between distinct vertices can be configured using the respective field in
 /// [`ValidationConfig`].
 ///
-/// [`ValidationConfig`]: crate::algorithms::validate::ValidationConfig
+/// [`ValidationConfig`]: crate::validate::ValidationConfig
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalVertex {
     position: Point<3>,
@@ -129,12 +120,9 @@ pub struct GlobalVertex {
 
 impl GlobalVertex {
     /// Construct a `GlobalVertex` from a position
-    pub fn from_position(
-        position: impl Into<Point<3>>,
-        objects: &Objects,
-    ) -> Handle<Self> {
+    pub fn from_position(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
-        objects.global_vertices.insert(Self { position })
+        Self { position }
     }
 
     /// Access the position of the vertex
