@@ -21,10 +21,10 @@ impl Host {
             Err(e) => return Err(e),
         };
 
-        return Ok(Self {
+        Ok(Self {
             evaluator,
             _watcher,
-        });
+        })
     }
 
     /// Access a channel with evaluation events
