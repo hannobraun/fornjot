@@ -1,4 +1,4 @@
-use std::{io, mem::size_of};
+use std::{io, mem::size_of, path::PathBuf};
 
 use crossbeam_channel::{Receiver, Sender};
 use thiserror::Error;
@@ -8,7 +8,7 @@ use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
-    gui::{Gui, GuiEvent},
+    gui::Gui,
     screen::{Screen, ScreenSize},
 };
 
@@ -159,8 +159,8 @@ impl Renderer {
 
     pub(crate) fn init_gui(
         &self,
-        event_rx: Receiver<GuiEvent>,
-        event_tx: Sender<GuiEvent>,
+        event_rx: Receiver<()>,
+        event_tx: Sender<PathBuf>,
     ) -> Gui {
         Gui::new(&self.device, self.surface_config.format, event_rx, event_tx)
     }

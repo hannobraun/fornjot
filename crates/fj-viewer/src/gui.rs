@@ -24,12 +24,6 @@ use fj_math::{Aabb, Scalar};
 
 use crate::graphics::DrawConfig;
 
-/// Event that are passed between the event_loop and gui
-pub enum GuiEvent {
-    AskModel,
-    LoadModel(PathBuf),
-}
-
 struct GuiState {
     has_model: bool,
 }
@@ -45,8 +39,8 @@ pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
-    event_rx: Receiver<GuiEvent>,
-    event_tx: Sender<GuiEvent>,
+    event_rx: Receiver<()>,
+    event_tx: Sender<PathBuf>,
     state: GuiState,
 }
 
@@ -54,8 +48,8 @@ impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        event_rx: Receiver<GuiEvent>,
-        event_tx: Sender<GuiEvent>,
+        event_rx: Receiver<()>,
+        event_tx: Sender<PathBuf>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -126,15 +120,10 @@ impl Gui {
                 })
                 .ok();
 
-            let gui_event = match gui_event {
-                Some(gui_event) => gui_event,
+            match gui_event {
+                Some(_) => self.state.has_model = false,
                 None => break,
             };
-
-            match gui_event {
-                GuiEvent::AskModel => self.state.has_model = false,
-                _ => {}
-            }
         }
 
         self.context.set_pixels_per_point(pixels_per_point);
@@ -298,9 +287,10 @@ impl Gui {
                 .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
                 .show(&self.context, |ui| {
                     ui.vertical_centered(|ui| {
-                        ui.label(
+                        ui.label(egui::RichText::new(
                             "No model selected please choose a model to view.",
-                        );
+                        ).color(egui::Color32::BLACK)
+                        .background_color(egui::Color32::WHITE));
                         if ui
                             .button(egui::RichText::new("Pick a model"))
                             .clicked()
@@ -308,7 +298,7 @@ impl Gui {
                             let model_dir = show_file_dialog();
                             if let Some(model_dir) = model_dir {
                                 self.event_tx
-                                    .send(GuiEvent::LoadModel(model_dir))
+                                    .send(model_dir)
                                     .expect("Channel is disconnected");
 
                                 self.state.has_model = true;

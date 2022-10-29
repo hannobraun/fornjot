@@ -70,7 +70,7 @@ fn main() -> anyhow::Result<()> {
 
 fn no_model_error() -> anyhow::Error {
     anyhow!(
-        "You must specify a model to start Fornjot.\n\
+        "You must specify a model to start Fornjot in export only mode.\n\
         - Pass a model as a command-line argument. See `fj-app --help`.\n\
         - Specify a default model in the configuration file."
     )
