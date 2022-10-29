@@ -14,9 +14,14 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
-use std::{env::current_dir, path::PathBuf};
+use std::path::PathBuf;
+
+#[cfg(not(target_arch = "wasm32"))]
+use std::env::current_dir;
 
 use crossbeam_channel::{Receiver, Sender};
+
+#[cfg(not(target_arch = "wasm32"))]
 use rfd::FileDialog;
 
 use fj_interop::status_report::StatusReport;
@@ -348,9 +353,13 @@ impl Gui {
 }
 
 fn show_file_dialog() -> Option<PathBuf> {
-    FileDialog::new()
+    #[cfg(not(target_arch = "wasm32"))]
+    return FileDialog::new()
         .set_directory(current_dir().unwrap_or_else(|_| PathBuf::from("/")))
-        .pick_folder()
+        .pick_folder();
+
+    #[cfg(target_arch = "wasm32")]
+    todo!("Picking folders does not work on wasm32")
 }
 
 impl std::fmt::Debug for Gui {
