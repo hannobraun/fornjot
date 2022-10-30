@@ -16,10 +16,7 @@ impl Host {
     pub fn from_model(model: Model) -> Result<Self, Error> {
         let watch_path = model.watch_path();
         let evaluator = Evaluator::from_model(model);
-        let _watcher = match Watcher::watch_model(&watch_path, &evaluator) {
-            Ok(_watcher) => _watcher,
-            Err(e) => return Err(e),
-        };
+        let _watcher = Watcher::watch_model(&watch_path, &evaluator)?;
 
         Ok(Self {
             evaluator,
