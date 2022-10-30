@@ -14,22 +14,47 @@
 //!
 //! <https://github.com/gfx-rs/wgpu/issues/1492>
 
+use std::path::PathBuf;
+
+#[cfg(not(target_arch = "wasm32"))]
+use std::env::current_dir;
+
+use crossbeam_channel::{Receiver, Sender};
+
+#[cfg(not(target_arch = "wasm32"))]
+use rfd::FileDialog;
+
 use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Scalar};
 
 use crate::graphics::DrawConfig;
+
+struct GuiState {
+    has_model: bool,
+}
+
+impl Default for GuiState {
+    fn default() -> Self {
+        Self { has_model: true }
+    }
+}
 
 /// The GUI
 pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
+    event_rx: Receiver<()>,
+    event_tx: Sender<PathBuf>,
+    state: GuiState,
 }
 
 impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
+        event_rx: Receiver<()>,
+        event_tx: Sender<PathBuf>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -69,6 +94,9 @@ impl Gui {
             context,
             render_pass,
             options: Default::default(),
+            event_rx,
+            event_tx,
+            state: Default::default(),
         }
     }
 
@@ -86,6 +114,23 @@ impl Gui {
         status: &StatusReport,
         line_drawing_available: bool,
     ) {
+        loop {
+            let gui_event = self
+                .event_rx
+                .try_recv()
+                .map_err(|err| {
+                    if err.is_disconnected() {
+                        panic!("Expected channel to never disconnect");
+                    }
+                })
+                .ok();
+
+            match gui_event {
+                Some(_) => self.state.has_model = false,
+                None => break,
+            };
+        }
+
         self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
@@ -243,6 +288,32 @@ impl Gui {
                 ))
             })
         });
+
+        if !self.state.has_model {
+            egui::Area::new("ask-model")
+                .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
+                .show(&self.context, |ui| {
+                    ui.vertical_centered(|ui| {
+                        ui.label(egui::RichText::new(
+                            "No model selected please choose a model to view.",
+                        ).color(egui::Color32::BLACK)
+                        .background_color(egui::Color32::WHITE));
+                        if ui
+                            .button(egui::RichText::new("Pick a model"))
+                            .clicked()
+                        {
+                            let model_dir = show_file_dialog();
+                            if let Some(model_dir) = model_dir {
+                                self.event_tx
+                                    .send(model_dir)
+                                    .expect("Channel is disconnected");
+
+                                self.state.has_model = true;
+                            }
+                        }
+                    })
+                });
+        }
     }
 
     pub(crate) fn draw(
@@ -279,6 +350,16 @@ impl Gui {
             None,
         );
     }
+}
+
+fn show_file_dialog() -> Option<PathBuf> {
+    #[cfg(not(target_arch = "wasm32"))]
+    return FileDialog::new()
+        .set_directory(current_dir().unwrap_or_else(|_| PathBuf::from("/")))
+        .pick_folder();
+
+    #[cfg(target_arch = "wasm32")]
+    todo!("Picking folders does not work on wasm32")
 }
 
 impl std::fmt::Debug for Gui {

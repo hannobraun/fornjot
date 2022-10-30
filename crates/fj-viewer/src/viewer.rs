@@ -1,8 +1,12 @@
+use std::path::PathBuf;
+
 use fj_interop::{
     processed_shape::ProcessedShape, status_report::StatusReport,
 };
 use fj_math::Aabb;
 use tracing::warn;
+
+use crossbeam_channel::{Receiver, Sender};
 
 use crate::{
     camera::FocusPoint, gui::Gui, Camera, DrawConfig, InputEvent, InputHandler,
@@ -38,9 +42,13 @@ pub struct Viewer {
 
 impl Viewer {
     /// Construct a new instance of `Viewer`
-    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
+    pub async fn new(
+        screen: &impl Screen,
+        event_rx: Receiver<()>,
+        event_tx: Sender<PathBuf>,
+    ) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
-        let gui = renderer.init_gui();
+        let gui = renderer.init_gui(event_rx, event_tx);
 
         Ok(Self {
             camera: Camera::default(),

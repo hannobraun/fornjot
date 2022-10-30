@@ -3,7 +3,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use anyhow::{anyhow, Context};
+use anyhow::Context;
 use fj_host::{Model, Parameters};
 
 use crate::{args::Args, config::Config};
@@ -14,10 +14,7 @@ pub struct ModelPath {
 }
 
 impl ModelPath {
-    pub fn from_args_and_config(
-        args: &Args,
-        config: &Config,
-    ) -> anyhow::Result<Self> {
+    pub fn from_args_and_config(args: &Args, config: &Config) -> Option<Self> {
         let default_path = config.default_path.clone();
 
         let model_path_from_args = args
@@ -28,11 +25,9 @@ impl ModelPath {
             .default_model
             .as_ref()
             .map(|model| ModelPathSource::Config(model.clone()));
-        let model_path = model_path_from_args
-            .or(model_path_from_config)
-            .ok_or_else(no_model_error)?;
+        let model_path = model_path_from_args.or(model_path_from_config)?;
 
-        Ok(Self {
+        Some(Self {
             default_path,
             model_path,
         })
@@ -141,12 +136,4 @@ fn load_error_context_inner(
     let context = format!("{error}\n\n{suggestions}");
 
     Ok(context)
-}
-
-fn no_model_error() -> anyhow::Error {
-    anyhow!(
-        "You must specify a model to start Fornjot.\n\
-        - Pass a model as a command-line argument. See `fj-app --help`.\n\
-        - Specify a default model in the configuration file."
-    )
 }

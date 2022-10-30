@@ -3,9 +3,9 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-use std::error;
+use std::{error, path::PathBuf};
 
-use fj_host::{Host, Model, ModelEvent};
+use fj_host::{Host, Model, ModelEvent, Parameters};
 use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
@@ -27,22 +27,30 @@ use crate::window::{self, Window};
 
 /// Initializes a model viewer for a given model and enters its process loop.
 pub fn run(
-    model: Model,
+    model: Option<Model>,
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
+    let (send_gui, gui_event_rx) = crossbeam_channel::bounded::<()>(1);
+    let (gui_event_tx, recv_gui) = crossbeam_channel::bounded::<PathBuf>(1);
+
     let mut status = StatusReport::new();
-    let host = Host::from_model(model)?;
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer = block_on(Viewer::new(&window))?;
-
-    let events = host.events();
+    let mut viewer =
+        block_on(Viewer::new(&window, gui_event_rx, gui_event_tx))?;
 
     let mut held_mouse_button = None;
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
+
+    let mut host = None;
+    if let Some(model) = model {
+        host = Some(Host::from_model(model)?);
+    } else {
+        send_gui.send(()).expect("Channel is disconnected");
+    }
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -53,51 +61,89 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        loop {
-            let event = events
-                .try_recv()
-                .map_err(|err| {
-                    if err.is_disconnected() {
-                        panic!("Expected channel to never disconnect");
-                    }
-                })
-                .ok();
+        let gui_event = recv_gui
+            .try_recv()
+            .map_err(|err| {
+                if err.is_disconnected() {
+                    panic!("Expected channel to never disconnect");
+                }
+            })
+            .ok();
 
-            let event = match event {
-                Some(status_update) => status_update,
-                None => break,
-            };
+        if let Some(model_path) = gui_event {
+            let model = Model::new(model_path, Parameters::empty()).unwrap();
+            match Host::from_model(model) {
+                Ok(new_host) => {
+                    host = Some(new_host);
+                }
+                Err(_) => {
+                    status.update_status("Error creating host.");
+                    send_gui.send(()).expect("Channel is disconnected");
+                }
+            }
+        }
 
-            match event {
-                ModelEvent::Evaluation(evaluation) => {
-                    status.update_status(&format!(
-                        "Model compiled successfully in {}!",
-                        evaluation.compile_time
-                    ));
-
-                    match shape_processor.process(&evaluation.shape) {
-                        Ok(shape) => {
-                            viewer.handle_shape_update(shape);
+        if let Some(host) = &host {
+            loop {
+                let events = host.events();
+                let event = events
+                    .try_recv()
+                    .map_err(|err| {
+                        if err.is_disconnected() {
+                            panic!("Expected channel to never disconnect");
                         }
-                        Err(err) => {
-                            // Can be cleaned up, once `Report` is stable:
-                            // https://doc.rust-lang.org/std/error/struct.Report.html
+                    })
+                    .ok();
 
-                            println!("Shape processing error: {}", err);
+                let event = match event {
+                    Some(status_update) => status_update,
+                    None => break,
+                };
 
-                            let mut current_err = &err as &dyn error::Error;
-                            while let Some(err) = current_err.source() {
-                                println!();
-                                println!("Caused by:");
-                                println!("    {}", err);
+                match event {
+                    ModelEvent::Evaluation(evaluation) => {
+                        status.update_status(&format!(
+                            "Model compiled successfully in {}!",
+                            evaluation.compile_time
+                        ));
 
-                                current_err = err;
+                        match shape_processor.process(&evaluation.shape) {
+                            Ok(shape) => {
+                                viewer.handle_shape_update(shape);
+                            }
+                            Err(err) => {
+                                // Can be cleaned up, once `Report` is stable:
+                                // https://doc.rust-lang.org/std/error/struct.Report.html
+
+                                println!("Shape processing error: {}", err);
+
+                                let mut current_err = &err as &dyn error::Error;
+                                while let Some(err) = current_err.source() {
+                                    println!();
+                                    println!("Caused by:");
+                                    println!("    {}", err);
+
+                                    current_err = err;
+                                }
                             }
                         }
                     }
-                }
-                ModelEvent::Error(err) => {
-                    status.update_status(&err.to_string());
+
+                    ModelEvent::Error(err) => {
+                        // Can be cleaned up, once `Report` is stable:
+                        // https://doc.rust-lang.org/std/error/struct.Report.html
+
+                        println!("Error receiving updated shape: {}", err);
+
+                        let mut current_err = &err as &dyn error::Error;
+                        while let Some(err) = current_err.source() {
+                            println!();
+                            println!("Caused by:");
+                            println!("    {}", err);
+
+                            current_err = err;
+                        }
+                    }
                 }
             }
         }

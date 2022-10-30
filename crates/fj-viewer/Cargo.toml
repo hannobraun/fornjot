@@ -12,6 +12,7 @@ categories.workspace = true
 
 [dependencies]
 bytemuck = "1.12.1"
+crossbeam-channel = "0.5.6"
 egui = "0.19.0"
 egui-wgpu = "0.19.0"
 fj-interop.workspace = true
@@ -20,6 +21,11 @@ raw-window-handle = "0.4.3"
 thiserror = "1.0.35"
 tracing = "0.1.37"
 wgpu_glyph = "0.17.0"
+
+[dependencies.rfd]
+version = "0.10.0"
+default_features = false
+features = ["xdg-portal"]
 
 [dependencies.wgpu]
 version = "0.13.1"
