@@ -172,10 +172,6 @@ impl<T> Deref for Validated<T> {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Geometric validation failed
-    #[error("Geometric validation failed")]
-    Geometric,
-
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
