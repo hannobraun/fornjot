@@ -43,7 +43,7 @@ impl PartialHalfEdge {
 
     /// Access the vertices of the global form, if available
     pub fn extract_global_vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
-        self.global_form.vertices().cloned()
+        self.global_form.vertices()
     }
 
     /// Update the partial half-edge with the given surface
@@ -377,9 +377,7 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
-            vertices: Some(
-                global_edge.vertices().access_in_normalized_order().clone(),
-            ),
+            vertices: Some(global_edge.vertices().access_in_normalized_order()),
         }
     }
 }
