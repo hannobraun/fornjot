@@ -1167,7 +1167,6 @@ dependencies = [
  "cargo_metadata",
  "crossbeam-channel",
  "fj",
- "fj-interop",
  "libloading",
  "notify",
  "thiserror",
