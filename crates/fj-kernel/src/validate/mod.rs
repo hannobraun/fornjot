@@ -26,6 +26,7 @@ mod uniqueness;
 mod vertex;
 
 pub use self::{
+    edge::HalfEdgeValidationError,
     uniqueness::UniquenessIssues,
     vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
 };
@@ -175,6 +176,10 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+
+    /// `HalfEdge` validation error
+    #[error(transparent)]
+    HalfEdge(#[from] HalfEdgeValidationError),
 
     /// `SurfaceVertex` position didn't match `GlobalVertex`
     #[error(transparent)]

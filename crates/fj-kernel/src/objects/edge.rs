@@ -33,13 +33,6 @@ impl HalfEdge {
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        // Make sure `curve` and `vertices` match.
-        assert_eq!(
-            a.curve().id(),
-            b.curve().id(),
-            "An edge's vertices must be defined in the same curve",
-        );
-
         let curve = a.curve();
 
         let (vertices_in_normalized_order, _) = VerticesInNormalizedOrder::new(
