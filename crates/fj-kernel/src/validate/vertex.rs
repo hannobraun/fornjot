@@ -16,14 +16,7 @@ impl Validate2 for Vertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
-        let curve_surface = self.curve().surface();
-        let surface_form_surface = self.surface_form().surface();
-        if curve_surface.id() != surface_form_surface.id() {
-            return Err(VertexValidationError::SurfaceMismatch {
-                curve_surface: curve_surface.clone(),
-                surface_form_surface: surface_form_surface.clone(),
-            });
-        }
+        VertexValidationError::check_surface_identity(self)?;
 
         let curve_position_as_surface =
             self.curve().path().point_from_path_coords(self.position());
@@ -84,6 +77,22 @@ pub enum VertexValidationError {
         /// The distance between the positions
         distance: Scalar,
     },
+}
+
+impl VertexValidationError {
+    fn check_surface_identity(vertex: &Vertex) -> Result<(), Self> {
+        let curve_surface = vertex.curve().surface();
+        let surface_form_surface = vertex.surface_form().surface();
+
+        if curve_surface.id() != surface_form_surface.id() {
+            return Err(VertexValidationError::SurfaceMismatch {
+                curve_surface: curve_surface.clone(),
+                surface_form_surface: surface_form_surface.clone(),
+            });
+        }
+
+        Ok(())
+    }
 }
 
 impl Validate2 for SurfaceVertex {
