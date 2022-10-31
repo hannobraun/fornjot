@@ -45,9 +45,7 @@ impl PartialHalfEdge {
     pub fn extract_global_vertices(
         &self,
     ) -> Option<[MaybePartial<GlobalVertex>; 2]> {
-        self.global_form
-            .vertices()
-            .map(|vertices| vertices.map(Into::into))
+        self.global_form.vertices()
     }
 
     /// Update the partial half-edge with the given surface

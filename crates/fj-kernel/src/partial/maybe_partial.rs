@@ -118,12 +118,15 @@ impl MaybePartial<GlobalEdge> {
     }
 
     /// Access the vertices
-    pub fn vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
+    pub fn vertices(&self) -> Option<[MaybePartial<GlobalVertex>; 2]> {
         match self {
-            Self::Full(full) => {
-                Some(full.vertices().access_in_normalized_order())
-            }
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Full(full) => Some(
+                full.vertices().access_in_normalized_order().map(Into::into),
+            ),
+            Self::Partial(partial) => partial
+                .vertices
+                .clone()
+                .map(|vertices| vertices.map(Into::into)),
         }
     }
 }
