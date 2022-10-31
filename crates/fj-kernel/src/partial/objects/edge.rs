@@ -42,8 +42,12 @@ impl PartialHalfEdge {
     }
 
     /// Access the vertices of the global form, if available
-    pub fn extract_global_vertices(&self) -> Option<[Handle<GlobalVertex>; 2]> {
-        self.global_form.vertices()
+    pub fn extract_global_vertices(
+        &self,
+    ) -> Option<[MaybePartial<GlobalVertex>; 2]> {
+        self.global_form
+            .vertices()
+            .map(|vertices| vertices.map(Into::into))
     }
 
     /// Update the partial half-edge with the given surface
@@ -136,7 +140,7 @@ impl PartialHalfEdge {
 
         let global_vertex = self
             .extract_global_vertices()
-            .map(|[global_form, _]| MaybePartial::from(global_form))
+            .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
                 GlobalVertex::partial()
                     .from_curve_and_position(curve.clone(), a_curve)
