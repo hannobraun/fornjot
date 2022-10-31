@@ -22,6 +22,29 @@ impl Validate2 for Vertex {
     }
 }
 
+impl Validate2 for SurfaceVertex {
+    type Error = SurfaceVertexPositionMismatch;
+
+    fn validate_with_config(
+        &self,
+        config: &ValidationConfig,
+    ) -> Result<(), Self::Error> {
+        SurfaceVertexPositionMismatch::check_position(self, config)?;
+        Ok(())
+    }
+}
+
+impl Validate2 for GlobalVertex {
+    type Error = Infallible;
+
+    fn validate_with_config(
+        &self,
+        _: &ValidationConfig,
+    ) -> Result<(), Self::Error> {
+        Ok(())
+    }
+}
+
 /// [`Vertex`] validation failed
 #[derive(Debug, thiserror::Error)]
 pub enum VertexValidationError {
@@ -104,18 +127,6 @@ impl VertexValidationError {
     }
 }
 
-impl Validate2 for SurfaceVertex {
-    type Error = SurfaceVertexPositionMismatch;
-
-    fn validate_with_config(
-        &self,
-        config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        SurfaceVertexPositionMismatch::check_position(self, config)?;
-        Ok(())
-    }
-}
-
 /// Mismatch between position of surface vertex and position of its global form
 #[derive(Debug, thiserror::Error)]
 #[error(
@@ -160,17 +171,6 @@ impl SurfaceVertexPositionMismatch {
             });
         }
 
-        Ok(())
-    }
-}
-
-impl Validate2 for GlobalVertex {
-    type Error = Infallible;
-
-    fn validate_with_config(
-        &self,
-        _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
         Ok(())
     }
 }
