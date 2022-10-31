@@ -57,11 +57,11 @@ impl Aabb<2> {
             .into_iter()
             .map(|point| point.into().to_na())
             .collect();
-        parry2d_f64::bounding_volume::AABB::from_points(&points).into()
+        parry2d_f64::bounding_volume::Aabb::from_points(&points).into()
     }
 
     /// Construct a 2-dimensional AABB from a Parry AABB
-    pub fn from_parry(aabb: parry2d_f64::bounding_volume::AABB) -> Self {
+    pub fn from_parry(aabb: parry2d_f64::bounding_volume::Aabb) -> Self {
         Self {
             min: aabb.mins.into(),
             max: aabb.maxs.into(),
@@ -80,11 +80,11 @@ impl Aabb<3> {
             .into_iter()
             .map(|point| point.into().to_na())
             .collect();
-        parry3d_f64::bounding_volume::AABB::from_points(&points).into()
+        parry3d_f64::bounding_volume::Aabb::from_points(&points).into()
     }
 
     /// Construct a 3-dimensional AABB from a Parry AABB
-    pub fn from_parry(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
+    pub fn from_parry(aabb: parry3d_f64::bounding_volume::Aabb) -> Self {
         Self {
             min: aabb.mins.into(),
             max: aabb.maxs.into(),
@@ -92,8 +92,8 @@ impl Aabb<3> {
     }
 
     /// Convert the AABB to a Parry AABB
-    pub fn to_parry(self) -> parry3d_f64::bounding_volume::AABB {
-        parry3d_f64::bounding_volume::AABB {
+    pub fn to_parry(self) -> parry3d_f64::bounding_volume::Aabb {
+        parry3d_f64::bounding_volume::Aabb {
             mins: self.min.to_na(),
             maxs: self.max.to_na(),
         }
@@ -128,14 +128,14 @@ impl Aabb<3> {
     }
 }
 
-impl From<parry2d_f64::bounding_volume::AABB> for Aabb<2> {
-    fn from(aabb: parry2d_f64::bounding_volume::AABB) -> Self {
+impl From<parry2d_f64::bounding_volume::Aabb> for Aabb<2> {
+    fn from(aabb: parry2d_f64::bounding_volume::Aabb) -> Self {
         Self::from_parry(aabb)
     }
 }
 
-impl From<parry3d_f64::bounding_volume::AABB> for Aabb<3> {
-    fn from(aabb: parry3d_f64::bounding_volume::AABB) -> Self {
+impl From<parry3d_f64::bounding_volume::Aabb> for Aabb<3> {
+    fn from(aabb: parry3d_f64::bounding_volume::Aabb) -> Self {
         Self::from_parry(aabb)
     }
 }
