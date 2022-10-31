@@ -180,7 +180,7 @@ pub enum ValidationError {
     #[error(transparent)]
     SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
 
-    /// `Vertex` position didn't match `SurfaceVertex`
+    /// `Vertex` validation error
     #[error(transparent)]
     Vertex(#[from] VertexValidationError),
 }
