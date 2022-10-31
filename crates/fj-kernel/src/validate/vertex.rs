@@ -111,21 +111,7 @@ impl Validate2 for SurfaceVertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
-        let surface_position_as_global =
-            self.surface().point_from_surface_coords(self.position());
-        let global_position = self.global_form().position();
-
-        let distance = surface_position_as_global.distance_to(&global_position);
-
-        if distance > config.identical_max_distance {
-            return Err(SurfaceVertexPositionMismatch {
-                surface_vertex: self.clone(),
-                global_vertex: self.global_form().clone_object(),
-                surface_position_as_global,
-                distance,
-            });
-        }
-
+        SurfaceVertexPositionMismatch::check_position(self, config)?;
         Ok(())
     }
 }
@@ -151,6 +137,31 @@ pub struct SurfaceVertexPositionMismatch {
 
     /// The distance between the positions
     pub distance: Scalar,
+}
+
+impl SurfaceVertexPositionMismatch {
+    fn check_position(
+        surface_vertex: &SurfaceVertex,
+        config: &ValidationConfig,
+    ) -> Result<(), Self> {
+        let surface_position_as_global = surface_vertex
+            .surface()
+            .point_from_surface_coords(surface_vertex.position());
+        let global_position = surface_vertex.global_form().position();
+
+        let distance = surface_position_as_global.distance_to(&global_position);
+
+        if distance > config.identical_max_distance {
+            return Err(SurfaceVertexPositionMismatch {
+                surface_vertex: surface_vertex.clone(),
+                global_vertex: surface_vertex.global_form().clone_object(),
+                surface_position_as_global,
+                distance,
+            });
+        }
+
+        Ok(())
+    }
 }
 
 impl Validate2 for GlobalVertex {
