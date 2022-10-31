@@ -13,7 +13,7 @@ categories.workspace = true
 [dependencies]
 approx = "0.5.1"
 decorum = "0.3.1"
-nalgebra = "0.31.2"
+nalgebra = "0.31.3"
 num-traits = "0.2.15"
 parry2d-f64 = "0.10.0"
 parry3d-f64 = "0.10.0"
