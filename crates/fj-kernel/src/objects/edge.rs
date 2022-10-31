@@ -33,19 +33,11 @@ impl HalfEdge {
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        let curve = a.curve();
-
         let (vertices_in_normalized_order, _) = VerticesInNormalizedOrder::new(
             [&a, &b].map(|vertex| vertex.global_form().clone()),
         );
 
         // Make sure `curve` and `vertices` match `global_form`.
-        assert_eq!(
-            curve.global_form().id(),
-            global_form.curve().id(),
-            "The global form of a half-edge's curve must match the curve of \
-            the half-edge's global form"
-        );
         assert_eq!(
             vertices_in_normalized_order
                 .access_in_normalized_order()

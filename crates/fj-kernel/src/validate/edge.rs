@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 
 use crate::{
-    objects::{Curve, GlobalEdge, HalfEdge},
+    objects::{Curve, GlobalCurve, GlobalEdge, HalfEdge},
     storage::Handle,
 };
 
@@ -15,6 +15,7 @@ impl Validate2 for HalfEdge {
         _: &ValidationConfig,
     ) -> Result<(), Self::Error> {
         HalfEdgeValidationError::check_curve_identity(self)?;
+        HalfEdgeValidationError::check_global_curve_identity(self)?;
         Ok(())
     }
 }
@@ -48,6 +49,23 @@ pub enum HalfEdgeValidationError {
         /// The curve of the [`HalfEdge`]'s front vertex
         front_curve: Handle<Curve>,
     },
+
+    /// [`HalfEdge`]'s [`GlobalCurve`]s do not match
+    #[error(
+        "Global form of `HalfEdge`'s `Curve` does not match `GlobalCurve` of \n\
+        the `HalfEdge`'s `GlobalEdge`\n\
+        - `GlobalCurve` from `Curve`: {:?}\n\
+        - `GlobalCurve` from `GlobalEdge`: {:?}",
+        .global_curve_from_curve.full_debug(),
+        .global_curve_from_global_form.full_debug(),
+    )]
+    GlobalCurveMismatch {
+        /// The [`GlobalCurve`] from the [`HalfEdge`]'s [`Curve`]
+        global_curve_from_curve: Handle<GlobalCurve>,
+
+        /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
+        global_curve_from_global_form: Handle<GlobalCurve>,
+    },
 }
 
 impl HalfEdgeValidationError {
@@ -64,6 +82,21 @@ impl HalfEdgeValidationError {
 
         Ok(())
     }
+
+    fn check_global_curve_identity(half_edge: &HalfEdge) -> Result<(), Self> {
+        let global_curve_from_curve = half_edge.curve().global_form();
+        let global_curve_from_global_form = half_edge.global_form().curve();
+
+        if global_curve_from_curve.id() != global_curve_from_global_form.id() {
+            return Err(Self::GlobalCurveMismatch {
+                global_curve_from_curve: global_curve_from_curve.clone(),
+                global_curve_from_global_form: global_curve_from_global_form
+                    .clone(),
+            });
+        }
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -71,7 +104,7 @@ mod tests {
     use fj_interop::ext::ArrayExt;
 
     use crate::{
-        objects::{Curve, GlobalEdge, HalfEdge, Objects, Vertex},
+        objects::{Curve, GlobalCurve, GlobalEdge, HalfEdge, Objects, Vertex},
         partial::HasPartial,
         validate::Validate2,
     };
@@ -128,6 +161,72 @@ mod tests {
 
             let global_form = GlobalEdge::partial()
                 .with_curve(Some(curve.global_form().clone()))
+                .with_vertices(Some(
+                    vertices
+                        .each_ref_ext()
+                        .map(|vertex| vertex.global_form().clone()),
+                ))
+                .build(&objects)?;
+
+            HalfEdge::new(vertices, global_form)
+        };
+
+        assert!(valid.validate().is_ok());
+        assert!(invalid.validate().is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
+        let valid = {
+            let objects = Objects::new();
+
+            let curve = Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_line_from_points([[0., 0.], [1., 0.]])
+                .build(&objects)?;
+
+            let vertices = {
+                [0., 1.].try_map_ext(|position| {
+                    Vertex::partial()
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                        .build(&objects)
+                })?
+            };
+
+            let global_form = GlobalEdge::partial()
+                .with_curve(Some(curve.global_form().clone()))
+                .with_vertices(Some(
+                    vertices
+                        .each_ref_ext()
+                        .map(|vertex| vertex.global_form().clone()),
+                ))
+                .build(&objects)?;
+
+            HalfEdge::new(vertices, global_form)
+        };
+        let invalid = {
+            let objects = Objects::new();
+
+            let curve = Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_line_from_points([[0., 0.], [1., 0.]])
+                .build(&objects)?;
+
+            let vertices = {
+                [0., 1.].try_map_ext(|position| {
+                    Vertex::partial()
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                        .build(&objects)
+                })?
+            };
+
+            let global_form = GlobalEdge::partial()
+                // Creating a different `GlobalCurve` here.
+                .with_curve(Some(objects.global_curves.insert(GlobalCurve)?))
                 .with_vertices(Some(
                     vertices
                         .each_ref_ext()
