@@ -1,4 +1,4 @@
-use std::{convert::Infallible, ops::Deref};
+use std::convert::Infallible;
 
 use fj_math::{Point, Scalar};
 
@@ -51,10 +51,10 @@ pub enum VertexValidationError {
     /// Mismatch between the surface's of the curve and surface form
     #[error(
         "Surface form of vertex must be defined on same surface as curve\n\
-        `Surface` of curve: {curve_surface:?} -> {:?}\n\
-        `Surface` of surface form: {surface_form_surface:?} -> {:?}",
-        .curve_surface.deref(),
-        .surface_form_surface.deref(),
+        `Surface` of curve: {:?}\n\
+        `Surface` of surface form: {:?}",
+        .curve_surface.full_debug(),
+        .surface_form_surface.full_debug(),
     )]
     SurfaceMismatch {
         /// The surface of the vertex' curve
