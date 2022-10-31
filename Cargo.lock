@@ -1189,7 +1189,6 @@ dependencies = [
  "fj-interop",
  "fj-math",
  "parking_lot",
- "parry2d-f64",
  "pretty_assertions",
  "robust-predicates",
  "spade",
