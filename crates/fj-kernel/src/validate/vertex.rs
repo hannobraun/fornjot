@@ -51,8 +51,8 @@ pub enum VertexValidationError {
     /// Mismatch between the surface's of the curve and surface form
     #[error(
         "Surface form of vertex must be defined on same surface as curve\n\
-        `Surface` of curve: {:?}\n\
-        `Surface` of surface form: {:?}",
+        `- Surface` of curve: {:?}\n\
+        `- Surface` of surface form: {:?}",
         .curve_surface.full_debug(),
         .surface_form_surface.full_debug(),
     )]
@@ -67,10 +67,10 @@ pub enum VertexValidationError {
     /// Mismatch between position of the vertex and position of its surface form
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
-        `Vertex`: {vertex:#?}\n\
-        `SurfaceVertex`: {surface_vertex:#?}\n\
-        `Vertex` position as surface: {curve_position_as_surface:?}\n\
-        Distance between the positions: {distance}"
+        - `Vertex`: {vertex:#?}\n\
+        - `SurfaceVertex`: {surface_vertex:#?}\n\
+        - `Vertex` position as surface: {curve_position_as_surface:?}\n\
+        - Distance between the positions: {distance}"
     )]
     PositionMismatch {
         /// The vertex
@@ -131,10 +131,10 @@ impl VertexValidationError {
 #[derive(Debug, thiserror::Error)]
 #[error(
     "`SurfaceVertex` position doesn't match position of its global form\n\
-    `SurfaceVertex`: {surface_vertex:#?}\n\
-    `GlobalVertex`: {global_vertex:#?}\n\
-    `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
-    Distance between the positions: {distance}"
+    - `SurfaceVertex`: {surface_vertex:#?}\n\
+    - `GlobalVertex`: {global_vertex:#?}\n\
+    - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
+    - Distance between the positions: {distance}"
 )]
 pub struct SurfaceVertexPositionMismatch {
     /// The surface vertex
