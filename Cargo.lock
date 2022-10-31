@@ -1122,7 +1122,7 @@ dependencies = [
 
 [[package]]
 name = "fj"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "fj-proc",
  "serde",
@@ -1131,7 +1131,7 @@ dependencies = [
 
 [[package]]
 name = "fj-app"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -1151,7 +1151,7 @@ dependencies = [
 
 [[package]]
 name = "fj-export"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "fj-interop",
  "fj-math",
@@ -1162,7 +1162,7 @@ dependencies = [
 
 [[package]]
 name = "fj-host"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "cargo_metadata",
  "crossbeam-channel",
@@ -1175,7 +1175,7 @@ dependencies = [
 
 [[package]]
 name = "fj-interop"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "chrono",
  "fj-math",
@@ -1183,7 +1183,7 @@ dependencies = [
 
 [[package]]
 name = "fj-kernel"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "anyhow",
  "fj-interop",
@@ -1199,7 +1199,7 @@ dependencies = [
 
 [[package]]
 name = "fj-math"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
@@ -1212,7 +1212,7 @@ dependencies = [
 
 [[package]]
 name = "fj-operations"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "fj",
  "fj-interop",
@@ -1223,7 +1223,7 @@ dependencies = [
 
 [[package]]
 name = "fj-proc"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "fj",
  "proc-macro2",
@@ -1234,7 +1234,7 @@ dependencies = [
 
 [[package]]
 name = "fj-viewer"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "bytemuck",
  "crossbeam-channel",
@@ -1253,7 +1253,7 @@ dependencies = [
 
 [[package]]
 name = "fj-window"
-version = "0.21.0"
+version = "0.22.0"
 dependencies = [
  "crossbeam-channel",
  "egui-winit",
