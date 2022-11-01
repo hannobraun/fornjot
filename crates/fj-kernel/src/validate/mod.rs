@@ -28,7 +28,7 @@ mod vertex;
 pub use self::{
     edge::HalfEdgeValidationError,
     uniqueness::UniquenessIssues,
-    vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
+    vertex::{SurfaceVertexValidationError, VertexValidationError},
 };
 
 use std::{collections::HashSet, convert::Infallible, ops::Deref};
@@ -183,7 +183,7 @@ pub enum ValidationError {
 
     /// `SurfaceVertex` position didn't match `GlobalVertex`
     #[error(transparent)]
-    SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
+    SurfaceVertex(#[from] SurfaceVertexValidationError),
 
     /// `Vertex` validation error
     #[error(transparent)]

@@ -23,13 +23,13 @@ impl Validate2 for Vertex {
 }
 
 impl Validate2 for SurfaceVertex {
-    type Error = SurfaceVertexPositionMismatch;
+    type Error = SurfaceVertexValidationError;
 
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
-        SurfaceVertexPositionMismatch::check_position(self, config)?;
+        SurfaceVertexValidationError::check_position(self, config)?;
         Ok(())
     }
 }
@@ -127,30 +127,33 @@ impl VertexValidationError {
     }
 }
 
-/// Mismatch between position of surface vertex and position of its global form
+/// [`SurfaceVertex`] validation error
 #[derive(Debug, thiserror::Error)]
-#[error(
-    "`SurfaceVertex` position doesn't match position of its global form\n\
+pub enum SurfaceVertexValidationError {
+    /// Mismatch between position and position of global form
+    #[error(
+        "`SurfaceVertex` position doesn't match position of its global form\n\
     - `SurfaceVertex`: {surface_vertex:#?}\n\
     - `GlobalVertex`: {global_vertex:#?}\n\
     - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
     - Distance between the positions: {distance}"
-)]
-pub struct SurfaceVertexPositionMismatch {
-    /// The surface vertex
-    pub surface_vertex: SurfaceVertex,
+    )]
+    PositionMismatch {
+        /// The surface vertex
+        surface_vertex: SurfaceVertex,
 
-    /// The mismatched global vertex
-    pub global_vertex: GlobalVertex,
+        /// The mismatched global vertex
+        global_vertex: GlobalVertex,
 
-    /// The surface position converted into a global position
-    pub surface_position_as_global: Point<3>,
+        /// The surface position converted into a global position
+        surface_position_as_global: Point<3>,
 
-    /// The distance between the positions
-    pub distance: Scalar,
+        /// The distance between the positions
+        distance: Scalar,
+    },
 }
 
-impl SurfaceVertexPositionMismatch {
+impl SurfaceVertexValidationError {
     fn check_position(
         surface_vertex: &SurfaceVertex,
         config: &ValidationConfig,
@@ -163,7 +166,7 @@ impl SurfaceVertexPositionMismatch {
         let distance = surface_position_as_global.distance_to(&global_position);
 
         if distance > config.identical_max_distance {
-            return Err(SurfaceVertexPositionMismatch {
+            return Err(Self::PositionMismatch {
                 surface_vertex: surface_vertex.clone(),
                 global_vertex: surface_vertex.global_form().clone_object(),
                 surface_position_as_global,
