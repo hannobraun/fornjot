@@ -2,7 +2,7 @@ use std::{collections::HashSet, ffi::OsStr, path::Path, thread};
 
 use notify::Watcher as _;
 
-use crate::{Error, Evaluator};
+use crate::{evaluator::TriggerEvaluation, Error, Evaluator};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -65,7 +65,9 @@ impl Watcher {
                     // application is being shut down.
                     //
                     // Either way, not much we can do about it here.
-                    watch_tx.send(()).expect("Channel is disconnected");
+                    watch_tx
+                        .send(TriggerEvaluation)
+                        .expect("Channel is disconnected");
                 }
             },
         )?;
@@ -82,7 +84,9 @@ impl Watcher {
         // Will panic, if the receiving end has panicked. Not much we can do
         // about that, if it happened.
         thread::spawn(move || {
-            watch_tx_2.send(()).expect("Channel is disconnected")
+            watch_tx_2
+                .send(TriggerEvaluation)
+                .expect("Channel is disconnected")
         });
 
         Ok(Self {

@@ -6,7 +6,7 @@ use crate::{Error, Evaluation, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
-    trigger_tx: Sender<()>,
+    trigger_tx: Sender<TriggerEvaluation>,
     event_rx: Receiver<ModelEvent>,
 }
 
@@ -16,24 +16,26 @@ impl Evaluator {
         let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
-        thread::spawn(move || loop {
-            let () = trigger_rx
-                .recv()
-                .expect("Expected channel to never disconnect");
+        thread::spawn(move || {
+            while let Ok(TriggerEvaluation) = trigger_rx.recv() {
+                let evaluation = match model.evaluate() {
+                    Ok(evaluation) => evaluation,
+                    Err(err) => {
+                        event_tx
+                            .send(ModelEvent::Error(err))
+                            .expect("Expected channel to never disconnect");
+                        continue;
+                    }
+                };
 
-            let evaluation = match model.evaluate() {
-                Ok(evaluation) => evaluation,
-                Err(err) => {
-                    event_tx
-                        .send(ModelEvent::Error(err))
-                        .expect("Expected channel to never disconnect");
-                    continue;
-                }
-            };
+                event_tx
+                    .send(ModelEvent::Evaluation(evaluation))
+                    .expect("Expected channel to never disconnect");
+            }
 
-            event_tx
-                .send(ModelEvent::Evaluation(evaluation))
-                .expect("Expected channel to never disconnect");
+            // The channel is disconnected, which means this instance of
+            // `Evaluator`, as well as all `Sender`s created from it, have been
+            // dropped. We're done.
         });
 
         Self {
@@ -43,7 +45,7 @@ impl Evaluator {
     }
 
     /// Access a channel for triggering evaluations
-    pub fn trigger(&self) -> Sender<()> {
+    pub fn trigger(&self) -> Sender<TriggerEvaluation> {
         self.trigger_tx.clone()
     }
 
@@ -52,6 +54,9 @@ impl Evaluator {
         self.event_rx.clone()
     }
 }
+
+/// Command received by [`Evaluator`] through its channel
+pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
