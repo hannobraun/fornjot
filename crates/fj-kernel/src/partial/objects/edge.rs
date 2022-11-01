@@ -322,7 +322,7 @@ pub struct PartialGlobalEdge {
     /// The vertices that bound the [`GlobalEdge`] in the curve
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
-    pub vertices: Option<[Handle<GlobalVertex>; 2]>,
+    pub vertices: Option<[MaybePartial<GlobalVertex>; 2]>,
 }
 
 impl PartialGlobalEdge {
@@ -340,7 +340,7 @@ impl PartialGlobalEdge {
         vertices: Option<[Handle<GlobalVertex>; 2]>,
     ) -> Self {
         if let Some(vertices) = vertices {
-            self.vertices = Some(vertices);
+            self.vertices = Some(vertices.map(Into::into));
         }
         self
     }
@@ -367,7 +367,8 @@ impl PartialGlobalEdge {
             .expect("Can't build `GlobalEdge` without `GlobalCurve`");
         let vertices = self
             .vertices
-            .expect("Can't build `GlobalEdge` without vertices");
+            .expect("Can't build `GlobalEdge` without vertices")
+            .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
 
         Ok(objects
             .global_edges
@@ -379,7 +380,12 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: Some(global_edge.curve().clone().into()),
-            vertices: Some(global_edge.vertices().access_in_normalized_order()),
+            vertices: Some(
+                global_edge
+                    .vertices()
+                    .access_in_normalized_order()
+                    .map(Into::into),
+            ),
         }
     }
 }
