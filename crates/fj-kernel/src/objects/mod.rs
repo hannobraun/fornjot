@@ -103,8 +103,8 @@ use crate::{
     path::GlobalPath,
     storage::{Handle, Store},
     validate::{
-        HalfEdgeValidationError, SurfaceVertexValidationError, Validate2,
-        VertexValidationError,
+        CycleValidationError, HalfEdgeValidationError,
+        SurfaceVertexValidationError, Validate2, VertexValidationError,
     },
 };
 
@@ -187,7 +187,10 @@ pub struct Cycles {
 
 impl Cycles {
     /// Insert a [`Cycle`] into the store
-    pub fn insert(&self, cycle: Cycle) -> Result<Handle<Cycle>, Infallible> {
+    pub fn insert(
+        &self,
+        cycle: Cycle,
+    ) -> Result<Handle<Cycle>, CycleValidationError> {
         cycle.validate()?;
         Ok(self.store.insert(cycle))
     }

@@ -1,11 +1,9 @@
-use std::convert::Infallible;
-
 use crate::objects::Cycle;
 
 use super::{Validate2, ValidationConfig};
 
 impl Validate2 for Cycle {
-    type Error = Infallible;
+    type Error = CycleValidationError;
 
     fn validate_with_config(
         &self,
@@ -14,3 +12,7 @@ impl Validate2 for Cycle {
         Ok(())
     }
 }
+
+/// [`Cycle`] validation error
+#[derive(Debug, thiserror::Error)]
+pub enum CycleValidationError {}
