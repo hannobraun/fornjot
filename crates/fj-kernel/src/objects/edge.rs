@@ -1,6 +1,6 @@
 use std::fmt;
 
-use pretty_assertions::{assert_eq, assert_ne};
+use pretty_assertions::assert_ne;
 
 use crate::storage::{Handle, HandleWrapper};
 
@@ -33,23 +33,6 @@ impl HalfEdge {
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        let (vertices_in_normalized_order, _) = VerticesInNormalizedOrder::new(
-            [&a, &b].map(|vertex| vertex.global_form().clone()),
-        );
-
-        // Make sure `curve` and `vertices` match `global_form`.
-        assert_eq!(
-            vertices_in_normalized_order
-                .access_in_normalized_order()
-                .map(|global_vertex| global_vertex.id()),
-            global_form
-                .vertices()
-                .access_in_normalized_order()
-                .map(|global_vertex| global_vertex.id()),
-            "The global forms of a half-edge's vertices must match the \
-            vertices of the half-edge's global form"
-        );
-
         // Make sure that the edge vertices are not coincident on the curve.
         assert_ne!(
             a.position(),
