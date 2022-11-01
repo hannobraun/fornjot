@@ -16,24 +16,26 @@ impl Evaluator {
         let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
-        thread::spawn(move || loop {
-            let TriggerEvaluation = trigger_rx
-                .recv()
-                .expect("Expected channel to never disconnect");
+        thread::spawn(move || {
+            while let Ok(TriggerEvaluation) = trigger_rx.recv() {
+                let evaluation = match model.evaluate() {
+                    Ok(evaluation) => evaluation,
+                    Err(err) => {
+                        event_tx
+                            .send(ModelEvent::Error(err))
+                            .expect("Expected channel to never disconnect");
+                        continue;
+                    }
+                };
 
-            let evaluation = match model.evaluate() {
-                Ok(evaluation) => evaluation,
-                Err(err) => {
-                    event_tx
-                        .send(ModelEvent::Error(err))
-                        .expect("Expected channel to never disconnect");
-                    continue;
-                }
-            };
+                event_tx
+                    .send(ModelEvent::Evaluation(evaluation))
+                    .expect("Expected channel to never disconnect");
+            }
 
-            event_tx
-                .send(ModelEvent::Evaluation(evaluation))
-                .expect("Expected channel to never disconnect");
+            // The channel is disconnected, which means this instance of
+            // `Evaluator`, as well as all `Sender`s created from it, have been
+            // dropped. We're done.
         });
 
         Self {
