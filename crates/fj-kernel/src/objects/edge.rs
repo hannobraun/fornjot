@@ -28,11 +28,11 @@ impl HalfEdge {
     /// perfectly fine for global forms of the the vertices to be coincident.
     /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
-        [a, b]: [Handle<Vertex>; 2],
+        vertices: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
-            vertices: [a, b],
+            vertices,
             global_form,
         }
     }
