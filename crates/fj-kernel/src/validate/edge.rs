@@ -18,12 +18,12 @@ impl Validate2 for HalfEdge {
 
     fn validate_with_config(
         &self,
-        _: &ValidationConfig,
+        config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
         HalfEdgeValidationError::check_curve_identity(self)?;
         HalfEdgeValidationError::check_global_curve_identity(self)?;
         HalfEdgeValidationError::check_global_vertex_identity(self)?;
-        HalfEdgeValidationError::check_vertex_positions(self)?;
+        HalfEdgeValidationError::check_vertex_positions(self, config)?;
         Ok(())
     }
 }
@@ -175,11 +175,16 @@ impl HalfEdgeValidationError {
         Ok(())
     }
 
-    fn check_vertex_positions(half_edge: &HalfEdge) -> Result<(), Self> {
+    fn check_vertex_positions(
+        half_edge: &HalfEdge,
+        config: &ValidationConfig,
+    ) -> Result<(), Self> {
         let back_position = half_edge.back().position();
         let front_position = half_edge.front().position();
 
-        if back_position == front_position {
+        let distance = (back_position - front_position).magnitude();
+
+        if distance < config.distinct_min_distance {
             return Err(Self::VerticesAreCoincident {
                 back_position,
                 front_position,
