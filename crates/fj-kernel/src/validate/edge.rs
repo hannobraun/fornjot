@@ -1,6 +1,7 @@
 use std::convert::Infallible;
 
 use fj_interop::ext::ArrayExt;
+use fj_math::Point;
 
 use crate::{
     objects::{
@@ -22,6 +23,7 @@ impl Validate2 for HalfEdge {
         HalfEdgeValidationError::check_curve_identity(self)?;
         HalfEdgeValidationError::check_global_curve_identity(self)?;
         HalfEdgeValidationError::check_global_vertex_identity(self)?;
+        HalfEdgeValidationError::check_vertex_positions(self)?;
         Ok(())
     }
 }
@@ -93,6 +95,20 @@ pub enum HalfEdgeValidationError {
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
         global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
     },
+
+    /// [`HalfEdge`]'s vertices are coincident
+    #[error(
+        "Vertices on curve are coincident\n\
+        - Position of back vertex: {back_position:?}\n\
+        - Position of front vertex: {front_position:?}"
+    )]
+    VerticesAreCoincident {
+        /// The position of the back vertex
+        back_position: Point<1>,
+
+        /// The position of the front vertex
+        front_position: Point<1>,
+    },
 }
 
 impl HalfEdgeValidationError {
@@ -153,6 +169,20 @@ impl HalfEdgeValidationError {
             return Err(Self::GlobalVertexMismatch {
                 global_vertices_from_vertices,
                 global_vertices_from_global_form,
+            });
+        }
+
+        Ok(())
+    }
+
+    fn check_vertex_positions(half_edge: &HalfEdge) -> Result<(), Self> {
+        let back_position = half_edge.back().position();
+        let front_position = half_edge.front().position();
+
+        if back_position == front_position {
+            return Err(Self::VerticesAreCoincident {
+                back_position,
+                front_position,
             });
         }
 
@@ -358,6 +388,71 @@ mod tests {
                         .each_ref_ext()
                         // Creating different `GlobalVertex` objects here.
                         .map(|vertex| vertex.global_form().to_partial()),
+                ))
+                .build(&objects)?;
+
+            HalfEdge::new(vertices, global_form)
+        };
+
+        assert!(valid.validate().is_ok());
+        assert!(invalid.validate().is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
+        let valid = {
+            let objects = Objects::new();
+
+            let curve = Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_line_from_points([[0., 0.], [1., 0.]])
+                .build(&objects)?;
+
+            let vertices = {
+                [0., 1.].try_map_ext(|position| {
+                    Vertex::partial()
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                        .build(&objects)
+                })?
+            };
+
+            let global_form = GlobalEdge::partial()
+                .with_curve(Some(curve.global_form().clone()))
+                .with_vertices(Some(
+                    vertices
+                        .each_ref_ext()
+                        .map(|vertex| vertex.global_form().clone()),
+                ))
+                .build(&objects)?;
+
+            HalfEdge::new(vertices, global_form)
+        };
+        let invalid = {
+            let objects = Objects::new();
+
+            let curve = Curve::partial()
+                .with_surface(Some(objects.surfaces.xy_plane()))
+                .as_line_from_points([[0., 0.], [1., 0.]])
+                .build(&objects)?;
+
+            let vertices = {
+                [0., 0.].try_map_ext(|position| {
+                    Vertex::partial()
+                        .with_position(Some([position]))
+                        .with_curve(Some(curve.clone()))
+                        .build(&objects)
+                })?
+            };
+
+            let global_form = GlobalEdge::partial()
+                .with_curve(Some(curve.global_form().clone()))
+                .with_vertices(Some(
+                    vertices
+                        .each_ref_ext()
+                        .map(|vertex| vertex.global_form().clone()),
                 ))
                 .build(&objects)?;
 

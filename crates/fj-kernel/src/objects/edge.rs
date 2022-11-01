@@ -1,7 +1,5 @@
 use std::fmt;
 
-use pretty_assertions::assert_ne;
-
 use crate::storage::{Handle, HandleWrapper};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
@@ -33,13 +31,6 @@ impl HalfEdge {
         [a, b]: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        // Make sure that the edge vertices are not coincident on the curve.
-        assert_ne!(
-            a.position(),
-            b.position(),
-            "Vertices of an edge must not be coincident on curve"
-        );
-
         Self {
             vertices: [a, b],
             global_form,
