@@ -337,7 +337,7 @@ impl PartialGlobalEdge {
     /// Update the partial global edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[Handle<GlobalVertex>; 2]>,
+        vertices: Option<[impl Into<MaybePartial<GlobalVertex>>; 2]>,
     ) -> Self {
         if let Some(vertices) = vertices {
             self.vertices = Some(vertices.map(Into::into));
