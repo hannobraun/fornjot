@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 
 use fj_interop::ext::ArrayExt;
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
@@ -108,6 +108,9 @@ pub enum HalfEdgeValidationError {
 
         /// The position of the front vertex
         front_position: Point<1>,
+
+        /// The distance between the two vertices
+        distance: Scalar,
     },
 }
 
@@ -188,6 +191,7 @@ impl HalfEdgeValidationError {
             return Err(Self::VerticesAreCoincident {
                 back_position,
                 front_position,
+                distance,
             });
         }
 
