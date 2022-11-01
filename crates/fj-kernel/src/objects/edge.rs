@@ -13,20 +13,6 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Create a new instance of `HalfEdge`
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the provided `vertices` are not defined on the same curve as
-    /// `curve`.
-    ///
-    /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
-    /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
-    /// objects that are passed refer to.
-    ///
-    /// Panics, if the provided vertices are coincident on the curve. If they
-    /// were, the edge would have no length, and thus not be valid. (It is
-    /// perfectly fine for global forms of the the vertices to be coincident.
-    /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
         vertices: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
