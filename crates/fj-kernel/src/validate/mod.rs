@@ -26,8 +26,9 @@ mod uniqueness;
 mod vertex;
 
 pub use self::{
+    edge::HalfEdgeValidationError,
     uniqueness::UniquenessIssues,
-    vertex::{SurfaceVertexPositionMismatch, VertexValidationError},
+    vertex::{SurfaceVertexValidationError, VertexValidationError},
 };
 
 use std::{collections::HashSet, convert::Infallible, ops::Deref};
@@ -172,19 +173,19 @@ impl<T> Deref for Validated<T> {
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// Geometric validation failed
-    #[error("Geometric validation failed")]
-    Geometric,
-
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
 
+    /// `HalfEdge` validation error
+    #[error(transparent)]
+    HalfEdge(#[from] HalfEdgeValidationError),
+
     /// `SurfaceVertex` position didn't match `GlobalVertex`
     #[error(transparent)]
-    SurfaceVertexPositionMismatch(#[from] SurfaceVertexPositionMismatch),
+    SurfaceVertex(#[from] SurfaceVertexValidationError),
 
-    /// `Vertex` position didn't match `SurfaceVertex`
+    /// `Vertex` validation error
     #[error(transparent)]
     Vertex(#[from] VertexValidationError),
 }

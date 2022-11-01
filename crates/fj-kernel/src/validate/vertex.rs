@@ -1,4 +1,4 @@
-use std::{convert::Infallible, ops::Deref};
+use std::convert::Infallible;
 
 use fj_math::{Point, Scalar};
 
@@ -16,30 +16,31 @@ impl Validate2 for Vertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), Self::Error> {
-        let curve_surface = self.curve().surface();
-        let surface_form_surface = self.surface_form().surface();
-        if curve_surface.id() != surface_form_surface.id() {
-            return Err(VertexValidationError::SurfaceMismatch {
-                curve_surface: curve_surface.clone(),
-                surface_form_surface: surface_form_surface.clone(),
-            });
-        }
+        VertexValidationError::check_surface_identity(self)?;
+        VertexValidationError::check_position(self, config)?;
+        Ok(())
+    }
+}
 
-        let curve_position_as_surface =
-            self.curve().path().point_from_path_coords(self.position());
-        let surface_position = self.surface_form().position();
+impl Validate2 for SurfaceVertex {
+    type Error = SurfaceVertexValidationError;
 
-        let distance = curve_position_as_surface.distance_to(&surface_position);
+    fn validate_with_config(
+        &self,
+        config: &ValidationConfig,
+    ) -> Result<(), Self::Error> {
+        SurfaceVertexValidationError::check_position(self, config)?;
+        Ok(())
+    }
+}
 
-        if distance > config.identical_max_distance {
-            return Err(VertexValidationError::PositionMismatch {
-                vertex: self.clone(),
-                surface_vertex: self.surface_form().clone_object(),
-                curve_position_as_surface,
-                distance,
-            });
-        }
+impl Validate2 for GlobalVertex {
+    type Error = Infallible;
 
+    fn validate_with_config(
+        &self,
+        _: &ValidationConfig,
+    ) -> Result<(), Self::Error> {
         Ok(())
     }
 }
@@ -50,10 +51,10 @@ pub enum VertexValidationError {
     /// Mismatch between the surface's of the curve and surface form
     #[error(
         "Surface form of vertex must be defined on same surface as curve\n\
-        `Surface` of curve: {curve_surface:?} -> {:?}\n\
-        `Surface` of surface form: {surface_form_surface:?} -> {:?}",
-        .curve_surface.deref(),
-        .surface_form_surface.deref(),
+        `- Surface` of curve: {:?}\n\
+        `- Surface` of surface form: {:?}",
+        .curve_surface.full_debug(),
+        .surface_form_surface.full_debug(),
     )]
     SurfaceMismatch {
         /// The surface of the vertex' curve
@@ -66,10 +67,10 @@ pub enum VertexValidationError {
     /// Mismatch between position of the vertex and position of its surface form
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
-        `Vertex`: {vertex:#?}\n\
-        `SurfaceVertex`: {surface_vertex:#?}\n\
-        `Vertex` position as surface: {curve_position_as_surface:?}\n\
-        Distance between the positions: {distance}"
+        - `Vertex`: {vertex:#?}\n\
+        - `SurfaceVertex`: {surface_vertex:#?}\n\
+        - `Vertex` position as surface: {curve_position_as_surface:?}\n\
+        - Distance between the positions: {distance}"
     )]
     PositionMismatch {
         /// The vertex
@@ -86,24 +87,38 @@ pub enum VertexValidationError {
     },
 }
 
-impl Validate2 for SurfaceVertex {
-    type Error = SurfaceVertexPositionMismatch;
+impl VertexValidationError {
+    fn check_surface_identity(vertex: &Vertex) -> Result<(), Self> {
+        let curve_surface = vertex.curve().surface();
+        let surface_form_surface = vertex.surface_form().surface();
 
-    fn validate_with_config(
-        &self,
+        if curve_surface.id() != surface_form_surface.id() {
+            return Err(VertexValidationError::SurfaceMismatch {
+                curve_surface: curve_surface.clone(),
+                surface_form_surface: surface_form_surface.clone(),
+            });
+        }
+
+        Ok(())
+    }
+
+    fn check_position(
+        vertex: &Vertex,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        let surface_position_as_global =
-            self.surface().point_from_surface_coords(self.position());
-        let global_position = self.global_form().position();
+    ) -> Result<(), Self> {
+        let curve_position_as_surface = vertex
+            .curve()
+            .path()
+            .point_from_path_coords(vertex.position());
+        let surface_position = vertex.surface_form().position();
 
-        let distance = surface_position_as_global.distance_to(&global_position);
+        let distance = curve_position_as_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
-            return Err(SurfaceVertexPositionMismatch {
-                surface_vertex: self.clone(),
-                global_vertex: self.global_form().clone_object(),
-                surface_position_as_global,
+            return Err(VertexValidationError::PositionMismatch {
+                vertex: vertex.clone(),
+                surface_vertex: vertex.surface_form().clone_object(),
+                curve_position_as_surface,
                 distance,
             });
         }
@@ -112,36 +127,53 @@ impl Validate2 for SurfaceVertex {
     }
 }
 
-/// Mismatch between position of surface vertex and position of its global form
+/// [`SurfaceVertex`] validation error
 #[derive(Debug, thiserror::Error)]
-#[error(
-    "`SurfaceVertex` position doesn't match position of its global form\n\
-    `SurfaceVertex`: {surface_vertex:#?}\n\
-    `GlobalVertex`: {global_vertex:#?}\n\
-    `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
-    Distance between the positions: {distance}"
-)]
-pub struct SurfaceVertexPositionMismatch {
-    /// The surface vertex
-    pub surface_vertex: SurfaceVertex,
+pub enum SurfaceVertexValidationError {
+    /// Mismatch between position and position of global form
+    #[error(
+        "`SurfaceVertex` position doesn't match position of its global form\n\
+    - `SurfaceVertex`: {surface_vertex:#?}\n\
+    - `GlobalVertex`: {global_vertex:#?}\n\
+    - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
+    - Distance between the positions: {distance}"
+    )]
+    PositionMismatch {
+        /// The surface vertex
+        surface_vertex: SurfaceVertex,
 
-    /// The mismatched global vertex
-    pub global_vertex: GlobalVertex,
+        /// The mismatched global vertex
+        global_vertex: GlobalVertex,
 
-    /// The surface position converted into a global position
-    pub surface_position_as_global: Point<3>,
+        /// The surface position converted into a global position
+        surface_position_as_global: Point<3>,
 
-    /// The distance between the positions
-    pub distance: Scalar,
+        /// The distance between the positions
+        distance: Scalar,
+    },
 }
 
-impl Validate2 for GlobalVertex {
-    type Error = Infallible;
+impl SurfaceVertexValidationError {
+    fn check_position(
+        surface_vertex: &SurfaceVertex,
+        config: &ValidationConfig,
+    ) -> Result<(), Self> {
+        let surface_position_as_global = surface_vertex
+            .surface()
+            .point_from_surface_coords(surface_vertex.position());
+        let global_position = surface_vertex.global_form().position();
 
-    fn validate_with_config(
-        &self,
-        _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+        let distance = surface_position_as_global.distance_to(&global_position);
+
+        if distance > config.identical_max_distance {
+            return Err(Self::PositionMismatch {
+                surface_vertex: surface_vertex.clone(),
+                global_vertex: surface_vertex.global_form().clone_object(),
+                surface_position_as_global,
+                distance,
+            });
+        }
+
         Ok(())
     }
 }

@@ -1,7 +1,5 @@
 use std::fmt;
 
-use pretty_assertions::{assert_eq, assert_ne};
-
 use crate::storage::{Handle, HandleWrapper};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
@@ -15,65 +13,12 @@ pub struct HalfEdge {
 
 impl HalfEdge {
     /// Create a new instance of `HalfEdge`
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the provided `vertices` are not defined on the same curve as
-    /// `curve`.
-    ///
-    /// Panics, if the provided [`GlobalEdge`] instance doesn't refer to the
-    /// same [`GlobalCurve`] and [`GlobalVertex`] instances that the other
-    /// objects that are passed refer to.
-    ///
-    /// Panics, if the provided vertices are coincident on the curve. If they
-    /// were, the edge would have no length, and thus not be valid. (It is
-    /// perfectly fine for global forms of the the vertices to be coincident.
-    /// That would just mean, that ends of the edge connect to each other.)
     pub fn new(
-        [a, b]: [Handle<Vertex>; 2],
+        vertices: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        // Make sure `curve` and `vertices` match.
-        assert_eq!(
-            a.curve().id(),
-            b.curve().id(),
-            "An edge's vertices must be defined in the same curve",
-        );
-
-        let curve = a.curve();
-
-        let (vertices_in_normalized_order, _) = VerticesInNormalizedOrder::new(
-            [&a, &b].map(|vertex| vertex.global_form().clone()),
-        );
-
-        // Make sure `curve` and `vertices` match `global_form`.
-        assert_eq!(
-            curve.global_form().id(),
-            global_form.curve().id(),
-            "The global form of a half-edge's curve must match the curve of \
-            the half-edge's global form"
-        );
-        assert_eq!(
-            vertices_in_normalized_order
-                .access_in_normalized_order()
-                .map(|global_vertex| global_vertex.id()),
-            global_form
-                .vertices()
-                .access_in_normalized_order()
-                .map(|global_vertex| global_vertex.id()),
-            "The global forms of a half-edge's vertices must match the \
-            vertices of the half-edge's global form"
-        );
-
-        // Make sure that the edge vertices are not coincident on the curve.
-        assert_ne!(
-            a.position(),
-            b.position(),
-            "Vertices of an edge must not be coincident on curve"
-        );
-
         Self {
-            vertices: [a, b],
+            vertices,
             global_form,
         }
     }
