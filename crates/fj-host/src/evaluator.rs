@@ -6,7 +6,7 @@ use crate::{Error, Evaluation, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
-    trigger_tx: Sender<()>,
+    trigger_tx: Sender<TriggerEvaluation>,
     event_rx: Receiver<ModelEvent>,
 }
 
@@ -17,7 +17,7 @@ impl Evaluator {
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
         thread::spawn(move || loop {
-            let () = trigger_rx
+            let TriggerEvaluation = trigger_rx
                 .recv()
                 .expect("Expected channel to never disconnect");
 
@@ -43,7 +43,7 @@ impl Evaluator {
     }
 
     /// Access a channel for triggering evaluations
-    pub fn trigger(&self) -> Sender<()> {
+    pub fn trigger(&self) -> Sender<TriggerEvaluation> {
         self.trigger_tx.clone()
     }
 
@@ -52,6 +52,9 @@ impl Evaluator {
         self.event_rx.clone()
     }
 }
+
+/// Command received by [`Evaluator`] through its channel
+pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
