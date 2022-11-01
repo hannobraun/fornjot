@@ -95,12 +95,17 @@ pub use self::{
     vertex::{GlobalVertex, SurfaceVertex, Vertex},
 };
 
+use std::convert::Infallible;
+
 use fj_math::Vector;
 
 use crate::{
     path::GlobalPath,
     storage::{Handle, Store},
-    validate::Validate2,
+    validate::{
+        HalfEdgeValidationError, SurfaceVertexValidationError, Validate2,
+        VertexValidationError,
+    },
 };
 
 /// The available object stores
@@ -168,10 +173,7 @@ pub struct Curves {
 
 impl Curves {
     /// Insert a [`Curve`] into the store
-    pub fn insert(
-        &self,
-        curve: Curve,
-    ) -> Result<Handle<Curve>, <Curve as Validate2>::Error> {
+    pub fn insert(&self, curve: Curve) -> Result<Handle<Curve>, Infallible> {
         curve.validate()?;
         Ok(self.store.insert(curve))
     }
@@ -185,10 +187,7 @@ pub struct Cycles {
 
 impl Cycles {
     /// Insert a [`Cycle`] into the store
-    pub fn insert(
-        &self,
-        cycle: Cycle,
-    ) -> Result<Handle<Cycle>, <Cycle as Validate2>::Error> {
+    pub fn insert(&self, cycle: Cycle) -> Result<Handle<Cycle>, Infallible> {
         cycle.validate()?;
         Ok(self.store.insert(cycle))
     }
@@ -202,10 +201,7 @@ pub struct Faces {
 
 impl Faces {
     /// Insert a [`Face`] into the store
-    pub fn insert(
-        &self,
-        face: Face,
-    ) -> Result<Handle<Face>, <Face as Validate2>::Error> {
+    pub fn insert(&self, face: Face) -> Result<Handle<Face>, Infallible> {
         face.validate()?;
         Ok(self.store.insert(face))
     }
@@ -222,7 +218,7 @@ impl GlobalCurves {
     pub fn insert(
         &self,
         global_curve: GlobalCurve,
-    ) -> Result<Handle<GlobalCurve>, <GlobalCurve as Validate2>::Error> {
+    ) -> Result<Handle<GlobalCurve>, Infallible> {
         global_curve.validate()?;
         Ok(self.store.insert(global_curve))
     }
@@ -239,7 +235,7 @@ impl GlobalEdges {
     pub fn insert(
         &self,
         global_edge: GlobalEdge,
-    ) -> Result<Handle<GlobalEdge>, <GlobalEdge as Validate2>::Error> {
+    ) -> Result<Handle<GlobalEdge>, Infallible> {
         global_edge.validate()?;
         Ok(self.store.insert(global_edge))
     }
@@ -256,7 +252,7 @@ impl GlobalVertices {
     pub fn insert(
         &self,
         global_vertex: GlobalVertex,
-    ) -> Result<Handle<GlobalVertex>, <GlobalVertex as Validate2>::Error> {
+    ) -> Result<Handle<GlobalVertex>, Infallible> {
         global_vertex.validate()?;
         Ok(self.store.insert(global_vertex))
     }
@@ -273,7 +269,7 @@ impl HalfEdges {
     pub fn insert(
         &self,
         half_edge: HalfEdge,
-    ) -> Result<Handle<HalfEdge>, <HalfEdge as Validate2>::Error> {
+    ) -> Result<Handle<HalfEdge>, HalfEdgeValidationError> {
         half_edge.validate()?;
         Ok(self.store.insert(half_edge))
     }
@@ -287,10 +283,7 @@ pub struct Shells {
 
 impl Shells {
     /// Insert a [`Shell`] into the store
-    pub fn insert(
-        &self,
-        shell: Shell,
-    ) -> Result<Handle<Shell>, <Shell as Validate2>::Error> {
+    pub fn insert(&self, shell: Shell) -> Result<Handle<Shell>, Infallible> {
         shell.validate()?;
         Ok(self.store.insert(shell))
     }
@@ -304,10 +297,7 @@ pub struct Sketches {
 
 impl Sketches {
     /// Insert a [`Sketch`] into the store
-    pub fn insert(
-        &self,
-        sketch: Sketch,
-    ) -> Result<Handle<Sketch>, <Sketch as Validate2>::Error> {
+    pub fn insert(&self, sketch: Sketch) -> Result<Handle<Sketch>, Infallible> {
         sketch.validate()?;
         Ok(self.store.insert(sketch))
     }
@@ -321,10 +311,7 @@ pub struct Solids {
 
 impl Solids {
     /// Insert a [`Solid`] into the store
-    pub fn insert(
-        &self,
-        solid: Solid,
-    ) -> Result<Handle<Solid>, <Solid as Validate2>::Error> {
+    pub fn insert(&self, solid: Solid) -> Result<Handle<Solid>, Infallible> {
         solid.validate()?;
         Ok(self.store.insert(solid))
     }
@@ -341,8 +328,7 @@ impl SurfaceVertices {
     pub fn insert(
         &self,
         surface_vertex: SurfaceVertex,
-    ) -> Result<Handle<SurfaceVertex>, <SurfaceVertex as Validate2>::Error>
-    {
+    ) -> Result<Handle<SurfaceVertex>, SurfaceVertexValidationError> {
         surface_vertex.validate()?;
         Ok(self.store.insert(surface_vertex))
     }
@@ -363,7 +349,7 @@ impl Surfaces {
     pub fn insert(
         &self,
         surface: Surface,
-    ) -> Result<Handle<Surface>, <Surface as Validate2>::Error> {
+    ) -> Result<Handle<Surface>, Infallible> {
         surface.validate()?;
         Ok(self.store.insert(surface))
     }
@@ -415,7 +401,7 @@ impl Vertices {
     pub fn insert(
         &self,
         vertex: Vertex,
-    ) -> Result<Handle<Vertex>, <Vertex as Validate2>::Error> {
+    ) -> Result<Handle<Vertex>, VertexValidationError> {
         vertex.validate()?;
         Ok(self.store.insert(vertex))
     }
