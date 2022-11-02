@@ -2,7 +2,7 @@ use std::fmt;
 
 use crate::storage::{Handle, HandleWrapper};
 
-use super::{Curve, GlobalCurve, GlobalVertex, Vertex};
+use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -44,6 +44,11 @@ impl HalfEdge {
     pub fn front(&self) -> &Handle<Vertex> {
         let [_, front] = self.vertices();
         front
+    }
+
+    /// Access the surface that the half-edge's curve is defined in
+    pub fn surface(&self) -> &Handle<Surface> {
+        self.curve().surface()
     }
 
     /// Access the global form of this half-edge
