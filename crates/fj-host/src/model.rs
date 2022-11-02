@@ -6,6 +6,7 @@ use std::{
 };
 
 use fj::{abi, version::RawVersion};
+use tracing::warn;
 
 use crate::{platform::HostPlatform, Parameters};
 
@@ -118,6 +119,22 @@ impl Model {
                         .into_owned();
 
                 return Err(Error::VersionMismatch { host, model });
+            }
+
+            let version_full: libloading::Symbol<fn() -> RawVersion> =
+                lib.get(b"version_full").map_err(Error::LoadingVersion)?;
+
+            let version_full = version_full();
+            if fj::version::VERSION_FULL != version_full.as_str() {
+                let host = String::from_utf8_lossy(
+                    fj::version::VERSION_FULL.as_bytes(),
+                )
+                .into_owned();
+                let model =
+                    String::from_utf8_lossy(version_full.as_str().as_bytes())
+                        .into_owned();
+
+                warn!("{}", Error::VersionMismatch { host, model });
             }
 
             let init: libloading::Symbol<abi::InitFunction> = lib

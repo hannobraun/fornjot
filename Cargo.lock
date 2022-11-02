@@ -1170,6 +1170,7 @@ dependencies = [
  "libloading",
  "notify",
  "thiserror",
+ "tracing",
 ]
 
 [[package]]
