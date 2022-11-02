@@ -20,7 +20,7 @@ impl StatusReport {
     pub fn update_status(&mut self, status: &str) {
         let date = {
             let date = Local::now();
-            format!("{}", date.format("[%H:%M:%S]"))
+            format!("{}", date.format("[%H:%M:%S.%3f]"))
         };
         let empty_space = " ".repeat(date.chars().count());
 
