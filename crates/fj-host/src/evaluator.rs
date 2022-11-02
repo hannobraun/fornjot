@@ -1,6 +1,6 @@
 use std::thread;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::{Receiver, SendError, Sender};
 
 use crate::{Error, Evaluation, Model};
 
@@ -18,19 +18,29 @@ impl Evaluator {
 
         thread::spawn(move || {
             while let Ok(TriggerEvaluation) = trigger_rx.recv() {
+                if let Err(SendError(_)) =
+                    event_tx.send(ModelEvent::ChangeDetected)
+                {
+                    break;
+                }
+
                 let evaluation = match model.evaluate() {
                     Ok(evaluation) => evaluation,
                     Err(err) => {
-                        event_tx
-                            .send(ModelEvent::Error(err))
-                            .expect("Expected channel to never disconnect");
+                        if let Err(SendError(_)) =
+                            event_tx.send(ModelEvent::Error(err))
+                        {
+                            break;
+                        }
                         continue;
                     }
                 };
 
-                event_tx
-                    .send(ModelEvent::Evaluation(evaluation))
-                    .expect("Expected channel to never disconnect");
+                if let Err(SendError(_)) =
+                    event_tx.send(ModelEvent::Evaluation(evaluation))
+                {
+                    break;
+                };
             }
 
             // The channel is disconnected, which means this instance of
@@ -60,6 +70,9 @@ pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
+    /// A change in the model has been detected
+    ChangeDetected,
+
     /// The model has been evaluated
     Evaluation(Evaluation),
 
