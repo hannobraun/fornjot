@@ -25,7 +25,7 @@ mod viewer;
 pub use self::{
     camera::Camera,
     graphics::{DrawConfig, Renderer, RendererInitError},
-    gui::Gui,
+    gui::{Gui, GuiState},
     input::{InputEvent, InputHandler},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     status_report::StatusReport,

@@ -366,8 +366,10 @@ pub struct Options {
     pub show_inspection_ui: bool,
 }
 
-struct GuiState {
-    has_model: bool,
+/// The current status of the GUI
+pub struct GuiState {
+    /// Indicates whether a model is currently available
+    pub has_model: bool,
 }
 
 impl Default for GuiState {
