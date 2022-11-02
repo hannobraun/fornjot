@@ -28,16 +28,6 @@ use fj_math::{Aabb, Scalar};
 
 use crate::{graphics::DrawConfig, StatusReport};
 
-struct GuiState {
-    has_model: bool,
-}
-
-impl Default for GuiState {
-    fn default() -> Self {
-        Self { has_model: true }
-    }
-}
-
 /// The GUI
 pub struct Gui {
     context: egui::Context,
@@ -374,4 +364,14 @@ pub struct Options {
     pub show_debug_text_example: bool,
     pub show_settings_ui: bool,
     pub show_inspection_ui: bool,
+}
+
+struct GuiState {
+    has_model: bool,
+}
+
+impl Default for GuiState {
+    fn default() -> Self {
+        Self { has_model: true }
+    }
 }
