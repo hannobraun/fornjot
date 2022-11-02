@@ -75,10 +75,7 @@ pub fn run(
                         );
                     }
                     ModelEvent::Evaluation(evaluation) => {
-                        status.update_status(&format!(
-                            "Model compiled successfully in {}!",
-                            evaluation.compile_time
-                        ));
+                        status.update_status("Model compiled. Processing...");
 
                         match shape_processor.process(&evaluation.shape) {
                             Ok(shape) => {
