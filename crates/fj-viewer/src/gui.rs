@@ -349,11 +349,3 @@ pub struct GuiState {
     /// Indicates whether a model is currently available
     pub model_available: bool,
 }
-
-impl Default for GuiState {
-    fn default() -> Self {
-        Self {
-            model_available: true,
-        }
-    }
-}
