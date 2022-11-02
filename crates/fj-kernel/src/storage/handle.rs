@@ -138,7 +138,10 @@ where
     }
 }
 
-impl<T> fmt::Debug for Handle<T> {
+impl<T> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = {
             let type_name = type_name::<T>();
@@ -272,7 +275,10 @@ impl<T> PartialOrd for HandleWrapper<T> {
     }
 }
 
-impl<T> fmt::Debug for HandleWrapper<T> {
+impl<T> fmt::Debug for HandleWrapper<T>
+where
+    T: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.fmt(f)
     }
