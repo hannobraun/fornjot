@@ -245,16 +245,13 @@ mod tests {
     fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let valid = SurfaceVertex::new(
-            [0., 0.],
-            objects.surfaces.xy_plane(),
-            objects
-                .global_vertices
-                .insert(GlobalVertex::from_position([0., 0., 0.]))?,
-        );
+        let valid = SurfaceVertex::partial()
+            .with_position(Some([0., 0.]))
+            .with_surface(Some(objects.surfaces.xy_plane()))
+            .build(&objects)?;
         let invalid = SurfaceVertex::new(
-            [0., 0.],
-            objects.surfaces.xy_plane(),
+            valid.position(),
+            valid.surface().clone(),
             objects
                 .global_vertices
                 .insert(GlobalVertex::from_position([1., 0., 0.]))?,
