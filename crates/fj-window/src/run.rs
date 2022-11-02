@@ -42,10 +42,7 @@ pub fn run(
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut host = None;
-    if let Some(model) = model {
-        host = Some(Host::from_model(model)?);
-    }
+    let mut host = model.map(Host::from_model).transpose()?;
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
