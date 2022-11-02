@@ -151,8 +151,13 @@ where
             }
         };
         let id = self.id().0;
+        let object = self.deref();
 
-        write!(f, "{name} @ {id:#x}")?;
+        if f.alternate() {
+            write!(f, "{name} @ {id:#x} => {object:#?}")?;
+        } else {
+            write!(f, "{name} @ {id:#x}")?;
+        }
 
         Ok(())
     }
