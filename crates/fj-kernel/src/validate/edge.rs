@@ -45,10 +45,8 @@ pub enum HalfEdgeValidationError {
     /// [`HalfEdge`] vertices are not defined on the same `Curve`
     #[error(
         "`HalfEdge` vertices are not defined on the same `Curve`\n\
-        - `Curve` of back vertex: {:?}\n\
-        - `Curve` of front vertex: {:?}",
-        .back_curve.full_debug(),
-        .front_curve.full_debug(),
+        - `Curve` of back vertex: {back_curve:#?}\n\
+        - `Curve` of front vertex: {front_curve:#?}"
     )]
     CurveMismatch {
         /// The curve of the [`HalfEdge`]'s back vertex
@@ -62,10 +60,8 @@ pub enum HalfEdgeValidationError {
     #[error(
         "Global form of `HalfEdge`'s `Curve` does not match `GlobalCurve` of \n\
         the `HalfEdge`'s `GlobalEdge`\n\
-        - `GlobalCurve` from `Curve`: {:?}\n\
-        - `GlobalCurve` from `GlobalEdge`: {:?}",
-        .global_curve_from_curve.full_debug(),
-        .global_curve_from_global_form.full_debug(),
+        - `GlobalCurve` from `Curve`: {global_curve_from_curve:#?}\n\
+        - `GlobalCurve` from `GlobalEdge`: {global_curve_from_global_form:#?}",
     )]
     GlobalCurveMismatch {
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s [`Curve`]
@@ -79,14 +75,10 @@ pub enum HalfEdgeValidationError {
     #[error(
         "Global forms of `HalfEdge` vertices do not match vertices of \n\
         `HalfEdge`'s global form\n\
-        - `GlobalVertex` objects from `Vertex` objects: {:?}\n\
-        - `GlobalVertex` objects from `GlobalEdge`: {:?}",
-        .global_vertices_from_vertices
-            .each_ref_ext()
-            .map(|vertex| vertex.full_debug()),
-        .global_vertices_from_global_form
-            .each_ref_ext()
-            .map(|vertex| vertex.full_debug()),
+        - `GlobalVertex` objects from `Vertex` objects: \
+            {global_vertices_from_vertices:#?}\n\
+        - `GlobalVertex` objects from `GlobalEdge`: \
+            {global_vertices_from_global_form:#?}"
     )]
     GlobalVertexMismatch {
         /// The [`GlobalVertex`] from the [`HalfEdge`]'s vertices
