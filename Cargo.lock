@@ -1177,7 +1177,6 @@ dependencies = [
 name = "fj-interop"
 version = "0.22.0"
 dependencies = [
- "chrono",
  "fj-math",
 ]
 
@@ -1236,6 +1235,7 @@ name = "fj-viewer"
 version = "0.22.0"
 dependencies = [
  "bytemuck",
+ "chrono",
  "crossbeam-channel",
  "egui",
  "egui-wgpu",

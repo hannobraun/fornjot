@@ -24,10 +24,9 @@ use crossbeam_channel::{Receiver, Sender};
 #[cfg(not(target_arch = "wasm32"))]
 use rfd::FileDialog;
 
-use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Scalar};
 
-use crate::graphics::DrawConfig;
+use crate::{graphics::DrawConfig, StatusReport};
 
 struct GuiState {
     has_model: bool,

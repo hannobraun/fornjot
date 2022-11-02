@@ -6,11 +6,10 @@
 use std::{error, path::PathBuf};
 
 use fj_host::{Host, Model, ModelEvent, Parameters};
-use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize, Viewer,
+    ScreenSize, StatusReport, Viewer,
 };
 use futures::executor::block_on;
 use tracing::trace;

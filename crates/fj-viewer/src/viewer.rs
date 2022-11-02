@@ -1,8 +1,6 @@
 use std::path::PathBuf;
 
-use fj_interop::{
-    processed_shape::ProcessedShape, status_report::StatusReport,
-};
+use fj_interop::processed_shape::ProcessedShape;
 use fj_math::Aabb;
 use tracing::warn;
 
@@ -11,6 +9,7 @@ use crossbeam_channel::{Receiver, Sender};
 use crate::{
     camera::FocusPoint, gui::Gui, Camera, DrawConfig, InputEvent, InputHandler,
     NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
+    StatusReport,
 };
 
 /// The Fornjot model viewer

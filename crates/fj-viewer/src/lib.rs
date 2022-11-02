@@ -19,6 +19,7 @@ mod graphics;
 mod gui;
 mod input;
 mod screen;
+mod status_report;
 mod viewer;
 
 pub use self::{
@@ -27,5 +28,6 @@ pub use self::{
     gui::Gui,
     input::{InputEvent, InputHandler},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
+    status_report::StatusReport,
     viewer::Viewer,
 };

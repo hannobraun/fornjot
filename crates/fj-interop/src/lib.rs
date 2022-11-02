@@ -18,4 +18,3 @@ pub mod debug;
 pub mod ext;
 pub mod mesh;
 pub mod processed_shape;
-pub mod status_report;
