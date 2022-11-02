@@ -127,7 +127,7 @@ impl Viewer {
     pub fn draw(
         &mut self,
         pixels_per_point: f32,
-        status: &mut StatusReport,
+        status: &StatusReport,
         egui_input: egui::RawInput,
     ) {
         let aabb = self

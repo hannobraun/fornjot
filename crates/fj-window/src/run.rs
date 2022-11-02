@@ -234,7 +234,7 @@ pub fn run(
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                viewer.draw(pixels_per_point, &mut status, egui_input);
+                viewer.draw(pixels_per_point, &status, egui_input);
             }
             _ => {}
         }
