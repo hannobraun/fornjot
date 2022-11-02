@@ -18,6 +18,10 @@ impl Evaluator {
 
         thread::spawn(move || {
             while let Ok(TriggerEvaluation) = trigger_rx.recv() {
+                event_tx
+                    .send(ModelEvent::ChangeDetected)
+                    .expect("Expected channel to never disconnect");
+
                 let evaluation = match model.evaluate() {
                     Ok(evaluation) => evaluation,
                     Err(err) => {
@@ -60,6 +64,9 @@ pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
 pub enum ModelEvent {
+    /// A change in the model has been detected
+    ChangeDetected,
+
     /// The model has been evaluated
     Evaluation(Evaluation),
 

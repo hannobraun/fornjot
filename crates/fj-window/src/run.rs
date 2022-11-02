@@ -69,6 +69,11 @@ pub fn run(
                 };
 
                 match event {
+                    ModelEvent::ChangeDetected => {
+                        status.update_status(
+                            "Change in model detected. Compiling...",
+                        );
+                    }
                     ModelEvent::Evaluation(evaluation) => {
                         status.update_status(&format!(
                             "Model compiled successfully in {}!",
