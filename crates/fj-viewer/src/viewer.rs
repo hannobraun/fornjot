@@ -4,12 +4,12 @@ use fj_interop::processed_shape::ProcessedShape;
 use fj_math::Aabb;
 use tracing::warn;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::Sender;
 
 use crate::{
-    camera::FocusPoint, gui::Gui, Camera, DrawConfig, InputEvent, InputHandler,
-    NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
-    StatusReport,
+    camera::FocusPoint, gui::Gui, Camera, DrawConfig, GuiState, InputEvent,
+    InputHandler, NormalizedScreenPosition, Renderer, RendererInitError,
+    Screen, ScreenSize, StatusReport,
 };
 
 /// The Fornjot model viewer
@@ -43,11 +43,10 @@ impl Viewer {
     /// Construct a new instance of `Viewer`
     pub async fn new(
         screen: &impl Screen,
-        event_rx: Receiver<()>,
         event_tx: Sender<PathBuf>,
     ) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
-        let gui = renderer.init_gui(event_rx, event_tx);
+        let gui = renderer.init_gui(event_tx);
 
         Ok(Self {
             camera: Camera::default(),
@@ -129,6 +128,7 @@ impl Viewer {
         pixels_per_point: f32,
         status: &StatusReport,
         egui_input: egui::RawInput,
+        gui_state: GuiState,
     ) {
         let aabb = self
             .shape
@@ -145,6 +145,7 @@ impl Viewer {
             &aabb,
             status,
             self.renderer.is_line_drawing_available(),
+            gui_state,
         );
 
         if let Err(err) = self.renderer.draw(

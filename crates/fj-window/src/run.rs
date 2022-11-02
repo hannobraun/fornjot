@@ -8,7 +8,7 @@ use std::{error, path::PathBuf};
 use fj_host::{Host, Model, ModelEvent, Parameters};
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    GuiState, InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize, StatusReport, Viewer,
 };
 use futures::executor::block_on;
@@ -30,15 +30,13 @@ pub fn run(
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
-    let (send_gui, gui_event_rx) = crossbeam_channel::bounded::<()>(1);
     let (gui_event_tx, recv_gui) = crossbeam_channel::bounded::<PathBuf>(1);
 
     let mut status = StatusReport::new();
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer =
-        block_on(Viewer::new(&window, gui_event_rx, gui_event_tx))?;
+    let mut viewer = block_on(Viewer::new(&window, gui_event_tx))?;
 
     let mut held_mouse_button = None;
 
@@ -47,8 +45,6 @@ pub fn run(
     let mut host = None;
     if let Some(model) = model {
         host = Some(Host::from_model(model)?);
-    } else {
-        send_gui.send(()).expect("Channel is disconnected");
     }
 
     // Only handle resize events once every frame. This filters out spurious
@@ -77,7 +73,6 @@ pub fn run(
                 }
                 Err(_) => {
                     status.update_status("Error creating host.");
-                    send_gui.send(()).expect("Channel is disconnected");
                 }
             }
         }
@@ -234,7 +229,10 @@ pub fn run(
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                viewer.draw(pixels_per_point, &status, egui_input);
+                let gui_state = GuiState {
+                    model_available: host.is_some(),
+                };
+                viewer.draw(pixels_per_point, &status, egui_input, gui_state);
             }
             _ => {}
         }

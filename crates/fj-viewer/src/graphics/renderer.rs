@@ -1,6 +1,6 @@
 use std::{io, mem::size_of, path::PathBuf};
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::Sender;
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
@@ -172,12 +172,8 @@ impl Renderer {
         })
     }
 
-    pub(crate) fn init_gui(
-        &self,
-        event_rx: Receiver<()>,
-        event_tx: Sender<PathBuf>,
-    ) -> Gui {
-        Gui::new(&self.device, self.surface_config.format, event_rx, event_tx)
+    pub(crate) fn init_gui(&self, event_tx: Sender<PathBuf>) -> Gui {
+        Gui::new(&self.device, self.surface_config.format, event_tx)
     }
 
     /// Updates the geometry of the model being rendered.

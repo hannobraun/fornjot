@@ -19,7 +19,7 @@ use std::path::PathBuf;
 #[cfg(not(target_arch = "wasm32"))]
 use std::env::current_dir;
 
-use crossbeam_channel::{Receiver, Sender};
+use crossbeam_channel::Sender;
 
 #[cfg(not(target_arch = "wasm32"))]
 use rfd::FileDialog;
@@ -33,16 +33,13 @@ pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
-    event_rx: Receiver<()>,
     event_tx: Sender<PathBuf>,
-    state: GuiState,
 }
 
 impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        event_rx: Receiver<()>,
         event_tx: Sender<PathBuf>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
@@ -83,9 +80,7 @@ impl Gui {
             context,
             render_pass,
             options: Default::default(),
-            event_rx,
             event_tx,
-            state: Default::default(),
         }
     }
 
@@ -94,6 +89,7 @@ impl Gui {
         &self.context
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn update(
         &mut self,
         pixels_per_point: f32,
@@ -102,24 +98,8 @@ impl Gui {
         aabb: &Aabb<3>,
         status: &StatusReport,
         line_drawing_available: bool,
+        state: GuiState,
     ) {
-        loop {
-            let gui_event = self
-                .event_rx
-                .try_recv()
-                .map_err(|err| {
-                    if err.is_disconnected() {
-                        panic!("Expected channel to never disconnect");
-                    }
-                })
-                .ok();
-
-            match gui_event {
-                Some(_) => self.state.model_available = false,
-                None => break,
-            };
-        }
-
         self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
@@ -278,7 +258,7 @@ impl Gui {
             })
         });
 
-        if !self.state.model_available {
+        if !state.model_available {
             egui::Area::new("ask-model")
                 .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
                 .show(&self.context, |ui| {
@@ -296,8 +276,6 @@ impl Gui {
                                 self.event_tx
                                     .send(model_dir)
                                     .expect("Channel is disconnected");
-
-                                self.state.model_available = true;
                             }
                         }
                     })
