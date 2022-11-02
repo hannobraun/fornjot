@@ -9,7 +9,6 @@ use super::{HalfEdge, Surface};
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    surface: Handle<Surface>,
     half_edges: Vec<Handle<HalfEdge>>,
 }
 
@@ -18,13 +17,17 @@ impl Cycle {
     ///
     /// # Panics
     ///
+    /// Panics, if `half_edges` does not yield at least one half-edge.
+    ///
     /// Panic, if the end of each half-edge does not connect to the beginning of
     /// the next one.
-    pub fn new(
-        surface: Handle<Surface>,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
-    ) -> Self {
+    pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
+
+        let surface = match half_edges.first() {
+            Some(half_edge) => half_edge.surface().clone(),
+            None => panic!("Cycle must contain at least one half-edge"),
+        };
 
         // Verify, that the curves of all edges are defined in the correct
         // surface.
@@ -64,15 +67,18 @@ impl Cycle {
             }
         }
 
-        Self {
-            surface,
-            half_edges,
-        }
+        Self { half_edges }
     }
 
     /// Access the surface that this cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
+        if let Some(half_edge) = self.half_edges.first() {
+            return half_edge.surface();
+        }
+
+        unreachable!(
+            "Cycle has no half-edges, which the constructor should prevent."
+        )
     }
 
     /// Access the half-edges that make up the cycle

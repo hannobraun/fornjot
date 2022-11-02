@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::MaybePartial,
+    partial::{HasPartial, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -60,6 +60,12 @@ impl PartialVertex {
         if let Some(surface_form) = surface_form {
             self.surface_form = surface_form.into();
         }
+        self
+    }
+
+    /// Remove the surface form of the partial vertex, inferring it on build
+    pub fn infer_surface_form(mut self) -> Self {
+        self.surface_form = SurfaceVertex::partial().into();
         self
     }
 
@@ -160,6 +166,12 @@ impl PartialSurfaceVertex {
         if let Some(global_form) = global_form {
             self.global_form = global_form.into();
         }
+        self
+    }
+
+    /// Remove the global form of the partial vertex, inferring it on build
+    pub fn infer_global_form(mut self) -> Self {
+        self.global_form = GlobalVertex::partial().into();
         self
     }
 

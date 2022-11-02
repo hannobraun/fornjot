@@ -8,8 +8,6 @@ use super::Reverse;
 
 impl Reverse for Handle<Cycle> {
     fn reverse(self, objects: &Objects) -> Result<Self, ValidationError> {
-        let surface = self.surface().clone();
-
         let mut edges = self
             .half_edges()
             .cloned()
@@ -18,6 +16,6 @@ impl Reverse for Handle<Cycle> {
 
         edges.reverse();
 
-        Ok(objects.cycles.insert(Cycle::new(surface, edges))?)
+        Ok(objects.cycles.insert(Cycle::new(edges))?)
     }
 }

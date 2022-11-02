@@ -260,10 +260,7 @@ impl<'a> ShellBuilder<'a> {
 
             Face::builder(self.objects)
                 .with_exterior(
-                    self.objects
-                        .cycles
-                        .insert(Cycle::new(surface, edges))
-                        .unwrap(),
+                    self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
                 )
                 .build()
         };

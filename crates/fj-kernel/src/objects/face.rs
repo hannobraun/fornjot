@@ -33,7 +33,6 @@ use super::{Cycle, Objects, Surface};
 /// [`Shell`]: super::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
-    surface: Handle<Surface>,
     exterior: Handle<Cycle>,
     interiors: Vec<Handle<Cycle>>,
     color: Color,
@@ -64,7 +63,7 @@ impl Face {
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
     ) -> Self {
-        let surface = exterior.surface().clone();
+        let surface = exterior.surface();
         let mut interiors = Vec::new();
 
         for interior in the_interiors.into_iter() {
@@ -83,7 +82,6 @@ impl Face {
         }
 
         Self {
-            surface,
             exterior,
             interiors,
             color,
@@ -92,7 +90,7 @@ impl Face {
 
     /// Access this face's surface
     pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
+        self.exterior().surface()
     }
 
     /// Access the cycle that bounds the face on the outside

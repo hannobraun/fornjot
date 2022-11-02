@@ -222,7 +222,7 @@ impl PartialCycle {
             half_edges
         };
 
-        Ok(objects.cycles.insert(Cycle::new(surface, half_edges))?)
+        Ok(objects.cycles.insert(Cycle::new(half_edges))?)
     }
 }
 

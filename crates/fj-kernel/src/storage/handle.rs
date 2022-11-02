@@ -39,16 +39,6 @@ impl<T> Handle<T> {
     {
         self.deref().clone()
     }
-
-    /// Return a `Debug` implementation with full debug info
-    pub fn full_debug(&self) -> impl fmt::Debug
-    where
-        T: fmt::Debug,
-    {
-        // It would be nicer to return a struct that implements `Debug`, as that
-        // would cut down on allocations, but this will work for now.
-        format!("{:?} -> {:?}", self.id(), self.deref())
-    }
 }
 
 impl<T> Deref for Handle<T> {
@@ -138,7 +128,10 @@ where
     }
 }
 
-impl<T> fmt::Debug for Handle<T> {
+impl<T> fmt::Debug for Handle<T>
+where
+    T: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let name = {
             let type_name = type_name::<T>();
@@ -148,8 +141,13 @@ impl<T> fmt::Debug for Handle<T> {
             }
         };
         let id = self.id().0;
+        let object = self.deref();
 
-        write!(f, "{name} @ {id:#x}")?;
+        if f.alternate() {
+            write!(f, "{name} @ {id:#x} => {object:#?}")?;
+        } else {
+            write!(f, "{name} @ {id:#x}")?;
+        }
 
         Ok(())
     }
@@ -272,7 +270,10 @@ impl<T> PartialOrd for HandleWrapper<T> {
     }
 }
 
-impl<T> fmt::Debug for HandleWrapper<T> {
+impl<T> fmt::Debug for HandleWrapper<T>
+where
+    T: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.fmt(f)
     }
