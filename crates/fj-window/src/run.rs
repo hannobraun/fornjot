@@ -230,9 +230,10 @@ pub fn run(
                     egui_winit_state.take_egui_input(window.window());
 
                 let gui_state = GuiState {
+                    status: &status,
                     model_available: host.is_some(),
                 };
-                viewer.draw(pixels_per_point, &status, egui_input, gui_state);
+                viewer.draw(pixels_per_point, egui_input, gui_state);
             }
             _ => {}
         }

@@ -89,14 +89,12 @@ impl Gui {
         &self.context
     }
 
-    #[allow(clippy::too_many_arguments)]
     pub(crate) fn update(
         &mut self,
         pixels_per_point: f32,
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
         aabb: &Aabb<3>,
-        status: &StatusReport,
         line_drawing_available: bool,
         state: GuiState,
     ) {
@@ -250,10 +248,13 @@ impl Gui {
         egui::Area::new("fj-status-message").show(&self.context, |ui| {
             ui.group(|ui| {
                 ui.add(egui::Label::new(
-                    egui::RichText::new(format!("Status:{}", status.status()))
-                        .monospace()
-                        .color(egui::Color32::BLACK)
-                        .background_color(egui::Color32::WHITE),
+                    egui::RichText::new(format!(
+                        "Status:{}",
+                        state.status.status()
+                    ))
+                    .monospace()
+                    .color(egui::Color32::BLACK)
+                    .background_color(egui::Color32::WHITE),
                 ))
             })
         });
@@ -345,7 +346,10 @@ pub struct Options {
 }
 
 /// The current status of the GUI
-pub struct GuiState {
+pub struct GuiState<'a> {
+    /// Reference to the status messages
+    pub status: &'a StatusReport,
+
     /// Indicates whether a model is currently available
     pub model_available: bool,
 }

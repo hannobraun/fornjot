@@ -9,7 +9,7 @@ use crossbeam_channel::Sender;
 use crate::{
     camera::FocusPoint, gui::Gui, Camera, DrawConfig, GuiState, InputEvent,
     InputHandler, NormalizedScreenPosition, Renderer, RendererInitError,
-    Screen, ScreenSize, StatusReport,
+    Screen, ScreenSize,
 };
 
 /// The Fornjot model viewer
@@ -126,7 +126,6 @@ impl Viewer {
     pub fn draw(
         &mut self,
         pixels_per_point: f32,
-        status: &StatusReport,
         egui_input: egui::RawInput,
         gui_state: GuiState,
     ) {
@@ -143,7 +142,6 @@ impl Viewer {
             egui_input,
             &mut self.draw_config,
             &aabb,
-            status,
             self.renderer.is_line_drawing_available(),
             gui_state,
         );
