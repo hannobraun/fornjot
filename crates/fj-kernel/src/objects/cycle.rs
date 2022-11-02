@@ -9,7 +9,6 @@ use super::{HalfEdge, Surface};
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    surface: Handle<Surface>,
     half_edges: Vec<Handle<HalfEdge>>,
 }
 
@@ -68,15 +67,18 @@ impl Cycle {
             }
         }
 
-        Self {
-            surface,
-            half_edges,
-        }
+        Self { half_edges }
     }
 
     /// Access the surface that this cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
+        if let Some(half_edge) = self.half_edges.first() {
+            return half_edge.surface();
+        }
+
+        unreachable!(
+            "Cycle has no half-edges, which the constructor should prevent."
+        )
     }
 
     /// Access the half-edges that make up the cycle
