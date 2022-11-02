@@ -4,8 +4,6 @@ use fj_interop::processed_shape::ProcessedShape;
 use fj_math::Aabb;
 use tracing::warn;
 
-use crossbeam_channel::Sender;
-
 use crate::{
     camera::FocusPoint, gui::Gui, Camera, DrawConfig, GuiState, InputEvent,
     InputHandler, NormalizedScreenPosition, Renderer, RendererInitError,
@@ -41,12 +39,9 @@ pub struct Viewer {
 
 impl Viewer {
     /// Construct a new instance of `Viewer`
-    pub async fn new(
-        screen: &impl Screen,
-        event_tx: Sender<PathBuf>,
-    ) -> Result<Self, RendererInitError> {
+    pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
-        let gui = renderer.init_gui(event_tx);
+        let gui = renderer.init_gui();
 
         Ok(Self {
             camera: Camera::default(),
@@ -128,7 +123,7 @@ impl Viewer {
         pixels_per_point: f32,
         egui_input: egui::RawInput,
         gui_state: GuiState,
-    ) {
+    ) -> Option<PathBuf> {
         let aabb = self
             .shape
             .as_ref()
@@ -137,7 +132,7 @@ impl Viewer {
 
         self.camera.update_planes(&aabb);
 
-        self.gui.update(
+        let new_model_path = self.gui.update(
             pixels_per_point,
             egui_input,
             &mut self.draw_config,
@@ -154,5 +149,7 @@ impl Viewer {
         ) {
             warn!("Draw error: {}", err);
         }
+
+        new_model_path
     }
 }

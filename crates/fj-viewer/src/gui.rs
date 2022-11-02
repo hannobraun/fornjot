@@ -19,8 +19,6 @@ use std::path::PathBuf;
 #[cfg(not(target_arch = "wasm32"))]
 use std::env::current_dir;
 
-use crossbeam_channel::Sender;
-
 #[cfg(not(target_arch = "wasm32"))]
 use rfd::FileDialog;
 
@@ -33,14 +31,12 @@ pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
-    event_tx: Sender<PathBuf>,
 }
 
 impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        event_tx: Sender<PathBuf>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -80,7 +76,6 @@ impl Gui {
             context,
             render_pass,
             options: Default::default(),
-            event_tx,
         }
     }
 
@@ -97,7 +92,7 @@ impl Gui {
         aabb: &Aabb<3>,
         line_drawing_available: bool,
         state: GuiState,
-    ) {
+    ) -> Option<PathBuf> {
         self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
@@ -259,6 +254,8 @@ impl Gui {
             })
         });
 
+        let mut new_model_path = None;
+
         if !state.model_available {
             egui::Area::new("ask-model")
                 .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
@@ -272,16 +269,13 @@ impl Gui {
                             .button(egui::RichText::new("Pick a model"))
                             .clicked()
                         {
-                            let model_dir = show_file_dialog();
-                            if let Some(model_dir) = model_dir {
-                                self.event_tx
-                                    .send(model_dir)
-                                    .expect("Channel is disconnected");
-                            }
+                            new_model_path = show_file_dialog();
                         }
                     })
                 });
         }
+
+        new_model_path
     }
 
     pub(crate) fn draw(
