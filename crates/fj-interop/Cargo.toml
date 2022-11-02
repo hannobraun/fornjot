@@ -11,5 +11,4 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-chrono = "0.4.22"
 fj-math.workspace = true

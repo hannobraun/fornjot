@@ -12,7 +12,7 @@ impl Host {
     /// Create a new instance of `Host`
     ///
     /// This is only useful, if you want to continuously watch the model for
-    /// changes. If you don't just keep using `Model`.
+    /// changes. If you don't, just keep using `Model`.
     pub fn from_model(model: Model) -> Result<Self, Error> {
         let watch_path = model.watch_path();
         let evaluator = Evaluator::from_model(model);

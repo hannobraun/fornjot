@@ -11,7 +11,7 @@ pub struct StatusReport {
 }
 
 impl StatusReport {
-    /// Create a new ``StatusReport`` instance with a blank status
+    /// Create a new `StatusReport` instance with a blank status
     pub fn new() -> Self {
         Self::default()
     }

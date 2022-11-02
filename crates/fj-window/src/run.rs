@@ -3,14 +3,13 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-use std::{error, path::PathBuf};
+use std::error;
 
 use fj_host::{Host, Model, ModelEvent, Parameters};
-use fj_interop::status_report::StatusReport;
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{
-    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize, Viewer,
+    GuiState, InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    ScreenSize, StatusReport, Viewer,
 };
 use futures::executor::block_on;
 use tracing::trace;
@@ -31,26 +30,17 @@ pub fn run(
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
-    let (send_gui, gui_event_rx) = crossbeam_channel::bounded::<()>(1);
-    let (gui_event_tx, recv_gui) = crossbeam_channel::bounded::<PathBuf>(1);
-
     let mut status = StatusReport::new();
 
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer =
-        block_on(Viewer::new(&window, gui_event_rx, gui_event_tx))?;
+    let mut viewer = block_on(Viewer::new(&window))?;
 
     let mut held_mouse_button = None;
 
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut host = None;
-    if let Some(model) = model {
-        host = Some(Host::from_model(model)?);
-    } else {
-        send_gui.send(()).expect("Channel is disconnected");
-    }
+    let mut host = model.map(Host::from_model).transpose()?;
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -60,28 +50,6 @@ pub fn run(
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
-
-        let gui_event = recv_gui
-            .try_recv()
-            .map_err(|err| {
-                if err.is_disconnected() {
-                    panic!("Expected channel to never disconnect");
-                }
-            })
-            .ok();
-
-        if let Some(model_path) = gui_event {
-            let model = Model::new(model_path, Parameters::empty()).unwrap();
-            match Host::from_model(model) {
-                Ok(new_host) => {
-                    host = Some(new_host);
-                }
-                Err(_) => {
-                    status.update_status("Error creating host.");
-                    send_gui.send(()).expect("Channel is disconnected");
-                }
-            }
-        }
 
         if let Some(host) = &host {
             loop {
@@ -235,7 +203,25 @@ pub fn run(
                 let egui_input =
                     egui_winit_state.take_egui_input(window.window());
 
-                viewer.draw(pixels_per_point, &mut status, egui_input);
+                let gui_state = GuiState {
+                    status: &status,
+                    model_available: host.is_some(),
+                };
+                let new_model_path =
+                    viewer.draw(pixels_per_point, egui_input, gui_state);
+
+                if let Some(model_path) = new_model_path {
+                    let model =
+                        Model::new(model_path, Parameters::empty()).unwrap();
+                    match Host::from_model(model) {
+                        Ok(new_host) => {
+                            host = Some(new_host);
+                        }
+                        Err(_) => {
+                            status.update_status("Error creating host.");
+                        }
+                    }
+                }
             }
             _ => {}
         }

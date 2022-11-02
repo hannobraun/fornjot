@@ -19,42 +19,24 @@ use std::path::PathBuf;
 #[cfg(not(target_arch = "wasm32"))]
 use std::env::current_dir;
 
-use crossbeam_channel::{Receiver, Sender};
-
 #[cfg(not(target_arch = "wasm32"))]
 use rfd::FileDialog;
 
-use fj_interop::status_report::StatusReport;
 use fj_math::{Aabb, Scalar};
 
-use crate::graphics::DrawConfig;
-
-struct GuiState {
-    has_model: bool,
-}
-
-impl Default for GuiState {
-    fn default() -> Self {
-        Self { has_model: true }
-    }
-}
+use crate::{graphics::DrawConfig, StatusReport};
 
 /// The GUI
 pub struct Gui {
     context: egui::Context,
     render_pass: egui_wgpu::renderer::RenderPass,
     options: Options,
-    event_rx: Receiver<()>,
-    event_tx: Sender<PathBuf>,
-    state: GuiState,
 }
 
 impl Gui {
     pub(crate) fn new(
         device: &wgpu::Device,
         texture_format: wgpu::TextureFormat,
-        event_rx: Receiver<()>,
-        event_tx: Sender<PathBuf>,
     ) -> Self {
         // The implementation of the integration with `egui` is likely to need
         // to change "significantly" depending on what architecture approach is
@@ -94,9 +76,6 @@ impl Gui {
             context,
             render_pass,
             options: Default::default(),
-            event_rx,
-            event_tx,
-            state: Default::default(),
         }
     }
 
@@ -111,26 +90,9 @@ impl Gui {
         egui_input: egui::RawInput,
         config: &mut DrawConfig,
         aabb: &Aabb<3>,
-        status: &StatusReport,
         line_drawing_available: bool,
-    ) {
-        loop {
-            let gui_event = self
-                .event_rx
-                .try_recv()
-                .map_err(|err| {
-                    if err.is_disconnected() {
-                        panic!("Expected channel to never disconnect");
-                    }
-                })
-                .ok();
-
-            match gui_event {
-                Some(_) => self.state.has_model = false,
-                None => break,
-            };
-        }
-
+        state: GuiState,
+    ) -> Option<PathBuf> {
         self.context.set_pixels_per_point(pixels_per_point);
         self.context.begin_frame(egui_input);
 
@@ -281,15 +243,20 @@ impl Gui {
         egui::Area::new("fj-status-message").show(&self.context, |ui| {
             ui.group(|ui| {
                 ui.add(egui::Label::new(
-                    egui::RichText::new(format!("Status:{}", status.status()))
-                        .monospace()
-                        .color(egui::Color32::BLACK)
-                        .background_color(egui::Color32::WHITE),
+                    egui::RichText::new(format!(
+                        "Status:{}",
+                        state.status.status()
+                    ))
+                    .monospace()
+                    .color(egui::Color32::BLACK)
+                    .background_color(egui::Color32::WHITE),
                 ))
             })
         });
 
-        if !self.state.has_model {
+        let mut new_model_path = None;
+
+        if !state.model_available {
             egui::Area::new("ask-model")
                 .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
                 .show(&self.context, |ui| {
@@ -302,18 +269,13 @@ impl Gui {
                             .button(egui::RichText::new("Pick a model"))
                             .clicked()
                         {
-                            let model_dir = show_file_dialog();
-                            if let Some(model_dir) = model_dir {
-                                self.event_tx
-                                    .send(model_dir)
-                                    .expect("Channel is disconnected");
-
-                                self.state.has_model = true;
-                            }
+                            new_model_path = show_file_dialog();
                         }
                     })
                 });
         }
+
+        new_model_path
     }
 
     pub(crate) fn draw(
@@ -375,4 +337,13 @@ pub struct Options {
     pub show_debug_text_example: bool,
     pub show_settings_ui: bool,
     pub show_inspection_ui: bool,
+}
+
+/// The current status of the GUI
+pub struct GuiState<'a> {
+    /// Reference to the status messages
+    pub status: &'a StatusReport,
+
+    /// Indicates whether a model is currently available
+    pub model_available: bool,
 }
