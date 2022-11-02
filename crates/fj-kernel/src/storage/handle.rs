@@ -39,16 +39,6 @@ impl<T> Handle<T> {
     {
         self.deref().clone()
     }
-
-    /// Return a `Debug` implementation with full debug info
-    pub fn full_debug(&self) -> impl fmt::Debug
-    where
-        T: fmt::Debug,
-    {
-        // It would be nicer to return a struct that implements `Debug`, as that
-        // would cut down on allocations, but this will work for now.
-        format!("{:?} -> {:?}", self.id(), self.deref())
-    }
 }
 
 impl<T> Deref for Handle<T> {
