@@ -63,6 +63,12 @@ impl PartialVertex {
         self
     }
 
+    /// Remove the surface form of the partial vertex, inferring it on build
+    pub fn infer_surface_form(mut self) -> Self {
+        self.surface_form = SurfaceVertex::partial().into();
+        self
+    }
+
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
