@@ -52,3 +52,11 @@ extern "C" fn version_pkg() -> RawVersion {
         len: VERSION_PKG.len(),
     }
 }
+
+#[no_mangle]
+extern "C" fn version_full() -> RawVersion {
+    RawVersion {
+        ptr: VERSION_FULL.as_ptr(),
+        len: VERSION_FULL.len(),
+    }
+}
