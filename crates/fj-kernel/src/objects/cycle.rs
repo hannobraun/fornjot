@@ -20,11 +20,13 @@ impl Cycle {
     ///
     /// Panic, if the end of each half-edge does not connect to the beginning of
     /// the next one.
-    pub fn new(
-        surface: Handle<Surface>,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
-    ) -> Self {
+    pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
+
+        let surface = match half_edges.first() {
+            Some(half_edge) => half_edge.surface().clone(),
+            None => panic!("Cycle must contain at least one half-edge"),
+        };
 
         // Verify, that the curves of all edges are defined in the correct
         // surface.

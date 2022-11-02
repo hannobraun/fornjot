@@ -121,11 +121,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         points_curve_and_surface,
                     ));
 
-                objects.curves.insert(Curve::new(
-                    surface.clone(),
-                    path,
-                    global,
-                ))?
+                objects.curves.insert(Curve::new(surface, path, global))?
             };
 
             let global = objects.global_edges.insert(GlobalEdge::new(
@@ -176,7 +172,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 i += 1;
             }
 
-            objects.cycles.insert(Cycle::new(surface, edges))?
+            objects.cycles.insert(Cycle::new(edges))?
         };
 
         Ok(Face::builder(objects)
@@ -242,7 +238,7 @@ mod tests {
                 .build(&objects)?
                 .reverse(&objects)?;
             let side_down = HalfEdge::partial()
-                .with_surface(Some(surface.clone()))
+                .with_surface(Some(surface))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
                     Some(bottom.back().surface_form().clone()),
                 )))
@@ -253,10 +249,9 @@ mod tests {
                 .build(&objects)?
                 .reverse(&objects)?;
 
-            let cycle = objects.cycles.insert(Cycle::new(
-                surface,
-                [bottom, side_up, top, side_down],
-            ))?;
+            let cycle = objects
+                .cycles
+                .insert(Cycle::new([bottom, side_up, top, side_down]))?;
 
             Face::builder(&objects).with_exterior(cycle).build()
         };
