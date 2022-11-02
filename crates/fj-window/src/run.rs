@@ -97,6 +97,8 @@ pub fn run(
                                 }
                             }
                         }
+
+                        status.update_status("Model processed.");
                     }
 
                     ModelEvent::Error(err) => {
