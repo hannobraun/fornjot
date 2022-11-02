@@ -115,7 +115,7 @@ impl Gui {
                 .ok();
 
             match gui_event {
-                Some(_) => self.state.has_model = false,
+                Some(_) => self.state.model_available = false,
                 None => break,
             };
         }
@@ -278,7 +278,7 @@ impl Gui {
             })
         });
 
-        if !self.state.has_model {
+        if !self.state.model_available {
             egui::Area::new("ask-model")
                 .anchor(egui::Align2::CENTER_CENTER, [0_f32, -5_f32])
                 .show(&self.context, |ui| {
@@ -297,7 +297,7 @@ impl Gui {
                                     .send(model_dir)
                                     .expect("Channel is disconnected");
 
-                                self.state.has_model = true;
+                                self.state.model_available = true;
                             }
                         }
                     })
@@ -369,11 +369,13 @@ pub struct Options {
 /// The current status of the GUI
 pub struct GuiState {
     /// Indicates whether a model is currently available
-    pub has_model: bool,
+    pub model_available: bool,
 }
 
 impl Default for GuiState {
     fn default() -> Self {
-        Self { has_model: true }
+        Self {
+            model_available: true,
+        }
     }
 }
