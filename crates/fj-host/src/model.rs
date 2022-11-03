@@ -108,13 +108,13 @@ impl Model {
             let version_pkg: libloading::Symbol<fn() -> RawVersion> =
                 lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
 
-            let version_pkg = version_pkg();
-            if fj::version::VERSION_PKG != version_pkg.to_string() {
+            let version_pkg = version_pkg().to_string();
+            if fj::version::VERSION_PKG != version_pkg {
                 let host = String::from_utf8_lossy(
                     fj::version::VERSION_PKG.as_bytes(),
                 )
                 .into_owned();
-                let model = version_pkg.to_string();
+                let model = version_pkg;
 
                 return Err(Error::VersionMismatch { host, model });
             }
@@ -122,13 +122,13 @@ impl Model {
             let version_full: libloading::Symbol<fn() -> RawVersion> =
                 lib.get(b"version_full").map_err(Error::LoadingVersion)?;
 
-            let version_full = version_full();
-            if fj::version::VERSION_FULL != version_full.to_string() {
+            let version_full = version_full().to_string();
+            if fj::version::VERSION_FULL != version_full {
                 let host = String::from_utf8_lossy(
                     fj::version::VERSION_FULL.as_bytes(),
                 )
                 .into_owned();
-                let model = version_full.to_string();
+                let model = version_full;
 
                 warn!("{}", Error::VersionMismatch { host, model });
             }
