@@ -114,9 +114,7 @@ impl Model {
                     fj::version::VERSION_PKG.as_bytes(),
                 )
                 .into_owned();
-                let model =
-                    String::from_utf8_lossy(version_pkg.as_str().as_bytes())
-                        .into_owned();
+                let model = version_pkg.as_str().to_owned();
 
                 return Err(Error::VersionMismatch { host, model });
             }
@@ -130,9 +128,7 @@ impl Model {
                     fj::version::VERSION_FULL.as_bytes(),
                 )
                 .into_owned();
-                let model =
-                    String::from_utf8_lossy(version_full.as_str().as_bytes())
-                        .into_owned();
+                let model = version_full.as_str().to_owned();
 
                 warn!("{}", Error::VersionMismatch { host, model });
             }
