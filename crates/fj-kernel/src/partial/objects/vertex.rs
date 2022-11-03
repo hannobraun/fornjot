@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{HasPartial, MaybePartial},
+    partial::MaybePartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -66,7 +66,7 @@ impl PartialVertex {
 
     /// Remove the surface form of the partial vertex, inferring it on build
     pub fn infer_surface_form(self) -> Self {
-        self.with_surface_form(Some(SurfaceVertex::partial()))
+        self.with_surface_form(Some(PartialSurfaceVertex::default()))
     }
 
     /// Build a full [`Vertex`] from the partial vertex
