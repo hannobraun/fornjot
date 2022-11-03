@@ -36,10 +36,10 @@ impl PartialHalfEdge {
     /// Extract the global curve from either the curve or global form
     ///
     /// If a global curve is available through both, the curve is preferred.
-    pub fn extract_global_curve(&self) -> Option<MaybePartial<GlobalCurve>> {
+    pub fn extract_global_curve(&self) -> MaybePartial<GlobalCurve> {
         self.curve
             .global_form()
-            .or_else(|| Some(self.global_form.curve()))
+            .unwrap_or_else(|| self.global_form.curve())
     }
 
     /// Access the vertices of the global form, if available
@@ -128,7 +128,7 @@ impl PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let curve = Curve::partial()
-            .with_global_form(self.extract_global_curve())
+            .with_global_form(Some(self.extract_global_curve()))
             .with_surface(self.surface.clone())
             .update_as_circle_from_radius(radius);
 
@@ -202,7 +202,7 @@ impl PartialHalfEdge {
         });
 
         let curve = Curve::partial()
-            .with_global_form(self.extract_global_curve())
+            .with_global_form(Some(self.extract_global_curve()))
             .with_surface(Some(surface))
             .update_as_line_from_points(points);
 
