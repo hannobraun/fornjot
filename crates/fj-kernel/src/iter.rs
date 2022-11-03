@@ -377,7 +377,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let object = Curve::partial()
             .with_surface(Some(surface))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects);
 
         assert_eq!(1, object.curve_iter().count());
@@ -594,7 +594,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let global_vertex = objects
             .global_vertices

@@ -89,7 +89,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
@@ -114,7 +114,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
@@ -139,7 +139,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))
@@ -159,7 +159,7 @@ mod tests {
         let surface = objects.surfaces.xy_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .with_surface(Some(surface))

@@ -6,7 +6,7 @@ use crate::{partial::PartialCurve, path::SurfacePath};
 #[allow(clippy::wrong_self_convention)]
 pub trait CurveBuilder {
     /// Update partial curve to represent the u-axis
-    fn as_u_axis(self) -> Self;
+    fn update_as_u_axis(self) -> Self;
 
     /// Update partial curve to represent the v-axis
     fn as_v_axis(self) -> Self;
@@ -19,7 +19,7 @@ pub trait CurveBuilder {
 }
 
 impl CurveBuilder for PartialCurve {
-    fn as_u_axis(self) -> Self {
+    fn update_as_u_axis(self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
