@@ -13,21 +13,9 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialVertex {
-    /// The position of the [`Vertex`] on the [`Curve`]
-    ///
-    /// Must be provided before calling [`PartialVertex::build`].
-    pub position: Option<Point<1>>,
-
-    /// The curve that the [`Vertex`] is defined in
-    ///
-    /// Must be provided before calling [`PartialVertex::build`].
-    pub curve: MaybePartial<Curve>,
-
-    /// The surface form of the [`Vertex`]
-    ///
-    /// Will be computed from `position` and `curve` in
-    /// [`PartialVertex::build`], if not provided.
-    pub surface_form: MaybePartial<SurfaceVertex>,
+    position: Option<Point<1>>,
+    curve: MaybePartial<Curve>,
+    surface_form: MaybePartial<SurfaceVertex>,
 }
 
 impl PartialVertex {
