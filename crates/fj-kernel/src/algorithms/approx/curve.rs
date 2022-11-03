@@ -286,7 +286,7 @@ mod tests {
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
         let curve = Curve::partial()
             .with_surface(Some(surface))
-            .as_circle_from_radius(1.)
+            .update_as_circle_from_radius(1.)
             .build(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);

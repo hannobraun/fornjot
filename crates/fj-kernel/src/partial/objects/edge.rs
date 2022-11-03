@@ -130,7 +130,7 @@ impl PartialHalfEdge {
         let curve = Curve::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(self.surface.clone())
-            .as_circle_from_radius(radius);
+            .update_as_circle_from_radius(radius);
 
         let path = curve.path().expect("Expected path that was just created");
 
