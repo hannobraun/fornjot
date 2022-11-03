@@ -264,12 +264,11 @@ impl PartialGlobalVertex {
 
     /// Update partial global vertex from the given surface and position on it
     pub fn from_surface_and_position(
-        mut self,
+        self,
         surface: &Surface,
         position: impl Into<Point<2>>,
     ) -> Self {
-        self.position = Some(surface.point_from_surface_coords(position));
-        self
+        self.with_position(Some(surface.point_from_surface_coords(position)))
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
