@@ -124,10 +124,10 @@ impl MaybePartial<Curve> {
 
 impl MaybePartial<GlobalEdge> {
     /// Access the curve
-    pub fn curve(&self) -> Option<MaybePartial<GlobalCurve>> {
+    pub fn curve(&self) -> MaybePartial<GlobalCurve> {
         match self {
-            Self::Full(full) => Some(full.curve().clone().into()),
-            Self::Partial(partial) => Some(partial.curve.clone()),
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve.clone(),
         }
     }
 
