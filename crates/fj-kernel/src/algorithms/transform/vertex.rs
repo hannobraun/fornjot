@@ -63,6 +63,6 @@ impl TransformObject for PartialGlobalVertex {
             .position()
             .map(|position| transform.transform_point(&position));
 
-        Ok(Self { position })
+        Ok(Self::default().with_position(position))
     }
 }
