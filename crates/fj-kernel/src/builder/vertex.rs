@@ -1,9 +1,23 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, Surface},
-    partial::{MaybePartial, PartialGlobalVertex},
+    objects::{Curve, GlobalVertex, Surface},
+    partial::{
+        HasPartial, MaybePartial, PartialGlobalVertex, PartialSurfaceVertex,
+    },
 };
+
+/// Builder API for [`PartialSurfaceVertex`]
+pub trait SurfaceVertexBuilder {
+    /// Remove the global form of the partial vertex, inferring it in `build`
+    fn infer_global_form(self) -> Self;
+}
+
+impl SurfaceVertexBuilder for PartialSurfaceVertex {
+    fn infer_global_form(self) -> Self {
+        self.with_global_form(Some(GlobalVertex::partial()))
+    }
+}
 
 /// Builder API for [`PartialGlobalVertex`]
 pub trait GlobalVertexBuilder {

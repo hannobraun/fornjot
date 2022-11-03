@@ -173,11 +173,6 @@ impl PartialSurfaceVertex {
         self
     }
 
-    /// Remove the global form of the partial vertex, inferring it on build
-    pub fn infer_global_form(self) -> Self {
-        self.with_global_form(Some(GlobalVertex::partial()))
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     ///
     /// # Panics

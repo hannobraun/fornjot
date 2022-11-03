@@ -179,7 +179,7 @@ impl SurfaceVertexValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CurveBuilder,
+        builder::{CurveBuilder, SurfaceVertexBuilder},
         objects::{Curve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
         validate::Validate2,

@@ -13,6 +13,10 @@ mod curve;
 mod vertex;
 
 pub use self::{
-    curve::CurveBuilder, face::FaceBuilder, shell::ShellBuilder,
-    sketch::SketchBuilder, solid::SolidBuilder, vertex::GlobalVertexBuilder,
+    curve::CurveBuilder,
+    face::FaceBuilder,
+    shell::ShellBuilder,
+    sketch::SketchBuilder,
+    solid::SolidBuilder,
+    vertex::{GlobalVertexBuilder, SurfaceVertexBuilder},
 };
