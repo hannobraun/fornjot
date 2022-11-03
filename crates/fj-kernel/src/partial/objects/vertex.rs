@@ -15,18 +15,18 @@ use crate::{
 pub struct PartialVertex {
     /// The position of the [`Vertex`] on the [`Curve`]
     ///
-    /// Must be provided before [`PartialVertex::build`] is called.
+    /// Must be provided before calling [`PartialVertex::build`].
     pub position: Option<Point<1>>,
 
     /// The curve that the [`Vertex`] is defined in
     ///
-    /// Must be provided before [`PartialVertex::build`] is called.
+    /// Must be provided before calling [`PartialVertex::build`].
     pub curve: MaybePartial<Curve>,
 
     /// The surface form of the [`Vertex`]
     ///
-    /// Can be provided, if already available, or computed from the position on
-    /// the [`Curve`].
+    /// Will be computed from `position` and `curve` in
+    /// [`PartialVertex::build`], if not provided.
     pub surface_form: MaybePartial<SurfaceVertex>,
 }
 
@@ -74,9 +74,9 @@ impl PartialVertex {
     ///
     /// # Panics
     ///
-    /// Panics, if no position has been provided.
+    /// Panics, if position has not been provided.
     ///
-    /// Panics, if no curve has been provided.
+    /// Panics, if curve has not been provided.
     pub fn build(
         self,
         objects: &Objects,
@@ -174,12 +174,6 @@ impl PartialSurfaceVertex {
     }
 
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
-    ///
-    /// # Panics
-    ///
-    /// Panics, if no position has been provided.
-    ///
-    /// Panics, if no surface has been provided.
     pub fn build(
         self,
         objects: &Objects,

@@ -9,7 +9,7 @@ use crate::{
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
-    /// Remove the global form of the partial vertex, inferring it in `build`
+    /// Infer the global form of the partial vertex
     fn infer_global_form(self) -> Self;
 }
 
