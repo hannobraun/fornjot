@@ -9,7 +9,7 @@ pub trait CurveBuilder {
     fn update_as_u_axis(self) -> Self;
 
     /// Update partial curve to represent the v-axis
-    fn as_v_axis(self) -> Self;
+    fn update_as_v_axis(self) -> Self;
 
     /// Update partial curve as a circle, from the provided radius
     fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
@@ -26,7 +26,7 @@ impl CurveBuilder for PartialCurve {
         self.as_line_from_points([a, b])
     }
 
-    fn as_v_axis(self) -> Self {
+    fn update_as_v_axis(self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
