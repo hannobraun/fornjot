@@ -3,7 +3,6 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{partial::PartialCurve, path::SurfacePath};
 
 /// Builder API for [`PartialCurve`]
-#[allow(clippy::wrong_self_convention)]
 pub trait CurveBuilder {
     /// Update partial curve to represent the u-axis
     fn update_as_u_axis(self) -> Self;
