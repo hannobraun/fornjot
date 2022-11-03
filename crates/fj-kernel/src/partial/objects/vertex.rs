@@ -140,6 +140,21 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
+    /// Access the position of the [`SurfaceVertex`]
+    pub fn position(&self) -> Option<Point<2>> {
+        self.position
+    }
+
+    /// Access the surface that the [`SurfaceVertex`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the global form of the [`SurfaceVertex`]
+    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
+        self.global_form.clone()
+    }
+
     /// Provide a position for the partial surface vertex
     pub fn with_position(
         mut self,

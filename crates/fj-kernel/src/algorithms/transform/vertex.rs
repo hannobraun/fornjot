@@ -38,15 +38,15 @@ impl TransformObject for PartialSurfaceVertex {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
-        let global_form = self.global_form.transform(transform, objects)?;
+        let global_form = self.global_form().transform(transform, objects)?;
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
         Ok(Self {
-            position: self.position,
+            position: self.position(),
             surface,
             global_form,
         })
