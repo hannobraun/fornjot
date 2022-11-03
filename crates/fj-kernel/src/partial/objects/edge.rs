@@ -131,7 +131,7 @@ impl PartialHalfEdge {
             .with_surface(self.surface.clone())
             .as_circle_from_radius(radius);
 
-        let path = curve.path.expect("Expected path that was just created");
+        let path = curve.path().expect("Expected path that was just created");
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));

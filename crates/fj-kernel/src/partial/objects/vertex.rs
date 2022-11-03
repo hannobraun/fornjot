@@ -249,10 +249,10 @@ impl PartialGlobalVertex {
     ) -> Self {
         let curve = curve.into().into_partial();
 
-        let path = curve.path.expect(
+        let path = curve.path().expect(
             "Need path to create `GlobalVertex` from curve and position",
         );
-        let surface = curve.surface.expect(
+        let surface = curve.surface().expect(
             "Need surface to create `GlobalVertex` from curve and position",
         );
 

@@ -30,6 +30,23 @@ pub struct PartialCurve {
 }
 
 impl PartialCurve {
+    /// Access the path that defines the [`Curve`]
+    pub fn path(&self) -> Option<SurfacePath> {
+        self.path
+    }
+
+    /// Access the surface that the [`Curve`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the global form of the [`Curve`]
+    pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
+        self.global_form
+            .clone()
+            .map(|handle_wrapper| handle_wrapper.0)
+    }
+
     /// Provide a path for the partial curve
     pub fn with_path(mut self, path: Option<SurfacePath>) -> Self {
         if let Some(path) = path {

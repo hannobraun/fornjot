@@ -99,9 +99,7 @@ impl MaybePartial<Curve> {
     pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
         match self {
             Self::Full(full) => Some(full.global_form().clone()),
-            Self::Partial(partial) => {
-                partial.global_form.clone().map(Into::into)
-            }
+            Self::Partial(partial) => partial.global_form(),
         }
     }
 }
