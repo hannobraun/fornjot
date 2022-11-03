@@ -6,7 +6,6 @@ use crate::{
 };
 
 /// Builder API for [`PartialGlobalVertex`]
-#[allow(clippy::wrong_self_convention)]
 pub trait GlobalVertexBuilder {
     /// Update partial global vertex from the given curve and position on it
     fn update_from_curve_and_position(
