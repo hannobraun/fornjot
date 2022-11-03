@@ -205,7 +205,7 @@ impl PartialHalfEdge {
         let curve = Curve::partial()
             .with_global_form(self.extract_global_curve())
             .with_surface(Some(surface))
-            .as_line_from_points(points);
+            .update_as_line_from_points(points);
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {

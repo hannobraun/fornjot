@@ -125,7 +125,7 @@ mod tests {
         let expected_curves = surfaces.try_map_ext(|surface| {
             Curve::partial()
                 .with_surface(Some(surface))
-                .as_line_from_points([[0., 0.], [1., 0.]])
+                .update_as_line_from_points([[0., 0.], [1., 0.]])
                 .build(&objects)
         })?;
         let expected_intervals =
