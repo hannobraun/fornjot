@@ -122,6 +122,14 @@ impl MaybePartial<Curve> {
         }
     }
 
+    /// Access the surface
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        match self {
+            MaybePartial::Full(full) => Some(full.surface().clone()),
+            MaybePartial::Partial(partial) => partial.surface(),
+        }
+    }
+
     /// Access the global form
     pub fn global_form(&self) -> Option<MaybePartial<GlobalCurve>> {
         match self {
