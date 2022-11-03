@@ -157,10 +157,10 @@ impl MaybePartial<SurfaceVertex> {
     }
 
     /// Access the surface
-    pub fn surface(&self) -> Option<&Handle<Surface>> {
+    pub fn surface(&self) -> Option<Handle<Surface>> {
         match self {
-            Self::Full(full) => Some(full.surface()),
-            Self::Partial(partial) => partial.surface.as_ref(),
+            Self::Full(full) => Some(full.surface().clone()),
+            Self::Partial(partial) => partial.surface.clone(),
         }
     }
 }

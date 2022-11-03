@@ -191,11 +191,10 @@ impl PartialHalfEdge {
 
         let surface = self
             .surface
-            .as_ref()
+            .clone()
             .or_else(|| from_surface.surface())
             .or_else(|| to_surface.surface())
-            .expect("Can't infer line segment without a surface")
-            .clone();
+            .expect("Can't infer line segment without a surface");
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
                 .position()
