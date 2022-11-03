@@ -197,6 +197,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
+        builder::CurveBuilder,
         objects::{Curve, Objects, Surface},
         partial::HasPartial,
         path::GlobalPath,
@@ -213,7 +214,7 @@ mod tests {
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
         let curve = Curve::partial()
             .with_surface(Some(surface))
-            .as_line_from_points([[1., 1.], [2., 1.]])
+            .update_as_line_from_points([[1., 1.], [2., 1.]])
             .build(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
@@ -234,7 +235,7 @@ mod tests {
         ))?;
         let curve = Curve::partial()
             .with_surface(Some(surface))
-            .as_line_from_points([[1., 1.], [1., 2.]])
+            .update_as_line_from_points([[1., 1.], [1., 2.]])
             .build(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
@@ -253,7 +254,7 @@ mod tests {
             objects.surfaces.insert(Surface::new(path, [0., 0., 1.]))?;
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_line_from_points([[0., 1.], [1., 1.]])
+            .update_as_line_from_points([[0., 1.], [1., 1.]])
             .build(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
@@ -285,7 +286,7 @@ mod tests {
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
         let curve = Curve::partial()
             .with_surface(Some(surface))
-            .as_circle_from_radius(1.)
+            .update_as_circle_from_radius(1.)
             .build(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);

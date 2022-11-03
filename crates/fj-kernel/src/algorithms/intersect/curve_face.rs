@@ -150,6 +150,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
+        builder::CurveBuilder,
         objects::{Curve, Face, Objects},
         partial::HasPartial,
     };
@@ -164,7 +165,7 @@ mod tests {
 
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_line_from_points([[-3., 0.], [-2., 0.]])
+            .update_as_line_from_points([[-3., 0.], [-2., 0.]])
             .build(&objects)?;
 
         #[rustfmt::skip]

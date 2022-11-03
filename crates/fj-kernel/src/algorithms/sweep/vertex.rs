@@ -168,6 +168,7 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
+        builder::CurveBuilder,
         objects::{Curve, HalfEdge, Objects, Vertex},
         partial::HasPartial,
     };
@@ -179,7 +180,7 @@ mod tests {
         let surface = objects.surfaces.xz_plane();
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let vertex = Vertex::partial()
             .with_position(Some([0.]))

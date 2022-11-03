@@ -14,20 +14,19 @@ impl TransformObject for PartialVertex {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+        let curve = self.curve().transform(transform, objects)?;
         let surface_form = self
-            .surface_form
+            .surface_form()
             .into_partial()
             .transform(transform, objects)?
             .into();
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
-        Ok(Self {
-            position: self.position,
-            curve,
-            surface_form,
-        })
+        Ok(Self::default()
+            .with_position(self.position())
+            .with_curve(Some(curve))
+            .with_surface_form(surface_form))
     }
 }
 
@@ -38,18 +37,17 @@ impl TransformObject for PartialSurfaceVertex {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
-        let global_form = self.global_form.transform(transform, objects)?;
+        let global_form = self.global_form().transform(transform, objects)?;
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
-        Ok(Self {
-            position: self.position,
-            surface,
-            global_form,
-        })
+        Ok(Self::default()
+            .with_position(self.position())
+            .with_surface(surface)
+            .with_global_form(Some(global_form)))
     }
 }
 
@@ -60,9 +58,9 @@ impl TransformObject for PartialGlobalVertex {
         _: &Objects,
     ) -> Result<Self, ValidationError> {
         let position = self
-            .position
+            .position()
             .map(|position| transform.transform_point(&position));
 
-        Ok(Self { position })
+        Ok(Self::default().with_position(position))
     }
 }

@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    builder::CurveBuilder,
     objects::{
         Curve, Cycle, HalfEdge, Objects, Surface, SurfaceVertex, Vertex,
     },
@@ -12,7 +13,7 @@ use crate::{
 /// A partial [`Cycle`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
     pub surface: Option<Handle<Surface>>,
@@ -82,7 +83,7 @@ impl PartialCycle {
 
                 let curve = Curve::partial()
                     .with_surface(Some(surface.clone()))
-                    .as_line_from_points([position_prev, position_next]);
+                    .update_as_line_from_points([position_prev, position_next]);
 
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {

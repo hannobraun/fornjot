@@ -179,6 +179,7 @@ impl SurfaceVertexValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
+        builder::{CurveBuilder, SurfaceVertexBuilder},
         objects::{Curve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
         validate::Validate2,
@@ -193,7 +194,7 @@ mod tests {
             .with_curve(Some(
                 Curve::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
-                    .as_u_axis(),
+                    .update_as_u_axis(),
             ))
             .build(&objects)?;
         let invalid = Vertex::new(
@@ -221,7 +222,7 @@ mod tests {
             .with_curve(Some(
                 Curve::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
-                    .as_u_axis(),
+                    .update_as_u_axis(),
             ))
             .build(&objects)?;
         let invalid = Vertex::new(

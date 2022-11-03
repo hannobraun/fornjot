@@ -92,6 +92,7 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
+        builder::CurveBuilder,
         objects::{Curve, Objects},
         partial::HasPartial,
     };
@@ -122,11 +123,11 @@ mod tests {
 
         let expected_xy = Curve::partial()
             .with_surface(Some(xy.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
         let expected_xz = Curve::partial()
             .with_surface(Some(xz.clone()))
-            .as_u_axis()
+            .update_as_u_axis()
             .build(&objects)?;
 
         assert_eq!(

@@ -1,8 +1,9 @@
 use fj_math::Point;
 
 use crate::{
+    builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{HasPartial, MaybePartial},
+    partial::MaybePartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -10,26 +11,29 @@ use crate::{
 /// A partial [`Vertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialVertex {
-    /// The position of the [`Vertex`] on the [`Curve`]
-    ///
-    /// Must be provided before [`PartialVertex::build`] is called.
-    pub position: Option<Point<1>>,
-
-    /// The curve that the [`Vertex`] is defined in
-    ///
-    /// Must be provided before [`PartialVertex::build`] is called.
-    pub curve: MaybePartial<Curve>,
-
-    /// The surface form of the [`Vertex`]
-    ///
-    /// Can be provided, if already available, or computed from the position on
-    /// the [`Curve`].
-    pub surface_form: MaybePartial<SurfaceVertex>,
+    position: Option<Point<1>>,
+    curve: MaybePartial<Curve>,
+    surface_form: MaybePartial<SurfaceVertex>,
 }
 
 impl PartialVertex {
+    /// Access the position of the [`Vertex`] on the curve
+    pub fn position(&self) -> Option<Point<1>> {
+        self.position
+    }
+
+    /// Access the curve that the [`Vertex`] is defined in
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        self.curve.clone()
+    }
+
+    /// Access the surface form of the [`Vertex`]
+    pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
+        self.surface_form.clone()
+    }
+
     /// Provide a position for the partial vertex
     pub fn with_position(
         mut self,
@@ -63,19 +67,13 @@ impl PartialVertex {
         self
     }
 
-    /// Remove the surface form of the partial vertex, inferring it on build
-    pub fn infer_surface_form(mut self) -> Self {
-        self.surface_form = SurfaceVertex::partial().into();
-        self
-    }
-
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
     ///
-    /// Panics, if no position has been provided.
+    /// Panics, if position has not been provided.
     ///
-    /// Panics, if no curve has been provided.
+    /// Panics, if curve has not been provided.
     pub fn build(
         self,
         objects: &Objects,
@@ -121,24 +119,27 @@ impl From<&Vertex> for PartialVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialSurfaceVertex {
-    /// The position of the [`SurfaceVertex`] in the [`Surface`]
-    ///
-    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
-    pub position: Option<Point<2>>,
-
-    /// The surface that the [`SurfaceVertex`] is defined in
-    ///
-    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
-    pub surface: Option<Handle<Surface>>,
-
-    /// The global form of the [`SurfaceVertex`]
-    ///
-    /// Can be provided, if already available, or computed from the position on
-    /// the [`Surface`].
-    pub global_form: MaybePartial<GlobalVertex>,
+    position: Option<Point<2>>,
+    surface: Option<Handle<Surface>>,
+    global_form: MaybePartial<GlobalVertex>,
 }
 
 impl PartialSurfaceVertex {
+    /// Access the position of the [`SurfaceVertex`]
+    pub fn position(&self) -> Option<Point<2>> {
+        self.position
+    }
+
+    /// Access the surface that the [`SurfaceVertex`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the global form of the [`SurfaceVertex`]
+    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
+        self.global_form.clone()
+    }
+
     /// Provide a position for the partial surface vertex
     pub fn with_position(
         mut self,
@@ -169,19 +170,7 @@ impl PartialSurfaceVertex {
         self
     }
 
-    /// Remove the global form of the partial vertex, inferring it on build
-    pub fn infer_global_form(mut self) -> Self {
-        self.global_form = GlobalVertex::partial().into();
-        self
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
-    ///
-    /// # Panics
-    ///
-    /// Panics, if no position has been provided.
-    ///
-    /// Panics, if no surface has been provided.
     pub fn build(
         self,
         objects: &Objects,
@@ -196,7 +185,7 @@ impl PartialSurfaceVertex {
         let global_form = self
             .global_form
             .update_partial(|global_form| {
-                global_form.from_surface_and_position(&surface, position)
+                global_form.update_from_surface_and_position(&surface, position)
             })
             .into_full(objects)?;
 
@@ -223,13 +212,15 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalVertex {
-    /// The position of the [`GlobalVertex`]
-    ///
-    /// Must be provided before [`PartialGlobalVertex::build`] is called.
-    pub position: Option<Point<3>>,
+    position: Option<Point<3>>,
 }
 
 impl PartialGlobalVertex {
+    /// Access the position of the [`GlobalVertex`]
+    pub fn position(&self) -> Option<Point<3>> {
+        self.position
+    }
+
     /// Provide a position for the partial global vertex
     pub fn with_position(
         mut self,
@@ -238,35 +229,6 @@ impl PartialGlobalVertex {
         if let Some(position) = position {
             self.position = Some(position.into());
         }
-        self
-    }
-
-    /// Update partial global vertex from the given curve and position on it
-    pub fn from_curve_and_position(
-        self,
-        curve: impl Into<MaybePartial<Curve>>,
-        position: impl Into<Point<1>>,
-    ) -> Self {
-        let curve = curve.into().into_partial();
-
-        let path = curve.path.expect(
-            "Need path to create `GlobalVertex` from curve and position",
-        );
-        let surface = curve.surface.expect(
-            "Need surface to create `GlobalVertex` from curve and position",
-        );
-
-        let position_surface = path.point_from_path_coords(position);
-        self.from_surface_and_position(&surface, position_surface)
-    }
-
-    /// Update partial global vertex from the given surface and position on it
-    pub fn from_surface_and_position(
-        mut self,
-        surface: &Surface,
-        position: impl Into<Point<2>>,
-    ) -> Self {
-        self.position = Some(surface.point_from_surface_coords(position));
         self
     }
 
