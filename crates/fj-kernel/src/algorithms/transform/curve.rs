@@ -1,29 +1,24 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{GlobalCurve, Objects},
-    partial::PartialCurve,
-    storage::Handle,
+    objects::Objects,
+    partial::{PartialCurve, PartialGlobalCurve},
     validate::ValidationError,
 };
 
 use super::TransformObject;
 
-impl TransformObject for Handle<GlobalCurve> {
+impl TransformObject for PartialGlobalCurve {
     fn transform(
         self,
         _: &Transform,
-        objects: &Objects,
+        _: &Objects,
     ) -> Result<Self, ValidationError> {
         // `GlobalCurve` doesn't contain any internal geometry. If it did, that
         // would just be redundant with the geometry of other objects, and this
         // other geometry is already being transformed by other implementations
         // of this trait.
-        //
-        // All we need to do here is create a new `GlobalCurve` instance, to
-        // make sure the transformed `GlobalCurve` has a different identity than
-        // the original one.
-        Ok(objects.global_curves.insert(GlobalCurve)?)
+        Ok(self)
     }
 }
 
