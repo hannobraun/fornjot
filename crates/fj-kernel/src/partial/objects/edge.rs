@@ -142,7 +142,7 @@ impl PartialHalfEdge {
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
                 GlobalVertex::partial()
-                    .from_curve_and_position(curve.clone(), a_curve)
+                    .update_from_curve_and_position(curve.clone(), a_curve)
                     .into()
             });
 

@@ -9,7 +9,7 @@ use crate::{
 #[allow(clippy::wrong_self_convention)]
 pub trait GlobalVertexBuilder {
     /// Update partial global vertex from the given curve and position on it
-    fn from_curve_and_position(
+    fn update_from_curve_and_position(
         self,
         curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
@@ -24,7 +24,7 @@ pub trait GlobalVertexBuilder {
 }
 
 impl GlobalVertexBuilder for PartialGlobalVertex {
-    fn from_curve_and_position(
+    fn update_from_curve_and_position(
         self,
         curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
