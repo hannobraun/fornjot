@@ -39,7 +39,7 @@ impl PartialHalfEdge {
     pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
         self.curve
             .global_form()
-            .or_else(|| self.global_form.curve().cloned())
+            .or_else(|| self.global_form.curve())
     }
 
     /// Access the vertices of the global form, if available
