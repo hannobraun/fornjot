@@ -329,10 +329,10 @@ impl PartialGlobalEdge {
     /// Update the partial global edge with the given curve
     pub fn with_curve(
         mut self,
-        curve: Option<MaybePartial<GlobalCurve>>,
+        curve: Option<impl Into<MaybePartial<GlobalCurve>>>,
     ) -> Self {
         if let Some(curve) = curve {
-            self.curve = Some(curve);
+            self.curve = Some(curve.into());
         }
         self
     }
@@ -354,7 +354,7 @@ impl PartialGlobalEdge {
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
-        self.with_curve(Some(curve.global_form().clone().into()))
+        self.with_curve(Some(curve.global_form().clone()))
             .with_vertices(Some(
                 vertices.clone().map(|vertex| vertex.global_form().clone()),
             ))
