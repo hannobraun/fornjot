@@ -109,12 +109,12 @@ impl Model {
                 lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
 
             let version_pkg = version_pkg();
-            if fj::version::VERSION_PKG != version_pkg.as_str() {
+            if fj::version::VERSION_PKG != version_pkg.to_string() {
                 let host = String::from_utf8_lossy(
                     fj::version::VERSION_PKG.as_bytes(),
                 )
                 .into_owned();
-                let model = version_pkg.as_str();
+                let model = version_pkg.to_string();
 
                 return Err(Error::VersionMismatch { host, model });
             }
@@ -123,12 +123,12 @@ impl Model {
                 lib.get(b"version_full").map_err(Error::LoadingVersion)?;
 
             let version_full = version_full();
-            if fj::version::VERSION_FULL != version_full.as_str() {
+            if fj::version::VERSION_FULL != version_full.to_string() {
                 let host = String::from_utf8_lossy(
                     fj::version::VERSION_FULL.as_bytes(),
                 )
                 .into_owned();
-                let model = version_full.as_str();
+                let model = version_full.to_string();
 
                 warn!("{}", Error::VersionMismatch { host, model });
             }
