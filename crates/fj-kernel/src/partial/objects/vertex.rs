@@ -122,21 +122,9 @@ impl From<&Vertex> for PartialVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialSurfaceVertex {
-    /// The position of the [`SurfaceVertex`] in the [`Surface`]
-    ///
-    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
-    pub position: Option<Point<2>>,
-
-    /// The surface that the [`SurfaceVertex`] is defined in
-    ///
-    /// Must be provided before [`PartialSurfaceVertex::build`] is called.
-    pub surface: Option<Handle<Surface>>,
-
-    /// The global form of the [`SurfaceVertex`]
-    ///
-    /// Can be provided, if already available, or computed from the position on
-    /// the [`Surface`].
-    pub global_form: MaybePartial<GlobalVertex>,
+    position: Option<Point<2>>,
+    surface: Option<Handle<Surface>>,
+    global_form: MaybePartial<GlobalVertex>,
 }
 
 impl PartialSurfaceVertex {
