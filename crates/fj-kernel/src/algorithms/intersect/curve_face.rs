@@ -150,6 +150,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
+        builder::CurveBuilder,
         objects::{Curve, Face, Objects},
         partial::HasPartial,
     };

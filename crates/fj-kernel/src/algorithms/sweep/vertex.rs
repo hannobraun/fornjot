@@ -168,6 +168,7 @@ mod tests {
 
     use crate::{
         algorithms::sweep::Sweep,
+        builder::CurveBuilder,
         objects::{Curve, HalfEdge, Objects, Vertex},
         partial::HasPartial,
     };

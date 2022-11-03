@@ -67,6 +67,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
+        builder::CurveBuilder,
         objects::{Curve, Face, Objects},
         partial::HasPartial,
     };

@@ -360,6 +360,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::{
+        builder::CurveBuilder,
         objects::{
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
             Shell, Sketch, Solid, SurfaceVertex, Vertex,

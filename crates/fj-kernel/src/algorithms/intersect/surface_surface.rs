@@ -92,6 +92,7 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject,
+        builder::CurveBuilder,
         objects::{Curve, Objects},
         partial::HasPartial,
     };

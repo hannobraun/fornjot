@@ -2,6 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
+    builder::CurveBuilder,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,

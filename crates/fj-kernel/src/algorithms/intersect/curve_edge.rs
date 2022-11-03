@@ -75,6 +75,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
+        builder::CurveBuilder,
         objects::{Curve, HalfEdge, Objects},
         partial::HasPartial,
     };

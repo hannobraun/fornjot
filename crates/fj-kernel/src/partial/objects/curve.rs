@@ -1,5 +1,3 @@
-use fj_math::{Point, Scalar, Vector};
-
 use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
     path::SurfacePath,
@@ -60,32 +58,6 @@ impl PartialCurve {
             self.global_form = Some(global_form.into());
         }
         self
-    }
-
-    /// Update partial curve to represent the u-axis
-    pub fn as_u_axis(self) -> Self {
-        let a = Point::origin();
-        let b = a + Vector::unit_u();
-
-        self.as_line_from_points([a, b])
-    }
-
-    /// Update partial curve to represent the v-axis
-    pub fn as_v_axis(self) -> Self {
-        let a = Point::origin();
-        let b = a + Vector::unit_v();
-
-        self.as_line_from_points([a, b])
-    }
-
-    /// Update partial curve as a circle, from the provided radius
-    pub fn as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
-        self.with_path(Some(SurfacePath::circle_from_radius(radius)))
-    }
-
-    /// Update partial curve as a line, from the provided points
-    pub fn as_line_from_points(self, points: [impl Into<Point<2>>; 2]) -> Self {
-        self.with_path(Some(SurfacePath::line_from_points(points)))
     }
 
     /// Build a full [`Curve`] from the partial curve
