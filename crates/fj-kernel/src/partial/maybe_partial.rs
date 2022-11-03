@@ -30,6 +30,24 @@ pub enum MaybePartial<T: HasPartial> {
 }
 
 impl<T: HasPartial> MaybePartial<T> {
+    /// Indicate whether this is a full object
+    pub fn is_full(&self) -> bool {
+        if let Self::Full(_) = self {
+            return true;
+        }
+
+        false
+    }
+
+    /// Indicate whether this is a partial object
+    pub fn is_partial(&self) -> bool {
+        if let Self::Partial(_) = self {
+            return true;
+        }
+
+        false
+    }
+
     /// If this is a partial object, update it
     ///
     /// This is useful whenever a partial object can infer something about its
