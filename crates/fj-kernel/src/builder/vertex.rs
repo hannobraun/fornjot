@@ -16,7 +16,7 @@ pub trait GlobalVertexBuilder {
     ) -> Self;
 
     /// Update partial global vertex from the given surface and position on it
-    fn from_surface_and_position(
+    fn update_from_surface_and_position(
         self,
         surface: &Surface,
         position: impl Into<Point<2>>,
@@ -39,10 +39,10 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
         );
 
         let position_surface = path.point_from_path_coords(position);
-        self.from_surface_and_position(&surface, position_surface)
+        self.update_from_surface_and_position(&surface, position_surface)
     }
 
-    fn from_surface_and_position(
+    fn update_from_surface_and_position(
         self,
         surface: &Surface,
         position: impl Into<Point<2>>,

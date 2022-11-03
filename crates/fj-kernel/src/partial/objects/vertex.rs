@@ -197,7 +197,7 @@ impl PartialSurfaceVertex {
         let global_form = self
             .global_form
             .update_partial(|global_form| {
-                global_form.from_surface_and_position(&surface, position)
+                global_form.update_from_surface_and_position(&surface, position)
             })
             .into_full(objects)?;
 
