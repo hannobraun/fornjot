@@ -5,6 +5,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
+    path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
 };
@@ -113,6 +114,14 @@ where
 // `MaybePartial<T>`, as that would conflict.
 
 impl MaybePartial<Curve> {
+    /// Access the path
+    pub fn path(&self) -> Option<SurfacePath> {
+        match self {
+            MaybePartial::Full(full) => Some(full.path()),
+            MaybePartial::Partial(partial) => partial.path(),
+        }
+    }
+
     /// Access the global form
     pub fn global_form(&self) -> Option<MaybePartial<GlobalCurve>> {
         match self {
