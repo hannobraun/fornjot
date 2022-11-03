@@ -196,6 +196,7 @@ mod tests {
     use fj_interop::ext::ArrayExt;
 
     use crate::{
+        builder::VertexBuilder,
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
         validate::Validate2,

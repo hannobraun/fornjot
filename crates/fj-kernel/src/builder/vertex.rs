@@ -4,8 +4,21 @@ use crate::{
     objects::{Curve, GlobalVertex, Surface},
     partial::{
         HasPartial, MaybePartial, PartialGlobalVertex, PartialSurfaceVertex,
+        PartialVertex,
     },
 };
+
+/// Builder API for [`PartialVertex`]
+pub trait VertexBuilder {
+    /// Remove the surface form of the partial vertex, inferring it on build
+    fn infer_surface_form(self) -> Self;
+}
+
+impl VertexBuilder for PartialVertex {
+    fn infer_surface_form(self) -> Self {
+        self.with_surface_form(Some(PartialSurfaceVertex::default()))
+    }
+}
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {

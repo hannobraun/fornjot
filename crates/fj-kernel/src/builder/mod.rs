@@ -18,5 +18,5 @@ pub use self::{
     shell::ShellBuilder,
     sketch::SketchBuilder,
     solid::SolidBuilder,
-    vertex::{GlobalVertexBuilder, SurfaceVertexBuilder},
+    vertex::{GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder},
 };
