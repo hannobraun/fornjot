@@ -12,21 +12,9 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialCurve {
-    /// The path that defines the [`Curve`]
-    ///
-    /// Must be provided before calling [`PartialCurve::build`].
-    pub path: Option<SurfacePath>,
-
-    /// The surface that the [`Curve`] is defined in
-    ///
-    /// Must be provided before calling [`PartialCurve::build`].
-    pub surface: Option<Handle<Surface>>,
-
-    /// The global form of the [`Curve`]
-    ///
-    /// Will be computed from `path` and `surface` in [`PartialCurve::build`],
-    /// if not provided.
-    pub global_form: Option<HandleWrapper<GlobalCurve>>,
+    path: Option<SurfacePath>,
+    surface: Option<Handle<Surface>>,
+    global_form: Option<HandleWrapper<GlobalCurve>>,
 }
 
 impl PartialCurve {
