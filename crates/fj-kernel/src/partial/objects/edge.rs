@@ -252,9 +252,11 @@ impl PartialHalfEdge {
             vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
                 vertex.update_partial(|vertex| {
                     vertex.clone().with_surface_form(Some(
-                        vertex.surface_form.update_partial(|surface_vertex| {
-                            surface_vertex.with_global_form(global_form)
-                        }),
+                        vertex.surface_form().update_partial(
+                            |surface_vertex| {
+                                surface_vertex.with_global_form(global_form)
+                            },
+                        ),
                     ))
                 })
             })

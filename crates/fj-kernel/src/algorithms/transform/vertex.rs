@@ -14,9 +14,9 @@ impl TransformObject for PartialVertex {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+        let curve = self.curve().transform(transform, objects)?;
         let surface_form = self
-            .surface_form
+            .surface_form()
             .into_partial()
             .transform(transform, objects)?
             .into();
@@ -24,7 +24,7 @@ impl TransformObject for PartialVertex {
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
         Ok(Self {
-            position: self.position,
+            position: self.position(),
             curve,
             surface_form,
         })

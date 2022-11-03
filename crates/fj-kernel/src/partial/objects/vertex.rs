@@ -31,6 +31,21 @@ pub struct PartialVertex {
 }
 
 impl PartialVertex {
+    /// Access the position of the [`Vertex`] on the curve
+    pub fn position(&self) -> Option<Point<1>> {
+        self.position
+    }
+
+    /// Access the curve that the [`Vertex`] is defined in
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        self.curve.clone()
+    }
+
+    /// Access the surface form of the [`Vertex`]
+    pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
+        self.surface_form.clone()
+    }
+
     /// Provide a position for the partial vertex
     pub fn with_position(
         mut self,
