@@ -317,7 +317,7 @@ pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
-    pub curve: Option<MaybePartial<GlobalCurve>>,
+    pub curve: MaybePartial<GlobalCurve>,
 
     /// The vertices that bound the [`GlobalEdge`] in the curve
     ///
@@ -332,7 +332,7 @@ impl PartialGlobalEdge {
         curve: Option<impl Into<MaybePartial<GlobalCurve>>>,
     ) -> Self {
         if let Some(curve) = curve {
-            self.curve = Some(curve.into());
+            self.curve = curve.into();
         }
         self
     }
@@ -365,10 +365,7 @@ impl PartialGlobalEdge {
         self,
         objects: &Objects,
     ) -> Result<Handle<GlobalEdge>, ValidationError> {
-        let curve = self
-            .curve
-            .expect("Can't build `GlobalEdge` without `GlobalCurve`")
-            .into_full(objects)?;
+        let curve = self.curve.into_full(objects)?;
         let vertices = self
             .vertices
             .expect("Can't build `GlobalEdge` without vertices")
@@ -383,7 +380,7 @@ impl PartialGlobalEdge {
 impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
-            curve: Some(global_edge.curve().clone().into()),
+            curve: global_edge.curve().clone().into(),
             vertices: Some(
                 global_edge
                     .vertices()
