@@ -8,7 +8,7 @@ use crate::{
 /// A partial [`Curve`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialCurve {
     path: Option<SurfacePath>,
     surface: Option<Handle<Surface>>,

@@ -11,7 +11,7 @@ use crate::{
 /// A partial [`Vertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialVertex {
     /// The position of the [`Vertex`] on the [`Curve`]
     ///

@@ -13,7 +13,7 @@ use crate::{
 /// A partial [`Cycle`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
     /// The surface that the [`Cycle`] is defined in
     pub surface: Option<Handle<Surface>>,

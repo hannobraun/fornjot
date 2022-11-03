@@ -15,7 +15,7 @@ use crate::{
 /// A partial [`HalfEdge`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialHalfEdge {
     /// The surface that the [`HalfEdge`]'s [`Curve`] is defined in
     pub surface: Option<Handle<Surface>>,
@@ -312,7 +312,7 @@ impl From<&HalfEdge> for PartialHalfEdge {
 /// A partial [`GlobalEdge`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
     ///
