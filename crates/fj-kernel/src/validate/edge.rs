@@ -239,7 +239,9 @@ mod tests {
             valid
                 .global_form()
                 .to_partial()
-                .with_curve(Some(objects.global_curves.insert(GlobalCurve)?))
+                .with_curve(Some(
+                    objects.global_curves.insert(GlobalCurve)?.into(),
+                ))
                 .build(&objects)?,
         );
 

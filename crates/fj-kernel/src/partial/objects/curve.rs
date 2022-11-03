@@ -1,7 +1,8 @@
 use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
+    partial::MaybePartial,
     path::SurfacePath,
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
     validate::ValidationError,
 };
 
@@ -12,7 +13,7 @@ use crate::{
 pub struct PartialCurve {
     path: Option<SurfacePath>,
     surface: Option<Handle<Surface>>,
-    global_form: Option<HandleWrapper<GlobalCurve>>,
+    global_form: Option<MaybePartial<GlobalCurve>>,
 }
 
 impl PartialCurve {
@@ -27,10 +28,8 @@ impl PartialCurve {
     }
 
     /// Access the global form of the [`Curve`]
-    pub fn global_form(&self) -> Option<Handle<GlobalCurve>> {
-        self.global_form
-            .clone()
-            .map(|handle_wrapper| handle_wrapper.0)
+    pub fn global_form(&self) -> Option<MaybePartial<GlobalCurve>> {
+        self.global_form.clone()
     }
 
     /// Provide a path for the partial curve
@@ -52,7 +51,7 @@ impl PartialCurve {
     /// Provide a global form for the partial curve
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<HandleWrapper<GlobalCurve>>>,
+        global_form: Option<impl Into<MaybePartial<GlobalCurve>>>,
     ) -> Self {
         if let Some(global_form) = global_form {
             self.global_form = Some(global_form.into());
@@ -72,7 +71,8 @@ impl PartialCurve {
         let global_form = match self.global_form {
             Some(global_form) => global_form,
             None => objects.global_curves.insert(GlobalCurve)?.into(),
-        };
+        }
+        .into_full(objects)?;
 
         Ok(objects
             .curves

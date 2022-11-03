@@ -8,7 +8,7 @@ use crate::{
         Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,
     },
     partial::{HasPartial, MaybePartial},
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
     validate::ValidationError,
 };
 
@@ -36,7 +36,7 @@ impl PartialHalfEdge {
     /// Extract the global curve from either the curve or global form
     ///
     /// If a global curve is available through both, the curve is preferred.
-    pub fn extract_global_curve(&self) -> Option<Handle<GlobalCurve>> {
+    pub fn extract_global_curve(&self) -> Option<MaybePartial<GlobalCurve>> {
         self.curve
             .global_form()
             .or_else(|| self.global_form.curve())
@@ -317,7 +317,7 @@ pub struct PartialGlobalEdge {
     /// The curve that the [`GlobalEdge`] is defined in
     ///
     /// Must be provided before [`PartialGlobalEdge::build`] is called.
-    pub curve: Option<HandleWrapper<GlobalCurve>>,
+    pub curve: Option<MaybePartial<GlobalCurve>>,
 
     /// The vertices that bound the [`GlobalEdge`] in the curve
     ///
@@ -327,9 +327,12 @@ pub struct PartialGlobalEdge {
 
 impl PartialGlobalEdge {
     /// Update the partial global edge with the given curve
-    pub fn with_curve(mut self, curve: Option<Handle<GlobalCurve>>) -> Self {
+    pub fn with_curve(
+        mut self,
+        curve: Option<MaybePartial<GlobalCurve>>,
+    ) -> Self {
         if let Some(curve) = curve {
-            self.curve = Some(curve.into());
+            self.curve = Some(curve);
         }
         self
     }
@@ -351,7 +354,7 @@ impl PartialGlobalEdge {
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
-        self.with_curve(Some(curve.global_form().clone()))
+        self.with_curve(Some(curve.global_form().clone().into()))
             .with_vertices(Some(
                 vertices.clone().map(|vertex| vertex.global_form().clone()),
             ))
@@ -364,7 +367,8 @@ impl PartialGlobalEdge {
     ) -> Result<Handle<GlobalEdge>, ValidationError> {
         let curve = self
             .curve
-            .expect("Can't build `GlobalEdge` without `GlobalCurve`");
+            .expect("Can't build `GlobalEdge` without `GlobalCurve`")
+            .into_full(objects)?;
         let vertices = self
             .vertices
             .expect("Can't build `GlobalEdge` without vertices")
