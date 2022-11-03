@@ -39,9 +39,10 @@ impl RawVersion {
     ///
     /// Must be a `RawVersion` returned from one of the hidden version functions
     /// in this module.
-    pub unsafe fn as_str(&self) -> &str {
+    #[allow(clippy::inherent_to_string)]
+    pub unsafe fn to_string(&self) -> String {
         let slice = slice::from_raw_parts(self.ptr, self.len);
-        std::str::from_utf8(slice).unwrap()
+        String::from_utf8_lossy(slice).into_owned()
     }
 }
 
