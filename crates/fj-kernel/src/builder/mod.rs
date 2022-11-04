@@ -10,11 +10,13 @@ mod solid;
 
 // These are new-style builders that build on top of the partial object API.
 mod curve;
+mod cycle;
 mod edge;
 mod vertex;
 
 pub use self::{
     curve::CurveBuilder,
+    cycle::CycleBuilder,
     edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
     face::FaceBuilder,
     shell::ShellBuilder,
