@@ -13,13 +13,11 @@ impl TransformObject for PartialCycle {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
-            .clone()
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let half_edges = self
-            .half_edges
-            .into_iter()
+            .half_edges()
             .map(|edge| {
                 Ok(edge
                     .into_partial()

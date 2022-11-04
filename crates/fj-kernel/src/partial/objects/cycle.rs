@@ -23,6 +23,16 @@ pub struct PartialCycle {
 }
 
 impl PartialCycle {
+    /// Access the surface that the [`Cycle`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the half-edges that make up the [`Cycle`]
+    pub fn half_edges(&self) -> impl Iterator<Item = MaybePartial<HalfEdge>> {
+        self.half_edges.clone().into_iter()
+    }
+
     /// Update the partial cycle with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
