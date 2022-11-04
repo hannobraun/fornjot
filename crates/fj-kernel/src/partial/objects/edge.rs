@@ -134,7 +134,7 @@ impl PartialHalfEdge {
     /// [`Objects`]. As of this writing, this method is the only one that
     /// deviates from that. I couldn't think of a way to do it better.
     pub fn update_as_circle_from_radius(
-        mut self,
+        self,
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
@@ -168,13 +168,11 @@ impl PartialHalfEdge {
                 .with_position(Some(point_curve))
                 .with_curve(Some(curve.clone()))
                 .with_surface_form(Some(surface_vertex.clone()))
-                .into()
         });
 
-        self.curve = curve.into();
-        self.vertices = [back, front];
-
-        Ok(self)
+        Ok(self
+            .with_curve(Some(curve))
+            .with_vertices(Some([back, front])))
     }
 
     /// Update partial half-edge as a line segment, from the given points
