@@ -19,14 +19,21 @@ impl PartialCycle {
         self.half_edges.clone().into_iter()
     }
 
-    /// Access the surface that the [`Cycle`] is defined in
+    /// Access the surface that the [`Cycle`]'s [`HalfEdge`]s are defined in
     pub fn surface(&self) -> Option<Handle<Surface>> {
         self.half_edges
             .first()
             .and_then(|half_edge| half_edge.curve().surface())
     }
 
-    /// Update the partial cycle with the given half-edges
+    /// Add the provided half-edges to the partial cycle
+    ///
+    /// This will merge all the surfaces of the added half-edges. All added
+    /// half-edges will end up with the same merged surface.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the surfaces can't be merged.
     pub fn with_half_edges(
         mut self,
         half_edges: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
@@ -42,7 +49,9 @@ impl PartialCycle {
         self.with_surface(surface)
     }
 
-    /// Update the partial cycle with the given surface
+    /// Update the partial cycle with the provided surface
+    ///
+    /// All [`HalfEdge`]s will be updated with this surface.
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
             for half_edge in &mut self.half_edges {
