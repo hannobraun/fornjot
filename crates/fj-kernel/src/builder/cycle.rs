@@ -51,9 +51,8 @@ impl CycleBuilder for PartialCycle {
         let mut half_edges = Vec::new();
         for vertex_next in iter {
             if let Some(vertex_prev) = previous {
-                let surface = self
+                let surface = vertex_prev
                     .surface()
-                    .clone()
                     .expect("Need surface to extend cycle with poly-chain");
 
                 let position_prev = vertex_prev
