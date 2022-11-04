@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    builder::{CurveBuilder, GlobalVertexBuilder},
+    builder::{CurveBuilder, GlobalVertexBuilder, GlobalEdgeBuilder},
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,
@@ -362,18 +362,6 @@ impl PartialGlobalEdge {
             self.vertices = Some(vertices.map(Into::into));
         }
         self
-    }
-
-    /// Update partial global edge from the given curve and vertices
-    pub fn from_curve_and_vertices(
-        self,
-        curve: &Curve,
-        vertices: &[Handle<Vertex>; 2],
-    ) -> Self {
-        self.with_curve(Some(curve.global_form().clone()))
-            .with_vertices(Some(
-                vertices.clone().map(|vertex| vertex.global_form().clone()),
-            ))
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
