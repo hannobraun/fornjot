@@ -55,7 +55,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         let global_vertex = self
-            .extract_global_vertices()
+            .global_form()
+            .vertices()
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
                 GlobalVertex::partial()
@@ -147,7 +148,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     must_switch_order
                 };
 
-                self.extract_global_vertices()
+                self.global_form()
+                    .vertices()
                     .map(
                         |[a, b]| {
                             if must_switch_order {
