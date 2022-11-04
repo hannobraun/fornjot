@@ -86,10 +86,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let surface = self.surface();
         let vertices = points.map(|point| {
             let surface_form = SurfaceVertex::partial()
-                .with_surface(surface.clone())
+                .with_surface(self.surface())
                 .with_position(Some(point));
 
             Vertex::partial().with_surface_form(Some(surface_form))
