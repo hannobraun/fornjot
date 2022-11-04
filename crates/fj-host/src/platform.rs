@@ -30,7 +30,7 @@ impl Platform for Unix {
     }
 }
 
-// Represents common apis availiable independent of hosts
+// Abstracts over differences in host platforms
 pub struct HostPlatform;
 
 impl HostPlatform {
