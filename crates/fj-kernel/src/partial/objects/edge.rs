@@ -6,10 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{
-        util::{merge_arrays, merge_options},
-        MaybePartial,
-    },
+    partial::{util::merge_arrays, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -19,7 +16,6 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialHalfEdge {
-    surface: Option<Handle<Surface>>,
     curve: MaybePartial<Curve>,
     vertices: [MaybePartial<Vertex>; 2],
     global_form: MaybePartial<GlobalEdge>,
@@ -28,7 +24,7 @@ pub struct PartialHalfEdge {
 impl PartialHalfEdge {
     /// Access the surface that the [`HalfEdge`]'s [`Curve`] is defined in
     pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.surface.clone()
+        self.curve.surface()
     }
 
     /// Access the curve that the [`HalfEdge`] is defined in
@@ -58,7 +54,9 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
-            self.surface = Some(surface);
+            self.curve = self
+                .curve
+                .update_partial(|curve| curve.with_surface(Some(surface)));
         }
         self
     }
@@ -124,7 +122,6 @@ impl PartialHalfEdge {
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
         Self {
-            surface: merge_options(self.surface, other.surface),
             curve: self.curve.merge_with(other.curve),
             vertices: merge_arrays(self.vertices, other.vertices),
             global_form: self.global_form.merge_with(other.global_form),
@@ -136,10 +133,7 @@ impl PartialHalfEdge {
         self,
         objects: &Objects,
     ) -> Result<Handle<HalfEdge>, ValidationError> {
-        let curve = self
-            .curve
-            .update_partial(|curve| curve.with_surface(self.surface))
-            .into_full(objects)?;
+        let curve = self.curve.into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
                 .update_partial(|vertex| vertex.with_curve(Some(curve.clone())))
@@ -165,7 +159,6 @@ impl From<&HalfEdge> for PartialHalfEdge {
             half_edge.vertices().clone().map(Into::into);
 
         Self {
-            surface: Some(half_edge.curve().surface().clone()),
             curve: half_edge.curve().clone().into(),
             vertices: [back_vertex, front_vertex],
             global_form: half_edge.global_form().clone().into(),
