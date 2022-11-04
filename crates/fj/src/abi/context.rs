@@ -19,7 +19,7 @@ impl<'a> From<&'a &dyn crate::models::Context> for Context<'a> {
             let ctx = &*(user_data as *const &dyn crate::models::Context);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
-                ctx.get_argument(&*name)
+                ctx.get_argument(&name)
             })) {
                 Ok(Some(arg)) => StringSlice::from_str(arg),
                 Ok(None) => StringSlice::from_str(""),

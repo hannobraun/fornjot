@@ -173,7 +173,7 @@ impl Deref for String {
     fn deref(&self) -> &Self::Target {
         // Safety: The only way to create a FfiSafeString is from a valid Rust
         // string, so we can skip the UTF-8 checks.
-        unsafe { std::str::from_utf8_unchecked(&*self.0) }
+        unsafe { std::str::from_utf8_unchecked(&self.0) }
     }
 }
 
@@ -296,7 +296,7 @@ impl Deref for StringSlice {
 
     fn deref(&self) -> &Self::Target {
         // Safety: the only way you can construct a StringSlice is via a string.
-        unsafe { std::str::from_utf8_unchecked(&*self.0) }
+        unsafe { std::str::from_utf8_unchecked(&self.0) }
     }
 }
 

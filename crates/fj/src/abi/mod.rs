@@ -121,7 +121,7 @@ fn on_panic(payload: Box<dyn Any + Send>) -> ! {
         if let Some(s) = payload.downcast_ref::<std::string::String>() {
             s.as_str()
         } else if let Some(s) = payload.downcast_ref::<&str>() {
-            *s
+            s
         } else {
             "A panic occurred"
         };
