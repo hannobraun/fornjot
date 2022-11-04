@@ -174,6 +174,14 @@ impl MaybePartial<GlobalEdge> {
 }
 
 impl MaybePartial<HalfEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve(),
+        }
+    }
+
     /// Access the front vertex
     pub fn front(&self) -> MaybePartial<Vertex> {
         match self {
