@@ -191,11 +191,11 @@ impl PartialHalfEdge {
             Vertex::partial().with_surface_form(Some(surface_form))
         });
 
-        self.with_vertices(Some(vertices)).as_line_segment()
+        self.with_vertices(Some(vertices)).update_as_line_segment()
     }
 
     /// Update partial half-edge as a line segment, reusing existing vertices
-    pub fn as_line_segment(mut self) -> Self {
+    pub fn update_as_line_segment(mut self) -> Self {
         let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
