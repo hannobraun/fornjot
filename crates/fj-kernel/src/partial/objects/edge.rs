@@ -136,10 +136,9 @@ impl PartialHalfEdge {
         self,
         objects: &Objects,
     ) -> Result<Handle<HalfEdge>, ValidationError> {
-        let surface = self.surface;
         let curve = self
             .curve
-            .update_partial(|curve| curve.with_surface(surface))
+            .update_partial(|curve| curve.with_surface(self.surface))
             .into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
