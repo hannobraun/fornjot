@@ -127,8 +127,7 @@ impl CycleBuilder for PartialCycle {
 
         self.with_half_edges(Some(
             HalfEdge::partial()
-                .with_surface(Some(surface))
-                .update_as_line_segment_from_points(vertices),
+                .update_as_line_segment_from_points(surface, vertices),
         ))
     }
 }

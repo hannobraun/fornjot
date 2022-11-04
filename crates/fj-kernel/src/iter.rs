@@ -485,8 +485,10 @@ mod tests {
         let objects = Objects::new();
 
         let object = HalfEdge::partial()
-            .with_surface(Some(objects.surfaces.xy_plane()))
-            .update_as_line_segment_from_points([[0., 0.], [1., 0.]])
+            .update_as_line_segment_from_points(
+                objects.surfaces.xy_plane(),
+                [[0., 0.], [1., 0.]],
+            )
             .build(&objects);
 
         assert_eq!(1, object.curve_iter().count());

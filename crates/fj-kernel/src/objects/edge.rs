@@ -165,12 +165,10 @@ mod tests {
         let b = [1., 0.];
 
         let a_to_b = HalfEdge::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_line_segment_from_points([a, b])
+            .update_as_line_segment_from_points(surface.clone(), [a, b])
             .build(&objects)?;
         let b_to_a = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([b, a])
+            .update_as_line_segment_from_points(surface, [b, a])
             .build(&objects)?;
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());

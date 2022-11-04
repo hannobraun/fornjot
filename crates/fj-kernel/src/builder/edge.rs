@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalVertex, Objects, SurfaceVertex, Vertex,
+        Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
     },
     partial::{HasPartial, PartialGlobalEdge, PartialHalfEdge},
@@ -31,6 +31,7 @@ pub trait HalfEdgeBuilder: Sized {
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
         self,
+        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self;
 
@@ -85,17 +86,20 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment_from_points(
         self,
+        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         let vertices = points.map(|point| {
             let surface_form = SurfaceVertex::partial()
-                .with_surface(self.curve().surface())
+                .with_surface(Some(surface.clone()))
                 .with_position(Some(point));
 
             Vertex::partial().with_surface_form(Some(surface_form))
         });
 
-        self.with_vertices(Some(vertices)).update_as_line_segment()
+        self.with_surface(Some(surface))
+            .with_vertices(Some(vertices))
+            .update_as_line_segment()
     }
 
     fn update_as_line_segment(self) -> Self {
