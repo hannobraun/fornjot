@@ -34,10 +34,10 @@ impl PartialCycle {
     /// Update the partial cycle with the given half-edges
     pub fn with_half_edges(
         mut self,
-        half_edge: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
+        half_edges: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
     ) -> Self {
         self.half_edges
-            .extend(half_edge.into_iter().map(Into::into));
+            .extend(half_edges.into_iter().map(Into::into));
         self
     }
 
