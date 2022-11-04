@@ -54,7 +54,7 @@ impl PartialCycle {
         vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
     ) -> Self {
         let iter = self
-            .half_edges
+            .half_edges()
             .last()
             .map(|half_edge| {
                 let [_, last] = half_edge.vertices();
@@ -68,7 +68,7 @@ impl PartialCycle {
         for vertex_next in iter {
             if let Some(vertex_prev) = previous {
                 let surface = self
-                    .surface
+                    .surface()
                     .clone()
                     .expect("Need surface to extend cycle with poly-chain");
 
@@ -132,8 +132,8 @@ impl PartialCycle {
     ///
     /// Builds a line segment from the last and first vertex, closing the cycle.
     pub fn close_with_line_segment(mut self) -> Self {
-        let first = self.half_edges.first();
-        let last = self.half_edges.last();
+        let first = self.half_edges().next();
+        let last = self.half_edges().last();
 
         let vertices = [first, last]
             .map(|option| option.map(|half_edge| half_edge.vertices()));
@@ -145,8 +145,7 @@ impl PartialCycle {
                     .position()
                     .expect("Need surface position to close cycle")
             });
-            let surface =
-                self.surface.clone().expect("Need surface to close cycle");
+            let surface = self.surface().expect("Need surface to close cycle");
 
             self.half_edges.push(
                 HalfEdge::partial()
