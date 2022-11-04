@@ -90,7 +90,10 @@ impl<'a> ShellBuilder<'a> {
                     HalfEdge::partial()
                         .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
-                        .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
+                        .update_as_line_segment_from_points([
+                            [Z, Z],
+                            [edge_length, Z],
+                        ])
                         .build(self.objects)
                         .unwrap()
                 })

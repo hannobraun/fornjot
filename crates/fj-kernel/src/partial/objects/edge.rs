@@ -178,7 +178,7 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a line segment, from the given points
-    pub fn as_line_segment_from_points(
+    pub fn update_as_line_segment_from_points(
         self,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {

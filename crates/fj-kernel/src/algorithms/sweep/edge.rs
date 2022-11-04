@@ -199,7 +199,7 @@ mod tests {
 
         let half_edge = HalfEdge::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
-            .as_line_segment_from_points([[0., 0.], [1., 0.]])
+            .update_as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects)?;
 
         let face =
@@ -210,7 +210,7 @@ mod tests {
 
             let bottom = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
-                .as_line_segment_from_points([[0., 0.], [1., 0.]])
+                .update_as_line_segment_from_points([[0., 0.], [1., 0.]])
                 .build(&objects)?;
             let side_up = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
