@@ -50,9 +50,14 @@ impl<'a> FaceBuilder<'a> {
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
+        let surface = self
+            .surface
+            .as_ref()
+            .expect("Need surface to create polygon");
+
         self.exterior = Some(
             Cycle::partial()
-                .with_surface(self.surface.clone())
+                .with_surface(Some(surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.objects)
@@ -75,9 +80,14 @@ impl<'a> FaceBuilder<'a> {
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
+        let surface = self
+            .surface
+            .as_ref()
+            .expect("Need surface to build polygon.");
+
         self.interiors.push(
             Cycle::partial()
-                .with_surface(self.surface.clone())
+                .with_surface(Some(surface.clone()))
                 .with_poly_chain_from_points(points)
                 .close_with_line_segment()
                 .build(self.objects)
