@@ -28,7 +28,13 @@ impl PartialCycle {
     /// Update the partial cycle with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
-            self.surface = Some(surface);
+            self.surface = Some(surface.clone());
+
+            for half_edge in &mut self.half_edges {
+                *half_edge = half_edge.clone().update_partial(|half_edge| {
+                    half_edge.with_surface(Some(surface.clone()))
+                });
+            }
         }
         self
     }
@@ -68,7 +74,6 @@ impl PartialCycle {
         objects: &Objects,
     ) -> Result<Handle<Cycle>, ValidationError> {
         let surface = self.surface.expect("Need surface to build `Cycle`");
-        let surface_for_edges = surface.clone();
         let half_edges = {
             let last_vertex = self
                 .half_edges
@@ -117,9 +122,7 @@ impl PartialCycle {
                                 partial.with_surface_form(previous_vertex)
                             });
 
-                            half_edge
-                                .with_surface(Some(surface_for_edges.clone()))
-                                .with_back_vertex(Some(back))
+                            half_edge.with_back_vertex(Some(back))
                         })
                         .into_full(objects)?;
 
