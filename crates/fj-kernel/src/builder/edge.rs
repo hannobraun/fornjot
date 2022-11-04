@@ -67,7 +67,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(self.surface())
+            .with_surface(curve.surface())
             .with_global_form(Some(global_vertex))
             .build(objects)?;
 
