@@ -399,8 +399,11 @@ mod tests {
 
         let surface = objects.surfaces.xy_plane();
         let object = Cycle::partial()
-            .with_surface(Some(surface))
-            .with_poly_chain_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .with_surface(Some(surface.clone()))
+            .with_poly_chain_from_points(
+                surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            )
             .close_with_line_segment()
             .build(&objects);
 
