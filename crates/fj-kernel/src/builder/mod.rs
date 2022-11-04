@@ -15,7 +15,7 @@ mod vertex;
 
 pub use self::{
     curve::CurveBuilder,
-    edge::GlobalEdgeBuilder,
+    edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
     face::FaceBuilder,
     shell::ShellBuilder,
     sketch::SketchBuilder,

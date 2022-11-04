@@ -149,7 +149,9 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{objects::Objects, partial::HasPartial};
+    use crate::{
+        builder::HalfEdgeBuilder, objects::Objects, partial::HasPartial,
+    };
 
     use super::HalfEdge;
 

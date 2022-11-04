@@ -189,6 +189,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
+        builder::HalfEdgeBuilder,
         objects::{Cycle, Face, HalfEdge, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
     };

@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    builder::CurveBuilder,
+    builder::{CurveBuilder, HalfEdgeBuilder},
     objects::{
         Curve, Cycle, HalfEdge, Objects, Surface, SurfaceVertex, Vertex,
     },

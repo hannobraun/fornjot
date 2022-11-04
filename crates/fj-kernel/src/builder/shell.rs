@@ -5,6 +5,7 @@ use fj_math::Scalar;
 
 use crate::{
     algorithms::transform::TransformObject,
+    builder::HalfEdgeBuilder,
     objects::{
         Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
