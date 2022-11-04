@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalVertex, Objects, SurfaceVertex, Vertex,
+        Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
     },
     partial::{HasPartial, PartialGlobalEdge, PartialHalfEdge},
@@ -31,6 +31,7 @@ pub trait HalfEdgeBuilder: Sized {
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
         self,
+        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self;
 
@@ -44,9 +45,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = Curve::partial()
+        let curve = self
+            .curve()
+            .into_partial()
             .with_global_form(Some(self.extract_global_curve()))
-            .with_surface(self.surface())
             .update_as_circle_from_radius(radius);
 
         let path = curve.path().expect("Expected path that was just created");
@@ -55,7 +57,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         let global_vertex = self
-            .extract_global_vertices()
+            .global_form()
+            .vertices()
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
                 GlobalVertex::partial()
@@ -65,7 +68,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(self.surface())
+            .with_surface(curve.surface())
             .with_global_form(Some(global_vertex))
             .build(objects)?;
 
@@ -83,18 +86,20 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment_from_points(
         self,
+        surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let surface = self.surface();
         let vertices = points.map(|point| {
             let surface_form = SurfaceVertex::partial()
-                .with_surface(surface.clone())
+                .with_surface(Some(surface.clone()))
                 .with_position(Some(point));
 
             Vertex::partial().with_surface_form(Some(surface_form))
         });
 
-        self.with_vertices(Some(vertices)).update_as_line_segment()
+        self.with_surface(Some(surface))
+            .with_vertices(Some(vertices))
+            .update_as_line_segment()
     }
 
     fn update_as_line_segment(self) -> Self {
@@ -103,6 +108,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
+            .curve()
             .surface()
             .or_else(|| from_surface.surface())
             .or_else(|| to_surface.surface())
@@ -147,7 +153,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     must_switch_order
                 };
 
-                self.extract_global_vertices()
+                self.global_form()
+                    .vertices()
                     .map(
                         |[a, b]| {
                             if must_switch_order {

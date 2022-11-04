@@ -1,8 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, HalfEdge, SurfaceVertex, Vertex},
+    objects::{Curve, HalfEdge, Surface, SurfaceVertex, Vertex},
     partial::{HasPartial, MaybePartial, PartialCycle},
+    storage::Handle,
 };
 
 use super::{CurveBuilder, HalfEdgeBuilder};
@@ -18,6 +19,7 @@ pub trait CycleBuilder {
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain_from_points(
         self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self;
 
@@ -49,9 +51,8 @@ impl CycleBuilder for PartialCycle {
         let mut half_edges = Vec::new();
         for vertex_next in iter {
             if let Some(vertex_prev) = previous {
-                let surface = self
+                let surface = vertex_prev
                     .surface()
-                    .clone()
                     .expect("Need surface to extend cycle with poly-chain");
 
                 let position_prev = vertex_prev
@@ -61,12 +62,8 @@ impl CycleBuilder for PartialCycle {
                     .position()
                     .expect("Need surface position to extend cycle");
 
-                let from = vertex_prev.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
-                let to = vertex_next.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
+                let from = vertex_prev;
+                let to = vertex_next;
 
                 previous = Some(to.clone());
 
@@ -99,10 +96,13 @@ impl CycleBuilder for PartialCycle {
 
     fn with_poly_chain_from_points(
         self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.with_poly_chain(points.into_iter().map(|position| {
-            SurfaceVertex::partial().with_position(Some(position))
+            SurfaceVertex::partial()
+                .with_surface(Some(surface.clone()))
+                .with_position(Some(position))
         }))
     }
 
@@ -127,8 +127,7 @@ impl CycleBuilder for PartialCycle {
 
         self.with_half_edges(Some(
             HalfEdge::partial()
-                .with_surface(Some(surface))
-                .update_as_line_segment_from_points(vertices),
+                .update_as_line_segment_from_points(surface, vertices),
         ))
     }
 }

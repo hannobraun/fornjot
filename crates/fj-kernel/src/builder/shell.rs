@@ -89,12 +89,11 @@ impl<'a> ShellBuilder<'a> {
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
                     HalfEdge::partial()
-                        .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
-                        .update_as_line_segment_from_points([
-                            [Z, Z],
-                            [edge_length, Z],
-                        ])
+                        .update_as_line_segment_from_points(
+                            surface.clone(),
+                            [[Z, Z], [edge_length, Z]],
+                        )
                         .build(self.objects)
                         .unwrap()
                 })
@@ -188,10 +187,8 @@ impl<'a> ShellBuilder<'a> {
                 .zip(sides_up)
                 .zip(tops.clone())
                 .zip(sides_down)
-                .zip(surfaces)
-                .map(|((((bottom, side_up), top), side_down), surface)| {
+                .map(|(((bottom, side_up), top), side_down)| {
                     let cycle = Cycle::partial()
-                        .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects)
                         .unwrap();

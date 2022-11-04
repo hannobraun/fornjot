@@ -68,6 +68,9 @@ pub trait Partial: Default + for<'a> From<&'a Self::Full> {
     /// The type representing the full variant of this object
     type Full;
 
+    /// Merge another partial object of the same type into this one
+    fn merge_with(self, other: Self) -> Self;
+
     /// Build a full object from this partial one
     ///
     /// Implementations of this method will typically try to infer any missing

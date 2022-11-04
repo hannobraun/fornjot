@@ -191,8 +191,7 @@ mod tests {
             (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
 
         let expected_half_edge = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([[0., 0.], [0., 1.]])
+            .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
             .build(&objects)?;
         assert_eq!(half_edge, expected_half_edge);
         Ok(())

@@ -12,22 +12,11 @@ impl TransformObject for PartialCycle {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let surface = self
-            .surface()
-            .map(|surface| surface.transform(transform, objects))
-            .transpose()?;
         let half_edges = self
             .half_edges()
-            .map(|edge| {
-                Ok(edge
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .with_surface(surface.clone()))
-            })
+            .map(|edge| edge.into_partial().transform(transform, objects))
             .collect::<Result<Vec<_>, ValidationError>>()?;
 
-        Ok(Self::default()
-            .with_surface(surface)
-            .with_half_edges(half_edges))
+        Ok(Self::default().with_half_edges(half_edges))
     }
 }

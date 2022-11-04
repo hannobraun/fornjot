@@ -125,8 +125,10 @@ mod tests {
             .array_windows_ext()
             .map(|&[a, b]| {
                 let half_edge = HalfEdge::partial()
-                    .with_surface(Some(objects.surfaces.xy_plane()))
-                    .update_as_line_segment_from_points([a, b])
+                    .update_as_line_segment_from_points(
+                        objects.surfaces.xy_plane(),
+                        [a, b],
+                    )
                     .build(&objects)?;
                 (half_edge, Color::default()).sweep(UP, &objects)
             })
@@ -167,8 +169,10 @@ mod tests {
             .array_windows_ext()
             .map(|&[a, b]| {
                 let half_edge = HalfEdge::partial()
-                    .with_surface(Some(objects.surfaces.xy_plane()))
-                    .update_as_line_segment_from_points([a, b])
+                    .update_as_line_segment_from_points(
+                        objects.surfaces.xy_plane(),
+                        [a, b],
+                    )
                     .build(&objects)?
                     .reverse(&objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &objects)

@@ -92,8 +92,7 @@ mod tests {
             .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([[1., -1.], [1., 1.]])
+            .update_as_line_segment_from_points(surface, [[1., -1.], [1., 1.]])
             .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -117,8 +116,10 @@ mod tests {
             .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([[-1., -1.], [-1., 1.]])
+            .update_as_line_segment_from_points(
+                surface,
+                [[-1., -1.], [-1., 1.]],
+            )
             .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -142,8 +143,10 @@ mod tests {
             .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([[-1., -1.], [1., -1.]])
+            .update_as_line_segment_from_points(
+                surface,
+                [[-1., -1.], [1., -1.]],
+            )
             .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -162,8 +165,7 @@ mod tests {
             .update_as_u_axis()
             .build(&objects)?;
         let half_edge = HalfEdge::partial()
-            .with_surface(Some(surface))
-            .update_as_line_segment_from_points([[-1., 0.], [1., 0.]])
+            .update_as_line_segment_from_points(surface, [[-1., 0.], [1., 0.]])
             .build(&objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
