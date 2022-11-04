@@ -57,9 +57,9 @@ impl TransformObject for PartialGlobalEdge {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+        let curve = self.curve().transform(transform, objects)?;
         let vertices = self
-            .vertices
+            .vertices()
             .map(|vertices| {
                 vertices.try_map_ext(|vertex| -> Result<_, ValidationError> {
                     vertex.transform(transform, objects)
