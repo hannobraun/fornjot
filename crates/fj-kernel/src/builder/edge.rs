@@ -5,10 +5,9 @@ use crate::{
 };
 
 /// Builder API for [`PartialGlobalEdge`]
-#[allow(clippy::wrong_self_convention)]
 pub trait GlobalEdgeBuilder {
     /// Update partial global edge from the given curve and vertices
-    fn from_curve_and_vertices(
+    fn update_from_curve_and_vertices(
         self,
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
@@ -16,7 +15,7 @@ pub trait GlobalEdgeBuilder {
 }
 
 impl GlobalEdgeBuilder for PartialGlobalEdge {
-    fn from_curve_and_vertices(
+    fn update_from_curve_and_vertices(
         self,
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],

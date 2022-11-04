@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    builder::{CurveBuilder, GlobalVertexBuilder, GlobalEdgeBuilder},
+    builder::{CurveBuilder, GlobalEdgeBuilder, GlobalVertexBuilder},
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex, VerticesInNormalizedOrder,
@@ -298,7 +298,7 @@ impl PartialHalfEdge {
         let global_form = self
             .global_form
             .update_partial(|partial| {
-                partial.from_curve_and_vertices(&curve, &vertices)
+                partial.update_from_curve_and_vertices(&curve, &vertices)
             })
             .into_full(objects)?;
 
