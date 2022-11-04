@@ -131,31 +131,30 @@ impl PartialCycle {
     /// Update the partial cycle by closing it with a line segment
     ///
     /// Builds a line segment from the last and first vertex, closing the cycle.
-    pub fn close_with_line_segment(mut self) -> Self {
+    pub fn close_with_line_segment(self) -> Self {
         let first = self.half_edges().next();
         let last = self.half_edges().last();
 
         let vertices = [first, last]
             .map(|option| option.map(|half_edge| half_edge.vertices()));
 
-        if let [Some([first, _]), Some([_, last])] = vertices {
-            let vertices = [last, first].map(|vertex| {
-                vertex
-                    .surface_form()
-                    .position()
-                    .expect("Need surface position to close cycle")
-            });
-            let surface = self.surface().expect("Need surface to close cycle");
+        let [Some([first, _]), Some([_, last])] = vertices else {
+            return self;
+        };
 
-            self.half_edges.push(
-                HalfEdge::partial()
-                    .with_surface(Some(surface))
-                    .update_as_line_segment_from_points(vertices)
-                    .into(),
-            );
-        }
+        let vertices = [last, first].map(|vertex| {
+            vertex
+                .surface_form()
+                .position()
+                .expect("Need surface position to close cycle")
+        });
+        let surface = self.surface().expect("Need surface to close cycle");
 
-        self
+        self.with_half_edges(Some(
+            HalfEdge::partial()
+                .with_surface(Some(surface))
+                .update_as_line_segment_from_points(vertices),
+        ))
     }
 
     /// Build a full [`Cycle`] from the partial cycle
