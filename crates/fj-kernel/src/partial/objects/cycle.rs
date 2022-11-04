@@ -202,7 +202,7 @@ impl PartialCycle {
 
                     let half_edge = half_edge
                         .update_partial(|half_edge| {
-                            let [back, _] = half_edge.vertices.clone();
+                            let [back, _] = half_edge.vertices();
                             let back = back.update_partial(|partial| {
                                 partial.with_surface_form(previous_vertex)
                             });

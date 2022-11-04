@@ -16,17 +16,16 @@ impl TransformObject for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let curve: MaybePartial<_> = self
-            .curve
-            .clone()
+            .curve()
             .into_partial()
             .transform(transform, objects)?
             .with_surface(surface.clone())
             .into();
-        let vertices = self.vertices.clone().try_map_ext(
+        let vertices = self.vertices().try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 Ok(vertex
                     .into_partial()
@@ -36,7 +35,7 @@ impl TransformObject for PartialHalfEdge {
             },
         )?;
         let global_form = self
-            .global_form
+            .global_form()
             .into_partial()
             .transform(transform, objects)?
             .with_curve(curve.global_form())
