@@ -193,7 +193,7 @@ impl PartialHalfEdge {
     }
 
     /// Update partial half-edge as a line segment, reusing existing vertices
-    pub fn update_as_line_segment(mut self) -> Self {
+    pub fn update_as_line_segment(self) -> Self {
         let [from, to] = self.vertices();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
@@ -270,10 +270,8 @@ impl PartialHalfEdge {
             })
         };
 
-        self.curve = curve.into();
-        self.vertices = [back, front];
-
-        self
+        self.with_curve(Some(curve))
+            .with_vertices(Some([back, front]))
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
