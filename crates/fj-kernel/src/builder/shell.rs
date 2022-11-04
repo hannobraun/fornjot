@@ -187,10 +187,8 @@ impl<'a> ShellBuilder<'a> {
                 .zip(sides_up)
                 .zip(tops.clone())
                 .zip(sides_down)
-                .zip(surfaces)
-                .map(|((((bottom, side_up), top), side_down), surface)| {
+                .map(|(((bottom, side_up), top), side_down)| {
                     let cycle = Cycle::partial()
-                        .with_surface(Some(surface))
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects)
                         .unwrap();
