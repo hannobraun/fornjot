@@ -22,14 +22,12 @@ impl TransformObject for PartialCycle {
                 Ok(edge
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_surface(surface.clone())
-                    .into())
+                    .with_surface(surface.clone()))
             })
-            .collect::<Result<_, ValidationError>>()?;
+            .collect::<Result<Vec<_>, ValidationError>>()?;
 
-        Ok(Self {
-            surface,
-            half_edges,
-        })
+        Ok(Self::default()
+            .with_surface(surface)
+            .with_half_edges(half_edges))
     }
 }

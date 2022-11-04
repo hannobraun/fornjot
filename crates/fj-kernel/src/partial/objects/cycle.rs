@@ -15,11 +15,8 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    /// The surface that the [`Cycle`] is defined in
-    pub surface: Option<Handle<Surface>>,
-
-    /// The half-edges that make up the [`Cycle`]
-    pub half_edges: Vec<MaybePartial<HalfEdge>>,
+    surface: Option<Handle<Surface>>,
+    half_edges: Vec<MaybePartial<HalfEdge>>,
 }
 
 impl PartialCycle {
