@@ -73,7 +73,6 @@ impl PartialCycle {
         mut self,
         objects: &Objects,
     ) -> Result<Handle<Cycle>, ValidationError> {
-        let surface = self.surface.expect("Need surface to build `Cycle`");
         let half_edges = {
             let last_vertex = self
                 .half_edges
@@ -89,11 +88,7 @@ impl PartialCycle {
                 .map(|(half_edge, vertex, surface_vertex)|
                     -> Result<_, ValidationError>
                 {
-                    let surface_vertex = surface_vertex
-                        .update_partial(|surface_vertex| {
-                            surface_vertex.with_surface(Some(surface.clone()))
-                        })
-                        .into_full(objects)?;
+                    let surface_vertex = surface_vertex.into_full(objects)?;
 
                     *half_edge =
                         half_edge.clone().update_partial(|half_edge| {
