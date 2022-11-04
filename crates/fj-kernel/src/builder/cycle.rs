@@ -62,12 +62,8 @@ impl CycleBuilder for PartialCycle {
                     .position()
                     .expect("Need surface position to extend cycle");
 
-                let from = vertex_prev.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
-                let to = vertex_next.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
+                let from = vertex_prev;
+                let to = vertex_next;
 
                 previous = Some(to.clone());
 
