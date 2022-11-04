@@ -140,7 +140,7 @@ impl PartialHalfEdge {
     ) -> Result<Self, ValidationError> {
         let curve = Curve::partial()
             .with_global_form(Some(self.extract_global_curve()))
-            .with_surface(self.surface.clone())
+            .with_surface(self.surface())
             .update_as_circle_from_radius(radius);
 
         let path = curve.path().expect("Expected path that was just created");
@@ -159,7 +159,7 @@ impl PartialHalfEdge {
 
         let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(self.surface.clone())
+            .with_surface(self.surface())
             .with_global_form(Some(global_vertex))
             .build(objects)?;
 
@@ -180,7 +180,7 @@ impl PartialHalfEdge {
         self,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let surface = self.surface.clone();
+        let surface = self.surface();
         let vertices = points.map(|point| {
             let surface_form = SurfaceVertex::partial()
                 .with_surface(surface.clone())
@@ -194,13 +194,12 @@ impl PartialHalfEdge {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     pub fn update_as_line_segment(mut self) -> Self {
-        let [from, to] = self.vertices.clone();
+        let [from, to] = self.vertices();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
-            .surface
-            .clone()
+            .surface()
             .or_else(|| from_surface.surface())
             .or_else(|| to_surface.surface())
             .expect("Can't infer line segment without a surface");
