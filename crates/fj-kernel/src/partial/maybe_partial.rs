@@ -64,6 +64,20 @@ impl<T: HasPartial> MaybePartial<T> {
         }
     }
 
+    /// Merge this `MaybePartial` with another of the same type
+    pub fn merge_with(self, other: Self) -> Self {
+        match (self, other) {
+            (Self::Full(_), Self::Full(_)) => {
+                panic!("Can't merge two full objects")
+            }
+            (Self::Full(full), Self::Partial(_))
+            | (Self::Partial(_), Self::Full(full)) => Self::Full(full),
+            (Self::Partial(a), Self::Partial(b)) => {
+                Self::Partial(a.merge_with(b))
+            }
+        }
+    }
+
     /// Return or build a full object
     ///
     /// If this already is a full object, it is returned. If this is a partial
