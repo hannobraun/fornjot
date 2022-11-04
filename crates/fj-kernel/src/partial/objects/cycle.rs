@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{util::merge_options, MaybePartial},
+    partial::MaybePartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -10,14 +10,15 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    surface: Option<Handle<Surface>>,
     half_edges: Vec<MaybePartial<HalfEdge>>,
 }
 
 impl PartialCycle {
     /// Access the surface that the [`Cycle`] is defined in
     pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.surface.clone()
+        self.half_edges
+            .first()
+            .and_then(|half_edge| half_edge.curve().surface())
     }
 
     /// Access the half-edges that make up the [`Cycle`]
@@ -28,8 +29,6 @@ impl PartialCycle {
     /// Update the partial cycle with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
-            self.surface = Some(surface.clone());
-
             for half_edge in &mut self.half_edges {
                 *half_edge = half_edge.clone().update_partial(|half_edge| {
                     half_edge.with_surface(Some(surface.clone()))
@@ -62,10 +61,7 @@ impl PartialCycle {
             (false, false) => self.half_edges, // doesn't matter which we use
         };
 
-        Self {
-            surface: merge_options(self.surface, other.surface),
-            half_edges,
-        }
+        Self { half_edges }
     }
 
     /// Build a full [`Cycle`] from the partial cycle
@@ -138,7 +134,6 @@ impl PartialCycle {
 impl From<&Cycle> for PartialCycle {
     fn from(cycle: &Cycle) -> Self {
         Self {
-            surface: Some(cycle.surface().clone()),
             half_edges: cycle.half_edges().cloned().map(Into::into).collect(),
         }
     }
