@@ -44,9 +44,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = Curve::partial()
+        let curve = self
+            .curve()
+            .into_partial()
             .with_global_form(Some(self.extract_global_curve()))
-            .with_surface(self.surface())
             .update_as_circle_from_radius(radius);
 
         let path = curve.path().expect("Expected path that was just created");
