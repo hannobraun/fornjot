@@ -50,7 +50,7 @@ impl PartialCycle {
 
     /// Update the partial cycle with a polygonal chain from the provided points
     pub fn with_poly_chain(
-        mut self,
+        self,
         vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
     ) -> Self {
         let iter = self
@@ -65,6 +65,7 @@ impl PartialCycle {
 
         let mut previous: Option<MaybePartial<SurfaceVertex>> = None;
 
+        let mut half_edges = Vec::new();
         for vertex_next in iter {
             if let Some(vertex_prev) = previous {
                 let surface = self
@@ -100,11 +101,10 @@ impl PartialCycle {
                             .with_surface_form(Some(surface_form))
                     });
 
-                self.half_edges.push(
+                half_edges.push(
                     HalfEdge::partial()
                         .with_curve(Some(curve))
-                        .with_vertices(Some([from, to]))
-                        .into(),
+                        .with_vertices(Some([from, to])),
                 );
 
                 continue;
@@ -113,7 +113,7 @@ impl PartialCycle {
             previous = Some(vertex_next);
         }
 
-        self
+        self.with_half_edges(half_edges)
     }
 
     /// Update the partial cycle with a polygonal chain from the provided points
