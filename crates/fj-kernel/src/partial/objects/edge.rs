@@ -133,7 +133,7 @@ impl PartialHalfEdge {
     /// In principle, only the `build` method should take a reference to
     /// [`Objects`]. As of this writing, this method is the only one that
     /// deviates from that. I couldn't think of a way to do it better.
-    pub fn as_circle_from_radius(
+    pub fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
         objects: &Objects,
