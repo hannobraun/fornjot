@@ -7,6 +7,8 @@ use crate::{
     storage::Handle,
 };
 
+use super::CycleBuilder;
+
 /// API for building a [`Face`]
 ///
 /// Also see [`Face::builder`].

@@ -16,38 +16,35 @@ impl TransformObject for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let curve: MaybePartial<_> = self
-            .curve
-            .clone()
+            .curve()
             .into_partial()
             .transform(transform, objects)?
             .with_surface(surface.clone())
             .into();
-        let vertices = self.vertices.clone().try_map_ext(
+        let vertices = self.vertices().try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 Ok(vertex
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_curve(Some(curve.clone()))
-                    .into())
+                    .with_curve(Some(curve.clone())))
             },
         )?;
         let global_form = self
-            .global_form
+            .global_form()
             .into_partial()
             .transform(transform, objects)?
             .with_curve(curve.global_form())
             .into();
 
-        Ok(Self {
-            surface,
-            curve,
-            vertices,
-            global_form,
-        })
+        Ok(Self::default()
+            .with_surface(surface)
+            .with_curve(Some(curve))
+            .with_vertices(Some(vertices))
+            .with_global_form(global_form))
     }
 }
 
@@ -57,9 +54,9 @@ impl TransformObject for PartialGlobalEdge {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+        let curve = self.curve().transform(transform, objects)?;
         let vertices = self
-            .vertices
+            .vertices()
             .map(|vertices| {
                 vertices.try_map_ext(|vertex| -> Result<_, ValidationError> {
                     vertex.transform(transform, objects)
@@ -67,6 +64,8 @@ impl TransformObject for PartialGlobalEdge {
             })
             .transpose()?;
 
-        Ok(Self { curve, vertices })
+        Ok(Self::default()
+            .with_curve(Some(curve))
+            .with_vertices(vertices))
     }
 }

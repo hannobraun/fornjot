@@ -1,11 +1,6 @@
-use fj_math::Point;
-
 use crate::{
-    builder::CurveBuilder,
-    objects::{
-        Curve, Cycle, HalfEdge, Objects, Surface, SurfaceVertex, Vertex,
-    },
-    partial::{HasPartial, MaybePartial},
+    objects::{Cycle, HalfEdge, Objects, Surface},
+    partial::MaybePartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -15,14 +10,21 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    /// The surface that the [`Cycle`] is defined in
-    pub surface: Option<Handle<Surface>>,
-
-    /// The half-edges that make up the [`Cycle`]
-    pub half_edges: Vec<MaybePartial<HalfEdge>>,
+    surface: Option<Handle<Surface>>,
+    half_edges: Vec<MaybePartial<HalfEdge>>,
 }
 
 impl PartialCycle {
+    /// Access the surface that the [`Cycle`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the half-edges that make up the [`Cycle`]
+    pub fn half_edges(&self) -> impl Iterator<Item = MaybePartial<HalfEdge>> {
+        self.half_edges.clone().into_iter()
+    }
+
     /// Update the partial cycle with the given surface
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {
@@ -34,121 +36,10 @@ impl PartialCycle {
     /// Update the partial cycle with the given half-edges
     pub fn with_half_edges(
         mut self,
-        half_edge: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
+        half_edges: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
     ) -> Self {
         self.half_edges
-            .extend(half_edge.into_iter().map(Into::into));
-        self
-    }
-
-    /// Update the partial cycle with a polygonal chain from the provided points
-    pub fn with_poly_chain(
-        mut self,
-        vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
-    ) -> Self {
-        let iter = self
-            .half_edges
-            .last()
-            .map(|half_edge| {
-                let [_, last] = half_edge.vertices();
-                last.surface_form()
-            })
-            .into_iter()
-            .chain(vertices);
-
-        let mut previous: Option<MaybePartial<SurfaceVertex>> = None;
-
-        for vertex_next in iter {
-            if let Some(vertex_prev) = previous {
-                let surface = self
-                    .surface
-                    .clone()
-                    .expect("Need surface to extend cycle with poly-chain");
-
-                let position_prev = vertex_prev
-                    .position()
-                    .expect("Need surface position to extend cycle");
-                let position_next = vertex_next
-                    .position()
-                    .expect("Need surface position to extend cycle");
-
-                let from = vertex_prev.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
-                let to = vertex_next.update_partial(|partial| {
-                    partial.with_surface(Some(surface.clone()))
-                });
-
-                previous = Some(to.clone());
-
-                let curve = Curve::partial()
-                    .with_surface(Some(surface.clone()))
-                    .update_as_line_from_points([position_prev, position_next]);
-
-                let [from, to] =
-                    [(0., from), (1., to)].map(|(position, surface_form)| {
-                        Vertex::partial()
-                            .with_curve(Some(curve.clone()))
-                            .with_position(Some([position]))
-                            .with_surface_form(Some(surface_form))
-                    });
-
-                self.half_edges.push(
-                    HalfEdge::partial()
-                        .with_curve(Some(curve))
-                        .with_vertices(Some([from, to]))
-                        .into(),
-                );
-
-                continue;
-            }
-
-            previous = Some(vertex_next);
-        }
-
-        self
-    }
-
-    /// Update the partial cycle with a polygonal chain from the provided points
-    pub fn with_poly_chain_from_points(
-        self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        self.with_poly_chain(points.into_iter().map(|position| {
-            SurfaceVertex::partial()
-                .with_position(Some(position))
-                .into()
-        }))
-    }
-
-    /// Update the partial cycle by closing it with a line segment
-    ///
-    /// Builds a line segment from the last and first vertex, closing the cycle.
-    pub fn close_with_line_segment(mut self) -> Self {
-        let first = self.half_edges.first();
-        let last = self.half_edges.last();
-
-        let vertices = [first, last]
-            .map(|option| option.map(|half_edge| half_edge.vertices()));
-
-        if let [Some([first, _]), Some([_, last])] = vertices {
-            let vertices = [last, first].map(|vertex| {
-                vertex
-                    .surface_form()
-                    .position()
-                    .expect("Need surface position to close cycle")
-            });
-            let surface =
-                self.surface.clone().expect("Need surface to close cycle");
-
-            self.half_edges.push(
-                HalfEdge::partial()
-                    .with_surface(Some(surface))
-                    .as_line_segment_from_points(vertices)
-                    .into(),
-            );
-        }
-
+            .extend(half_edges.into_iter().map(Into::into));
         self
     }
 
@@ -202,7 +93,7 @@ impl PartialCycle {
 
                     let half_edge = half_edge
                         .update_partial(|half_edge| {
-                            let [back, _] = half_edge.vertices.clone();
+                            let [back, _] = half_edge.vertices();
                             let back = back.update_partial(|partial| {
                                 partial.with_surface_form(previous_vertex)
                             });

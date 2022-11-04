@@ -149,7 +149,9 @@ impl VerticesInNormalizedOrder {
 mod tests {
     use pretty_assertions::assert_eq;
 
-    use crate::{objects::Objects, partial::HasPartial};
+    use crate::{
+        builder::HalfEdgeBuilder, objects::Objects, partial::HasPartial,
+    };
 
     use super::HalfEdge;
 
@@ -164,11 +166,11 @@ mod tests {
 
         let a_to_b = HalfEdge::partial()
             .with_surface(Some(surface.clone()))
-            .as_line_segment_from_points([a, b])
+            .update_as_line_segment_from_points([a, b])
             .build(&objects)?;
         let b_to_a = HalfEdge::partial()
             .with_surface(Some(surface))
-            .as_line_segment_from_points([b, a])
+            .update_as_line_segment_from_points([b, a])
             .build(&objects)?;
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());

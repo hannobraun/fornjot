@@ -5,6 +5,7 @@ use fj_math::Scalar;
 
 use crate::{
     algorithms::transform::TransformObject,
+    builder::HalfEdgeBuilder,
     objects::{
         Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
@@ -90,7 +91,10 @@ impl<'a> ShellBuilder<'a> {
                     HalfEdge::partial()
                         .with_surface(Some(surface.clone()))
                         .with_global_form(Some(half_edge.global_form().clone()))
-                        .as_line_segment_from_points([[Z, Z], [edge_length, Z]])
+                        .update_as_line_segment_from_points([
+                            [Z, Z],
+                            [edge_length, Z],
+                        ])
                         .build(self.objects)
                         .unwrap()
                 })
@@ -113,7 +117,7 @@ impl<'a> ShellBuilder<'a> {
                             Vertex::partial().with_surface_form(Some(from)),
                             Vertex::partial().with_surface_form(Some(to)),
                         ]))
-                        .as_line_segment()
+                        .update_as_line_segment()
                         .build(self.objects)
                         .unwrap()
                 })
@@ -150,7 +154,7 @@ impl<'a> ShellBuilder<'a> {
                                 Vertex::partial().with_surface_form(Some(from)),
                                 Vertex::partial().with_surface_form(Some(to)),
                             ]))
-                            .as_line_segment()
+                            .update_as_line_segment()
                             .build(self.objects)
                             .unwrap()
                     })
@@ -173,7 +177,7 @@ impl<'a> ShellBuilder<'a> {
 
                     HalfEdge::partial()
                         .with_vertices(Some([from, to]))
-                        .as_line_segment()
+                        .update_as_line_segment()
                         .build(self.objects)
                         .unwrap()
                 })
@@ -252,7 +256,7 @@ impl<'a> ShellBuilder<'a> {
                     HalfEdge::partial()
                         .with_vertices(Some(vertices))
                         .with_global_form(Some(edge.global_form().clone()))
-                        .as_line_segment()
+                        .update_as_line_segment()
                         .build(self.objects)
                         .unwrap(),
                 );

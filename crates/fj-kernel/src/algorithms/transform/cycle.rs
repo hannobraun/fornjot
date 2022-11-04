@@ -13,25 +13,21 @@ impl TransformObject for PartialCycle {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface
-            .clone()
+            .surface()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let half_edges = self
-            .half_edges
-            .into_iter()
+            .half_edges()
             .map(|edge| {
                 Ok(edge
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_surface(surface.clone())
-                    .into())
+                    .with_surface(surface.clone()))
             })
-            .collect::<Result<_, ValidationError>>()?;
+            .collect::<Result<Vec<_>, ValidationError>>()?;
 
-        Ok(Self {
-            surface,
-            half_edges,
-        })
+        Ok(Self::default()
+            .with_surface(surface)
+            .with_half_edges(half_edges))
     }
 }

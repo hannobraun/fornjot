@@ -84,6 +84,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
+        builder::HalfEdgeBuilder,
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
     };
@@ -125,7 +126,7 @@ mod tests {
             .map(|&[a, b]| {
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
-                    .as_line_segment_from_points([a, b])
+                    .update_as_line_segment_from_points([a, b])
                     .build(&objects)?;
                 (half_edge, Color::default()).sweep(UP, &objects)
             })
@@ -167,7 +168,7 @@ mod tests {
             .map(|&[a, b]| {
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
-                    .as_line_segment_from_points([a, b])
+                    .update_as_line_segment_from_points([a, b])
                     .build(&objects)?
                     .reverse(&objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &objects)

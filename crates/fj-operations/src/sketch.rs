@@ -2,6 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
+    builder::HalfEdgeBuilder,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
     validate::{Validate, Validated, ValidationConfig, ValidationError},
@@ -28,7 +29,7 @@ impl Shape for fj::Sketch {
 
                 let half_edge = HalfEdge::partial()
                     .with_surface(Some(surface))
-                    .as_circle_from_radius(circle.radius(), objects)?
+                    .update_as_circle_from_radius(circle.radius(), objects)?
                     .build(objects)?;
                 let cycle = objects.cycles.insert(Cycle::new([half_edge]))?;
 

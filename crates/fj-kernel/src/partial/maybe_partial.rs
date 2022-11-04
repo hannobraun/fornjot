@@ -144,7 +144,7 @@ impl MaybePartial<GlobalEdge> {
     pub fn curve(&self) -> MaybePartial<GlobalCurve> {
         match self {
             Self::Full(full) => full.curve().clone().into(),
-            Self::Partial(partial) => partial.curve.clone(),
+            Self::Partial(partial) => partial.curve(),
         }
     }
 
@@ -154,7 +154,7 @@ impl MaybePartial<GlobalEdge> {
             Self::Full(full) => Some(
                 full.vertices().access_in_normalized_order().map(Into::into),
             ),
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Partial(partial) => partial.vertices(),
         }
     }
 }
@@ -165,7 +165,7 @@ impl MaybePartial<HalfEdge> {
         match self {
             Self::Full(full) => full.front().clone().into(),
             Self::Partial(partial) => {
-                let [_, front] = &partial.vertices;
+                let [_, front] = &partial.vertices();
                 front.clone()
             }
         }
@@ -175,7 +175,7 @@ impl MaybePartial<HalfEdge> {
     pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
         match self {
             Self::Full(full) => full.vertices().clone().map(Into::into),
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Partial(partial) => partial.vertices(),
         }
     }
 }

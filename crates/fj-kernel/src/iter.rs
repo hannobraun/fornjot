@@ -360,7 +360,7 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CurveBuilder,
+        builder::{CurveBuilder, CycleBuilder, HalfEdgeBuilder},
         objects::{
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
             Shell, Sketch, Solid, SurfaceVertex, Vertex,
@@ -486,7 +486,7 @@ mod tests {
 
         let object = HalfEdge::partial()
             .with_surface(Some(objects.surfaces.xy_plane()))
-            .as_line_segment_from_points([[0., 0.], [1., 0.]])
+            .update_as_line_segment_from_points([[0., 0.], [1., 0.]])
             .build(&objects);
 
         assert_eq!(1, object.curve_iter().count());
