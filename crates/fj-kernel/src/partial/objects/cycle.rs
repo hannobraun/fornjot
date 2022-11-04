@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::MaybePartial,
+    partial::{util::merge_options, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -43,9 +43,15 @@ impl PartialCycle {
         mut self,
         half_edges: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
     ) -> Self {
-        self.half_edges
-            .extend(half_edges.into_iter().map(Into::into));
-        self
+        let half_edges = half_edges.into_iter().map(Into::into);
+
+        let mut surface = self.surface();
+        for half_edge in half_edges {
+            surface = merge_options(surface, half_edge.curve().surface());
+            self.half_edges.push(half_edge);
+        }
+
+        self.with_surface(surface)
     }
 
     /// Merge this partial object with another
