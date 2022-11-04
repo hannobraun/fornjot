@@ -89,7 +89,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) -> Self {
         let vertices = points.map(|point| {
             let surface_form = SurfaceVertex::partial()
-                .with_surface(self.surface())
+                .with_surface(self.curve().surface())
                 .with_position(Some(point));
 
             Vertex::partial().with_surface_form(Some(surface_form))
@@ -104,6 +104,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
+            .curve()
             .surface()
             .or_else(|| from_surface.surface())
             .or_else(|| to_surface.surface())

@@ -22,11 +22,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Access the surface that the [`HalfEdge`]'s [`Curve`] is defined in
-    pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.curve.surface()
-    }
-
     /// Access the curve that the [`HalfEdge`] is defined in
     pub fn curve(&self) -> MaybePartial<Curve> {
         self.curve.clone()
