@@ -12,7 +12,7 @@ pub trait CycleBuilder {
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain(
         self,
-        vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
+        vertices: impl IntoIterator<Item = impl Into<MaybePartial<SurfaceVertex>>>,
     ) -> Self;
 
     /// Update the partial cycle with a polygonal chain from the provided points
@@ -30,8 +30,10 @@ pub trait CycleBuilder {
 impl CycleBuilder for PartialCycle {
     fn with_poly_chain(
         self,
-        vertices: impl IntoIterator<Item = MaybePartial<SurfaceVertex>>,
+        vertices: impl IntoIterator<Item = impl Into<MaybePartial<SurfaceVertex>>>,
     ) -> Self {
+        let vertices = vertices.into_iter().map(Into::into);
+
         let iter = self
             .half_edges()
             .last()
@@ -100,9 +102,7 @@ impl CycleBuilder for PartialCycle {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.with_poly_chain(points.into_iter().map(|position| {
-            SurfaceVertex::partial()
-                .with_position(Some(position))
-                .into()
+            SurfaceVertex::partial().with_position(Some(position))
         }))
     }
 
