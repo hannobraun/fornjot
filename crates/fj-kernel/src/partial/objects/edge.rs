@@ -47,24 +47,22 @@ impl PartialHalfEdge {
     }
 
     /// Update the partial half-edge with the given surface
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            self.curve = self.curve.update_partial(|curve| {
-                curve.with_surface(Some(surface.clone()))
-            });
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+        self.curve = self
+            .curve
+            .update_partial(|curve| curve.with_surface(Some(surface.clone())));
 
-            self.vertices = self.vertices.map(|vertex| {
-                vertex.update_partial(|vertex| {
-                    let surface_form = vertex.surface_form().update_partial(
-                        |surface_vertex| {
-                            surface_vertex.with_surface(Some(surface.clone()))
-                        },
-                    );
+        self.vertices = self.vertices.map(|vertex| {
+            vertex.update_partial(|vertex| {
+                let surface_form =
+                    vertex.surface_form().update_partial(|surface_vertex| {
+                        surface_vertex.with_surface(Some(surface.clone()))
+                    });
 
-                    vertex.with_surface_form(surface_form)
-                })
-            });
-        }
+                vertex.with_surface_form(surface_form)
+            })
+        });
+
         self
     }
 

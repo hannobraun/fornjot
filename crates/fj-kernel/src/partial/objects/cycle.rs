@@ -58,7 +58,7 @@ impl PartialCycle {
         if let Some(surface) = surface {
             for half_edge in &mut self.half_edges {
                 *half_edge = half_edge.clone().update_partial(|half_edge| {
-                    half_edge.with_surface(Some(surface.clone()))
+                    half_edge.with_surface(surface.clone())
                 });
             }
         }

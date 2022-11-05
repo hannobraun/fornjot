@@ -97,7 +97,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             Vertex::partial().with_surface_form(surface_form)
         });
 
-        self.with_surface(Some(surface))
+        self.with_surface(surface)
             .with_vertices(Some(vertices))
             .update_as_line_segment()
     }
