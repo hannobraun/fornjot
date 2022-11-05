@@ -6,9 +6,7 @@ mod metadata;
 mod model;
 
 pub use self::{
-    context::{
-        Context, ContextError, ContextExt, MissingArgument, ParseFailed,
-    },
+    context::Context,
     host::{Host, HostExt},
     metadata::{ArgumentMetadata, Metadata, ModelMetadata},
     model::Model,

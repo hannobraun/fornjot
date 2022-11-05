@@ -4,16 +4,22 @@
 pub struct Metadata {
     /// A short, human-friendly name used to identify this module.
     pub name: String,
+
     /// A semver-compliant version number.
     pub version: String,
+
     /// A short, one-line description.
     pub short_description: Option<String>,
+
     /// A more elaborate description.
     pub description: Option<String>,
+
     /// A link to the homepage.
     pub homepage: Option<String>,
+
     /// A link to the source code.
     pub repository: Option<String>,
+
     /// The name of the software license(s) this software is released under.
     ///
     /// This is interpreted as a SPDX license expression (e.g.  `MIT OR
@@ -120,8 +126,10 @@ impl Metadata {
 pub struct ModelMetadata {
     /// A short, human-friendly name used to identify this model.
     pub name: String,
+
     /// A description of what this model does.
     pub description: Option<String>,
+
     /// Arguments that the model uses when calculating its geometry.
     pub arguments: Vec<ArgumentMetadata>,
 }
@@ -171,9 +179,11 @@ impl ModelMetadata {
 pub struct ArgumentMetadata {
     /// The name used to refer to this argument.
     pub name: String,
+
     /// A short description of this argument that could be shown to the user
     /// in something like a tooltip.
     pub description: Option<String>,
+
     /// Something that could be used as a default if no value was provided.
     pub default_value: Option<String>,
 }
