@@ -107,11 +107,10 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given global form
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalEdge>>>,
+        global_form: impl Into<MaybePartial<GlobalEdge>>,
     ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = global_form.into();
-        }
+        self.global_form = global_form.into();
+
         self
     }
 

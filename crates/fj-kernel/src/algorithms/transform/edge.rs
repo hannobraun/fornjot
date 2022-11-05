@@ -32,8 +32,7 @@ impl TransformObject for PartialHalfEdge {
             .global_form()
             .into_partial()
             .transform(transform, objects)?
-            .with_curve(curve.global_form())
-            .into();
+            .with_curve(curve.global_form());
 
         Ok(Self::default()
             .with_curve(curve)
