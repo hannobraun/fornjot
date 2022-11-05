@@ -148,7 +148,7 @@ impl<'a> ShellBuilder<'a> {
                         ));
 
                         HalfEdge::partial()
-                            .with_curve(Some(curve))
+                            .with_curve(curve)
                             .with_vertices(Some([
                                 Vertex::partial().with_surface_form(from),
                                 Vertex::partial().with_surface_form(to),
