@@ -131,7 +131,7 @@ impl PartialHalfEdge {
         let curve = self.curve.into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
-                .update_partial(|vertex| vertex.with_curve(Some(curve.clone())))
+                .update_partial(|vertex| vertex.with_curve(curve.clone()))
                 .into_full(objects)
         })?;
 

@@ -191,11 +191,11 @@ mod tests {
 
         let valid = Vertex::partial()
             .with_position(Some([0.]))
-            .with_curve(Some(
+            .with_curve(
                 Curve::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
                     .update_as_u_axis(),
-            ))
+            )
             .build(&objects)?;
         let invalid = Vertex::new(
             valid.position(),
@@ -219,11 +219,11 @@ mod tests {
 
         let valid = Vertex::partial()
             .with_position(Some([0.]))
-            .with_curve(Some(
+            .with_curve(
                 Curve::partial()
                     .with_surface(Some(objects.surfaces.xy_plane()))
                     .update_as_u_axis(),
-            ))
+            )
             .build(&objects)?;
         let invalid = Vertex::new(
             valid.position(),

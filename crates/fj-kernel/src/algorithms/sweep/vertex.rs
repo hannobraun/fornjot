@@ -184,7 +184,7 @@ mod tests {
             .build(&objects)?;
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
-            .with_curve(Some(curve))
+            .with_curve(curve)
             .build(&objects)?;
 
         let half_edge =

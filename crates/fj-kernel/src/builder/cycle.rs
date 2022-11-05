@@ -74,7 +74,7 @@ impl CycleBuilder for PartialCycle {
                 let [from, to] =
                     [(0., from), (1., to)].map(|(position, surface_form)| {
                         Vertex::partial()
-                            .with_curve(Some(curve.clone()))
+                            .with_curve(curve.clone())
                             .with_position(Some([position]))
                             .with_surface_form(surface_form)
                     });

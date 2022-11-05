@@ -25,7 +25,7 @@ impl TransformObject for PartialHalfEdge {
                 Ok(vertex
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_curve(Some(curve.clone())))
+                    .with_curve(curve.clone()))
             },
         )?;
         let global_form = self
