@@ -11,6 +11,8 @@ pub trait Host {
 }
 
 /// Extension methods to augment the [`Host`] API.
+///
+/// The purpose of this trait is to keep [`Host`] object-safe.
 pub trait HostExt {
     /// Register a model with the Fornjot runtime.
     fn register_model<M>(&mut self, model: M)
