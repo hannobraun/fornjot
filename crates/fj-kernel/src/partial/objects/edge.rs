@@ -94,12 +94,11 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given front vertex
     pub fn with_front_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: impl Into<MaybePartial<Vertex>>,
     ) -> Self {
-        if let Some(vertex) = vertex {
-            let [_, to] = &mut self.vertices;
-            *to = vertex.into();
-        }
+        let [_, to] = &mut self.vertices;
+        *to = vertex.into();
+
         self
     }
 

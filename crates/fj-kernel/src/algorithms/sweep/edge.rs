@@ -224,9 +224,9 @@ mod tests {
                         bottom.front().surface_form().clone(),
                     ),
                 ))
-                .with_front_vertex(Some(Vertex::partial().with_surface_form(
+                .with_front_vertex(Vertex::partial().with_surface_form(
                     SurfaceVertex::partial().with_position(Some([1., 1.])),
-                )))
+                ))
                 .update_as_line_segment()
                 .build(&objects)?;
             let top = HalfEdge::partial()
@@ -234,11 +234,11 @@ mod tests {
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
                     SurfaceVertex::partial().with_position(Some([0., 1.])),
                 )))
-                .with_front_vertex(Some(
+                .with_front_vertex(
                     Vertex::partial().with_surface_form(
                         side_up.front().surface_form().clone(),
                     ),
-                ))
+                )
                 .update_as_line_segment()
                 .build(&objects)?
                 .reverse(&objects)?;
@@ -249,10 +249,10 @@ mod tests {
                         bottom.back().surface_form().clone(),
                     ),
                 ))
-                .with_front_vertex(Some(
+                .with_front_vertex(
                     Vertex::partial()
                         .with_surface_form(top.front().surface_form().clone()),
-                ))
+                )
                 .update_as_line_segment()
                 .build(&objects)?
                 .reverse(&objects)?;
