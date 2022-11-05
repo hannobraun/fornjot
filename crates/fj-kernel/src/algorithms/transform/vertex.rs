@@ -18,14 +18,13 @@ impl TransformObject for PartialVertex {
         let surface_form = self
             .surface_form()
             .into_partial()
-            .transform(transform, objects)?
-            .into();
+            .transform(transform, objects)?;
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
         Ok(Self::default()
             .with_position(self.position())
-            .with_curve(Some(curve))
+            .with_curve(curve)
             .with_surface_form(surface_form))
     }
 }

@@ -25,19 +25,18 @@ impl TransformObject for PartialHalfEdge {
                 Ok(vertex
                     .into_partial()
                     .transform(transform, objects)?
-                    .with_curve(Some(curve.clone())))
+                    .with_curve(curve.clone()))
             },
         )?;
         let global_form = self
             .global_form()
             .into_partial()
             .transform(transform, objects)?
-            .with_curve(curve.global_form())
-            .into();
+            .with_curve(curve.global_form());
 
         Ok(Self::default()
-            .with_curve(Some(curve))
-            .with_vertices(Some(vertices))
+            .with_curve(curve)
+            .with_vertices(vertices)
             .with_global_form(global_form))
     }
 }

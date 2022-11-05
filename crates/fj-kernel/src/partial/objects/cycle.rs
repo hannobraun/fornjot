@@ -1,6 +1,8 @@
 use crate::{
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{util::merge_options, MaybePartial},
+    partial::{
+        util::merge_options, MaybePartial, PartialHalfEdge, PartialVertex,
+    },
     storage::Handle,
     validate::ValidationError,
 };
@@ -56,7 +58,7 @@ impl PartialCycle {
         if let Some(surface) = surface {
             for half_edge in &mut self.half_edges {
                 *half_edge = half_edge.clone().update_partial(|half_edge| {
-                    half_edge.with_surface(Some(surface.clone()))
+                    half_edge.with_surface(surface.clone())
                 });
             }
         }
@@ -84,63 +86,47 @@ impl PartialCycle {
         mut self,
         objects: &Objects,
     ) -> Result<Handle<Cycle>, ValidationError> {
-        let half_edges = {
-            let last_vertex = self
-                .half_edges
-                .last_mut()
-                .map(|half_edge| {
-                    let vertex = half_edge.front();
-                    (half_edge, vertex)
-                })
-                .map(|(half_edge, vertex)| {
-                    let surface_vertex = vertex.surface_form();
-                    (half_edge, vertex, surface_vertex)
-                })
-                .map(|(half_edge, vertex, surface_vertex)|
-                    -> Result<_, ValidationError>
-                {
-                    let surface_vertex = surface_vertex.into_full(objects)?;
+        // To create a cycle, we need to make sure that all its half-edges
+        // connect to each other. Let's start with all the connections between
+        // the first and the last half-edge.
+        let mut previous_vertex = None;
+        for half_edge in &mut self.half_edges {
+            let back_vertex = previous_vertex.unwrap_or_default();
+            let front_vertex =
+                half_edge.front().surface_form().into_full(objects)?;
 
-                    *half_edge =
-                        half_edge.clone().update_partial(|half_edge| {
-                            half_edge.with_front_vertex(Some(
-                                vertex.update_partial(|vertex| {
-                                    vertex.with_surface_form(Some(
-                                        surface_vertex.clone(),
-                                    ))
-                                }),
-                            ))
-                        });
+            *half_edge = half_edge.clone().merge_with(
+                PartialHalfEdge::default()
+                    .with_back_vertex(
+                        PartialVertex::default().with_surface_form(back_vertex),
+                    )
+                    .with_front_vertex(
+                        PartialVertex::default()
+                            .with_surface_form(front_vertex.clone()),
+                    ),
+            );
 
-                    Ok(surface_vertex)
-                })
-                .transpose()?;
+            previous_vertex = Some(MaybePartial::from(front_vertex));
+        }
 
-            let (half_edges, _) = self.half_edges.into_iter().fold(
-                Ok((Vec::new(), last_vertex)),
-                |result: Result<_, ValidationError>, half_edge| {
-                    let (mut half_edges, previous_vertex) = result?;
+        // We're not quite done yet. We need to close the cycle, by connecting
+        // the last half-edge back around to the first one.
+        if let Some(half_edge) = self.half_edges.first_mut() {
+            let back_vertex = previous_vertex.unwrap_or_default();
 
-                    let half_edge = half_edge
-                        .update_partial(|half_edge| {
-                            let [back, _] = half_edge.vertices();
-                            let back = back.update_partial(|partial| {
-                                partial.with_surface_form(previous_vertex)
-                            });
+            *half_edge = half_edge.clone().merge_with(
+                PartialHalfEdge::default().with_back_vertex(
+                    PartialVertex::default().with_surface_form(back_vertex),
+                ),
+            );
+        }
 
-                            half_edge.with_back_vertex(Some(back))
-                        })
-                        .into_full(objects)?;
-
-                    let front = half_edge.front().surface_form().clone();
-                    half_edges.push(half_edge);
-
-                    Ok((half_edges, Some(front)))
-                },
-            )?;
-
-            half_edges
-        };
+        // All connections made! All that's left is to build the half-edges.
+        let mut half_edges = Vec::new();
+        for half_edge in self.half_edges {
+            let half_edge = half_edge.into_full(objects)?;
+            half_edges.push(half_edge);
+        }
 
         Ok(objects.cycles.insert(Cycle::new(half_edges))?)
     }

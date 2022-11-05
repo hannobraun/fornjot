@@ -47,82 +47,70 @@ impl PartialHalfEdge {
     }
 
     /// Update the partial half-edge with the given surface
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            self.curve = self.curve.update_partial(|curve| {
-                curve.with_surface(Some(surface.clone()))
-            });
+    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+        self.curve = self
+            .curve
+            .update_partial(|curve| curve.with_surface(Some(surface.clone())));
 
-            self.vertices = self.vertices.map(|vertex| {
-                vertex.update_partial(|vertex| {
-                    let surface_form = vertex.surface_form().update_partial(
-                        |surface_vertex| {
-                            surface_vertex.with_surface(Some(surface.clone()))
-                        },
-                    );
+        self.vertices = self.vertices.map(|vertex| {
+            vertex.update_partial(|vertex| {
+                let surface_form =
+                    vertex.surface_form().update_partial(|surface_vertex| {
+                        surface_vertex.with_surface(Some(surface.clone()))
+                    });
 
-                    vertex.with_surface_form(Some(surface_form))
-                })
-            });
-        }
+                vertex.with_surface_form(surface_form)
+            })
+        });
+
         self
     }
 
     /// Update the partial half-edge with the given curve
-    pub fn with_curve(
-        mut self,
-        curve: Option<impl Into<MaybePartial<Curve>>>,
-    ) -> Self {
-        if let Some(curve) = curve {
-            self.curve = curve.into();
-        }
+    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
+        self.curve = curve.into();
+
         self
     }
 
     /// Update the partial half-edge with the given back vertex
     pub fn with_back_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: impl Into<MaybePartial<Vertex>>,
     ) -> Self {
-        if let Some(vertex) = vertex {
-            let [from, _] = &mut self.vertices;
-            *from = vertex.into();
-        }
+        let [from, _] = &mut self.vertices;
+        *from = vertex.into();
+
         self
     }
 
     /// Update the partial half-edge with the given front vertex
     pub fn with_front_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: impl Into<MaybePartial<Vertex>>,
     ) -> Self {
-        if let Some(vertex) = vertex {
-            let [_, to] = &mut self.vertices;
-            *to = vertex.into();
-        }
+        let [_, to] = &mut self.vertices;
+        *to = vertex.into();
+
         self
     }
 
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
+        vertices: [impl Into<MaybePartial<Vertex>>; 2],
     ) -> Self {
-        let vertices = vertices.map(|vertices| vertices.map(Into::into));
-        if let Some([back, front]) = vertices {
-            self.vertices = [back, front];
-        }
+        self.vertices = vertices.map(Into::into);
         self
     }
 
     /// Update the partial half-edge with the given global form
     pub fn with_global_form(
         mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalEdge>>>,
+        global_form: impl Into<MaybePartial<GlobalEdge>>,
     ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = global_form.into();
-        }
+        self.global_form = global_form.into();
+
         self
     }
 
@@ -143,7 +131,7 @@ impl PartialHalfEdge {
         let curve = self.curve.into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
-                .update_partial(|vertex| vertex.with_curve(Some(curve.clone())))
+                .update_partial(|vertex| vertex.with_curve(curve.clone()))
                 .into_full(objects)
         })?;
 

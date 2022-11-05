@@ -217,7 +217,7 @@ mod tests {
             vertices[1] = vertices[1]
                 .to_partial()
                 // Arranging for an equal but not identical curve here.
-                .with_curve(Some(valid.curve().to_partial()))
+                .with_curve(valid.curve().to_partial())
                 .build(&objects)?;
 
             HalfEdge::new(vertices, valid.global_form().clone())

@@ -75,13 +75,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
             Vertex::partial()
                 .with_position(Some(point_curve))
-                .with_curve(Some(curve.clone()))
-                .with_surface_form(Some(surface_vertex.clone()))
+                .with_curve(curve.clone())
+                .with_surface_form(surface_vertex.clone())
         });
 
-        Ok(self
-            .with_curve(Some(curve))
-            .with_vertices(Some([back, front])))
+        Ok(self.with_curve(curve).with_vertices([back, front]))
     }
 
     fn update_as_line_segment_from_points(
@@ -94,11 +92,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .with_surface(Some(surface.clone()))
                 .with_position(Some(point));
 
-            Vertex::partial().with_surface_form(Some(surface_form))
+            Vertex::partial().with_surface_form(surface_form)
         });
 
-        self.with_surface(Some(surface))
-            .with_vertices(Some(vertices))
+        self.with_surface(surface)
+            .with_vertices(vertices)
             .update_as_line_segment()
     }
 
@@ -129,7 +127,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 vertex.update_partial(|vertex| {
                     vertex
                         .with_position(Some([position]))
-                        .with_curve(Some(curve.clone()))
+                        .with_curve(curve.clone())
                 })
             });
 
@@ -170,19 +168,18 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
             vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
                 vertex.update_partial(|vertex| {
-                    vertex.clone().with_surface_form(Some(
+                    vertex.clone().with_surface_form(
                         vertex.surface_form().update_partial(
                             |surface_vertex| {
                                 surface_vertex.with_global_form(global_form)
                             },
                         ),
-                    ))
+                    )
                 })
             })
         };
 
-        self.with_curve(Some(curve))
-            .with_vertices(Some([back, front]))
+        self.with_curve(curve).with_vertices([back, front])
     }
 }
 

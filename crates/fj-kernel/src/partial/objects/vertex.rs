@@ -46,24 +46,17 @@ impl PartialVertex {
     }
 
     /// Provide a curve for the partial vertex
-    pub fn with_curve(
-        mut self,
-        curve: Option<impl Into<MaybePartial<Curve>>>,
-    ) -> Self {
-        if let Some(curve) = curve {
-            self.curve = curve.into();
-        }
+    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
+        self.curve = curve.into();
         self
     }
 
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,
-        surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
+        surface_form: impl Into<MaybePartial<SurfaceVertex>>,
     ) -> Self {
-        if let Some(surface_form) = surface_form {
-            self.surface_form = surface_form.into();
-        }
+        self.surface_form = surface_form.into();
         self
     }
 
