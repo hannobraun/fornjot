@@ -76,7 +76,7 @@ impl CycleBuilder for PartialCycle {
                         Vertex::partial()
                             .with_curve(Some(curve.clone()))
                             .with_position(Some([position]))
-                            .with_surface_form(Some(surface_form))
+                            .with_surface_form(surface_form)
                     });
 
                 half_edges.push(

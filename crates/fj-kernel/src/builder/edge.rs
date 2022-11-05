@@ -76,7 +76,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             Vertex::partial()
                 .with_position(Some(point_curve))
                 .with_curve(Some(curve.clone()))
-                .with_surface_form(Some(surface_vertex.clone()))
+                .with_surface_form(surface_vertex.clone())
         });
 
         Ok(self
@@ -94,7 +94,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .with_surface(Some(surface.clone()))
                 .with_position(Some(point));
 
-            Vertex::partial().with_surface_form(Some(surface_form))
+            Vertex::partial().with_surface_form(surface_form)
         });
 
         self.with_surface(Some(surface))
@@ -170,13 +170,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
             vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
                 vertex.update_partial(|vertex| {
-                    vertex.clone().with_surface_form(Some(
+                    vertex.clone().with_surface_form(
                         vertex.surface_form().update_partial(
                             |surface_vertex| {
                                 surface_vertex.with_global_form(global_form)
                             },
                         ),
-                    ))
+                    )
                 })
             })
         };

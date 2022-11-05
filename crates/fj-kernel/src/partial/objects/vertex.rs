@@ -59,11 +59,9 @@ impl PartialVertex {
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,
-        surface_form: Option<impl Into<MaybePartial<SurfaceVertex>>>,
+        surface_form: impl Into<MaybePartial<SurfaceVertex>>,
     ) -> Self {
-        if let Some(surface_form) = surface_form {
-            self.surface_form = surface_form.into();
-        }
+        self.surface_form = surface_form.into();
         self
     }
 

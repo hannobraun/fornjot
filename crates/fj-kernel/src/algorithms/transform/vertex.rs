@@ -25,7 +25,7 @@ impl TransformObject for PartialVertex {
         Ok(Self::default()
             .with_position(self.position())
             .with_curve(Some(curve))
-            .with_surface_form(Some(surface_form)))
+            .with_surface_form(surface_form))
     }
 }
 

@@ -61,7 +61,7 @@ impl PartialHalfEdge {
                         },
                     );
 
-                    vertex.with_surface_form(Some(surface_form))
+                    vertex.with_surface_form(surface_form)
                 })
             });
         }

@@ -219,37 +219,40 @@ mod tests {
                 .build(&objects)?;
             let side_up = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
-                .with_back_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(bottom.front().surface_form().clone()),
-                )))
-                .with_front_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(
-                        SurfaceVertex::partial().with_position(Some([1., 1.])),
+                .with_back_vertex(Some(
+                    Vertex::partial().with_surface_form(
+                        bottom.front().surface_form().clone(),
                     ),
+                ))
+                .with_front_vertex(Some(Vertex::partial().with_surface_form(
+                    SurfaceVertex::partial().with_position(Some([1., 1.])),
                 )))
                 .update_as_line_segment()
                 .build(&objects)?;
             let top = HalfEdge::partial()
                 .with_surface(Some(surface.clone()))
                 .with_back_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(
-                        SurfaceVertex::partial().with_position(Some([0., 1.])),
+                    SurfaceVertex::partial().with_position(Some([0., 1.])),
+                )))
+                .with_front_vertex(Some(
+                    Vertex::partial().with_surface_form(
+                        side_up.front().surface_form().clone(),
                     ),
-                )))
-                .with_front_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(side_up.front().surface_form().clone()),
-                )))
+                ))
                 .update_as_line_segment()
                 .build(&objects)?
                 .reverse(&objects)?;
             let side_down = HalfEdge::partial()
                 .with_surface(Some(surface))
-                .with_back_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(bottom.back().surface_form().clone()),
-                )))
-                .with_front_vertex(Some(Vertex::partial().with_surface_form(
-                    Some(top.front().surface_form().clone()),
-                )))
+                .with_back_vertex(Some(
+                    Vertex::partial().with_surface_form(
+                        bottom.back().surface_form().clone(),
+                    ),
+                ))
+                .with_front_vertex(Some(
+                    Vertex::partial()
+                        .with_surface_form(top.front().surface_form().clone()),
+                ))
                 .update_as_line_segment()
                 .build(&objects)?
                 .reverse(&objects)?;

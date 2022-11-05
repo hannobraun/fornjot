@@ -99,7 +99,7 @@ impl PartialCycle {
                 *last_half_edge = last_half_edge.clone().merge_with(
                     PartialHalfEdge::default().with_front_vertex(Some(
                         PartialVertex::default()
-                            .with_surface_form(Some(surface_vertex.clone())),
+                            .with_surface_form(surface_vertex.clone()),
                     )),
                 );
 
@@ -115,7 +115,7 @@ impl PartialCycle {
                         .update_partial(|half_edge| {
                             let [back, _] = half_edge.vertices();
                             let back = back.update_partial(|partial| {
-                                partial.with_surface_form(Some(previous_vertex))
+                                partial.with_surface_form(previous_vertex)
                             });
 
                             half_edge.with_back_vertex(Some(back))
