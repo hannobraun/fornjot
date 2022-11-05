@@ -98,12 +98,9 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,
-        vertices: Option<[impl Into<MaybePartial<Vertex>>; 2]>,
+        vertices: [impl Into<MaybePartial<Vertex>>; 2],
     ) -> Self {
-        let vertices = vertices.map(|vertices| vertices.map(Into::into));
-        if let Some([back, front]) = vertices {
-            self.vertices = [back, front];
-        }
+        self.vertices = vertices.map(Into::into);
         self
     }
 

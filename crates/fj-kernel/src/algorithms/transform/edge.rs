@@ -37,7 +37,7 @@ impl TransformObject for PartialHalfEdge {
 
         Ok(Self::default()
             .with_curve(curve)
-            .with_vertices(Some(vertices))
+            .with_vertices(vertices)
             .with_global_form(global_form))
     }
 }

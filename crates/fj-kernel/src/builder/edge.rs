@@ -79,7 +79,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .with_surface_form(surface_vertex.clone())
         });
 
-        Ok(self.with_curve(curve).with_vertices(Some([back, front])))
+        Ok(self.with_curve(curve).with_vertices([back, front]))
     }
 
     fn update_as_line_segment_from_points(
@@ -96,7 +96,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         });
 
         self.with_surface(surface)
-            .with_vertices(Some(vertices))
+            .with_vertices(vertices)
             .update_as_line_segment()
     }
 
@@ -179,7 +179,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             })
         };
 
-        self.with_curve(curve).with_vertices(Some([back, front]))
+        self.with_curve(curve).with_vertices([back, front])
     }
 }
 

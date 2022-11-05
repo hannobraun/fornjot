@@ -82,7 +82,7 @@ impl CycleBuilder for PartialCycle {
                 half_edges.push(
                     HalfEdge::partial()
                         .with_curve(curve)
-                        .with_vertices(Some([from, to])),
+                        .with_vertices([from, to]),
                 );
 
                 continue;
