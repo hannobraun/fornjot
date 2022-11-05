@@ -82,12 +82,11 @@ impl PartialHalfEdge {
     /// Update the partial half-edge with the given back vertex
     pub fn with_back_vertex(
         mut self,
-        vertex: Option<impl Into<MaybePartial<Vertex>>>,
+        vertex: impl Into<MaybePartial<Vertex>>,
     ) -> Self {
-        if let Some(vertex) = vertex {
-            let [from, _] = &mut self.vertices;
-            *from = vertex.into();
-        }
+        let [from, _] = &mut self.vertices;
+        *from = vertex.into();
+
         self
     }
 

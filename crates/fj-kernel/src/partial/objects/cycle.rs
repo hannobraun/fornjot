@@ -118,7 +118,7 @@ impl PartialCycle {
                                 partial.with_surface_form(previous_vertex)
                             });
 
-                            half_edge.with_back_vertex(Some(back))
+                            half_edge.with_back_vertex(back)
                         })
                         .into_full(objects)?;
 
