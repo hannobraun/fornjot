@@ -65,8 +65,8 @@ impl<T: HasPartial> MaybePartial<T> {
     }
 
     /// Merge this `MaybePartial` with another of the same type
-    pub fn merge_with(self, other: Self) -> Self {
-        match (self, other) {
+    pub fn merge_with(self, other: impl Into<Self>) -> Self {
+        match (self, other.into()) {
             (Self::Full(_), Self::Full(_)) => {
                 panic!("Can't merge two full objects")
             }
