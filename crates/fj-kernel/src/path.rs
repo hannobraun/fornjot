@@ -22,7 +22,7 @@
 //! [`Surface`]: crate::objects::Surface
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
-use fj_math::{Circle, Line, Point, Scalar, Vector};
+use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -139,6 +139,17 @@ impl GlobalPath {
         match self {
             Self::Circle(circle) => circle.vector_from_circle_coords(vector),
             Self::Line(line) => line.vector_from_line_coords(vector),
+        }
+    }
+
+    /// Transform the path
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        match self {
+            Self::Circle(curve) => {
+                Self::Circle(transform.transform_circle(&curve))
+            }
+            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
         }
     }
 }
