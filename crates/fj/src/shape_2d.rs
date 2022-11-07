@@ -134,6 +134,18 @@ impl Sketch {
     }
 }
 
+impl From<Sketch> for Shape {
+    fn from(shape: Sketch) -> Self {
+        Self::Shape2d(shape.into())
+    }
+}
+
+impl From<Sketch> for Shape2d {
+    fn from(shape: Sketch) -> Self {
+        Shape2d::Sketch(shape)
+    }
+}
+
 /// A chain of elements that is part of a [`Sketch`]
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -185,17 +197,5 @@ impl PolyChain {
     /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
         self.points.clone().into()
-    }
-}
-
-impl From<Sketch> for Shape {
-    fn from(shape: Sketch) -> Self {
-        Self::Shape2d(shape.into())
-    }
-}
-
-impl From<Sketch> for Shape2d {
-    fn from(shape: Sketch) -> Self {
-        Shape2d::Sketch(shape)
     }
 }
