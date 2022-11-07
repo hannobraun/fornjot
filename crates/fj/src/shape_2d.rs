@@ -184,7 +184,7 @@ impl Circle {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct PolyChain {
-    points: ffi_safe::Vec<SketchSegment>,
+    segments: ffi_safe::Vec<SketchSegment>,
 }
 
 impl PolyChain {
@@ -194,12 +194,12 @@ impl PolyChain {
             .into_iter()
             .map(|point| SketchSegment::LineTo { point })
             .collect();
-        Self { points }
+        Self { segments: points }
     }
 
     /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
-        let segments: Vec<_> = self.points.clone().into();
+        let segments: Vec<_> = self.segments.clone().into();
         segments
             .into_iter()
             .map(|SketchSegment::LineTo { point }| point)
