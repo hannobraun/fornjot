@@ -1,7 +1,4 @@
-use std::mem;
-use std::sync::atomic;
-
-use crate::Shape;
+use crate::{abi::ffi_safe, Shape};
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
@@ -171,120 +168,24 @@ impl Circle {
 }
 
 /// A polygonal chain that is part of a [`Sketch`]
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq)]
 #[repr(C)]
 pub struct PolyChain {
-    // The fields are the raw parts of a `Vec`. `Sketch` needs to be FFI-safe,
-    // meaning it can't store a `Vec` directly. It needs to take this detour.
-    ptr: *mut [f64; 2],
-    length: usize,
-    capacity: usize,
-
-    // The `Sketch` can be cloned, so we need to track the number of live
-    // instances, so as to free the buffer behind `ptr` only when the last
-    // one is dropped.
-    rc: *mut atomic::AtomicUsize,
+    points: ffi_safe::Vec<[f64; 2]>,
 }
 
 impl PolyChain {
     /// Construct an instance from a list of points
-    pub fn from_points(mut points: Vec<[f64; 2]>) -> Self {
-        // This can be cleaned up, once `Vec::into_raw_parts` is stable.
-        let ptr = points.as_mut_ptr();
-        let length = points.len();
-        let capacity = points.capacity();
-
-        // We're taking ownership of the memory here, so we can't allow `points`
-        // to deallocate it.
-        mem::forget(points);
-
-        // Allocate the reference counter on the heap. It will be reclaimed
-        // alongside `points` when it reaches 0.
-        let rc = Box::new(atomic::AtomicUsize::new(1));
-        let rc = Box::leak(rc) as *mut _;
-
-        Self {
-            ptr,
-            length,
-            capacity,
-            rc,
-        }
-    }
-
-    /// Get a reference to the points in this [`PolyChain`].
-    fn points(&self) -> &[[f64; 2]] {
-        unsafe { std::slice::from_raw_parts(self.ptr, self.length) }
+    pub fn from_points(points: Vec<[f64; 2]>) -> Self {
+        let points = points.into();
+        Self { points }
     }
 
     /// Return the points that define the polygonal chain
     pub fn to_points(&self) -> Vec<[f64; 2]> {
-        // This is sound. All invariants are automatically kept, as the raw
-        // parts come from an original `Vec` that is identical to the new one we
-        // create here, and aren't being modified anywhere.
-        let points = unsafe {
-            Vec::from_raw_parts(self.ptr, self.length, self.capacity)
-        };
-
-        // Ownership of the pointer in `self.raw_parts` transferred to `points`.
-        // We work around that, by returning a clone of `points` (hence not
-        // giving ownership to the caller).
-        let ret = points.clone();
-
-        // Now we just need to forget that `points` ever existed, and we keep
-        // ownership of the pointer.
-        mem::forget(points);
-
-        ret
+        self.points.clone().into()
     }
 }
-
-impl Clone for PolyChain {
-    fn clone(&self) -> Self {
-        // Increment the reference counter
-        unsafe {
-            (*self.rc).fetch_add(1, atomic::Ordering::AcqRel);
-        }
-
-        Self {
-            ptr: self.ptr,
-            length: self.length,
-            capacity: self.capacity,
-            rc: self.rc,
-        }
-    }
-}
-
-impl PartialEq for PolyChain {
-    fn eq(&self, other: &Self) -> bool {
-        self.points() == other.points()
-    }
-}
-
-impl Drop for PolyChain {
-    fn drop(&mut self) {
-        // Decrement the reference counter
-        let rc_last =
-            unsafe { (*self.rc).fetch_sub(1, atomic::Ordering::AcqRel) };
-
-        // If the value of the refcount before decrementing was 1,
-        // then this must be the last Drop call. Reclaim all resources
-        // allocated on the heap.
-        if rc_last == 1 {
-            unsafe {
-                let points =
-                    Vec::from_raw_parts(self.ptr, self.length, self.capacity);
-                let rc = Box::from_raw(self.rc);
-
-                drop(points);
-                drop(rc);
-            }
-        }
-    }
-}
-
-// `PolyChain` can be `Send`, because it encapsulates the raw pointer it
-// contains, making sure memory ownership rules are observed.
-unsafe impl Send for PolyChain {}
 
 #[cfg(feature = "serde")]
 impl serde::ser::Serialize for PolyChain {
@@ -342,55 +243,20 @@ impl From<Sketch> for Shape2d {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    fn test_points() -> Vec<[f64; 2]> {
-        vec![[1.0, 1.0], [2.0, 1.0], [2.0, 2.0], [1.0, 2.0]]
-    }
-
-    #[test]
-    fn test_poly_chain_preserve_points() {
-        let points = test_points();
-        let poly_chain = PolyChain::from_points(points.clone());
-
-        assert_eq!(poly_chain.to_points(), points);
-    }
-
-    #[test]
-    fn test_poly_chain_rc() {
-        let assert_rc = |poly_chain: &PolyChain, expected_rc: usize| {
-            let rc =
-                unsafe { (*poly_chain.rc).load(atomic::Ordering::Acquire) };
-            assert_eq!(
-                rc, expected_rc,
-                "Sketch has rc = {rc}, expected {expected_rc}"
-            );
-        };
-
-        let poly_chain = PolyChain::from_points(test_points());
-        assert_rc(&poly_chain, 1);
-
-        let (s2, s3) = (poly_chain.clone(), poly_chain.clone());
-        assert_rc(&poly_chain, 3);
-
-        drop(s2);
-        assert_rc(&poly_chain, 2);
-
-        drop(s3);
-        assert_rc(&poly_chain, 1);
-
-        // rc is deallocated after the last drop, so we can't assert that it's 0
-    }
-
     #[cfg(feature = "serde")]
     #[test]
     fn test_poly_chain_serialize_loopback() {
         use serde_json::{from_str, to_string};
 
-        let poly_chain = PolyChain::from_points(test_points());
+        let poly_chain = super::PolyChain::from_points(vec![
+            [1.0, 1.0],
+            [2.0, 1.0],
+            [2.0, 2.0],
+            [1.0, 2.0],
+        ]);
 
         let json = to_string(&poly_chain).expect("failed to serialize sketch");
-        let poly_chain_de: PolyChain =
+        let poly_chain_de: super::PolyChain =
             from_str(&json).expect("failed to deserialize sketch");
 
         // ensure same content
