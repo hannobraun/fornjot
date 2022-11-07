@@ -100,8 +100,6 @@ impl From<Difference2d> for Shape2d {
 #[repr(C)]
 pub struct Sketch {
     chain: Chain,
-
-    // The color of the sketch in RGBA
     color: [u8; 4],
 }
 
