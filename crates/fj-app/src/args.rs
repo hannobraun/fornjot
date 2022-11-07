@@ -10,7 +10,6 @@ use fj_math::Scalar;
 #[command(version = fj::version::VERSION_FULL)]
 pub struct Args {
     /// The model to open
-    #[arg(short, long)]
     pub model: Option<PathBuf>,
 
     /// Export model to this path
