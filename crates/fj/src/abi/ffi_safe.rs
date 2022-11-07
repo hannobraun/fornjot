@@ -127,6 +127,35 @@ impl<T> Drop for Vec<T> {
 unsafe impl<T: Send> Send for Vec<T> {}
 unsafe impl<T: Sync> Sync for Vec<T> {}
 
+#[cfg(feature = "serde")]
+impl<T> serde::ser::Serialize for Vec<T>
+where
+    T: serde::ser::Serialize,
+{
+    fn serialize<S>(
+        &self,
+        serializer: S,
+    ) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::ser::Serializer,
+    {
+        self.deref().serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de, T> serde::de::Deserialize<'de> for Vec<T>
+where
+    T: serde::de::Deserialize<'de>,
+{
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::de::Deserializer<'de>,
+    {
+        Ok(std::vec::Vec::deserialize(deserializer)?.into())
+    }
+}
+
 /// A FFI-safe version of `Box<str>`.
 #[repr(transparent)]
 #[derive(Debug, PartialEq, Clone)]

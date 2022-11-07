@@ -169,6 +169,7 @@ impl Circle {
 
 /// A polygonal chain that is part of a [`Sketch`]
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct PolyChain {
     points: ffi_safe::Vec<[f64; 2]>,
@@ -187,48 +188,6 @@ impl PolyChain {
     }
 }
 
-#[cfg(feature = "serde")]
-impl serde::ser::Serialize for PolyChain {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::ser::Serializer,
-    {
-        let serde_sketch = PolyChainSerde {
-            points: self.to_points(),
-        };
-
-        serde_sketch.serialize(serializer)
-    }
-}
-
-#[cfg(feature = "serde")]
-impl<'de> serde::de::Deserialize<'de> for PolyChain {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::de::Deserializer<'de>,
-    {
-        PolyChainSerde::deserialize(deserializer)
-            .map(|serde_sketch| PolyChain::from_points(serde_sketch.points))
-    }
-}
-
-/// An owned, non-repr-C [`PolyChain`]
-///
-/// De/serializing a non-trivial structure with raw pointers is a hassle.
-/// This structure is a simple, owned intermediate form that can use the derive
-/// macros provided by serde. The implementation of the `Serialize` and
-/// `Deserialize` traits for [`PolyChain`] use this type as a stepping stone.
-///
-/// Note that constructing this requires cloning the points behind
-/// [`PolyChain`]. If de/serialization turns out to be a bottleneck, a more
-/// complete implementation will be required.
-#[cfg(feature = "serde")]
-#[derive(serde::Serialize, serde::Deserialize)]
-#[serde(rename = "Polyline")]
-struct PolyChainSerde {
-    points: Vec<[f64; 2]>,
-}
-
 impl From<Sketch> for Shape {
     fn from(shape: Sketch) -> Self {
         Self::Shape2d(shape.into())
@@ -238,28 +197,5 @@ impl From<Sketch> for Shape {
 impl From<Sketch> for Shape2d {
     fn from(shape: Sketch) -> Self {
         Shape2d::Sketch(shape)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[cfg(feature = "serde")]
-    #[test]
-    fn test_poly_chain_serialize_loopback() {
-        use serde_json::{from_str, to_string};
-
-        let poly_chain = super::PolyChain::from_points(vec![
-            [1.0, 1.0],
-            [2.0, 1.0],
-            [2.0, 2.0],
-            [1.0, 2.0],
-        ]);
-
-        let json = to_string(&poly_chain).expect("failed to serialize sketch");
-        let poly_chain_de: super::PolyChain =
-            from_str(&json).expect("failed to deserialize sketch");
-
-        // ensure same content
-        assert_eq!(poly_chain.to_points(), poly_chain_de.to_points());
     }
 }
