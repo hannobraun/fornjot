@@ -67,6 +67,8 @@ jobs:
 
       - name: Binaries | Compile
         run: cargo build --release --target ${{ matrix.target }}
+        env:
+          RELEASE_DETECTED: ${{ needs.calculate-release-flags.outputs.release-detected }}
 
       - name: Binaries | Prepare upload
         run: |
