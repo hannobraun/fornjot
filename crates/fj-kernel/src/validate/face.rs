@@ -1,11 +1,9 @@
-use std::convert::Infallible;
-
 use crate::objects::Face;
 
 use super::{Validate2, ValidationConfig};
 
 impl Validate2 for Face {
-    type Error = Infallible;
+    type Error = FaceValidationError;
 
     fn validate_with_config(
         &self,
@@ -14,3 +12,7 @@ impl Validate2 for Face {
         Ok(())
     }
 }
+
+/// [`Face`] validation error
+#[derive(Debug, thiserror::Error)]
+pub enum FaceValidationError {}
