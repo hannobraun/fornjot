@@ -1,4 +1,5 @@
 use crate::{
+    builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
     partial::{
         util::merge_options, MaybePartial, PartialHalfEdge, PartialVertex,
