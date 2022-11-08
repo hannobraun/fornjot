@@ -55,12 +55,12 @@ impl CycleBuilder for PartialCycle {
                     .surface()
                     .expect("Need surface to extend cycle with poly-chain");
 
-                let position_prev = vertex_prev
-                    .position()
-                    .expect("Need surface position to extend cycle");
-                let position_next = vertex_next
-                    .position()
-                    .expect("Need surface position to extend cycle");
+                let [position_prev, position_next] =
+                    [&vertex_prev, &vertex_next].map(|vertex| {
+                        vertex
+                            .position()
+                            .expect("Need surface position to extend cycle")
+                    });
 
                 let from = vertex_prev;
                 let to = vertex_next;
