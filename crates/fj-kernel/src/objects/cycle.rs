@@ -2,7 +2,6 @@ use std::slice;
 
 use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
-use pretty_assertions::assert_eq;
 
 use crate::{path::SurfacePath, storage::Handle};
 
@@ -34,34 +33,6 @@ impl Cycle {
             !half_edges.is_empty(),
             "Cycle must contain at least one half-edge"
         );
-
-        if half_edges.len() != 1 {
-            // Verify that all edges connect.
-            for [a, b] in half_edges.as_slice().array_windows_ext() {
-                let [_, prev] = a.vertices();
-                let [next, _] = b.vertices();
-
-                assert_eq!(
-                    prev.surface_form().id(),
-                    next.surface_form().id(),
-                    "Edges in cycle do not connect"
-                );
-            }
-        }
-
-        // Verify that the edges form a cycle
-        if let Some(first) = half_edges.first() {
-            if let Some(last) = half_edges.last() {
-                let [first, _] = first.vertices();
-                let [_, last] = last.vertices();
-
-                assert_eq!(
-                    first.surface_form().id(),
-                    last.surface_form().id(),
-                    "Edges do not form a cycle"
-                );
-            }
-        }
 
         Self { half_edges }
     }
