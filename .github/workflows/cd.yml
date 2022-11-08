@@ -20,7 +20,7 @@ jobs:
     name: Calculate release flags
     runs-on: ubuntu-latest
     outputs:
-      release-detected: ${{ steps.step1.outputs.release-detected }}
+      release-detected: ${{ steps.release.outputs.release-detected }}
 
     steps:
       - name: Checkout
