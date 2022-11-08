@@ -95,6 +95,7 @@ async fn generate_announcement(
             title,
             url,
             author,
+            ..
         } = pull_request;
 
         let author = if author_blacklist.contains(author.name.as_str()) {

@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use anyhow::anyhow;
 use autolib::find_version_in_str;
+use chrono::{DateTime, Utc};
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
@@ -64,10 +65,10 @@ impl PullRequestsSinceLastRelease {
                     }
                 }
 
-                if pull_request.merged_at.is_none() {
+                let Some(merged_at) = pull_request.merged_at else {
                     // If it wasn't merged, we're not interested.
                     continue;
-                }
+                };
 
                 let number = pull_request.number;
                 let title = pull_request
@@ -85,6 +86,7 @@ impl PullRequestsSinceLastRelease {
                     title,
                     url,
                     author,
+                    merged_at,
                 };
 
                 pull_requests.insert(pull_request.number, pull_request);
@@ -109,6 +111,7 @@ pub struct PullRequest {
     pub title: String,
     pub url: Url,
     pub author: Author,
+    pub merged_at: DateTime<Utc>,
 }
 
 pub struct Author {
