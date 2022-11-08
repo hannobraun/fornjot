@@ -1,3 +1,5 @@
+use std::slice;
+
 use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
 use pretty_assertions::assert_eq;
@@ -76,7 +78,7 @@ impl Cycle {
     }
 
     /// Access the half-edges that make up the cycle
-    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<HalfEdge>> + '_ {
+    pub fn half_edges(&self) -> HalfEdgesOfCycle {
         self.half_edges.iter()
     }
 
@@ -138,3 +140,8 @@ impl Cycle {
         unreachable!("Encountered invalid cycle: {self:#?}");
     }
 }
+
+/// An iterator over the half-edges of a [`Cycle`]
+///
+/// Returned by [`Cycle::half_edges`].
+pub type HalfEdgesOfCycle<'a> = slice::Iter<'a, Handle<HalfEdge>>;

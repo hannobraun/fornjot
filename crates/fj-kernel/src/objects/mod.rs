@@ -85,7 +85,7 @@ mod vertex;
 
 pub use self::{
     curve::{Curve, GlobalCurve},
-    cycle::Cycle,
+    cycle::{Cycle, HalfEdgesOfCycle},
     edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
     face::{Face, FaceSet, Handedness},
     shell::Shell,
