@@ -20,6 +20,28 @@ defaults:
     shell: bash
 
 jobs:
+  calculate-release-flags:
+    name: Calculate release flags
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Operator | Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: release-operator-01
+
+      - name: Operator | Deduce
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_LABEL: release
+          RUST_LOG: info
+        run: |
+          # Run release operator
+          cargo run -p release-operator -- detect
+
   binaries:
     name: Binaries
     strategy:
@@ -79,16 +101,6 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           key: release-operator-01
-
-      - name: Operator | Deduce
-        id: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_LABEL: release
-          RUST_LOG: info
-        run: |
-          # Run release operator
-          cargo run -p release-operator -- detect
 
       - name: Binaries | Download
         if: ${{ steps.release.outputs.release-detected == 'true' }}
