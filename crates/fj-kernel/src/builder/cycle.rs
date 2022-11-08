@@ -55,34 +55,32 @@ impl CycleBuilder for PartialCycle {
                     .surface()
                     .expect("Need surface to extend cycle with poly-chain");
 
-                let position_prev = vertex_prev
-                    .position()
-                    .expect("Need surface position to extend cycle");
-                let position_next = vertex_next
-                    .position()
-                    .expect("Need surface position to extend cycle");
+                let [position_prev, position_next] =
+                    [&vertex_prev, &vertex_next].map(|vertex| {
+                        vertex
+                            .position()
+                            .expect("Need surface position to extend cycle")
+                    });
 
-                let from = vertex_prev;
-                let to = vertex_next;
-
-                previous = Some(to.clone());
+                previous = Some(vertex_next.clone());
 
                 let curve = Curve::partial()
                     .with_surface(Some(surface.clone()))
                     .update_as_line_from_points([position_prev, position_next]);
 
-                let [from, to] =
-                    [(0., from), (1., to)].map(|(position, surface_form)| {
+                let vertices = [(0., vertex_prev), (1., vertex_next)].map(
+                    |(position, surface_form)| {
                         Vertex::partial()
                             .with_curve(curve.clone())
                             .with_position(Some([position]))
                             .with_surface_form(surface_form)
-                    });
+                    },
+                );
 
                 half_edges.push(
                     HalfEdge::partial()
                         .with_curve(curve)
-                        .with_vertices([from, to]),
+                        .with_vertices(vertices),
                 );
 
                 continue;

@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
     },
-    partial::{HasPartial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     storage::Handle,
     validate::ValidationError,
 };
@@ -15,6 +15,12 @@ use super::{CurveBuilder, GlobalVertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
+    /// Update the partial half-edge with the given back vertex
+    fn with_back_vertex(self, back: impl Into<MaybePartial<Vertex>>) -> Self;
+
+    /// Update the partial half-edge with the given front vertex
+    fn with_front_vertex(self, front: impl Into<MaybePartial<Vertex>>) -> Self;
+
     /// Update partial half-edge as a circle, from the given radius
     ///
     /// # Implementation Note
@@ -37,9 +43,22 @@ pub trait HalfEdgeBuilder: Sized {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     fn update_as_line_segment(self) -> Self;
+
+    /// Infer the global form of the partial half-edge
+    fn infer_global_form(self) -> Self;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
+    fn with_back_vertex(self, back: impl Into<MaybePartial<Vertex>>) -> Self {
+        let [_, front] = self.vertices();
+        self.with_vertices([back.into(), front])
+    }
+
+    fn with_front_vertex(self, front: impl Into<MaybePartial<Vertex>>) -> Self {
+        let [back, _] = self.vertices();
+        self.with_vertices([back, front.into()])
+    }
+
     fn update_as_circle_from_radius(
         self,
         radius: impl Into<Scalar>,
@@ -180,6 +199,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         };
 
         self.with_curve(curve).with_vertices([back, front])
+    }
+
+    fn infer_global_form(self) -> Self {
+        self.with_global_form(PartialGlobalEdge::default())
     }
 }
 

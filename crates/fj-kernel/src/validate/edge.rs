@@ -24,6 +24,11 @@ impl Validate2 for HalfEdge {
         HalfEdgeValidationError::check_global_curve_identity(self)?;
         HalfEdgeValidationError::check_global_vertex_identity(self)?;
         HalfEdgeValidationError::check_vertex_positions(self, config)?;
+
+        // We don't need to check anything about surfaces here. We already check
+        // curves, which makes sure the vertices are consistent with each other,
+        // and the validation of those vertices checks the surfaces.
+
         Ok(())
     }
 }

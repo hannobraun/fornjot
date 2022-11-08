@@ -26,6 +26,7 @@ mod uniqueness;
 mod vertex;
 
 pub use self::{
+    cycle::CycleValidationError,
     edge::HalfEdgeValidationError,
     uniqueness::UniquenessIssues,
     vertex::{SurfaceVertexValidationError, VertexValidationError},
@@ -176,6 +177,10 @@ pub enum ValidationError {
     /// Uniqueness validation failed
     #[error("Uniqueness validation failed")]
     Uniqueness(#[from] UniquenessIssues),
+
+    /// `Cycle` validation error
+    #[error(transparent)]
+    Cycle(#[from] CycleValidationError),
 
     /// `HalfEdge` validation error
     #[error(transparent)]
