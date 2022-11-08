@@ -15,6 +15,11 @@ impl Validate2 for Cycle {
         _: &ValidationConfig,
     ) -> Result<(), Self::Error> {
         CycleValidationError::check_half_edge_connections(self)?;
+
+        // We don't need to check that all half-edges are defined in the same
+        // surface. We already check that they are connected by identical
+        // surface vertices, so that would be redundant.
+
         Ok(())
     }
 }
