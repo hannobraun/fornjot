@@ -224,6 +224,14 @@ impl MaybePartial<SurfaceVertex> {
             Self::Partial(partial) => partial.surface(),
         }
     }
+
+    /// Access the global form
+    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
+        match self {
+            Self::Full(full) => full.global_form().clone().into(),
+            Self::Partial(partial) => partial.global_form(),
+        }
+    }
 }
 
 impl MaybePartial<Vertex> {
