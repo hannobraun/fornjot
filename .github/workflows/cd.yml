@@ -92,7 +92,9 @@ jobs:
   release:
     name: Release
     if: ${{ needs.calculate-release-flags.outputs.release-detected == 'true' }}
-    needs: binaries
+    needs:
+      - calculate-release-flags
+      - binaries
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
