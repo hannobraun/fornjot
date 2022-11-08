@@ -52,7 +52,7 @@ jobs:
           - { target: aarch64-apple-darwin, os: macOS-latest }
           - { target: x86_64-pc-windows-msvc, os: windows-latest }
 
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -91,7 +91,7 @@ jobs:
 
   release:
     name: Release
-    if: ${{ steps.calculate-release-flags.outputs.release-detected == 'true' }}
+    if: ${{ needs.calculate-release-flags.outputs.release-detected == 'true' }}
     needs: binaries
     runs-on: ubuntu-latest
     steps:
