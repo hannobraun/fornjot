@@ -43,6 +43,9 @@ pub trait HalfEdgeBuilder: Sized {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     fn update_as_line_segment(self) -> Self;
+
+    /// Infer the global form of the partial half-edge
+    fn infer_global_form(self) -> Self;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -196,6 +199,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         };
 
         self.with_curve(curve).with_vertices([back, front])
+    }
+
+    fn infer_global_form(self) -> Self {
+        self.with_global_form(PartialGlobalEdge::default())
     }
 }
 
