@@ -87,6 +87,22 @@ impl PartialCycle {
         mut self,
         objects: &Objects,
     ) -> Result<Handle<Cycle>, ValidationError> {
+        // Check that the cycle is closed. This will lead to a panic further
+        // down anyway, but that panic would be super-confusing. This one should
+        // be a bit more explicit on what is wrong.
+        if let (Some(first), Some(last)) =
+            (self.half_edges.first(), self.half_edges.last())
+        {
+            let [first, _] = first.vertices();
+            let [_, last] = last.vertices();
+
+            assert_eq!(
+                first.surface_form().position(),
+                last.surface_form().position(),
+                "Attempting to build un-closed cycle"
+            );
+        }
+
         // To create a cycle, we need to make sure that all its half-edges
         // connect to each other. Let's start with all the connections between
         // the first and the last half-edge.
