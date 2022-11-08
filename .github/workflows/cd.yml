@@ -91,6 +91,7 @@ jobs:
 
   release:
     name: Release
+    if: ${{ steps.calculate-release-flags.outputs.release-detected == 'true' }}
     needs: binaries
     runs-on: ubuntu-latest
     steps:
@@ -103,11 +104,9 @@ jobs:
           key: release-operator-01
 
       - name: Binaries | Download
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         uses: actions/download-artifact@v3
 
       - name: Binaries | Checksums
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         run: |
           # Build binary checksums
           for file in "${PROJ_NAME}"-*/"${PROJ_NAME}"-*; do
@@ -117,7 +116,6 @@ jobs:
           done
 
       - name: Release | GitHub
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.release.outputs.tag-name }}
@@ -125,7 +123,6 @@ jobs:
           files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
 
       - name: Release | Crates.io
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         env:
           RUST_LOG: info
         run: |
