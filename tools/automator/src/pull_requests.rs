@@ -51,8 +51,8 @@ impl PullRequestsSinceLastRelease {
                                 pull_request.title.ok_or_else(|| {
                                     anyhow!("Release PR is missing title")
                                 })?;
-                            let version = find_version_in_str(&title)?;
 
+                            let version = find_version_in_str(&title)?;
                             let version = version.ok_or_else(|| {
                                 anyhow!(
                                     "Pull request title contains no version:\
