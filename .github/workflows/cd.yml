@@ -19,6 +19,9 @@ jobs:
   calculate-release-flags:
     name: Calculate release flags
     runs-on: ubuntu-latest
+    outputs:
+      release-detected: ${{ steps.step1.outputs.release-detected }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
