@@ -20,7 +20,7 @@ impl PullRequestsSinceLastRelease {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
-        let version_of_last_release = 'outer: loop {
+        let (version_of_last_release, time_of_last_release) = 'outer: loop {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
             println!("Fetching page {}...", page);
@@ -60,7 +60,12 @@ impl PullRequestsSinceLastRelease {
                                 )
                             })?;
 
-                            break 'outer version;
+                            let time =
+                                pull_request.merged_at.ok_or_else(|| {
+                                    anyhow!("Release PR is missing merge time")
+                                })?;
+
+                            break 'outer (version, time);
                         }
                     }
                 }
@@ -98,6 +103,10 @@ impl PullRequestsSinceLastRelease {
                 return Err(anyhow!("Could not find previous release PR"));
             }
         };
+
+        pull_requests.retain(|_, pull_request| {
+            pull_request.merged_at > time_of_last_release
+        });
 
         Ok(Self {
             pull_requests,
