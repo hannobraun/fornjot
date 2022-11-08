@@ -108,7 +108,7 @@ Models are Rust libraries that depend on the [`fj`](https://crates.io/crates/fj)
 To view a model, run:
 
 ``` sh
-fj-app --model my-model
+fj-app my-model
 ```
 
 This will usually compile and load the model in the `my-model/` directory. If there is a configuration file (`fj.toml`) available, it might define a default path to load models from that is different from the current working directory. This is the case [in the Fornjot repository](fj.toml).
@@ -122,7 +122,7 @@ Toggle model rendering by pressing `1`. Toggle mesh rendering by pressing `2`. T
 To export a model to a file, run:
 
 ``` sh
-fj-app --model my-model --export my-model.3mf
+fj-app my-model --export my-model.3mf
 ```
 
 The file type is chosen based on the file extension. Both 3MF and STL are supported.
@@ -132,7 +132,7 @@ The file type is chosen based on the file extension. Both 3MF and STL are suppor
 Models can define parameters that can be overridden. This can be done using the `--parameters` argument:
 
 ``` sh
-fj-app --model my-model --parameters "width=3.0,height=5.0"
+fj-app my-model --parameters "width=3.0,height=5.0"
 ```
 
 
