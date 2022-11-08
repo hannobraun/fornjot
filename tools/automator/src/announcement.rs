@@ -95,14 +95,12 @@ async fn generate_announcement(
             title,
             url,
             author,
+            ..
         } = pull_request;
 
-        let author = if authors.contains(&author.name)
-            || author_blacklist.contains(author.name.as_str())
-        {
+        let author = if author_blacklist.contains(author.name.as_str()) {
             None
         } else {
-            authors.insert(author.name.clone());
             Some(author)
         };
 
@@ -118,8 +116,12 @@ async fn generate_announcement(
         pull_request_links.push_str(&link);
 
         if let Some(Author { name, profile }) = author {
-            let author_link = format!("[@{name}]: {profile}\n");
-            author_links.push_str(&author_link);
+            if !authors.contains(&name) {
+                let author_link = format!("[@{name}]: {profile}\n");
+                author_links.push_str(&author_link);
+
+                authors.insert(name.clone());
+            }
         }
     }
 

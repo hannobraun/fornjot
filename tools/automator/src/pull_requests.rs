@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use anyhow::anyhow;
 use autolib::find_version_in_str;
+use chrono::{DateTime, Utc};
 use octocrab::{
     models::pulls::PullRequest as OctoPullRequest,
     params::{pulls::Sort, Direction, State},
@@ -19,7 +20,7 @@ impl PullRequestsSinceLastRelease {
         let mut pull_requests = BTreeMap::new();
         let mut page = 1u32;
 
-        let version_of_last_release = 'outer: loop {
+        let (version_of_last_release, time_of_last_release) = 'outer: loop {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
             println!("Fetching page {}...", page);
@@ -50,8 +51,8 @@ impl PullRequestsSinceLastRelease {
                                 pull_request.title.ok_or_else(|| {
                                     anyhow!("Release PR is missing title")
                                 })?;
-                            let version = find_version_in_str(&title)?;
 
+                            let version = find_version_in_str(&title)?;
                             let version = version.ok_or_else(|| {
                                 anyhow!(
                                     "Pull request title contains no version:\
@@ -59,15 +60,20 @@ impl PullRequestsSinceLastRelease {
                                 )
                             })?;
 
-                            break 'outer version;
+                            let time =
+                                pull_request.merged_at.ok_or_else(|| {
+                                    anyhow!("Release PR is missing merge time")
+                                })?;
+
+                            break 'outer (version, time);
                         }
                     }
                 }
 
-                if pull_request.merged_at.is_none() {
+                let Some(merged_at) = pull_request.merged_at else {
                     // If it wasn't merged, we're not interested.
                     continue;
-                }
+                };
 
                 let number = pull_request.number;
                 let title = pull_request
@@ -85,6 +91,7 @@ impl PullRequestsSinceLastRelease {
                     title,
                     url,
                     author,
+                    merged_at,
                 };
 
                 pull_requests.insert(pull_request.number, pull_request);
@@ -96,6 +103,10 @@ impl PullRequestsSinceLastRelease {
                 return Err(anyhow!("Could not find previous release PR"));
             }
         };
+
+        pull_requests.retain(|_, pull_request| {
+            pull_request.merged_at > time_of_last_release
+        });
 
         Ok(Self {
             pull_requests,
@@ -109,6 +120,7 @@ pub struct PullRequest {
     pub title: String,
     pub url: Url,
     pub author: Author,
+    pub merged_at: DateTime<Utc>,
 }
 
 pub struct Author {

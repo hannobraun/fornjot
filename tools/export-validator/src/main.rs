@@ -20,7 +20,7 @@ fn main() -> anyhow::Result<()> {
         let exit_status = Command::new("cargo")
             .arg("run")
             .arg("--")
-            .args(["--model", &model])
+            .arg(&model)
             .args(["--export", export_file_path_str])
             .status()?;
 
