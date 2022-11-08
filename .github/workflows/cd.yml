@@ -68,6 +68,8 @@ jobs:
       - name: Binaries | Compile
         run: cargo build --release --target ${{ matrix.target }}
         env:
+          # This lets our app know it's an "official" release. Otherwise we would get
+          # a version number like "fj-app 0.8.0 (8cb928bb, unreleased)"
           RELEASE_DETECTED: ${{ needs.calculate-release-flags.outputs.release-detected }}
 
       - name: Binaries | Prepare upload
