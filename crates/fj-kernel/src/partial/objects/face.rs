@@ -113,3 +113,14 @@ impl PartialFace {
             .insert(Face::new(exterior, interiors, color))?)
     }
 }
+
+impl From<&Face> for PartialFace {
+    fn from(face: &Face) -> Self {
+        Self {
+            surface: Some(face.surface().clone()),
+            exterior: face.exterior().clone().into(),
+            interiors: face.interiors().cloned().map(Into::into).collect(),
+            color: Some(face.color()),
+        }
+    }
+}
