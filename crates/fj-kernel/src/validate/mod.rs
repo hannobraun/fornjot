@@ -88,7 +88,7 @@ pub enum ValidationError {
     #[error(transparent)]
     HalfEdge(#[from] HalfEdgeValidationError),
 
-    /// `SurfaceVertex` position didn't match `GlobalVertex`
+    /// `SurfaceVertex` validation error
     #[error(transparent)]
     SurfaceVertex(#[from] SurfaceVertexValidationError),
 
