@@ -58,16 +58,16 @@ impl PartialFace {
 
     /// Build the [`Face`] with an exterior polygon from the provided points
     pub fn with_exterior_polygon_from_points(
-        mut self,
+        self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         let surface = self.surface().expect("Need surface to create polygon");
 
-        self.exterior = Cycle::partial()
-            .with_poly_chain_from_points(surface, points)
-            .close_with_line_segment()
-            .into();
-        self
+        self.with_exterior(
+            Cycle::partial()
+                .with_poly_chain_from_points(surface, points)
+                .close_with_line_segment(),
+        )
     }
 
     /// Build the [`Face`] with the provided interior polygons
