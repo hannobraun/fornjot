@@ -4,7 +4,7 @@ use fj_math::Point;
 use crate::{
     builder::CycleBuilder,
     objects::{Cycle, Face, Objects, Surface},
-    partial::{HasPartial, MaybePartial},
+    partial::{util::merge_options, HasPartial, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -106,6 +106,19 @@ impl PartialFace {
     pub fn with_color(mut self, color: Color) -> Self {
         self.color = Some(color);
         self
+    }
+
+    /// Merge this partial object with another
+    pub fn merge_with(self, other: Self) -> Self {
+        let mut interiors = self.interiors;
+        interiors.extend(other.interiors);
+
+        Self {
+            surface: merge_options(self.surface, other.surface),
+            exterior: self.exterior.merge_with(other.exterior),
+            interiors,
+            color: merge_options(self.color, other.color),
+        }
     }
 
     /// Construct a polygon from a list of points
