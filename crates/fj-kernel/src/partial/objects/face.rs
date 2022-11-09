@@ -6,6 +6,7 @@ use crate::{
     objects::{Cycle, Face, Objects, Surface},
     partial::HasPartial,
     storage::Handle,
+    validate::ValidationError,
 };
 
 /// API for building a [`Face`]
@@ -100,15 +101,16 @@ impl<'a> FaceBuilder<'a> {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(self) -> Handle<Face> {
+    pub fn build(self) -> Result<Handle<Face>, ValidationError> {
         let exterior = self
             .exterior
             .expect("Can't build `Face` without exterior cycle");
         let color = self.color.unwrap_or_default();
 
-        self.objects
-            .faces
-            .insert(Face::new(exterior, self.interiors, color))
-            .unwrap()
+        Ok(self.objects.faces.insert(Face::new(
+            exterior,
+            self.interiors,
+            color,
+        ))?)
     }
 }

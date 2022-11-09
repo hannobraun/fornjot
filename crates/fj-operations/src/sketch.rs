@@ -35,7 +35,7 @@ impl Shape for fj::Sketch {
                 Face::builder(objects)
                     .with_exterior(cycle)
                     .with_color(Color(self.color()))
-                    .build()
+                    .build()?
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =
@@ -45,7 +45,7 @@ impl Shape for fj::Sketch {
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .with_color(Color(self.color()))
-                    .build()
+                    .build()?
             }
         };
 

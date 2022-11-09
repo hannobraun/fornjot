@@ -187,7 +187,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
-            .build();
+            .build()?;
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

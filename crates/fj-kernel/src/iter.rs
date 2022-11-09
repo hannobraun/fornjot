@@ -528,14 +528,14 @@ mod tests {
     }
 
     #[test]
-    fn sketch() {
+    fn sketch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::builder(&objects)
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+            .build()?;
         let object = Sketch::builder(&objects).with_faces([face]).build();
 
         assert_eq!(3, object.curve_iter().count());
@@ -549,6 +549,8 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(1, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]

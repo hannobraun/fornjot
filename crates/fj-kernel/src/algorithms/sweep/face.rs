@@ -110,12 +110,12 @@ mod tests {
         let bottom = Face::builder(&objects)
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build()
+            .build()?
             .reverse(&objects)?;
         let top = Face::builder(&objects)
             .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build();
+            .build()?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -154,12 +154,12 @@ mod tests {
         let bottom = Face::builder(&objects)
             .with_surface(surface.clone().translate(DOWN, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build()
+            .build()?
             .reverse(&objects)?;
         let top = Face::builder(&objects)
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build();
+            .build()?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());

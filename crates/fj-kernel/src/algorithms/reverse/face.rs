@@ -14,10 +14,10 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(objects))
             .collect::<Result<Vec<_>, _>>()?;
 
-        Ok(Face::builder(objects)
+        Face::builder(objects)
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(self.color())
-            .build())
+            .build()
     }
 }

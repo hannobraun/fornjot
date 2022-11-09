@@ -171,7 +171,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([-1., 0., 0.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -193,7 +193,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([1., 0., 0.], &objects)?;
 
         assert_eq!(
@@ -218,7 +218,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([0., 0., 2.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -240,7 +240,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([1., 1., 0.], &objects)?;
 
         let edge = face
@@ -273,7 +273,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([1., 1., 1.], &objects)?;
 
         let vertex = face
@@ -290,7 +290,7 @@ mod tests {
     }
 
     #[test]
-    fn ray_is_parallel_to_surface_and_hits() {
+    fn ray_is_parallel_to_surface_and_hits() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -304,12 +304,14 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build();
+            .build()?;
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFaceAndAreParallel)
-        )
+        );
+
+        Ok(())
     }
 
     #[test]
@@ -327,7 +329,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build()?
             .translate([0., 0., 1.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);

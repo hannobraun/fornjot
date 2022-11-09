@@ -47,7 +47,8 @@ impl<'a> SketchBuilder<'a> {
         self.faces.extend([Face::builder(self.objects)
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(points)
-            .build()]);
+            .build()
+            .unwrap()]);
         self
     }
 

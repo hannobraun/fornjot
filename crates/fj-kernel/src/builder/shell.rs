@@ -63,6 +63,7 @@ impl<'a> ShellBuilder<'a> {
                     [-h, h],
                 ])
                 .build()
+                .unwrap()
         };
 
         let (sides, top_edges) = {
@@ -193,7 +194,10 @@ impl<'a> ShellBuilder<'a> {
                         .build(self.objects)
                         .unwrap();
 
-                    Face::builder(self.objects).with_exterior(cycle).build()
+                    Face::builder(self.objects)
+                        .with_exterior(cycle)
+                        .build()
+                        .unwrap()
                 });
 
             (sides, tops)
@@ -264,6 +268,7 @@ impl<'a> ShellBuilder<'a> {
                     self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
                 )
                 .build()
+                .unwrap()
         };
 
         self.faces.extend([bottom]);
