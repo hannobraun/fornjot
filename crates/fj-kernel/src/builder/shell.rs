@@ -5,7 +5,7 @@ use fj_math::Scalar;
 
 use crate::{
     algorithms::transform::TransformObject,
-    builder::HalfEdgeBuilder,
+    builder::{FaceBuilder, HalfEdgeBuilder},
     objects::{
         Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
@@ -54,7 +54,7 @@ impl<'a> ShellBuilder<'a> {
                 .translate([Z, Z, -h], self.objects)
                 .unwrap();
 
-            Face::builder(self.objects)
+            Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points([
                     [-h, -h],
@@ -62,7 +62,8 @@ impl<'a> ShellBuilder<'a> {
                     [h, h],
                     [-h, h],
                 ])
-                .build()
+                .build(self.objects)
+                .unwrap()
         };
 
         let (sides, top_edges) = {
@@ -193,7 +194,10 @@ impl<'a> ShellBuilder<'a> {
                         .build(self.objects)
                         .unwrap();
 
-                    Face::builder(self.objects).with_exterior(cycle).build()
+                    Face::partial()
+                        .with_exterior(cycle)
+                        .build(self.objects)
+                        .unwrap()
                 });
 
             (sides, tops)
@@ -259,11 +263,12 @@ impl<'a> ShellBuilder<'a> {
                 );
             }
 
-            Face::builder(self.objects)
+            Face::partial()
                 .with_exterior(
                     self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
                 )
-                .build()
+                .build(self.objects)
+                .unwrap()
         };
 
         self.faces.extend([bottom]);

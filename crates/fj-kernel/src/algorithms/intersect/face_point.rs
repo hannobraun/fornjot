@@ -136,34 +136,38 @@ mod tests {
 
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
+        builder::FaceBuilder,
         iter::ObjectIters,
         objects::{Face, Objects},
+        partial::HasPartial,
     };
 
     #[test]
-    fn point_is_outside_face() {
+    fn point_is_outside_face() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
-            .build();
+            .build(&objects)?;
         let point = Point::from([2., 1.]);
 
         let intersection = (&face, &point).intersect();
         assert_eq!(intersection, None);
+
+        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_while_passing_outside() {
+    fn ray_hits_vertex_while_passing_outside() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -171,17 +175,19 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
+
+        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_at_cycle_seam() {
+    fn ray_hits_vertex_at_cycle_seam() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 2.]);
 
         let intersection = (&face, &point).intersect();
@@ -189,14 +195,16 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
+
+        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_while_staying_inside() {
+    fn ray_hits_vertex_while_staying_inside() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -204,7 +212,7 @@ mod tests {
                 [3., 0.],
                 [3., 4.],
             ])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -212,14 +220,17 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
+
+        Ok(())
     }
 
     #[test]
-    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
+    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() -> anyhow::Result<()>
+    {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -227,7 +238,7 @@ mod tests {
                 [3., 1.],
                 [0., 2.],
             ])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -235,14 +246,17 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
+
+        Ok(())
     }
 
     #[test]
-    fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
+    fn ray_hits_parallel_edge_and_does_not_leave_face_there(
+    ) -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -251,7 +265,7 @@ mod tests {
                 [4., 0.],
                 [4., 5.],
             ])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -259,17 +273,19 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
+
+        Ok(())
     }
 
     #[test]
-    fn point_is_coincident_with_edge() {
+    fn point_is_coincident_with_edge() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -286,17 +302,19 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnEdge(edge.clone()))
         );
+
+        Ok(())
     }
 
     #[test]
-    fn point_is_coincident_with_vertex() {
+    fn point_is_coincident_with_vertex() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+            .build(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -311,5 +329,7 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex.clone()))
         );
+
+        Ok(())
     }
 }

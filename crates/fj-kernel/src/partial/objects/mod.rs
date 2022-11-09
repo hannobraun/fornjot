@@ -1,18 +1,19 @@
 pub mod curve;
 pub mod cycle;
 pub mod edge;
+pub mod face;
 pub mod vertex;
 
 use crate::{
     objects::{
-        Curve, Cycle, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        SurfaceVertex, Vertex,
+        Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
+        Objects, SurfaceVertex, Vertex,
     },
     storage::Handle,
 };
 
 use super::{
-    HasPartial, MaybePartial, Partial, PartialCurve, PartialCycle,
+    HasPartial, MaybePartial, Partial, PartialCurve, PartialCycle, PartialFace,
     PartialGlobalCurve, PartialGlobalEdge, PartialGlobalVertex,
     PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
 };
@@ -53,6 +54,7 @@ macro_rules! impl_traits {
 impl_traits!(
     Curve, PartialCurve;
     Cycle, PartialCycle;
+    Face, PartialFace;
     GlobalCurve, PartialGlobalCurve;
     GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;

@@ -2,44 +2,51 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Face, FaceSet, Objects},
-    partial::HasPartial,
-    storage::Handle,
+    partial::{HasPartial, PartialFace},
     validate::ValidationError,
 };
 
 use super::TransformObject;
 
-impl TransformObject for Handle<Face> {
+impl TransformObject for PartialFace {
     fn transform(
         self,
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let surface = self.surface().clone().transform(transform, objects)?;
+        let surface = self
+            .surface()
+            .map(|surface| surface.transform(transform, objects))
+            .transpose()?;
         let exterior = self
             .exterior()
-            .to_partial()
+            .into_partial()
             .transform(transform, objects)?
-            .with_surface(Some(surface.clone()))
-            .build(objects)?;
+            .with_surface(surface.clone());
         let interiors = self
             .interiors()
             .map(|cycle| -> Result<_, ValidationError> {
                 cycle
-                    .to_partial()
+                    .into_partial()
                     .transform(transform, objects)?
-                    .with_surface(Some(surface.clone()))
+                    .with_surface(surface.clone())
                     .build(objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
 
         let color = self.color();
 
-        Ok(Face::builder(objects)
+        let mut face = Face::partial()
             .with_exterior(exterior)
-            .with_interiors(interiors)
-            .with_color(color)
-            .build())
+            .with_interiors(interiors);
+        if let Some(surface) = surface {
+            face = face.with_surface(surface);
+        }
+        if let Some(color) = color {
+            face = face.with_color(color);
+        }
+
+        Ok(face)
     }
 }
 

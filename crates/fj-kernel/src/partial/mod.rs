@@ -45,6 +45,7 @@ pub use self::{
         curve::{PartialCurve, PartialGlobalCurve},
         cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
+        face::PartialFace,
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
     traits::{HasPartial, Partial},

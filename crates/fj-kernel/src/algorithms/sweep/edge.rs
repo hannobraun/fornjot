@@ -7,6 +7,7 @@ use crate::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
         Vertex,
     },
+    partial::HasPartial,
     path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
@@ -175,10 +176,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             objects.cycles.insert(Cycle::new(edges))?
         };
 
-        Ok(Face::builder(objects)
+        Face::partial()
             .with_exterior(cycle)
             .with_color(color)
-            .build())
+            .build(objects)
     }
 }
 
@@ -256,7 +257,7 @@ mod tests {
                     .cycles
                     .insert(Cycle::new([bottom, side_up, top, side_down]))?;
 
-                Face::builder(&objects).with_exterior(cycle).build()
+                Face::partial().with_exterior(cycle).build(&objects)?
             };
 
         assert_eq!(face, expected_face);

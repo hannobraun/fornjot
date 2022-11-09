@@ -5,6 +5,7 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
+    partial::HasPartial,
     validate::ValidationError,
 };
 use fj_math::Aabb;
@@ -78,11 +79,11 @@ impl Shape for fj::Difference2d {
             );
 
             faces.push(
-                Face::builder(objects)
+                Face::partial()
                     .with_exterior(exterior)
                     .with_interiors(interiors)
                     .with_color(Color(self.color()))
-                    .build(),
+                    .build(objects)?,
             );
         }
 

@@ -84,7 +84,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        builder::HalfEdgeBuilder,
+        builder::{FaceBuilder, HalfEdgeBuilder},
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
     };
@@ -107,15 +107,15 @@ mod tests {
             .build()
             .sweep(UP, &objects)?;
 
-        let bottom = Face::builder(&objects)
+        let bottom = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build()
+            .build(&objects)?
             .reverse(&objects)?;
-        let top = Face::builder(&objects)
+        let top = Face::partial()
             .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build();
+            .build(&objects)?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -151,15 +151,15 @@ mod tests {
             .build()
             .sweep(DOWN, &objects)?;
 
-        let bottom = Face::builder(&objects)
+        let bottom = Face::partial()
             .with_surface(surface.clone().translate(DOWN, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build()
+            .build(&objects)?
             .reverse(&objects)?;
-        let top = Face::builder(&objects)
+        let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build();
+            .build(&objects)?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());

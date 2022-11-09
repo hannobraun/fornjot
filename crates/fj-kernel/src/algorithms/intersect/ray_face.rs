@@ -152,8 +152,10 @@ mod tests {
             },
             transform::TransformObject,
         },
+        builder::FaceBuilder,
         iter::ObjectIters,
         objects::{Face, Objects},
+        partial::HasPartial,
     };
 
     #[test]
@@ -163,7 +165,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -171,7 +173,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([-1., 0., 0.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -185,7 +187,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -193,7 +195,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([1., 0., 0.], &objects)?;
 
         assert_eq!(
@@ -210,7 +212,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -218,7 +220,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([0., 0., 2.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -232,7 +234,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -240,7 +242,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([1., 1., 0.], &objects)?;
 
         let edge = face
@@ -265,7 +267,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.yz_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -273,7 +275,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([1., 1., 1.], &objects)?;
 
         let vertex = face
@@ -290,13 +292,13 @@ mod tests {
     }
 
     #[test]
-    fn ray_is_parallel_to_surface_and_hits() {
+    fn ray_is_parallel_to_surface_and_hits() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -304,12 +306,14 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build();
+            .build(&objects)?;
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFaceAndAreParallel)
-        )
+        );
+
+        Ok(())
     }
 
     #[test]
@@ -319,7 +323,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [-1., -1.],
@@ -327,7 +331,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build()
+            .build(&objects)?
             .translate([0., 0., 1.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
