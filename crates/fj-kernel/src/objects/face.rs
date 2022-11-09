@@ -41,12 +41,7 @@ pub struct Face {
 impl Face {
     /// Build a `Face` using [`PartialFace`]
     pub fn builder() -> PartialFace {
-        PartialFace {
-            surface: None,
-            exterior: Default::default(),
-            interiors: Vec::new(),
-            color: None,
-        }
+        PartialFace::default()
     }
 
     /// Construct a new instance of `Face`
