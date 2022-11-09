@@ -12,6 +12,7 @@ use crate::{
 /// API for building a [`Face`]
 ///
 /// Also see [`Face::builder`].
+#[derive(Clone, Debug, Default)]
 pub struct PartialFace {
     /// The surface that the [`Face`] is defined in
     pub surface: Option<Handle<Surface>>,
