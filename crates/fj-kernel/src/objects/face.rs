@@ -51,13 +51,6 @@ impl Face {
     }
 
     /// Construct a new instance of `Face`
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the provided cycles are not defined in the same surface.
-    ///
-    /// Panics, if the winding of the interior cycles is not opposite that of
-    /// the exterior cycle.
     pub fn new(
         exterior: Handle<Cycle>,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
