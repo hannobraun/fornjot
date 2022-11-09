@@ -26,7 +26,7 @@ pub struct FaceBuilder<'a> {
     pub exterior: MaybePartial<Cycle>,
 
     /// The interior cycles that form holes in the [`Face`]
-    pub interiors: Vec<Handle<Cycle>>,
+    pub interiors: Vec<MaybePartial<Cycle>>,
 
     /// The color of the [`Face`]
     pub color: Option<Color>,
@@ -67,6 +67,7 @@ impl<'a> FaceBuilder<'a> {
         mut self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
+        let interiors = interiors.into_iter().map(Into::into);
         self.interiors.extend(interiors);
         self
     }
@@ -85,8 +86,7 @@ impl<'a> FaceBuilder<'a> {
             Cycle::partial()
                 .with_poly_chain_from_points(surface.clone(), points)
                 .close_with_line_segment()
-                .build(self.objects)
-                .unwrap(),
+                .into(),
         );
         self
     }
@@ -100,12 +100,16 @@ impl<'a> FaceBuilder<'a> {
     /// Construct a polygon from a list of points
     pub fn build(self) -> Result<Handle<Face>, ValidationError> {
         let exterior = self.exterior.into_full(self.objects)?;
+        let interiors = self
+            .interiors
+            .into_iter()
+            .map(|cycle| cycle.into_full(self.objects))
+            .collect::<Result<Vec<_>, _>>()?;
         let color = self.color.unwrap_or_default();
 
-        Ok(self.objects.faces.insert(Face::new(
-            exterior,
-            self.interiors,
-            color,
-        ))?)
+        Ok(self
+            .objects
+            .faces
+            .insert(Face::new(exterior, interiors, color))?)
     }
 }
