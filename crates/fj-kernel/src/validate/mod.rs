@@ -36,7 +36,7 @@ use std::convert::Infallible;
 use fj_math::Scalar;
 
 /// Validate an object
-pub trait Validate2: Sized {
+pub trait Validate: Sized {
     /// The error that validation of the implementing type can result in
     type Error: Into<ValidationError>;
 

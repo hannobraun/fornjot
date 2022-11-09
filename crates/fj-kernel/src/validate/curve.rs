@@ -2,9 +2,9 @@ use std::convert::Infallible;
 
 use crate::objects::{Curve, GlobalCurve};
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Curve {
+impl Validate for Curve {
     type Error = Infallible;
 
     fn validate_with_config(
@@ -15,7 +15,7 @@ impl Validate2 for Curve {
     }
 }
 
-impl Validate2 for GlobalCurve {
+impl Validate for GlobalCurve {
     type Error = Infallible;
 
     fn validate_with_config(

@@ -2,9 +2,9 @@ use std::convert::Infallible;
 
 use crate::objects::Sketch;
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Sketch {
+impl Validate for Sketch {
     type Error = Infallible;
 
     fn validate_with_config(

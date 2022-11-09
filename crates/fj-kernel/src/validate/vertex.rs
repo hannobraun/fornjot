@@ -7,9 +7,9 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Vertex {
+impl Validate for Vertex {
     type Error = VertexValidationError;
 
     fn validate_with_config(
@@ -22,7 +22,7 @@ impl Validate2 for Vertex {
     }
 }
 
-impl Validate2 for SurfaceVertex {
+impl Validate for SurfaceVertex {
     type Error = SurfaceVertexValidationError;
 
     fn validate_with_config(
@@ -34,7 +34,7 @@ impl Validate2 for SurfaceVertex {
     }
 }
 
-impl Validate2 for GlobalVertex {
+impl Validate for GlobalVertex {
     type Error = Infallible;
 
     fn validate_with_config(
@@ -182,7 +182,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         objects::{Curve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
-        validate::Validate2,
+        validate::Validate,
     };
 
     #[test]

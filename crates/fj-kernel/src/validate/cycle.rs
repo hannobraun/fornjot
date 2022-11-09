@@ -5,9 +5,9 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Cycle {
+impl Validate for Cycle {
     type Error = CycleValidationError;
 
     fn validate_with_config(
@@ -69,7 +69,7 @@ mod tests {
         builder::{CycleBuilder, HalfEdgeBuilder, VertexBuilder},
         objects::{Cycle, Objects},
         partial::HasPartial,
-        validate::Validate2,
+        validate::Validate,
     };
 
     #[test]

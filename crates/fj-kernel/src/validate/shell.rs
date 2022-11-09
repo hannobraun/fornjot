@@ -2,9 +2,9 @@ use std::convert::Infallible;
 
 use crate::objects::Shell;
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Shell {
+impl Validate for Shell {
     type Error = Infallible;
 
     fn validate_with_config(
