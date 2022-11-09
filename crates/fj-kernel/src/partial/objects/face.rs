@@ -14,20 +14,10 @@ use crate::{
 /// Also see [`Face::builder`].
 #[derive(Clone, Debug, Default)]
 pub struct PartialFace {
-    /// The surface that the [`Face`] is defined in
-    pub surface: Option<Handle<Surface>>,
-
-    /// The exterior cycle that bounds the [`Face`] on the outside
-    ///
-    /// Must be provided by the caller, directly or using one of the `with_`
-    /// methods, before [`PartialFace::build`] is called.
-    pub exterior: MaybePartial<Cycle>,
-
-    /// The interior cycles that form holes in the [`Face`]
-    pub interiors: Vec<MaybePartial<Cycle>>,
-
-    /// The color of the [`Face`]
-    pub color: Option<Color>,
+    surface: Option<Handle<Surface>>,
+    exterior: MaybePartial<Cycle>,
+    interiors: Vec<MaybePartial<Cycle>>,
+    color: Option<Color>,
 }
 
 impl PartialFace {
