@@ -12,14 +12,14 @@ use crate::{
 /// API for building a [`Face`]
 ///
 /// Also see [`Face::builder`].
-pub struct FaceBuilder {
+pub struct PartialFace {
     /// The surface that the [`Face`] is defined in
     pub surface: Option<Handle<Surface>>,
 
     /// The exterior cycle that bounds the [`Face`] on the outside
     ///
     /// Must be provided by the caller, directly or using one of the `with_`
-    /// methods, before [`FaceBuilder::build`] is called.
+    /// methods, before [`PartialFace::build`] is called.
     pub exterior: MaybePartial<Cycle>,
 
     /// The interior cycles that form holes in the [`Face`]
@@ -29,7 +29,7 @@ pub struct FaceBuilder {
     pub color: Option<Color>,
 }
 
-impl FaceBuilder {
+impl PartialFace {
     /// Build the [`Face`] with the provided surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
