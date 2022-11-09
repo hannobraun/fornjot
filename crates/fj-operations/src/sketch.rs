@@ -44,8 +44,11 @@ impl Shape for fj::Sketch {
                     .insert(objects)?
             }
             fj::Chain::PolyChain(poly_chain) => {
-                let points =
-                    poly_chain.to_points().into_iter().map(Point::from);
+                let points = poly_chain
+                    .to_points()
+                    .into_iter()
+                    .map(|fj::SketchSegment::LineTo { point }| point)
+                    .map(Point::from);
 
                 Face::partial()
                     .with_surface(surface)
@@ -70,6 +73,7 @@ impl Shape for fj::Sketch {
                 poly_chain
                     .to_points()
                     .into_iter()
+                    .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from)
                     .map(Point::to_xyz),
             ),
