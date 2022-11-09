@@ -61,13 +61,10 @@ impl PartialFace {
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        let surface = self
-            .surface
-            .as_ref()
-            .expect("Need surface to create polygon");
+        let surface = self.surface().expect("Need surface to create polygon");
 
         self.exterior = Cycle::partial()
-            .with_poly_chain_from_points(surface.clone(), points)
+            .with_poly_chain_from_points(surface, points)
             .close_with_line_segment()
             .into();
         self
