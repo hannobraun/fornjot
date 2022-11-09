@@ -11,17 +11,39 @@ env:
   # used to rename and upload the binaries
   PROJ_NAME: fj-app
 
-  # This lets our app know it's an "official" release. Otherwise we would get
-  # a version number like "fj-app 0.8.0 (8cb928bb, unreleased)"
-  FJ_OFFICIAL_RELEASE: 1
-
 defaults:
   run:
     shell: bash
 
 jobs:
+  calculate-release-flags:
+    name: Calculate release flags
+    runs-on: ubuntu-latest
+    outputs:
+      release-detected: ${{ steps.release.outputs.release-detected }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Operator | Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: release-operator-01
+
+      - name: Operator | Deduce
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_LABEL: release
+          RUST_LOG: info
+        run: |
+          # Run release operator
+          cargo run -p release-operator -- detect
+
   binaries:
     name: Binaries
+    needs: calculate-release-flags
     strategy:
       matrix:
         include:
@@ -30,7 +52,7 @@ jobs:
           - { target: aarch64-apple-darwin, os: macOS-latest }
           - { target: x86_64-pc-windows-msvc, os: windows-latest }
 
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -45,6 +67,10 @@ jobs:
 
       - name: Binaries | Compile
         run: cargo build --release --target ${{ matrix.target }}
+        env:
+          # This lets our app know it's an "official" release. Otherwise we would get
+          # a version number like "fj-app 0.8.0 (8cb928bb, unreleased)"
+          RELEASE_DETECTED: ${{ needs.calculate-release-flags.outputs.release-detected }}
 
       - name: Binaries | Prepare upload
         run: |
@@ -69,7 +95,10 @@ jobs:
 
   release:
     name: Release
-    needs: binaries
+    if: ${{ needs.calculate-release-flags.outputs.release-detected == 'true' }}
+    needs:
+      - calculate-release-flags
+      - binaries
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -80,22 +109,10 @@ jobs:
         with:
           key: release-operator-01
 
-      - name: Operator | Deduce
-        id: release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_LABEL: release
-          RUST_LOG: info
-        run: |
-          # Run release operator
-          cargo run -p release-operator -- detect
-
       - name: Binaries | Download
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         uses: actions/download-artifact@v3
 
       - name: Binaries | Checksums
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         run: |
           # Build binary checksums
           for file in "${PROJ_NAME}"-*/"${PROJ_NAME}"-*; do
@@ -105,7 +122,6 @@ jobs:
           done
 
       - name: Release | GitHub
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.release.outputs.tag-name }}
@@ -113,7 +129,6 @@ jobs:
           files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
 
       - name: Release | Crates.io
-        if: ${{ steps.release.outputs.release-detected == 'true' }}
         env:
           RUST_LOG: info
         run: |

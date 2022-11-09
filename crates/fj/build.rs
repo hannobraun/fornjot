@@ -23,8 +23,8 @@ impl Version {
         let commit = git_description();
 
         let official_release =
-            std::env::var("FJ_OFFICIAL_RELEASE").as_deref() == Ok("1");
-        println!("cargo:rerun-if-env-changed=FJ_OFFICIAL_RELEASE");
+            std::env::var("RELEASE_DETECTED").as_deref() == Ok("true");
+        println!("cargo:rerun-if-env-changed=RELEASE_DETECTED");
 
         let full_string = match (commit, official_release) {
             (Some(commit), true) => format!("{pkg_version} ({commit})"),
