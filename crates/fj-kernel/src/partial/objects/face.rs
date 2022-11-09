@@ -48,7 +48,10 @@ impl PartialFace {
     }
 
     /// Build the [`Face`] with the provided exterior
-    pub fn with_exterior(mut self, exterior: Handle<Cycle>) -> Self {
+    pub fn with_exterior(
+        mut self,
+        exterior: impl Into<MaybePartial<Cycle>>,
+    ) -> Self {
         self.exterior = exterior.into();
         self
     }
