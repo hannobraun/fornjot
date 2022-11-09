@@ -3,7 +3,7 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::{builder::FaceBuilder, storage::Handle};
+use crate::{partial::FaceBuilder, storage::Handle};
 
 use super::{Cycle, Objects, Surface};
 

@@ -2,12 +2,11 @@ use fj_interop::mesh::Color;
 use fj_math::Point;
 
 use crate::{
+    builder::CycleBuilder,
     objects::{Cycle, Face, Objects, Surface},
     partial::HasPartial,
     storage::Handle,
 };
-
-use super::CycleBuilder;
 
 /// API for building a [`Face`]
 ///
