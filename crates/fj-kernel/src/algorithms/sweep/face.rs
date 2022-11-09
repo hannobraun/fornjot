@@ -85,6 +85,7 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
         builder::{FaceBuilder, HalfEdgeBuilder},
+        insert::Insert,
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
     };
@@ -111,11 +112,13 @@ mod tests {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
+            .insert(&objects)?
             .reverse(&objects)?;
         let top = Face::partial()
             .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -129,7 +132,8 @@ mod tests {
                         objects.surfaces.xy_plane(),
                         [a, b],
                     )
-                    .build(&objects)?;
+                    .build(&objects)?
+                    .insert(&objects)?;
                 (half_edge, Color::default()).sweep(UP, &objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
@@ -155,11 +159,13 @@ mod tests {
             .with_surface(surface.clone().translate(DOWN, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
+            .insert(&objects)?
             .reverse(&objects)?;
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -174,6 +180,7 @@ mod tests {
                         [a, b],
                     )
                     .build(&objects)?
+                    .insert(&objects)?
                     .reverse(&objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &objects)
             })

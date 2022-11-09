@@ -169,6 +169,7 @@ mod tests {
     use crate::{
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
+        insert::Insert,
         objects::{Curve, HalfEdge, Objects, Vertex},
         partial::HasPartial,
     };
@@ -181,18 +182,21 @@ mod tests {
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .update_as_u_axis()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let vertex = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(curve)
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         let half_edge =
             (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
 
         let expected_half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         assert_eq!(half_edge, expected_half_edge);
         Ok(())
     }

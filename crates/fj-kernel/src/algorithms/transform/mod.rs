@@ -13,10 +13,11 @@ mod vertex;
 use fj_math::{Transform, Vector};
 
 use crate::{
+    insert::Insert,
     objects::Objects,
     partial::{HasPartial, MaybePartial, Partial},
     storage::Handle,
-    validate::ValidationError,
+    validate::{Validate, ValidationError},
 };
 
 /// Transform an object
@@ -61,17 +62,20 @@ pub trait TransformObject: Sized {
 
 impl<T> TransformObject for Handle<T>
 where
-    T: HasPartial,
+    T: HasPartial + Insert,
     T::Partial: TransformObject,
+    ValidationError: From<<T as Validate>::Error>,
 {
     fn transform(
         self,
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        self.to_partial()
+        Ok(self
+            .to_partial()
             .transform(transform, objects)?
-            .build(objects)
+            .build(objects)?
+            .insert(objects)?)
     }
 }
 

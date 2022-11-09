@@ -102,10 +102,7 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<HalfEdge>, ValidationError> {
+    pub fn build(self, objects: &Objects) -> Result<HalfEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
@@ -120,9 +117,7 @@ impl PartialHalfEdge {
             })
             .into_full(objects)?;
 
-        Ok(objects
-            .half_edges
-            .insert(HalfEdge::new(vertices, global_form))?)
+        Ok(HalfEdge::new(vertices, global_form))
     }
 }
 
@@ -202,16 +197,14 @@ impl PartialGlobalEdge {
     pub fn build(
         self,
         objects: &Objects,
-    ) -> Result<Handle<GlobalEdge>, ValidationError> {
+    ) -> Result<GlobalEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
         let vertices = self
             .vertices
             .expect("Can't build `GlobalEdge` without vertices")
             .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
 
-        Ok(objects
-            .global_edges
-            .insert(GlobalEdge::new(curve, vertices))?)
+        Ok(GlobalEdge::new(curve, vertices))
     }
 }
 

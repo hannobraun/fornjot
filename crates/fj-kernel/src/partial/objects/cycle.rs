@@ -86,7 +86,7 @@ impl PartialCycle {
     pub fn build(
         mut self,
         objects: &Objects,
-    ) -> Result<Handle<Cycle>, ValidationError> {
+    ) -> Result<Cycle, ValidationError> {
         // Check that the cycle is closed. This will lead to a panic further
         // down anyway, but that panic would be super-confusing. This one should
         // be a bit more explicit on what is wrong.
@@ -142,7 +142,7 @@ impl PartialCycle {
             half_edges.push(half_edge);
         }
 
-        Ok(objects.cycles.insert(Cycle::new(half_edges))?)
+        Ok(Cycle::new(half_edges))
     }
 }
 

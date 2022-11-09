@@ -137,6 +137,7 @@ mod tests {
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         builder::FaceBuilder,
+        insert::Insert,
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,
@@ -150,7 +151,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([2., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -167,7 +169,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -187,7 +190,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 2.]);
 
         let intersection = (&face, &point).intersect();
@@ -212,7 +216,8 @@ mod tests {
                 [3., 0.],
                 [3., 4.],
             ])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -238,7 +243,8 @@ mod tests {
                 [3., 1.],
                 [0., 2.],
             ])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -265,7 +271,8 @@ mod tests {
                 [4., 0.],
                 [4., 5.],
             ])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -285,7 +292,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -314,7 +322,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();

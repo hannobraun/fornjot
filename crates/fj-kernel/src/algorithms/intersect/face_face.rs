@@ -68,8 +68,10 @@ mod tests {
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
         builder::{CurveBuilder, FaceBuilder},
+        insert::Insert,
         objects::{Curve, Face, Objects},
         partial::HasPartial,
+        validate::ValidationError,
     };
 
     use super::FaceFaceIntersection;
@@ -122,12 +124,14 @@ mod tests {
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
 
-        let expected_curves = surfaces.try_map_ext(|surface| {
-            Curve::partial()
-                .with_surface(Some(surface))
-                .update_as_line_from_points([[0., 0.], [1., 0.]])
-                .build(&objects)
-        })?;
+        let expected_curves =
+            surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
+                Ok(Curve::partial()
+                    .with_surface(Some(surface))
+                    .update_as_line_from_points([[0., 0.], [1., 0.]])
+                    .build(&objects)?
+                    .insert(&objects)?)
+            })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
         assert_eq!(

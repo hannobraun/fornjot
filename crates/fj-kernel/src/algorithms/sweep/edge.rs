@@ -3,6 +3,7 @@ use fj_math::{Line, Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
         Vertex,
@@ -176,10 +177,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             objects.cycles.insert(Cycle::new(edges))?
         };
 
-        Face::partial()
+        Ok(Face::partial()
             .with_exterior(cycle)
             .with_color(color)
-            .build(objects)
+            .build(objects)?
+            .insert(objects)?)
     }
 }
 
@@ -191,6 +193,7 @@ mod tests {
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
+        insert::Insert,
         objects::{Cycle, Face, HalfEdge, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
     };
@@ -204,7 +207,8 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         let face =
             (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
@@ -218,7 +222,8 @@ mod tests {
                         surface.clone(),
                         [[0., 0.], [1., 0.]],
                     )
-                    .build(&objects)?;
+                    .build(&objects)?
+                    .insert(&objects)?;
                 let side_up = HalfEdge::partial()
                     .with_surface(surface.clone())
                     .with_back_vertex(Vertex::partial().with_surface_form(
@@ -228,7 +233,8 @@ mod tests {
                         SurfaceVertex::partial().with_position(Some([1., 1.])),
                     ))
                     .update_as_line_segment()
-                    .build(&objects)?;
+                    .build(&objects)?
+                    .insert(&objects)?;
                 let top = HalfEdge::partial()
                     .with_surface(surface.clone())
                     .with_back_vertex(Vertex::partial().with_surface_form(
@@ -239,6 +245,7 @@ mod tests {
                     ))
                     .update_as_line_segment()
                     .build(&objects)?
+                    .insert(&objects)?
                     .reverse(&objects)?;
                 let side_down =
                     HalfEdge::partial()
@@ -251,13 +258,17 @@ mod tests {
                         ))
                         .update_as_line_segment()
                         .build(&objects)?
+                        .insert(&objects)?
                         .reverse(&objects)?;
 
                 let cycle = objects
                     .cycles
                     .insert(Cycle::new([bottom, side_up, top, side_down]))?;
 
-                Face::partial().with_exterior(cycle).build(&objects)?
+                Face::partial()
+                    .with_exterior(cycle)
+                    .build(&objects)?
+                    .insert(&objects)?
             };
 
         assert_eq!(face, expected_face);

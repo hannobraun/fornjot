@@ -106,6 +106,7 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
+        insert::Insert,
         objects::{Cycle, Face, Objects},
         partial::HasPartial,
         validate::Validate,
@@ -127,7 +128,8 @@ mod tests {
                     [[1., 1.], [1., 2.], [2., 1.]],
                 )
                 .close_with_line_segment()
-                .build(&objects)?];
+                .build(&objects)?
+                .insert(&objects)?];
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
