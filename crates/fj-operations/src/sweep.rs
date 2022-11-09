@@ -4,7 +4,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::sweep::Sweep,
     objects::{Objects, Solid},
-    validate::{ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::{Aabb, Vector};
 
@@ -15,11 +15,10 @@ impl Shape for fj::Sweep {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
-        let sketch = self.shape().compute_brep(config, objects, debug_info)?;
+        let sketch = self.shape().compute_brep(objects, debug_info)?;
         let sketch = objects.sketches.insert(sketch)?;
 
         let path = Vector::from(self.path());

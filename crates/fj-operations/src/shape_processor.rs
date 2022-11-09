@@ -7,7 +7,7 @@ use fj_kernel::{
         triangulate::Triangulate,
     },
     objects::Objects,
-    validate::{ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::Scalar;
 
@@ -42,10 +42,9 @@ impl ShapeProcessor {
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
-        let config = ValidationConfig::default();
         let objects = Objects::new();
         let mut debug_info = DebugInfo::new();
-        let shape = shape.compute_brep(&config, &objects, &mut debug_info)?;
+        let shape = shape.compute_brep(&objects, &mut debug_info)?;
         let mesh = (&shape, tolerance).triangulate();
 
         Ok(ProcessedShape {

@@ -5,7 +5,7 @@ use fj_kernel::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
-    validate::{ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
 
@@ -16,7 +16,6 @@ impl Shape for fj::Sketch {
 
     fn compute_brep(
         &self,
-        _: &ValidationConfig,
         objects: &Objects,
         _: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {

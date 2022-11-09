@@ -27,7 +27,7 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects, Sketch},
-    validate::{ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::Aabb;
 
@@ -39,7 +39,6 @@ pub trait Shape {
     /// Compute the boundary representation of the shape
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError>;
@@ -56,20 +55,16 @@ impl Shape for fj::Shape {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         match self {
-            Self::Shape2d(shape) => Ok(shape
-                .compute_brep(config, objects, debug_info)?
-                .faces()
-                .clone()),
-            Self::Group(shape) => {
-                shape.compute_brep(config, objects, debug_info)
+            Self::Shape2d(shape) => {
+                Ok(shape.compute_brep(objects, debug_info)?.faces().clone())
             }
+            Self::Group(shape) => shape.compute_brep(objects, debug_info),
             Self::Sweep(shape) => Ok(shape
-                .compute_brep(config, objects, debug_info)?
+                .compute_brep(objects, debug_info)?
                 .shells()
                 .map(|shell| shell.faces().clone())
                 .reduce(|mut a, b| {
@@ -77,9 +72,7 @@ impl Shape for fj::Shape {
                     a
                 })
                 .unwrap_or_default()),
-            Self::Transform(shape) => {
-                shape.compute_brep(config, objects, debug_info)
-            }
+            Self::Transform(shape) => shape.compute_brep(objects, debug_info),
         }
     }
 
@@ -98,17 +91,12 @@ impl Shape for fj::Shape2d {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         match self {
-            Self::Difference(shape) => {
-                shape.compute_brep(config, objects, debug_info)
-            }
-            Self::Sketch(shape) => {
-                shape.compute_brep(config, objects, debug_info)
-            }
+            Self::Difference(shape) => shape.compute_brep(objects, debug_info),
+            Self::Sketch(shape) => shape.compute_brep(objects, debug_info),
         }
     }
 
