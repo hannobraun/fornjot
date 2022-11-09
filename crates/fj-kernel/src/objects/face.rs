@@ -63,15 +63,9 @@ impl Face {
         the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
     ) -> Self {
-        let surface = exterior.surface();
         let mut interiors = Vec::new();
 
         for interior in the_interiors.into_iter() {
-            assert_eq!(
-                surface.id(),
-                interior.surface().id(),
-                "Cycles that bound a face must be in face's surface"
-            );
             assert_ne!(
                 exterior.winding(),
                 interior.winding(),
