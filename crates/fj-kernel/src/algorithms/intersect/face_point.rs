@@ -145,10 +145,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([2., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -162,10 +162,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -182,10 +182,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 2.]);
 
         let intersection = (&face, &point).intersect();
@@ -202,7 +202,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -210,7 +210,7 @@ mod tests {
                 [3., 0.],
                 [3., 4.],
             ])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -228,7 +228,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -236,7 +236,7 @@ mod tests {
                 [3., 1.],
                 [0., 2.],
             ])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -254,7 +254,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -263,7 +263,7 @@ mod tests {
                 [4., 0.],
                 [4., 5.],
             ])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -280,10 +280,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -309,10 +309,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build()?;
+            .build(&objects)?;
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();

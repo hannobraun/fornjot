@@ -12,10 +12,7 @@ use crate::{
 /// API for building a [`Face`]
 ///
 /// Also see [`Face::builder`].
-pub struct FaceBuilder<'a> {
-    /// The stores that the created objects are put in
-    pub objects: &'a Objects,
-
+pub struct FaceBuilder {
     /// The surface that the [`Face`] is defined in
     pub surface: Option<Handle<Surface>>,
 
@@ -32,7 +29,7 @@ pub struct FaceBuilder<'a> {
     pub color: Option<Color>,
 }
 
-impl<'a> FaceBuilder<'a> {
+impl FaceBuilder {
     /// Build the [`Face`] with the provided surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
@@ -98,17 +95,19 @@ impl<'a> FaceBuilder<'a> {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(self) -> Result<Handle<Face>, ValidationError> {
-        let exterior = self.exterior.into_full(self.objects)?;
+    pub fn build(
+        self,
+        objects: &Objects,
+    ) -> Result<Handle<Face>, ValidationError> {
+        let exterior = self.exterior.into_full(objects)?;
         let interiors = self
             .interiors
             .into_iter()
-            .map(|cycle| cycle.into_full(self.objects))
+            .map(|cycle| cycle.into_full(objects))
             .collect::<Result<Vec<_>, _>>()?;
         let color = self.color.unwrap_or_default();
 
-        Ok(self
-            .objects
+        Ok(objects
             .faces
             .insert(Face::new(exterior, interiors, color))?)
     }

@@ -87,10 +87,10 @@ mod tests {
         ];
         let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
             .try_map_ext(|surface| {
-                Face::builder(&objects)
+                Face::builder()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
-                    .build()
+                    .build(&objects)
             })?;
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
@@ -114,10 +114,10 @@ mod tests {
         let surfaces =
             [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
         let [a, b] = surfaces.clone().try_map_ext(|surface| {
-            Face::builder(&objects)
+            Face::builder()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
-                .build()
+                .build(&objects)
         })?;
 
         let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;

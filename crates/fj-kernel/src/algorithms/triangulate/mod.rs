@@ -100,10 +100,10 @@ mod tests {
         let d = [0., 1.];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([a, b, c, d])
-            .build()?;
+            .build(&objects)?;
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -135,11 +135,11 @@ mod tests {
         let h = [3., 1.];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
-            .build()?;
+            .build(&objects)?;
 
         let triangles = triangulate(face)?;
 
@@ -196,10 +196,10 @@ mod tests {
         let e = [0., 0.8];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
-            .build()?;
+            .build(&objects)?;
 
         let triangles = triangulate(face)?;
 

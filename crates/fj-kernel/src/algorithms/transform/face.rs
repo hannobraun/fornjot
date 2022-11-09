@@ -35,11 +35,11 @@ impl TransformObject for Handle<Face> {
 
         let color = self.color();
 
-        Face::builder(objects)
+        Face::builder()
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(color)
-            .build()
+            .build(objects)
     }
 }
 

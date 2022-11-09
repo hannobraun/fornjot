@@ -54,7 +54,7 @@ impl<'a> ShellBuilder<'a> {
                 .translate([Z, Z, -h], self.objects)
                 .unwrap();
 
-            Face::builder(self.objects)
+            Face::builder()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points([
                     [-h, -h],
@@ -62,7 +62,7 @@ impl<'a> ShellBuilder<'a> {
                     [h, h],
                     [-h, h],
                 ])
-                .build()
+                .build(self.objects)
                 .unwrap()
         };
 
@@ -194,9 +194,9 @@ impl<'a> ShellBuilder<'a> {
                         .build(self.objects)
                         .unwrap();
 
-                    Face::builder(self.objects)
+                    Face::builder()
                         .with_exterior(cycle)
-                        .build()
+                        .build(self.objects)
                         .unwrap()
                 });
 
@@ -263,11 +263,11 @@ impl<'a> ShellBuilder<'a> {
                 );
             }
 
-            Face::builder(self.objects)
+            Face::builder()
                 .with_exterior(
                     self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
                 )
-                .build()
+                .build(self.objects)
                 .unwrap()
         };
 

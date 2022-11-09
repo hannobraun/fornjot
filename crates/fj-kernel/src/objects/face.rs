@@ -5,7 +5,7 @@ use fj_math::Winding;
 
 use crate::{partial::FaceBuilder, storage::Handle};
 
-use super::{Cycle, Objects, Surface};
+use super::{Cycle, Surface};
 
 /// A face of a shape
 ///
@@ -40,9 +40,8 @@ pub struct Face {
 
 impl Face {
     /// Build a `Face` using [`FaceBuilder`]
-    pub fn builder(objects: &Objects) -> FaceBuilder {
+    pub fn builder() -> FaceBuilder {
         FaceBuilder {
-            objects,
             surface: None,
             exterior: Default::default(),
             interiors: Vec::new(),

@@ -424,10 +424,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = Face::builder(&objects)
+        let object = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build();
+            .build(&objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -532,10 +532,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build()?;
+            .build(&objects)?;
         let object = Sketch::builder(&objects).with_faces([face]).build();
 
         assert_eq!(3, object.curve_iter().count());

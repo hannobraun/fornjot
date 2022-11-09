@@ -32,20 +32,20 @@ impl Shape for fj::Sketch {
                     .build(objects)?;
                 let cycle = objects.cycles.insert(Cycle::new([half_edge]))?;
 
-                Face::builder(objects)
+                Face::builder()
                     .with_exterior(cycle)
                     .with_color(Color(self.color()))
-                    .build()?
+                    .build(objects)?
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =
                     poly_chain.to_points().into_iter().map(Point::from);
 
-                Face::builder(objects)
+                Face::builder()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .with_color(Color(self.color()))
-                    .build()?
+                    .build(objects)?
             }
         };
 

@@ -183,11 +183,11 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = Face::builder(&objects)
+        let face = Face::builder()
             .with_surface(surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
-            .build()?;
+            .build(&objects)?;
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
