@@ -89,6 +89,7 @@
 
 pub mod algorithms;
 pub mod builder;
+pub mod insert;
 pub mod iter;
 pub mod objects;
 pub mod partial;
