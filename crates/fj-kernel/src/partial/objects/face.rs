@@ -9,9 +9,9 @@ use crate::{
     validate::ValidationError,
 };
 
-/// API for building a [`Face`]
+/// A partial [`Face`]
 ///
-/// Also see [`Face::builder`].
+/// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialFace {
     surface: Option<Handle<Surface>>,
