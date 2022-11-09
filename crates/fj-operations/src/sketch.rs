@@ -45,7 +45,7 @@ impl Shape for fj::Sketch {
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
-                    .to_points()
+                    .to_segments()
                     .into_iter()
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from);
@@ -71,7 +71,7 @@ impl Shape for fj::Sketch {
             },
             fj::Chain::PolyChain(poly_chain) => Aabb::<3>::from_points(
                 poly_chain
-                    .to_points()
+                    .to_segments()
                     .into_iter()
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from)

@@ -198,7 +198,7 @@ impl PolyChain {
     }
 
     /// Return the points that define the polygonal chain
-    pub fn to_points(&self) -> Vec<SketchSegment> {
+    pub fn to_segments(&self) -> Vec<SketchSegment> {
         self.segments.clone().into()
     }
 }
