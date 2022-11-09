@@ -6,6 +6,8 @@ use crate::{
     storage::Handle,
 };
 
+use super::FaceBuilder;
+
 /// API for building a [`Sketch`]
 ///
 /// Also see [`Sketch::builder`].

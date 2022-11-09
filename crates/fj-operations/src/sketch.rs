@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::HalfEdgeBuilder,
+    builder::{FaceBuilder, HalfEdgeBuilder},
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
     validate::ValidationError,

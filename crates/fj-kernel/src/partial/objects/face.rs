@@ -1,10 +1,8 @@
 use fj_interop::mesh::Color;
-use fj_math::Point;
 
 use crate::{
-    builder::CycleBuilder,
     objects::{Cycle, Face, Objects, Surface},
-    partial::{util::merge_options, HasPartial, MaybePartial},
+    partial::{util::merge_options, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -56,20 +54,6 @@ impl PartialFace {
         self
     }
 
-    /// Build the [`Face`] with an exterior polygon from the provided points
-    pub fn with_exterior_polygon_from_points(
-        self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        let surface = self.surface().expect("Need surface to create polygon");
-
-        self.with_exterior(
-            Cycle::partial()
-                .with_poly_chain_from_points(surface, points)
-                .close_with_line_segment(),
-        )
-    }
-
     /// Build the [`Face`] with the provided interior polygons
     pub fn with_interiors(
         mut self,
@@ -78,18 +62,6 @@ impl PartialFace {
         let interiors = interiors.into_iter().map(Into::into);
         self.interiors.extend(interiors);
         self
-    }
-
-    /// Build the [`Face`] with an interior polygon from the provided points
-    pub fn with_interior_polygon_from_points(
-        self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        let surface = self.surface().expect("Need surface to build polygon.");
-
-        self.with_interiors([Cycle::partial()
-            .with_poly_chain_from_points(surface, points)
-            .close_with_line_segment()])
     }
 
     /// Build the [`Face`] with the provided color

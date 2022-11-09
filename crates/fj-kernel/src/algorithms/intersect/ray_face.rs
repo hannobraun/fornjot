@@ -152,6 +152,7 @@ mod tests {
             },
             transform::TransformObject,
         },
+        builder::FaceBuilder,
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,

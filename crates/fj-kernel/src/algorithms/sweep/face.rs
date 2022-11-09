@@ -84,7 +84,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        builder::HalfEdgeBuilder,
+        builder::{FaceBuilder, HalfEdgeBuilder},
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
     };

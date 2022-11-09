@@ -136,6 +136,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
+        builder::FaceBuilder,
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,

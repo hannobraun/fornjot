@@ -84,6 +84,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
+        builder::FaceBuilder,
         objects::{Face, Objects},
         partial::HasPartial,
         storage::Handle,

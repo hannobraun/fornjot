@@ -105,7 +105,7 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         algorithms::reverse::Reverse,
-        builder::CycleBuilder,
+        builder::{CycleBuilder, FaceBuilder},
         objects::{Cycle, Face, Objects},
         partial::HasPartial,
         validate::Validate,

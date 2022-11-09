@@ -11,12 +11,14 @@ mod solid;
 mod curve;
 mod cycle;
 mod edge;
+mod face;
 mod vertex;
 
 pub use self::{
     curve::CurveBuilder,
     cycle::CycleBuilder,
     edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
+    face::FaceBuilder,
     shell::ShellBuilder,
     sketch::SketchBuilder,
     solid::SolidBuilder,
