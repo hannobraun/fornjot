@@ -1242,7 +1242,6 @@ dependencies = [
  "egui-wgpu",
  "fj-interop",
  "fj-math",
- "getrandom",
  "raw-window-handle 0.4.3",
  "rfd",
  "thiserror",
