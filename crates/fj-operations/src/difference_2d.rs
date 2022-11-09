@@ -5,7 +5,7 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::{ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -19,7 +19,7 @@ impl Shape for fj::Difference2d {
         config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -87,7 +87,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::builder(objects).with_faces(faces).build();
-        difference.deref().clone().validate_with_config(config)
+        Ok(difference.deref().clone())
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

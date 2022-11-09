@@ -1,7 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects},
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::{ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -15,16 +15,16 @@ impl Shape for fj::Group {
         config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         let mut faces = FaceSet::new();
 
         let a = self.a.compute_brep(config, objects, debug_info)?;
         let b = self.b.compute_brep(config, objects, debug_info)?;
 
-        faces.extend(a.into_inner());
-        faces.extend(b.into_inner());
+        faces.extend(a);
+        faces.extend(b);
 
-        faces.validate_with_config(config)
+        Ok(faces)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

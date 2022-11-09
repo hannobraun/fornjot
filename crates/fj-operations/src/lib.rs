@@ -27,7 +27,7 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects, Sketch},
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::{ValidationConfig, ValidationError},
 };
 use fj_math::Aabb;
 
@@ -42,7 +42,7 @@ pub trait Shape {
         config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError>;
+    ) -> Result<Self::Brep, ValidationError>;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -59,28 +59,24 @@ impl Shape for fj::Shape {
         config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         match self {
-            Self::Shape2d(shape) => shape
+            Self::Shape2d(shape) => Ok(shape
                 .compute_brep(config, objects, debug_info)?
-                .into_inner()
                 .faces()
-                .clone()
-                .validate_with_config(config),
+                .clone()),
             Self::Group(shape) => {
                 shape.compute_brep(config, objects, debug_info)
             }
-            Self::Sweep(shape) => shape
+            Self::Sweep(shape) => Ok(shape
                 .compute_brep(config, objects, debug_info)?
-                .into_inner()
                 .shells()
                 .map(|shell| shell.faces().clone())
                 .reduce(|mut a, b| {
                     a.extend(b);
                     a
                 })
-                .unwrap_or_default()
-                .validate_with_config(config),
+                .unwrap_or_default()),
             Self::Transform(shape) => {
                 shape.compute_brep(config, objects, debug_info)
             }
@@ -105,7 +101,7 @@ impl Shape for fj::Shape2d {
         config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         match self {
             Self::Difference(shape) => {
                 shape.compute_brep(config, objects, debug_info)
