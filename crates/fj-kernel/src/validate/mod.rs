@@ -28,6 +28,7 @@ mod vertex;
 pub use self::{
     cycle::CycleValidationError,
     edge::HalfEdgeValidationError,
+    face::FaceValidationError,
     uniqueness::UniquenessIssues,
     vertex::{SurfaceVertexValidationError, VertexValidationError},
 };
@@ -181,6 +182,10 @@ pub enum ValidationError {
     /// `Cycle` validation error
     #[error(transparent)]
     Cycle(#[from] CycleValidationError),
+
+    /// `Face` validation error
+    #[error(transparent)]
+    Face(#[from] FaceValidationError),
 
     /// `HalfEdge` validation error
     #[error(transparent)]
