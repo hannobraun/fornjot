@@ -44,7 +44,7 @@ impl Face {
         FaceBuilder {
             objects,
             surface: None,
-            exterior: None,
+            exterior: Default::default(),
             interiors: Vec::new(),
             color: None,
         }

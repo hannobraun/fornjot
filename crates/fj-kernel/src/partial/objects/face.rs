@@ -4,7 +4,7 @@ use fj_math::Point;
 use crate::{
     builder::CycleBuilder,
     objects::{Cycle, Face, Objects, Surface},
-    partial::HasPartial,
+    partial::{HasPartial, MaybePartial},
     storage::Handle,
     validate::ValidationError,
 };
@@ -23,7 +23,7 @@ pub struct FaceBuilder<'a> {
     ///
     /// Must be provided by the caller, directly or using one of the `with_`
     /// methods, before [`FaceBuilder::build`] is called.
-    pub exterior: Option<Handle<Cycle>>,
+    pub exterior: MaybePartial<Cycle>,
 
     /// The interior cycles that form holes in the [`Face`]
     pub interiors: Vec<Handle<Cycle>>,
@@ -41,7 +41,7 @@ impl<'a> FaceBuilder<'a> {
 
     /// Build the [`Face`] with the provided exterior
     pub fn with_exterior(mut self, exterior: Handle<Cycle>) -> Self {
-        self.exterior = Some(exterior);
+        self.exterior = exterior.into();
         self
     }
 
@@ -55,13 +55,10 @@ impl<'a> FaceBuilder<'a> {
             .as_ref()
             .expect("Need surface to create polygon");
 
-        self.exterior = Some(
-            Cycle::partial()
-                .with_poly_chain_from_points(surface.clone(), points)
-                .close_with_line_segment()
-                .build(self.objects)
-                .unwrap(),
-        );
+        self.exterior = Cycle::partial()
+            .with_poly_chain_from_points(surface.clone(), points)
+            .close_with_line_segment()
+            .into();
         self
     }
 
@@ -102,9 +99,7 @@ impl<'a> FaceBuilder<'a> {
 
     /// Construct a polygon from a list of points
     pub fn build(self) -> Result<Handle<Face>, ValidationError> {
-        let exterior = self
-            .exterior
-            .expect("Can't build `Face` without exterior cycle");
+        let exterior = self.exterior.into_full(self.objects)?;
         let color = self.color.unwrap_or_default();
 
         Ok(self.objects.faces.insert(Face::new(
