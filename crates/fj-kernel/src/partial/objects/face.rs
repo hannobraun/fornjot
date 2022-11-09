@@ -65,7 +65,7 @@ impl<'a> FaceBuilder<'a> {
     /// Build the [`Face`] with the provided interior polygons
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        interiors: impl IntoIterator<Item = impl Into<MaybePartial<Cycle>>>,
     ) -> Self {
         let interiors = interiors.into_iter().map(Into::into);
         self.interiors.extend(interiors);
