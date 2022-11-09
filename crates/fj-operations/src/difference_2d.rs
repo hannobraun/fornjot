@@ -5,7 +5,7 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::Aabb;
 
@@ -16,10 +16,9 @@ impl Shape for fj::Difference2d {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -28,9 +27,10 @@ impl Shape for fj::Difference2d {
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
 
-        let [a, b] = self.shapes().each_ref_ext().try_map_ext(|shape| {
-            shape.compute_brep(config, objects, debug_info)
-        })?;
+        let [a, b] = self
+            .shapes()
+            .each_ref_ext()
+            .try_map_ext(|shape| shape.compute_brep(objects, debug_info))?;
 
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -87,7 +87,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::builder(objects).with_faces(faces).build();
-        difference.deref().clone().validate_with_config(config)
+        Ok(difference.deref().clone())
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

@@ -5,7 +5,7 @@ use fj_kernel::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
 
@@ -16,10 +16,9 @@ impl Shape for fj::Sketch {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         _: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
+    ) -> Result<Self::Brep, ValidationError> {
         let surface = objects.surfaces.xy_plane();
 
         let face = match self.chain() {
@@ -51,7 +50,7 @@ impl Shape for fj::Sketch {
         };
 
         let sketch = Sketch::builder(objects).with_faces([face]).build();
-        sketch.deref().clone().validate_with_config(config)
+        Ok(sketch.deref().clone())
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

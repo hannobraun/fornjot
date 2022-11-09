@@ -4,7 +4,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::sweep::Sweep,
     objects::{Objects, Solid},
-    validate::{Validate, Validated, ValidationConfig, ValidationError},
+    validate::ValidationError,
 };
 use fj_math::{Aabb, Vector};
 
@@ -15,17 +15,16 @@ impl Shape for fj::Sweep {
 
     fn compute_brep(
         &self,
-        config: &ValidationConfig,
         objects: &Objects,
         debug_info: &mut DebugInfo,
-    ) -> Result<Validated<Self::Brep>, ValidationError> {
-        let sketch = self.shape().compute_brep(config, objects, debug_info)?;
-        let sketch = objects.sketches.insert(sketch.into_inner())?;
+    ) -> Result<Self::Brep, ValidationError> {
+        let sketch = self.shape().compute_brep(objects, debug_info)?;
+        let sketch = objects.sketches.insert(sketch)?;
 
         let path = Vector::from(self.path());
 
         let solid = sketch.sweep(path, objects)?;
-        solid.deref().clone().validate_with_config(config)
+        Ok(solid.deref().clone())
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
