@@ -4,12 +4,9 @@ pub mod edge;
 pub mod face;
 pub mod vertex;
 
-use crate::{
-    objects::{
-        Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
-        Objects, SurfaceVertex, Vertex,
-    },
-    storage::Handle,
+use crate::objects::{
+    Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
+    Objects, SurfaceVertex, Vertex,
 };
 
 use super::{
@@ -34,7 +31,7 @@ macro_rules! impl_traits {
 
                 fn build(self, objects: &Objects)
                     -> Result<
-                        Handle<Self::Full>,
+                        Self::Full,
                         crate::validate::ValidationError
                     >
                 {

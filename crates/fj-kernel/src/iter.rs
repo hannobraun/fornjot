@@ -361,6 +361,7 @@ impl<T> Iterator for Iter<T> {
 mod tests {
     use crate::{
         builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
+        insert::Insert,
         objects::{
             Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
             Shell, Sketch, Solid, SurfaceVertex, Vertex,
@@ -378,7 +379,8 @@ mod tests {
         let object = Curve::partial()
             .with_surface(Some(surface))
             .update_as_u_axis()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -406,7 +408,8 @@ mod tests {
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -431,7 +434,8 @@ mod tests {
         let object = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -501,7 +505,8 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -547,7 +552,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let object = Sketch::builder(&objects).with_faces([face]).build();
 
         assert_eq!(3, object.curve_iter().count());
@@ -613,7 +619,8 @@ mod tests {
         let curve = Curve::partial()
             .with_surface(Some(surface.clone()))
             .update_as_u_axis()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let global_vertex = objects
             .global_vertices
             .insert(GlobalVertex::from_position([0., 0., 0.]))?;

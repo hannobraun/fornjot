@@ -202,9 +202,10 @@ mod tests {
 
     use crate::{
         builder::{HalfEdgeBuilder, VertexBuilder},
+        insert::Insert,
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
-        validate::Validate,
+        validate::{Validate, ValidationError},
     };
 
     #[test]
@@ -223,7 +224,8 @@ mod tests {
                 .to_partial()
                 // Arranging for an equal but not identical curve here.
                 .with_curve(valid.curve().to_partial())
-                .build(&objects)?;
+                .build(&objects)?
+                .insert(&objects)?;
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
@@ -250,7 +252,8 @@ mod tests {
                 .global_form()
                 .to_partial()
                 .with_curve(Some(objects.global_curves.insert(GlobalCurve)?))
-                .build(&objects)?,
+                .build(&objects)?
+                .insert(&objects)?,
         );
 
         assert!(valid.validate().is_ok());
@@ -282,7 +285,8 @@ mod tests {
                         // Creating equal but not identical vertices here.
                         .map(|vertex| vertex.to_partial()),
                 ))
-                .build(&objects)?,
+                .build(&objects)?
+                .insert(&objects)?,
         );
 
         assert!(valid.validate().is_ok());
@@ -302,13 +306,16 @@ mod tests {
             )
             .build(&objects)?;
         let invalid = HalfEdge::new(
-            valid.vertices().clone().try_map_ext(|vertex| {
-                vertex
-                    .to_partial()
-                    .with_position(Some([0.]))
-                    .infer_surface_form()
-                    .build(&objects)
-            })?,
+            valid.vertices().clone().try_map_ext(
+                |vertex| -> anyhow::Result<_, ValidationError> {
+                    Ok(vertex
+                        .to_partial()
+                        .with_position(Some([0.]))
+                        .infer_surface_form()
+                        .build(&objects)?
+                        .insert(&objects)?)
+                },
+            )?,
             valid.global_form().clone(),
         );
 

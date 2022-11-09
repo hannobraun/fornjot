@@ -153,6 +153,7 @@ mod tests {
             transform::TransformObject,
         },
         builder::FaceBuilder,
+        insert::Insert,
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,
@@ -174,6 +175,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([-1., 0., 0.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -196,6 +198,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([1., 0., 0.], &objects)?;
 
         assert_eq!(
@@ -221,6 +224,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([0., 0., 2.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -243,6 +247,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([1., 1., 0.], &objects)?;
 
         let edge = face
@@ -276,6 +281,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([1., 1., 1.], &objects)?;
 
         let vertex = face
@@ -306,7 +312,8 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -332,6 +339,7 @@ mod tests {
                 [-1., 1.],
             ])
             .build(&objects)?
+            .insert(&objects)?
             .translate([0., 0., 1.], &objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);

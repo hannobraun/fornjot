@@ -3,6 +3,7 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
+    insert::Insert,
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
     partial::HasPartial,
@@ -83,7 +84,8 @@ impl Shape for fj::Difference2d {
                     .with_exterior(exterior)
                     .with_interiors(interiors)
                     .with_color(Color(self.color()))
-                    .build(objects)?,
+                    .build(objects)?
+                    .insert(objects)?,
             );
         }
 

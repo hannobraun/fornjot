@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    insert::Insert,
     objects::{Face, FaceSet, Objects, Sketch, Surface},
     partial::HasPartial,
     storage::Handle,
@@ -51,6 +52,8 @@ impl<'a> SketchBuilder<'a> {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(points)
             .build(self.objects)
+            .unwrap()
+            .insert(self.objects)
             .unwrap()]);
         self
     }

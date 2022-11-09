@@ -67,9 +67,10 @@ impl CycleValidationError {
 mod tests {
     use crate::{
         builder::{CycleBuilder, HalfEdgeBuilder, VertexBuilder},
+        insert::Insert,
         objects::{Cycle, Objects},
         partial::HasPartial,
-        validate::Validate,
+        validate::{Validate, ValidationError},
     };
 
     #[test]
@@ -102,7 +103,9 @@ mod tests {
 
             let half_edges = half_edges
                 .into_iter()
-                .map(|half_edge| half_edge.build(&objects))
+                .map(|half_edge| -> anyhow::Result<_, ValidationError> {
+                    Ok(half_edge.build(&objects)?.insert(&objects)?)
+                })
                 .collect::<Result<Vec<_>, _>>()?;
 
             Cycle::new(half_edges)

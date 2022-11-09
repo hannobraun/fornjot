@@ -3,6 +3,7 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
+    insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::HasPartial,
     validate::ValidationError,
@@ -29,13 +30,15 @@ impl Shape for fj::Sketch {
                 let half_edge = HalfEdge::partial()
                     .with_surface(surface)
                     .update_as_circle_from_radius(circle.radius(), objects)?
-                    .build(objects)?;
+                    .build(objects)?
+                    .insert(objects)?;
                 let cycle = objects.cycles.insert(Cycle::new([half_edge]))?;
 
                 Face::partial()
                     .with_exterior(cycle)
                     .with_color(Color(self.color()))
                     .build(objects)?
+                    .insert(objects)?
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points =
@@ -46,6 +49,7 @@ impl Shape for fj::Sketch {
                     .with_exterior_polygon_from_points(points)
                     .with_color(Color(self.color()))
                     .build(objects)?
+                    .insert(objects)?
             }
         };
 

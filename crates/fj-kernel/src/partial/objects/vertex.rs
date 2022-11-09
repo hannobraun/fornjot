@@ -76,10 +76,7 @@ impl PartialVertex {
     /// Panics, if position has not been provided.
     ///
     /// Panics, if curve has not been provided.
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<Vertex>, ValidationError> {
+    pub fn build(self, objects: &Objects) -> Result<Vertex, ValidationError> {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
@@ -98,11 +95,7 @@ impl PartialVertex {
             })
             .into_full(objects)?;
 
-        Ok(objects.vertices.insert(Vertex::new(
-            position,
-            curve,
-            surface_form,
-        ))?)
+        Ok(Vertex::new(position, curve, surface_form))
     }
 }
 
@@ -185,7 +178,7 @@ impl PartialSurfaceVertex {
     pub fn build(
         self,
         objects: &Objects,
-    ) -> Result<Handle<SurfaceVertex>, ValidationError> {
+    ) -> Result<SurfaceVertex, ValidationError> {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -200,11 +193,7 @@ impl PartialSurfaceVertex {
             })
             .into_full(objects)?;
 
-        Ok(objects.surface_vertices.insert(SurfaceVertex::new(
-            position,
-            surface,
-            global_form,
-        ))?)
+        Ok(SurfaceVertex::new(position, surface, global_form))
     }
 }
 
@@ -251,17 +240,12 @@ impl PartialGlobalVertex {
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<GlobalVertex>, ValidationError> {
+    pub fn build(self, _: &Objects) -> Result<GlobalVertex, ValidationError> {
         let position = self
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        Ok(objects
-            .global_vertices
-            .insert(GlobalVertex::from_position(position))?)
+        Ok(GlobalVertex::from_position(position))
     }
 }
 

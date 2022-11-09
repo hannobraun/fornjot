@@ -2,6 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
+    insert::Insert,
     objects::{
         Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
@@ -89,7 +90,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .with_position(Some(path.point_from_path_coords(a_curve)))
             .with_surface(curve.surface())
             .with_global_form(Some(global_vertex))
-            .build(objects)?;
+            .build(objects)?
+            .insert(objects)?;
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
             Vertex::partial()

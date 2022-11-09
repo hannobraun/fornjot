@@ -1,13 +1,14 @@
 use fj_math::Point;
 
 use crate::{
+    insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
     path::SurfacePath,
     storage::Handle,
-    validate::ValidationError,
+    validate::{Validate, ValidationError},
 };
 
 use super::{HasPartial, Partial};
@@ -91,9 +92,15 @@ impl<T: HasPartial> MaybePartial<T> {
     pub fn into_full(
         self,
         objects: &Objects,
-    ) -> Result<Handle<T>, ValidationError> {
+    ) -> Result<Handle<T>, ValidationError>
+    where
+        T: Insert,
+        ValidationError: From<<T as Validate>::Error>,
+    {
         match self {
-            Self::Partial(partial) => partial.build(objects),
+            Self::Partial(partial) => {
+                Ok(partial.build(objects)?.insert(objects)?)
+            }
             Self::Full(full) => Ok(full),
         }
     }

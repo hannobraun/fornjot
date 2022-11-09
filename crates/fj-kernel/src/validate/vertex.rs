@@ -180,6 +180,7 @@ impl SurfaceVertexValidationError {
 mod tests {
     use crate::{
         builder::{CurveBuilder, SurfaceVertexBuilder},
+        insert::Insert,
         objects::{Curve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::HasPartial,
         validate::Validate,
@@ -204,7 +205,8 @@ mod tests {
                 .surface_form()
                 .to_partial()
                 .with_surface(Some(objects.surfaces.xz_plane()))
-                .build(&objects)?,
+                .build(&objects)?
+                .insert(&objects)?,
         );
 
         assert!(valid.validate().is_ok());
@@ -233,7 +235,8 @@ mod tests {
                 .to_partial()
                 .with_position(Some([1., 0.]))
                 .infer_global_form()
-                .build(&objects)?,
+                .build(&objects)?
+                .insert(&objects)?,
         );
 
         assert!(valid.validate().is_ok());

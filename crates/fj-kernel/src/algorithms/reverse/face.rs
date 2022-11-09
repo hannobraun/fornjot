@@ -1,4 +1,5 @@
 use crate::{
+    insert::Insert,
     objects::{Face, Objects},
     partial::HasPartial,
     storage::Handle,
@@ -15,10 +16,11 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(objects))
             .collect::<Result<Vec<_>, _>>()?;
 
-        Face::partial()
+        Ok(Face::partial()
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(self.color())
-            .build(objects)
+            .build(objects)?
+            .insert(objects)?)
     }
 }

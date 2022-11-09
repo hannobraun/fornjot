@@ -85,6 +85,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, Tolerance},
         builder::FaceBuilder,
+        insert::Insert,
         objects::{Face, Objects},
         partial::HasPartial,
         storage::Handle,
@@ -105,7 +106,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([a, b, c, d])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -141,7 +143,8 @@ mod tests {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         let triangles = triangulate(face)?;
 
@@ -201,7 +204,8 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         let triangles = triangulate(face)?;
 

@@ -6,6 +6,7 @@ use fj_math::Scalar;
 use crate::{
     algorithms::transform::TransformObject,
     builder::{FaceBuilder, HalfEdgeBuilder},
+    insert::Insert,
     objects::{
         Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
         SurfaceVertex, Vertex,
@@ -64,6 +65,8 @@ impl<'a> ShellBuilder<'a> {
                 ])
                 .build(self.objects)
                 .unwrap()
+                .insert(self.objects)
+                .unwrap()
         };
 
         let (sides, top_edges) = {
@@ -97,6 +100,8 @@ impl<'a> ShellBuilder<'a> {
                         )
                         .build(self.objects)
                         .unwrap()
+                        .insert(self.objects)
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -119,6 +124,8 @@ impl<'a> ShellBuilder<'a> {
                         ])
                         .update_as_line_segment()
                         .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
                         .unwrap()
                 })
                 .collect::<Vec<_>>();
@@ -157,6 +164,8 @@ impl<'a> ShellBuilder<'a> {
                             .update_as_line_segment()
                             .build(self.objects)
                             .unwrap()
+                            .insert(self.objects)
+                            .unwrap()
                     })
                     .collect::<Vec<_>>()
             };
@@ -180,6 +189,8 @@ impl<'a> ShellBuilder<'a> {
                         .update_as_line_segment()
                         .build(self.objects)
                         .unwrap()
+                        .insert(self.objects)
+                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -192,11 +203,15 @@ impl<'a> ShellBuilder<'a> {
                     let cycle = Cycle::partial()
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
                         .unwrap();
 
                     Face::partial()
                         .with_exterior(cycle)
                         .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
                         .unwrap()
                 });
 
@@ -232,6 +247,8 @@ impl<'a> ShellBuilder<'a> {
                             ))
                             .build(self.objects)
                             .unwrap()
+                            .insert(self.objects)
+                            .unwrap()
                     });
 
                 [a.clone(), b, c, d, a]
@@ -259,6 +276,8 @@ impl<'a> ShellBuilder<'a> {
                         .with_global_form(edge.global_form().clone())
                         .update_as_line_segment()
                         .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
                         .unwrap(),
                 );
             }
@@ -268,6 +287,8 @@ impl<'a> ShellBuilder<'a> {
                     self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
                 )
                 .build(self.objects)
+                .unwrap()
+                .insert(self.objects)
                 .unwrap()
         };
 

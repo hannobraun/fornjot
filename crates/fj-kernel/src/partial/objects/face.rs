@@ -84,10 +84,7 @@ impl PartialFace {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<Face>, ValidationError> {
+    pub fn build(self, objects: &Objects) -> Result<Face, ValidationError> {
         let exterior = self.exterior.into_full(objects)?;
         let interiors = self
             .interiors
@@ -96,9 +93,7 @@ impl PartialFace {
             .collect::<Result<Vec<_>, _>>()?;
         let color = self.color.unwrap_or_default();
 
-        Ok(objects
-            .faces
-            .insert(Face::new(exterior, interiors, color))?)
+        Ok(Face::new(exterior, interiors, color))
     }
 }
 

@@ -1,6 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
+    insert::Insert,
     objects::{Face, FaceSet, Objects},
     partial::{HasPartial, PartialFace},
     validate::ValidationError,
@@ -26,11 +27,12 @@ impl TransformObject for PartialFace {
         let interiors = self
             .interiors()
             .map(|cycle| -> Result<_, ValidationError> {
-                cycle
+                Ok(cycle
                     .into_partial()
                     .transform(transform, objects)?
                     .with_surface(surface.clone())
-                    .build(objects)
+                    .build(objects)?
+                    .insert(objects)?)
             })
             .collect::<Result<Vec<_>, _>>()?;
 

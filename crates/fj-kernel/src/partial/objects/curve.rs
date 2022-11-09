@@ -80,10 +80,7 @@ impl PartialCurve {
     }
 
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<Curve>, ValidationError> {
+    pub fn build(self, objects: &Objects) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
@@ -94,9 +91,7 @@ impl PartialCurve {
         }
         .into_full(objects)?;
 
-        Ok(objects
-            .curves
-            .insert(Curve::new(surface, path, global_form))?)
+        Ok(Curve::new(surface, path, global_form))
     }
 }
 
@@ -128,12 +123,8 @@ impl PartialGlobalCurve {
     }
 
     /// Build a full [`GlobalCurve`] from the partial global curve
-    pub fn build(
-        self,
-        objects: &Objects,
-    ) -> Result<Handle<GlobalCurve>, ValidationError> {
-        let global_curve = objects.global_curves.insert(GlobalCurve)?;
-        Ok(global_curve)
+    pub fn build(self, _: &Objects) -> Result<GlobalCurve, ValidationError> {
+        Ok(GlobalCurve)
     }
 }
 

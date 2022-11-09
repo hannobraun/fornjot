@@ -93,6 +93,7 @@ mod tests {
     use crate::{
         algorithms::transform::TransformObject,
         builder::CurveBuilder,
+        insert::Insert,
         objects::{Curve, Objects},
         partial::HasPartial,
     };
@@ -124,11 +125,13 @@ mod tests {
         let expected_xy = Curve::partial()
             .with_surface(Some(xy.clone()))
             .update_as_u_axis()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
         let expected_xz = Curve::partial()
             .with_surface(Some(xz.clone()))
             .update_as_u_axis()
-            .build(&objects)?;
+            .build(&objects)?
+            .insert(&objects)?;
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz], &objects)?,
