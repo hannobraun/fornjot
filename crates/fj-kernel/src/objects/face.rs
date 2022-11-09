@@ -60,20 +60,10 @@ impl Face {
     /// the exterior cycle.
     pub fn new(
         exterior: Handle<Cycle>,
-        the_interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
     ) -> Self {
-        let mut interiors = Vec::new();
-
-        for interior in the_interiors.into_iter() {
-            assert_ne!(
-                exterior.winding(),
-                interior.winding(),
-                "Interior cycles must have opposite winding of exterior cycle"
-            );
-
-            interiors.push(interior);
-        }
+        let interiors = interiors.into_iter().collect();
 
         Self {
             exterior,

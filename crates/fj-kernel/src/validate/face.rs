@@ -1,3 +1,5 @@
+use fj_math::Winding;
+
 use crate::{
     objects::{Cycle, Face, Surface},
     storage::Handle,
@@ -13,6 +15,7 @@ impl Validate2 for Face {
         _: &ValidationConfig,
     ) -> Result<(), Self::Error> {
         FaceValidationError::check_surface_identity(self)?;
+        FaceValidationError::check_interior_winding(self)?;
         Ok(())
     }
 }
@@ -37,6 +40,24 @@ pub enum FaceValidationError {
         /// The face
         face: Face,
     },
+
+    /// Interior of [`Face`] has invalid winding; must be opposite of exterior
+    #[error(
+        "Interior of `Face` has invalid winding; must be opposite of exterior\n\
+        - Winding of exterior cycle: {exterior_winding:#?}\n\
+        - Winding of interior cycle: {interior_winding:#?}\n\
+        - `Face`: {face:#?}"
+    )]
+    InvalidInteriorWinding {
+        /// The winding of the [`Face`]'s exterior cycle
+        exterior_winding: Winding,
+
+        /// The winding of the invalid interior cycle
+        interior_winding: Winding,
+
+        /// The face
+        face: Face,
+    },
 }
 
 impl FaceValidationError {
@@ -55,11 +76,35 @@ impl FaceValidationError {
 
         Ok(())
     }
+
+    fn check_interior_winding(face: &Face) -> Result<(), Self> {
+        let exterior_winding = face.exterior().winding();
+
+        for interior in face.interiors() {
+            let interior_winding = interior.winding();
+
+            if exterior_winding == interior_winding {
+                return Err(Self::InvalidInteriorWinding {
+                    exterior_winding,
+                    interior_winding,
+                    face: face.clone(),
+                });
+            }
+            assert_ne!(
+                exterior_winding,
+                interior.winding(),
+                "Interior cycles must have opposite winding of exterior cycle"
+            );
+        }
+
+        Ok(())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::{
+        algorithms::reverse::Reverse,
         builder::CycleBuilder,
         objects::{Cycle, Face, Objects},
         partial::HasPartial,
@@ -83,6 +128,31 @@ mod tests {
                 )
                 .close_with_line_segment()
                 .build(&objects)?];
+
+            Face::new(valid.exterior().clone(), interiors, valid.color())
+        };
+
+        assert!(valid.validate().is_ok());
+        assert!(invalid.validate().is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn face_invalid_interior_winding() -> anyhow::Result<()> {
+        let objects = Objects::new();
+
+        let valid = Face::builder(&objects)
+            .with_surface(objects.surfaces.xy_plane())
+            .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
+            .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
+            .build();
+        let invalid = {
+            let interiors = valid
+                .interiors()
+                .cloned()
+                .map(|cycle| cycle.reverse(&objects))
+                .collect::<Result<Vec<_>, _>>()?;
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
