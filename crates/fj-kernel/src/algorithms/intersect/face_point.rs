@@ -138,6 +138,7 @@ mod tests {
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         iter::ObjectIters,
         objects::{Face, Objects},
+        partial::HasPartial,
     };
 
     #[test]
@@ -145,7 +146,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
             .build(&objects)?;
@@ -162,7 +163,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
             .build(&objects)?;
@@ -182,7 +183,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
             .build(&objects)?;
@@ -202,7 +203,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -228,7 +229,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -254,7 +255,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
                 [0., 0.],
@@ -280,7 +281,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
             .build(&objects)?;
@@ -309,7 +310,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build(&objects)?;

@@ -87,7 +87,7 @@ mod tests {
         ];
         let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
             .try_map_ext(|surface| {
-                Face::builder()
+                Face::partial()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .build(&objects)
@@ -114,7 +114,7 @@ mod tests {
         let surfaces =
             [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
         let [a, b] = surfaces.clone().try_map_ext(|surface| {
-            Face::builder()
+            Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
                 .build(&objects)

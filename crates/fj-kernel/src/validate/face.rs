@@ -115,7 +115,7 @@ mod tests {
     fn face_surface_mismatch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let valid = Face::builder()
+        let valid = Face::partial()
             .with_surface(objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
@@ -142,7 +142,7 @@ mod tests {
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let valid = Face::builder()
+        let valid = Face::partial()
             .with_surface(objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])

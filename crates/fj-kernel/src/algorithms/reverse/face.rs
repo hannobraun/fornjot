@@ -1,5 +1,6 @@
 use crate::{
     objects::{Face, Objects},
+    partial::HasPartial,
     storage::Handle,
     validate::ValidationError,
 };
@@ -14,7 +15,7 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(objects))
             .collect::<Result<Vec<_>, _>>()?;
 
-        Face::builder()
+        Face::partial()
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(self.color())

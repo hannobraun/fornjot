@@ -3,7 +3,7 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::{partial::PartialFace, storage::Handle};
+use crate::storage::Handle;
 
 use super::{Cycle, Surface};
 
@@ -39,11 +39,6 @@ pub struct Face {
 }
 
 impl Face {
-    /// Build a `Face` using [`PartialFace`]
-    pub fn builder() -> PartialFace {
-        PartialFace::default()
-    }
-
     /// Construct a new instance of `Face`
     pub fn new(
         exterior: Handle<Cycle>,

@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, FaceSet, Objects, Sketch, Surface},
+    partial::HasPartial,
     storage::Handle,
 };
 
@@ -44,7 +45,7 @@ impl<'a> SketchBuilder<'a> {
             .surface
             .as_ref()
             .expect("Can't build `Sketch` without `Surface`");
-        self.faces.extend([Face::builder()
+        self.faces.extend([Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(points)
             .build(self.objects)

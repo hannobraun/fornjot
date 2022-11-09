@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Face, FaceSet, Objects},
-    partial::PartialFace,
+    partial::{HasPartial, PartialFace},
     validate::ValidationError,
 };
 
@@ -36,7 +36,7 @@ impl TransformObject for PartialFace {
 
         let color = self.color();
 
-        let mut face = Face::builder()
+        let mut face = Face::partial()
             .with_exterior(exterior)
             .with_interiors(interiors);
         if let Some(surface) = surface {

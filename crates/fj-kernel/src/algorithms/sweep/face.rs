@@ -107,12 +107,12 @@ mod tests {
             .build()
             .sweep(UP, &objects)?;
 
-        let bottom = Face::builder()
+        let bottom = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .reverse(&objects)?;
-        let top = Face::builder()
+        let top = Face::partial()
             .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?;
@@ -151,12 +151,12 @@ mod tests {
             .build()
             .sweep(DOWN, &objects)?;
 
-        let bottom = Face::builder()
+        let bottom = Face::partial()
             .with_surface(surface.clone().translate(DOWN, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .reverse(&objects)?;
-        let top = Face::builder()
+        let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?;

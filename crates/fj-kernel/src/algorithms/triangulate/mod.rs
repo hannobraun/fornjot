@@ -85,6 +85,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, Tolerance},
         objects::{Face, Objects},
+        partial::HasPartial,
         storage::Handle,
     };
 
@@ -100,7 +101,7 @@ mod tests {
         let d = [0., 1.];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([a, b, c, d])
             .build(&objects)?;
@@ -135,7 +136,7 @@ mod tests {
         let h = [3., 1.];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
@@ -196,7 +197,7 @@ mod tests {
         let e = [0., 0.8];
 
         let surface = objects.surfaces.xy_plane();
-        let face = Face::builder()
+        let face = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
             .build(&objects)?;
