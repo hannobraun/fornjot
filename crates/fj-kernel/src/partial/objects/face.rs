@@ -31,6 +31,26 @@ pub struct PartialFace {
 }
 
 impl PartialFace {
+    /// Access th surface that the [`Face`] is defined in
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        self.surface.clone()
+    }
+
+    /// Access the [`Face`]'s exterior cycle
+    pub fn exterior(&self) -> MaybePartial<Cycle> {
+        self.exterior.clone()
+    }
+
+    /// Access the [`Face`]'s interior cycles
+    pub fn interiors(&self) -> impl Iterator<Item = MaybePartial<Cycle>> + '_ {
+        self.interiors.iter().cloned()
+    }
+
+    /// Access the color of the [`Face`]
+    pub fn color(&self) -> Option<Color> {
+        self.color
+    }
+
     /// Build the [`Face`] with the provided surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
