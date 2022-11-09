@@ -82,18 +82,14 @@ impl PartialFace {
 
     /// Build the [`Face`] with an interior polygon from the provided points
     pub fn with_interior_polygon_from_points(
-        mut self,
+        self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         let surface = self.surface().expect("Need surface to build polygon.");
 
-        self.interiors.push(
-            Cycle::partial()
-                .with_poly_chain_from_points(surface, points)
-                .close_with_line_segment()
-                .into(),
-        );
-        self
+        self.with_interiors([Cycle::partial()
+            .with_poly_chain_from_points(surface, points)
+            .close_with_line_segment()])
     }
 
     /// Build the [`Face`] with the provided color
