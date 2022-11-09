@@ -31,61 +31,9 @@ pub use self::{
     vertex::{SurfaceVertexValidationError, VertexValidationError},
 };
 
-use std::{convert::Infallible, ops::Deref};
+use std::convert::Infallible;
 
 use fj_math::Scalar;
-
-use crate::iter::ObjectIters;
-
-/// Validate an object
-pub trait Validate: Sized {
-    /// Validate the object using default configuration
-    ///
-    /// The following calls are equivalent:
-    /// ``` rust
-    /// # use fj_kernel::{
-    /// #     objects::{GlobalVertex, Objects},
-    /// #     validate::{Validate, ValidationConfig},
-    /// # };
-    /// # let objects = Objects::new();
-    /// # let object = objects.global_vertices.insert(
-    /// #     GlobalVertex::from_position([0., 0., 0.])
-    /// # );
-    /// object.validate();
-    /// ```
-    /// ``` rust
-    /// # use fj_kernel::{
-    /// #     objects::{GlobalVertex, Objects},
-    /// #     validate::{Validate, ValidationConfig},
-    /// # };
-    /// # let objects = Objects::new();
-    /// # let object = objects.global_vertices.insert(
-    /// #     GlobalVertex::from_position([0., 0., 0.])
-    /// # );
-    /// object.validate_with_config(&ValidationConfig::default());
-    /// ```
-    fn validate(self) -> Result<Validated<Self>, ValidationError> {
-        self.validate_with_config(&ValidationConfig::default())
-    }
-
-    /// Validate the object
-    fn validate_with_config(
-        self,
-        config: &ValidationConfig,
-    ) -> Result<Validated<Self>, ValidationError>;
-}
-
-impl<T> Validate for T
-where
-    T: for<'r> ObjectIters<'r>,
-{
-    fn validate_with_config(
-        self,
-        _: &ValidationConfig,
-    ) -> Result<Validated<Self>, ValidationError> {
-        Ok(Validated(self))
-    }
-}
 
 /// Validate an object
 pub trait Validate2: Sized {
@@ -133,27 +81,6 @@ impl Default for ValidationConfig {
             // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
         }
-    }
-}
-
-/// Wrapper around an object that indicates the object has been validated
-///
-/// Returned by implementations of `Validate`.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Validated<T>(T);
-
-impl<T> Validated<T> {
-    /// Consume this instance of `Validated` and return the wrapped object
-    pub fn into_inner(self) -> T {
-        self.0
-    }
-}
-
-impl<T> Deref for Validated<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
     }
 }
 
