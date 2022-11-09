@@ -104,7 +104,7 @@ use crate::{
     storage::{Handle, Store},
     validate::{
         CycleValidationError, FaceValidationError, HalfEdgeValidationError,
-        SurfaceVertexValidationError, Validate2, VertexValidationError,
+        SurfaceVertexValidationError, Validate, VertexValidationError,
     },
 };
 

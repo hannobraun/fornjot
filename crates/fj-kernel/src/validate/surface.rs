@@ -2,9 +2,9 @@ use std::convert::Infallible;
 
 use crate::objects::Surface;
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Surface {
+impl Validate for Surface {
     type Error = Infallible;
 
     fn validate_with_config(

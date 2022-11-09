@@ -11,9 +11,9 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for HalfEdge {
+impl Validate for HalfEdge {
     type Error = HalfEdgeValidationError;
 
     fn validate_with_config(
@@ -33,7 +33,7 @@ impl Validate2 for HalfEdge {
     }
 }
 
-impl Validate2 for GlobalEdge {
+impl Validate for GlobalEdge {
     type Error = Infallible;
 
     fn validate_with_config(
@@ -204,7 +204,7 @@ mod tests {
         builder::{HalfEdgeBuilder, VertexBuilder},
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
-        validate::Validate2,
+        validate::Validate,
     };
 
     #[test]

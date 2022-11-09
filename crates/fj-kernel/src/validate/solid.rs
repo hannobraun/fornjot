@@ -2,9 +2,9 @@ use std::convert::Infallible;
 
 use crate::objects::Solid;
 
-use super::{Validate2, ValidationConfig};
+use super::{Validate, ValidationConfig};
 
-impl Validate2 for Solid {
+impl Validate for Solid {
     type Error = Infallible;
 
     fn validate_with_config(
