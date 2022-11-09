@@ -371,14 +371,14 @@ mod tests {
     use super::ObjectIters as _;
 
     #[test]
-    fn curve() {
+    fn curve() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let object = Curve::partial()
             .with_surface(Some(surface))
             .update_as_u_axis()
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -391,10 +391,12 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
-    fn cycle() {
+    fn cycle() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
@@ -404,7 +406,7 @@ mod tests {
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -417,17 +419,19 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
-    fn face() {
+    fn face() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let object = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -440,13 +444,15 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(1, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
-    fn global_curve() {
+    fn global_curve() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let object = objects.global_curves.insert(GlobalCurve);
+        let object = objects.global_curves.insert(GlobalCurve)?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -459,15 +465,17 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
-    fn global_vertex() {
+    fn global_vertex() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let object = objects
             .global_vertices
-            .insert(GlobalVertex::from_position([0., 0., 0.]));
+            .insert(GlobalVertex::from_position([0., 0., 0.]))?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -480,10 +488,12 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
-    fn half_edge() {
+    fn half_edge() -> anyhow::Result<()> {
         let objects = Objects::new();
 
         let object = HalfEdge::partial()
@@ -491,7 +501,7 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&objects);
+            .build(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -504,6 +514,8 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(2, object.vertex_iter().count());
+
+        Ok(())
     }
 
     #[test]
