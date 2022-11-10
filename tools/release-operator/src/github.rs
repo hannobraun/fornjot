@@ -71,6 +71,6 @@ impl Actions {
     // Set an "output" in GitHub Actions
     pub fn set_output(key: Outputs, value: &str) {
         log::debug!("setting output name={key} value={value}");
-        println!("{key}={value} >> $GITHUB_OUTPUT");
+        println!("\"{key}={value}\" >> $GITHUB_OUTPUT");
     }
 }
