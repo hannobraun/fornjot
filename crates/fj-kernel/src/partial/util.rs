@@ -1,4 +1,4 @@
-use fj_interop::ext::ArrayExt;
+use iter_fixed::IntoIteratorFixed;
 
 use super::{HasPartial, MaybePartial};
 
@@ -22,5 +22,8 @@ pub fn merge_arrays<T: HasPartial>(
     a: [MaybePartial<T>; 2],
     b: [MaybePartial<T>; 2],
 ) -> [MaybePartial<T>; 2] {
-    a.zip_ext(b).map(|(a, b)| a.merge_with(b))
+    a.into_iter_fixed()
+        .zip(b)
+        .collect::<[_; 2]>()
+        .map(|(a, b)| a.merge_with(b))
 }
