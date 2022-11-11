@@ -57,7 +57,7 @@ impl TransformObject for PartialGlobalVertex {
         _: &Objects,
     ) -> Result<Self, ValidationError> {
         let position = self
-            .position()
+            .position
             .map(|position| transform.transform_point(&position));
 
         Ok(Self::default().with_position(position))

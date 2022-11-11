@@ -223,11 +223,6 @@ pub struct PartialGlobalVertex {
 }
 
 impl PartialGlobalVertex {
-    /// Access the position of the [`GlobalVertex`]
-    pub fn position(&self) -> Option<Point<3>> {
-        self.position
-    }
-
     /// Provide a position for the partial global vertex
     pub fn with_position(
         mut self,
