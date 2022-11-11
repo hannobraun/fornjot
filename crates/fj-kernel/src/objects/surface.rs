@@ -30,6 +30,11 @@ impl Surface {
         }
     }
 
+    /// Access the surface's geometry
+    pub fn geometry(&self) -> SurfaceGeometry {
+        self.geometry
+    }
+
     /// Access the path that defines the u-coordinate of this surface
     pub fn u(&self) -> GlobalPath {
         self.geometry.u
