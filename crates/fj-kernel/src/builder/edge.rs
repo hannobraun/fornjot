@@ -201,7 +201,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .map(|(vertex, global_form)| {
                     vertex.update_partial(|vertex| {
                         vertex.clone().with_surface_form(
-                            vertex.surface_form().update_partial(
+                            vertex.surface_form.update_partial(
                                 |mut surface_vertex| {
                                     if let Some(global_form) = global_form {
                                         surface_vertex.global_form =

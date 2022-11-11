@@ -14,9 +14,9 @@ impl TransformObject for PartialVertex {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve.clone().transform(transform, objects)?;
+        let curve = self.curve.transform(transform, objects)?;
         let surface_form = self
-            .surface_form()
+            .surface_form
             .into_partial()
             .transform(transform, objects)?;
 
