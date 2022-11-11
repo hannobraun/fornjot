@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Vector};
+use fj_math::{Line, Point};
 
 use crate::geometry::{path::GlobalPath, surface::SurfaceGeometry};
 
@@ -10,12 +10,8 @@ pub struct Surface {
 
 impl Surface {
     /// Construct a `Surface` from two paths that define its coordinate system
-    pub fn new(u: GlobalPath, v: impl Into<Vector<3>>) -> Self {
-        let v = v.into();
-
-        Self {
-            geometry: SurfaceGeometry { u, v },
-        }
+    pub fn new(geometry: SurfaceGeometry) -> Self {
+        Self { geometry }
     }
 
     /// Construct a plane from 3 points

@@ -100,7 +100,7 @@ use std::convert::Infallible;
 use fj_math::Vector;
 
 use crate::{
-    geometry::path::GlobalPath,
+    geometry::{path::GlobalPath, surface::SurfaceGeometry},
     storage::{Handle, Store},
     validate::{
         CycleValidationError, FaceValidationError, HalfEdgeValidationError,
@@ -380,12 +380,18 @@ impl Default for Surfaces {
     fn default() -> Self {
         let store = Store::new();
 
-        let xy_plane =
-            store.insert(Surface::new(GlobalPath::x_axis(), Vector::unit_y()));
-        let xz_plane =
-            store.insert(Surface::new(GlobalPath::x_axis(), Vector::unit_z()));
-        let yz_plane =
-            store.insert(Surface::new(GlobalPath::y_axis(), Vector::unit_z()));
+        let xy_plane = store.insert(Surface::new(SurfaceGeometry {
+            u: GlobalPath::x_axis(),
+            v: Vector::unit_y(),
+        }));
+        let xz_plane = store.insert(Surface::new(SurfaceGeometry {
+            u: GlobalPath::x_axis(),
+            v: Vector::unit_z(),
+        }));
+        let yz_plane = store.insert(Surface::new(SurfaceGeometry {
+            u: GlobalPath::y_axis(),
+            v: Vector::unit_z(),
+        }));
 
         Self {
             store,

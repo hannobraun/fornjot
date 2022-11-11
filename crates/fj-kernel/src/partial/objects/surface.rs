@@ -21,7 +21,7 @@ impl PartialSurface {
             .geometry
             .expect("Can't build `Surface` without geometry");
 
-        Ok(Surface::new(geometry.u, geometry.v))
+        Ok(Surface::new(geometry))
     }
 }
 
