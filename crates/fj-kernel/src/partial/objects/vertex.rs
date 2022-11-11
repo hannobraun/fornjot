@@ -24,11 +24,6 @@ pub struct PartialVertex {
 }
 
 impl PartialVertex {
-    /// Access the curve that the [`Vertex`] is defined in
-    pub fn curve(&self) -> MaybePartial<Curve> {
-        self.curve.clone()
-    }
-
     /// Access the surface form of the [`Vertex`]
     pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
         self.surface_form.clone()
