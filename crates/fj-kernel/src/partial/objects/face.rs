@@ -72,14 +72,7 @@ impl PartialFace {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            surface: self.surface.merge_with(other.surface),
-            exterior: self.exterior.merge_with(other.exterior),
-            interiors: Mergeable(self.interiors)
-                .merge_with(Mergeable(other.interiors))
-                .0,
-            color: self.color.merge_with(other.color),
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Construct a polygon from a list of points
@@ -93,6 +86,21 @@ impl PartialFace {
         let color = self.color.unwrap_or_default();
 
         Ok(Face::new(exterior, interiors, color))
+    }
+}
+
+impl MergeWith for PartialFace {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            surface: self.surface.merge_with(other.surface),
+            exterior: self.exterior.merge_with(other.exterior),
+            interiors: Mergeable(self.interiors)
+                .merge_with(Mergeable(other.interiors))
+                .0,
+            color: self.color.merge_with(other.color),
+        }
     }
 }
 
