@@ -107,11 +107,9 @@ impl PartialSurfaceVertex {
 
         let global_form = self
             .global_form
-            .update_partial(|_| {
-                PartialGlobalVertex::from_surface_and_position(
-                    &surface, position,
-                )
-            })
+            .merge_with(PartialGlobalVertex::from_surface_and_position(
+                &surface, position,
+            ))
             .into_full(objects)?;
 
         Ok(SurfaceVertex::new(position, surface, global_form))
