@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 
 use crate::{
     objects::{Cycle, Face, Objects, Surface},
-    partial::{util::merge_options, MaybePartial},
+    partial::{MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
@@ -76,10 +76,10 @@ impl PartialFace {
         interiors.extend(other.interiors);
 
         Self {
-            surface: merge_options(self.surface, other.surface),
+            surface: self.surface.merge_with(other.surface),
             exterior: self.exterior.merge_with(other.exterior),
             interiors,
-            color: merge_options(self.color, other.color),
+            color: self.color.merge_with(other.color),
         }
     }
 

@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{util::merge_options, MaybePartial},
+    partial::{MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
@@ -63,7 +63,7 @@ impl PartialVertex {
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
         Self {
-            position: merge_options(self.position, other.position),
+            position: self.position.merge_with(other.position),
             curve: self.curve.merge_with(other.curve),
             surface_form: self.surface_form.merge_with(other.surface_form),
         }
@@ -168,8 +168,8 @@ impl PartialSurfaceVertex {
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
         Self {
-            position: merge_options(self.position, other.position),
-            surface: merge_options(self.surface, other.surface),
+            position: self.position.merge_with(other.position),
+            surface: self.surface.merge_with(other.surface),
             global_form: self.global_form.merge_with(other.global_form),
         }
     }
@@ -235,7 +235,7 @@ impl PartialGlobalVertex {
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
         Self {
-            position: merge_options(self.position, other.position),
+            position: self.position.merge_with(other.position),
         }
     }
 

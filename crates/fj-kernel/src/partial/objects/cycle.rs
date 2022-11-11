@@ -1,9 +1,7 @@
 use crate::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{
-        util::merge_options, MaybePartial, PartialHalfEdge, PartialVertex,
-    },
+    partial::{MaybePartial, MergeWith, PartialHalfEdge, PartialVertex},
     storage::Handle,
     validate::ValidationError,
 };
@@ -45,7 +43,7 @@ impl PartialCycle {
 
         let mut surface = self.surface();
         for half_edge in half_edges {
-            surface = merge_options(surface, half_edge.curve().surface());
+            surface = surface.merge_with(half_edge.curve().surface());
             self.half_edges.push(half_edge);
         }
 

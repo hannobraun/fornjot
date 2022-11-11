@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial::{util::merge_options, MaybePartial},
+    partial::{MaybePartial, MergeWith},
     path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
@@ -73,8 +73,8 @@ impl PartialCurve {
         };
 
         Self {
-            path: merge_options(self.path, other.path),
-            surface: merge_options(self.surface, other.surface),
+            path: self.path.merge_with(other.path),
+            surface: self.surface.merge_with(other.surface),
             global_form,
         }
     }
