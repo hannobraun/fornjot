@@ -23,7 +23,7 @@ impl TransformObject for PartialVertex {
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
         Ok(Self::default()
-            .with_position(self.position())
+            .with_position(self.position)
             .with_curve(curve)
             .with_surface_form(surface_form))
     }

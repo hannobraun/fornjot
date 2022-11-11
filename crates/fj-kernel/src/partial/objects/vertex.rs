@@ -24,11 +24,6 @@ pub struct PartialVertex {
 }
 
 impl PartialVertex {
-    /// Access the position of the [`Vertex`] on the curve
-    pub fn position(&self) -> Option<Point<1>> {
-        self.position
-    }
-
     /// Access the curve that the [`Vertex`] is defined in
     pub fn curve(&self) -> MaybePartial<Curve> {
         self.curve.clone()
