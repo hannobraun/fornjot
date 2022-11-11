@@ -82,9 +82,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .vertices()
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
-                GlobalVertex::partial()
-                    .update_from_curve_and_position(curve.clone(), a_curve)
-                    .into()
+                let mut global_vertex = GlobalVertex::partial();
+                global_vertex
+                    .update_from_curve_and_position(curve.clone(), a_curve);
+                global_vertex.into()
             });
 
         let surface_vertex = SurfaceVertex::partial()
