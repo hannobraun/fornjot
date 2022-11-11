@@ -66,7 +66,7 @@ impl PartialCycle {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self { half_edges: self.half_edges.merge_with(other.half_edges) }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`Cycle`] from the partial cycle
@@ -130,6 +130,16 @@ impl PartialCycle {
         }
 
         Ok(Cycle::new(half_edges))
+    }
+}
+
+impl MergeWith for PartialCycle {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            half_edges: self.half_edges.merge_with(other.half_edges),
+        }
     }
 }
 
