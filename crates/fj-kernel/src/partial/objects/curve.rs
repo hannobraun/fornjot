@@ -11,9 +11,14 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCurve {
-    path: Option<SurfacePath>,
-    surface: Option<Handle<Surface>>,
-    global_form: Option<MaybePartial<GlobalCurve>>,
+    /// The path that defines the [`Curve`]
+    pub path: Option<SurfacePath>,
+
+    /// The surface that the [`Curve`] is defined in
+    pub surface: Option<Handle<Surface>>,
+
+    /// The global form of the [`Curve`]
+    pub global_form: Option<MaybePartial<GlobalCurve>>,
 }
 
 impl PartialCurve {
