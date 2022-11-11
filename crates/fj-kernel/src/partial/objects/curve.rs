@@ -22,14 +22,6 @@ pub struct PartialCurve {
 }
 
 impl PartialCurve {
-    /// Provide a path for the partial curve
-    pub fn with_path(mut self, path: Option<SurfacePath>) -> Self {
-        if let Some(path) = path {
-            self.path = Some(path);
-        }
-        self
-    }
-
     /// Provide a surface for the partial curve
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {

@@ -36,13 +36,19 @@ impl CurveBuilder for PartialCurve {
     }
 
     fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
-        self.with_path(Some(SurfacePath::circle_from_radius(radius)))
+        Self {
+            path: Some(SurfacePath::circle_from_radius(radius)),
+            ..self
+        }
     }
 
     fn update_as_line_from_points(
         self,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        self.with_path(Some(SurfacePath::line_from_points(points)))
+        Self {
+            path: Some(SurfacePath::line_from_points(points)),
+            ..self
+        }
     }
 }
