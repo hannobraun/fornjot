@@ -2,6 +2,7 @@ pub mod curve;
 pub mod cycle;
 pub mod edge;
 pub mod face;
+pub mod surface;
 pub mod vertex;
 
 use crate::objects::{
