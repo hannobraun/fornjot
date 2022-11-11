@@ -1,22 +1,25 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Objects, Surface},
-    storage::Handle,
-    validate::ValidationError,
+    geometry::surface::SurfaceGeometry, objects::Objects,
+    partial::PartialSurface, validate::ValidationError,
 };
 
 use super::TransformObject;
 
-impl TransformObject for Handle<Surface> {
+impl TransformObject for PartialSurface {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        _: &Objects,
     ) -> Result<Self, ValidationError> {
-        Ok(objects.surfaces.insert(Surface::new(
-            self.geometry().u.transform(transform),
-            transform.transform_vector(&self.geometry().v),
-        ))?)
+        let geometry = self.geometry.map(|geometry| {
+            let u = geometry.u.transform(transform);
+            let v = transform.transform_vector(&geometry.v);
+
+            SurfaceGeometry { u, v }
+        });
+
+        Ok(Self { geometry })
     }
 }
