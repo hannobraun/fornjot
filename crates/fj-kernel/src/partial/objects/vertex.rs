@@ -218,7 +218,8 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalVertex {
-    position: Option<Point<3>>,
+    /// The position of the [`GlobalVertex`]
+    pub position: Option<Point<3>>,
 }
 
 impl PartialGlobalVertex {
