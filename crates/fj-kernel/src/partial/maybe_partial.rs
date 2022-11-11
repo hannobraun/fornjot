@@ -233,7 +233,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
         match self {
             Self::Full(full) => full.global_form().clone().into(),
-            Self::Partial(partial) => partial.global_form(),
+            Self::Partial(partial) => partial.global_form.clone(),
         }
     }
 }

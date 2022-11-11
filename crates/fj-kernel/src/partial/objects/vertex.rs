@@ -128,11 +128,6 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
-    /// Access the global form of the [`SurfaceVertex`]
-    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
-        self.global_form.clone()
-    }
-
     /// Provide a position for the partial surface vertex
     pub fn with_position(
         mut self,
