@@ -18,6 +18,12 @@ pub struct PartialCurve {
     pub surface: Option<Handle<Surface>>,
 
     /// The global form of the [`Curve`]
+    ///
+    /// # Implementation Note
+    ///
+    /// This can in principle be simplified to just `MaybePartial<GlobalForm`,
+    /// but as of this writing, there's still some code that relies on this
+    /// being an `Option`.
     pub global_form: Option<MaybePartial<GlobalCurve>>,
 }
 
