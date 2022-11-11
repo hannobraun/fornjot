@@ -1187,6 +1187,7 @@ dependencies = [
  "anyhow",
  "fj-interop",
  "fj-math",
+ "iter_fixed",
  "itertools",
  "parking_lot",
  "pretty_assertions",
@@ -1835,6 +1836,12 @@ name = "ipnet"
 version = "2.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f88c5561171189e69df9d98bcf18fd5f9558300f7ea7b801eb8a0fd748bd8745"
+
+[[package]]
+name = "iter_fixed"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4d1d13810ef04ff22d946a8445d1e0016c9e98dbb6deeeb2af061e753060737c"
 
 [[package]]
 name = "itertools"
