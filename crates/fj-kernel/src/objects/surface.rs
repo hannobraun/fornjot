@@ -79,7 +79,7 @@ mod tests {
 
     #[test]
     fn point_from_surface_coords() {
-        let swept = Surface {
+        let surface = Surface {
             geometry: SurfaceGeometry {
                 u: GlobalPath::Line(Line::from_origin_and_direction(
                     Point::from([1., 1., 1.]),
@@ -90,14 +90,14 @@ mod tests {
         };
 
         assert_eq!(
-            swept.point_from_surface_coords([2., 4.]),
+            surface.point_from_surface_coords([2., 4.]),
             Point::from([1., 5., 9.]),
         );
     }
 
     #[test]
     fn vector_from_surface_coords() {
-        let swept = Surface {
+        let surface = Surface {
             geometry: SurfaceGeometry {
                 u: GlobalPath::Line(Line::from_origin_and_direction(
                     Point::from([1., 0., 0.]),
@@ -108,7 +108,7 @@ mod tests {
         };
 
         assert_eq!(
-            swept.vector_from_surface_coords([2., 4.]),
+            surface.vector_from_surface_coords([2., 4.]),
             Vector::from([0., 4., 8.]),
         );
     }
