@@ -36,7 +36,8 @@ impl TransformObject for PartialSurfaceVertex {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface()
+            .surface
+            .clone()
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let global_form = self.global_form().transform(transform, objects)?;

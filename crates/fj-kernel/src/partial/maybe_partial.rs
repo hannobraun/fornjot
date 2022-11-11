@@ -225,7 +225,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn surface(&self) -> Option<Handle<Surface>> {
         match self {
             Self::Full(full) => Some(full.surface().clone()),
-            Self::Partial(partial) => partial.surface(),
+            Self::Partial(partial) => partial.surface.clone(),
         }
     }
 
