@@ -41,9 +41,9 @@ impl TransformObject for PartialCurve {
         // coordinates, and thus transforming `surface` takes care of it.
         Ok(PartialCurve {
             path: self.path,
+            surface,
             ..Default::default()
         }
-        .with_surface(surface)
         .with_global_form(global_form))
     }
 }

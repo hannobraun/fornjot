@@ -7,7 +7,10 @@ use crate::{
         Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
     },
-    partial::{HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{
+        HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
+        PartialHalfEdge,
+    },
     storage::Handle,
     validate::ValidationError,
 };
@@ -138,10 +141,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let curve = Curve::partial()
-            .with_global_form(Some(self.extract_global_curve()))
-            .with_surface(Some(surface))
-            .update_as_line_from_points(points);
+        let curve = PartialCurve {
+            surface: Some(surface),
+            ..Default::default()
+        }
+        .with_global_form(Some(self.extract_global_curve()))
+        .update_as_line_from_points(points);
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {

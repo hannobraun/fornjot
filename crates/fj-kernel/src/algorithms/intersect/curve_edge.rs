@@ -76,8 +76,8 @@ mod tests {
 
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
-        objects::{Curve, HalfEdge, Objects},
-        partial::HasPartial,
+        objects::{HalfEdge, Objects},
+        partial::{HasPartial, PartialCurve},
     };
 
     use super::CurveEdgeIntersection;
@@ -87,10 +87,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_u_axis()
-            .build(&objects)?;
+        let curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        }
+        .update_as_u_axis()
+        .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[1., -1.], [1., 1.]])
             .build(&objects)?;
@@ -111,10 +113,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_u_axis()
-            .build(&objects)?;
+        let curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        }
+        .update_as_u_axis()
+        .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
@@ -138,10 +142,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_u_axis()
-            .build(&objects)?;
+        let curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        }
+        .update_as_u_axis()
+        .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
@@ -160,10 +166,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_u_axis()
-            .build(&objects)?;
+        let curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        }
+        .update_as_u_axis()
+        .build(&objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[-1., 0.], [1., 0.]])
             .build(&objects)?;

@@ -181,8 +181,8 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
-        objects::{Curve, GlobalVertex, Objects, SurfaceVertex, Vertex},
-        partial::HasPartial,
+        objects::{GlobalVertex, Objects, SurfaceVertex, Vertex},
+        partial::{HasPartial, PartialCurve},
         validate::Validate,
     };
 
@@ -193,9 +193,11 @@ mod tests {
         let valid = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(
-                Curve::partial()
-                    .with_surface(Some(objects.surfaces.xy_plane()))
-                    .update_as_u_axis(),
+                PartialCurve {
+                    surface: Some(objects.surfaces.xy_plane()),
+                    ..Default::default()
+                }
+                .update_as_u_axis(),
             )
             .build(&objects)?;
         let invalid = Vertex::new(
@@ -222,9 +224,11 @@ mod tests {
         let valid = Vertex::partial()
             .with_position(Some([0.]))
             .with_curve(
-                Curve::partial()
-                    .with_surface(Some(objects.surfaces.xy_plane()))
-                    .update_as_u_axis(),
+                PartialCurve {
+                    surface: Some(objects.surfaces.xy_plane()),
+                    ..Default::default()
+                }
+                .update_as_u_axis(),
             )
             .build(&objects)?;
         let invalid = Vertex::new(

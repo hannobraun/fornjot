@@ -22,14 +22,6 @@ pub struct PartialCurve {
 }
 
 impl PartialCurve {
-    /// Provide a surface for the partial curve
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            self.surface = Some(surface);
-        }
-        self
-    }
-
     /// Provide a global form for the partial curve
     pub fn with_global_form(
         mut self,
