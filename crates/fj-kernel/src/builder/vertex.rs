@@ -23,11 +23,11 @@ impl VertexBuilder for PartialVertex {
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
     /// Infer the global form of the partial vertex
-    fn infer_global_form(self) -> Self;
+    fn infer_global_form(&mut self) -> &mut Self;
 }
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
-    fn infer_global_form(mut self) -> Self {
+    fn infer_global_form(&mut self) -> &mut Self {
         self.global_form = GlobalVertex::partial().into();
         self
     }

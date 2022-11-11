@@ -231,7 +231,8 @@ mod tests {
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.position = Some([1., 0.].into());
-            tmp.infer_global_form().build(&objects)?.insert(&objects)?
+            tmp.infer_global_form();
+            tmp.build(&objects)?.insert(&objects)?
         });
 
         assert!(valid.validate().is_ok());
