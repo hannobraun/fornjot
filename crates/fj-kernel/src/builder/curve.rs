@@ -5,7 +5,7 @@ use crate::{partial::PartialCurve, path::SurfacePath};
 /// Builder API for [`PartialCurve`]
 pub trait CurveBuilder {
     /// Update partial curve to represent the u-axis
-    fn update_as_u_axis(self) -> Self;
+    fn update_as_u_axis(&mut self) -> &mut Self;
 
     /// Update partial curve to represent the v-axis
     fn update_as_v_axis(&mut self) -> &mut Self;
@@ -24,12 +24,11 @@ pub trait CurveBuilder {
 }
 
 impl CurveBuilder for PartialCurve {
-    fn update_as_u_axis(mut self) -> Self {
+    fn update_as_u_axis(&mut self) -> &mut Self {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
-        self.update_as_line_from_points([a, b]);
-        self
+        self.update_as_line_from_points([a, b])
     }
 
     fn update_as_v_axis(&mut self) -> &mut Self {

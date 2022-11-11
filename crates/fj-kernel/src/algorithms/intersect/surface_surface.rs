@@ -119,20 +119,18 @@ mod tests {
             None,
         );
 
-        let expected_xy = PartialCurve {
+        let mut expected_xy = PartialCurve {
             surface: Some(xy.clone()),
             ..Default::default()
-        }
-        .update_as_u_axis()
-        .build(&objects)?
-        .insert(&objects)?;
-        let expected_xz = PartialCurve {
+        };
+        expected_xy.update_as_u_axis();
+        let expected_xy = expected_xy.build(&objects)?.insert(&objects)?;
+        let mut expected_xz = PartialCurve {
             surface: Some(xz.clone()),
             ..Default::default()
-        }
-        .update_as_u_axis()
-        .build(&objects)?
-        .insert(&objects)?;
+        };
+        expected_xz.update_as_u_axis();
+        let expected_xz = expected_xz.build(&objects)?.insert(&objects)?;
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz], &objects)?,

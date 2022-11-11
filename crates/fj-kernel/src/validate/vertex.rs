@@ -190,15 +190,15 @@ mod tests {
     fn vertex_surface_mismatch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
+        let mut curve = PartialCurve {
+            surface: Some(objects.surfaces.xy_plane()),
+            ..Default::default()
+        };
+        curve.update_as_u_axis();
+
         let valid = Vertex::partial()
             .with_position(Some([0.]))
-            .with_curve(
-                PartialCurve {
-                    surface: Some(objects.surfaces.xy_plane()),
-                    ..Default::default()
-                }
-                .update_as_u_axis(),
-            )
+            .with_curve(curve)
             .build(&objects)?;
         let invalid = Vertex::new(
             valid.position(),
@@ -221,16 +221,18 @@ mod tests {
     fn vertex_position_mismatch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let valid = Vertex::partial()
-            .with_position(Some([0.]))
-            .with_curve(
-                PartialCurve {
-                    surface: Some(objects.surfaces.xy_plane()),
-                    ..Default::default()
-                }
-                .update_as_u_axis(),
-            )
-            .build(&objects)?;
+        let valid = {
+            let mut curve = PartialCurve {
+                surface: Some(objects.surfaces.xy_plane()),
+                ..Default::default()
+            };
+            curve.update_as_u_axis();
+
+            Vertex::partial()
+                .with_position(Some([0.]))
+                .with_curve(curve)
+                .build(&objects)?
+        };
         let invalid = Vertex::new(
             valid.position(),
             valid.curve().clone(),

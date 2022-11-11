@@ -376,13 +376,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = PartialCurve {
+        let mut object = PartialCurve {
             surface: Some(surface),
             ..Default::default()
-        }
-        .update_as_u_axis()
-        .build(&objects)?
-        .insert(&objects)?;
+        };
+        object.update_as_u_axis();
+        let object = object.build(&objects)?.insert(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -618,13 +617,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = PartialCurve {
+        let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
-        }
-        .update_as_u_axis()
-        .build(&objects)?
-        .insert(&objects)?;
+        };
+        curve.update_as_u_axis();
+        let curve = curve.build(&objects)?.insert(&objects)?;
         let global_vertex = objects
             .global_vertices
             .insert(GlobalVertex::from_position([0., 0., 0.]))?;
