@@ -88,6 +88,13 @@ impl<T> MergeWith for Vec<T> {
     }
 }
 
+impl<T> MergeWith for Mergeable<Vec<T>> {
+    fn merge_with(mut self, other: impl Into<Self>) -> Self {
+        self.0.extend(other.into().0);
+        self
+    }
+}
+
 impl<T> MergeWith for Handle<T> {
     fn merge_with(self, other: impl Into<Self>) -> Self {
         if self.id() == other.into().id() {
