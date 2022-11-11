@@ -200,11 +200,11 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::CurveBuilder,
+        builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        objects::{Objects, Surface},
-        partial::PartialCurve,
+        objects::Objects,
+        partial::{PartialCurve, PartialSurface},
     };
 
     use super::CurveApprox;
@@ -213,8 +213,10 @@ mod tests {
     fn approx_line_on_flat_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.])
-            .insert(&objects)?;
+        let surface =
+            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
+                .build(&objects)?
+                .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -234,9 +236,12 @@ mod tests {
     {
         let objects = Objects::new();
 
-        let surface =
-            Surface::new(GlobalPath::circle_from_radius(1.), [0., 0., 1.])
-                .insert(&objects)?;
+        let surface = PartialSurface::from_axes(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+        )
+        .build(&objects)?
+        .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -256,7 +261,9 @@ mod tests {
         let objects = Objects::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let surface = Surface::new(path, [0., 0., 1.]).insert(&objects)?;
+        let surface = PartialSurface::from_axes(path, [0., 0., 1.])
+            .build(&objects)?
+            .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
@@ -288,8 +295,10 @@ mod tests {
     fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let surface = Surface::new(GlobalPath::x_axis(), [0., 0., 1.])
-            .insert(&objects)?;
+        let surface =
+            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
+                .build(&objects)?
+                .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
