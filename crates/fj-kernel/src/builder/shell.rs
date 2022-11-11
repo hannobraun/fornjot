@@ -78,9 +78,8 @@ impl<'a> ShellBuilder<'a> {
                         .map(|vertex| vertex.global_form().position());
                     let c = a + [Z, Z, edge_length];
 
-                    self.objects
-                        .surfaces
-                        .insert(Surface::plane_from_points([a, b, c]))
+                    Surface::plane_from_points([a, b, c])
+                        .insert(self.objects)
                         .unwrap()
                 })
                 .collect::<Vec<_>>();

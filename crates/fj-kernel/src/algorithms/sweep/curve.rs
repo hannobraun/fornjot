@@ -2,6 +2,7 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
+    insert::Insert,
     objects::{Curve, Objects, Surface},
     storage::Handle,
     validate::ValidationError,
@@ -77,6 +78,7 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        Ok(objects.surfaces.insert(Surface::new(u, path))?)
+        let surface = Surface::new(u, path).insert(objects)?;
+        Ok(surface)
     }
 }
