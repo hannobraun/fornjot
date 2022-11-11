@@ -6,10 +6,13 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     algorithms::transform::TransformObject,
-    builder::{FaceBuilder, HalfEdgeBuilder},
+    builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
-    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface},
-    partial::{HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex},
+    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell},
+    partial::{
+        HasPartial, PartialCurve, PartialSurface, PartialSurfaceVertex,
+        PartialVertex,
+    },
     storage::Handle,
 };
 
@@ -78,7 +81,9 @@ impl<'a> ShellBuilder<'a> {
                         .map(|vertex| vertex.global_form().position());
                     let c = a + [Z, Z, edge_length];
 
-                    Surface::plane_from_points([a, b, c])
+                    PartialSurface::plane_from_points([a, b, c])
+                        .build(self.objects)
+                        .unwrap()
                         .insert(self.objects)
                         .unwrap()
                 })
