@@ -12,6 +12,7 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
+mod surface;
 mod vertex;
 
 pub use self::{
@@ -22,5 +23,6 @@ pub use self::{
     shell::ShellBuilder,
     sketch::SketchBuilder,
     solid::SolidBuilder,
+    surface::SurfaceBuilder,
     vertex::{GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder},
 };
