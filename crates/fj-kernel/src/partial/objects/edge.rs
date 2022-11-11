@@ -92,11 +92,6 @@ impl PartialHalfEdge {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, objects: &Objects) -> Result<HalfEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
@@ -182,11 +177,6 @@ impl PartialGlobalEdge {
             self.vertices = Some(vertices.map(Into::into));
         }
         self
-    }
-
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge

@@ -64,11 +64,6 @@ impl PartialCycle {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`Cycle`] from the partial cycle
     pub fn build(
         mut self,

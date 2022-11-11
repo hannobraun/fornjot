@@ -70,11 +70,6 @@ impl PartialFace {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Construct a polygon from a list of points
     pub fn build(self, objects: &Objects) -> Result<Face, ValidationError> {
         let exterior = self.exterior.into_full(objects)?;

@@ -59,11 +59,6 @@ impl PartialCurve {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`Curve`] from the partial curve
     pub fn build(self, objects: &Objects) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
@@ -116,11 +111,6 @@ impl From<&Curve> for PartialCurve {
 pub struct PartialGlobalCurve;
 
 impl PartialGlobalCurve {
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`GlobalCurve`] from the partial global curve
     pub fn build(self, _: &Objects) -> Result<GlobalCurve, ValidationError> {
         Ok(GlobalCurve)

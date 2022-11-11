@@ -60,11 +60,6 @@ impl PartialVertex {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
@@ -173,11 +168,6 @@ impl PartialSurfaceVertex {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         self,
@@ -246,11 +236,6 @@ impl PartialGlobalVertex {
             self.position = Some(position.into());
         }
         self
-    }
-
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
