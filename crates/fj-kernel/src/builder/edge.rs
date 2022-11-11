@@ -99,9 +99,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
             PartialVertex {
                 position: Some(point_curve),
+                curve: curve.clone().into(),
                 ..Default::default()
             }
-            .with_curve(curve.clone())
             .with_surface_form(surface_vertex.clone())
         });
 
@@ -156,7 +156,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
                 vertex.update_partial(|mut vertex| {
                     vertex.position = Some([position].into());
-                    vertex.with_curve(curve.clone())
+                    vertex.curve = curve.clone().into();
+                    vertex
                 })
             });
 

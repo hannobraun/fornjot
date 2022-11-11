@@ -24,12 +24,6 @@ pub struct PartialVertex {
 }
 
 impl PartialVertex {
-    /// Provide a curve for the partial vertex
-    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
-        self.curve = curve.into();
-        self
-    }
-
     /// Provide a surface form for the partial vertex
     pub fn with_surface_form(
         mut self,

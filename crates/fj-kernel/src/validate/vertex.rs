@@ -200,9 +200,9 @@ mod tests {
 
         let valid = PartialVertex {
             position: Some([0.].into()),
+            curve: curve.into(),
             ..Default::default()
         }
-        .with_curve(curve)
         .build(&objects)?;
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
@@ -229,9 +229,9 @@ mod tests {
 
             PartialVertex {
                 position: Some([0.].into()),
+                curve: curve.into(),
                 ..Default::default()
             }
-            .with_curve(curve)
             .build(&objects)?
         };
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {

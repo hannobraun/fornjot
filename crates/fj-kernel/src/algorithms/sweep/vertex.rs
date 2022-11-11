@@ -187,9 +187,9 @@ mod tests {
         let curve = curve.build(&objects)?.insert(&objects)?;
         let vertex = PartialVertex {
             position: Some([0.].into()),
+            curve: curve.into(),
             ..Default::default()
         }
-        .with_curve(curve)
         .build(&objects)?
         .insert(&objects)?;
 

@@ -220,12 +220,10 @@ mod tests {
             .build(&objects)?;
         let invalid = {
             let mut vertices = valid.vertices().clone();
-            vertices[1] = vertices[1]
-                .to_partial()
-                // Arranging for an equal but not identical curve here.
-                .with_curve(valid.curve().to_partial())
-                .build(&objects)?
-                .insert(&objects)?;
+            let mut vertex = vertices[1].to_partial();
+            // Arranging for an equal but not identical curve here.
+            vertex.curve = valid.curve().to_partial().into();
+            vertices[1] = vertex.build(&objects)?.insert(&objects)?;
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };

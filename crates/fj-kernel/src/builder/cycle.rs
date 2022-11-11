@@ -78,9 +78,9 @@ impl CycleBuilder for PartialCycle {
                     |(position, surface_form)| {
                         PartialVertex {
                             position: Some([position].into()),
+                            curve: curve.clone().into(),
                             ..Default::default()
                         }
-                        .with_curve(curve.clone())
                         .with_surface_form(surface_form)
                     },
                 );

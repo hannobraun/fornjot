@@ -22,10 +22,10 @@ impl TransformObject for PartialHalfEdge {
             .into();
         let vertices = self.vertices().try_map_ext(
             |vertex| -> Result<_, ValidationError> {
-                Ok(vertex
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .with_curve(curve.clone()))
+                let mut vertex =
+                    vertex.into_partial().transform(transform, objects)?;
+                vertex.curve = curve.clone();
+                Ok(vertex)
             },
         )?;
         let global_form = self
