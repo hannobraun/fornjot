@@ -71,7 +71,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .with_global_form(Some(self.extract_global_curve()))
             .update_as_circle_from_radius(radius);
 
-        let path = curve.path().expect("Expected path that was just created");
+        let path = curve.path.expect("Expected path that was just created");
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -88,7 +88,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(curve.surface())
+            .with_surface(curve.surface.clone())
             .with_global_form(Some(global_vertex))
             .build(objects)?
             .insert(objects)?;
