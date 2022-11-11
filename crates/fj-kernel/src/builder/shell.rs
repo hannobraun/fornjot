@@ -8,9 +8,7 @@ use crate::{
     algorithms::transform::TransformObject,
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{
-        Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, Vertex,
-    },
+    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface},
     partial::{HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     storage::Handle,
 };
@@ -121,8 +119,14 @@ impl<'a> ShellBuilder<'a> {
 
                     HalfEdge::partial()
                         .with_vertices([
-                            Vertex::partial().with_surface_form(from),
-                            Vertex::partial().with_surface_form(to),
+                            PartialVertex {
+                                surface_form: from.into(),
+                                ..Default::default()
+                            },
+                            PartialVertex {
+                                surface_form: to.into(),
+                                ..Default::default()
+                            },
                         ])
                         .update_as_line_segment()
                         .build(self.objects)
@@ -166,8 +170,14 @@ impl<'a> ShellBuilder<'a> {
                         HalfEdge::partial()
                             .with_curve(curve)
                             .with_vertices([
-                                Vertex::partial().with_surface_form(from),
-                                Vertex::partial().with_surface_form(to),
+                                PartialVertex {
+                                    surface_form: from.into(),
+                                    ..Default::default()
+                                },
+                                PartialVertex {
+                                    surface_form: to.into(),
+                                    ..Default::default()
+                                },
                             ])
                             .update_as_line_segment()
                             .build(self.objects)
@@ -189,8 +199,14 @@ impl<'a> ShellBuilder<'a> {
                     let from = from.surface_form().clone();
                     let to = to.surface_form().clone();
 
-                    let from = Vertex::partial().with_surface_form(from);
-                    let to = Vertex::partial().with_surface_form(to);
+                    let from = PartialVertex {
+                        surface_form: from.into(),
+                        ..Default::default()
+                    };
+                    let to = PartialVertex {
+                        surface_form: to.into(),
+                        ..Default::default()
+                    };
 
                     HalfEdge::partial()
                         .with_vertices([from, to])
@@ -276,12 +292,10 @@ impl<'a> ShellBuilder<'a> {
                     .into_iter_fixed()
                     .zip(surface_vertices.clone())
                     .collect::<[_; 2]>()
-                    .map(|(vertex, surface_form)| {
-                        PartialVertex {
-                            position: Some(vertex.position()),
-                            ..Default::default()
-                        }
-                        .with_surface_form(surface_form)
+                    .map(|(vertex, surface_form)| PartialVertex {
+                        position: Some(vertex.position()),
+                        surface_form: surface_form.into(),
+                        ..Default::default()
                     });
 
                 edges.push(

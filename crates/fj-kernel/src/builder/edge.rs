@@ -96,14 +96,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         .build(objects)?
         .insert(objects)?;
 
-        let [back, front] = [a_curve, b_curve].map(|point_curve| {
-            PartialVertex {
+        let [back, front] =
+            [a_curve, b_curve].map(|point_curve| PartialVertex {
                 position: Some(point_curve),
                 curve: curve.clone().into(),
-                ..Default::default()
-            }
-            .with_surface_form(surface_vertex.clone())
-        });
+                surface_form: surface_vertex.clone().into(),
+            });
 
         Ok(self.with_curve(curve).with_vertices([back, front]))
     }
@@ -120,7 +118,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 ..Default::default()
             };
 
-            Vertex::partial().with_surface_form(surface_form)
+            PartialVertex {
+                surface_form: surface_form.into(),
+                ..Default::default()
+            }
         });
 
         self.with_surface(surface)
@@ -201,18 +202,16 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .zip(global_forms)
                 .collect::<[_; 2]>()
                 .map(|(vertex, global_form)| {
-                    vertex.update_partial(|vertex| {
-                        vertex.clone().with_surface_form(
-                            vertex.surface_form.update_partial(
-                                |mut surface_vertex| {
-                                    if let Some(global_form) = global_form {
-                                        surface_vertex.global_form =
-                                            global_form;
-                                    }
-                                    surface_vertex
-                                },
-                            ),
-                        )
+                    vertex.update_partial(|mut vertex| {
+                        vertex.surface_form = vertex
+                            .surface_form
+                            .update_partial(|mut surface_vertex| {
+                                if let Some(global_form) = global_form {
+                                    surface_vertex.global_form = global_form;
+                                }
+                                surface_vertex
+                            });
+                        vertex
                     })
                 })
         };

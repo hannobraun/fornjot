@@ -75,13 +75,10 @@ impl CycleBuilder for PartialCycle {
                     .update_as_line_from_points([position_prev, position_next]);
 
                 let vertices = [(0., vertex_prev), (1., vertex_next)].map(
-                    |(position, surface_form)| {
-                        PartialVertex {
-                            position: Some([position].into()),
-                            curve: curve.clone().into(),
-                            ..Default::default()
-                        }
-                        .with_surface_form(surface_form)
+                    |(position, surface_form)| PartialVertex {
+                        position: Some([position].into()),
+                        curve: curve.clone().into(),
+                        surface_form,
                     },
                 );
 

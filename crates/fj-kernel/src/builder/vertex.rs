@@ -15,8 +15,9 @@ pub trait VertexBuilder {
 }
 
 impl VertexBuilder for PartialVertex {
-    fn infer_surface_form(self) -> Self {
-        self.with_surface_form(PartialSurfaceVertex::default())
+    fn infer_surface_form(mut self) -> Self {
+        self.surface_form = PartialSurfaceVertex::default().into();
+        self
     }
 }
 

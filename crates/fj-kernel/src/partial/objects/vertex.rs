@@ -24,15 +24,6 @@ pub struct PartialVertex {
 }
 
 impl PartialVertex {
-    /// Provide a surface form for the partial vertex
-    pub fn with_surface_form(
-        mut self,
-        surface_form: impl Into<MaybePartial<SurfaceVertex>>,
-    ) -> Self {
-        self.surface_form = surface_form.into();
-        self
-    }
-
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
