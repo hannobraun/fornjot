@@ -182,7 +182,9 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, Objects, SurfaceVertex, Vertex},
-        partial::{HasPartial, PartialCurve, PartialSurfaceVertex},
+        partial::{
+            HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex,
+        },
         validate::Validate,
     };
 
@@ -196,10 +198,12 @@ mod tests {
         };
         curve.update_as_u_axis();
 
-        let valid = Vertex::partial()
-            .with_position(Some([0.]))
-            .with_curve(curve)
-            .build(&objects)?;
+        let valid = PartialVertex {
+            position: Some([0.].into()),
+            ..Default::default()
+        }
+        .with_curve(curve)
+        .build(&objects)?;
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.surface = Some(objects.surfaces.xz_plane());
@@ -223,10 +227,12 @@ mod tests {
             };
             curve.update_as_u_axis();
 
-            Vertex::partial()
-                .with_position(Some([0.]))
-                .with_curve(curve)
-                .build(&objects)?
+            PartialVertex {
+                position: Some([0.].into()),
+                ..Default::default()
+            }
+            .with_curve(curve)
+            .build(&objects)?
         };
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();

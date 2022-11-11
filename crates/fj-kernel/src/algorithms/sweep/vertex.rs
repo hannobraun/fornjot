@@ -170,8 +170,8 @@ mod tests {
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{HalfEdge, Objects, Vertex},
-        partial::{HasPartial, PartialCurve},
+        objects::{HalfEdge, Objects},
+        partial::{HasPartial, PartialCurve, PartialVertex},
     };
 
     #[test]
@@ -185,11 +185,13 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&objects)?.insert(&objects)?;
-        let vertex = Vertex::partial()
-            .with_position(Some([0.]))
-            .with_curve(curve)
-            .build(&objects)?
-            .insert(&objects)?;
+        let vertex = PartialVertex {
+            position: Some([0.].into()),
+            ..Default::default()
+        }
+        .with_curve(curve)
+        .build(&objects)?
+        .insert(&objects)?;
 
         let half_edge =
             (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;

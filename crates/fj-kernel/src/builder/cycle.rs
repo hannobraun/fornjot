@@ -1,10 +1,10 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{HalfEdge, Surface, SurfaceVertex, Vertex},
+    objects::{HalfEdge, Surface, SurfaceVertex},
     partial::{
         HasPartial, MaybePartial, PartialCurve, PartialCycle,
-        PartialSurfaceVertex,
+        PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
 };
@@ -76,10 +76,12 @@ impl CycleBuilder for PartialCycle {
 
                 let vertices = [(0., vertex_prev), (1., vertex_next)].map(
                     |(position, surface_form)| {
-                        Vertex::partial()
-                            .with_curve(curve.clone())
-                            .with_position(Some([position]))
-                            .with_surface_form(surface_form)
+                        PartialVertex {
+                            position: Some([position].into()),
+                            ..Default::default()
+                        }
+                        .with_curve(curve.clone())
+                        .with_surface_form(surface_form)
                     },
                 );
 

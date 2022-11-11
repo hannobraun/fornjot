@@ -9,7 +9,7 @@ use crate::{
     },
     partial::{
         HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
-        PartialHalfEdge, PartialSurfaceVertex,
+        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
     validate::ValidationError,
@@ -97,10 +97,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         .insert(objects)?;
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
-            Vertex::partial()
-                .with_position(Some(point_curve))
-                .with_curve(curve.clone())
-                .with_surface_form(surface_vertex.clone())
+            PartialVertex {
+                position: Some(point_curve),
+                ..Default::default()
+            }
+            .with_curve(curve.clone())
+            .with_surface_form(surface_vertex.clone())
         });
 
         Ok(self.with_curve(curve).with_vertices([back, front]))
@@ -152,10 +154,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
-                vertex.update_partial(|vertex| {
-                    vertex
-                        .with_position(Some([position]))
-                        .with_curve(curve.clone())
+                vertex.update_partial(|mut vertex| {
+                    vertex.position = Some([position].into());
+                    vertex.with_curve(curve.clone())
                 })
             });
 

@@ -308,9 +308,9 @@ mod tests {
         let invalid = HalfEdge::new(
             valid.vertices().clone().try_map_ext(
                 |vertex| -> anyhow::Result<_, ValidationError> {
+                    let mut vertex = vertex.to_partial();
+                    vertex.position = Some([0.].into());
                     Ok(vertex
-                        .to_partial()
-                        .with_position(Some([0.]))
                         .infer_surface_form()
                         .build(&objects)?
                         .insert(&objects)?)

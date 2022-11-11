@@ -11,7 +11,7 @@ use crate::{
     objects::{
         Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, Vertex,
     },
-    partial::{HasPartial, PartialCurve, PartialSurfaceVertex},
+    partial::{HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     storage::Handle,
 };
 
@@ -277,9 +277,11 @@ impl<'a> ShellBuilder<'a> {
                     .zip(surface_vertices.clone())
                     .collect::<[_; 2]>()
                     .map(|(vertex, surface_form)| {
-                        Vertex::partial()
-                            .with_position(Some(vertex.position()))
-                            .with_surface_form(surface_form)
+                        PartialVertex {
+                            position: Some(vertex.position()),
+                            ..Default::default()
+                        }
+                        .with_surface_form(surface_form)
                     });
 
                 edges.push(
