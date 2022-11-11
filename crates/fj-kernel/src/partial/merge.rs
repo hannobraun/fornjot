@@ -1,5 +1,7 @@
 use iter_fixed::IntoIteratorFixed;
 
+use crate::storage::Handle;
+
 /// Trait for merging partial objects
 ///
 /// Implemented for all partial objects themselves, and also some related types
@@ -53,5 +55,15 @@ where
         }
 
         self.xor(other)
+    }
+}
+
+impl<T> MergeWith for Handle<T> {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        if self.id() == other.into().id() {
+            return self;
+        }
+
+        panic!("Can't merge two distinct objects")
     }
 }

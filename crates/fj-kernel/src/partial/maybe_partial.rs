@@ -114,15 +114,7 @@ where
 {
     fn merge_with(self, other: impl Into<Self>) -> Self {
         match (self, other.into()) {
-            (Self::Full(a), Self::Full(b)) => {
-                if a.id() != b.id() {
-                    panic!("Can't merge two full objects")
-                }
-
-                // If they're equal, which they are, if we reach this point,
-                // then merging them is a no-op.
-                Self::Full(a)
-            }
+            (Self::Full(a), Self::Full(b)) => Self::Full(a.merge_with(b)),
             (Self::Full(full), Self::Partial(_))
             | (Self::Partial(_), Self::Full(full)) => Self::Full(full),
             (Self::Partial(a), Self::Partial(b)) => {
