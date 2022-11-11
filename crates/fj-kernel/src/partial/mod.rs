@@ -38,7 +38,6 @@ mod maybe_partial;
 mod merge;
 mod objects;
 mod traits;
-mod util;
 
 pub use self::{
     maybe_partial::MaybePartial,

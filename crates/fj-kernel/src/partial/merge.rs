@@ -1,3 +1,5 @@
+use iter_fixed::IntoIteratorFixed;
+
 /// Trait for merging partial objects
 ///
 /// Implemented for all partial objects themselves, and also some related types
@@ -10,6 +12,18 @@ pub trait MergeWith: Sized {
     /// Merging two objects that cannot be merged is considered a programmer
     /// error and will result in a panic.
     fn merge_with(self, other: impl Into<Self>) -> Self;
+}
+
+impl<T, const N: usize> MergeWith for [T; N]
+where
+    T: MergeWith,
+{
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        self.into_iter_fixed()
+            .zip(other.into())
+            .collect::<[_; N]>()
+            .map(|(a, b)| a.merge_with(b))
+    }
 }
 
 impl<T> MergeWith for Option<T>
