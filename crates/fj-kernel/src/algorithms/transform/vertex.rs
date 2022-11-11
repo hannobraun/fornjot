@@ -47,9 +47,8 @@ impl TransformObject for PartialSurfaceVertex {
         Ok(Self {
             position: self.position,
             surface,
-            ..Default::default()
-        }
-        .with_global_form(Some(global_form)))
+            global_form,
+        })
     }
 }
 

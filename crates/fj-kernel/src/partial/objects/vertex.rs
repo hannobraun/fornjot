@@ -129,17 +129,6 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
-    /// Provide a global form for the partial surface vertex
-    pub fn with_global_form(
-        mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
-    ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = global_form.into();
-        }
-        self
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         self,

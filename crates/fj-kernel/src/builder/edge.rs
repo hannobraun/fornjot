@@ -91,9 +91,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let surface_vertex = PartialSurfaceVertex {
             position: Some(path.point_from_path_coords(a_curve)),
             surface: curve.surface.clone(),
-            ..Default::default()
+            global_form: global_vertex,
         }
-        .with_global_form(Some(global_vertex))
         .build(objects)?
         .insert(objects)?;
 
@@ -203,8 +202,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     vertex.update_partial(|vertex| {
                         vertex.clone().with_surface_form(
                             vertex.surface_form().update_partial(
-                                |surface_vertex| {
-                                    surface_vertex.with_global_form(global_form)
+                                |mut surface_vertex| {
+                                    if let Some(global_form) = global_form {
+                                        surface_vertex.global_form =
+                                            global_form;
+                                    }
+                                    surface_vertex
                                 },
                             ),
                         )

@@ -149,9 +149,8 @@ impl<'a> ShellBuilder<'a> {
                         let from = PartialSurfaceVertex {
                             position: Some(to.position() + [Z, edge_length]),
                             surface: Some(surface.clone()),
-                            ..Default::default()
-                        }
-                        .with_global_form(Some(from.global_form().clone()));
+                            global_form: from.global_form().clone().into(),
+                        };
 
                         let curve = PartialCurve {
                             global_form: Some(
@@ -254,9 +253,8 @@ impl<'a> ShellBuilder<'a> {
                         PartialSurfaceVertex {
                             position: Some(point.into()),
                             surface: Some(surface.clone()),
-                            ..Default::default()
+                            global_form: vertex.global_form().clone().into(),
                         }
-                        .with_global_form(Some(vertex.global_form().clone()))
                         .build(self.objects)
                         .unwrap()
                         .insert(self.objects)

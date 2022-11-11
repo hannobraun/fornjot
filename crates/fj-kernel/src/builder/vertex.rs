@@ -27,8 +27,9 @@ pub trait SurfaceVertexBuilder {
 }
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
-    fn infer_global_form(self) -> Self {
-        self.with_global_form(Some(GlobalVertex::partial()))
+    fn infer_global_form(mut self) -> Self {
+        self.global_form = GlobalVertex::partial().into();
+        self
     }
 }
 
