@@ -62,11 +62,7 @@ impl PartialVertex {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            position: self.position.merge_with(other.position),
-            curve: self.curve.merge_with(other.curve),
-            surface_form: self.surface_form.merge_with(other.surface_form),
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`Vertex`] from the partial vertex
@@ -96,6 +92,18 @@ impl PartialVertex {
             .into_full(objects)?;
 
         Ok(Vertex::new(position, curve, surface_form))
+    }
+}
+
+impl MergeWith for PartialVertex {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            position: self.position.merge_with(other.position),
+            curve: self.curve.merge_with(other.curve),
+            surface_form: self.surface_form.merge_with(other.surface_form),
+        }
     }
 }
 
