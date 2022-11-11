@@ -2,7 +2,10 @@ use fj_math::Point;
 
 use crate::{
     objects::{HalfEdge, Surface, SurfaceVertex, Vertex},
-    partial::{HasPartial, MaybePartial, PartialCurve, PartialCycle},
+    partial::{
+        HasPartial, MaybePartial, PartialCurve, PartialCycle,
+        PartialSurfaceVertex,
+    },
     storage::Handle,
 };
 
@@ -101,9 +104,11 @@ impl CycleBuilder for PartialCycle {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         self.with_poly_chain(points.into_iter().map(|position| {
-            SurfaceVertex::partial()
-                .with_surface(Some(surface.clone()))
-                .with_position(Some(position))
+            PartialSurfaceVertex {
+                position: Some(position.into()),
+                ..Default::default()
+            }
+            .with_surface(Some(surface.clone()))
         }))
     }
 

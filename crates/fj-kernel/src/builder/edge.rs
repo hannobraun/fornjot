@@ -4,12 +4,12 @@ use iter_fixed::IntoIteratorFixed;
 use crate::{
     insert::Insert,
     objects::{
-        Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
+        Curve, GlobalVertex, Objects, Surface, Vertex,
         VerticesInNormalizedOrder,
     },
     partial::{
         HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
-        PartialHalfEdge,
+        PartialHalfEdge, PartialSurfaceVertex,
     },
     storage::Handle,
     validate::ValidationError,
@@ -88,12 +88,14 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 global_vertex.into()
             });
 
-        let surface_vertex = SurfaceVertex::partial()
-            .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(curve.surface.clone())
-            .with_global_form(Some(global_vertex))
-            .build(objects)?
-            .insert(objects)?;
+        let surface_vertex = PartialSurfaceVertex {
+            position: Some(path.point_from_path_coords(a_curve)),
+            ..Default::default()
+        }
+        .with_surface(curve.surface.clone())
+        .with_global_form(Some(global_vertex))
+        .build(objects)?
+        .insert(objects)?;
 
         let [back, front] = [a_curve, b_curve].map(|point_curve| {
             Vertex::partial()
@@ -111,9 +113,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         let vertices = points.map(|point| {
-            let surface_form = SurfaceVertex::partial()
-                .with_surface(Some(surface.clone()))
-                .with_position(Some(point));
+            let surface_form = PartialSurfaceVertex {
+                position: Some(point.into()),
+                ..Default::default()
+            }
+            .with_surface(Some(surface.clone()));
 
             Vertex::partial().with_surface_form(surface_form)
         });

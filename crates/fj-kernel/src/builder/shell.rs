@@ -9,10 +9,9 @@ use crate::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{
-        Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, SurfaceVertex,
-        Vertex,
+        Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, Vertex,
     },
-    partial::{HasPartial, PartialCurve},
+    partial::{HasPartial, PartialCurve, PartialSurfaceVertex},
     storage::Handle,
 };
 
@@ -114,9 +113,11 @@ impl<'a> ShellBuilder<'a> {
                     let [_, from] = bottom.vertices();
 
                     let from = from.surface_form().clone();
-                    let to = SurfaceVertex::partial()
-                        .with_position(Some(from.position() + [Z, edge_length]))
-                        .with_surface(Some(surface.clone()));
+                    let to = PartialSurfaceVertex {
+                        position: Some(from.position() + [Z, edge_length]),
+                        ..Default::default()
+                    }
+                    .with_surface(Some(surface.clone()));
 
                     HalfEdge::partial()
                         .with_vertices([
@@ -145,12 +146,12 @@ impl<'a> ShellBuilder<'a> {
                         let [to, _] = bottom.vertices();
 
                         let to = to.surface_form().clone();
-                        let from = SurfaceVertex::partial()
-                            .with_position(Some(
-                                to.position() + [Z, edge_length],
-                            ))
-                            .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(from.global_form().clone()));
+                        let from = PartialSurfaceVertex {
+                            position: Some(to.position() + [Z, edge_length]),
+                            ..Default::default()
+                        }
+                        .with_surface(Some(surface.clone()))
+                        .with_global_form(Some(from.global_form().clone()));
 
                         let curve = PartialCurve {
                             global_form: Some(
@@ -250,16 +251,16 @@ impl<'a> ShellBuilder<'a> {
                     .map(|(point, edge)| {
                         let vertex = edge.back();
 
-                        SurfaceVertex::partial()
-                            .with_position(Some(point))
-                            .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(
-                                vertex.global_form().clone(),
-                            ))
-                            .build(self.objects)
-                            .unwrap()
-                            .insert(self.objects)
-                            .unwrap()
+                        PartialSurfaceVertex {
+                            position: Some(point.into()),
+                            ..Default::default()
+                        }
+                        .with_surface(Some(surface.clone()))
+                        .with_global_form(Some(vertex.global_form().clone()))
+                        .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
+                        .unwrap()
                     });
 
                 [a.clone(), b, c, d, a]

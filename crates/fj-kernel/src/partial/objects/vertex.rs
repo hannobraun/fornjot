@@ -75,14 +75,13 @@ impl PartialVertex {
 
         let surface_form = self
             .surface_form
-            .update_partial(|partial| {
+            .update_partial(|mut partial| {
                 let position = partial.position.unwrap_or_else(|| {
                     curve.path().point_from_path_coords(position)
                 });
 
-                partial
-                    .with_position(Some(position))
-                    .with_surface(Some(curve.surface().clone()))
+                partial.position = Some(position);
+                partial.with_surface(Some(curve.surface().clone()))
             })
             .into_full(objects)?;
 
@@ -128,17 +127,6 @@ pub struct PartialSurfaceVertex {
 }
 
 impl PartialSurfaceVertex {
-    /// Provide a position for the partial surface vertex
-    pub fn with_position(
-        mut self,
-        position: Option<impl Into<Point<2>>>,
-    ) -> Self {
-        if let Some(position) = position {
-            self.position = Some(position.into());
-        }
-        self
-    }
-
     /// Provide a surface for the partial surface vertex
     pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
         if let Some(surface) = surface {

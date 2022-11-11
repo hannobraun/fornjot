@@ -199,8 +199,8 @@ mod tests {
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{Cycle, Face, HalfEdge, Objects, SurfaceVertex, Vertex},
-        partial::HasPartial,
+        objects::{Cycle, Face, HalfEdge, Objects, Vertex},
+        partial::{HasPartial, PartialSurfaceVertex},
     };
 
     #[test]
@@ -235,7 +235,10 @@ mod tests {
                         bottom.front().surface_form().clone(),
                     ))
                     .with_front_vertex(Vertex::partial().with_surface_form(
-                        SurfaceVertex::partial().with_position(Some([1., 1.])),
+                        PartialSurfaceVertex {
+                            position: Some([1., 1.].into()),
+                            ..Default::default()
+                        },
                     ))
                     .update_as_line_segment()
                     .build(&objects)?
@@ -243,7 +246,10 @@ mod tests {
                 let top = HalfEdge::partial()
                     .with_surface(surface.clone())
                     .with_back_vertex(Vertex::partial().with_surface_form(
-                        SurfaceVertex::partial().with_position(Some([0., 1.])),
+                        PartialSurfaceVertex {
+                            position: Some([0., 1.].into()),
+                            ..Default::default()
+                        },
                     ))
                     .with_front_vertex(Vertex::partial().with_surface_form(
                         side_up.front().surface_form().clone(),

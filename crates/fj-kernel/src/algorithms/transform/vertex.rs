@@ -44,10 +44,12 @@ impl TransformObject for PartialSurfaceVertex {
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
-        Ok(Self::default()
-            .with_position(self.position)
-            .with_surface(surface)
-            .with_global_form(Some(global_form)))
+        Ok(Self {
+            position: self.position,
+            ..Default::default()
+        }
+        .with_surface(surface)
+        .with_global_form(Some(global_form)))
     }
 }
 

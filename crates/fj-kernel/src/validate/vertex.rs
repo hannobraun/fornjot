@@ -182,7 +182,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, Objects, SurfaceVertex, Vertex},
-        partial::{HasPartial, PartialCurve},
+        partial::{HasPartial, PartialCurve, PartialSurfaceVertex},
         validate::Validate,
     };
 
@@ -233,17 +233,11 @@ mod tests {
                 .with_curve(curve)
                 .build(&objects)?
         };
-        let invalid = Vertex::new(
-            valid.position(),
-            valid.curve().clone(),
-            valid
-                .surface_form()
-                .to_partial()
-                .with_position(Some([1., 0.]))
-                .infer_global_form()
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+        let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
+            let mut tmp = valid.surface_form().to_partial();
+            tmp.position = Some([1., 0.].into());
+            tmp.infer_global_form().build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
@@ -255,10 +249,12 @@ mod tests {
     fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let valid = SurfaceVertex::partial()
-            .with_position(Some([0., 0.]))
-            .with_surface(Some(objects.surfaces.xy_plane()))
-            .build(&objects)?;
+        let valid = PartialSurfaceVertex {
+            position: Some([0., 0.].into()),
+            ..Default::default()
+        }
+        .with_surface(Some(objects.surfaces.xy_plane()))
+        .build(&objects)?;
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
