@@ -1,6 +1,6 @@
 use iter_fixed::IntoIteratorFixed;
 
-use super::{HasPartial, MaybePartial};
+use super::{HasPartial, MaybePartial, MergeWith};
 
 pub fn merge_arrays<T: HasPartial>(
     a: [MaybePartial<T>; 2],

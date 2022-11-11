@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{util::merge_arrays, MaybePartial},
+    partial::{util::merge_arrays, MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
