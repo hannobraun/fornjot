@@ -61,13 +61,7 @@ impl PartialCurve {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            path: self.path.merge_with(other.path),
-            surface: self.surface.merge_with(other.surface),
-            global_form: Mergeable(self.global_form)
-                .merge_with(Mergeable(other.global_form))
-                .0,
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`Curve`] from the partial curve
@@ -83,6 +77,20 @@ impl PartialCurve {
         .into_full(objects)?;
 
         Ok(Curve::new(surface, path, global_form))
+    }
+}
+
+impl MergeWith for PartialCurve {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            path: self.path.merge_with(other.path),
+            surface: self.surface.merge_with(other.surface),
+            global_form: Mergeable(self.global_form)
+                .merge_with(Mergeable(other.global_form))
+                .0,
+        }
     }
 }
 
