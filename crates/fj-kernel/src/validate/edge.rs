@@ -308,10 +308,8 @@ mod tests {
                 |vertex| -> anyhow::Result<_, ValidationError> {
                     let mut vertex = vertex.to_partial();
                     vertex.position = Some([0.].into());
-                    Ok(vertex
-                        .infer_surface_form()
-                        .build(&objects)?
-                        .insert(&objects)?)
+                    vertex.infer_surface_form();
+                    Ok(vertex.build(&objects)?.insert(&objects)?)
                 },
             )?,
             valid.global_form().clone(),

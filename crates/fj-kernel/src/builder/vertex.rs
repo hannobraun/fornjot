@@ -11,11 +11,11 @@ use crate::{
 /// Builder API for [`PartialVertex`]
 pub trait VertexBuilder {
     /// Remove the surface form of the partial vertex, inferring it on build
-    fn infer_surface_form(self) -> Self;
+    fn infer_surface_form(&mut self) -> &mut Self;
 }
 
 impl VertexBuilder for PartialVertex {
-    fn infer_surface_form(mut self) -> Self {
+    fn infer_surface_form(&mut self) -> &mut Self {
         self.surface_form = PartialSurfaceVertex::default().into();
         self
     }
