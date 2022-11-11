@@ -35,12 +35,14 @@
 //! [#1147]: https://github.com/hannobraun/Fornjot/issues/1147
 
 mod maybe_partial;
+mod merge;
 mod objects;
 mod traits;
 mod util;
 
 pub use self::{
     maybe_partial::MaybePartial,
+    merge::MergeWith,
     objects::{
         curve::{PartialCurve, PartialGlobalCurve},
         cycle::PartialCycle,
