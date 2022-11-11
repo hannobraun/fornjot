@@ -9,10 +9,10 @@ use crate::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{
-        Curve, Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface,
-        SurfaceVertex, Vertex,
+        Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, SurfaceVertex,
+        Vertex,
     },
-    partial::HasPartial,
+    partial::{HasPartial, PartialCurve},
     storage::Handle,
 };
 
@@ -152,9 +152,16 @@ impl<'a> ShellBuilder<'a> {
                             .with_surface(Some(surface.clone()))
                             .with_global_form(Some(from.global_form().clone()));
 
-                        let curve = Curve::partial().with_global_form(Some(
-                            side_up_prev.curve().global_form().clone(),
-                        ));
+                        let curve = PartialCurve {
+                            global_form: Some(
+                                side_up_prev
+                                    .curve()
+                                    .global_form()
+                                    .clone()
+                                    .into(),
+                            ),
+                            ..Default::default()
+                        };
 
                         HalfEdge::partial()
                             .with_curve(curve)

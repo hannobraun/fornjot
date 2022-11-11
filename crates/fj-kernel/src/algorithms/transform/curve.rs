@@ -29,19 +29,20 @@ impl TransformObject for PartialCurve {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
-            .surface()
+            .surface
             .map(|surface| surface.transform(transform, objects))
             .transpose()?;
         let global_form = self
-            .global_form()
+            .global_form
             .map(|global_form| global_form.transform(transform, objects))
             .transpose()?;
 
         // Don't need to transform `self.path`, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.
-        Ok(Self::default()
-            .with_surface(surface)
-            .with_path(self.path())
-            .with_global_form(global_form))
+        Ok(PartialCurve {
+            path: self.path,
+            surface,
+            global_form,
+        })
     }
 }

@@ -7,7 +7,10 @@ use crate::{
         Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
         VerticesInNormalizedOrder,
     },
-    partial::{HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{
+        HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
+        PartialHalfEdge,
+    },
     storage::Handle,
     validate::ValidationError,
 };
@@ -65,13 +68,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self
-            .curve()
-            .into_partial()
-            .with_global_form(Some(self.extract_global_curve()))
-            .update_as_circle_from_radius(radius);
+        let mut curve = self.curve().into_partial();
+        curve.global_form = Some(self.extract_global_curve());
+        curve.update_as_circle_from_radius(radius);
 
-        let path = curve.path().expect("Expected path that was just created");
+        let path = curve.path.expect("Expected path that was just created");
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -88,7 +89,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = SurfaceVertex::partial()
             .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(curve.surface())
+            .with_surface(curve.surface.clone())
             .with_global_form(Some(global_vertex))
             .build(objects)?
             .insert(objects)?;
@@ -138,10 +139,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let curve = Curve::partial()
-            .with_global_form(Some(self.extract_global_curve()))
-            .with_surface(Some(surface))
-            .update_as_line_from_points(points);
+        let mut curve = PartialCurve {
+            surface: Some(surface),
+            global_form: Some(self.extract_global_curve()),
+            ..Default::default()
+        };
+        curve.update_as_line_from_points(points);
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {

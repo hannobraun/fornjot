@@ -199,8 +199,8 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::CurveBuilder,
         insert::Insert,
-        objects::{Curve, Objects, Surface},
-        partial::HasPartial,
+        objects::{Objects, Surface},
+        partial::PartialCurve,
         path::GlobalPath,
     };
 
@@ -213,11 +213,12 @@ mod tests {
         let surface = objects
             .surfaces
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
-        let curve = Curve::partial()
-            .with_surface(Some(surface))
-            .update_as_line_from_points([[1., 1.], [2., 1.]])
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface),
+            ..Default::default()
+        };
+        curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
+        let curve = curve.build(&objects)?.insert(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -235,11 +236,12 @@ mod tests {
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
         ))?;
-        let curve = Curve::partial()
-            .with_surface(Some(surface))
-            .update_as_line_from_points([[1., 1.], [1., 2.]])
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface),
+            ..Default::default()
+        };
+        curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
+        let curve = curve.build(&objects)?.insert(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -255,11 +257,12 @@ mod tests {
         let path = GlobalPath::circle_from_radius(1.);
         let surface =
             objects.surfaces.insert(Surface::new(path, [0., 0., 1.]))?;
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_line_from_points([[0., 1.], [1., 1.]])
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        };
+        curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
+        let curve = curve.build(&objects)?.insert(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -288,11 +291,12 @@ mod tests {
         let surface = objects
             .surfaces
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
-        let curve = Curve::partial()
-            .with_surface(Some(surface))
-            .update_as_circle_from_radius(1.)
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface),
+            ..Default::default()
+        };
+        curve.update_as_circle_from_radius(1.);
+        let curve = curve.build(&objects)?.insert(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;

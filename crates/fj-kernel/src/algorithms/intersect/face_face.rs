@@ -72,8 +72,8 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         builder::{CurveBuilder, FaceBuilder},
         insert::Insert,
-        objects::{Curve, Face, Objects},
-        partial::HasPartial,
+        objects::{Face, Objects},
+        partial::{HasPartial, PartialCurve},
         validate::ValidationError,
     };
 
@@ -129,11 +129,12 @@ mod tests {
 
         let expected_curves =
             surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
-                Ok(Curve::partial()
-                    .with_surface(Some(surface))
-                    .update_as_line_from_points([[0., 0.], [1., 0.]])
-                    .build(&objects)?
-                    .insert(&objects)?)
+                let mut curve = PartialCurve {
+                    surface: Some(surface),
+                    ..Default::default()
+                };
+                curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
+                Ok(curve.build(&objects)?.insert(&objects)?)
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

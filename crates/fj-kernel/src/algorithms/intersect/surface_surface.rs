@@ -91,11 +91,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject,
-        builder::CurveBuilder,
-        insert::Insert,
-        objects::{Curve, Objects},
-        partial::HasPartial,
+        algorithms::transform::TransformObject, builder::CurveBuilder,
+        insert::Insert, objects::Objects, partial::PartialCurve,
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -122,16 +119,18 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::partial()
-            .with_surface(Some(xy.clone()))
-            .update_as_u_axis()
-            .build(&objects)?
-            .insert(&objects)?;
-        let expected_xz = Curve::partial()
-            .with_surface(Some(xz.clone()))
-            .update_as_u_axis()
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut expected_xy = PartialCurve {
+            surface: Some(xy.clone()),
+            ..Default::default()
+        };
+        expected_xy.update_as_u_axis();
+        let expected_xy = expected_xy.build(&objects)?.insert(&objects)?;
+        let mut expected_xz = PartialCurve {
+            surface: Some(xz.clone()),
+            ..Default::default()
+        };
+        expected_xz.update_as_u_axis();
+        let expected_xz = expected_xz.build(&objects)?.insert(&objects)?;
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz], &objects)?,

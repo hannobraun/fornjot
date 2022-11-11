@@ -151,8 +151,8 @@ where
 mod tests {
     use crate::{
         builder::{CurveBuilder, FaceBuilder},
-        objects::{Curve, Face, Objects},
-        partial::HasPartial,
+        objects::{Face, Objects},
+        partial::{HasPartial, PartialCurve},
     };
 
     use super::CurveFaceIntersection;
@@ -163,10 +163,12 @@ mod tests {
 
         let surface = objects.surfaces.xy_plane();
 
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_line_from_points([[-3., 0.], [-2., 0.]])
-            .build(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        };
+        curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
+        let curve = curve.build(&objects)?;
 
         #[rustfmt::skip]
         let exterior = [

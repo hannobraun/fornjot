@@ -363,10 +363,10 @@ mod tests {
         builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{
-            Curve, Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects,
-            Shell, Sketch, Solid, SurfaceVertex, Vertex,
+            Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects, Shell,
+            Sketch, Solid, SurfaceVertex, Vertex,
         },
-        partial::HasPartial,
+        partial::{HasPartial, PartialCurve},
     };
 
     use super::ObjectIters as _;
@@ -376,11 +376,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let object = Curve::partial()
-            .with_surface(Some(surface))
-            .update_as_u_axis()
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut object = PartialCurve {
+            surface: Some(surface),
+            ..Default::default()
+        };
+        object.update_as_u_axis();
+        let object = object.build(&objects)?.insert(&objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -616,11 +617,12 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let curve = Curve::partial()
-            .with_surface(Some(surface.clone()))
-            .update_as_u_axis()
-            .build(&objects)?
-            .insert(&objects)?;
+        let mut curve = PartialCurve {
+            surface: Some(surface.clone()),
+            ..Default::default()
+        };
+        curve.update_as_u_axis();
+        let curve = curve.build(&objects)?.insert(&objects)?;
         let global_vertex = objects
             .global_vertices
             .insert(GlobalVertex::from_position([0., 0., 0.]))?;

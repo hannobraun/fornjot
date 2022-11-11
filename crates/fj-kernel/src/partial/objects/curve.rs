@@ -11,54 +11,23 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCurve {
-    path: Option<SurfacePath>,
-    surface: Option<Handle<Surface>>,
-    global_form: Option<MaybePartial<GlobalCurve>>,
+    /// The path that defines the [`Curve`]
+    pub path: Option<SurfacePath>,
+
+    /// The surface that the [`Curve`] is defined in
+    pub surface: Option<Handle<Surface>>,
+
+    /// The global form of the [`Curve`]
+    ///
+    /// # Implementation Note
+    ///
+    /// This can in principle be simplified to just `MaybePartial<GlobalForm`,
+    /// but as of this writing, there's still some code that relies on this
+    /// being an `Option`.
+    pub global_form: Option<MaybePartial<GlobalCurve>>,
 }
 
 impl PartialCurve {
-    /// Access the path that defines the [`Curve`]
-    pub fn path(&self) -> Option<SurfacePath> {
-        self.path
-    }
-
-    /// Access the surface that the [`Curve`] is defined in
-    pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.surface.clone()
-    }
-
-    /// Access the global form of the [`Curve`]
-    pub fn global_form(&self) -> Option<MaybePartial<GlobalCurve>> {
-        self.global_form.clone()
-    }
-
-    /// Provide a path for the partial curve
-    pub fn with_path(mut self, path: Option<SurfacePath>) -> Self {
-        if let Some(path) = path {
-            self.path = Some(path);
-        }
-        self
-    }
-
-    /// Provide a surface for the partial curve
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            self.surface = Some(surface);
-        }
-        self
-    }
-
-    /// Provide a global form for the partial curve
-    pub fn with_global_form(
-        mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalCurve>>>,
-    ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = Some(global_form.into());
-        }
-        self
-    }
-
     /// Build a full [`Curve`] from the partial curve
     pub fn build(self, objects: &Objects) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");

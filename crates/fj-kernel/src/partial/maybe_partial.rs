@@ -142,7 +142,7 @@ impl MaybePartial<Curve> {
     pub fn path(&self) -> Option<SurfacePath> {
         match self {
             MaybePartial::Full(full) => Some(full.path()),
-            MaybePartial::Partial(partial) => partial.path(),
+            MaybePartial::Partial(partial) => partial.path,
         }
     }
 
@@ -150,7 +150,7 @@ impl MaybePartial<Curve> {
     pub fn surface(&self) -> Option<Handle<Surface>> {
         match self {
             MaybePartial::Full(full) => Some(full.surface().clone()),
-            MaybePartial::Partial(partial) => partial.surface(),
+            MaybePartial::Partial(partial) => partial.surface.clone(),
         }
     }
 
@@ -158,7 +158,7 @@ impl MaybePartial<Curve> {
     pub fn global_form(&self) -> Option<MaybePartial<GlobalCurve>> {
         match self {
             Self::Full(full) => Some(full.global_form().clone().into()),
-            Self::Partial(partial) => partial.global_form(),
+            Self::Partial(partial) => partial.global_form.clone(),
         }
     }
 }
