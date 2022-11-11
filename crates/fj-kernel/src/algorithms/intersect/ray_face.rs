@@ -4,8 +4,8 @@ use fj_math::{Plane, Point, Scalar};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
+    geometry::path::GlobalPath,
     objects::{Face, HalfEdge, Vertex},
-    path::GlobalPath,
     storage::Handle,
 };
 

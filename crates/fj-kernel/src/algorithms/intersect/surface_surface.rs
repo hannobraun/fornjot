@@ -2,8 +2,8 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
+    geometry::path::{GlobalPath, SurfacePath},
     objects::{Curve, GlobalCurve, Objects, Surface},
-    path::{GlobalPath, SurfacePath},
     storage::Handle,
     validate::ValidationError,
 };

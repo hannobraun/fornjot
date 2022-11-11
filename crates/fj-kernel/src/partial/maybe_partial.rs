@@ -1,12 +1,12 @@
 use fj_math::Point;
 
 use crate::{
+    geometry::path::SurfacePath,
     insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
-    path::SurfacePath,
     storage::Handle,
     validate::{Validate, ValidationError},
 };

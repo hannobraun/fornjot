@@ -3,11 +3,11 @@ use fj_math::{Line, Point, Scalar, Vector};
 use try_insert_ext::EntryInsertExt;
 
 use crate::{
+    geometry::path::SurfacePath,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
-    path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
 };

@@ -12,8 +12,8 @@
 use std::collections::BTreeMap;
 
 use crate::{
+    geometry::path::{GlobalPath, SurfacePath},
     objects::{Curve, GlobalCurve},
-    path::{GlobalPath, SurfacePath},
     storage::{Handle, ObjectId},
 };
 
@@ -198,10 +198,10 @@ mod tests {
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::CurveBuilder,
+        geometry::path::GlobalPath,
         insert::Insert,
         objects::{Objects, Surface},
         partial::PartialCurve,
-        path::GlobalPath,
     };
 
     use super::CurveApprox;

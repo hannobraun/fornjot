@@ -4,13 +4,13 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    geometry::path::SurfacePath,
     insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
         Vertex,
     },
     partial::HasPartial,
-    path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
 };

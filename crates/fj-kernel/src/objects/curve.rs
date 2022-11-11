@@ -1,5 +1,5 @@
 use crate::{
-    path::SurfacePath,
+    geometry::path::SurfacePath,
     storage::{Handle, HandleWrapper},
 };
 

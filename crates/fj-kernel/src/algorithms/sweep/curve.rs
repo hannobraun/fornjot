@@ -1,8 +1,8 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
+    geometry::path::{GlobalPath, SurfacePath},
     objects::{Curve, Objects, Surface},
-    path::{GlobalPath, SurfacePath},
     storage::Handle,
     validate::ValidationError,
 };

@@ -3,7 +3,7 @@ use std::slice;
 use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
 
-use crate::{path::SurfacePath, storage::Handle};
+use crate::{geometry::path::SurfacePath, storage::Handle};
 
 use super::{HalfEdge, Surface};
 

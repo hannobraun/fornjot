@@ -1,7 +1,7 @@
 use crate::{
+    geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
     partial::{MaybePartial, MergeWith, Mergeable},
-    path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
 };

@@ -100,7 +100,7 @@ use std::convert::Infallible;
 use fj_math::Vector;
 
 use crate::{
-    path::GlobalPath,
+    geometry::path::GlobalPath,
     storage::{Handle, Store},
     validate::{
         CycleValidationError, FaceValidationError, HalfEdgeValidationError,

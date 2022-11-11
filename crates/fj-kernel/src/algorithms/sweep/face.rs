@@ -2,8 +2,8 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    geometry::path::GlobalPath,
     objects::{Face, Objects, Shell},
-    path::GlobalPath,
     storage::Handle,
     validate::ValidationError,
 };

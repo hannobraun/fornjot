@@ -1,6 +1,6 @@
 use fj_math::{Line, Point, Vector};
 
-use crate::path::GlobalPath;
+use crate::geometry::path::GlobalPath;
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -66,7 +66,7 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::path::GlobalPath;
+    use crate::geometry::path::GlobalPath;
 
     use super::Surface;
 
