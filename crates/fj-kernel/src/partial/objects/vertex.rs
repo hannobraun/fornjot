@@ -250,9 +250,7 @@ impl PartialGlobalVertex {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            position: self.position.merge_with(other.position),
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`GlobalVertex`] from the partial global vertex
@@ -262,6 +260,16 @@ impl PartialGlobalVertex {
             .expect("Can't build a `GlobalVertex` without a position");
 
         Ok(GlobalVertex::from_position(position))
+    }
+}
+
+impl MergeWith for PartialGlobalVertex {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            position: self.position.merge_with(other.position),
+        }
     }
 }
 
