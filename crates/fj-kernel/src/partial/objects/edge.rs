@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{MaybePartial, MergeWith},
+    partial::{MaybePartial, MergeWith, Mergeable},
     storage::Handle,
     validate::ValidationError,
 };
@@ -186,18 +186,11 @@ impl PartialGlobalEdge {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        // This is harder than it needs to be, because `vertices` uses the
-        // redundant combination of `Option` and `MaybePartial`. There's some
-        // code relying on that, however, so we have to live with it for now.
-        let vertices = match (self.vertices, other.vertices) {
-            (Some(a), Some(b)) => Some(a.merge_with(b)),
-            (Some(vertices), None) | (None, Some(vertices)) => Some(vertices),
-            (None, None) => None,
-        };
-
         Self {
             curve: self.curve.merge_with(other.curve),
-            vertices,
+            vertices: Mergeable(self.vertices)
+                .merge_with(Mergeable(other.vertices))
+                .0,
         }
     }
 

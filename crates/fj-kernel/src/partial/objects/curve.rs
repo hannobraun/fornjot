@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial::{MaybePartial, MergeWith},
+    partial::{MaybePartial, MergeWith, Mergeable},
     path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
@@ -61,21 +61,12 @@ impl PartialCurve {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        // This is harder than it should be, as `global_form` uses the redundant
-        // `Option<MaybePartial<_>>` representation. There's some code relying
-        // on that though, so we have to live with it for now.
-        let global_form = match (self.global_form, other.global_form) {
-            (Some(a), Some(b)) => Some(a.merge_with(b)),
-            (Some(global_form), None) | (None, Some(global_form)) => {
-                Some(global_form)
-            }
-            (None, None) => None,
-        };
-
         Self {
             path: self.path.merge_with(other.path),
             surface: self.surface.merge_with(other.surface),
-            global_form,
+            global_form: Mergeable(self.global_form)
+                .merge_with(Mergeable(other.global_form))
+                .0,
         }
     }
 

@@ -47,20 +47,29 @@ where
 
         // We know that `self != other`, or we wouldn't have made it here.
         if self.is_some() && other.is_some() {
-            // It would be great if we could optionally merge the two values
-            // recursively, if they support that, but that requires
-            // `specialization`:
-            // https://doc.rust-lang.org/nightly/unstable-book/language-features/specialization.html
-            //
-            // Or maybe `min_specialization`:
-            // https://doc.rust-lang.org/nightly/unstable-book/language-features/min-specialization.html
-            //
-            // Basically, we'd have one default implementation for all types,
-            // and a specialized one for `T: MergeWith`.
             panic!("Can't merge two `Option`s that are both `Some`")
         }
 
         self.xor(other)
+    }
+}
+
+// We wouldn't need to use `Mergeable` here, if we had `specialization`:
+// https://doc.rust-lang.org/nightly/unstable-book/language-features/specialization.html
+//
+// Or maybe `min_specialization`:
+// https://doc.rust-lang.org/nightly/unstable-book/language-features/min-specialization.html
+impl<T> MergeWith for Mergeable<Option<T>>
+where
+    T: MergeWith,
+{
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let merged = match (self.0, other.into().0) {
+            (Some(a), Some(b)) => Some(a.merge_with(b)),
+            (a, b) => a.xor(b),
+        };
+
+        Self(merged)
     }
 }
 
