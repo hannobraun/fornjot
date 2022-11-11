@@ -106,9 +106,9 @@ impl CycleBuilder for PartialCycle {
         self.with_poly_chain(points.into_iter().map(|position| {
             PartialSurfaceVertex {
                 position: Some(position.into()),
+                surface: Some(surface.clone()),
                 ..Default::default()
             }
-            .with_surface(Some(surface.clone()))
         }))
     }
 

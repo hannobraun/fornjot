@@ -200,16 +200,11 @@ mod tests {
             .with_position(Some([0.]))
             .with_curve(curve)
             .build(&objects)?;
-        let invalid = Vertex::new(
-            valid.position(),
-            valid.curve().clone(),
-            valid
-                .surface_form()
-                .to_partial()
-                .with_surface(Some(objects.surfaces.xz_plane()))
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+        let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
+            let mut tmp = valid.surface_form().to_partial();
+            tmp.surface = Some(objects.surfaces.xz_plane());
+            tmp.build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
@@ -251,9 +246,9 @@ mod tests {
 
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),
+            surface: Some(objects.surfaces.xy_plane()),
             ..Default::default()
         }
-        .with_surface(Some(objects.surfaces.xy_plane()))
         .build(&objects)?;
         let invalid = SurfaceVertex::new(
             valid.position(),

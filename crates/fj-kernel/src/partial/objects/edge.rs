@@ -55,10 +55,12 @@ impl PartialHalfEdge {
 
         self.vertices = self.vertices.map(|vertex| {
             vertex.update_partial(|vertex| {
-                let surface_form =
-                    vertex.surface_form().update_partial(|surface_vertex| {
-                        surface_vertex.with_surface(Some(surface.clone()))
-                    });
+                let surface_form = vertex.surface_form().update_partial(
+                    |mut surface_vertex| {
+                        surface_vertex.surface = Some(surface.clone());
+                        surface_vertex
+                    },
+                );
 
                 vertex.with_surface_form(surface_form)
             })
