@@ -3,12 +3,9 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     insert::Insert,
-    objects::{
-        Curve, GlobalVertex, Objects, Surface, Vertex,
-        VerticesInNormalizedOrder,
-    },
+    objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
-        HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
+        MaybePartial, PartialCurve, PartialGlobalEdge, PartialGlobalVertex,
         PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
@@ -82,10 +79,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .vertices()
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
-                let mut global_vertex = GlobalVertex::partial();
-                global_vertex
-                    .update_from_curve_and_position(curve.clone(), a_curve);
-                global_vertex.into()
+                PartialGlobalVertex::from_curve_and_position(
+                    curve.clone(),
+                    a_curve,
+                )
+                .into()
             });
 
         let surface_vertex = PartialSurfaceVertex {

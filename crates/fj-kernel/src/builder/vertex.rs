@@ -37,11 +37,10 @@ impl SurfaceVertexBuilder for PartialSurfaceVertex {
 /// Builder API for [`PartialGlobalVertex`]
 pub trait GlobalVertexBuilder {
     /// Update partial global vertex from the given curve and position on it
-    fn update_from_curve_and_position(
-        &mut self,
+    fn from_curve_and_position(
         curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
-    ) -> &mut Self;
+    ) -> Self;
 
     /// Update partial global vertex from the given surface and position on it
     fn update_from_surface_and_position(
@@ -52,11 +51,10 @@ pub trait GlobalVertexBuilder {
 }
 
 impl GlobalVertexBuilder for PartialGlobalVertex {
-    fn update_from_curve_and_position(
-        &mut self,
+    fn from_curve_and_position(
         curve: impl Into<MaybePartial<Curve>>,
         position: impl Into<Point<1>>,
-    ) -> &mut Self {
+    ) -> Self {
         let curve = curve.into().into_partial();
 
         let path = curve.path.expect(
@@ -67,7 +65,11 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
         );
 
         let position_surface = path.point_from_path_coords(position);
-        self.update_from_surface_and_position(&surface, position_surface)
+
+        let mut global_vertex = PartialGlobalVertex::default();
+        global_vertex
+            .update_from_surface_and_position(&surface, position_surface);
+        global_vertex
     }
 
     fn update_from_surface_and_position(
