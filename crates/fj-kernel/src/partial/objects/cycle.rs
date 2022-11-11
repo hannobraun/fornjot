@@ -96,9 +96,14 @@ impl PartialCycle {
 
             *half_edge = half_edge.clone().merge_with(
                 PartialHalfEdge::default().with_vertices([
-                    PartialVertex::default().with_surface_form(back_vertex),
-                    PartialVertex::default()
-                        .with_surface_form(front_vertex.clone()),
+                    PartialVertex {
+                        surface_form: back_vertex,
+                        ..Default::default()
+                    },
+                    PartialVertex {
+                        surface_form: front_vertex.clone().into(),
+                        ..Default::default()
+                    },
                 ]),
             );
 
@@ -111,9 +116,10 @@ impl PartialCycle {
             let back_vertex = previous_vertex.unwrap_or_default();
 
             *half_edge = half_edge.clone().merge_with(
-                PartialHalfEdge::default().with_back_vertex(
-                    PartialVertex::default().with_surface_form(back_vertex),
-                ),
+                PartialHalfEdge::default().with_back_vertex(PartialVertex {
+                    surface_form: back_vertex,
+                    ..Default::default()
+                }),
             );
         }
 

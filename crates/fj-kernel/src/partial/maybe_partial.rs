@@ -217,7 +217,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn position(&self) -> Option<Point<2>> {
         match self {
             Self::Full(full) => Some(full.position()),
-            Self::Partial(partial) => partial.position(),
+            Self::Partial(partial) => partial.position,
         }
     }
 
@@ -225,7 +225,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn surface(&self) -> Option<Handle<Surface>> {
         match self {
             Self::Full(full) => Some(full.surface().clone()),
-            Self::Partial(partial) => partial.surface(),
+            Self::Partial(partial) => partial.surface.clone(),
         }
     }
 
@@ -233,7 +233,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
         match self {
             Self::Full(full) => full.global_form().clone().into(),
-            Self::Partial(partial) => partial.global_form(),
+            Self::Partial(partial) => partial.global_form.clone(),
         }
     }
 }
@@ -243,7 +243,7 @@ impl MaybePartial<Vertex> {
     pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
         match self {
             Self::Full(full) => full.surface_form().clone().into(),
-            Self::Partial(partial) => partial.surface_form(),
+            Self::Partial(partial) => partial.surface_form.clone(),
         }
     }
 }

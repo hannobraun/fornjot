@@ -220,12 +220,10 @@ mod tests {
             .build(&objects)?;
         let invalid = {
             let mut vertices = valid.vertices().clone();
-            vertices[1] = vertices[1]
-                .to_partial()
-                // Arranging for an equal but not identical curve here.
-                .with_curve(valid.curve().to_partial())
-                .build(&objects)?
-                .insert(&objects)?;
+            let mut vertex = vertices[1].to_partial();
+            // Arranging for an equal but not identical curve here.
+            vertex.curve = valid.curve().to_partial().into();
+            vertices[1] = vertex.build(&objects)?.insert(&objects)?;
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
@@ -308,12 +306,10 @@ mod tests {
         let invalid = HalfEdge::new(
             valid.vertices().clone().try_map_ext(
                 |vertex| -> anyhow::Result<_, ValidationError> {
-                    Ok(vertex
-                        .to_partial()
-                        .with_position(Some([0.]))
-                        .infer_surface_form()
-                        .build(&objects)?
-                        .insert(&objects)?)
+                    let mut vertex = vertex.to_partial();
+                    vertex.position = Some([0.].into());
+                    vertex.infer_surface_form();
+                    Ok(vertex.build(&objects)?.insert(&objects)?)
                 },
             )?,
             valid.global_form().clone(),

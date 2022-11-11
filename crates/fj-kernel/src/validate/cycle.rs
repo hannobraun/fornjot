@@ -95,7 +95,8 @@ mod tests {
 
             // Sever connection between the last and first half-edge in the
             // cycle.
-            let first_vertex = first_vertex.into_partial().infer_surface_form();
+            let mut first_vertex = first_vertex.into_partial();
+            first_vertex.infer_surface_form();
             *first_half_edge = first_half_edge
                 .clone()
                 .with_back_vertex(first_vertex)

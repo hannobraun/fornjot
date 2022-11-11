@@ -54,13 +54,16 @@ impl PartialHalfEdge {
         });
 
         self.vertices = self.vertices.map(|vertex| {
-            vertex.update_partial(|vertex| {
-                let surface_form =
-                    vertex.surface_form().update_partial(|surface_vertex| {
-                        surface_vertex.with_surface(Some(surface.clone()))
-                    });
+            vertex.update_partial(|mut vertex| {
+                let surface_form = vertex.surface_form.clone().update_partial(
+                    |mut surface_vertex| {
+                        surface_vertex.surface = Some(surface.clone());
+                        surface_vertex
+                    },
+                );
 
-                vertex.with_surface_form(surface_form)
+                vertex.surface_form = surface_form;
+                vertex
             })
         });
 
@@ -98,7 +101,10 @@ impl PartialHalfEdge {
         let curve = self.curve.into_full(objects)?;
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
-                .update_partial(|vertex| vertex.with_curve(curve.clone()))
+                .update_partial(|mut vertex| {
+                    vertex.curve = curve.clone().into();
+                    vertex
+                })
                 .into_full(objects)
         })?;
 

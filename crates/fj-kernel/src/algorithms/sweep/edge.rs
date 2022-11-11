@@ -199,8 +199,8 @@ mod tests {
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{Cycle, Face, HalfEdge, Objects, SurfaceVertex, Vertex},
-        partial::HasPartial,
+        objects::{Cycle, Face, HalfEdge, Objects},
+        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
     };
 
     #[test]
@@ -218,63 +218,75 @@ mod tests {
         let face =
             (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
 
-        let expected_face =
-            {
-                let surface = objects.surfaces.xz_plane();
+        let expected_face = {
+            let surface = objects.surfaces.xz_plane();
 
-                let bottom = HalfEdge::partial()
-                    .update_as_line_segment_from_points(
-                        surface.clone(),
-                        [[0., 0.], [1., 0.]],
-                    )
-                    .build(&objects)?
-                    .insert(&objects)?;
-                let side_up = HalfEdge::partial()
-                    .with_surface(surface.clone())
-                    .with_back_vertex(Vertex::partial().with_surface_form(
-                        bottom.front().surface_form().clone(),
-                    ))
-                    .with_front_vertex(Vertex::partial().with_surface_form(
-                        SurfaceVertex::partial().with_position(Some([1., 1.])),
-                    ))
-                    .update_as_line_segment()
-                    .build(&objects)?
-                    .insert(&objects)?;
-                let top = HalfEdge::partial()
-                    .with_surface(surface.clone())
-                    .with_back_vertex(Vertex::partial().with_surface_form(
-                        SurfaceVertex::partial().with_position(Some([0., 1.])),
-                    ))
-                    .with_front_vertex(Vertex::partial().with_surface_form(
-                        side_up.front().surface_form().clone(),
-                    ))
-                    .update_as_line_segment()
-                    .build(&objects)?
-                    .insert(&objects)?
-                    .reverse(&objects)?;
-                let side_down =
-                    HalfEdge::partial()
-                        .with_surface(surface)
-                        .with_back_vertex(Vertex::partial().with_surface_form(
-                            bottom.back().surface_form().clone(),
-                        ))
-                        .with_front_vertex(Vertex::partial().with_surface_form(
-                            top.front().surface_form().clone(),
-                        ))
-                        .update_as_line_segment()
-                        .build(&objects)?
-                        .insert(&objects)?
-                        .reverse(&objects)?;
+            let bottom = HalfEdge::partial()
+                .update_as_line_segment_from_points(
+                    surface.clone(),
+                    [[0., 0.], [1., 0.]],
+                )
+                .build(&objects)?
+                .insert(&objects)?;
+            let side_up = HalfEdge::partial()
+                .with_surface(surface.clone())
+                .with_back_vertex(PartialVertex {
+                    surface_form: bottom.front().surface_form().clone().into(),
+                    ..Default::default()
+                })
+                .with_front_vertex(PartialVertex {
+                    surface_form: PartialSurfaceVertex {
+                        position: Some([1., 1.].into()),
+                        ..Default::default()
+                    }
+                    .into(),
+                    ..Default::default()
+                })
+                .update_as_line_segment()
+                .build(&objects)?
+                .insert(&objects)?;
+            let top = HalfEdge::partial()
+                .with_surface(surface.clone())
+                .with_back_vertex(PartialVertex {
+                    surface_form: PartialSurfaceVertex {
+                        position: Some([0., 1.].into()),
+                        ..Default::default()
+                    }
+                    .into(),
+                    ..Default::default()
+                })
+                .with_front_vertex(PartialVertex {
+                    surface_form: side_up.front().surface_form().clone().into(),
+                    ..Default::default()
+                })
+                .update_as_line_segment()
+                .build(&objects)?
+                .insert(&objects)?
+                .reverse(&objects)?;
+            let side_down = HalfEdge::partial()
+                .with_surface(surface)
+                .with_back_vertex(PartialVertex {
+                    surface_form: bottom.back().surface_form().clone().into(),
+                    ..Default::default()
+                })
+                .with_front_vertex(PartialVertex {
+                    surface_form: top.front().surface_form().clone().into(),
+                    ..Default::default()
+                })
+                .update_as_line_segment()
+                .build(&objects)?
+                .insert(&objects)?
+                .reverse(&objects)?;
 
-                let cycle = objects
-                    .cycles
-                    .insert(Cycle::new([bottom, side_up, top, side_down]))?;
+            let cycle = objects
+                .cycles
+                .insert(Cycle::new([bottom, side_up, top, side_down]))?;
 
-                Face::partial()
-                    .with_exterior(cycle)
-                    .build(&objects)?
-                    .insert(&objects)?
-            };
+            Face::partial()
+                .with_exterior(cycle)
+                .build(&objects)?
+                .insert(&objects)?
+        };
 
         assert_eq!(face, expected_face);
         Ok(())

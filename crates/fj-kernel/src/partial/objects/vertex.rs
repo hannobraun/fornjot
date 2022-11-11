@@ -13,53 +13,17 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialVertex {
-    position: Option<Point<1>>,
-    curve: MaybePartial<Curve>,
-    surface_form: MaybePartial<SurfaceVertex>,
+    /// The position of the [`Vertex`]
+    pub position: Option<Point<1>>,
+
+    /// The curve that the [`Vertex`] is defined in
+    pub curve: MaybePartial<Curve>,
+
+    /// The surface form of the [`Vertex`]
+    pub surface_form: MaybePartial<SurfaceVertex>,
 }
 
 impl PartialVertex {
-    /// Access the position of the [`Vertex`] on the curve
-    pub fn position(&self) -> Option<Point<1>> {
-        self.position
-    }
-
-    /// Access the curve that the [`Vertex`] is defined in
-    pub fn curve(&self) -> MaybePartial<Curve> {
-        self.curve.clone()
-    }
-
-    /// Access the surface form of the [`Vertex`]
-    pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
-        self.surface_form.clone()
-    }
-
-    /// Provide a position for the partial vertex
-    pub fn with_position(
-        mut self,
-        position: Option<impl Into<Point<1>>>,
-    ) -> Self {
-        if let Some(position) = position {
-            self.position = Some(position.into());
-        }
-        self
-    }
-
-    /// Provide a curve for the partial vertex
-    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
-        self.curve = curve.into();
-        self
-    }
-
-    /// Provide a surface form for the partial vertex
-    pub fn with_surface_form(
-        mut self,
-        surface_form: impl Into<MaybePartial<SurfaceVertex>>,
-    ) -> Self {
-        self.surface_form = surface_form.into();
-        self
-    }
-
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
@@ -75,14 +39,15 @@ impl PartialVertex {
 
         let surface_form = self
             .surface_form
-            .update_partial(|partial| {
+            .update_partial(|mut partial| {
                 let position = partial.position.unwrap_or_else(|| {
                     curve.path().point_from_path_coords(position)
                 });
 
+                partial.position = Some(position);
+                partial.surface = Some(curve.surface().clone());
+
                 partial
-                    .with_position(Some(position))
-                    .with_surface(Some(curve.surface().clone()))
             })
             .into_full(objects)?;
 
@@ -117,57 +82,17 @@ impl From<&Vertex> for PartialVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialSurfaceVertex {
-    position: Option<Point<2>>,
-    surface: Option<Handle<Surface>>,
-    global_form: MaybePartial<GlobalVertex>,
+    /// The position of the [`SurfaceVertex`]
+    pub position: Option<Point<2>>,
+
+    /// The surface that the [`SurfaceVertex`] is defined in
+    pub surface: Option<Handle<Surface>>,
+
+    /// The global form of the [`SurfaceVertex`]
+    pub global_form: MaybePartial<GlobalVertex>,
 }
 
 impl PartialSurfaceVertex {
-    /// Access the position of the [`SurfaceVertex`]
-    pub fn position(&self) -> Option<Point<2>> {
-        self.position
-    }
-
-    /// Access the surface that the [`SurfaceVertex`] is defined in
-    pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.surface.clone()
-    }
-
-    /// Access the global form of the [`SurfaceVertex`]
-    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
-        self.global_form.clone()
-    }
-
-    /// Provide a position for the partial surface vertex
-    pub fn with_position(
-        mut self,
-        position: Option<impl Into<Point<2>>>,
-    ) -> Self {
-        if let Some(position) = position {
-            self.position = Some(position.into());
-        }
-        self
-    }
-
-    /// Provide a surface for the partial surface vertex
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            self.surface = Some(surface);
-        }
-        self
-    }
-
-    /// Provide a global form for the partial surface vertex
-    pub fn with_global_form(
-        mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalVertex>>>,
-    ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = global_form.into();
-        }
-        self
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         self,
@@ -182,9 +107,9 @@ impl PartialSurfaceVertex {
 
         let global_form = self
             .global_form
-            .update_partial(|global_form| {
-                global_form.update_from_surface_and_position(&surface, position)
-            })
+            .merge_with(PartialGlobalVertex::from_surface_and_position(
+                &surface, position,
+            ))
             .into_full(objects)?;
 
         Ok(SurfaceVertex::new(position, surface, global_form))
@@ -218,26 +143,11 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct PartialGlobalVertex {
-    position: Option<Point<3>>,
+    /// The position of the [`GlobalVertex`]
+    pub position: Option<Point<3>>,
 }
 
 impl PartialGlobalVertex {
-    /// Access the position of the [`GlobalVertex`]
-    pub fn position(&self) -> Option<Point<3>> {
-        self.position
-    }
-
-    /// Provide a position for the partial global vertex
-    pub fn with_position(
-        mut self,
-        position: Option<impl Into<Point<3>>>,
-    ) -> Self {
-        if let Some(position) = position {
-            self.position = Some(position.into());
-        }
-        self
-    }
-
     /// Build a full [`GlobalVertex`] from the partial global vertex
     pub fn build(self, _: &Objects) -> Result<GlobalVertex, ValidationError> {
         let position = self

@@ -8,11 +8,8 @@ use crate::{
     algorithms::transform::TransformObject,
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{
-        Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface, SurfaceVertex,
-        Vertex,
-    },
-    partial::{HasPartial, PartialCurve},
+    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Surface},
+    partial::{HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     storage::Handle,
 };
 
@@ -114,14 +111,22 @@ impl<'a> ShellBuilder<'a> {
                     let [_, from] = bottom.vertices();
 
                     let from = from.surface_form().clone();
-                    let to = SurfaceVertex::partial()
-                        .with_position(Some(from.position() + [Z, edge_length]))
-                        .with_surface(Some(surface.clone()));
+                    let to = PartialSurfaceVertex {
+                        position: Some(from.position() + [Z, edge_length]),
+                        surface: Some(surface.clone()),
+                        ..Default::default()
+                    };
 
                     HalfEdge::partial()
                         .with_vertices([
-                            Vertex::partial().with_surface_form(from),
-                            Vertex::partial().with_surface_form(to),
+                            PartialVertex {
+                                surface_form: from.into(),
+                                ..Default::default()
+                            },
+                            PartialVertex {
+                                surface_form: to.into(),
+                                ..Default::default()
+                            },
                         ])
                         .update_as_line_segment()
                         .build(self.objects)
@@ -145,12 +150,11 @@ impl<'a> ShellBuilder<'a> {
                         let [to, _] = bottom.vertices();
 
                         let to = to.surface_form().clone();
-                        let from = SurfaceVertex::partial()
-                            .with_position(Some(
-                                to.position() + [Z, edge_length],
-                            ))
-                            .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(from.global_form().clone()));
+                        let from = PartialSurfaceVertex {
+                            position: Some(to.position() + [Z, edge_length]),
+                            surface: Some(surface.clone()),
+                            global_form: from.global_form().clone().into(),
+                        };
 
                         let curve = PartialCurve {
                             global_form: Some(
@@ -166,8 +170,14 @@ impl<'a> ShellBuilder<'a> {
                         HalfEdge::partial()
                             .with_curve(curve)
                             .with_vertices([
-                                Vertex::partial().with_surface_form(from),
-                                Vertex::partial().with_surface_form(to),
+                                PartialVertex {
+                                    surface_form: from.into(),
+                                    ..Default::default()
+                                },
+                                PartialVertex {
+                                    surface_form: to.into(),
+                                    ..Default::default()
+                                },
                             ])
                             .update_as_line_segment()
                             .build(self.objects)
@@ -189,8 +199,14 @@ impl<'a> ShellBuilder<'a> {
                     let from = from.surface_form().clone();
                     let to = to.surface_form().clone();
 
-                    let from = Vertex::partial().with_surface_form(from);
-                    let to = Vertex::partial().with_surface_form(to);
+                    let from = PartialVertex {
+                        surface_form: from.into(),
+                        ..Default::default()
+                    };
+                    let to = PartialVertex {
+                        surface_form: to.into(),
+                        ..Default::default()
+                    };
 
                     HalfEdge::partial()
                         .with_vertices([from, to])
@@ -250,16 +266,15 @@ impl<'a> ShellBuilder<'a> {
                     .map(|(point, edge)| {
                         let vertex = edge.back();
 
-                        SurfaceVertex::partial()
-                            .with_position(Some(point))
-                            .with_surface(Some(surface.clone()))
-                            .with_global_form(Some(
-                                vertex.global_form().clone(),
-                            ))
-                            .build(self.objects)
-                            .unwrap()
-                            .insert(self.objects)
-                            .unwrap()
+                        PartialSurfaceVertex {
+                            position: Some(point.into()),
+                            surface: Some(surface.clone()),
+                            global_form: vertex.global_form().clone().into(),
+                        }
+                        .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
+                        .unwrap()
                     });
 
                 [a.clone(), b, c, d, a]
@@ -277,10 +292,10 @@ impl<'a> ShellBuilder<'a> {
                     .into_iter_fixed()
                     .zip(surface_vertices.clone())
                     .collect::<[_; 2]>()
-                    .map(|(vertex, surface_form)| {
-                        Vertex::partial()
-                            .with_position(Some(vertex.position()))
-                            .with_surface_form(surface_form)
+                    .map(|(vertex, surface_form)| PartialVertex {
+                        position: Some(vertex.position()),
+                        surface_form: surface_form.into(),
+                        ..Default::default()
                     });
 
                 edges.push(

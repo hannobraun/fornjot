@@ -3,13 +3,10 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     insert::Insert,
-    objects::{
-        Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex,
-        VerticesInNormalizedOrder,
-    },
+    objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
-        HasPartial, MaybePartial, PartialCurve, PartialGlobalEdge,
-        PartialHalfEdge,
+        MaybePartial, PartialCurve, PartialGlobalEdge, PartialGlobalVertex,
+        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
     validate::ValidationError,
@@ -82,24 +79,27 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .vertices()
             .map(|[global_form, _]| global_form)
             .unwrap_or_else(|| {
-                GlobalVertex::partial()
-                    .update_from_curve_and_position(curve.clone(), a_curve)
-                    .into()
+                PartialGlobalVertex::from_curve_and_position(
+                    curve.clone(),
+                    a_curve,
+                )
+                .into()
             });
 
-        let surface_vertex = SurfaceVertex::partial()
-            .with_position(Some(path.point_from_path_coords(a_curve)))
-            .with_surface(curve.surface.clone())
-            .with_global_form(Some(global_vertex))
-            .build(objects)?
-            .insert(objects)?;
+        let surface_vertex = PartialSurfaceVertex {
+            position: Some(path.point_from_path_coords(a_curve)),
+            surface: curve.surface.clone(),
+            global_form: global_vertex,
+        }
+        .build(objects)?
+        .insert(objects)?;
 
-        let [back, front] = [a_curve, b_curve].map(|point_curve| {
-            Vertex::partial()
-                .with_position(Some(point_curve))
-                .with_curve(curve.clone())
-                .with_surface_form(surface_vertex.clone())
-        });
+        let [back, front] =
+            [a_curve, b_curve].map(|point_curve| PartialVertex {
+                position: Some(point_curve),
+                curve: curve.clone().into(),
+                surface_form: surface_vertex.clone().into(),
+            });
 
         Ok(self.with_curve(curve).with_vertices([back, front]))
     }
@@ -110,11 +110,16 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
         let vertices = points.map(|point| {
-            let surface_form = SurfaceVertex::partial()
-                .with_surface(Some(surface.clone()))
-                .with_position(Some(point));
+            let surface_form = PartialSurfaceVertex {
+                position: Some(point.into()),
+                surface: Some(surface.clone()),
+                ..Default::default()
+            };
 
-            Vertex::partial().with_surface_form(surface_form)
+            PartialVertex {
+                surface_form: surface_form.into(),
+                ..Default::default()
+            }
         });
 
         self.with_surface(surface)
@@ -148,10 +153,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
-                vertex.update_partial(|vertex| {
+                vertex.update_partial(|mut vertex| {
+                    vertex.position = Some([position].into());
+                    vertex.curve = curve.clone().into();
                     vertex
-                        .with_position(Some([position]))
-                        .with_curve(curve.clone())
                 })
             });
 
@@ -195,14 +200,16 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .zip(global_forms)
                 .collect::<[_; 2]>()
                 .map(|(vertex, global_form)| {
-                    vertex.update_partial(|vertex| {
-                        vertex.clone().with_surface_form(
-                            vertex.surface_form().update_partial(
-                                |surface_vertex| {
-                                    surface_vertex.with_global_form(global_form)
-                                },
-                            ),
-                        )
+                    vertex.update_partial(|mut vertex| {
+                        vertex.surface_form = vertex
+                            .surface_form
+                            .update_partial(|mut surface_vertex| {
+                                if let Some(global_form) = global_form {
+                                    surface_vertex.global_form = global_form;
+                                }
+                                surface_vertex
+                            });
+                        vertex
                     })
                 })
         };
