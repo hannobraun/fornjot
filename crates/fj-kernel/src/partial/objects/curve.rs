@@ -118,13 +118,19 @@ pub struct PartialGlobalCurve;
 
 impl PartialGlobalCurve {
     /// Merge this partial object with another
-    pub fn merge_with(self, _: Self) -> Self {
-        Self
+    pub fn merge_with(self, other: Self) -> Self {
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`GlobalCurve`] from the partial global curve
     pub fn build(self, _: &Objects) -> Result<GlobalCurve, ValidationError> {
         Ok(GlobalCurve)
+    }
+}
+
+impl MergeWith for PartialGlobalCurve {
+    fn merge_with(self, _: impl Into<Self>) -> Self {
+        Self
     }
 }
 
