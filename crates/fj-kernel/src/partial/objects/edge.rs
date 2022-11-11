@@ -94,11 +94,7 @@ impl PartialHalfEdge {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            curve: self.curve.merge_with(other.curve),
-            vertices: self.vertices.merge_with(other.vertices),
-            global_form: self.global_form.merge_with(other.global_form),
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
@@ -118,6 +114,18 @@ impl PartialHalfEdge {
             .into_full(objects)?;
 
         Ok(HalfEdge::new(vertices, global_form))
+    }
+}
+
+impl MergeWith for PartialHalfEdge {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            curve: self.curve.merge_with(other.curve),
+            vertices: self.vertices.merge_with(other.vertices),
+            global_form: self.global_form.merge_with(other.global_form),
+        }
     }
 }
 
