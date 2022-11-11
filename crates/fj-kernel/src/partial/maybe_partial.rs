@@ -11,7 +11,7 @@ use crate::{
     validate::{Validate, ValidationError},
 };
 
-use super::{HasPartial, Partial};
+use super::{HasPartial, MergeWith, Partial};
 
 /// Can be used everywhere either a partial or full objects are accepted
 ///
@@ -65,26 +65,6 @@ impl<T: HasPartial> MaybePartial<T> {
         }
     }
 
-    /// Merge this `MaybePartial` with another of the same type
-    pub fn merge_with(self, other: impl Into<Self>) -> Self {
-        match (self, other.into()) {
-            (Self::Full(a), Self::Full(b)) => {
-                if a.id() != b.id() {
-                    panic!("Can't merge two full objects")
-                }
-
-                // If they're equal, which they are, if we reach this point,
-                // then merging them is a no-op.
-                Self::Full(a)
-            }
-            (Self::Full(full), Self::Partial(_))
-            | (Self::Partial(_), Self::Full(full)) => Self::Full(full),
-            (Self::Partial(a), Self::Partial(b)) => {
-                Self::Partial(a.merge_with(b))
-            }
-        }
-    }
-
     /// Return or build a full object
     ///
     /// If this already is a full object, it is returned. If this is a partial
@@ -125,6 +105,23 @@ where
 {
     fn default() -> Self {
         Self::Partial(T::Partial::default())
+    }
+}
+
+impl<T> MergeWith for MaybePartial<T>
+where
+    T: HasPartial,
+    T::Partial: MergeWith,
+{
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        match (self, other.into()) {
+            (Self::Full(a), Self::Full(b)) => Self::Full(a.merge_with(b)),
+            (Self::Full(full), Self::Partial(_))
+            | (Self::Partial(_), Self::Full(full)) => Self::Full(full),
+            (Self::Partial(a), Self::Partial(b)) => {
+                Self::Partial(a.merge_with(b))
+            }
+        }
     }
 }
 

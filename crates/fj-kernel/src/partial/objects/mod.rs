@@ -25,10 +25,6 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn merge_with(self, other: Self) -> Self {
-                    self.merge_with(other)
-                }
-
                 fn build(self, objects: &Objects)
                     -> Result<
                         Self::Full,

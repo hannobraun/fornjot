@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 
 use crate::{
     objects::{Cycle, Face, Objects, Surface},
-    partial::{util::merge_options, MaybePartial},
+    partial::{MaybePartial, MergeWith, Mergeable},
     storage::Handle,
     validate::ValidationError,
 };
@@ -70,19 +70,6 @@ impl PartialFace {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        let mut interiors = self.interiors;
-        interiors.extend(other.interiors);
-
-        Self {
-            surface: merge_options(self.surface, other.surface),
-            exterior: self.exterior.merge_with(other.exterior),
-            interiors,
-            color: merge_options(self.color, other.color),
-        }
-    }
-
     /// Construct a polygon from a list of points
     pub fn build(self, objects: &Objects) -> Result<Face, ValidationError> {
         let exterior = self.exterior.into_full(objects)?;
@@ -94,6 +81,21 @@ impl PartialFace {
         let color = self.color.unwrap_or_default();
 
         Ok(Face::new(exterior, interiors, color))
+    }
+}
+
+impl MergeWith for PartialFace {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            surface: self.surface.merge_with(other.surface),
+            exterior: self.exterior.merge_with(other.exterior),
+            interiors: Mergeable(self.interiors)
+                .merge_with(Mergeable(other.interiors))
+                .0,
+            color: self.color.merge_with(other.color),
+        }
     }
 }
 

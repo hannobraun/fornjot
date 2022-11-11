@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{util::merge_arrays, MaybePartial},
+    partial::{MaybePartial, MergeWith, Mergeable},
     storage::Handle,
     validate::ValidationError,
 };
@@ -92,15 +92,6 @@ impl PartialHalfEdge {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            curve: self.curve.merge_with(other.curve),
-            vertices: merge_arrays(self.vertices, other.vertices),
-            global_form: self.global_form.merge_with(other.global_form),
-        }
-    }
-
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, objects: &Objects) -> Result<HalfEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
@@ -118,6 +109,18 @@ impl PartialHalfEdge {
             .into_full(objects)?;
 
         Ok(HalfEdge::new(vertices, global_form))
+    }
+}
+
+impl MergeWith for PartialHalfEdge {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            curve: self.curve.merge_with(other.curve),
+            vertices: self.vertices.merge_with(other.vertices),
+            global_form: self.global_form.merge_with(other.global_form),
+        }
     }
 }
 
@@ -176,23 +179,6 @@ impl PartialGlobalEdge {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        // This is harder than it needs to be, because `vertices` uses the
-        // redundant combination of `Option` and `MaybePartial`. There's some
-        // code relying on that, however, so we have to live with it for now.
-        let vertices = match (self.vertices, other.vertices) {
-            (Some(a), Some(b)) => Some(merge_arrays(a, b)),
-            (Some(vertices), None) | (None, Some(vertices)) => Some(vertices),
-            (None, None) => None,
-        };
-
-        Self {
-            curve: self.curve.merge_with(other.curve),
-            vertices,
-        }
-    }
-
     /// Build a full [`GlobalEdge`] from the partial global edge
     pub fn build(
         self,
@@ -205,6 +191,19 @@ impl PartialGlobalEdge {
             .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
 
         Ok(GlobalEdge::new(curve, vertices))
+    }
+}
+
+impl MergeWith for PartialGlobalEdge {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            curve: self.curve.merge_with(other.curve),
+            vertices: Mergeable(self.vertices)
+                .merge_with(Mergeable(other.vertices))
+                .0,
+        }
     }
 }
 

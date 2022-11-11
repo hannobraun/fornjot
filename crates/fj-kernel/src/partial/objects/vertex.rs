@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{util::merge_options, MaybePartial},
+    partial::{MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
@@ -60,15 +60,6 @@ impl PartialVertex {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            position: merge_options(self.position, other.position),
-            curve: self.curve.merge_with(other.curve),
-            surface_form: self.surface_form.merge_with(other.surface_form),
-        }
-    }
-
     /// Build a full [`Vertex`] from the partial vertex
     ///
     /// # Panics
@@ -96,6 +87,18 @@ impl PartialVertex {
             .into_full(objects)?;
 
         Ok(Vertex::new(position, curve, surface_form))
+    }
+}
+
+impl MergeWith for PartialVertex {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            position: self.position.merge_with(other.position),
+            curve: self.curve.merge_with(other.curve),
+            surface_form: self.surface_form.merge_with(other.surface_form),
+        }
     }
 }
 
@@ -165,15 +168,6 @@ impl PartialSurfaceVertex {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            position: merge_options(self.position, other.position),
-            surface: merge_options(self.surface, other.surface),
-            global_form: self.global_form.merge_with(other.global_form),
-        }
-    }
-
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         self,
@@ -194,6 +188,18 @@ impl PartialSurfaceVertex {
             .into_full(objects)?;
 
         Ok(SurfaceVertex::new(position, surface, global_form))
+    }
+}
+
+impl MergeWith for PartialSurfaceVertex {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            position: self.position.merge_with(other.position),
+            surface: self.surface.merge_with(other.surface),
+            global_form: self.global_form.merge_with(other.global_form),
+        }
     }
 }
 
@@ -232,13 +238,6 @@ impl PartialGlobalVertex {
         self
     }
 
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            position: merge_options(self.position, other.position),
-        }
-    }
-
     /// Build a full [`GlobalVertex`] from the partial global vertex
     pub fn build(self, _: &Objects) -> Result<GlobalVertex, ValidationError> {
         let position = self
@@ -246,6 +245,16 @@ impl PartialGlobalVertex {
             .expect("Can't build a `GlobalVertex` without a position");
 
         Ok(GlobalVertex::from_position(position))
+    }
+}
+
+impl MergeWith for PartialGlobalVertex {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            position: self.position.merge_with(other.position),
+        }
     }
 }
 

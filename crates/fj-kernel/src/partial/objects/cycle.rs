@@ -1,9 +1,7 @@
 use crate::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{
-        util::merge_options, MaybePartial, PartialHalfEdge, PartialVertex,
-    },
+    partial::{MaybePartial, MergeWith, PartialHalfEdge, PartialVertex},
     storage::Handle,
     validate::ValidationError,
 };
@@ -45,7 +43,7 @@ impl PartialCycle {
 
         let mut surface = self.surface();
         for half_edge in half_edges {
-            surface = merge_options(surface, half_edge.curve().surface());
+            surface = surface.merge_with(half_edge.curve().surface());
             self.half_edges.push(half_edge);
         }
 
@@ -64,22 +62,6 @@ impl PartialCycle {
             }
         }
         self
-    }
-
-    /// Merge this partial object with another
-    pub fn merge_with(self, other: Self) -> Self {
-        let a_is_empty = self.half_edges.is_empty();
-        let b_is_empty = other.half_edges.is_empty();
-        let half_edges = match (a_is_empty, b_is_empty) {
-            (true, true) => {
-                panic!("Can't merge `PartialHalfEdge`, if both have half-edges")
-            }
-            (true, false) => self.half_edges,
-            (false, true) => other.half_edges,
-            (false, false) => self.half_edges, // doesn't matter which we use
-        };
-
-        Self { half_edges }
     }
 
     /// Build a full [`Cycle`] from the partial cycle
@@ -143,6 +125,16 @@ impl PartialCycle {
         }
 
         Ok(Cycle::new(half_edges))
+    }
+}
+
+impl MergeWith for PartialCycle {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            half_edges: self.half_edges.merge_with(other.half_edges),
+        }
     }
 }
 
