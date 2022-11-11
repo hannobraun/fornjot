@@ -291,13 +291,12 @@ mod tests {
         let surface = objects
             .surfaces
             .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
-        let curve = PartialCurve {
+        let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
-        }
-        .update_as_circle_from_radius(1.)
-        .build(&objects)?
-        .insert(&objects)?;
+        };
+        curve.update_as_circle_from_radius(1.);
+        let curve = curve.build(&objects)?.insert(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
