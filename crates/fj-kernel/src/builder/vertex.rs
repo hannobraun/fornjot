@@ -69,10 +69,11 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
     }
 
     fn update_from_surface_and_position(
-        self,
+        mut self,
         surface: &Surface,
         position: impl Into<Point<2>>,
     ) -> Self {
-        self.with_position(Some(surface.point_from_surface_coords(position)))
+        self.position = Some(surface.point_from_surface_coords(position));
+        self
     }
 }
