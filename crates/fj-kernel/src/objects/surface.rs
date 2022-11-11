@@ -1,19 +1,21 @@
 use fj_math::{Line, Point, Vector};
 
-use crate::geometry::path::GlobalPath;
+use crate::geometry::{path::GlobalPath, surface::SurfaceGeometry};
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Surface {
-    u: GlobalPath,
-    v: Vector<3>,
+    geometry: SurfaceGeometry,
 }
 
 impl Surface {
     /// Construct a `Surface` from two paths that define its coordinate system
     pub fn new(u: GlobalPath, v: impl Into<Vector<3>>) -> Self {
         let v = v.into();
-        Self { u, v }
+
+        Self {
+            geometry: SurfaceGeometry { u, v },
+        }
     }
 
     /// Construct a plane from 3 points
@@ -23,17 +25,19 @@ impl Surface {
         let u = GlobalPath::Line(Line::from_points([a, b]));
         let v = c - a;
 
-        Self { u, v }
+        Self {
+            geometry: SurfaceGeometry { u, v },
+        }
     }
 
     /// Access the path that defines the u-coordinate of this surface
     pub fn u(&self) -> GlobalPath {
-        self.u
+        self.geometry.u
     }
 
     /// Access the path that defines the v-coordinate of this surface
     pub fn v(&self) -> Vector<3> {
-        self.v
+        self.geometry.v
     }
 
     /// Convert a point in surface coordinates to model coordinates
@@ -42,7 +46,7 @@ impl Surface {
         point: impl Into<Point<2>>,
     ) -> Point<3> {
         let point = point.into();
-        self.u.point_from_path_coords([point.u])
+        self.geometry.u.point_from_path_coords([point.u])
             + self.path_to_line().vector_from_line_coords([point.v])
     }
 
@@ -52,12 +56,15 @@ impl Surface {
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
         let vector = vector.into();
-        self.u.vector_from_path_coords([vector.u])
+        self.geometry.u.vector_from_path_coords([vector.u])
             + self.path_to_line().vector_from_line_coords([vector.v])
     }
 
     fn path_to_line(&self) -> Line<3> {
-        Line::from_origin_and_direction(self.u.origin(), self.v)
+        Line::from_origin_and_direction(
+            self.geometry.u.origin(),
+            self.geometry.v,
+        )
     }
 }
 
@@ -66,18 +73,20 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::path::GlobalPath;
+    use crate::geometry::{path::GlobalPath, surface::SurfaceGeometry};
 
     use super::Surface;
 
     #[test]
     fn point_from_surface_coords() {
         let swept = Surface {
-            u: GlobalPath::Line(Line::from_origin_and_direction(
-                Point::from([1., 1., 1.]),
-                Vector::from([0., 2., 0.]),
-            )),
-            v: Vector::from([0., 0., 2.]),
+            geometry: SurfaceGeometry {
+                u: GlobalPath::Line(Line::from_origin_and_direction(
+                    Point::from([1., 1., 1.]),
+                    Vector::from([0., 2., 0.]),
+                )),
+                v: Vector::from([0., 0., 2.]),
+            },
         };
 
         assert_eq!(
@@ -89,11 +98,13 @@ mod tests {
     #[test]
     fn vector_from_surface_coords() {
         let swept = Surface {
-            u: GlobalPath::Line(Line::from_origin_and_direction(
-                Point::from([1., 0., 0.]),
-                Vector::from([0., 2., 0.]),
-            )),
-            v: Vector::from([0., 0., 2.]),
+            geometry: SurfaceGeometry {
+                u: GlobalPath::Line(Line::from_origin_and_direction(
+                    Point::from([1., 0., 0.]),
+                    Vector::from([0., 2., 0.]),
+                )),
+                v: Vector::from([0., 0., 2.]),
+            },
         };
 
         assert_eq!(
