@@ -22,17 +22,6 @@ pub struct PartialCurve {
 }
 
 impl PartialCurve {
-    /// Provide a global form for the partial curve
-    pub fn with_global_form(
-        mut self,
-        global_form: Option<impl Into<MaybePartial<GlobalCurve>>>,
-    ) -> Self {
-        if let Some(global_form) = global_form {
-            self.global_form = Some(global_form.into());
-        }
-        self
-    }
-
     /// Build a full [`Curve`] from the partial curve
     pub fn build(self, objects: &Objects) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
