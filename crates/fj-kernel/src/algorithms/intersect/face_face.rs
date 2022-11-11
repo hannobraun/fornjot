@@ -129,13 +129,12 @@ mod tests {
 
         let expected_curves =
             surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
-                Ok(PartialCurve {
+                let mut curve = PartialCurve {
                     surface: Some(surface),
                     ..Default::default()
-                }
-                .update_as_line_from_points([[0., 0.], [1., 0.]])
-                .build(&objects)?
-                .insert(&objects)?)
+                };
+                curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
+                Ok(curve.build(&objects)?.insert(&objects)?)
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

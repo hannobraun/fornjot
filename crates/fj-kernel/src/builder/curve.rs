@@ -15,24 +15,26 @@ pub trait CurveBuilder {
 
     /// Update partial curve as a line, from the provided points
     fn update_as_line_from_points(
-        self,
+        &mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> Self;
+    ) -> &mut Self;
 }
 
 impl CurveBuilder for PartialCurve {
-    fn update_as_u_axis(self) -> Self {
+    fn update_as_u_axis(mut self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_u();
 
-        self.update_as_line_from_points([a, b])
+        self.update_as_line_from_points([a, b]);
+        self
     }
 
-    fn update_as_v_axis(self) -> Self {
+    fn update_as_v_axis(mut self) -> Self {
         let a = Point::origin();
         let b = a + Vector::unit_v();
 
-        self.update_as_line_from_points([a, b])
+        self.update_as_line_from_points([a, b]);
+        self
     }
 
     fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self {
@@ -43,12 +45,10 @@ impl CurveBuilder for PartialCurve {
     }
 
     fn update_as_line_from_points(
-        self,
+        &mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> Self {
-        Self {
-            path: Some(SurfacePath::line_from_points(points)),
-            ..self
-        }
+    ) -> &mut Self {
+        self.path = Some(SurfacePath::line_from_points(points));
+        self
     }
 }

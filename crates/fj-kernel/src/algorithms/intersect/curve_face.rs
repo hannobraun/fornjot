@@ -163,12 +163,12 @@ mod tests {
 
         let surface = objects.surfaces.xy_plane();
 
-        let curve = PartialCurve {
+        let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
-        }
-        .update_as_line_from_points([[-3., 0.], [-2., 0.]])
-        .build(&objects)?;
+        };
+        curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
+        let curve = curve.build(&objects)?;
 
         #[rustfmt::skip]
         let exterior = [

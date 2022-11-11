@@ -139,12 +139,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let curve = PartialCurve {
+        let mut curve = PartialCurve {
             surface: Some(surface),
             global_form: Some(self.extract_global_curve()),
             ..Default::default()
-        }
-        .update_as_line_from_points(points);
+        };
+        curve.update_as_line_from_points(points);
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {

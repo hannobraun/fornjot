@@ -64,11 +64,12 @@ impl CycleBuilder for PartialCycle {
 
                 previous = Some(vertex_next.clone());
 
-                let curve = PartialCurve {
+                let mut curve = PartialCurve {
                     surface: Some(surface.clone()),
                     ..Default::default()
-                }
-                .update_as_line_from_points([position_prev, position_next]);
+                };
+                curve
+                    .update_as_line_from_points([position_prev, position_next]);
 
                 let vertices = [(0., vertex_prev), (1., vertex_next)].map(
                     |(position, surface_form)| {
