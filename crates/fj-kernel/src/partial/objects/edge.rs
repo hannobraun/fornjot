@@ -186,12 +186,7 @@ impl PartialGlobalEdge {
 
     /// Merge this partial object with another
     pub fn merge_with(self, other: Self) -> Self {
-        Self {
-            curve: self.curve.merge_with(other.curve),
-            vertices: Mergeable(self.vertices)
-                .merge_with(Mergeable(other.vertices))
-                .0,
-        }
+        <Self as MergeWith>::merge_with(self, other)
     }
 
     /// Build a full [`GlobalEdge`] from the partial global edge
@@ -206,6 +201,19 @@ impl PartialGlobalEdge {
             .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
 
         Ok(GlobalEdge::new(curve, vertices))
+    }
+}
+
+impl MergeWith for PartialGlobalEdge {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        Self {
+            curve: self.curve.merge_with(other.curve),
+            vertices: Mergeable(self.vertices)
+                .merge_with(Mergeable(other.vertices))
+                .0,
+        }
     }
 }
 
