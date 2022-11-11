@@ -111,6 +111,7 @@ where
 impl<T> MergeWith for MaybePartial<T>
 where
     T: HasPartial,
+    T::Partial: MergeWith,
 {
     fn merge_with(self, other: impl Into<Self>) -> Self {
         match (self, other.into()) {
