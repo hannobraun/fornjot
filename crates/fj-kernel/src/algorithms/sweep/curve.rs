@@ -18,7 +18,7 @@ impl Sweep for Handle<Curve> {
         _: &mut SweepCache,
         objects: &Objects,
     ) -> Result<Self::Swept, ValidationError> {
-        match self.surface().u() {
+        match self.surface().geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.

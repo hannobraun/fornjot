@@ -34,14 +34,4 @@ impl Surface {
     pub fn geometry(&self) -> SurfaceGeometry {
         self.geometry
     }
-
-    /// Access the path that defines the u-coordinate of this surface
-    pub fn u(&self) -> GlobalPath {
-        self.geometry.u
-    }
-
-    /// Access the path that defines the v-coordinate of this surface
-    pub fn v(&self) -> Vector<3> {
-        self.geometry.v
-    }
 }

@@ -15,8 +15,8 @@ impl TransformObject for Handle<Surface> {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         Ok(objects.surfaces.insert(Surface::new(
-            self.u().transform(transform),
-            transform.transform_vector(&self.v()),
+            self.geometry().u.transform(transform),
+            transform.transform_vector(&self.geometry().v),
         ))?)
     }
 }

@@ -62,7 +62,7 @@ fn approx_global_curve(
     // This will probably all be unified eventually, as `SurfacePath` and
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
-    let points = match (curve.path(), curve.surface().u()) {
+    let points = match (curve.path(), curve.surface().geometry().u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             todo!(
                 "Approximating a circle on a curved surface not supported yet."
@@ -102,7 +102,7 @@ fn approx_global_curve(
                     [curve.path().point_from_path_coords(point_curve).u]
                 }));
 
-            let approx_u = (curve.surface().u(), range_u)
+            let approx_u = (curve.surface().geometry().u, range_u)
                 .approx_with_cache(tolerance, &mut ());
 
             let mut points = Vec::new();
