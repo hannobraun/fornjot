@@ -73,6 +73,21 @@ where
     }
 }
 
+impl<T> MergeWith for Vec<T> {
+    fn merge_with(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+
+        match (self.is_empty(), other.is_empty()) {
+            (true, true) => {
+                panic!("Can't merge `PartialHalfEdge`, if both have half-edges")
+            }
+            (true, false) => other,
+            (false, true) => self,
+            (false, false) => self, // doesn't matter which we use
+        }
+    }
+}
+
 impl<T> MergeWith for Handle<T> {
     fn merge_with(self, other: impl Into<Self>) -> Self {
         if self.id() == other.into().id() {
