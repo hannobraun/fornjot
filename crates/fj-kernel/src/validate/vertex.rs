@@ -158,6 +158,7 @@ impl SurfaceVertexValidationError {
     ) -> Result<(), Self> {
         let surface_position_as_global = surface_vertex
             .surface()
+            .geometry()
             .point_from_surface_coords(surface_vertex.position());
         let global_position = surface_vertex.global_form().position();
 

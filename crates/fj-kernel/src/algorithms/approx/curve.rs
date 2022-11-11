@@ -90,6 +90,7 @@ fn approx_global_curve(
 
                     let point_global = curve
                         .surface()
+                        .geometry()
                         .point_from_surface_coords(point_surface);
                     (point_curve, point_global)
                 })
@@ -108,8 +109,10 @@ fn approx_global_curve(
             for (u, _) in approx_u {
                 let t = (u.t - line.origin().u) / line.direction().u;
                 let point_surface = curve.path().point_from_path_coords([t]);
-                let point_global =
-                    curve.surface().point_from_surface_coords(point_surface);
+                let point_global = curve
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(point_surface);
                 points.push((u, point_global));
             }
 
@@ -276,7 +279,7 @@ mod tests {
                 let point_surface =
                     curve.path().point_from_path_coords(point_local);
                 let point_global =
-                    surface.point_from_surface_coords(point_surface);
+                    surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
@@ -306,8 +309,10 @@ mod tests {
             .approx(tolerance)
             .into_iter()
             .map(|(_, point_surface)| {
-                let point_global =
-                    curve.surface().point_from_surface_coords(point_surface);
+                let point_global = curve
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();

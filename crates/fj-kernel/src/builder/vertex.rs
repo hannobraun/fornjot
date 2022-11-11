@@ -73,7 +73,9 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
         position: impl Into<Point<2>>,
     ) -> Self {
         PartialGlobalVertex {
-            position: Some(surface.point_from_surface_coords(position)),
+            position: Some(
+                surface.geometry().point_from_surface_coords(position),
+            ),
         }
     }
 }

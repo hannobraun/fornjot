@@ -44,20 +44,32 @@ impl Sweep for Handle<Curve> {
 
         let u = match self.path() {
             SurfacePath::Circle(circle) => {
-                let center =
-                    self.surface().point_from_surface_coords(circle.center());
-                let a = self.surface().vector_from_surface_coords(circle.a());
-                let b = self.surface().vector_from_surface_coords(circle.b());
+                let center = self
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(circle.center());
+                let a = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(circle.a());
+                let b = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(circle.b());
 
                 let circle = Circle::new(center, a, b);
 
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin =
-                    self.surface().point_from_surface_coords(line.origin());
-                let direction =
-                    self.surface().vector_from_surface_coords(line.direction());
+                let origin = self
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(line.origin());
+                let direction = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(line.direction());
 
                 let line = Line::from_origin_and_direction(origin, direction);
 
