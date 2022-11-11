@@ -16,6 +16,12 @@ pub trait MergeWith: Sized {
     fn merge_with(self, other: impl Into<Self>) -> Self;
 }
 
+/// Wrapper struct that indicates that the contents can be merged
+///
+/// Used in connection with [`MergeWith`] to select one implementation over
+/// another.
+pub struct Mergeable<T>(pub T);
+
 impl<T, const N: usize> MergeWith for [T; N]
 where
     T: MergeWith,

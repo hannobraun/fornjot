@@ -41,7 +41,7 @@ mod traits;
 
 pub use self::{
     maybe_partial::MaybePartial,
-    merge::MergeWith,
+    merge::{MergeWith, Mergeable},
     objects::{
         curve::{PartialCurve, PartialGlobalCurve},
         cycle::PartialCycle,
