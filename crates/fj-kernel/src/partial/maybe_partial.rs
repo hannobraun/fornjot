@@ -217,7 +217,7 @@ impl MaybePartial<SurfaceVertex> {
     pub fn position(&self) -> Option<Point<2>> {
         match self {
             Self::Full(full) => Some(full.position()),
-            Self::Partial(partial) => partial.position(),
+            Self::Partial(partial) => partial.position,
         }
     }
 
