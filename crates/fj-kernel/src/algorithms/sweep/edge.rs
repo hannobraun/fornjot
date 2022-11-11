@@ -1,5 +1,6 @@
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Line, Scalar, Vector};
+use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
@@ -65,7 +66,9 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
                 vertices
                     .each_ref_ext()
-                    .zip_ext(points_surface)
+                    .into_iter_fixed()
+                    .zip(points_surface)
+                    .collect::<[_; 2]>()
                     .try_map_ext(
                     |(vertex, point_surface)| -> Result<_, ValidationError> {
                         let surface_vertex = objects.surface_vertices.insert(
@@ -135,7 +138,9 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
             let vertices = bottom_vertices
                 .each_ref_ext()
-                .zip_ext(surface_vertices)
+                .into_iter_fixed()
+                .zip(surface_vertices)
+                .collect::<[_; 2]>()
                 .try_map_ext(|(vertex, surface_form)| {
                     objects.vertices.insert(Vertex::new(
                         vertex.position(),

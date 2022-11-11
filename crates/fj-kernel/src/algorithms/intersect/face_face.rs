@@ -1,4 +1,5 @@
 use fj_interop::ext::ArrayExt;
+use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     objects::{Curve, Face, Objects},
@@ -41,8 +42,10 @@ impl FaceFaceIntersection {
 
         let curve_face_intersections = intersection_curves
             .each_ref_ext()
-            .zip_ext(faces)
-            .map(|(curve, face)| CurveFaceIntersection::compute(curve, face));
+            .into_iter_fixed()
+            .zip(faces)
+            .map(|(curve, face)| CurveFaceIntersection::compute(curve, face))
+            .collect::<[_; 2]>();
 
         let intersection_intervals = {
             let [a, b] = curve_face_intersections;

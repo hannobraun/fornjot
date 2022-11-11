@@ -1,5 +1,5 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
+use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     insert::Insert,
@@ -187,17 +187,21 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     .unwrap_or([None, None])
             };
 
-            vertices.zip_ext(global_forms).map(|(vertex, global_form)| {
-                vertex.update_partial(|vertex| {
-                    vertex.clone().with_surface_form(
-                        vertex.surface_form().update_partial(
-                            |surface_vertex| {
-                                surface_vertex.with_global_form(global_form)
-                            },
-                        ),
-                    )
+            vertices
+                .into_iter_fixed()
+                .zip(global_forms)
+                .collect::<[_; 2]>()
+                .map(|(vertex, global_form)| {
+                    vertex.update_partial(|vertex| {
+                        vertex.clone().with_surface_form(
+                            vertex.surface_form().update_partial(
+                                |surface_vertex| {
+                                    surface_vertex.with_global_form(global_form)
+                                },
+                            ),
+                        )
+                    })
                 })
-            })
         };
 
         self.with_curve(curve).with_vertices([back, front])

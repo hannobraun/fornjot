@@ -2,6 +2,7 @@ use std::array;
 
 use fj_interop::ext::{ArrayExt, SliceExt};
 use fj_math::Scalar;
+use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     algorithms::transform::TransformObject,
@@ -235,8 +236,11 @@ impl<'a> ShellBuilder<'a> {
                 let mut edges = top_edges.iter();
                 let half_edges = array::from_fn(|_| edges.next().unwrap());
 
-                let [a, b, c, d] =
-                    points.zip_ext(half_edges).map(|(point, edge)| {
+                let [a, b, c, d] = points
+                    .into_iter_fixed()
+                    .zip(half_edges)
+                    .collect::<[_; 4]>()
+                    .map(|(point, edge)| {
                         let vertex = edge.back();
 
                         SurfaceVertex::partial()
@@ -263,7 +267,9 @@ impl<'a> ShellBuilder<'a> {
                 let vertices = edge
                     .vertices()
                     .each_ref_ext()
-                    .zip_ext(surface_vertices.clone())
+                    .into_iter_fixed()
+                    .zip(surface_vertices.clone())
+                    .collect::<[_; 2]>()
                     .map(|(vertex, surface_form)| {
                         Vertex::partial()
                             .with_position(Some(vertex.position()))
