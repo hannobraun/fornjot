@@ -28,11 +28,13 @@ impl TransformObject for PartialHalfEdge {
                 Ok(vertex)
             },
         )?;
-        let global_form = self
+        let mut global_form = self
             .global_form()
             .into_partial()
-            .transform(transform, objects)?
-            .with_curve(curve.global_form());
+            .transform(transform, objects)?;
+        if let Some(curve) = curve.global_form() {
+            global_form.curve = curve;
+        }
 
         Ok(Self::default()
             .with_curve(curve)
@@ -57,8 +59,10 @@ impl TransformObject for PartialGlobalEdge {
             })
             .transpose()?;
 
-        Ok(Self::default()
-            .with_curve(Some(curve))
-            .with_vertices(vertices))
+        Ok(Self {
+            curve,
+            ..Default::default()
+        }
+        .with_vertices(vertices))
     }
 }

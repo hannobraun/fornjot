@@ -244,15 +244,11 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&objects)?;
-        let invalid = HalfEdge::new(
-            valid.vertices().clone(),
-            valid
-                .global_form()
-                .to_partial()
-                .with_curve(Some(objects.global_curves.insert(GlobalCurve)?))
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+        let invalid = HalfEdge::new(valid.vertices().clone(), {
+            let mut tmp = valid.global_form().to_partial();
+            tmp.curve = objects.global_curves.insert(GlobalCurve)?.into();
+            tmp.build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());

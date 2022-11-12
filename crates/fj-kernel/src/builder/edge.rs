@@ -235,13 +235,13 @@ pub trait GlobalEdgeBuilder {
 
 impl GlobalEdgeBuilder for PartialGlobalEdge {
     fn update_from_curve_and_vertices(
-        self,
+        mut self,
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
-        self.with_curve(Some(curve.global_form().clone()))
-            .with_vertices(Some(
-                vertices.clone().map(|vertex| vertex.global_form().clone()),
-            ))
+        self.curve = curve.global_form().clone().into();
+        self.with_vertices(Some(
+            vertices.clone().map(|vertex| vertex.global_form().clone()),
+        ))
     }
 }

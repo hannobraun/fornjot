@@ -157,17 +157,6 @@ pub struct PartialGlobalEdge {
 }
 
 impl PartialGlobalEdge {
-    /// Update the partial global edge with the given curve
-    pub fn with_curve(
-        mut self,
-        curve: Option<impl Into<MaybePartial<GlobalCurve>>>,
-    ) -> Self {
-        if let Some(curve) = curve {
-            self.curve = curve.into();
-        }
-        self
-    }
-
     /// Update the partial global edge with the given vertices
     pub fn with_vertices(
         mut self,
