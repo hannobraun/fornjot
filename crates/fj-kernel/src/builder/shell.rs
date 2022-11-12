@@ -161,13 +161,11 @@ impl<'a> ShellBuilder<'a> {
                         };
 
                         let curve = PartialCurve {
-                            global_form: Some(
-                                side_up_prev
-                                    .curve()
-                                    .global_form()
-                                    .clone()
-                                    .into(),
-                            ),
+                            global_form: side_up_prev
+                                .curve()
+                                .global_form()
+                                .clone()
+                                .into(),
                             ..Default::default()
                         };
 
