@@ -105,39 +105,32 @@ impl Model {
             let lib = libloading::Library::new(&self.lib_path)
                 .map_err(Error::LoadingLibrary)?;
 
-            if cfg!(target_os = "windows") {
-                warn!(
-                    "Version check is disabled on Windows (see \
-                    https://github.com/hannobraun/Fornjot/issues/1307)"
-                );
-            } else {
-                let version_pkg: libloading::Symbol<fn() -> RawVersion> =
-                    lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
+            let version_pkg: libloading::Symbol<fn() -> RawVersion> =
+                lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
 
-                let version_pkg = version_pkg().to_string();
-                if fj::version::VERSION_PKG != version_pkg {
-                    let host = String::from_utf8_lossy(
-                        fj::version::VERSION_PKG.as_bytes(),
-                    )
-                    .into_owned();
-                    let model = version_pkg;
+            let version_pkg = version_pkg().to_string();
+            if fj::version::VERSION_PKG != version_pkg {
+                let host = String::from_utf8_lossy(
+                    fj::version::VERSION_PKG.as_bytes(),
+                )
+                .into_owned();
+                let model = version_pkg;
 
-                    return Err(Error::VersionMismatch { host, model });
-                }
+                return Err(Error::VersionMismatch { host, model });
+            }
 
-                let version_full: libloading::Symbol<fn() -> RawVersion> =
-                    lib.get(b"version_full").map_err(Error::LoadingVersion)?;
+            let version_full: libloading::Symbol<fn() -> RawVersion> =
+                lib.get(b"version_full").map_err(Error::LoadingVersion)?;
 
-                let version_full = version_full().to_string();
-                if fj::version::VERSION_FULL != version_full {
-                    let host = String::from_utf8_lossy(
-                        fj::version::VERSION_FULL.as_bytes(),
-                    )
-                    .into_owned();
-                    let model = version_full;
+            let version_full = version_full().to_string();
+            if fj::version::VERSION_FULL != version_full {
+                let host = String::from_utf8_lossy(
+                    fj::version::VERSION_FULL.as_bytes(),
+                )
+                .into_owned();
+                let model = version_full;
 
-                    warn!("{}", Error::VersionMismatch { host, model });
-                }
+                warn!("{}", Error::VersionMismatch { host, model });
             }
 
             let init: libloading::Symbol<abi::InitFunction> = lib

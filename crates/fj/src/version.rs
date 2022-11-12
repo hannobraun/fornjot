@@ -1,6 +1,6 @@
 //! API for checking compatibility between the Fornjot app and a model
 
-use core::slice;
+use std::{ffi::CStr, os::raw::c_char};
 
 /// The Fornjot package version
 ///
@@ -24,13 +24,7 @@ pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
 /// Used by the Fornjot application to check for compatibility between a model
 /// and the app.
 #[repr(C)]
-pub struct RawVersion {
-    /// The pointer to the `str`
-    pub ptr: *const u8,
-
-    /// The length of the `str`
-    pub len: usize,
-}
+pub struct RawVersion(*const c_char);
 
 impl RawVersion {
     /// Convert the `RawVersion` into a string
@@ -41,23 +35,21 @@ impl RawVersion {
     /// in this module.
     #[allow(clippy::inherent_to_string)]
     pub unsafe fn to_string(&self) -> String {
-        let slice = slice::from_raw_parts(self.ptr, self.len);
-        String::from_utf8_lossy(slice).into_owned()
+        CStr::from_ptr(self.0)
+            .to_str()
+            .expect("Failed to convert RawVersion into String")
+            .to_owned()
     }
 }
 
 #[no_mangle]
 extern "C" fn version_pkg() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_PKG.as_ptr(),
-        len: VERSION_PKG.len(),
-    }
+    static C_VERSION_PKG: &str = concat!(env!("FJ_VERSION_PKG"), "\0");
+    RawVersion(C_VERSION_PKG.as_ptr() as *const c_char)
 }
 
 #[no_mangle]
 extern "C" fn version_full() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_FULL.as_ptr(),
-        len: VERSION_FULL.len(),
-    }
+    static C_VERSION_FULL: &str = concat!(env!("FJ_VERSION_FULL"), "\0");
+    RawVersion(C_VERSION_FULL.as_ptr() as *const c_char)
 }
