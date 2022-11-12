@@ -66,7 +66,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let mut curve = self.curve.clone().into_partial();
-        curve.global_form = self.extract_global_curve();
         curve.update_as_circle_from_radius(radius);
 
         let path = curve.path.expect("Expected path that was just created");
@@ -136,7 +135,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let mut curve = self.curve.clone().into_partial();
         curve.surface = Some(surface);
-        curve.global_form = self.extract_global_curve();
         curve.update_as_line_from_points(points);
 
         let [back, front] = {

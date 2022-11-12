@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{MaybePartial, MergeWith},
+    partial::{MaybePartial, MergeWith, PartialCurve},
     storage::Handle,
     validate::ValidationError,
 };
@@ -87,8 +87,23 @@ impl PartialHalfEdge {
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, objects: &Objects) -> Result<HalfEdge, ValidationError> {
-        let curve = self.curve.into_full(objects)?;
+    pub fn build(
+        mut self,
+        objects: &Objects,
+    ) -> Result<HalfEdge, ValidationError> {
+        let global_curve = self
+            .curve
+            .global_form()
+            .merge_with(self.global_form.curve());
+
+        let curve = {
+            self.curve = self.curve.merge_with(PartialCurve {
+                global_form: global_curve,
+                ..Default::default()
+            });
+
+            self.curve.into_full(objects)?
+        };
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
                 .update_partial(|mut vertex| {
