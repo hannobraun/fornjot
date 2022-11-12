@@ -33,8 +33,7 @@ impl PartialHalfEdge {
     pub fn extract_global_curve(&self) -> MaybePartial<GlobalCurve> {
         self.curve
             .global_form()
-            .map(|global_form| global_form.merge_with(self.global_form.curve()))
-            .unwrap_or_else(|| self.global_form.curve())
+            .merge_with(self.global_form.curve())
     }
 
     /// Update the partial half-edge with the given surface

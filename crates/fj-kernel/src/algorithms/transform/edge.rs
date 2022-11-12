@@ -32,9 +32,7 @@ impl TransformObject for PartialHalfEdge {
             .global_form
             .into_partial()
             .transform(transform, objects)?;
-        if let Some(curve) = curve.global_form() {
-            global_form.curve = curve;
-        }
+        global_form.curve = curve.global_form();
 
         Ok(Self::default()
             .with_curve(curve)
