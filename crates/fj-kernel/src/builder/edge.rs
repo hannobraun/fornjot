@@ -6,14 +6,13 @@ use crate::{
     objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
         MaybePartial, MergeWith, PartialCurve, PartialGlobalEdge,
-        PartialGlobalVertex, PartialHalfEdge, PartialSurfaceVertex,
-        PartialVertex,
+        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
     validate::ValidationError,
 };
 
-use super::{CurveBuilder, GlobalVertexBuilder};
+use super::CurveBuilder;
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
@@ -75,17 +74,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let global_vertex = self
-            .global_form()
-            .vertices()
-            .map(|[global_form, _]| global_form)
-            .unwrap_or_else(|| {
-                PartialGlobalVertex::from_curve_and_position(
-                    curve.clone(),
-                    a_curve,
-                )
-                .into()
-            });
+        let [global_vertex, _] = self.global_form().vertices();
 
         let surface_vertex = PartialSurfaceVertex {
             position: Some(path.point_from_path_coords(a_curve)),
@@ -181,19 +170,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     must_switch_order
                 };
 
-                self.global_form()
-                    .vertices()
-                    .map(
-                        |[a, b]| {
-                            if must_switch_order {
-                                [b, a]
-                            } else {
-                                [a, b]
-                            }
-                        },
-                    )
-                    .map(|[a, b]| [Some(a), Some(b)])
-                    .unwrap_or([None, None])
+                let [a, b] = self.global_form().vertices();
+                let [a, b] = if must_switch_order { [b, a] } else { [a, b] };
+                [Some(a), Some(b)]
             };
 
             vertices
