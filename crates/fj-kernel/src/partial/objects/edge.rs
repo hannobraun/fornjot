@@ -27,15 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Extract the global curve from either the curve or global form
-    ///
-    /// If a global curve is available through both, the curve is preferred.
-    pub fn extract_global_curve(&self) -> MaybePartial<GlobalCurve> {
-        self.curve
-            .global_form()
-            .merge_with(self.global_form.curve())
-    }
-
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.curve = self.curve.update_partial(|mut curve| {
