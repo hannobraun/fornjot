@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{MaybePartial, MergeWith, PartialCurve},
+    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex},
     storage::Handle,
     validate::ValidationError,
 };
@@ -97,9 +97,9 @@ impl PartialHalfEdge {
         };
         let vertices = self.vertices.try_map_ext(|vertex| {
             vertex
-                .update_partial(|mut vertex| {
-                    vertex.curve = curve.clone().into();
-                    vertex
+                .merge_with(PartialVertex {
+                    curve: curve.clone().into(),
+                    ..Default::default()
                 })
                 .into_full(objects)
         })?;
