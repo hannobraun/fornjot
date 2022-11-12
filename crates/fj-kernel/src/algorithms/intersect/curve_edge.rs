@@ -1,8 +1,8 @@
 use fj_math::{Point, Segment};
 
 use crate::{
+    geometry::path::SurfacePath,
     objects::{Curve, HalfEdge},
-    path::SurfacePath,
 };
 
 use super::LineSegmentIntersection;

@@ -12,8 +12,8 @@
 use std::collections::BTreeMap;
 
 use crate::{
+    geometry::path::{GlobalPath, SurfacePath},
     objects::{Curve, GlobalCurve},
-    path::{GlobalPath, SurfacePath},
     storage::{Handle, ObjectId},
 };
 
@@ -62,7 +62,7 @@ fn approx_global_curve(
     // This will probably all be unified eventually, as `SurfacePath` and
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
-    let points = match (curve.path(), curve.surface().u()) {
+    let points = match (curve.path(), curve.surface().geometry().u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             todo!(
                 "Approximating a circle on a curved surface not supported yet."
@@ -90,6 +90,7 @@ fn approx_global_curve(
 
                     let point_global = curve
                         .surface()
+                        .geometry()
                         .point_from_surface_coords(point_surface);
                     (point_curve, point_global)
                 })
@@ -101,15 +102,17 @@ fn approx_global_curve(
                     [curve.path().point_from_path_coords(point_curve).u]
                 }));
 
-            let approx_u = (curve.surface().u(), range_u)
+            let approx_u = (curve.surface().geometry().u, range_u)
                 .approx_with_cache(tolerance, &mut ());
 
             let mut points = Vec::new();
             for (u, _) in approx_u {
                 let t = (u.t - line.origin().u) / line.direction().u;
                 let point_surface = curve.path().point_from_path_coords([t]);
-                let point_global =
-                    curve.surface().point_from_surface_coords(point_surface);
+                let point_global = curve
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(point_surface);
                 points.push((u, point_global));
             }
 
@@ -197,11 +200,11 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::CurveBuilder,
+        builder::{CurveBuilder, SurfaceBuilder},
+        geometry::path::GlobalPath,
         insert::Insert,
-        objects::{Objects, Surface},
-        partial::PartialCurve,
-        path::GlobalPath,
+        objects::Objects,
+        partial::{PartialCurve, PartialSurface},
     };
 
     use super::CurveApprox;
@@ -210,9 +213,10 @@ mod tests {
     fn approx_line_on_flat_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let surface = objects
-            .surfaces
-            .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
+        let surface =
+            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
+                .build(&objects)?
+                .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -232,10 +236,12 @@ mod tests {
     {
         let objects = Objects::new();
 
-        let surface = objects.surfaces.insert(Surface::new(
+        let surface = PartialSurface::from_axes(
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
-        ))?;
+        )
+        .build(&objects)?
+        .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -255,8 +261,9 @@ mod tests {
         let objects = Objects::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let surface =
-            objects.surfaces.insert(Surface::new(path, [0., 0., 1.]))?;
+        let surface = PartialSurface::from_axes(path, [0., 0., 1.])
+            .build(&objects)?
+            .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
@@ -276,7 +283,7 @@ mod tests {
                 let point_surface =
                     curve.path().point_from_path_coords(point_local);
                 let point_global =
-                    surface.point_from_surface_coords(point_surface);
+                    surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
@@ -288,9 +295,10 @@ mod tests {
     fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let surface = objects
-            .surfaces
-            .insert(Surface::new(GlobalPath::x_axis(), [0., 0., 1.]))?;
+        let surface =
+            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
+                .build(&objects)?
+                .insert(&objects)?;
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -306,8 +314,10 @@ mod tests {
             .approx(tolerance)
             .into_iter()
             .map(|(_, point_surface)| {
-                let point_global =
-                    curve.surface().point_from_surface_coords(point_surface);
+                let point_global = curve
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();

@@ -2,8 +2,8 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
+    geometry::path::{GlobalPath, SurfacePath},
     objects::{Curve, GlobalCurve, Objects, Surface},
-    path::{GlobalPath, SurfacePath},
     storage::Handle,
     validate::ValidationError,
 };
@@ -74,12 +74,12 @@ impl SurfaceSurfaceIntersection {
 
 fn plane_from_surface(surface: &Surface) -> Plane {
     let (line, path) = {
-        let line = match surface.u() {
+        let line = match surface.geometry().u {
             GlobalPath::Line(line) => line,
             _ => todo!("Only plane-plane intersection is currently supported."),
         };
 
-        (line, surface.v())
+        (line, surface.geometry().v)
     };
 
     Plane::from_parametric(line.origin(), line.direction(), path)

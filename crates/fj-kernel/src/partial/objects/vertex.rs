@@ -80,7 +80,7 @@ impl From<&Vertex> for PartialVertex {
 /// A partial [`SurfaceVertex`]
 ///
 /// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
     /// The position of the [`SurfaceVertex`]
     pub position: Option<Point<2>>,
@@ -108,7 +108,8 @@ impl PartialSurfaceVertex {
         let global_form = self
             .global_form
             .merge_with(PartialGlobalVertex::from_surface_and_position(
-                &surface, position,
+                &surface.geometry(),
+                position,
             ))
             .into_full(objects)?;
 

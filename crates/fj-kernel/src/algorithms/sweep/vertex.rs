@@ -3,11 +3,11 @@ use fj_math::{Line, Point, Scalar, Vector};
 use try_insert_ext::EntryInsertExt;
 
 use crate::{
+    geometry::path::SurfacePath,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
-    path::SurfacePath,
     storage::Handle,
     validate::ValidationError,
 };
@@ -56,7 +56,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         // not, we have no way of knowing the surface coordinates of the input
         // `Vertex` on the `Surface`, and we're going to need to do that further
         // down. There's no way to check for that, unfortunately.
-        assert_eq!(path, surface.v());
+        assert_eq!(path, surface.geometry().v);
 
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and

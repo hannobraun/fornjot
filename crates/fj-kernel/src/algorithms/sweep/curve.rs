@@ -1,8 +1,11 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
+    builder::SurfaceBuilder,
+    geometry::path::{GlobalPath, SurfacePath},
+    insert::Insert,
     objects::{Curve, Objects, Surface},
-    path::{GlobalPath, SurfacePath},
+    partial::PartialSurface,
     storage::Handle,
     validate::ValidationError,
 };
@@ -18,7 +21,7 @@ impl Sweep for Handle<Curve> {
         _: &mut SweepCache,
         objects: &Objects,
     ) -> Result<Self::Swept, ValidationError> {
-        match self.surface().u() {
+        match self.surface().geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.
@@ -44,20 +47,32 @@ impl Sweep for Handle<Curve> {
 
         let u = match self.path() {
             SurfacePath::Circle(circle) => {
-                let center =
-                    self.surface().point_from_surface_coords(circle.center());
-                let a = self.surface().vector_from_surface_coords(circle.a());
-                let b = self.surface().vector_from_surface_coords(circle.b());
+                let center = self
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(circle.center());
+                let a = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(circle.a());
+                let b = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(circle.b());
 
                 let circle = Circle::new(center, a, b);
 
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin =
-                    self.surface().point_from_surface_coords(line.origin());
-                let direction =
-                    self.surface().vector_from_surface_coords(line.direction());
+                let origin = self
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(line.origin());
+                let direction = self
+                    .surface()
+                    .geometry()
+                    .vector_from_surface_coords(line.direction());
 
                 let line = Line::from_origin_and_direction(origin, direction);
 
@@ -65,6 +80,9 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        Ok(objects.surfaces.insert(Surface::new(u, path))?)
+        let surface = PartialSurface::from_axes(u, path)
+            .build(objects)?
+            .insert(objects)?;
+        Ok(surface)
     }
 }

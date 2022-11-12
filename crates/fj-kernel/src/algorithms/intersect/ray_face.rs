@@ -4,8 +4,8 @@ use fj_math::{Plane, Point, Scalar};
 
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
+    geometry::path::GlobalPath,
     objects::{Face, HalfEdge, Vertex},
-    path::GlobalPath,
     storage::Handle,
 };
 
@@ -17,14 +17,14 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, face) = self;
 
-        let plane = match face.surface().u() {
+        let plane = match face.surface().geometry().u {
             GlobalPath::Circle(_) => todo!(
                 "Casting a ray against a swept circle is not supported yet"
             ),
             GlobalPath::Line(line) => Plane::from_parametric(
                 line.origin(),
                 line.direction(),
-                face.surface().v(),
+                face.surface().geometry().v,
             ),
         };
 

@@ -2,8 +2,8 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    geometry::path::GlobalPath,
     objects::{Face, Objects, Shell},
-    path::GlobalPath,
     storage::Handle,
     validate::ValidationError,
 };
@@ -24,14 +24,14 @@ impl Sweep for Handle<Face> {
         let mut faces = Vec::new();
 
         let is_negative_sweep = {
-            let u = match self.surface().u() {
+            let u = match self.surface().geometry().u {
                 GlobalPath::Circle(_) => todo!(
                     "Sweeping from faces defined in round surfaces is not \
                     supported"
                 ),
                 GlobalPath::Line(line) => line.direction(),
             };
-            let v = self.surface().v();
+            let v = self.surface().geometry().v;
 
             let normal = u.cross(&v);
 

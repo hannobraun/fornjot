@@ -1,6 +1,6 @@
 use fj_math::{Point, Scalar, Vector};
 
-use crate::{partial::PartialCurve, path::SurfacePath};
+use crate::{geometry::path::SurfacePath, partial::PartialCurve};
 
 /// Builder API for [`PartialCurve`]
 pub trait CurveBuilder {

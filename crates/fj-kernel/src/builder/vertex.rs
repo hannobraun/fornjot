@@ -1,7 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalVertex, Surface},
+    geometry::surface::SurfaceGeometry,
+    objects::{Curve, GlobalVertex},
     partial::{
         HasPartial, MaybePartial, PartialGlobalVertex, PartialSurfaceVertex,
         PartialVertex,
@@ -44,7 +45,7 @@ pub trait GlobalVertexBuilder {
 
     /// Update partial global vertex from the given surface and position on it
     fn from_surface_and_position(
-        surface: &Surface,
+        surface: &SurfaceGeometry,
         position: impl Into<Point<2>>,
     ) -> Self;
 }
@@ -59,9 +60,12 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
         let path = curve.path.expect(
             "Need path to create `GlobalVertex` from curve and position",
         );
-        let surface = curve.surface.expect(
-            "Need surface to create `GlobalVertex` from curve and position",
-        );
+        let surface = curve
+            .surface
+            .expect(
+                "Need surface to create `GlobalVertex` from curve and position",
+            )
+            .geometry();
 
         let position_surface = path.point_from_path_coords(position);
 
@@ -69,7 +73,7 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
     }
 
     fn from_surface_and_position(
-        surface: &Surface,
+        surface: &SurfaceGeometry,
         position: impl Into<Point<2>>,
     ) -> Self {
         PartialGlobalVertex {

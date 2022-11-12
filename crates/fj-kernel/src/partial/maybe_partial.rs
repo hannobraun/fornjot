@@ -1,12 +1,12 @@
 use fj_math::Point;
 
 use crate::{
+    geometry::{path::SurfacePath, surface::SurfaceGeometry},
     insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
-    path::SurfacePath,
     storage::Handle,
     validate::{Validate, ValidationError},
 };
@@ -208,6 +208,16 @@ impl MaybePartial<HalfEdge> {
         match self {
             Self::Full(full) => full.vertices().clone().map(Into::into),
             Self::Partial(partial) => partial.vertices(),
+        }
+    }
+}
+
+impl MaybePartial<Surface> {
+    /// Access the geometry
+    pub fn geometry(&self) -> Option<SurfaceGeometry> {
+        match self {
+            Self::Full(full) => Some(full.geometry()),
+            Self::Partial(partial) => partial.geometry,
         }
     }
 }
