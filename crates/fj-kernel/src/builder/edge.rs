@@ -5,8 +5,9 @@ use crate::{
     insert::Insert,
     objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
-        MaybePartial, PartialCurve, PartialGlobalEdge, PartialGlobalVertex,
-        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+        MaybePartial, MergeWith, PartialCurve, PartialGlobalEdge,
+        PartialGlobalVertex, PartialHalfEdge, PartialSurfaceVertex,
+        PartialVertex,
     },
     storage::Handle,
     validate::ValidationError,
@@ -135,8 +136,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let surface = self
             .curve()
             .surface()
-            .or_else(|| from_surface.surface())
-            .or_else(|| to_surface.surface())
+            .merge_with(from_surface.surface())
+            .merge_with(to_surface.surface())
             .expect("Can't infer line segment without a surface");
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
