@@ -157,11 +157,6 @@ pub struct PartialGlobalEdge {
 }
 
 impl PartialGlobalEdge {
-    /// Access the curve that the [`GlobalEdge`] is defined in
-    pub fn curve(&self) -> MaybePartial<GlobalCurve> {
-        self.curve.clone()
-    }
-
     /// Access the vertices that bound the [`GlobalEdge`] in the curve
     pub fn vertices(&self) -> Option<[MaybePartial<GlobalVertex>; 2]> {
         self.vertices.clone()

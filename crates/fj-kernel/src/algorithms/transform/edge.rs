@@ -47,7 +47,7 @@ impl TransformObject for PartialGlobalEdge {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve().transform(transform, objects)?;
+        let curve = self.curve.clone().transform(transform, objects)?;
         let vertices = self
             .vertices()
             .map(|vertices| {
