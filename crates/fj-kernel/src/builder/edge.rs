@@ -202,14 +202,14 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .collect::<[_; 2]>()
                 .map(|(vertex, global_form)| {
                     vertex.update_partial(|mut vertex| {
-                        vertex.surface_form = vertex
-                            .surface_form
-                            .update_partial(|mut surface_vertex| {
-                                if let Some(global_form) = global_form {
-                                    surface_vertex.global_form = global_form;
-                                }
-                                surface_vertex
-                            });
+                        let mut surface_form = PartialSurfaceVertex::default();
+                        if let Some(global_form) = global_form {
+                            surface_form.global_form = global_form;
+                        }
+
+                        vertex.surface_form =
+                            vertex.surface_form.merge_with(surface_form);
+
                         vertex
                     })
                 })
