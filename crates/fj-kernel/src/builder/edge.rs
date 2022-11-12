@@ -65,7 +65,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let mut curve = self.curve().into_partial();
+        let mut curve = self.curve.clone().into_partial();
         curve.global_form = Some(self.extract_global_curve());
         curve.update_as_circle_from_radius(radius);
 
@@ -123,7 +123,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
-            .curve()
+            .curve
             .surface()
             .merge_with(from_surface.surface())
             .merge_with(to_surface.surface())

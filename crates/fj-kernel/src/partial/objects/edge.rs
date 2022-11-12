@@ -27,11 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Access the curve that the [`HalfEdge`] is defined in
-    pub fn curve(&self) -> MaybePartial<Curve> {
-        self.curve.clone()
-    }
-
     /// Access the vertices that bound this [`HalfEdge`] in the [`Curve`]
     pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
         self.vertices.clone()

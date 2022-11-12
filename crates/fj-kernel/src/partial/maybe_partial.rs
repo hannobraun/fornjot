@@ -188,7 +188,7 @@ impl MaybePartial<HalfEdge> {
     pub fn curve(&self) -> MaybePartial<Curve> {
         match self {
             Self::Full(full) => full.curve().clone().into(),
-            Self::Partial(partial) => partial.curve(),
+            Self::Partial(partial) => partial.curve.clone(),
         }
     }
 

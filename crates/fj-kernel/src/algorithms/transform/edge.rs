@@ -16,7 +16,8 @@ impl TransformObject for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let curve: MaybePartial<_> = self
-            .curve()
+            .curve
+            .clone()
             .into_partial()
             .transform(transform, objects)?
             .into();
