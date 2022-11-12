@@ -74,7 +74,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let [global_vertex, _] = self.global_form().vertices();
+        let [global_vertex, _] = self.global_form.vertices();
 
         let surface_vertex = PartialSurfaceVertex {
             position: Some(path.point_from_path_coords(a_curve)),
@@ -170,7 +170,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     must_switch_order
                 };
 
-                let [a, b] = self.global_form().vertices();
+                let [a, b] = self.global_form.vertices();
                 if must_switch_order {
                     [b, a]
                 } else {

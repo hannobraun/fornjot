@@ -27,11 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Access the global form of the [`HalfEdge`]
-    pub fn global_form(&self) -> MaybePartial<GlobalEdge> {
-        self.global_form.clone()
-    }
-
     /// Extract the global curve from either the curve or global form
     ///
     /// If a global curve is available through both, the curve is preferred.
