@@ -268,14 +268,12 @@ mod tests {
             .build(&objects)?;
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.vertices = Some(
-                valid
-                    .global_form()
-                    .vertices()
-                    .access_in_normalized_order()
-                    // Creating equal but not identical vertices here.
-                    .map(|vertex| vertex.to_partial().into()),
-            );
+            tmp.vertices = valid
+                .global_form()
+                .vertices()
+                .access_in_normalized_order()
+                // Creating equal but not identical vertices here.
+                .map(|vertex| vertex.to_partial().into());
             tmp.build(&objects)?.insert(&objects)?
         });
 

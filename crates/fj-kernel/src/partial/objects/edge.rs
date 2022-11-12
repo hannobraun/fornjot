@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{MaybePartial, MergeWith, Mergeable},
+    partial::{MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
@@ -153,7 +153,7 @@ pub struct PartialGlobalEdge {
     pub curve: MaybePartial<GlobalCurve>,
 
     /// The vertices that bound the [`GlobalEdge`] in the curve
-    pub vertices: Option<[MaybePartial<GlobalVertex>; 2]>,
+    pub vertices: [MaybePartial<GlobalVertex>; 2],
 }
 
 impl PartialGlobalEdge {
@@ -165,7 +165,6 @@ impl PartialGlobalEdge {
         let curve = self.curve.into_full(objects)?;
         let vertices = self
             .vertices
-            .expect("Can't build `GlobalEdge` without vertices")
             .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
 
         Ok(GlobalEdge::new(curve, vertices))
@@ -178,9 +177,7 @@ impl MergeWith for PartialGlobalEdge {
 
         Self {
             curve: self.curve.merge_with(other.curve),
-            vertices: Mergeable(self.vertices)
-                .merge_with(Mergeable(other.vertices))
-                .0,
+            vertices: self.vertices.merge_with(other.vertices),
         }
     }
 }
@@ -189,12 +186,10 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
     fn from(global_edge: &GlobalEdge) -> Self {
         Self {
             curve: global_edge.curve().clone().into(),
-            vertices: Some(
-                global_edge
-                    .vertices()
-                    .access_in_normalized_order()
-                    .map(Into::into),
-            ),
+            vertices: global_edge
+                .vertices()
+                .access_in_normalized_order()
+                .map(Into::into),
         }
     }
 }

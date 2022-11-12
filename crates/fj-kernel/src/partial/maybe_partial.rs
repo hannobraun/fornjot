@@ -178,7 +178,7 @@ impl MaybePartial<GlobalEdge> {
             Self::Full(full) => Some(
                 full.vertices().access_in_normalized_order().map(Into::into),
             ),
-            Self::Partial(partial) => partial.vertices.clone(),
+            Self::Partial(partial) => Some(partial.vertices.clone()),
         }
     }
 }
