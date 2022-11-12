@@ -16,9 +16,14 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialHalfEdge {
-    curve: MaybePartial<Curve>,
-    vertices: [MaybePartial<Vertex>; 2],
-    global_form: MaybePartial<GlobalEdge>,
+    /// The curve that the [`HalfEdge`] is defined in
+    pub curve: MaybePartial<Curve>,
+
+    /// The vertices that bound the [`HalfEdge`] in the curve
+    pub vertices: [MaybePartial<Vertex>; 2],
+
+    /// The global form of the [`HalfEdge`]
+    pub global_form: MaybePartial<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
