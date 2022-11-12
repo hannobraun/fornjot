@@ -21,7 +21,7 @@ impl TransformObject for PartialHalfEdge {
             .into_partial()
             .transform(transform, objects)?
             .into();
-        let vertices = self.vertices().try_map_ext(
+        let vertices = self.vertices.clone().try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 let mut vertex =
                     vertex.into_partial().transform(transform, objects)?;

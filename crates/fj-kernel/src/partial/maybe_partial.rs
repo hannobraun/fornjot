@@ -197,7 +197,7 @@ impl MaybePartial<HalfEdge> {
         match self {
             Self::Full(full) => full.front().clone().into(),
             Self::Partial(partial) => {
-                let [_, front] = &partial.vertices();
+                let [_, front] = &partial.vertices;
                 front.clone()
             }
         }
@@ -207,7 +207,7 @@ impl MaybePartial<HalfEdge> {
     pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
         match self {
             Self::Full(full) => full.vertices().clone().map(Into::into),
-            Self::Partial(partial) => partial.vertices(),
+            Self::Partial(partial) => partial.vertices.clone(),
         }
     }
 }

@@ -51,12 +51,12 @@ pub trait HalfEdgeBuilder: Sized {
 
 impl HalfEdgeBuilder for PartialHalfEdge {
     fn with_back_vertex(self, back: impl Into<MaybePartial<Vertex>>) -> Self {
-        let [_, front] = self.vertices();
+        let [_, front] = self.vertices.clone();
         self.with_vertices([back.into(), front])
     }
 
     fn with_front_vertex(self, front: impl Into<MaybePartial<Vertex>>) -> Self {
-        let [back, _] = self.vertices();
+        let [back, _] = self.vertices.clone();
         self.with_vertices([back, front.into()])
     }
 
@@ -118,7 +118,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_line_segment(self) -> Self {
-        let [from, to] = self.vertices();
+        let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
 

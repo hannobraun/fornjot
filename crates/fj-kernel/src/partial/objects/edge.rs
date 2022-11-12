@@ -27,11 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Access the vertices that bound this [`HalfEdge`] in the [`Curve`]
-    pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
-        self.vertices.clone()
-    }
-
     /// Access the global form of the [`HalfEdge`]
     pub fn global_form(&self) -> MaybePartial<GlobalEdge> {
         self.global_form.clone()
