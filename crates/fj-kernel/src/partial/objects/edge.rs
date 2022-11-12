@@ -149,8 +149,11 @@ impl From<&HalfEdge> for PartialHalfEdge {
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
-    curve: MaybePartial<GlobalCurve>,
-    vertices: Option<[MaybePartial<GlobalVertex>; 2]>,
+    /// The curve that the [`GlobalEdge`] is defined in
+    pub curve: MaybePartial<GlobalCurve>,
+
+    /// The vertices that bound the [`GlobalEdge`] in the curve
+    pub vertices: Option<[MaybePartial<GlobalVertex>; 2]>,
 }
 
 impl PartialGlobalEdge {
