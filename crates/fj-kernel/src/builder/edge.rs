@@ -171,8 +171,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 };
 
                 let [a, b] = self.global_form().vertices();
-                let [a, b] = if must_switch_order { [b, a] } else { [a, b] };
-                [Some(a), Some(b)]
+                if must_switch_order {
+                    [b, a]
+                } else {
+                    [a, b]
+                }
             };
 
             vertices
@@ -181,10 +184,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .collect::<[_; 2]>()
                 .map(|(vertex, global_form)| {
                     vertex.update_partial(|mut vertex| {
-                        let mut surface_form = PartialSurfaceVertex::default();
-                        if let Some(global_form) = global_form {
-                            surface_form.global_form = global_form;
-                        }
+                        let surface_form = PartialSurfaceVertex {
+                            global_form,
+                            ..Default::default()
+                        };
 
                         vertex.surface_form =
                             vertex.surface_form.merge_with(surface_form);
