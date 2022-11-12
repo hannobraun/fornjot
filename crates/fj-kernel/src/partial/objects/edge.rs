@@ -157,17 +157,6 @@ pub struct PartialGlobalEdge {
 }
 
 impl PartialGlobalEdge {
-    /// Update the partial global edge with the given vertices
-    pub fn with_vertices(
-        mut self,
-        vertices: Option<[impl Into<MaybePartial<GlobalVertex>>; 2]>,
-    ) -> Self {
-        if let Some(vertices) = vertices {
-            self.vertices = Some(vertices.map(Into::into));
-        }
-        self
-    }
-
     /// Build a full [`GlobalEdge`] from the partial global edge
     pub fn build(
         self,

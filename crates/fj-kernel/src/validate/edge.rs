@@ -266,22 +266,18 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&objects)?;
-        let invalid = HalfEdge::new(
-            valid.vertices().clone(),
-            valid
-                .global_form()
-                .to_partial()
-                .with_vertices(Some(
-                    valid
-                        .global_form()
-                        .vertices()
-                        .access_in_normalized_order()
-                        // Creating equal but not identical vertices here.
-                        .map(|vertex| vertex.to_partial()),
-                ))
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+        let invalid = HalfEdge::new(valid.vertices().clone(), {
+            let mut tmp = valid.global_form().to_partial();
+            tmp.vertices = Some(
+                valid
+                    .global_form()
+                    .vertices()
+                    .access_in_normalized_order()
+                    // Creating equal but not identical vertices here.
+                    .map(|vertex| vertex.to_partial().into()),
+            );
+            tmp.build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());

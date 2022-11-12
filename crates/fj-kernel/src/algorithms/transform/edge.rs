@@ -59,10 +59,6 @@ impl TransformObject for PartialGlobalEdge {
             })
             .transpose()?;
 
-        Ok(Self {
-            curve,
-            ..Default::default()
-        }
-        .with_vertices(vertices))
+        Ok(Self { curve, vertices })
     }
 }

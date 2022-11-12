@@ -240,8 +240,11 @@ impl GlobalEdgeBuilder for PartialGlobalEdge {
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
         self.curve = curve.global_form().clone().into();
-        self.with_vertices(Some(
-            vertices.clone().map(|vertex| vertex.global_form().clone()),
-        ))
+        self.vertices = Some(
+            vertices
+                .clone()
+                .map(|vertex| vertex.global_form().clone().into()),
+        );
+        self
     }
 }
