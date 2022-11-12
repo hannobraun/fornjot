@@ -5,8 +5,8 @@ use crate::{
     insert::Insert,
     objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
-        MaybePartial, MergeWith, PartialCurve, PartialGlobalEdge,
-        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+        MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
+        PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
     validate::ValidationError,
@@ -134,11 +134,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = PartialCurve {
-            surface: Some(surface),
-            global_form: self.extract_global_curve(),
-            ..Default::default()
-        };
+        let mut curve = self.curve.clone().into_partial();
+        curve.surface = Some(surface);
+        curve.global_form = self.extract_global_curve();
         curve.update_as_line_from_points(points);
 
         let [back, front] = {
