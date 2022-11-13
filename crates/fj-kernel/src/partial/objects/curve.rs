@@ -1,7 +1,7 @@
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial::{MaybePartial, MergeWith, Mergeable},
+    partial::{MaybePartial, MergeWith},
     storage::Handle,
     validate::ValidationError,
 };
@@ -18,13 +18,7 @@ pub struct PartialCurve {
     pub surface: Option<Handle<Surface>>,
 
     /// The global form of the [`Curve`]
-    ///
-    /// # Implementation Note
-    ///
-    /// This can in principle be simplified to just `MaybePartial<GlobalForm`,
-    /// but as of this writing, there's still some code that relies on this
-    /// being an `Option`.
-    pub global_form: Option<MaybePartial<GlobalCurve>>,
+    pub global_form: MaybePartial<GlobalCurve>,
 }
 
 impl PartialCurve {
@@ -34,11 +28,7 @@ impl PartialCurve {
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
-        let global_form = match self.global_form {
-            Some(global_form) => global_form,
-            None => objects.global_curves.insert(GlobalCurve)?.into(),
-        }
-        .into_full(objects)?;
+        let global_form = self.global_form.into_full(objects)?;
 
         Ok(Curve::new(surface, path, global_form))
     }
@@ -51,9 +41,7 @@ impl MergeWith for PartialCurve {
         Self {
             path: self.path.merge_with(other.path),
             surface: self.surface.merge_with(other.surface),
-            global_form: Mergeable(self.global_form)
-                .merge_with(Mergeable(other.global_form))
-                .0,
+            global_form: self.global_form.merge_with(other.global_form),
         }
     }
 }
@@ -63,7 +51,7 @@ impl From<&Curve> for PartialCurve {
         Self {
             path: Some(curve.path()),
             surface: Some(curve.surface().clone()),
-            global_form: Some(curve.global_form().clone().into()),
+            global_form: curve.global_form().clone().into(),
         }
     }
 }

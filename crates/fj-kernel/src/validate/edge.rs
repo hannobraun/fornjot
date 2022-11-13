@@ -244,15 +244,11 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&objects)?;
-        let invalid = HalfEdge::new(
-            valid.vertices().clone(),
-            valid
-                .global_form()
-                .to_partial()
-                .with_curve(Some(objects.global_curves.insert(GlobalCurve)?))
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+        let invalid = HalfEdge::new(valid.vertices().clone(), {
+            let mut tmp = valid.global_form().to_partial();
+            tmp.curve = objects.global_curves.insert(GlobalCurve)?.into();
+            tmp.build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
@@ -270,22 +266,16 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&objects)?;
-        let invalid = HalfEdge::new(
-            valid.vertices().clone(),
-            valid
+        let invalid = HalfEdge::new(valid.vertices().clone(), {
+            let mut tmp = valid.global_form().to_partial();
+            tmp.vertices = valid
                 .global_form()
-                .to_partial()
-                .with_vertices(Some(
-                    valid
-                        .global_form()
-                        .vertices()
-                        .access_in_normalized_order()
-                        // Creating equal but not identical vertices here.
-                        .map(|vertex| vertex.to_partial()),
-                ))
-                .build(&objects)?
-                .insert(&objects)?,
-        );
+                .vertices()
+                .access_in_normalized_order()
+                // Creating equal but not identical vertices here.
+                .map(|vertex| vertex.to_partial().into());
+            tmp.build(&objects)?.insert(&objects)?
+        });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());

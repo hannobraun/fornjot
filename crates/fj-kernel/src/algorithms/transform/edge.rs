@@ -16,11 +16,11 @@ impl TransformObject for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let curve: MaybePartial<_> = self
-            .curve()
+            .curve
             .into_partial()
             .transform(transform, objects)?
             .into();
-        let vertices = self.vertices().try_map_ext(
+        let vertices = self.vertices.try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 let mut vertex =
                     vertex.into_partial().transform(transform, objects)?;
@@ -28,11 +28,11 @@ impl TransformObject for PartialHalfEdge {
                 Ok(vertex)
             },
         )?;
-        let global_form = self
-            .global_form()
+        let mut global_form = self
+            .global_form
             .into_partial()
-            .transform(transform, objects)?
-            .with_curve(curve.global_form());
+            .transform(transform, objects)?;
+        global_form.curve = curve.global_form();
 
         Ok(Self::default()
             .with_curve(curve)
@@ -47,18 +47,13 @@ impl TransformObject for PartialGlobalEdge {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve = self.curve().transform(transform, objects)?;
-        let vertices = self
-            .vertices()
-            .map(|vertices| {
-                vertices.try_map_ext(|vertex| -> Result<_, ValidationError> {
-                    vertex.transform(transform, objects)
-                })
-            })
-            .transpose()?;
+        let curve = self.curve.transform(transform, objects)?;
+        let vertices = self.vertices.try_map_ext(
+            |vertex| -> Result<_, ValidationError> {
+                vertex.transform(transform, objects)
+            },
+        )?;
 
-        Ok(Self::default()
-            .with_curve(Some(curve))
-            .with_vertices(vertices))
+        Ok(Self { curve, vertices })
     }
 }

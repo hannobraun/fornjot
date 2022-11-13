@@ -91,7 +91,7 @@ mod tests {
                 .collect::<Vec<_>>();
 
             let first_half_edge = &mut half_edges[0];
-            let [first_vertex, _] = first_half_edge.vertices();
+            let [first_vertex, _] = first_half_edge.vertices.clone();
 
             // Sever connection between the last and first half-edge in the
             // cycle.
