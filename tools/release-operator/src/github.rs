@@ -72,7 +72,9 @@ pub struct Actions;
 
 impl Actions {
     // Set an "output" in GitHub Actions
-    pub fn set_output(key: Outputs, value: &str) -> anyhow::Result<()> {
+    pub fn set_output<'r>(
+        outputs: impl IntoIterator<Item = (Outputs, &'r str)>,
+    ) -> anyhow::Result<()> {
         const GITHUB_OUTPUT: &str = "GITHUB_OUTPUT";
 
         let output = env::var_os(GITHUB_OUTPUT).ok_or_else(|| {
@@ -80,8 +82,10 @@ impl Actions {
         })?;
         let mut output = File::options().append(true).open(output)?;
 
-        log::debug!("setting output name={key} value={value}");
-        writeln!(output, "{key}={value}")?;
+        for (key, value) in outputs {
+            log::debug!("setting output name={key} value={value}");
+            writeln!(output, "{key}={value}")?;
+        }
 
         Ok(())
     }
