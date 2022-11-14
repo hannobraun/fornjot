@@ -78,7 +78,7 @@ impl Actions {
         let output = env::var_os(GITHUB_OUTPUT).ok_or_else(|| {
             anyhow!("Could not read environment variable {GITHUB_OUTPUT}")
         })?;
-        let mut output = File::open(output)?;
+        let mut output = File::options().append(true).open(output)?;
 
         log::debug!("setting output name={key} value={value}");
         writeln!(output, "{key}={value}")?;
