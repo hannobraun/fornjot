@@ -14,6 +14,7 @@
 
 mod args;
 mod config;
+mod model_crate;
 mod path;
 
 use anyhow::{anyhow, Context};
@@ -48,6 +49,10 @@ fn main() -> anyhow::Result<()> {
     let shape_processor = ShapeProcessor {
         tolerance: args.tolerance,
     };
+
+    if let Some(model_name) = args.new {
+        return model_crate::create(&model_name);
+    }
 
     let model = model_path.map(|m| m.load_model(parameters)).transpose()?;
 
