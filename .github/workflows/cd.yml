@@ -125,8 +125,8 @@ jobs:
       - name: Release | GitHub
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.release.outputs.tag-name }}
-          name: ${{ steps.release.outputs.tag-name }}
+          tag_name: ${{ needs.calculate-release-flags.outputs.tag-name }}
+          name: ${{ needs.calculate-release-flags.outputs.tag-name }}
           files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
 
       - name: Release | Crates.io
