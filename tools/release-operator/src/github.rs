@@ -1,4 +1,7 @@
+use std::{env, fs::File, io::Write};
+
 use crate::release::Outputs;
+use anyhow::anyhow;
 use cmd_lib::run_fun;
 use serde::Deserialize;
 
@@ -69,8 +72,17 @@ pub struct Actions;
 
 impl Actions {
     // Set an "output" in GitHub Actions
-    pub fn set_output(key: Outputs, value: &str) {
+    pub fn set_output(key: Outputs, value: &str) -> anyhow::Result<()> {
+        const GITHUB_OUTPUT: &str = "GITHUB_OUTPUT";
+
+        let output = env::var_os(GITHUB_OUTPUT).ok_or_else(|| {
+            anyhow!("Could not read environment variable {GITHUB_OUTPUT}")
+        })?;
+        let mut output = File::open(output)?;
+
         log::debug!("setting output name={key} value={value}");
-        println!("\"{key}={value}\" >> $GITHUB_OUTPUT");
+        writeln!(output, "{key}={value}")?;
+
+        Ok(())
     }
 }

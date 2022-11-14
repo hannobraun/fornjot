@@ -62,15 +62,15 @@ impl Release {
         let tag = format!("v{tag}");
         log::info!("detected release of {tag}");
 
-        Actions::set_output(Outputs::ReleaseDetected, "true");
-        Actions::set_output(Outputs::TagName, &tag);
+        Actions::set_output(Outputs::ReleaseDetected, "true")?;
+        Actions::set_output(Outputs::TagName, &tag)?;
 
         Ok(())
     }
 
     fn miss(&self) -> anyhow::Result<()> {
         log::info!("no release detected");
-        Actions::set_output(Outputs::ReleaseDetected, "false");
+        Actions::set_output(Outputs::ReleaseDetected, "false")?;
         Ok(())
     }
 }
