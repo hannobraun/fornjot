@@ -69,8 +69,9 @@ pub struct Actions;
 
 impl Actions {
     // Set an "output" in GitHub Actions
-    pub fn set_output(key: Outputs, value: &str) {
+    pub fn set_output(key: Outputs, value: &str) -> anyhow::Result<()> {
         log::debug!("setting output name={key} value={value}");
         println!("\"{key}={value}\" >> $GITHUB_OUTPUT");
+        Ok(())
     }
 }
