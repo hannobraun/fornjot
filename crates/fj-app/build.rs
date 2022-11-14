@@ -2,7 +2,7 @@ use ignore::WalkBuilder;
 use std::{collections::HashSet, env, ffi::OsStr, fs::File, path::Path};
 
 static NEW_MODEL_TEMPLATE: &str = "star";
-static EXTRA_IGNORED_FILES: [&str; 1] = ["star.png"];
+static EXTRA_IGNORED_FILES: &[&str] = &["star.png", "README.md"];
 
 fn main() {
     create_new_model_tar();
@@ -23,7 +23,7 @@ fn create_new_model_tar() {
         fornjot_root_path.join("models").join(NEW_MODEL_TEMPLATE);
 
     let extra_ignored_files = EXTRA_IGNORED_FILES
-        .into_iter()
+        .iter()
         .map(OsStr::new)
         .collect::<HashSet<_>>();
 

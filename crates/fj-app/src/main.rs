@@ -51,8 +51,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     if let Some(model_name) = args.new {
-        model_crate::create(&model_name);
-        return Ok(());
+        return model_crate::create(&model_name);
     }
 
     let model = model_path.map(|m| m.load_model(parameters)).transpose()?;
