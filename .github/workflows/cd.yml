@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release-detected: ${{ steps.release.outputs.release-detected }}
+      tag-name: ${{ steps.release.outputs.tag-name }}
 
     steps:
       - name: Checkout
