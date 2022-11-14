@@ -1,5 +1,63 @@
 # Fornjot - Changelog
 
+## v0.24.0 (2022-11-14)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Don't require `--model` to pass a model ([#1323]; thank you, [@kopackiw]!)
+- Add command to create a new model ([#1344]; thank you, [@MartinKavik]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Complete transition to new validation infrastructure ([#1326], [#1328], [#1330])
+- Continue cleaning up partial object API ([#1331], [#1334], [#1337], [#1338], [#1339], [#1340], [#1343])
+
+#### `fj-operations`
+
+- Remove use of old validation infrastructure ([#1329])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1321])
+- Make some minor code cleanups ([#1322], [#1332], [#1336])
+- Fix some release automation issues ([#1324], [#1325], [#1333], [#1335]; thank you, [@kopackiw]!)
+- Add Windows support to `export-validator` ([#1342]; thank you, [@MartinKavik]!)
+
+[#1321]: https://github.com/hannobraun/Fornjot/pull/1321
+[#1322]: https://github.com/hannobraun/Fornjot/pull/1322
+[#1323]: https://github.com/hannobraun/Fornjot/pull/1323
+[#1324]: https://github.com/hannobraun/Fornjot/pull/1324
+[#1325]: https://github.com/hannobraun/Fornjot/pull/1325
+[#1326]: https://github.com/hannobraun/Fornjot/pull/1326
+[#1328]: https://github.com/hannobraun/Fornjot/pull/1328
+[#1329]: https://github.com/hannobraun/Fornjot/pull/1329
+[#1330]: https://github.com/hannobraun/Fornjot/pull/1330
+[#1331]: https://github.com/hannobraun/Fornjot/pull/1331
+[#1332]: https://github.com/hannobraun/Fornjot/pull/1332
+[#1333]: https://github.com/hannobraun/Fornjot/pull/1333
+[#1334]: https://github.com/hannobraun/Fornjot/pull/1334
+[#1335]: https://github.com/hannobraun/Fornjot/pull/1335
+[#1336]: https://github.com/hannobraun/Fornjot/pull/1336
+[#1337]: https://github.com/hannobraun/Fornjot/pull/1337
+[#1338]: https://github.com/hannobraun/Fornjot/pull/1338
+[#1339]: https://github.com/hannobraun/Fornjot/pull/1339
+[#1340]: https://github.com/hannobraun/Fornjot/pull/1340
+[#1342]: https://github.com/hannobraun/Fornjot/pull/1342
+[#1343]: https://github.com/hannobraun/Fornjot/pull/1343
+[#1344]: https://github.com/hannobraun/Fornjot/pull/1344
+
+[@kopackiw]: https://github.com/kopackiw
+[@MartinKavik]: https://github.com/MartinKavik
+
+
 ## v0.23.0 (2022-11-07)
 
 ### End-user improvements
