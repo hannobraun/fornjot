@@ -21,7 +21,7 @@ fj-math.workspace = true
 raw-window-handle = "0.4.3"
 thiserror = "1.0.35"
 tracing = "0.1.37"
-wgpu_glyph = "0.17.0"
+wgpu_glyph = "0.18.0"
 
 [dependencies.rfd]
 version = "0.10.0"

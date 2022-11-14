@@ -971,7 +971,7 @@ dependencies = [
  "egui",
  "tracing",
  "type-map",
- "wgpu",
+ "wgpu 0.13.1",
 ]
 
 [[package]]
@@ -1258,7 +1258,7 @@ dependencies = [
  "rfd",
  "thiserror",
  "tracing",
- "wgpu",
+ "wgpu 0.13.1",
  "wgpu_glyph",
 ]
 
@@ -2152,6 +2152,26 @@ name = "naga"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f50357e1167a3ab92d6b3c7f4bf5f7fd13fde3f4b28bf0d5ea07b5100fdb6c0"
+dependencies = [
+ "bit-set",
+ "bitflags",
+ "codespan-reporting",
+ "hexf-parse",
+ "indexmap",
+ "log",
+ "num-traits",
+ "rustc-hash",
+ "spirv",
+ "termcolor",
+ "thiserror",
+ "unicode-xid",
+]
+
+[[package]]
+name = "naga"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "262d2840e72dbe250e8cf2f522d080988dfca624c4112c096238a4845f591707"
 dependencies = [
  "bit-set",
  "bitflags",
@@ -4204,16 +4224,38 @@ dependencies = [
  "arrayvec 0.7.2",
  "js-sys",
  "log",
- "naga",
+ "naga 0.9.0",
  "parking_lot",
  "raw-window-handle 0.4.3",
  "smallvec",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
- "wgpu-core",
- "wgpu-hal",
- "wgpu-types",
+ "wgpu-core 0.13.2",
+ "wgpu-hal 0.13.2",
+ "wgpu-types 0.13.2",
+]
+
+[[package]]
+name = "wgpu"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2272b17bffc8a0c7d53897435da7c1db587c87d3a14e8dae9cdb8d1d210fc0f"
+dependencies = [
+ "arrayvec 0.7.2",
+ "js-sys",
+ "log",
+ "naga 0.10.0",
+ "parking_lot",
+ "raw-window-handle 0.5.0",
+ "smallvec",
+ "static_assertions",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "wgpu-core 0.14.0",
+ "wgpu-hal 0.14.1",
+ "wgpu-types 0.14.1",
 ]
 
 [[package]]
@@ -4230,15 +4272,39 @@ dependencies = [
  "copyless",
  "fxhash",
  "log",
- "naga",
+ "naga 0.9.0",
  "parking_lot",
  "profiling",
  "raw-window-handle 0.4.3",
  "smallvec",
  "thiserror",
  "web-sys",
- "wgpu-hal",
- "wgpu-types",
+ "wgpu-hal 0.13.2",
+ "wgpu-types 0.13.2",
+]
+
+[[package]]
+name = "wgpu-core"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73d14cad393054caf992ee02b7da6a372245d39a484f7461c1f44f6f6359bd28"
+dependencies = [
+ "arrayvec 0.7.2",
+ "bit-vec",
+ "bitflags",
+ "cfg_aliases",
+ "codespan-reporting",
+ "fxhash",
+ "log",
+ "naga 0.10.0",
+ "parking_lot",
+ "profiling",
+ "raw-window-handle 0.5.0",
+ "smallvec",
+ "thiserror",
+ "web-sys",
+ "wgpu-hal 0.14.1",
+ "wgpu-types 0.14.1",
 ]
 
 [[package]]
@@ -4266,7 +4332,7 @@ dependencies = [
  "libloading",
  "log",
  "metal",
- "naga",
+ "naga 0.9.0",
  "objc",
  "parking_lot",
  "profiling",
@@ -4276,7 +4342,46 @@ dependencies = [
  "thiserror",
  "wasm-bindgen",
  "web-sys",
- "wgpu-types",
+ "wgpu-types 0.13.2",
+ "winapi",
+]
+
+[[package]]
+name = "wgpu-hal"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3cc320a61acb26be4f549c9b1b53405c10a223fbfea363ec39474c32c348d12f"
+dependencies = [
+ "android_system_properties",
+ "arrayvec 0.7.2",
+ "ash",
+ "bit-set",
+ "bitflags",
+ "block",
+ "core-graphics-types",
+ "d3d12",
+ "foreign-types 0.3.2",
+ "fxhash",
+ "glow",
+ "gpu-alloc",
+ "gpu-descriptor",
+ "js-sys",
+ "khronos-egl",
+ "libloading",
+ "log",
+ "metal",
+ "naga 0.10.0",
+ "objc",
+ "parking_lot",
+ "profiling",
+ "range-alloc",
+ "raw-window-handle 0.5.0",
+ "renderdoc-sys",
+ "smallvec",
+ "thiserror",
+ "wasm-bindgen",
+ "web-sys",
+ "wgpu-types 0.14.1",
  "winapi",
 ]
 
@@ -4290,15 +4395,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "wgpu_glyph"
-version = "0.17.0"
+name = "wgpu-types"
+version = "0.14.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "362152ff06b11372ddfdfc706606fb0f3b6f1b540f017675443a61d074a0a5df"
+checksum = "fb6b28ef22cac17b9109b25b3bf8c9a103eeb293d7c5f78653979b09140375f6"
+dependencies = [
+ "bitflags",
+]
+
+[[package]]
+name = "wgpu_glyph"
+version = "0.18.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cafb82773e0f124a33674dab5de4dff73175aeb921949047ab014efb58fb446"
 dependencies = [
  "bytemuck",
  "glyph_brush",
  "log",
- "wgpu",
+ "wgpu 0.14.0",
 ]
 
 [[package]]
