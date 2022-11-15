@@ -60,6 +60,10 @@ impl Version {
 //   program.
 unsafe impl Send for Version {}
 
+// There is no reason why a `&Version` wouldn't be `Send`, so per definition,
+// `Version` can be `Sync`.
+unsafe impl Sync for Version {}
+
 #[no_mangle]
 extern "C" fn version_pkg() -> Version {
     Version::from_static_str(VERSION_PKG)
