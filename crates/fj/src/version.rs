@@ -11,13 +11,15 @@ use std::{fmt, slice};
 /// constant between releases, even though changes are made throughout. A match
 /// of this version does not conclusively determine that the app and a model are
 /// compatible.
-pub static VERSION_PKG: &str = env!("FJ_VERSION_PKG");
+pub static VERSION_PKG: Version =
+    Version::from_static_str(env!("FJ_VERSION_PKG"));
 
 /// The full Fornjot version
 ///
 /// Can be used to check for compatibility between a model and the Fornjot app
 /// that runs it.
-pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
+pub static VERSION_FULL: Version =
+    Version::from_static_str(env!("FJ_VERSION_FULL"));
 
 /// C-ABI-compatible representation of a version
 ///
@@ -65,10 +67,10 @@ unsafe impl Sync for Version {}
 
 #[no_mangle]
 extern "C" fn version_pkg() -> Version {
-    Version::from_static_str(VERSION_PKG)
+    VERSION_PKG
 }
 
 #[no_mangle]
 extern "C" fn version_full() -> Version {
-    Version::from_static_str(VERSION_FULL)
+    VERSION_FULL
 }

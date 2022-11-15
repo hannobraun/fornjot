@@ -111,7 +111,7 @@ impl Model {
                     https://github.com/hannobraun/Fornjot/issues/1307)"
                 );
             } else {
-                let version_pkg_host = fj::version::VERSION_PKG;
+                let version_pkg_host = fj::version::VERSION_PKG.to_string();
 
                 let version_pkg_model: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
@@ -130,7 +130,7 @@ impl Model {
                     return Err(Error::VersionMismatch { host, model });
                 }
 
-                let version_full_host = fj::version::VERSION_FULL;
+                let version_full_host = fj::version::VERSION_FULL.to_string();
 
                 let version_full_model: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_full").map_err(Error::LoadingVersion)?;
