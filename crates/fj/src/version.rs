@@ -23,6 +23,7 @@ pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
 ///
 /// Used by the Fornjot application to check for compatibility between a model
 /// and the app.
+#[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Version {
     ptr: *const u8,
