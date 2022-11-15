@@ -27,7 +27,8 @@ fn postprocess_model_files(
             ),
             (
                 r#"path = "../../crates/fj""#.to_owned(),
-                ["version = \"", fj::version::VERSION_PKG, "\""].concat(),
+                ["version = \"", &fj::version::VERSION_PKG.to_string(), "\""]
+                    .concat(),
             ),
         ],
     )?;

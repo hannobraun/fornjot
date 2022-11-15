@@ -1,6 +1,6 @@
 //! API for checking compatibility between the Fornjot app and a model
 
-use core::slice;
+use std::{fmt, slice};
 
 /// The Fornjot package version
 ///
@@ -11,53 +11,58 @@ use core::slice;
 /// constant between releases, even though changes are made throughout. A match
 /// of this version does not conclusively determine that the app and a model are
 /// compatible.
-pub static VERSION_PKG: &str = env!("FJ_VERSION_PKG");
+#[no_mangle]
+pub static VERSION_PKG: Version =
+    Version::from_static_str(env!("FJ_VERSION_PKG"));
 
 /// The full Fornjot version
 ///
 /// Can be used to check for compatibility between a model and the Fornjot app
 /// that runs it.
-pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
+#[no_mangle]
+pub static VERSION_FULL: Version =
+    Version::from_static_str(env!("FJ_VERSION_FULL"));
 
 /// C-ABI-compatible representation of a version
 ///
 /// Used by the Fornjot application to check for compatibility between a model
 /// and the app.
+#[derive(Clone, Copy, Debug)]
 #[repr(C)]
-pub struct RawVersion {
-    /// The pointer to the `str`
-    pub ptr: *const u8,
-
-    /// The length of the `str`
-    pub len: usize,
+pub struct Version {
+    ptr: *const u8,
+    len: usize,
 }
 
-impl RawVersion {
-    /// Convert the `RawVersion` into a string
-    ///
-    /// # Safety
-    ///
-    /// Must be a `RawVersion` returned from one of the hidden version functions
-    /// in this module.
-    #[allow(clippy::inherent_to_string)]
-    pub unsafe fn to_string(&self) -> String {
-        let slice = slice::from_raw_parts(self.ptr, self.len);
-        String::from_utf8_lossy(slice).into_owned()
+impl Version {
+    const fn from_static_str(s: &'static str) -> Self {
+        Self {
+            ptr: s.as_ptr(),
+            len: s.len(),
+        }
     }
 }
 
-#[no_mangle]
-extern "C" fn version_pkg() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_PKG.as_ptr(),
-        len: VERSION_PKG.len(),
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // This is sound. We only ever create `ptr` and `len` from static
+        // strings.
+        let slice = unsafe { slice::from_raw_parts(self.ptr, self.len) };
+
+        write!(f, "{}", String::from_utf8_lossy(slice).into_owned())
     }
 }
 
-#[no_mangle]
-extern "C" fn version_full() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_FULL.as_ptr(),
-        len: VERSION_FULL.len(),
-    }
-}
+// The only reason this is not derived automatically, is that `Version` contains
+// a `*const u8`. `Version` can still safely be `Send`, for the following
+// reasons:
+// - The field is private, and no code in this module uses it for any write
+//   access, un-synchronized or not.
+// - `Version` can only be constructed from strings with a static lifetime, so
+//   it's guaranteed that the pointer is valid over the whole lifetime of the
+//   program.
+unsafe impl Send for Version {}
+
+// There is no reason why a `&Version` wouldn't be `Send`, so per definition,
+// `Version` can be `Sync`.
+unsafe impl Sync for Version {}

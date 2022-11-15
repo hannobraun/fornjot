@@ -32,7 +32,7 @@ fj-window.workspace = true
 
 [dependencies.clap]
 version = "4.0.23"
-features = ["derive"]
+features = ["derive", "string"]
 
 [dependencies.figment]
 version = "0.10.8"
