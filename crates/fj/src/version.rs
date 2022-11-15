@@ -1,6 +1,6 @@
 //! API for checking compatibility between the Fornjot app and a model
 
-use core::slice;
+use std::slice;
 
 /// The Fornjot package version
 ///
