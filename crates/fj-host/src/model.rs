@@ -5,7 +5,7 @@ use std::{
     str,
 };
 
-use fj::{abi, version::RawVersion};
+use fj::{abi, version::Version};
 use tracing::{debug, warn};
 
 use crate::{platform::HostPlatform, Parameters};
@@ -111,7 +111,7 @@ impl Model {
                     https://github.com/hannobraun/Fornjot/issues/1307)"
                 );
             } else {
-                let version_pkg: libloading::Symbol<fn() -> RawVersion> =
+                let version_pkg: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
                 let version_pkg = version_pkg().to_string();
 
@@ -130,7 +130,7 @@ impl Model {
                     return Err(Error::VersionMismatch { host, model });
                 }
 
-                let version_full: libloading::Symbol<fn() -> RawVersion> =
+                let version_full: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_full").map_err(Error::LoadingVersion)?;
                 let version_full = version_full().to_string();
 

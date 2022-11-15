@@ -24,12 +24,12 @@ pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
 /// Used by the Fornjot application to check for compatibility between a model
 /// and the app.
 #[repr(C)]
-pub struct RawVersion {
+pub struct Version {
     ptr: *const u8,
     len: usize,
 }
 
-impl RawVersion {
+impl Version {
     const fn from_static_str(s: &'static str) -> Self {
         Self {
             ptr: s.as_ptr(),
@@ -51,11 +51,11 @@ impl RawVersion {
 }
 
 #[no_mangle]
-extern "C" fn version_pkg() -> RawVersion {
-    RawVersion::from_static_str(VERSION_PKG)
+extern "C" fn version_pkg() -> Version {
+    Version::from_static_str(VERSION_PKG)
 }
 
 #[no_mangle]
-extern "C" fn version_full() -> RawVersion {
-    RawVersion::from_static_str(VERSION_FULL)
+extern "C" fn version_full() -> Version {
+    Version::from_static_str(VERSION_FULL)
 }
