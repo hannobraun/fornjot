@@ -33,6 +33,13 @@ pub struct RawVersion {
 }
 
 impl RawVersion {
+    const fn from_static_str(s: &'static str) -> Self {
+        Self {
+            ptr: s.as_ptr(),
+            len: s.len(),
+        }
+    }
+
     /// Convert the `RawVersion` into a string
     ///
     /// # Safety
@@ -48,16 +55,10 @@ impl RawVersion {
 
 #[no_mangle]
 extern "C" fn version_pkg() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_PKG.as_ptr(),
-        len: VERSION_PKG.len(),
-    }
+    RawVersion::from_static_str(VERSION_PKG)
 }
 
 #[no_mangle]
 extern "C" fn version_full() -> RawVersion {
-    RawVersion {
-        ptr: VERSION_FULL.as_ptr(),
-        len: VERSION_FULL.len(),
-    }
+    RawVersion::from_static_str(VERSION_FULL)
 }
