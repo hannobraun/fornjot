@@ -11,6 +11,7 @@ use std::{fmt, slice};
 /// constant between releases, even though changes are made throughout. A match
 /// of this version does not conclusively determine that the app and a model are
 /// compatible.
+#[no_mangle]
 pub static VERSION_PKG: Version =
     Version::from_static_str(env!("FJ_VERSION_PKG"));
 
@@ -18,6 +19,7 @@ pub static VERSION_PKG: Version =
 ///
 /// Can be used to check for compatibility between a model and the Fornjot app
 /// that runs it.
+#[no_mangle]
 pub static VERSION_FULL: Version =
     Version::from_static_str(env!("FJ_VERSION_FULL"));
 
