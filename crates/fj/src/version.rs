@@ -25,11 +25,8 @@ pub static VERSION_FULL: &str = env!("FJ_VERSION_FULL");
 /// and the app.
 #[repr(C)]
 pub struct RawVersion {
-    /// The pointer to the `str`
-    pub ptr: *const u8,
-
-    /// The length of the `str`
-    pub len: usize,
+    ptr: *const u8,
+    len: usize,
 }
 
 impl RawVersion {
