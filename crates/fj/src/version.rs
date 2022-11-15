@@ -44,8 +44,10 @@ impl Version {
     /// Must be a `RawVersion` returned from one of the hidden version functions
     /// in this module.
     #[allow(clippy::inherent_to_string)]
-    pub unsafe fn to_string(&self) -> String {
-        let slice = slice::from_raw_parts(self.ptr, self.len);
+    pub fn to_string(&self) -> String {
+        // This is sound. We only ever create `ptr` and `len` from static
+        // strings.
+        let slice = unsafe { slice::from_raw_parts(self.ptr, self.len) };
         String::from_utf8_lossy(slice).into_owned()
     }
 }
