@@ -6,7 +6,7 @@ use std::{
 };
 
 use fj::{abi, version::RawVersion};
-use tracing::warn;
+use tracing::{debug, warn};
 
 use crate::{platform::HostPlatform, Parameters};
 
@@ -113,8 +113,13 @@ impl Model {
             } else {
                 let version_pkg: libloading::Symbol<fn() -> RawVersion> =
                     lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
-
                 let version_pkg = version_pkg().to_string();
+
+                debug!(
+                    "Comparing package versions (host: {}, model: {})",
+                    fj::version::VERSION_PKG,
+                    version_pkg
+                );
                 if fj::version::VERSION_PKG != version_pkg {
                     let host = String::from_utf8_lossy(
                         fj::version::VERSION_PKG.as_bytes(),
@@ -127,8 +132,13 @@ impl Model {
 
                 let version_full: libloading::Symbol<fn() -> RawVersion> =
                     lib.get(b"version_full").map_err(Error::LoadingVersion)?;
-
                 let version_full = version_full().to_string();
+
+                debug!(
+                    "Comparing full versions (host: {}, model: {})",
+                    fj::version::VERSION_FULL,
+                    version_full
+                );
                 if fj::version::VERSION_FULL != version_full {
                     let host = String::from_utf8_lossy(
                         fj::version::VERSION_FULL.as_bytes(),
