@@ -50,6 +50,16 @@ impl Version {
     }
 }
 
+// The only reason this is not derived automatically, is that `Version` contains
+// a `*const u8`. `Version` can still safely be `Send`, for the following
+// reasons:
+// - The field is private, and no code in this module uses it for any write
+//   access, un-synchronized or not.
+// - `Version` can only be constructed from strings with a static lifetime, so
+//   it's guaranteed that the pointer is valid over the whole lifetime of the
+//   program.
+unsafe impl Send for Version {}
+
 #[no_mangle]
 extern "C" fn version_pkg() -> Version {
     Version::from_static_str(VERSION_PKG)
