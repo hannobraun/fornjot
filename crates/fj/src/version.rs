@@ -66,13 +66,3 @@ unsafe impl Send for Version {}
 // There is no reason why a `&Version` wouldn't be `Send`, so per definition,
 // `Version` can be `Sync`.
 unsafe impl Sync for Version {}
-
-#[no_mangle]
-extern "C" fn version_pkg() -> Version {
-    VERSION_PKG
-}
-
-#[no_mangle]
-extern "C" fn version_full() -> Version {
-    VERSION_FULL
-}

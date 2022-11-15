@@ -113,9 +113,9 @@ impl Model {
             } else {
                 let version_pkg_host = fj::version::VERSION_PKG.to_string();
 
-                let version_pkg_model: libloading::Symbol<fn() -> Version> =
-                    lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
-                let version_pkg_mode = version_pkg_model().to_string();
+                let version_pkg_model: libloading::Symbol<*const Version> =
+                    lib.get(b"VERSION_PKG").map_err(Error::LoadingVersion)?;
+                let version_pkg_mode = (**version_pkg_model).to_string();
 
                 debug!(
                     "Comparing package versions (host: {}, model: {})",
@@ -132,9 +132,9 @@ impl Model {
 
                 let version_full_host = fj::version::VERSION_FULL.to_string();
 
-                let version_full_model: libloading::Symbol<fn() -> Version> =
-                    lib.get(b"version_full").map_err(Error::LoadingVersion)?;
-                let version_full_model = version_full_model().to_string();
+                let version_full_model: libloading::Symbol<*const Version> =
+                    lib.get(b"VERSION_FULL").map_err(Error::LoadingVersion)?;
+                let version_full_model = (**version_full_model).to_string();
 
                 debug!(
                     "Comparing full versions (host: {}, model: {})",
