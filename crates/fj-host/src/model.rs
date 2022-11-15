@@ -111,24 +111,26 @@ impl Model {
                     https://github.com/hannobraun/Fornjot/issues/1307)"
                 );
             } else {
+                let version_pkg_host = fj::version::VERSION_PKG;
+
                 let version_pkg: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_pkg").map_err(Error::LoadingVersion)?;
                 let version_pkg = version_pkg().to_string();
 
                 debug!(
                     "Comparing package versions (host: {}, model: {})",
-                    fj::version::VERSION_PKG,
-                    version_pkg
+                    version_pkg_host, version_pkg
                 );
-                if fj::version::VERSION_PKG != version_pkg {
-                    let host = String::from_utf8_lossy(
-                        fj::version::VERSION_PKG.as_bytes(),
-                    )
-                    .into_owned();
+                if version_pkg_host != version_pkg {
+                    let host =
+                        String::from_utf8_lossy(version_pkg_host.as_bytes())
+                            .into_owned();
                     let model = version_pkg;
 
                     return Err(Error::VersionMismatch { host, model });
                 }
+
+                let version_full_host = fj::version::VERSION_FULL;
 
                 let version_full: libloading::Symbol<fn() -> Version> =
                     lib.get(b"version_full").map_err(Error::LoadingVersion)?;
@@ -136,14 +138,12 @@ impl Model {
 
                 debug!(
                     "Comparing full versions (host: {}, model: {})",
-                    fj::version::VERSION_FULL,
-                    version_full
+                    version_full_host, version_full
                 );
-                if fj::version::VERSION_FULL != version_full {
-                    let host = String::from_utf8_lossy(
-                        fj::version::VERSION_FULL.as_bytes(),
-                    )
-                    .into_owned();
+                if version_full_host != version_full {
+                    let host =
+                        String::from_utf8_lossy(version_full_host.as_bytes())
+                            .into_owned();
                     let model = version_full;
 
                     warn!("{}", Error::VersionMismatch { host, model });
