@@ -1,6 +1,6 @@
 //! API for checking compatibility between the Fornjot app and a model
 
-use std::slice;
+use std::{fmt, slice};
 
 /// The Fornjot package version
 ///
@@ -36,19 +36,15 @@ impl Version {
             len: s.len(),
         }
     }
+}
 
-    /// Convert the `RawVersion` into a string
-    ///
-    /// # Safety
-    ///
-    /// Must be a `RawVersion` returned from one of the hidden version functions
-    /// in this module.
-    #[allow(clippy::inherent_to_string)]
-    pub fn to_string(&self) -> String {
+impl fmt::Display for Version {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // This is sound. We only ever create `ptr` and `len` from static
         // strings.
         let slice = unsafe { slice::from_raw_parts(self.ptr, self.len) };
-        String::from_utf8_lossy(slice).into_owned()
+
+        write!(f, "{}", String::from_utf8_lossy(slice).into_owned())
     }
 }
 
