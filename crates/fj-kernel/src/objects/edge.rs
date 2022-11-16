@@ -1,6 +1,9 @@
 use std::fmt;
 
-use crate::storage::{Handle, HandleWrapper};
+use crate::{
+    get::Get,
+    storage::{Handle, HandleWrapper},
+};
 
 use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
@@ -54,6 +57,18 @@ impl HalfEdge {
     /// Access the global form of this half-edge
     pub fn global_form(&self) -> &Handle<GlobalEdge> {
         &self.global_form
+    }
+}
+
+impl Get<GlobalEdge> for HalfEdge {
+    fn get(&self) -> Handle<GlobalEdge> {
+        self.global_form().clone()
+    }
+}
+
+impl Get<GlobalCurve> for HalfEdge {
+    fn get(&self) -> Handle<GlobalCurve> {
+        self.global_form().curve().clone()
     }
 }
 
@@ -112,6 +127,12 @@ impl GlobalEdge {
     /// specific order.
     pub fn vertices(&self) -> &VerticesInNormalizedOrder {
         &self.vertices
+    }
+}
+
+impl Get<GlobalCurve> for GlobalEdge {
+    fn get(&self) -> Handle<GlobalCurve> {
+        self.curve().clone()
     }
 }
 
