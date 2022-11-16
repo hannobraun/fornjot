@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{MaybePartial, MergeWith},
+    partial::{MaybePartial, MergeWith, Replace},
     storage::Handle,
     validate::ValidationError,
 };
@@ -126,6 +126,13 @@ impl MergeWith for PartialSurfaceVertex {
             surface: self.surface.merge_with(other.surface),
             global_form: self.global_form.merge_with(other.global_form),
         }
+    }
+}
+
+impl Replace<Surface> for PartialSurfaceVertex {
+    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
+        self.surface = Some(surface);
+        self
     }
 }
 
