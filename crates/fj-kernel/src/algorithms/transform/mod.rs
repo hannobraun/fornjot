@@ -92,13 +92,11 @@ where
     ) -> Result<Self, ValidationError> {
         let transformed = match self {
             Self::Full(full) => {
-                Self::Partial(full.to_partial().transform(transform, objects)?)
+                full.to_partial().transform(transform, objects)?
             }
-            Self::Partial(partial) => {
-                Self::Partial(partial.transform(transform, objects)?)
-            }
+            Self::Partial(partial) => partial.transform(transform, objects)?,
         };
 
-        Ok(transformed)
+        Ok(Self::Partial(transformed))
     }
 }
