@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{get::Get, storage::Handle};
 
-use super::{Curve, Surface};
+use super::{Curve, GlobalCurve, Surface};
 
 /// A vertex
 ///
@@ -65,6 +65,24 @@ impl Get<Curve> for Vertex {
 impl Get<SurfaceVertex> for Vertex {
     fn get(&self) -> Handle<SurfaceVertex> {
         self.surface_form().clone()
+    }
+}
+
+impl Get<Surface> for Vertex {
+    fn get(&self) -> Handle<Surface> {
+        self.curve().surface().clone()
+    }
+}
+
+impl Get<GlobalCurve> for Vertex {
+    fn get(&self) -> Handle<GlobalCurve> {
+        self.curve().global_form().clone()
+    }
+}
+
+impl Get<GlobalVertex> for Vertex {
+    fn get(&self) -> Handle<GlobalVertex> {
+        self.surface_form().global_form().clone()
     }
 }
 

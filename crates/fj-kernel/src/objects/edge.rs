@@ -66,6 +66,12 @@ impl Get<GlobalEdge> for HalfEdge {
     }
 }
 
+impl Get<GlobalCurve> for HalfEdge {
+    fn get(&self) -> Handle<GlobalCurve> {
+        self.global_form().curve().clone()
+    }
+}
+
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
