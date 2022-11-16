@@ -91,7 +91,9 @@ where
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let transformed = match self {
-            Self::Full(full) => Self::Full(full.transform(transform, objects)?),
+            Self::Full(full) => {
+                Self::Partial(full.to_partial().transform(transform, objects)?)
+            }
             Self::Partial(partial) => {
                 Self::Partial(partial.transform(transform, objects)?)
             }
