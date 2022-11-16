@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{path::SurfacePath, surface::SurfaceGeometry},
+    get::Get,
     insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
@@ -11,7 +12,7 @@ use crate::{
     validate::{Validate, ValidationError},
 };
 
-use super::{HasPartial, MergeWith, Partial};
+use super::{HasPartial, MergeWith, Partial, Replace};
 
 /// Can be used everywhere either a partial or full objects are accepted
 ///
@@ -122,6 +123,29 @@ where
                 Self::Partial(a.merge_with(b))
             }
         }
+    }
+}
+
+impl<T, R> Replace<R> for MaybePartial<T>
+where
+    T: HasPartial + Get<R>,
+    T::Partial: Replace<R>,
+{
+    fn replace(&mut self, object: Handle<R>) -> &mut Self {
+        match self {
+            Self::Full(full) => {
+                if full.get().id() != object.id() {
+                    let mut partial = full.to_partial();
+                    partial.replace(object);
+                    *self = Self::Partial(partial);
+                }
+            }
+            Self::Partial(partial) => {
+                partial.replace(object);
+            }
+        }
+
+        self
     }
 }
 
