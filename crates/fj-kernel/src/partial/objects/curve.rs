@@ -1,7 +1,7 @@
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial::{MaybePartial, MergeWith},
+    partial::{MaybePartial, MergeWith, Replace},
     storage::Handle,
     validate::ValidationError,
 };
@@ -43,6 +43,13 @@ impl MergeWith for PartialCurve {
             surface: self.surface.merge_with(other.surface),
             global_form: self.global_form.merge_with(other.global_form),
         }
+    }
+}
+
+impl Replace<Surface> for PartialCurve {
+    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
+        self.surface = Some(surface);
+        self
     }
 }
 

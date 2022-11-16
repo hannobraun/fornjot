@@ -5,7 +5,7 @@ use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
-    partial::HasPartial,
+    partial::{HasPartial, Replace},
     validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
@@ -27,11 +27,14 @@ impl Shape for fj::Sketch {
                 // Circles have just a single round edge with no vertices. So
                 // none need to be added here.
 
-                let half_edge = HalfEdge::partial()
-                    .with_surface(surface)
-                    .update_as_circle_from_radius(circle.radius(), objects)?
-                    .build(objects)?
-                    .insert(objects)?;
+                let half_edge = {
+                    let mut half_edge = HalfEdge::partial();
+                    half_edge.replace(surface);
+                    half_edge
+                        .update_as_circle_from_radius(circle.radius(), objects)?
+                        .build(objects)?
+                        .insert(objects)?
+                };
                 let cycle = objects.cycles.insert(Cycle::new([half_edge]))?;
 
                 Face::partial()
