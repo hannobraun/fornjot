@@ -228,26 +228,34 @@ mod tests {
                 )
                 .build(&objects)?
                 .insert(&objects)?;
-            let side_up = HalfEdge::partial()
-                .with_surface(surface.clone())
-                .with_back_vertex(PartialVertex {
-                    surface_form: bottom.front().surface_form().clone().into(),
-                    ..Default::default()
-                })
-                .with_front_vertex(PartialVertex {
-                    surface_form: PartialSurfaceVertex {
-                        position: Some([1., 1.].into()),
+            let side_up = {
+                let mut side_up = HalfEdge::partial();
+                side_up.with_surface(surface.clone());
+                side_up
+                    .with_back_vertex(PartialVertex {
+                        surface_form: bottom
+                            .front()
+                            .surface_form()
+                            .clone()
+                            .into(),
                         ..Default::default()
-                    }
-                    .into(),
-                    ..Default::default()
-                })
-                .update_as_line_segment()
-                .build(&objects)?
-                .insert(&objects)?;
-            let top = HalfEdge::partial()
-                .with_surface(surface.clone())
-                .with_back_vertex(PartialVertex {
+                    })
+                    .with_front_vertex(PartialVertex {
+                        surface_form: PartialSurfaceVertex {
+                            position: Some([1., 1.].into()),
+                            ..Default::default()
+                        }
+                        .into(),
+                        ..Default::default()
+                    })
+                    .update_as_line_segment()
+                    .build(&objects)?
+                    .insert(&objects)?
+            };
+            let top = {
+                let mut top = HalfEdge::partial();
+                top.with_surface(surface.clone());
+                top.with_back_vertex(PartialVertex {
                     surface_form: PartialSurfaceVertex {
                         position: Some([0., 1.].into()),
                         ..Default::default()
@@ -262,21 +270,29 @@ mod tests {
                 .update_as_line_segment()
                 .build(&objects)?
                 .insert(&objects)?
-                .reverse(&objects)?;
-            let side_down = HalfEdge::partial()
-                .with_surface(surface)
-                .with_back_vertex(PartialVertex {
-                    surface_form: bottom.back().surface_form().clone().into(),
-                    ..Default::default()
-                })
-                .with_front_vertex(PartialVertex {
-                    surface_form: top.front().surface_form().clone().into(),
-                    ..Default::default()
-                })
-                .update_as_line_segment()
-                .build(&objects)?
-                .insert(&objects)?
-                .reverse(&objects)?;
+                .reverse(&objects)?
+            };
+            let side_down = {
+                let mut side_down = HalfEdge::partial();
+                side_down.with_surface(surface);
+                side_down
+                    .with_back_vertex(PartialVertex {
+                        surface_form: bottom
+                            .back()
+                            .surface_form()
+                            .clone()
+                            .into(),
+                        ..Default::default()
+                    })
+                    .with_front_vertex(PartialVertex {
+                        surface_form: top.front().surface_form().clone().into(),
+                        ..Default::default()
+                    })
+                    .update_as_line_segment()
+                    .build(&objects)?
+                    .insert(&objects)?
+                    .reverse(&objects)?
+            };
 
             let cycle = objects
                 .cycles

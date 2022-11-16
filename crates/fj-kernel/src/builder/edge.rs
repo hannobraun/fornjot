@@ -94,7 +94,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_line_segment_from_points(
-        self,
+        mut self,
         surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
@@ -111,9 +111,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        self.with_surface(surface)
-            .with_vertices(vertices)
-            .update_as_line_segment()
+        self.with_surface(surface);
+        self.with_vertices(vertices).update_as_line_segment()
     }
 
     fn update_as_line_segment(self) -> Self {

@@ -28,13 +28,13 @@ pub struct PartialHalfEdge {
 
 impl PartialHalfEdge {
     /// Update the partial half-edge with the given surface
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
+    pub fn with_surface(&mut self, surface: Handle<Surface>) -> &mut Self {
         self.curve = self.curve.clone().update_partial(|mut curve| {
             curve.replace(surface.clone());
             curve
         });
 
-        self.vertices = self.vertices.map(|vertex| {
+        self.vertices = self.vertices.clone().map(|vertex| {
             vertex.update_partial(|mut vertex| {
                 let surface_form = vertex.surface_form.clone().update_partial(
                     |mut surface_vertex| {
