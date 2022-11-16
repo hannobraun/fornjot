@@ -105,10 +105,7 @@ impl MergeWith for PartialHalfEdge {
 
 impl Replace<Surface> for PartialHalfEdge {
     fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.curve = self.curve.clone().update_partial(|mut curve| {
-            curve.replace(surface.clone());
-            curve
-        });
+        self.curve.replace(surface.clone());
 
         self.vertices = self.vertices.clone().map(|vertex| {
             vertex.update_partial(|mut vertex| {
