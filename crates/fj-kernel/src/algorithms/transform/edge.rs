@@ -16,24 +16,16 @@ impl TransformObject for PartialHalfEdge {
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
         let curve = self.curve.transform(transform, objects)?;
-        let vertices = self.vertices.try_map_ext(
-            |vertex| -> Result<_, ValidationError> {
-                let mut vertex =
-                    vertex.into_partial().transform(transform, objects)?;
-                vertex.curve = curve.clone();
-                Ok(vertex)
-            },
-        )?;
-        let mut global_form = self
-            .global_form
-            .into_partial()
-            .transform(transform, objects)?;
-        global_form.curve = curve.global_form();
+        let vertices = self
+            .vertices
+            .try_map_ext(|vertex| vertex.transform(transform, objects))?;
+        let global_form = self.global_form.transform(transform, objects)?;
 
-        Ok(Self::default()
-            .with_curve(curve)
-            .with_vertices(vertices)
-            .with_global_form(global_form))
+        Ok(Self {
+            curve,
+            vertices,
+            global_form,
+        })
     }
 }
 

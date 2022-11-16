@@ -50,18 +50,26 @@ pub trait HalfEdgeBuilder: Sized {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn with_back_vertex(self, back: impl Into<MaybePartial<Vertex>>) -> Self {
+    fn with_back_vertex(
+        mut self,
+        back: impl Into<MaybePartial<Vertex>>,
+    ) -> Self {
         let [_, front] = self.vertices.clone();
-        self.with_vertices([back.into(), front])
+        self.vertices = [back.into(), front];
+        self
     }
 
-    fn with_front_vertex(self, front: impl Into<MaybePartial<Vertex>>) -> Self {
+    fn with_front_vertex(
+        mut self,
+        front: impl Into<MaybePartial<Vertex>>,
+    ) -> Self {
         let [back, _] = self.vertices.clone();
-        self.with_vertices([back, front.into()])
+        self.vertices = [back, front.into()];
+        self
     }
 
     fn update_as_circle_from_radius(
-        self,
+        mut self,
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
@@ -90,7 +98,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 surface_form: surface_vertex.clone().into(),
             });
 
-        Ok(self.with_curve(curve).with_vertices([back, front]))
+        self.curve = curve.into();
+        self.vertices = [back, front].map(Into::into);
+
+        Ok(self)
     }
 
     fn update_as_line_segment_from_points(
@@ -112,10 +123,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         });
 
         self.replace(surface);
-        self.with_vertices(vertices).update_as_line_segment()
+        self.vertices = vertices.map(Into::into);
+        self.update_as_line_segment()
     }
 
-    fn update_as_line_segment(self) -> Self {
+    fn update_as_line_segment(mut self) -> Self {
         let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
@@ -190,11 +202,15 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 })
         };
 
-        self.with_curve(curve).with_vertices([back, front])
+        self.curve = curve.into();
+        self.vertices = [back, front];
+
+        self
     }
 
-    fn infer_global_form(self) -> Self {
-        self.with_global_form(PartialGlobalEdge::default())
+    fn infer_global_form(mut self) -> Self {
+        self.global_form = PartialGlobalEdge::default().into();
+        self
     }
 }
 

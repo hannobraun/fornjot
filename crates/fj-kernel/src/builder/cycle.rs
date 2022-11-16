@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Surface, SurfaceVertex},
     partial::{
-        HasPartial, MaybePartial, PartialCurve, PartialCycle,
+        HasPartial, MaybePartial, PartialCurve, PartialCycle, PartialHalfEdge,
         PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
@@ -82,11 +82,11 @@ impl CycleBuilder for PartialCycle {
                     },
                 );
 
-                half_edges.push(
-                    HalfEdge::partial()
-                        .with_curve(curve)
-                        .with_vertices(vertices),
-                );
+                half_edges.push(PartialHalfEdge {
+                    curve: curve.into(),
+                    vertices: vertices.map(Into::into),
+                    ..Default::default()
+                });
 
                 continue;
             }
