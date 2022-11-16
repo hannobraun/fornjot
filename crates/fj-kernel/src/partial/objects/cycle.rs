@@ -98,8 +98,8 @@ impl PartialCycle {
             let front_vertex =
                 half_edge.front().surface_form().into_full(objects)?;
 
-            *half_edge = half_edge.clone().merge_with(
-                PartialHalfEdge::default().with_vertices([
+            *half_edge = half_edge.clone().merge_with(PartialHalfEdge {
+                vertices: [
                     PartialVertex {
                         surface_form: back_vertex,
                         ..Default::default()
@@ -108,8 +108,10 @@ impl PartialCycle {
                         surface_form: front_vertex.clone().into(),
                         ..Default::default()
                     },
-                ]),
-            );
+                ]
+                .map(Into::into),
+                ..Default::default()
+            });
 
             previous_vertex = Some(MaybePartial::from(front_vertex));
         }

@@ -27,15 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Update the partial half-edge with the given vertices
-    pub fn with_vertices(
-        mut self,
-        vertices: [impl Into<MaybePartial<Vertex>>; 2],
-    ) -> Self {
-        self.vertices = vertices.map(Into::into);
-        self
-    }
-
     /// Update the partial half-edge with the given global form
     pub fn with_global_form(
         mut self,

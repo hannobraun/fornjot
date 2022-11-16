@@ -121,8 +121,8 @@ impl<'a> ShellBuilder<'a> {
                         ..Default::default()
                     };
 
-                    HalfEdge::partial()
-                        .with_vertices([
+                    PartialHalfEdge {
+                        vertices: [
                             PartialVertex {
                                 surface_form: from.into(),
                                 ..Default::default()
@@ -131,12 +131,15 @@ impl<'a> ShellBuilder<'a> {
                                 surface_form: to.into(),
                                 ..Default::default()
                             },
-                        ])
-                        .update_as_line_segment()
-                        .build(self.objects)
-                        .unwrap()
-                        .insert(self.objects)
-                        .unwrap()
+                        ]
+                        .map(Into::into),
+                        ..Default::default()
+                    }
+                    .update_as_line_segment()
+                    .build(self.objects)
+                    .unwrap()
+                    .insert(self.objects)
+                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -171,18 +174,19 @@ impl<'a> ShellBuilder<'a> {
 
                         PartialHalfEdge {
                             curve: curve.into(),
+                            vertices: [
+                                PartialVertex {
+                                    surface_form: from.into(),
+                                    ..Default::default()
+                                },
+                                PartialVertex {
+                                    surface_form: to.into(),
+                                    ..Default::default()
+                                },
+                            ]
+                            .map(Into::into),
                             ..Default::default()
                         }
-                        .with_vertices([
-                            PartialVertex {
-                                surface_form: from.into(),
-                                ..Default::default()
-                            },
-                            PartialVertex {
-                                surface_form: to.into(),
-                                ..Default::default()
-                            },
-                        ])
                         .update_as_line_segment()
                         .build(self.objects)
                         .unwrap()
@@ -212,13 +216,15 @@ impl<'a> ShellBuilder<'a> {
                         ..Default::default()
                     };
 
-                    HalfEdge::partial()
-                        .with_vertices([from, to])
-                        .update_as_line_segment()
-                        .build(self.objects)
-                        .unwrap()
-                        .insert(self.objects)
-                        .unwrap()
+                    PartialHalfEdge {
+                        vertices: [from, to].map(Into::into),
+                        ..Default::default()
+                    }
+                    .update_as_line_segment()
+                    .build(self.objects)
+                    .unwrap()
+                    .insert(self.objects)
+                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -303,14 +309,16 @@ impl<'a> ShellBuilder<'a> {
                     });
 
                 edges.push(
-                    HalfEdge::partial()
-                        .with_vertices(vertices)
-                        .with_global_form(edge.global_form().clone())
-                        .update_as_line_segment()
-                        .build(self.objects)
-                        .unwrap()
-                        .insert(self.objects)
-                        .unwrap(),
+                    PartialHalfEdge {
+                        vertices: vertices.map(Into::into),
+                        ..Default::default()
+                    }
+                    .with_global_form(edge.global_form().clone())
+                    .update_as_line_segment()
+                    .build(self.objects)
+                    .unwrap()
+                    .insert(self.objects)
+                    .unwrap(),
                 );
             }
 
