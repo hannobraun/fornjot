@@ -107,11 +107,9 @@ impl Replace<Surface> for PartialHalfEdge {
     fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
         self.curve.replace(surface.clone());
 
-        self.vertices = self.vertices.clone().map(|vertex| {
-            vertex.update_partial(|mut vertex| {
-                vertex.replace(surface.clone());
-                vertex
-            })
+        self.vertices = self.vertices.clone().map(|mut vertex| {
+            vertex.replace(surface.clone());
+            vertex
         });
 
         self
