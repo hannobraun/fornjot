@@ -30,10 +30,12 @@ impl TransformObject for PartialHalfEdge {
             .transform(transform, objects)?;
         global_form.curve = curve.global_form();
 
-        Ok(Self::default()
-            .with_curve(curve)
-            .with_vertices(vertices)
-            .with_global_form(global_form))
+        Ok(Self {
+            curve,
+            ..Default::default()
+        }
+        .with_vertices(vertices)
+        .with_global_form(global_form))
     }
 }
 

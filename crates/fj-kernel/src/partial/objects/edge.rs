@@ -27,13 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Update the partial half-edge with the given curve
-    pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
-        self.curve = curve.into();
-
-        self
-    }
-
     /// Update the partial half-edge with the given vertices
     pub fn with_vertices(
         mut self,

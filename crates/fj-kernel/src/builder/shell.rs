@@ -10,8 +10,8 @@ use crate::{
     insert::Insert,
     objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell},
     partial::{
-        HasPartial, PartialCurve, PartialSurface, PartialSurfaceVertex,
-        PartialVertex,
+        HasPartial, PartialCurve, PartialHalfEdge, PartialSurface,
+        PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
 };
@@ -169,23 +169,25 @@ impl<'a> ShellBuilder<'a> {
                             ..Default::default()
                         };
 
-                        HalfEdge::partial()
-                            .with_curve(curve)
-                            .with_vertices([
-                                PartialVertex {
-                                    surface_form: from.into(),
-                                    ..Default::default()
-                                },
-                                PartialVertex {
-                                    surface_form: to.into(),
-                                    ..Default::default()
-                                },
-                            ])
-                            .update_as_line_segment()
-                            .build(self.objects)
-                            .unwrap()
-                            .insert(self.objects)
-                            .unwrap()
+                        PartialHalfEdge {
+                            curve: curve.into(),
+                            ..Default::default()
+                        }
+                        .with_vertices([
+                            PartialVertex {
+                                surface_form: from.into(),
+                                ..Default::default()
+                            },
+                            PartialVertex {
+                                surface_form: to.into(),
+                                ..Default::default()
+                            },
+                        ])
+                        .update_as_line_segment()
+                        .build(self.objects)
+                        .unwrap()
+                        .insert(self.objects)
+                        .unwrap()
                     })
                     .collect::<Vec<_>>()
             };

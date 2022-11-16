@@ -61,7 +61,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_circle_from_radius(
-        self,
+        mut self,
         radius: impl Into<Scalar>,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
@@ -90,7 +90,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 surface_form: surface_vertex.clone().into(),
             });
 
-        Ok(self.with_curve(curve).with_vertices([back, front]))
+        self.curve = curve.into();
+
+        Ok(self.with_vertices([back, front]))
     }
 
     fn update_as_line_segment_from_points(
@@ -115,7 +117,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.with_vertices(vertices).update_as_line_segment()
     }
 
-    fn update_as_line_segment(self) -> Self {
+    fn update_as_line_segment(mut self) -> Self {
         let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
@@ -190,7 +192,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 })
         };
 
-        self.with_curve(curve).with_vertices([back, front])
+        self.curve = curve.into();
+
+        self.with_vertices([back, front])
     }
 
     fn infer_global_form(self) -> Self {
