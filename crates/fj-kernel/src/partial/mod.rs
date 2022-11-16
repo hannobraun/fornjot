@@ -37,6 +37,7 @@
 mod maybe_partial;
 mod merge;
 mod objects;
+mod replace;
 mod traits;
 
 pub use self::{
@@ -50,5 +51,6 @@ pub use self::{
         surface::PartialSurface,
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
+    replace::Replace,
     traits::{HasPartial, Partial},
 };
