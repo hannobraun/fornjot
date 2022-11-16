@@ -90,13 +90,17 @@ where
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        match self {
+        let transformed = match self {
             Self::Full(full) => {
-                Ok(Self::Full(full.transform(transform, objects)?))
+                full.to_partial().transform(transform, objects)?
             }
-            Self::Partial(partial) => {
-                Ok(Self::Partial(partial.transform(transform, objects)?))
-            }
-        }
+            Self::Partial(partial) => partial.transform(transform, objects)?,
+        };
+
+        // Transforming a `MaybePartial` *always* results in a partial object.
+        // This provides the most flexibility to the caller, who might want to
+        // use the transformed partial object for merging or whatever else,
+        // before building it themselves.
+        Ok(Self::Partial(transformed))
     }
 }

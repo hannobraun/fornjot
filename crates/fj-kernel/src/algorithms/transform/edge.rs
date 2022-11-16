@@ -3,7 +3,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::Objects,
-    partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{PartialGlobalEdge, PartialHalfEdge},
     validate::ValidationError,
 };
 
@@ -15,11 +15,7 @@ impl TransformObject for PartialHalfEdge {
         transform: &Transform,
         objects: &Objects,
     ) -> Result<Self, ValidationError> {
-        let curve: MaybePartial<_> = self
-            .curve
-            .into_partial()
-            .transform(transform, objects)?
-            .into();
+        let curve = self.curve.transform(transform, objects)?;
         let vertices = self.vertices.try_map_ext(
             |vertex| -> Result<_, ValidationError> {
                 let mut vertex =

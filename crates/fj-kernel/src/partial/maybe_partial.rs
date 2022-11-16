@@ -207,6 +207,16 @@ impl MaybePartial<GlobalEdge> {
     }
 }
 
+impl MaybePartial<GlobalVertex> {
+    /// Access the position
+    pub fn position(&self) -> Option<Point<3>> {
+        match self {
+            Self::Full(full) => Some(full.position()),
+            Self::Partial(partial) => partial.position,
+        }
+    }
+}
+
 impl MaybePartial<HalfEdge> {
     /// Access the curve
     pub fn curve(&self) -> MaybePartial<Curve> {
