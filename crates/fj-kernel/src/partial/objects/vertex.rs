@@ -102,7 +102,7 @@ pub struct PartialSurfaceVertex {
 impl PartialSurfaceVertex {
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
-        self,
+        mut self,
         objects: &Objects,
     ) -> Result<SurfaceVertex, ValidationError> {
         let position = self
@@ -112,13 +112,15 @@ impl PartialSurfaceVertex {
             .surface
             .expect("Can't build `SurfaceVertex` without `Surface`");
 
-        let global_form = self
-            .global_form
-            .merge_with(PartialGlobalVertex::from_surface_and_position(
-                &surface.geometry(),
-                position,
-            ))
-            .into_full(objects)?;
+        if self.global_form.position().is_none() {
+            self.global_form = self.global_form.merge_with(
+                PartialGlobalVertex::from_surface_and_position(
+                    &surface.geometry(),
+                    position,
+                ),
+            )
+        }
+        let global_form = self.global_form.into_full(objects)?;
 
         Ok(SurfaceVertex::new(position, surface, global_form))
     }
