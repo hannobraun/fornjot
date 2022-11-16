@@ -6,7 +6,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, Vertex,
     },
-    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex},
+    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex, Replace},
     storage::Handle,
     validate::ValidationError,
 };
@@ -29,8 +29,8 @@ pub struct PartialHalfEdge {
 impl PartialHalfEdge {
     /// Update the partial half-edge with the given surface
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.curve = self.curve.update_partial(|mut curve| {
-            curve.surface = Some(surface.clone());
+        self.curve = self.curve.clone().update_partial(|mut curve| {
+            curve.replace(surface.clone());
             curve
         });
 
