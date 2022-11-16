@@ -67,6 +67,13 @@ impl MergeWith for PartialVertex {
     }
 }
 
+impl Replace<Surface> for PartialVertex {
+    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
+        self.surface_form.replace(surface);
+        self
+    }
+}
+
 impl From<&Vertex> for PartialVertex {
     fn from(vertex: &Vertex) -> Self {
         Self {
