@@ -200,7 +200,7 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge, Objects},
-        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial::{HasPartial, PartialSurfaceVertex, PartialVertex, Replace},
     };
 
     #[test]
@@ -230,7 +230,7 @@ mod tests {
                 .insert(&objects)?;
             let side_up = {
                 let mut side_up = HalfEdge::partial();
-                side_up.with_surface(surface.clone());
+                side_up.replace(surface.clone());
                 side_up
                     .with_back_vertex(PartialVertex {
                         surface_form: bottom
@@ -254,7 +254,7 @@ mod tests {
             };
             let top = {
                 let mut top = HalfEdge::partial();
-                top.with_surface(surface.clone());
+                top.replace(surface.clone());
                 top.with_back_vertex(PartialVertex {
                     surface_form: PartialSurfaceVertex {
                         position: Some([0., 1.].into()),
@@ -274,7 +274,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = HalfEdge::partial();
-                side_down.with_surface(surface);
+                side_down.replace(surface);
                 side_down
                     .with_back_vertex(PartialVertex {
                         surface_form: bottom

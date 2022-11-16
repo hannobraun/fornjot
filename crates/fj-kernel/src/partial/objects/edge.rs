@@ -27,30 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Update the partial half-edge with the given surface
-    pub fn with_surface(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.curve = self.curve.clone().update_partial(|mut curve| {
-            curve.replace(surface.clone());
-            curve
-        });
-
-        self.vertices = self.vertices.clone().map(|vertex| {
-            vertex.update_partial(|mut vertex| {
-                let surface_form = vertex.surface_form.clone().update_partial(
-                    |mut surface_vertex| {
-                        surface_vertex.replace(surface.clone());
-                        surface_vertex
-                    },
-                );
-
-                vertex.surface_form = surface_form;
-                vertex
-            })
-        });
-
-        self
-    }
-
     /// Update the partial half-edge with the given curve
     pub fn with_curve(mut self, curve: impl Into<MaybePartial<Curve>>) -> Self {
         self.curve = curve.into();
@@ -124,6 +100,31 @@ impl MergeWith for PartialHalfEdge {
             vertices: self.vertices.merge_with(other.vertices),
             global_form: self.global_form.merge_with(other.global_form),
         }
+    }
+}
+
+impl Replace<Surface> for PartialHalfEdge {
+    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
+        self.curve = self.curve.clone().update_partial(|mut curve| {
+            curve.replace(surface.clone());
+            curve
+        });
+
+        self.vertices = self.vertices.clone().map(|vertex| {
+            vertex.update_partial(|mut vertex| {
+                let surface_form = vertex.surface_form.clone().update_partial(
+                    |mut surface_vertex| {
+                        surface_vertex.replace(surface.clone());
+                        surface_vertex
+                    },
+                );
+
+                vertex.surface_form = surface_form;
+                vertex
+            })
+        });
+
+        self
     }
 }
 

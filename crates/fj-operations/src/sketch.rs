@@ -5,7 +5,7 @@ use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
-    partial::HasPartial,
+    partial::{HasPartial, Replace},
     validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
@@ -29,7 +29,7 @@ impl Shape for fj::Sketch {
 
                 let half_edge = {
                     let mut half_edge = HalfEdge::partial();
-                    half_edge.with_surface(surface);
+                    half_edge.replace(surface);
                     half_edge
                         .update_as_circle_from_radius(circle.radius(), objects)?
                         .build(objects)?
