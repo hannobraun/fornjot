@@ -109,14 +109,7 @@ impl Replace<Surface> for PartialHalfEdge {
 
         self.vertices = self.vertices.clone().map(|vertex| {
             vertex.update_partial(|mut vertex| {
-                let surface_form = vertex.surface_form.clone().update_partial(
-                    |mut surface_vertex| {
-                        surface_vertex.replace(surface.clone());
-                        surface_vertex
-                    },
-                );
-
-                vertex.surface_form = surface_form;
+                vertex.surface_form.replace(surface.clone());
                 vertex
             })
         });
