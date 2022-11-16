@@ -8,7 +8,7 @@ use crate::{
     algorithms::transform::TransformObject,
     builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
-    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell},
+    objects::{Cycle, Face, FaceSet, Objects, Shell},
     partial::{
         HasPartial, PartialCurve, PartialHalfEdge, PartialSurface,
         PartialSurfaceVertex, PartialVertex,
@@ -94,16 +94,18 @@ impl<'a> ShellBuilder<'a> {
                 .half_edges()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
-                    HalfEdge::partial()
-                        .with_global_form(half_edge.global_form().clone())
-                        .update_as_line_segment_from_points(
-                            surface.clone(),
-                            [[Z, Z], [edge_length, Z]],
-                        )
-                        .build(self.objects)
-                        .unwrap()
-                        .insert(self.objects)
-                        .unwrap()
+                    PartialHalfEdge {
+                        global_form: half_edge.global_form().clone().into(),
+                        ..Default::default()
+                    }
+                    .update_as_line_segment_from_points(
+                        surface.clone(),
+                        [[Z, Z], [edge_length, Z]],
+                    )
+                    .build(self.objects)
+                    .unwrap()
+                    .insert(self.objects)
+                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -311,9 +313,9 @@ impl<'a> ShellBuilder<'a> {
                 edges.push(
                     PartialHalfEdge {
                         vertices: vertices.map(Into::into),
+                        global_form: edge.global_form().clone().into(),
                         ..Default::default()
                     }
-                    .with_global_form(edge.global_form().clone())
                     .update_as_line_segment()
                     .build(self.objects)
                     .unwrap()

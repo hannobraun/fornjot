@@ -27,16 +27,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Update the partial half-edge with the given global form
-    pub fn with_global_form(
-        mut self,
-        global_form: impl Into<MaybePartial<GlobalEdge>>,
-    ) -> Self {
-        self.global_form = global_form.into();
-
-        self
-    }
-
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(
         mut self,

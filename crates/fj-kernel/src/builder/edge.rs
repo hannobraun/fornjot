@@ -208,8 +208,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self
     }
 
-    fn infer_global_form(self) -> Self {
-        self.with_global_form(PartialGlobalEdge::default())
+    fn infer_global_form(mut self) -> Self {
+        self.global_form = PartialGlobalEdge::default().into();
+        self
     }
 }
 

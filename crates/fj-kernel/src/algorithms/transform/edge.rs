@@ -33,9 +33,8 @@ impl TransformObject for PartialHalfEdge {
         Ok(Self {
             curve,
             vertices: vertices.map(Into::into),
-            ..Default::default()
-        }
-        .with_global_form(global_form))
+            global_form: global_form.into(),
+        })
     }
 }
 
