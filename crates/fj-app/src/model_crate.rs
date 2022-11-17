@@ -30,7 +30,10 @@ fn post_process_model_files(
             ),
         ],
     )?;
-    fs::write(path.join("README.md"), format!("# {model_name}\n"))?;
+    replace_in_file(
+        &path.join("README.md"),
+        [("# Model Template".to_string(), format!("# {model_name}"))],
+    )?;
     Ok(())
 }
 
