@@ -52,7 +52,7 @@ fn git_description() -> Option<String> {
     let crate_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
 
     let mut cmd = Command::new("git");
-    cmd.args(["describe", "--always", "--dirty=-modified"])
+    cmd.args(["describe", "--always", "--tags", "--dirty=-modified"])
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .current_dir(&crate_dir);
