@@ -1,12 +1,12 @@
+use include_dir::{include_dir, Dir};
 use std::{fs, path::Path};
-use tar::Archive;
 
-static NEW_MODEL_TAR: &[u8] =
-    include_bytes!(concat!(env!("OUT_DIR"), "/new_model.tar"));
+static MODEL_TEMPLATE: Dir = include_dir!("$CARGO_MANIFEST_DIR/model-template");
 
 pub fn create(model_name: &str) -> anyhow::Result<()> {
     let path = Path::new(model_name);
-    Archive::new(NEW_MODEL_TAR).unpack(path)?;
+    fs::create_dir_all(path)?;
+    MODEL_TEMPLATE.extract(path)?;
     postprocess_model_files(path, model_name)?;
     println!("Model '{model_name}' created");
     Ok(())
