@@ -1,18 +1,18 @@
+use include_dir::{include_dir, Dir};
 use std::{fs, path::Path};
-use tar::Archive;
 
-static NEW_MODEL_TAR: &[u8] =
-    include_bytes!(concat!(env!("OUT_DIR"), "/new_model.tar"));
+static MODEL_TEMPLATE: Dir = include_dir!("$CARGO_MANIFEST_DIR/model-template");
 
 pub fn create(model_name: &str) -> anyhow::Result<()> {
     let path = Path::new(model_name);
-    Archive::new(NEW_MODEL_TAR).unpack(path)?;
-    postprocess_model_files(path, model_name)?;
+    fs::create_dir_all(path)?;
+    MODEL_TEMPLATE.extract(path)?;
+    post_process_model_files(path, model_name)?;
     println!("Model '{model_name}' created");
     Ok(())
 }
 
-fn postprocess_model_files(
+fn post_process_model_files(
     path: &Path,
     model_name: &str,
 ) -> anyhow::Result<()> {
@@ -30,7 +30,10 @@ fn postprocess_model_files(
             ),
         ],
     )?;
-    fs::write(path.join("README.md"), format!("# {model_name}\n"))?;
+    replace_in_file(
+        &path.join("README.md"),
+        [("# Model Template".to_string(), format!("# {model_name}"))],
+    )?;
     Ok(())
 }
 
