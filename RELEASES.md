@@ -104,6 +104,8 @@ Additionally, post it in the following places:
   https://fosstodon.org/@hannobraun
 - Rust Users
   https://users.rust-lang.org/t/fornjot-code-cad-in-rust-weekly-dev-log/71783
+- This Week in Rust
+  https://github.com/rust-lang/this-week-in-rust
 
 
 ## 10. Improve release procedure
