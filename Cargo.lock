@@ -1133,6 +1133,7 @@ dependencies = [
 name = "fj"
 version = "0.24.0"
 dependencies = [
+ "anyhow",
  "fj-proc",
  "serde",
  "serde_json",
