@@ -1,44 +1,49 @@
 use std::{
+    fmt::Write,
     path::PathBuf,
     process::{Command, Output, Stdio},
 };
 
-fn main() {
-    let version = Version::determine();
+fn main() -> anyhow::Result<()> {
+    let version = Version::determine()?;
 
-    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
-    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full_string);
+    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg);
+    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full);
 
     // Make sure the build script doesn't run too often.
     println!("cargo:rerun-if-changed=Cargo.toml");
+
+    Ok(())
 }
 
 struct Version {
-    pkg_version: String,
-    full_string: String,
+    pkg: String,
+    full: String,
 }
 impl Version {
-    fn determine() -> Self {
-        let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
+    fn determine() -> anyhow::Result<Self> {
+        let pkg = std::env::var("CARGO_PKG_VERSION").unwrap();
         let commit = git_description();
 
         let official_release =
             std::env::var("RELEASE_DETECTED").as_deref() == Ok("true");
         println!("cargo:rerun-if-env-changed=RELEASE_DETECTED");
 
-        let full_string = match (commit, official_release) {
-            (Some(commit), true) => format!("{pkg_version} ({commit})"),
-            (Some(commit), false) => {
-                format!("{pkg_version} ({commit}, unreleased)")
-            }
-            (None, true) => pkg_version.clone(),
-            (None, false) => format!("{pkg_version} (unreleased)"),
-        };
+        let mut full = format!("{pkg} (");
 
-        Self {
-            pkg_version,
-            full_string,
+        if official_release {
+            write!(full, "official release binary")?;
+        } else {
+            write!(full, "development build")?;
         }
+
+        if let Some(commit) = commit {
+            write!(full, "; {commit}")?;
+        }
+
+        writeln!(full, ")")?;
+
+        Ok(Self { pkg, full })
     }
 }
 
@@ -52,7 +57,7 @@ fn git_description() -> Option<String> {
     let crate_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
 
     let mut cmd = Command::new("git");
-    cmd.args(["describe", "--always", "--dirty=-modified"])
+    cmd.args(["describe", "--always", "--tags"])
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .current_dir(&crate_dir);
