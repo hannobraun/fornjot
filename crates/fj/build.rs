@@ -7,7 +7,7 @@ fn main() {
     let version = Version::determine();
 
     println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
-    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full_string);
+    println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full);
 
     // Make sure the build script doesn't run too often.
     println!("cargo:rerun-if-changed=Cargo.toml");
@@ -15,7 +15,7 @@ fn main() {
 
 struct Version {
     pkg_version: String,
-    full_string: String,
+    full: String,
 }
 impl Version {
     fn determine() -> Self {
@@ -26,7 +26,7 @@ impl Version {
             std::env::var("RELEASE_DETECTED").as_deref() == Ok("true");
         println!("cargo:rerun-if-env-changed=RELEASE_DETECTED");
 
-        let full_string = match (commit, official_release) {
+        let full = match (commit, official_release) {
             (Some(commit), true) => format!("{pkg_version} ({commit})"),
             (Some(commit), false) => {
                 format!("{pkg_version} ({commit}, unreleased)")
@@ -35,10 +35,7 @@ impl Version {
             (None, false) => format!("{pkg_version} (unreleased)"),
         };
 
-        Self {
-            pkg_version,
-            full_string,
-        }
+        Self { pkg_version, full }
     }
 }
 
