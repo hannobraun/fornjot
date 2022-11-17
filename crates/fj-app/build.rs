@@ -1,8 +1,7 @@
 use ignore::WalkBuilder;
 use std::{collections::HashSet, env, ffi::OsStr, fs::File, path::Path};
 
-static NEW_MODEL_TEMPLATE: &str = "star";
-static EXTRA_IGNORED_FILES: &[&str] = &["star.png", "README.md"];
+static EXTRA_IGNORED_FILES: &[&str] = &["README.md"];
 
 fn main() {
     create_new_model_tar();
@@ -14,13 +13,7 @@ fn create_new_model_tar() {
     let mut tar_builder = tar::Builder::new(file);
 
     let manifest_dir = env::var_os("CARGO_MANIFEST_DIR").unwrap();
-    let fornjot_root_path = Path::new(&manifest_dir)
-        .ancestors()
-        .nth(2)
-        .expect("Failed to get 'fornjot_root_path' path");
-
-    let new_model_path =
-        fornjot_root_path.join("models").join(NEW_MODEL_TEMPLATE);
+    let new_model_path = Path::new(&manifest_dir).join("model-template");
 
     let extra_ignored_files = EXTRA_IGNORED_FILES
         .iter()
