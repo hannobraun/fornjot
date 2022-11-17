@@ -1,4 +1,5 @@
 use std::{
+    fmt::Write,
     path::PathBuf,
     process::{Command, Output, Stdio},
 };
@@ -28,14 +29,19 @@ impl Version {
             std::env::var("RELEASE_DETECTED").as_deref() == Ok("true");
         println!("cargo:rerun-if-env-changed=RELEASE_DETECTED");
 
-        let full = match (commit, official_release) {
-            (Some(commit), true) => format!("{pkg} ({commit})"),
-            (Some(commit), false) => {
-                format!("{pkg} ({commit}, unreleased)")
-            }
-            (None, true) => pkg.clone(),
-            (None, false) => format!("{pkg} (unreleased)"),
-        };
+        let mut full = format!("{pkg} (");
+
+        if official_release {
+            write!(full, "official release binary")?;
+        } else {
+            write!(full, "development build")?;
+        }
+
+        if let Some(commit) = commit {
+            write!(full, "; {commit}")?;
+        }
+
+        writeln!(full, ")")?;
 
         Ok(Self { pkg, full })
     }
