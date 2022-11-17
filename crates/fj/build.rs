@@ -3,14 +3,16 @@ use std::{
     process::{Command, Output, Stdio},
 };
 
-fn main() {
-    let version = Version::determine();
+fn main() -> anyhow::Result<()> {
+    let version = Version::determine()?;
 
     println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg);
     println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full);
 
     // Make sure the build script doesn't run too often.
     println!("cargo:rerun-if-changed=Cargo.toml");
+
+    Ok(())
 }
 
 struct Version {
@@ -18,7 +20,7 @@ struct Version {
     full: String,
 }
 impl Version {
-    fn determine() -> Self {
+    fn determine() -> anyhow::Result<Self> {
         let pkg = std::env::var("CARGO_PKG_VERSION").unwrap();
         let commit = git_description();
 
@@ -35,7 +37,7 @@ impl Version {
             (None, false) => format!("{pkg} (unreleased)"),
         };
 
-        Self { pkg, full }
+        Ok(Self { pkg, full })
     }
 }
 
