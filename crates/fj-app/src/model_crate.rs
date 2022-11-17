@@ -1,8 +1,6 @@
 use std::{fs, path::Path};
 use tar::Archive;
 
-static NEW_MODEL_TEMPLATE: &str = "star";
-
 static NEW_MODEL_TAR: &[u8] =
     include_bytes!(concat!(env!("OUT_DIR"), "/new_model.tar"));
 
@@ -22,11 +20,11 @@ fn postprocess_model_files(
         &path.join("Cargo.toml"),
         [
             (
-                format!("name = \"{NEW_MODEL_TEMPLATE}\""),
+                "name = \"model-template\"".to_string(),
                 format!("name = \"{model_name}\""),
             ),
             (
-                r#"path = "../../crates/fj""#.to_owned(),
+                r#"path = "../../fj""#.to_owned(),
                 ["version = \"", &fj::version::VERSION_PKG.to_string(), "\""]
                     .concat(),
             ),

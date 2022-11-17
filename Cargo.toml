@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crates/fj",
     "crates/fj-app",
+    "crates/fj-app/model-template",
     "crates/fj-export",
     "crates/fj-host",
     "crates/fj-interop",
