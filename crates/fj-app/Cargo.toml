@@ -10,14 +10,6 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
-[build-dependencies.ignore]
-version = "0.4.18"
-default-features = false
-
-[build-dependencies.tar]
-version = "0.4.35"
-default-features = false
-
 [dependencies]
 anyhow = "1.0.66"
 fj.workspace = true
@@ -46,7 +38,3 @@ features = ["derive"]
 [dependencies.tracing-subscriber]
 version = "0.3.16"
 features = ["env-filter", "fmt"]
-
-[dependencies.tar]
-version = "0.4.35"
-default-features = false
