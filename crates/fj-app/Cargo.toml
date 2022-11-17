@@ -29,6 +29,7 @@ fj-math.workspace = true
 fj-operations.workspace = true
 fj-viewer.workspace = true
 fj-window.workspace = true
+include_dir = "0.7.3"
 
 [dependencies.clap]
 version = "4.0.23"
