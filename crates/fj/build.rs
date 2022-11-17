@@ -6,7 +6,7 @@ use std::{
 fn main() {
     let version = Version::determine();
 
-    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg_version);
+    println!("cargo:rustc-env=FJ_VERSION_PKG={}", version.pkg);
     println!("cargo:rustc-env=FJ_VERSION_FULL={}", version.full);
 
     // Make sure the build script doesn't run too often.
@@ -14,12 +14,12 @@ fn main() {
 }
 
 struct Version {
-    pkg_version: String,
+    pkg: String,
     full: String,
 }
 impl Version {
     fn determine() -> Self {
-        let pkg_version = std::env::var("CARGO_PKG_VERSION").unwrap();
+        let pkg = std::env::var("CARGO_PKG_VERSION").unwrap();
         let commit = git_description();
 
         let official_release =
@@ -27,15 +27,15 @@ impl Version {
         println!("cargo:rerun-if-env-changed=RELEASE_DETECTED");
 
         let full = match (commit, official_release) {
-            (Some(commit), true) => format!("{pkg_version} ({commit})"),
+            (Some(commit), true) => format!("{pkg} ({commit})"),
             (Some(commit), false) => {
-                format!("{pkg_version} ({commit}, unreleased)")
+                format!("{pkg} ({commit}, unreleased)")
             }
-            (None, true) => pkg_version.clone(),
-            (None, false) => format!("{pkg_version} (unreleased)"),
+            (None, true) => pkg.clone(),
+            (None, false) => format!("{pkg} (unreleased)"),
         };
 
-        Self { pkg_version, full }
+        Self { pkg, full }
     }
 }
 
