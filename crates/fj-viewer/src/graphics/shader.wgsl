@@ -40,7 +40,7 @@ fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
 
     let angle = acos(dot(light, -in.normal));
-    let f_angle = angle / (pi / 2.0);
+    let f_angle = angle / (pi * 0.75);
 
     let f_normal = max(1.0 - f_angle, 0.0);
 
