@@ -7,12 +7,12 @@ pub fn create(model_name: &str) -> anyhow::Result<()> {
     let path = Path::new(model_name);
     fs::create_dir_all(path)?;
     MODEL_TEMPLATE.extract(path)?;
-    postprocess_model_files(path, model_name)?;
+    post_process_model_files(path, model_name)?;
     println!("Model '{model_name}' created");
     Ok(())
 }
 
-fn postprocess_model_files(
+fn post_process_model_files(
     path: &Path,
     model_name: &str,
 ) -> anyhow::Result<()> {
