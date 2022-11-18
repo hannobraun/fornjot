@@ -10,8 +10,9 @@ pub fn triangulate(
 ) -> Vec<[TriangulationPoint; 3]> {
     use spade::Triangulation as _;
 
-    let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
-        .expect("Inserted invalid values into triangulation");
+    let triangulation =
+        spade::ConstrainedDelaunayTriangulation::<_>::bulk_load(points)
+            .expect("Inserted invalid values into triangulation");
 
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
