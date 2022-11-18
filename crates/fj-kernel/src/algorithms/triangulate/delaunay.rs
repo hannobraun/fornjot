@@ -12,25 +12,24 @@ pub fn triangulate(
 ) -> Vec<[TriangulationPoint; 3]> {
     use spade::Triangulation as _;
 
-    let points: Vec<_> = {
-        let mut points = BTreeSet::new();
+    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
-        for cycle_approx in cycles {
-            points.extend(cycle_approx.points());
+    let mut points = BTreeSet::new();
+
+    for cycle_approx in cycles {
+        for point in cycle_approx.points() {
+            if !points.contains(&point) {
+                triangulation
+                    .insert(TriangulationPoint {
+                        point_surface: point.local_form,
+                        point_global: point.global_form,
+                    })
+                    .expect("Inserted invalid point into triangulation");
+
+                points.insert(point);
+            }
         }
-
-        points
-            .into_iter()
-            .map(|point| TriangulationPoint {
-                point_surface: point.local_form,
-                point_global: point.global_form,
-            })
-            .collect()
-    };
-
-    let triangulation =
-        spade::ConstrainedDelaunayTriangulation::<_>::bulk_load(points)
-            .expect("Inserted invalid values into triangulation");
+    }
 
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
