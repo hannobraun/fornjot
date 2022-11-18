@@ -1,17 +1,48 @@
+use std::collections::BTreeMap;
+
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
-use crate::objects::Handedness;
+use crate::{algorithms::approx::cycle::CycleApprox, objects::Handedness};
 
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(
-    points: Vec<TriangulationPoint>,
+    cycles: impl IntoIterator<Item = CycleApprox>,
     coord_handedness: Handedness,
 ) -> Vec<[TriangulationPoint; 3]> {
     use spade::Triangulation as _;
 
-    let triangulation = spade::DelaunayTriangulation::<_>::bulk_load(points)
-        .expect("Inserted invalid values into triangulation");
+    let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
+
+    let mut points = BTreeMap::new();
+
+    for cycle_approx in cycles {
+        let mut handle_prev = None;
+
+        for point in cycle_approx.points() {
+            let handle = match points.get(&point) {
+                Some(handle) => *handle,
+                None => {
+                    let handle = triangulation
+                        .insert(TriangulationPoint {
+                            point_surface: point.local_form,
+                            point_global: point.global_form,
+                        })
+                        .expect("Inserted invalid point into triangulation");
+
+                    points.insert(point, handle);
+
+                    handle
+                }
+            };
+
+            if let Some(handle_prev) = handle_prev {
+                triangulation.add_constraint(handle_prev, handle);
+            }
+
+            handle_prev = Some(handle);
+        }
+    }
 
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {

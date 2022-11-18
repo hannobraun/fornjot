@@ -6,7 +6,7 @@ mod polygon;
 use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
-use self::{delaunay::TriangulationPoint, polygon::Polygon};
+use self::polygon::Polygon;
 
 use super::approx::{face::FaceApprox, Approx, Tolerance};
 
@@ -44,14 +44,6 @@ where
 
 impl Triangulate for FaceApprox {
     fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
-        let points: Vec<_> = self
-            .points()
-            .into_iter()
-            .map(|point| TriangulationPoint {
-                point_surface: point.local_form,
-                point_global: point.global_form,
-            })
-            .collect();
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
@@ -59,12 +51,13 @@ impl Triangulate for FaceApprox {
                     .into_iter()
                     .map(|point| point.local_form),
             )
-            .with_interiors(self.interiors.into_iter().map(|interior| {
+            .with_interiors(self.interiors.iter().map(|interior| {
                 interior.points().into_iter().map(|point| point.local_form)
             }));
 
+        let cycles = [self.exterior].into_iter().chain(self.interiors);
         let mut triangles =
-            delaunay::triangulate(points, self.coord_handedness);
+            delaunay::triangulate(cycles, self.coord_handedness);
         triangles.retain(|triangle| {
             face_as_polygon
                 .contains_triangle(triangle.map(|point| point.point_surface))
@@ -176,29 +169,26 @@ mod tests {
         Ok(())
     }
 
-    #[ignore]
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        //
-        //                c
-        //               /|
-        //   e          / |
-        //   |\       /   |
-        //   | |     /    |
-        //   | \   /      |
-        //   |  \ /       |
-        //   |   d        |
-        //   a ---------- b
-        //
+        //   e       c
+        //   |\     /|
+        //   \ \   / b
+        //    \ \ / /
+        //     \ d /
+        //      \a/
 
-        let a = [0., 0.];
-        let b = [0.4, 0.];
-        //let b = [0.5, 0.]; // test passes with this change
-        let c = [0.4, 1.0];
+        // Naive Delaunay triangulation will create a triangle (c, d, e), which
+        // is not part of the polygon. The higher-level triangulation will
+        // filter that out, but it will result in missing triangles.
+
+        let a = [0.1, 0.0];
+        let b = [0.2, 0.9];
+        let c = [0.2, 1.0];
         let d = [0.1, 0.1];
-        let e = [0., 0.8];
+        let e = [0.0, 1.0];
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -209,17 +199,15 @@ mod tests {
 
         let triangles = triangulate(face)?;
 
-        let a3 = surface.geometry().point_from_surface_coords(a);
-        let b3 = surface.geometry().point_from_surface_coords(b);
-        let c3 = surface.geometry().point_from_surface_coords(c);
-        let d3 = surface.geometry().point_from_surface_coords(d);
-        let e3 = surface.geometry().point_from_surface_coords(e);
+        let a = surface.geometry().point_from_surface_coords(a);
+        let b = surface.geometry().point_from_surface_coords(b);
+        let c = surface.geometry().point_from_surface_coords(c);
+        let d = surface.geometry().point_from_surface_coords(d);
+        let e = surface.geometry().point_from_surface_coords(e);
 
-        assert!(triangles.contains_triangle([a3, b3, d3]));
-        assert!(triangles.contains_triangle([b3, c3, d3]));
-        assert!(triangles.contains_triangle([a3, d3, e3]));
-
-        assert!(!triangles.contains_triangle([b3, e3, d3]));
+        assert!(triangles.contains_triangle([a, b, d]));
+        assert!(triangles.contains_triangle([a, d, e]));
+        assert!(triangles.contains_triangle([b, c, d]));
 
         Ok(())
     }
