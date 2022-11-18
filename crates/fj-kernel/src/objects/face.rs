@@ -30,8 +30,8 @@ use crate::{
 /// means that all [`HalfEdge`]s that bound a `Face` have the interior of the
 /// face on their left side (on the face's front side).
 ///
-/// [`HalfEdge`]: super::HalfEdge
-/// [`Shell`]: super::Shell
+/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     exterior: Handle<Cycle>,
