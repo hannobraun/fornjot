@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::BTreeMap;
 
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
@@ -14,20 +14,33 @@ pub fn triangulate(
 
     let mut triangulation = spade::ConstrainedDelaunayTriangulation::<_>::new();
 
-    let mut points = BTreeSet::new();
+    let mut points = BTreeMap::new();
 
     for cycle_approx in cycles {
-        for point in cycle_approx.points() {
-            if !points.contains(&point) {
-                triangulation
-                    .insert(TriangulationPoint {
-                        point_surface: point.local_form,
-                        point_global: point.global_form,
-                    })
-                    .expect("Inserted invalid point into triangulation");
+        let mut handle_prev = None;
 
-                points.insert(point);
+        for point in cycle_approx.points() {
+            let handle = match points.get(&point) {
+                Some(handle) => *handle,
+                None => {
+                    let handle = triangulation
+                        .insert(TriangulationPoint {
+                            point_surface: point.local_form,
+                            point_global: point.global_form,
+                        })
+                        .expect("Inserted invalid point into triangulation");
+
+                    points.insert(point, handle);
+
+                    handle
+                }
+            };
+
+            if let Some(handle_prev) = handle_prev {
+                triangulation.add_constraint(handle_prev, handle);
             }
+
+            handle_prev = Some(handle);
         }
     }
 

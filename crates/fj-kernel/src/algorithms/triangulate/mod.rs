@@ -169,7 +169,6 @@ mod tests {
         Ok(())
     }
 
-    #[ignore]
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
         let objects = Objects::new();
