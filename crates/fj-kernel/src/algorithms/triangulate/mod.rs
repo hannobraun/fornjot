@@ -3,12 +3,10 @@
 mod delaunay;
 mod polygon;
 
-use std::collections::BTreeSet;
-
 use fj_interop::mesh::Mesh;
 use fj_math::Point;
 
-use self::{delaunay::TriangulationPoint, polygon::Polygon};
+use self::polygon::Polygon;
 
 use super::approx::{face::FaceApprox, Approx, Tolerance};
 
@@ -46,23 +44,6 @@ where
 
 impl Triangulate for FaceApprox {
     fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
-        let points: Vec<_> = {
-            let mut points = BTreeSet::new();
-
-            points.extend(self.exterior.points());
-
-            for cycle_approx in &self.interiors {
-                points.extend(cycle_approx.points());
-            }
-
-            points
-                .into_iter()
-                .map(|point| TriangulationPoint {
-                    point_surface: point.local_form,
-                    point_global: point.global_form,
-                })
-                .collect()
-        };
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
@@ -74,8 +55,9 @@ impl Triangulate for FaceApprox {
                 interior.points().into_iter().map(|point| point.local_form)
             }));
 
+        let cycles = [self.exterior].into_iter().chain(self.interiors);
         let mut triangles =
-            delaunay::triangulate(points, self.coord_handedness);
+            delaunay::triangulate(cycles, self.coord_handedness);
         triangles.retain(|triangle| {
             face_as_polygon
                 .contains_triangle(triangle.map(|point| point.point_surface))
