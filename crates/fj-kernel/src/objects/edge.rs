@@ -2,10 +2,9 @@ use std::fmt;
 
 use crate::{
     get::Get,
+    objects::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
-
-use super::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex};
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

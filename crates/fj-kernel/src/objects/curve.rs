@@ -1,10 +1,9 @@
 use crate::{
     geometry::path::SurfacePath,
     get::Get,
+    objects::Surface,
     storage::{Handle, HandleWrapper},
 };
-
-use super::Surface;
 
 /// A curve, defined in local surface coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

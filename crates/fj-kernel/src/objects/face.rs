@@ -3,9 +3,10 @@ use std::collections::{btree_set, BTreeSet};
 use fj_interop::mesh::Color;
 use fj_math::Winding;
 
-use crate::storage::Handle;
-
-use super::{Cycle, Surface};
+use crate::{
+    objects::{Cycle, Surface},
+    storage::Handle,
+};
 
 /// A face of a shape
 ///
