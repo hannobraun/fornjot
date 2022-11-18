@@ -184,18 +184,35 @@ impl Circle {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
 pub struct PolyChain {
-    points: ffi_safe::Vec<[f64; 2]>,
+    segments: ffi_safe::Vec<SketchSegment>,
 }
 
 impl PolyChain {
     /// Construct an instance from a list of points
     pub fn from_points(points: Vec<[f64; 2]>) -> Self {
-        let points = points.into();
-        Self { points }
+        let points = points
+            .into_iter()
+            .map(|point| SketchSegment::LineTo { point })
+            .collect();
+        Self { segments: points }
     }
 
     /// Return the points that define the polygonal chain
-    pub fn to_points(&self) -> Vec<[f64; 2]> {
-        self.points.clone().into()
+    pub fn to_segments(&self) -> Vec<SketchSegment> {
+        self.segments.clone().into()
     }
+}
+
+/// A segment of a sketch
+///
+/// Each segment starts at the previous point of the sketch.
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(C)]
+pub enum SketchSegment {
+    /// A line to a point
+    LineTo {
+        /// The destination point of the line
+        point: [f64; 2],
+    },
 }

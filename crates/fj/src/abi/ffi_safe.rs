@@ -78,6 +78,12 @@ impl<T: Copy> From<Vec<T>> for Box<[T]> {
     }
 }
 
+impl<T> Default for Vec<T> {
+    fn default() -> Self {
+        std::vec::Vec::default().into()
+    }
+}
+
 impl<T> FromIterator<T> for Vec<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let vec: std::vec::Vec<T> = iter.into_iter().collect();
