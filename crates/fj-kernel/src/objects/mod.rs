@@ -73,17 +73,9 @@
 //! [`Handle`]: crate::storage::Handle
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
-mod curve;
-mod cycle;
-mod edge;
-mod face;
-mod shell;
-mod sketch;
-mod solid;
-mod surface;
-mod vertex;
+mod full;
 
-pub use self::{
+pub use self::full::{
     curve::{Curve, GlobalCurve},
     cycle::{Cycle, HalfEdgesOfCycle},
     edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
