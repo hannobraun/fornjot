@@ -74,6 +74,7 @@
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
 mod full;
+mod object;
 mod stores;
 
 pub use self::{
@@ -88,6 +89,7 @@ pub use self::{
         surface::Surface,
         vertex::{GlobalVertex, SurfaceVertex, Vertex},
     },
+    object::{Bare, BehindHandle, Form, Object, WithHandle},
     stores::{
         Curves, Cycles, Faces, GlobalCurves, GlobalEdges, GlobalVertices,
         HalfEdges, Objects, Shells, Sketches, Solids, SurfaceVertices,
