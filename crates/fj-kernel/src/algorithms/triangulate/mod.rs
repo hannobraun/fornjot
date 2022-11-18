@@ -70,7 +70,7 @@ impl Triangulate for FaceApprox {
                     .into_iter()
                     .map(|point| point.local_form),
             )
-            .with_interiors(self.interiors.into_iter().map(|interior| {
+            .with_interiors(self.interiors.iter().map(|interior| {
                 interior.points().into_iter().map(|point| point.local_form)
             }));
 
