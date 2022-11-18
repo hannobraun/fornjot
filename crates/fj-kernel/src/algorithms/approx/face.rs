@@ -34,6 +34,7 @@ impl Approx for &FaceSet {
         let min_distance = ValidationConfig::default().distinct_min_distance;
         let mut all_points: BTreeSet<ApproxPoint<2>> = BTreeSet::new();
 
+        // Run some validation code on the approximation.
         for approx in &approx {
             let approx: &FaceApprox = approx;
 
