@@ -1,13 +1,15 @@
 use crate::{
+    insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
-        Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
+        Objects, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
     storage::Handle,
+    validate::{Validate, ValidationError},
 };
 
 macro_rules! object {
-    ($($ty:ident, $name:expr;)*) => {
+    ($($ty:ident, $name:expr, $store:ident;)*) => {
         /// An object
         ///
         /// This enum is generic over the form that the object takes. An
@@ -19,6 +21,29 @@ macro_rules! object {
                 #[doc = concat!("A ", $name)]
                 $ty(F::Form<$ty>),
             )*
+        }
+
+        impl Object<WithHandle> {
+            /// Insert the object into its respective store
+            pub fn insert(
+                self,
+                objects: &Objects,
+            ) -> Result<Object<BehindHandle>, ValidationError>
+            where
+                $(
+                    crate::objects::$ty: Insert,
+                    ValidationError: From<<$ty as Validate>::Error>,
+                )*
+            {
+                match self {
+                    $(
+                        Self::$ty((handle, object)) => {
+                            objects.$store.insert(handle.clone(), object)?;
+                            Ok(handle.into())
+                        }
+                    )*
+                }
+            }
         }
 
         $(
@@ -44,19 +69,19 @@ macro_rules! object {
 }
 
 object!(
-    Curve, "curve";
-    Cycle, "cycle";
-    Face, "face";
-    GlobalCurve, "global curve";
-    GlobalEdge, "global edge";
-    GlobalVertex, "global vertex";
-    HalfEdge, "half-edge";
-    Shell, "shell";
-    Sketch, "sketch";
-    Solid, "solid";
-    Surface, "surface";
-    SurfaceVertex, "surface vertex";
-    Vertex, "vertex";
+    Curve, "curve", curves;
+    Cycle, "cycle", cycles;
+    Face, "face", faces;
+    GlobalCurve, "global curve", global_curves;
+    GlobalEdge, "global edge", global_edges;
+    GlobalVertex, "global vertex", global_vertices;
+    HalfEdge, "half-edge", half_edges;
+    Shell, "shell", shells;
+    Sketch, "sketch", sketches;
+    Solid, "solid", solids;
+    Surface, "surface", surfaces;
+    SurfaceVertex, "surface vertex", surface_vertices;
+    Vertex, "vertex", vertices;
 );
 
 /// The form that an object can take
