@@ -5,7 +5,7 @@
 //! 1. No limitations on performance.
 //! 2. Best possible convenience.
 //!
-//! Please note that I'm deliberately saving "no limitations" on performance. So
+//! Please note that I'm deliberately saying "no limitations" on performance. So
 //! far, performance has not been a priority, so this might not be that fast.
 //! But by having a custom data structure, we should be able to make performance
 //! as good as we need it, within the limits of the practical.
