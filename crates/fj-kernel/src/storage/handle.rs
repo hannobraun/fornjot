@@ -74,7 +74,7 @@ impl<T> Deref for Handle<T> {
         // which I've run successfully under Miri.
         let cell = unsafe { &*self.ptr };
 
-        // Can only happen, if the object has been reserved, but the reservation
+        // Can only panic, if the object has been reserved, but the reservation
         // was never completed.
         cell.as_ref()
             .expect("Handle references non-existing object")
