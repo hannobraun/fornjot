@@ -44,6 +44,12 @@ impl<S: State> Service<S> {
     ///
     /// The command is executed synchronously. When this method returns, the
     /// state has been updated and any events have been logged.
+    // TASK: It's quite possible that the `&mut self` here will turn into a huge
+    //       pain very quickly. If so, we can turn it into a `&self` using
+    //       interior mutability. Conceptually, this method is not much
+    //       different from sending a message to another task/thread, and that
+    //       tends to require only `&self` (at least in the standard library and
+    //       crossbeam).
     pub fn execute(&mut self, command: S::Command) {
         let mut events = Vec::new();
         self.state.decide(command, &mut events);

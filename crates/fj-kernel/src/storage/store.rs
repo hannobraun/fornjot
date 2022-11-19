@@ -83,6 +83,8 @@ impl<T> Store<T> {
     /// Panics, if the passed `Handle` does not refer to a reserved slot. This
     /// can only be the case, if the handle has been used to insert an object
     /// before.
+    // TASK: If `Store` is mutated only within an evolver, change this to take
+    //       `&mut self`.
     pub fn insert(&self, handle: Handle<T>, object: T) {
         let mut inner = self.inner.write();
         inner.blocks.insert(handle.index, object);
