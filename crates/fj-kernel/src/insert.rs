@@ -13,7 +13,6 @@ use crate::{
 
 /// Convenience trait to insert objects into their respective stores
 pub trait Insert: Sized + Validate {
-    // TASK: Make error more specific.
     /// Insert the object into its respective store
     fn insert(
         self,

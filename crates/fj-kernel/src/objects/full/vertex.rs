@@ -1,8 +1,10 @@
 use fj_math::Point;
 
-use crate::{get::Get, storage::Handle};
-
-use super::{Curve, GlobalCurve, Surface};
+use crate::{
+    get::Get,
+    objects::{Curve, GlobalCurve, Surface},
+    storage::Handle,
+};
 
 /// A vertex
 ///
