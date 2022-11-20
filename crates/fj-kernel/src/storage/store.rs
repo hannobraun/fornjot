@@ -159,11 +159,11 @@ impl<T> Reservation<T> {
     /// limitations.
     pub fn complete(self, object: T) -> Handle<T> {
         let mut inner = self.store.write();
-        let ptr = inner.blocks.insert(self.index, object);
+        inner.blocks.insert(self.index, object);
 
         Handle {
             store: self.store.clone(),
-            ptr,
+            ptr: self.ptr,
         }
     }
 }
