@@ -50,16 +50,9 @@ impl<T> Blocks<T> {
         ret
     }
 
-    pub fn insert(
-        &mut self,
-        Index {
-            block_index,
-            object_index,
-        }: Index,
-        object: T,
-    ) -> *const Option<T> {
-        let block = &mut self.inner[block_index.0];
-        block.insert(object_index, object)
+    pub fn insert(&mut self, index: Index, object: T) -> *const Option<T> {
+        let block = &mut self.inner[index.block_index.0];
+        block.insert(index.object_index, object)
     }
 
     pub fn get(&self, index: usize) -> Option<&Block<T>> {
