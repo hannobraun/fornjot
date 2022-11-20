@@ -41,15 +41,17 @@ impl<T> Store<T> {
     pub fn new() -> Self {
         let block_size = 16384;
 
-        let inner = Arc::new(RwLock::new(Blocks::new(block_size)));
+        let inner = Arc::new(RwLock::new(StoreInnerInner {
+            blocks: Blocks::new(block_size),
+        }));
 
         Self { inner }
     }
 
     /// Insert an object into the store
     pub fn insert(&self, object: T) -> Handle<T> {
-        let mut blocks = self.inner.write();
-        let ptr = blocks.push(object);
+        let mut inner = self.inner.write();
+        let ptr = inner.blocks.push(object);
 
         Handle {
             store: self.inner.clone(),
@@ -74,8 +76,8 @@ impl<T> Store<T> {
     /// [`Handle`]'s ID in the construction of the object, or to create groups
     /// of objects that reference each other through their [`Handle`]s.
     pub fn reserve(&self) -> Reservation<T> {
-        let mut blocks = self.inner.write();
-        let (index, ptr) = blocks.reserve();
+        let mut inner = self.inner.write();
+        let (index, ptr) = inner.blocks.reserve();
 
         Reservation {
             store: self.inner.clone(),
@@ -112,9 +114,9 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     type Item = Handle<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let blocks = self.store.read();
+        let inner = self.store.read();
 
-        let block = blocks.get(self.next_block)?;
+        let block = inner.blocks.get(self.next_block)?;
         let object = block.get(self.next_object);
 
         self.next_object += 1;
@@ -158,8 +160,8 @@ impl<T> Reservation<T> {
     /// [`Handle`]s you acquired from [`Reservation::handle`] without
     /// limitations.
     pub fn complete(self, object: T) -> Handle<T> {
-        let mut blocks = self.store.write();
-        let ptr = blocks.insert(self.index, object);
+        let mut inner = self.store.write();
+        let ptr = inner.blocks.insert(self.index, object);
 
         Handle {
             store: self.store.clone(),
@@ -168,7 +170,12 @@ impl<T> Reservation<T> {
     }
 }
 
-pub type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
+pub type StoreInner<T> = Arc<RwLock<StoreInnerInner<T>>>;
+
+#[derive(Debug)]
+pub struct StoreInnerInner<T> {
+    blocks: Blocks<T>,
+}
 
 #[cfg(test)]
 mod tests {
