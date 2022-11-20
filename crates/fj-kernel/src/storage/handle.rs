@@ -72,11 +72,11 @@ impl<T> Deref for Handle<T> {
         //
         // Furthermore, all of the code mentioned here is covered by unit tests,
         // which I've run successfully under Miri.
-        let cell = unsafe { &*self.ptr };
+        let slot = unsafe { &*self.ptr };
 
         // Can only panic, if the object has been reserved, but the reservation
         // was never completed.
-        cell.as_ref()
+        slot.as_ref()
             .expect("Handle references non-existing object")
     }
 }

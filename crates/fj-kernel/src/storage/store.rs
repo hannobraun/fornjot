@@ -25,7 +25,10 @@ use std::{marker::PhantomData, sync::Arc};
 
 use parking_lot::RwLock;
 
-use super::{blocks::Blocks, Handle};
+use super::{
+    blocks::{Blocks, Index},
+    Handle,
+};
 
 /// Append-only object storage
 #[derive(Debug)]
@@ -36,16 +39,17 @@ pub struct Store<T> {
 impl<T> Store<T> {
     /// Construct a new instance of `Store`
     pub fn new() -> Self {
-        let block_size = 16384;
-        Self {
-            inner: Arc::new(RwLock::new(Blocks::new(block_size))),
-        }
+        let inner = Arc::new(RwLock::new(StoreInnerInner {
+            blocks: Blocks::new(BLOCK_SIZE),
+        }));
+
+        Self { inner }
     }
 
     /// Insert an object into the store
     pub fn insert(&self, object: T) -> Handle<T> {
-        let mut blocks = self.inner.write();
-        let ptr = blocks.push(object);
+        let mut inner = self.inner.write();
+        let ptr = inner.blocks.push(object);
 
         Handle {
             store: self.inner.clone(),
@@ -70,8 +74,8 @@ impl<T> Store<T> {
     /// [`Handle`]'s ID in the construction of the object, or to create groups
     /// of objects that reference each other through their [`Handle`]s.
     pub fn reserve(&self) -> Reservation<T> {
-        let mut blocks = self.inner.write();
-        let (index, ptr) = blocks.reserve();
+        let mut inner = self.inner.write();
+        let (index, ptr) = inner.blocks.reserve();
 
         Reservation {
             store: self.inner.clone(),
@@ -108,9 +112,9 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     type Item = Handle<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let blocks = self.store.read();
+        let inner = self.store.read();
 
-        let block = blocks.get(self.next_block)?;
+        let block = inner.blocks.get(self.next_block)?;
         let object = block.get(self.next_object);
 
         self.next_object += 1;
@@ -128,10 +132,11 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
 /// A reservation of a slot for an object within a [`Store`]
 ///
 /// See [`Store::reserve`].
+#[derive(Debug)]
 pub struct Reservation<T> {
     store: StoreInner<T>,
-    ptr: *mut Option<T>,
-    index: (usize, usize),
+    ptr: *const Option<T>,
+    index: Index,
 }
 
 impl<T> Reservation<T> {
@@ -153,17 +158,24 @@ impl<T> Reservation<T> {
     /// [`Handle`]s you acquired from [`Reservation::handle`] without
     /// limitations.
     pub fn complete(self, object: T) -> Handle<T> {
-        let mut blocks = self.store.write();
-        let ptr = blocks.insert(self.index, object);
+        let mut inner = self.store.write();
+        inner.blocks.insert(self.index, object);
 
         Handle {
             store: self.store.clone(),
-            ptr,
+            ptr: self.ptr,
         }
     }
 }
 
-pub type StoreInner<T> = Arc<RwLock<Blocks<T>>>;
+pub type StoreInner<T> = Arc<RwLock<StoreInnerInner<T>>>;
+
+#[derive(Debug)]
+pub struct StoreInnerInner<T> {
+    blocks: Blocks<T>,
+}
+
+const BLOCK_SIZE: usize = 16384;
 
 #[cfg(test)]
 mod tests {

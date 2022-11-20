@@ -19,7 +19,7 @@ impl<T> Blocks<T> {
         self.insert(index, object)
     }
 
-    pub fn reserve(&mut self) -> ((usize, usize), *mut Option<T>) {
+    pub fn reserve(&mut self) -> (Index, *const Option<T>) {
         let mut current_block = match self.inner.pop() {
             Some(block) => block,
             None => Block::new(self.block_size),
@@ -28,8 +28,14 @@ impl<T> Blocks<T> {
         let ret = loop {
             match current_block.reserve() {
                 Ok((object_index, ptr)) => {
-                    let block_index = self.inner.len();
-                    break ((block_index, object_index), ptr);
+                    let block_index = BlockIndex(self.inner.len());
+                    break (
+                        Index {
+                            block_index,
+                            object_index,
+                        },
+                        ptr,
+                    );
                 }
                 Err(()) => {
                     // Block is full. Need to create a new one and retry.
@@ -44,13 +50,9 @@ impl<T> Blocks<T> {
         ret
     }
 
-    pub fn insert(
-        &mut self,
-        (block_index, object_index): (usize, usize),
-        object: T,
-    ) -> *const Option<T> {
-        let block = &mut self.inner[block_index];
-        block.insert(object_index, object)
+    pub fn insert(&mut self, index: Index, object: T) -> *const Option<T> {
+        let block = &mut self.inner[index.block_index.0];
+        block.insert(index.object_index, object)
     }
 
     pub fn get(&self, index: usize) -> Option<&Block<T>> {
@@ -66,7 +68,7 @@ impl<T> Blocks<T> {
 #[derive(Debug)]
 pub struct Block<T> {
     objects: Box<[Option<T>]>,
-    next: usize,
+    next: ObjectIndex,
 }
 
 impl<T> Block<T> {
@@ -76,24 +78,31 @@ impl<T> Block<T> {
             .collect::<Vec<Option<T>>>();
         let objects = vec.into_boxed_slice();
 
-        Self { objects, next: 0 }
+        Self {
+            objects,
+            next: ObjectIndex(0),
+        }
     }
 
-    pub fn reserve(&mut self) -> Result<(usize, *mut Option<T>), ()> {
-        if self.next >= self.objects.len() {
+    pub fn reserve(&mut self) -> Result<(ObjectIndex, *const Option<T>), ()> {
+        if self.next.0 >= self.objects.len() {
             return Err(());
         }
 
         let index = self.next;
-        let ptr = &mut self.objects[self.next];
-        self.next += 1;
+        let ptr = &mut self.objects[self.next.0];
+        self.next.0 += 1;
 
         Ok((index, ptr))
     }
 
-    pub fn insert(&mut self, index: usize, object: T) -> *const Option<T> {
-        self.objects[index] = Some(object);
-        &self.objects[index]
+    pub fn insert(
+        &mut self,
+        index: ObjectIndex,
+        object: T,
+    ) -> *const Option<T> {
+        self.objects[index.0] = Some(object);
+        &self.objects[index.0]
     }
 
     pub fn get(&self, index: usize) -> &Option<T> {
@@ -101,7 +110,7 @@ impl<T> Block<T> {
     }
 
     pub fn len(&self) -> usize {
-        self.next
+        self.next.0
     }
 
     #[cfg(test)]
@@ -119,6 +128,18 @@ impl<T> Block<T> {
         })
     }
 }
+
+#[derive(Clone, Copy, Debug)]
+pub struct Index {
+    block_index: BlockIndex,
+    object_index: ObjectIndex,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct BlockIndex(usize);
+
+#[derive(Clone, Copy, Debug)]
+pub struct ObjectIndex(usize);
 
 #[cfg(test)]
 mod tests {
