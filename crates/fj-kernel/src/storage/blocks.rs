@@ -19,7 +19,7 @@ impl<T> Blocks<T> {
         self.insert(index, object)
     }
 
-    pub fn reserve(&mut self) -> (Index, *mut Option<T>) {
+    pub fn reserve(&mut self) -> (Index, *const Option<T>) {
         let mut current_block = match self.inner.pop() {
             Some(block) => block,
             None => Block::new(self.block_size),
@@ -84,7 +84,7 @@ impl<T> Block<T> {
         }
     }
 
-    pub fn reserve(&mut self) -> Result<(ObjectIndex, *mut Option<T>), ()> {
+    pub fn reserve(&mut self) -> Result<(ObjectIndex, *const Option<T>), ()> {
         if self.next.0 >= self.objects.len() {
             return Err(());
         }

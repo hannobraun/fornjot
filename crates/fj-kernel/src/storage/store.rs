@@ -137,7 +137,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
 #[derive(Debug)]
 pub struct Reservation<T> {
     store: StoreInner<T>,
-    ptr: *mut Option<T>,
+    ptr: *const Option<T>,
     index: Index,
 }
 
