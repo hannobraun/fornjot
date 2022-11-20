@@ -26,7 +26,7 @@ use std::{marker::PhantomData, sync::Arc};
 use parking_lot::RwLock;
 
 use super::{
-    blocks::{BlockIndex, Blocks, ObjectIndex},
+    blocks::{Blocks, Index},
     Handle,
 };
 
@@ -136,7 +136,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
 pub struct Reservation<T> {
     store: StoreInner<T>,
     ptr: *mut Option<T>,
-    index: (BlockIndex, ObjectIndex),
+    index: Index,
 }
 
 impl<T> Reservation<T> {
