@@ -37,9 +37,10 @@ impl<T> Store<T> {
     /// Construct a new instance of `Store`
     pub fn new() -> Self {
         let block_size = 16384;
-        Self {
-            inner: Arc::new(RwLock::new(Blocks::new(block_size))),
-        }
+
+        let inner = Arc::new(RwLock::new(Blocks::new(block_size)));
+
+        Self { inner }
     }
 
     /// Insert an object into the store
