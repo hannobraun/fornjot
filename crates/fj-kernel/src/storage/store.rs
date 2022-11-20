@@ -129,6 +129,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
 /// A reservation of a slot for an object within a [`Store`]
 ///
 /// See [`Store::reserve`].
+#[derive(Debug)]
 pub struct Reservation<T> {
     store: StoreInner<T>,
     ptr: *mut Option<T>,
