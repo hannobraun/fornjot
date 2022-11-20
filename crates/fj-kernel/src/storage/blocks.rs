@@ -19,7 +19,7 @@ impl<T> Blocks<T> {
         self.insert(index, object)
     }
 
-    pub fn reserve(&mut self) -> ((usize, ObjectIndex), *mut Option<T>) {
+    pub fn reserve(&mut self) -> ((BlockIndex, ObjectIndex), *mut Option<T>) {
         let mut current_block = match self.inner.pop() {
             Some(block) => block,
             None => Block::new(self.block_size),
@@ -28,7 +28,7 @@ impl<T> Blocks<T> {
         let ret = loop {
             match current_block.reserve() {
                 Ok((object_index, ptr)) => {
-                    let block_index = self.inner.len();
+                    let block_index = BlockIndex(self.inner.len());
                     break ((block_index, object_index), ptr);
                 }
                 Err(()) => {
@@ -46,10 +46,10 @@ impl<T> Blocks<T> {
 
     pub fn insert(
         &mut self,
-        (block_index, object_index): (usize, ObjectIndex),
+        (block_index, object_index): (BlockIndex, ObjectIndex),
         object: T,
     ) -> *const Option<T> {
-        let block = &mut self.inner[block_index];
+        let block = &mut self.inner[block_index.0];
         block.insert(object_index, object)
     }
 
@@ -126,6 +126,9 @@ impl<T> Block<T> {
         })
     }
 }
+
+#[derive(Clone, Copy, Debug)]
+pub struct BlockIndex(usize);
 
 #[derive(Clone, Copy, Debug)]
 pub struct ObjectIndex(usize);
