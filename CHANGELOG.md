@@ -1,5 +1,54 @@
 # Fornjot - Changelog
 
+## v0.25.0 (2022-11-21)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fix potential soundness hole in version comparison ([#1358])
+- Fix error when `cargo install`ing `fj-app` from `crates.io` ([#1364], [#1365])
+- Soften shading ([#1366])
+- Improve output of `--version` ([#1367])
+- Fix triangulation of sharp, concave faces ([#1369])
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Add infrastructure for abstracting over access to referenced objects ([#1359])
+- Continue cleanup of partial object API ([#1360], [#1361], [#1362])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1345], [#1347], [#1348], [#1355])
+- Update release procedure ([#1363])
+- Make some smaller code cleanups ([#1368], [#1370], [#1371])
+
+[#1345]: https://github.com/hannobraun/Fornjot/pull/1345
+[#1347]: https://github.com/hannobraun/Fornjot/pull/1347
+[#1348]: https://github.com/hannobraun/Fornjot/pull/1348
+[#1355]: https://github.com/hannobraun/Fornjot/pull/1355
+[#1358]: https://github.com/hannobraun/Fornjot/pull/1358
+[#1359]: https://github.com/hannobraun/Fornjot/pull/1359
+[#1360]: https://github.com/hannobraun/Fornjot/pull/1360
+[#1361]: https://github.com/hannobraun/Fornjot/pull/1361
+[#1362]: https://github.com/hannobraun/Fornjot/pull/1362
+[#1363]: https://github.com/hannobraun/Fornjot/pull/1363
+[#1364]: https://github.com/hannobraun/Fornjot/pull/1364
+[#1365]: https://github.com/hannobraun/Fornjot/pull/1365
+[#1366]: https://github.com/hannobraun/Fornjot/pull/1366
+[#1367]: https://github.com/hannobraun/Fornjot/pull/1367
+[#1368]: https://github.com/hannobraun/Fornjot/pull/1368
+[#1369]: https://github.com/hannobraun/Fornjot/pull/1369
+[#1370]: https://github.com/hannobraun/Fornjot/pull/1370
+[#1371]: https://github.com/hannobraun/Fornjot/pull/1371
+
+
 ## v0.24.0 (2022-11-14)
 
 ### End-user improvements
