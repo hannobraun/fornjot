@@ -12,10 +12,6 @@ pub struct Args {
     /// The model to open
     pub model: Option<PathBuf>,
 
-    /// Create a new model with this name
-    #[arg(short, long, value_name = "MODEL_NAME")]
-    pub new: Option<String>,
-
     /// Export model to this path
     #[arg(short, long, value_name = "PATH")]
     pub export: Option<PathBuf>,
