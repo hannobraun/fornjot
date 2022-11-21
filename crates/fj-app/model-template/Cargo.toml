@@ -1,7 +1,0 @@
-[package]
-name = "model-template"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies.fj]
-path = "../../fj"
