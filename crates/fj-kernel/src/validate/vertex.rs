@@ -261,9 +261,7 @@ mod tests {
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
-            objects
-                .global_vertices
-                .insert(GlobalVertex::from_position([1., 0., 0.]))?,
+            GlobalVertex::from_position([1., 0., 0.]).insert(&objects)?,
         );
 
         assert!(valid.validate().is_ok());

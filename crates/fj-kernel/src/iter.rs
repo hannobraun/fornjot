@@ -478,9 +478,8 @@ mod tests {
     fn global_vertex() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let object = objects
-            .global_vertices
-            .insert(GlobalVertex::from_position([0., 0., 0.]))?;
+        let object =
+            GlobalVertex::from_position([0., 0., 0.]).insert(&objects)?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -623,9 +622,8 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&objects)?.insert(&objects)?;
-        let global_vertex = objects
-            .global_vertices
-            .insert(GlobalVertex::from_position([0., 0., 0.]))?;
+        let global_vertex =
+            GlobalVertex::from_position([0., 0., 0.]).insert(&objects)?;
         let surface_vertex = objects
             .surface_vertices
             .insert(SurfaceVertex::new([0., 0.], surface, global_vertex))?;
