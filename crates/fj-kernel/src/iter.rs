@@ -624,9 +624,9 @@ mod tests {
         let curve = curve.build(&objects)?.insert(&objects)?;
         let global_vertex =
             GlobalVertex::from_position([0., 0., 0.]).insert(&objects)?;
-        let surface_vertex = objects
-            .surface_vertices
-            .insert(SurfaceVertex::new([0., 0.], surface, global_vertex))?;
+        let surface_vertex =
+            SurfaceVertex::new([0., 0.], surface, global_vertex)
+                .insert(&objects)?;
         let object =
             objects
                 .vertices
