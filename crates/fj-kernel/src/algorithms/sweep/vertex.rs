@@ -4,6 +4,7 @@ use try_insert_ext::EntryInsertExt;
 
 use crate::{
     geometry::path::SurfacePath,
+    insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
@@ -90,11 +91,12 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let curve = {
             let line = Line::from_points(points_surface);
 
-            objects.curves.insert(Curve::new(
+            Curve::new(
                 surface.clone(),
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
-            ))?
+            )
+            .insert(objects)?
         };
 
         let vertices_surface = {
