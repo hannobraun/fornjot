@@ -112,11 +112,12 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = vertices_surface.try_map_ext(|surface_form| {
-            objects.vertices.insert(Vertex::new(
+            Vertex::new(
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
-            ))
+            )
+            .insert(objects)
         })?;
 
         // And finally, creating the output `Edge` is just a matter of
