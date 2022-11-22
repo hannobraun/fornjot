@@ -3,6 +3,7 @@ use std::ops::Deref;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::sweep::Sweep,
+    insert::Insert,
     objects::{Objects, Solid},
     validate::ValidationError,
 };
@@ -19,7 +20,7 @@ impl Shape for fj::Sweep {
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let sketch = self.shape().compute_brep(objects, debug_info)?;
-        let sketch = objects.sketches.insert(sketch)?;
+        let sketch = sketch.insert(objects)?;
 
         let path = Vector::from(self.path());
 

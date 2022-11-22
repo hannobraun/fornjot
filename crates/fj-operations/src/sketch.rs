@@ -35,7 +35,7 @@ impl Shape for fj::Sketch {
                         .build(objects)?
                         .insert(objects)?
                 };
-                let cycle = objects.cycles.insert(Cycle::new([half_edge]))?;
+                let cycle = Cycle::new([half_edge]).insert(objects)?;
 
                 Face::partial()
                     .with_exterior(cycle)
