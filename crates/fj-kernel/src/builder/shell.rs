@@ -341,6 +341,6 @@ impl<'a> ShellBuilder<'a> {
 
     /// Build the [`Shell`]
     pub fn build(self) -> Handle<Shell> {
-        self.objects.shells.insert(Shell::new(self.faces)).unwrap()
+        Shell::new(self.faces).insert(self.objects).unwrap()
     }
 }
