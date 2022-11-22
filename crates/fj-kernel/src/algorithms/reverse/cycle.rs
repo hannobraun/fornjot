@@ -1,4 +1,5 @@
 use crate::{
+    insert::Insert,
     objects::{Cycle, Objects},
     storage::Handle,
     validate::ValidationError,
@@ -16,6 +17,6 @@ impl Reverse for Handle<Cycle> {
 
         edges.reverse();
 
-        Ok(objects.cycles.insert(Cycle::new(edges))?)
+        Ok(Cycle::new(edges).insert(objects)?)
     }
 }

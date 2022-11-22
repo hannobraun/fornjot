@@ -180,7 +180,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 i += 1;
             }
 
-            objects.cycles.insert(Cycle::new(edges))?
+            Cycle::new(edges).insert(objects)?
         };
 
         Ok(Face::partial()
@@ -295,9 +295,8 @@ mod tests {
                     .reverse(&objects)?
             };
 
-            let cycle = objects
-                .cycles
-                .insert(Cycle::new([bottom, side_up, top, side_down]))?;
+            let cycle = Cycle::new([bottom, side_up, top, side_down])
+                .insert(&objects)?;
 
             Face::partial()
                 .with_exterior(cycle)

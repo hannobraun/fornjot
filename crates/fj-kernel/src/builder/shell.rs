@@ -325,9 +325,7 @@ impl<'a> ShellBuilder<'a> {
             }
 
             Face::partial()
-                .with_exterior(
-                    self.objects.cycles.insert(Cycle::new(edges)).unwrap(),
-                )
+                .with_exterior(Cycle::new(edges).insert(self.objects).unwrap())
                 .build(self.objects)
                 .unwrap()
                 .insert(self.objects)
