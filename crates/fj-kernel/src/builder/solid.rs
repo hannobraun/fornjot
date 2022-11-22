@@ -3,6 +3,7 @@ use std::collections::BTreeSet;
 use fj_math::Scalar;
 
 use crate::{
+    insert::Insert,
     objects::{Objects, Shell, Solid},
     storage::Handle,
 };
@@ -42,6 +43,6 @@ impl<'a> SolidBuilder<'a> {
 
     /// Build the [`Solid`]
     pub fn build(self) -> Handle<Solid> {
-        self.objects.solids.insert(Solid::new(self.shells)).unwrap()
+        Solid::new(self.shells).insert(self.objects).unwrap()
     }
 }
