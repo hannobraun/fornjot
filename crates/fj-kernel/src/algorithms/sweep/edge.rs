@@ -53,11 +53,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         points_curve_and_surface,
                     ));
 
-                objects.curves.insert(Curve::new(
+                Curve::new(
                     surface.clone(),
                     path,
                     edge.curve().global_form().clone(),
-                ))?
+                )
+                .insert(objects)?
             };
 
             let vertices = {
@@ -71,26 +72,24 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     .collect::<[_; 2]>()
                     .try_map_ext(
                     |(vertex, point_surface)| -> Result<_, ValidationError> {
-                        let surface_vertex = objects.surface_vertices.insert(
-                            SurfaceVertex::new(
-                                point_surface,
-                                surface.clone(),
-                                vertex.global_form().clone(),
-                            ),
-                        )?;
+                        let surface_vertex = SurfaceVertex::new(
+                            point_surface,
+                            surface.clone(),
+                            vertex.global_form().clone(),
+                        )
+                        .insert(objects)?;
 
-                        Ok(objects.vertices.insert(Vertex::new(
+                        Ok(Vertex::new(
                             vertex.position(),
                             curve.clone(),
                             surface_vertex,
-                        ))?)
+                        ).insert(objects)?)
                     },
                 )?
             };
 
-            objects
-                .half_edges
-                .insert(HalfEdge::new(vertices, edge.global_form().clone()))?
+            HalfEdge::new(vertices, edge.global_form().clone())
+                .insert(objects)?
         };
 
         let side_edges =
@@ -126,15 +125,16 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         points_curve_and_surface,
                     ));
 
-                objects.curves.insert(Curve::new(surface, path, global))?
+                Curve::new(surface, path, global).insert(objects)?
             };
 
-            let global = objects.global_edges.insert(GlobalEdge::new(
+            let global = GlobalEdge::new(
                 curve.global_form().clone(),
                 surface_vertices
                     .clone()
                     .map(|surface_vertex| surface_vertex.global_form().clone()),
-            ))?;
+            )
+            .insert(objects)?;
 
             let vertices = bottom_vertices
                 .each_ref_ext()
@@ -142,14 +142,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .zip(surface_vertices)
                 .collect::<[_; 2]>()
                 .try_map_ext(|(vertex, surface_form)| {
-                    objects.vertices.insert(Vertex::new(
-                        vertex.position(),
-                        curve.clone(),
-                        surface_form,
-                    ))
+                    Vertex::new(vertex.position(), curve.clone(), surface_form)
+                        .insert(objects)
                 })?;
 
-            objects.half_edges.insert(HalfEdge::new(vertices, global))?
+            HalfEdge::new(vertices, global).insert(objects)?
         };
 
         let cycle = {
@@ -179,7 +176,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 i += 1;
             }
 
-            objects.cycles.insert(Cycle::new(edges))?
+            Cycle::new(edges).insert(objects)?
         };
 
         Ok(Face::partial()
@@ -294,9 +291,8 @@ mod tests {
                     .reverse(&objects)?
             };
 
-            let cycle = objects
-                .cycles
-                .insert(Cycle::new([bottom, side_up, top, side_down]))?;
+            let cycle = Cycle::new([bottom, side_up, top, side_down])
+                .insert(&objects)?;
 
             Face::partial()
                 .with_exterior(cycle)

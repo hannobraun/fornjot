@@ -246,7 +246,7 @@ mod tests {
             .build(&objects)?;
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.curve = objects.global_curves.insert(GlobalCurve)?.into();
+            tmp.curve = GlobalCurve.insert(&objects)?.into();
             tmp.build(&objects)?.insert(&objects)?
         });
 
