@@ -139,7 +139,7 @@ impl Sweep for Handle<GlobalVertex> {
         cache: &mut SweepCache,
         objects: &Objects,
     ) -> Result<Self::Swept, ValidationError> {
-        let curve = objects.global_curves.insert(GlobalCurve)?;
+        let curve = GlobalCurve.insert(objects)?;
 
         let a = self.clone();
         let b = cache

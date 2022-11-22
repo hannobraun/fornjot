@@ -457,7 +457,7 @@ mod tests {
     fn global_curve() -> anyhow::Result<()> {
         let objects = Objects::new();
 
-        let object = objects.global_curves.insert(GlobalCurve)?;
+        let object = GlobalCurve.insert(&objects)?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
