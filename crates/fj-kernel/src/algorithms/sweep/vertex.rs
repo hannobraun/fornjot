@@ -124,9 +124,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        Ok(objects
-            .half_edges
-            .insert(HalfEdge::new(vertices, edge_global))?)
+        Ok(HalfEdge::new(vertices, edge_global).insert(objects)?)
     }
 }
 

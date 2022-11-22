@@ -1,4 +1,5 @@
 use crate::{
+    insert::Insert,
     objects::{HalfEdge, Objects},
     storage::Handle,
     validate::ValidationError,
@@ -13,8 +14,7 @@ impl Reverse for Handle<HalfEdge> {
             [b, a]
         };
 
-        Ok(objects
-            .half_edges
-            .insert(HalfEdge::new(vertices, self.global_form().clone()))?)
+        Ok(HalfEdge::new(vertices, self.global_form().clone())
+            .insert(objects)?)
     }
 }
