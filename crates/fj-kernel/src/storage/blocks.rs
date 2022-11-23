@@ -45,9 +45,9 @@ impl<T> Blocks<T> {
         ret
     }
 
-    pub fn insert(&mut self, index: Index, object: T) -> *const Option<T> {
+    pub fn insert(&mut self, index: Index, object: T) {
         let block = &mut self.inner[index.block_index.0];
-        block.insert(index.object_index, object)
+        block.insert(index.object_index, object);
     }
 
     pub fn get_and_inc(&self, index: &mut Index) -> Option<&Option<T>> {
