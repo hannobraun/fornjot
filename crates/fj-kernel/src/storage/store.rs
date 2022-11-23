@@ -75,23 +75,6 @@ impl<T> Store<T> {
             _a: PhantomData,
         }
     }
-
-    /// Reserve a slot for an object
-    ///
-    /// Returns a [`Reservation`], which can be used to access the [`Handle`] of
-    /// an object that hasn't been added yet. This makes it possible to use the
-    /// [`Handle`]'s ID in the construction of the object, or to create groups
-    /// of objects that reference each other through their [`Handle`]s.
-    pub fn reserve(&self) -> Reservation<T> {
-        let mut inner = self.inner.write();
-        let (index, ptr) = inner.blocks.reserve();
-
-        Reservation {
-            store: self.inner.clone(),
-            index,
-            ptr,
-        }
-    }
 }
 
 impl<T> Default for Store<T> {
@@ -138,45 +121,6 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     }
 }
 
-/// A reservation of a slot for an object within a [`Store`]
-///
-/// See [`Store::reserve`].
-#[derive(Debug)]
-pub struct Reservation<T> {
-    store: StoreInner<T>,
-    ptr: *const Option<T>,
-    index: Index,
-}
-
-impl<T> Reservation<T> {
-    /// Access the [`Handle`] for this reservation
-    ///
-    /// You **must not** dereference the handle to access the object it
-    /// references, until you initialized that object by calling
-    /// [`Reservation::complete`]. Doing otherwise will lead to a panic.
-    pub fn handle(&self) -> Handle<T> {
-        Handle {
-            store: self.store.clone(),
-            ptr: self.ptr,
-        }
-    }
-
-    /// Complete the reservation by providing an object
-    ///
-    /// This method consumes the reservation. After calling it, you can use any
-    /// [`Handle`]s you acquired from [`Reservation::handle`] without
-    /// limitations.
-    pub fn complete(self, object: T) -> Handle<T> {
-        let mut inner = self.store.write();
-        inner.blocks.insert(self.index, object);
-
-        Handle {
-            store: self.store.clone(),
-            ptr: self.ptr,
-        }
-    }
-}
-
 pub type StoreInner<T> = Arc<RwLock<StoreInnerInner<T>>>;
 
 #[derive(Debug)]
@@ -207,26 +151,5 @@ mod tests {
 
         let objects = store.iter().collect::<Vec<_>>();
         assert_eq!(objects, [a, b])
-    }
-
-    #[test]
-    fn reserve() {
-        let store = Store::<i32>::new();
-
-        let a = store.reserve();
-        let b = store.reserve();
-
-        let id_a = a.handle().id();
-        let id_b = b.handle().id();
-        assert_ne!(id_a, id_b);
-
-        let a = a.complete(0);
-        let b = b.complete(1);
-
-        assert_eq!(*a, 0);
-        assert_eq!(*b, 1);
-
-        let objects = store.iter().collect::<Vec<_>>();
-        assert_eq!(objects, [a, b]);
     }
 }
