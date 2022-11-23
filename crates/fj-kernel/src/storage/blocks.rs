@@ -105,8 +105,8 @@ impl<T> Block<T> {
         &self.objects[index.0]
     }
 
-    pub fn get(&self, index: usize) -> &Option<T> {
-        &self.objects[index]
+    pub fn get(&self, index: ObjectIndex) -> &Option<T> {
+        &self.objects[index.0]
     }
 
     pub fn len(&self) -> usize {
@@ -121,7 +121,7 @@ impl<T> Block<T> {
                 return None;
             }
 
-            let object = self.get(i).as_ref()?;
+            let object = self.get(ObjectIndex(i)).as_ref()?;
             i += 1;
 
             Some(object)

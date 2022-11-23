@@ -113,7 +113,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
         let inner = self.store.read();
 
         let block = inner.blocks.get(self.next_index.block_index.0)?;
-        let object = block.get(self.next_index.object_index.0);
+        let object = block.get(self.next_index.object_index);
 
         self.next_index.object_index.0 += 1;
         if self.next_index.object_index.0 >= block.len() {
