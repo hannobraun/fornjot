@@ -63,6 +63,7 @@ impl<T> Store<T> {
 
         Handle {
             store: self.inner.clone(),
+            index,
             ptr,
         }
     }
@@ -106,6 +107,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
         let inner = self.store.read();
 
         loop {
+            let index = self.next_index;
             let ptr = inner.blocks.get_and_inc(&mut self.next_index)?;
 
             if ptr.is_none() {
@@ -115,6 +117,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
 
             return Some(Handle {
                 store: self.store.clone(),
+                index,
                 ptr,
             });
         }
