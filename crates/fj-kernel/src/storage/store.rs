@@ -26,7 +26,7 @@ use std::{marker::PhantomData, sync::Arc};
 use parking_lot::RwLock;
 
 use super::{
-    blocks::{Blocks, Index},
+    blocks::{BlockIndex, Blocks, Index, ObjectIndex},
     Handle,
 };
 
@@ -61,8 +61,10 @@ impl<T> Store<T> {
     pub fn iter(&self) -> Iter<T> {
         Iter {
             store: self.inner.clone(),
-            next_block: 0,
-            next_object: 0,
+            next_index: Index {
+                block_index: BlockIndex(0),
+                object_index: ObjectIndex(0),
+            },
             _a: PhantomData,
         }
     }
@@ -103,8 +105,7 @@ impl<'a, T> IntoIterator for &'a Store<T> {
 /// An iterator over objects in a [`Store`]
 pub struct Iter<'a, T> {
     store: StoreInner<T>,
-    next_block: usize,
-    next_object: usize,
+    next_index: Index,
     _a: PhantomData<&'a ()>,
 }
 
@@ -114,12 +115,12 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.store.read();
 
-        let block = inner.blocks.get(self.next_block)?;
-        let object = block.get(self.next_object);
+        let block = inner.blocks.get(self.next_index.block_index.0)?;
+        let object = block.get(self.next_index.object_index.0);
 
-        self.next_object += 1;
-        if self.next_object >= block.len() {
-            self.next_block += 1;
+        self.next_index.object_index.0 += 1;
+        if self.next_index.object_index.0 >= block.len() {
+            self.next_index.block_index.0 += 1;
         }
 
         Some(Handle {
