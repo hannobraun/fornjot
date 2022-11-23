@@ -38,6 +38,9 @@ pub struct Store<T> {
 
 impl<T> Store<T> {
     /// Construct a new instance of `Store`
+    ///
+    /// Equivalent to calling [`Store::with_block_size`] with a default block
+    /// size.
     pub fn new() -> Self {
         Self::with_block_size(16384)
     }
