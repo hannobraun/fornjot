@@ -122,12 +122,19 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.store.read();
 
-        let object = inner.blocks.get_and_inc(&mut self.next_index)?;
+        loop {
+            let object = inner.blocks.get_and_inc(&mut self.next_index)?;
 
-        Some(Handle {
-            store: self.store.clone(),
-            ptr: object,
-        })
+            if object.is_none() {
+                // This is a reserved slot.
+                continue;
+            }
+
+            return Some(Handle {
+                store: self.store.clone(),
+                ptr: object,
+            });
+        }
     }
 }
 
