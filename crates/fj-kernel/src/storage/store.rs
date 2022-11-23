@@ -77,17 +77,10 @@ impl<T> Store<T> {
     }
 
     /// Insert an object into the store
-    pub fn insert(&self, object: T) -> Handle<T> {
+    pub fn insert(&self, handle: Handle<T>, object: T) -> Handle<T> {
         let mut inner = self.inner.write();
-
-        let (index, ptr) = inner.blocks.reserve();
-        inner.blocks.insert(index, object);
-
-        Handle {
-            store: self.inner.clone(),
-            index,
-            ptr,
-        }
+        inner.blocks.insert(handle.index, object);
+        handle
     }
 
     /// Iterate over all objects in this store
@@ -155,14 +148,18 @@ pub struct StoreInnerInner<T> {
 
 #[cfg(test)]
 mod tests {
+    use crate::storage::Handle;
+
     use super::Store;
 
     #[test]
     fn insert_and_handle() {
         let store = Store::with_block_size(1);
 
+        let handle: Handle<i32> = store.reserve();
         let object = 0;
-        let handle = store.insert(object);
+
+        store.insert(handle.clone(), object);
 
         assert_eq!(*handle, object);
     }
@@ -171,8 +168,10 @@ mod tests {
     fn insert_and_iter() {
         let store = Store::with_block_size(1);
 
-        let a = store.insert(0);
-        let b = store.insert(1);
+        let a: Handle<i32> = store.reserve();
+        let b = store.reserve();
+        store.insert(a.clone(), 0);
+        store.insert(b.clone(), 1);
 
         let objects = store.iter().collect::<Vec<_>>();
         assert_eq!(objects, [a, b])

@@ -86,9 +86,13 @@ impl Curves {
     }
 
     /// Insert a [`Curve`] into the store
-    pub fn insert(&self, curve: Curve) -> Result<Handle<Curve>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Curve>,
+        curve: Curve,
+    ) -> Result<Handle<Curve>, Infallible> {
         curve.validate()?;
-        Ok(self.store.insert(curve))
+        Ok(self.store.insert(handle, curve))
     }
 }
 
@@ -107,10 +111,11 @@ impl Cycles {
     /// Insert a [`Cycle`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Cycle>,
         cycle: Cycle,
     ) -> Result<Handle<Cycle>, CycleValidationError> {
         cycle.validate()?;
-        Ok(self.store.insert(cycle))
+        Ok(self.store.insert(handle, cycle))
     }
 }
 
@@ -129,10 +134,11 @@ impl Faces {
     /// Insert a [`Face`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Face>,
         face: Face,
     ) -> Result<Handle<Face>, FaceValidationError> {
         face.validate()?;
-        Ok(self.store.insert(face))
+        Ok(self.store.insert(handle, face))
     }
 }
 
@@ -151,10 +157,11 @@ impl GlobalCurves {
     /// Insert a [`GlobalCurve`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalCurve>,
         global_curve: GlobalCurve,
     ) -> Result<Handle<GlobalCurve>, Infallible> {
         global_curve.validate()?;
-        Ok(self.store.insert(global_curve))
+        Ok(self.store.insert(handle, global_curve))
     }
 }
 
@@ -173,10 +180,11 @@ impl GlobalEdges {
     /// Insert a [`GlobalEdge`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalEdge>,
         global_edge: GlobalEdge,
     ) -> Result<Handle<GlobalEdge>, Infallible> {
         global_edge.validate()?;
-        Ok(self.store.insert(global_edge))
+        Ok(self.store.insert(handle, global_edge))
     }
 }
 
@@ -195,10 +203,11 @@ impl GlobalVertices {
     /// Insert a [`GlobalVertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalVertex>,
         global_vertex: GlobalVertex,
     ) -> Result<Handle<GlobalVertex>, Infallible> {
         global_vertex.validate()?;
-        Ok(self.store.insert(global_vertex))
+        Ok(self.store.insert(handle, global_vertex))
     }
 }
 
@@ -217,10 +226,11 @@ impl HalfEdges {
     /// Insert a [`HalfEdge`] into the store
     pub fn insert(
         &self,
+        handle: Handle<HalfEdge>,
         half_edge: HalfEdge,
     ) -> Result<Handle<HalfEdge>, HalfEdgeValidationError> {
         half_edge.validate()?;
-        Ok(self.store.insert(half_edge))
+        Ok(self.store.insert(handle, half_edge))
     }
 }
 
@@ -237,9 +247,13 @@ impl Shells {
     }
 
     /// Insert a [`Shell`] into the store
-    pub fn insert(&self, shell: Shell) -> Result<Handle<Shell>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Shell>,
+        shell: Shell,
+    ) -> Result<Handle<Shell>, Infallible> {
         shell.validate()?;
-        Ok(self.store.insert(shell))
+        Ok(self.store.insert(handle, shell))
     }
 }
 
@@ -256,9 +270,13 @@ impl Sketches {
     }
 
     /// Insert a [`Sketch`] into the store
-    pub fn insert(&self, sketch: Sketch) -> Result<Handle<Sketch>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Sketch>,
+        sketch: Sketch,
+    ) -> Result<Handle<Sketch>, Infallible> {
         sketch.validate()?;
-        Ok(self.store.insert(sketch))
+        Ok(self.store.insert(handle, sketch))
     }
 }
 
@@ -275,9 +293,13 @@ impl Solids {
     }
 
     /// Insert a [`Solid`] into the store
-    pub fn insert(&self, solid: Solid) -> Result<Handle<Solid>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Solid>,
+        solid: Solid,
+    ) -> Result<Handle<Solid>, Infallible> {
         solid.validate()?;
-        Ok(self.store.insert(solid))
+        Ok(self.store.insert(handle, solid))
     }
 }
 
@@ -296,10 +318,11 @@ impl SurfaceVertices {
     /// Insert a [`SurfaceVertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<SurfaceVertex>,
         surface_vertex: SurfaceVertex,
     ) -> Result<Handle<SurfaceVertex>, SurfaceVertexValidationError> {
         surface_vertex.validate()?;
-        Ok(self.store.insert(surface_vertex))
+        Ok(self.store.insert(handle, surface_vertex))
     }
 }
 
@@ -322,10 +345,11 @@ impl Surfaces {
     /// Insert a [`Surface`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Surface>,
         surface: Surface,
     ) -> Result<Handle<Surface>, Infallible> {
         surface.validate()?;
-        Ok(self.store.insert(surface))
+        Ok(self.store.insert(handle, surface))
     }
 
     /// Access the xy-plane
@@ -346,20 +370,33 @@ impl Surfaces {
 
 impl Default for Surfaces {
     fn default() -> Self {
-        let store = Store::new();
+        let store: Store<Surface> = Store::new();
 
-        let xy_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_y(),
-        }));
-        let xz_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_z(),
-        }));
-        let yz_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::y_axis(),
-            v: Vector::unit_z(),
-        }));
+        let xy_plane = store.reserve();
+        store.insert(
+            xy_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_y(),
+            }),
+        );
+
+        let xz_plane = store.reserve();
+        store.insert(
+            xz_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_z(),
+            }),
+        );
+        let yz_plane = store.reserve();
+        store.insert(
+            yz_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::y_axis(),
+                v: Vector::unit_z(),
+            }),
+        );
 
         Self {
             store,
@@ -385,9 +422,10 @@ impl Vertices {
     /// Insert a [`Vertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Vertex>,
         vertex: Vertex,
     ) -> Result<Handle<Vertex>, VertexValidationError> {
         vertex.validate()?;
-        Ok(self.store.insert(vertex))
+        Ok(self.store.insert(handle, vertex))
     }
 }
