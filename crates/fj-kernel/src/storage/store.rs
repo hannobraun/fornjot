@@ -39,7 +39,7 @@ pub struct Store<T> {
 impl<T> Store<T> {
     /// Construct a new instance of `Store`
     pub fn new() -> Self {
-        Self::with_block_size(BLOCK_SIZE)
+        Self::with_block_size(16384)
     }
 
     /// Construct a new instance of `Store` using the provided block size
@@ -171,8 +171,6 @@ pub type StoreInner<T> = Arc<RwLock<StoreInnerInner<T>>>;
 pub struct StoreInnerInner<T> {
     blocks: Blocks<T>,
 }
-
-const BLOCK_SIZE: usize = 16384;
 
 #[cfg(test)]
 mod tests {
