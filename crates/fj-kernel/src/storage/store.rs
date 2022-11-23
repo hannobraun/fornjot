@@ -39,8 +39,13 @@ pub struct Store<T> {
 impl<T> Store<T> {
     /// Construct a new instance of `Store`
     pub fn new() -> Self {
+        Self::with_block_size(BLOCK_SIZE)
+    }
+
+    /// Construct a new instance of `Store` using the provided block size
+    pub fn with_block_size(block_size: usize) -> Self {
         let inner = Arc::new(RwLock::new(StoreInnerInner {
-            blocks: Blocks::new(BLOCK_SIZE),
+            blocks: Blocks::new(block_size),
         }));
 
         Self { inner }
