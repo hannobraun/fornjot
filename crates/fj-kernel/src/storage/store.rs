@@ -77,10 +77,9 @@ impl<T> Store<T> {
     }
 
     /// Insert an object into the store
-    pub fn insert(&self, handle: Handle<T>, object: T) -> Handle<T> {
+    pub fn insert(&self, handle: Handle<T>, object: T) {
         let mut inner = self.inner.write();
         inner.blocks.insert(handle.index, object);
-        handle
     }
 
     /// Iterate over all objects in this store

@@ -90,9 +90,10 @@ impl Curves {
         &self,
         handle: Handle<Curve>,
         curve: Curve,
-    ) -> Result<Handle<Curve>, Infallible> {
+    ) -> Result<(), Infallible> {
         curve.validate()?;
-        Ok(self.store.insert(handle, curve))
+        self.store.insert(handle, curve);
+        Ok(())
     }
 }
 
@@ -113,9 +114,10 @@ impl Cycles {
         &self,
         handle: Handle<Cycle>,
         cycle: Cycle,
-    ) -> Result<Handle<Cycle>, CycleValidationError> {
+    ) -> Result<(), CycleValidationError> {
         cycle.validate()?;
-        Ok(self.store.insert(handle, cycle))
+        self.store.insert(handle, cycle);
+        Ok(())
     }
 }
 
@@ -136,9 +138,10 @@ impl Faces {
         &self,
         handle: Handle<Face>,
         face: Face,
-    ) -> Result<Handle<Face>, FaceValidationError> {
+    ) -> Result<(), FaceValidationError> {
         face.validate()?;
-        Ok(self.store.insert(handle, face))
+        self.store.insert(handle, face);
+        Ok(())
     }
 }
 
@@ -159,9 +162,10 @@ impl GlobalCurves {
         &self,
         handle: Handle<GlobalCurve>,
         global_curve: GlobalCurve,
-    ) -> Result<Handle<GlobalCurve>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_curve.validate()?;
-        Ok(self.store.insert(handle, global_curve))
+        self.store.insert(handle, global_curve);
+        Ok(())
     }
 }
 
@@ -182,9 +186,10 @@ impl GlobalEdges {
         &self,
         handle: Handle<GlobalEdge>,
         global_edge: GlobalEdge,
-    ) -> Result<Handle<GlobalEdge>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_edge.validate()?;
-        Ok(self.store.insert(handle, global_edge))
+        self.store.insert(handle, global_edge);
+        Ok(())
     }
 }
 
@@ -205,9 +210,10 @@ impl GlobalVertices {
         &self,
         handle: Handle<GlobalVertex>,
         global_vertex: GlobalVertex,
-    ) -> Result<Handle<GlobalVertex>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_vertex.validate()?;
-        Ok(self.store.insert(handle, global_vertex))
+        self.store.insert(handle, global_vertex);
+        Ok(())
     }
 }
 
@@ -228,9 +234,10 @@ impl HalfEdges {
         &self,
         handle: Handle<HalfEdge>,
         half_edge: HalfEdge,
-    ) -> Result<Handle<HalfEdge>, HalfEdgeValidationError> {
+    ) -> Result<(), HalfEdgeValidationError> {
         half_edge.validate()?;
-        Ok(self.store.insert(handle, half_edge))
+        self.store.insert(handle, half_edge);
+        Ok(())
     }
 }
 
@@ -251,9 +258,10 @@ impl Shells {
         &self,
         handle: Handle<Shell>,
         shell: Shell,
-    ) -> Result<Handle<Shell>, Infallible> {
+    ) -> Result<(), Infallible> {
         shell.validate()?;
-        Ok(self.store.insert(handle, shell))
+        self.store.insert(handle, shell);
+        Ok(())
     }
 }
 
@@ -274,9 +282,10 @@ impl Sketches {
         &self,
         handle: Handle<Sketch>,
         sketch: Sketch,
-    ) -> Result<Handle<Sketch>, Infallible> {
+    ) -> Result<(), Infallible> {
         sketch.validate()?;
-        Ok(self.store.insert(handle, sketch))
+        self.store.insert(handle, sketch);
+        Ok(())
     }
 }
 
@@ -297,9 +306,10 @@ impl Solids {
         &self,
         handle: Handle<Solid>,
         solid: Solid,
-    ) -> Result<Handle<Solid>, Infallible> {
+    ) -> Result<(), Infallible> {
         solid.validate()?;
-        Ok(self.store.insert(handle, solid))
+        self.store.insert(handle, solid);
+        Ok(())
     }
 }
 
@@ -320,9 +330,10 @@ impl SurfaceVertices {
         &self,
         handle: Handle<SurfaceVertex>,
         surface_vertex: SurfaceVertex,
-    ) -> Result<Handle<SurfaceVertex>, SurfaceVertexValidationError> {
+    ) -> Result<(), SurfaceVertexValidationError> {
         surface_vertex.validate()?;
-        Ok(self.store.insert(handle, surface_vertex))
+        self.store.insert(handle, surface_vertex);
+        Ok(())
     }
 }
 
@@ -347,9 +358,10 @@ impl Surfaces {
         &self,
         handle: Handle<Surface>,
         surface: Surface,
-    ) -> Result<Handle<Surface>, Infallible> {
+    ) -> Result<(), Infallible> {
         surface.validate()?;
-        Ok(self.store.insert(handle, surface))
+        self.store.insert(handle, surface);
+        Ok(())
     }
 
     /// Access the xy-plane
@@ -424,8 +436,9 @@ impl Vertices {
         &self,
         handle: Handle<Vertex>,
         vertex: Vertex,
-    ) -> Result<Handle<Vertex>, VertexValidationError> {
+    ) -> Result<(), VertexValidationError> {
         vertex.validate()?;
-        Ok(self.store.insert(handle, vertex))
+        self.store.insert(handle, vertex);
+        Ok(())
     }
 }
