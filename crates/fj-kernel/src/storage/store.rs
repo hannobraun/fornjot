@@ -38,9 +38,17 @@ pub struct Store<T> {
 
 impl<T> Store<T> {
     /// Construct a new instance of `Store`
+    ///
+    /// Equivalent to calling [`Store::with_block_size`] with a default block
+    /// size.
     pub fn new() -> Self {
+        Self::with_block_size(16384)
+    }
+
+    /// Construct a new instance of `Store` using the provided block size
+    pub fn with_block_size(block_size: usize) -> Self {
         let inner = Arc::new(RwLock::new(StoreInnerInner {
-            blocks: Blocks::new(BLOCK_SIZE),
+            blocks: Blocks::new(block_size),
         }));
 
         Self { inner }
@@ -61,8 +69,7 @@ impl<T> Store<T> {
     pub fn iter(&self) -> Iter<T> {
         Iter {
             store: self.inner.clone(),
-            next_block: 0,
-            next_object: 0,
+            next_index: Index::zero(),
             _a: PhantomData,
         }
     }
@@ -103,8 +110,7 @@ impl<'a, T> IntoIterator for &'a Store<T> {
 /// An iterator over objects in a [`Store`]
 pub struct Iter<'a, T> {
     store: StoreInner<T>,
-    next_block: usize,
-    next_object: usize,
+    next_index: Index,
     _a: PhantomData<&'a ()>,
 }
 
@@ -114,13 +120,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.store.read();
 
-        let block = inner.blocks.get(self.next_block)?;
-        let object = block.get(self.next_object);
-
-        self.next_object += 1;
-        if self.next_object >= block.len() {
-            self.next_block += 1;
-        }
+        let object = inner.blocks.get_and_inc(&mut self.next_index)?;
 
         Some(Handle {
             store: self.store.clone(),
@@ -175,15 +175,13 @@ pub struct StoreInnerInner<T> {
     blocks: Blocks<T>,
 }
 
-const BLOCK_SIZE: usize = 16384;
-
 #[cfg(test)]
 mod tests {
     use super::Store;
 
     #[test]
     fn insert_and_handle() {
-        let store = Store::new();
+        let store = Store::with_block_size(1);
 
         let object = 0;
         let handle = store.insert(object);
@@ -193,7 +191,7 @@ mod tests {
 
     #[test]
     fn insert_and_iter() {
-        let store = Store::new();
+        let store = Store::with_block_size(1);
 
         let a = store.insert(0);
         let b = store.insert(1);

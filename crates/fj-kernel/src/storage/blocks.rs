@@ -55,8 +55,13 @@ impl<T> Blocks<T> {
         block.insert(index.object_index, object)
     }
 
-    pub fn get(&self, index: usize) -> Option<&Block<T>> {
-        self.inner.get(index)
+    pub fn get_and_inc(&self, index: &mut Index) -> Option<&Option<T>> {
+        let block = self.inner.get(index.block_index.0)?;
+        let object = block.get(index.object_index);
+
+        index.inc(block);
+
+        Some(object)
     }
 
     #[cfg(test)]
@@ -105,8 +110,8 @@ impl<T> Block<T> {
         &self.objects[index.0]
     }
 
-    pub fn get(&self, index: usize) -> &Option<T> {
-        &self.objects[index]
+    pub fn get(&self, index: ObjectIndex) -> &Option<T> {
+        &self.objects[index.0]
     }
 
     pub fn len(&self) -> usize {
@@ -121,7 +126,7 @@ impl<T> Block<T> {
                 return None;
             }
 
-            let object = self.get(i).as_ref()?;
+            let object = self.get(ObjectIndex(i)).as_ref()?;
             i += 1;
 
             Some(object)
@@ -133,6 +138,23 @@ impl<T> Block<T> {
 pub struct Index {
     block_index: BlockIndex,
     object_index: ObjectIndex,
+}
+
+impl Index {
+    pub fn zero() -> Self {
+        Self {
+            block_index: BlockIndex(0),
+            object_index: ObjectIndex(0),
+        }
+    }
+
+    pub fn inc<T>(&mut self, block: &Block<T>) {
+        self.object_index.0 += 1;
+        if self.object_index.0 >= block.len() {
+            self.block_index.0 += 1;
+            self.object_index.0 = 0;
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
