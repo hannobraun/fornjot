@@ -136,8 +136,8 @@ impl<T> Block<T> {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Index {
-    pub block_index: BlockIndex,
-    pub object_index: ObjectIndex,
+    block_index: BlockIndex,
+    object_index: ObjectIndex,
 }
 
 impl Index {
@@ -157,10 +157,10 @@ impl Index {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct BlockIndex(pub usize);
+pub struct BlockIndex(usize);
 
 #[derive(Clone, Copy, Debug)]
-pub struct ObjectIndex(pub usize);
+pub struct ObjectIndex(usize);
 
 #[cfg(test)]
 mod tests {
