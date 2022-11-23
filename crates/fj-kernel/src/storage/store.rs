@@ -112,10 +112,7 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.store.read();
 
-        let block = inner.blocks.get(self.next_index.block_index.0)?;
-        let object = block.get(self.next_index.object_index);
-
-        self.next_index.inc(block);
+        let object = inner.blocks.get_and_inc(&mut self.next_index)?;
 
         Some(Handle {
             store: self.store.clone(),

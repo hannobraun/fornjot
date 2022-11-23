@@ -55,8 +55,13 @@ impl<T> Blocks<T> {
         block.insert(index.object_index, object)
     }
 
-    pub fn get(&self, index: usize) -> Option<&Block<T>> {
-        self.inner.get(index)
+    pub fn get_and_inc(&self, index: &mut Index) -> Option<&Option<T>> {
+        let block = self.inner.get(index.block_index.0)?;
+        let object = block.get(index.object_index);
+
+        index.inc(block);
+
+        Some(object)
     }
 
     #[cfg(test)]
