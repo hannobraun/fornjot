@@ -57,7 +57,9 @@ impl<T> Store<T> {
     /// Insert an object into the store
     pub fn insert(&self, object: T) -> Handle<T> {
         let mut inner = self.inner.write();
-        let ptr = inner.blocks.push(object);
+
+        let (index, ptr) = inner.blocks.reserve();
+        inner.blocks.insert(index, object);
 
         Handle {
             store: self.inner.clone(),

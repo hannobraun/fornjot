@@ -14,11 +14,6 @@ impl<T> Blocks<T> {
         }
     }
 
-    pub fn push(&mut self, object: T) -> *const Option<T> {
-        let (index, _) = self.reserve();
-        self.insert(index, object)
-    }
-
     pub fn reserve(&mut self) -> (Index, *const Option<T>) {
         let mut current_block = match self.inner.pop() {
             Some(block) => block,
@@ -62,11 +57,6 @@ impl<T> Blocks<T> {
         index.inc(block);
 
         Some(object)
-    }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        self.inner.iter().flat_map(|block| block.iter())
     }
 }
 
@@ -117,21 +107,6 @@ impl<T> Block<T> {
     pub fn len(&self) -> usize {
         self.next.0
     }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        let mut i = 0;
-        iter::from_fn(move || {
-            if i >= self.len() {
-                return None;
-            }
-
-            let object = self.get(ObjectIndex(i)).as_ref()?;
-            i += 1;
-
-            Some(object)
-        })
-    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -162,19 +137,3 @@ pub struct BlockIndex(usize);
 
 #[derive(Clone, Copy, Debug)]
 pub struct ObjectIndex(usize);
-
-#[cfg(test)]
-mod tests {
-    use super::Blocks;
-
-    #[test]
-    fn push() {
-        let mut blocks = Blocks::new(1);
-
-        blocks.push(0);
-        blocks.push(1);
-
-        let objects = blocks.iter().copied().collect::<Vec<_>>();
-        assert_eq!(objects, [0, 1]);
-    }
-}
