@@ -106,16 +106,16 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
         let inner = self.store.read();
 
         loop {
-            let object = inner.blocks.get_and_inc(&mut self.next_index)?;
+            let ptr = inner.blocks.get_and_inc(&mut self.next_index)?;
 
-            if object.is_none() {
+            if ptr.is_none() {
                 // This is a reserved slot.
                 continue;
             }
 
             return Some(Handle {
                 store: self.store.clone(),
-                ptr: object,
+                ptr,
             });
         }
     }
