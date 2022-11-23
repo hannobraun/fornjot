@@ -91,13 +91,8 @@ impl<T> Block<T> {
         Ok((index, ptr))
     }
 
-    pub fn insert(
-        &mut self,
-        index: ObjectIndex,
-        object: T,
-    ) -> *const Option<T> {
+    pub fn insert(&mut self, index: ObjectIndex, object: T) {
         self.objects[index.0] = Some(object);
-        &self.objects[index.0]
     }
 
     pub fn get(&self, index: ObjectIndex) -> &Option<T> {
