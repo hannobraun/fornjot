@@ -181,7 +181,7 @@ mod tests {
 
     #[test]
     fn insert_and_handle() {
-        let store = Store::new();
+        let store = Store::with_block_size(1);
 
         let object = 0;
         let handle = store.insert(object);
@@ -191,7 +191,7 @@ mod tests {
 
     #[test]
     fn insert_and_iter() {
-        let store = Store::new();
+        let store = Store::with_block_size(1);
 
         let a = store.insert(0);
         let b = store.insert(1);

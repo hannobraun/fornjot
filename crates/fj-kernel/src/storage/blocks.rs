@@ -152,6 +152,7 @@ impl Index {
         self.object_index.0 += 1;
         if self.object_index.0 >= block.len() {
             self.block_index.0 += 1;
+            self.object_index.0 = 0;
         }
     }
 }
