@@ -92,7 +92,13 @@ impl<T> Block<T> {
     }
 
     pub fn insert(&mut self, index: ObjectIndex, object: T) {
-        self.objects[index.0] = Some(object);
+        let slot = &mut self.objects[index.0];
+
+        if slot.is_some() {
+            panic!("Attempting to overwrite object in store")
+        }
+
+        *slot = Some(object);
     }
 
     pub fn get(&self, index: ObjectIndex) -> &Option<T> {
