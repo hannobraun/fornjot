@@ -100,5 +100,6 @@ pub mod insert;
 pub mod iter;
 pub mod objects;
 pub mod partial;
+pub mod services;
 pub mod storage;
 pub mod validate;
