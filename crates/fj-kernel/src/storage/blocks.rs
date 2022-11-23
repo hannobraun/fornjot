@@ -135,6 +135,15 @@ pub struct Index {
     pub object_index: ObjectIndex,
 }
 
+impl Index {
+    pub fn zero() -> Self {
+        Self {
+            block_index: BlockIndex(0),
+            object_index: ObjectIndex(0),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug)]
 pub struct BlockIndex(pub usize);
 

@@ -26,7 +26,7 @@ use std::{marker::PhantomData, sync::Arc};
 use parking_lot::RwLock;
 
 use super::{
-    blocks::{BlockIndex, Blocks, Index, ObjectIndex},
+    blocks::{Blocks, Index},
     Handle,
 };
 
@@ -61,10 +61,7 @@ impl<T> Store<T> {
     pub fn iter(&self) -> Iter<T> {
         Iter {
             store: self.inner.clone(),
-            next_index: Index {
-                block_index: BlockIndex(0),
-                object_index: ObjectIndex(0),
-            },
+            next_index: Index::zero(),
             _a: PhantomData,
         }
     }
