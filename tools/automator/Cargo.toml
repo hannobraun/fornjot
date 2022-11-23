@@ -11,7 +11,7 @@ map-macro = "0.2.4"
 octocrab = "0.17.0"
 semver = "1.0.14"
 serde = "1.0.147"
-serde_json = "1.0.87"
+serde_json = "1.0.89"
 url = "2.3.0"
 
 [dependencies.autolib]
