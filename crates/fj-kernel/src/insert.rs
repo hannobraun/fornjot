@@ -29,7 +29,8 @@ macro_rules! impl_insert {
                     objects: &Objects,
                 ) -> Result<Handle<Self>, <Self as Validate>::Error> {
                     let handle = objects.$store.reserve();
-                    objects.$store.insert(handle, self)
+                    objects.$store.insert(handle.clone(), self)?;
+                    Ok(handle)
                 }
             }
         )*
