@@ -1,6 +1,6 @@
 use std::{any::type_name, cmp::Ordering, fmt, hash::Hash, ops::Deref};
 
-use super::store::StoreInner;
+use super::{blocks::Index, store::StoreInner};
 
 /// A handle for an object
 ///
@@ -23,6 +23,7 @@ use super::store::StoreInner;
 /// comparing the values returned by [`Handle::id`].
 pub struct Handle<T> {
     pub(super) store: StoreInner<T>,
+    pub(super) index: Index,
     pub(super) ptr: *const Option<T>,
 }
 
@@ -85,6 +86,7 @@ impl<T> Clone for Handle<T> {
     fn clone(&self) -> Self {
         Self {
             store: self.store.clone(),
+            index: self.index,
             ptr: self.ptr,
         }
     }

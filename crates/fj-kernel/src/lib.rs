@@ -86,6 +86,11 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 #![warn(missing_docs)]
+// I've made a simple change that put `ValidationError` over the threshold for
+// this warning. I couldn't come up with an easy fix, and figured that silencing
+// the warning is the most practical solution for now, as the validation
+// infrastructure is in flux anyway. Maybe the problem will take care of itself.
+#![allow(clippy::result_large_err)]
 
 pub mod algorithms;
 pub mod builder;

@@ -14,11 +14,6 @@ impl<T> Blocks<T> {
         }
     }
 
-    pub fn push(&mut self, object: T) -> *const Option<T> {
-        let (index, _) = self.reserve();
-        self.insert(index, object)
-    }
-
     pub fn reserve(&mut self) -> (Index, *const Option<T>) {
         let mut current_block = match self.inner.pop() {
             Some(block) => block,
@@ -50,9 +45,9 @@ impl<T> Blocks<T> {
         ret
     }
 
-    pub fn insert(&mut self, index: Index, object: T) -> *const Option<T> {
+    pub fn insert(&mut self, index: Index, object: T) {
         let block = &mut self.inner[index.block_index.0];
-        block.insert(index.object_index, object)
+        block.insert(index.object_index, object);
     }
 
     pub fn get_and_inc(&self, index: &mut Index) -> Option<&Option<T>> {
@@ -62,11 +57,6 @@ impl<T> Blocks<T> {
         index.inc(block);
 
         Some(object)
-    }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        self.inner.iter().flat_map(|block| block.iter())
     }
 }
 
@@ -101,13 +91,14 @@ impl<T> Block<T> {
         Ok((index, ptr))
     }
 
-    pub fn insert(
-        &mut self,
-        index: ObjectIndex,
-        object: T,
-    ) -> *const Option<T> {
-        self.objects[index.0] = Some(object);
-        &self.objects[index.0]
+    pub fn insert(&mut self, index: ObjectIndex, object: T) {
+        let slot = &mut self.objects[index.0];
+
+        if slot.is_some() {
+            panic!("Attempting to overwrite object in store")
+        }
+
+        *slot = Some(object);
     }
 
     pub fn get(&self, index: ObjectIndex) -> &Option<T> {
@@ -116,21 +107,6 @@ impl<T> Block<T> {
 
     pub fn len(&self) -> usize {
         self.next.0
-    }
-
-    #[cfg(test)]
-    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
-        let mut i = 0;
-        iter::from_fn(move || {
-            if i >= self.len() {
-                return None;
-            }
-
-            let object = self.get(ObjectIndex(i)).as_ref()?;
-            i += 1;
-
-            Some(object)
-        })
     }
 }
 
@@ -162,19 +138,3 @@ pub struct BlockIndex(usize);
 
 #[derive(Clone, Copy, Debug)]
 pub struct ObjectIndex(usize);
-
-#[cfg(test)]
-mod tests {
-    use super::Blocks;
-
-    #[test]
-    fn push() {
-        let mut blocks = Blocks::new(1);
-
-        blocks.push(0);
-        blocks.push(1);
-
-        let objects = blocks.iter().copied().collect::<Vec<_>>();
-        assert_eq!(objects, [0, 1]);
-    }
-}

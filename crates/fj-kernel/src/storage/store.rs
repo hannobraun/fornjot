@@ -54,15 +54,38 @@ impl<T> Store<T> {
         Self { inner }
     }
 
-    /// Insert an object into the store
-    pub fn insert(&self, object: T) -> Handle<T> {
+    /// Reserve a slot for an object in the store
+    ///
+    /// This method returns a handle to the reserved slot. That handle does not
+    /// refer to an object yet! Attempting to dereference the handle before it
+    /// has been used to insert an object into the store, will result in a
+    /// panic.
+    ///
+    /// Usually, you'd acquire one handle, then immediately use it to insert an
+    /// object using [`Store::insert`]. The methods are separate to support more
+    /// advanced use cases, like inserting objects that refer to each other.
+    pub fn reserve(&self) -> Handle<T> {
         let mut inner = self.inner.write();
-        let ptr = inner.blocks.push(object);
+
+        let (index, ptr) = inner.blocks.reserve();
 
         Handle {
             store: self.inner.clone(),
+            index,
             ptr,
         }
+    }
+
+    /// Insert an object into the store
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the passed `Handle` does not refer to a reserved slot. This
+    /// can only be the case, if the handle has been used to insert an object
+    /// before.
+    pub fn insert(&self, handle: Handle<T>, object: T) {
+        let mut inner = self.inner.write();
+        inner.blocks.insert(handle.index, object);
     }
 
     /// Iterate over all objects in this store
@@ -71,23 +94,6 @@ impl<T> Store<T> {
             store: self.inner.clone(),
             next_index: Index::zero(),
             _a: PhantomData,
-        }
-    }
-
-    /// Reserve a slot for an object
-    ///
-    /// Returns a [`Reservation`], which can be used to access the [`Handle`] of
-    /// an object that hasn't been added yet. This makes it possible to use the
-    /// [`Handle`]'s ID in the construction of the object, or to create groups
-    /// of objects that reference each other through their [`Handle`]s.
-    pub fn reserve(&self) -> Reservation<T> {
-        let mut inner = self.inner.write();
-        let (index, ptr) = inner.blocks.reserve();
-
-        Reservation {
-            store: self.inner.clone(),
-            index,
-            ptr,
         }
     }
 }
@@ -120,50 +126,20 @@ impl<'a, T: 'a> Iterator for Iter<'a, T> {
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.store.read();
 
-        let object = inner.blocks.get_and_inc(&mut self.next_index)?;
+        loop {
+            let index = self.next_index;
+            let ptr = inner.blocks.get_and_inc(&mut self.next_index)?;
 
-        Some(Handle {
-            store: self.store.clone(),
-            ptr: object,
-        })
-    }
-}
+            if ptr.is_none() {
+                // This is a reserved slot.
+                continue;
+            }
 
-/// A reservation of a slot for an object within a [`Store`]
-///
-/// See [`Store::reserve`].
-#[derive(Debug)]
-pub struct Reservation<T> {
-    store: StoreInner<T>,
-    ptr: *const Option<T>,
-    index: Index,
-}
-
-impl<T> Reservation<T> {
-    /// Access the [`Handle`] for this reservation
-    ///
-    /// You **must not** dereference the handle to access the object it
-    /// references, until you initialized that object by calling
-    /// [`Reservation::complete`]. Doing otherwise will lead to a panic.
-    pub fn handle(&self) -> Handle<T> {
-        Handle {
-            store: self.store.clone(),
-            ptr: self.ptr,
-        }
-    }
-
-    /// Complete the reservation by providing an object
-    ///
-    /// This method consumes the reservation. After calling it, you can use any
-    /// [`Handle`]s you acquired from [`Reservation::handle`] without
-    /// limitations.
-    pub fn complete(self, object: T) -> Handle<T> {
-        let mut inner = self.store.write();
-        inner.blocks.insert(self.index, object);
-
-        Handle {
-            store: self.store.clone(),
-            ptr: self.ptr,
+            return Some(Handle {
+                store: self.store.clone(),
+                index,
+                ptr,
+            });
         }
     }
 }
@@ -177,14 +153,18 @@ pub struct StoreInnerInner<T> {
 
 #[cfg(test)]
 mod tests {
+    use crate::storage::Handle;
+
     use super::Store;
 
     #[test]
     fn insert_and_handle() {
         let store = Store::with_block_size(1);
 
+        let handle: Handle<i32> = store.reserve();
         let object = 0;
-        let handle = store.insert(object);
+
+        store.insert(handle.clone(), object);
 
         assert_eq!(*handle, object);
     }
@@ -193,31 +173,12 @@ mod tests {
     fn insert_and_iter() {
         let store = Store::with_block_size(1);
 
-        let a = store.insert(0);
-        let b = store.insert(1);
+        let a: Handle<i32> = store.reserve();
+        let b = store.reserve();
+        store.insert(a.clone(), 0);
+        store.insert(b.clone(), 1);
 
         let objects = store.iter().collect::<Vec<_>>();
         assert_eq!(objects, [a, b])
-    }
-
-    #[test]
-    fn reserve() {
-        let store = Store::<i32>::new();
-
-        let a = store.reserve();
-        let b = store.reserve();
-
-        let id_a = a.handle().id();
-        let id_b = b.handle().id();
-        assert_ne!(id_a, id_b);
-
-        let a = a.complete(0);
-        let b = b.complete(1);
-
-        assert_eq!(*a, 0);
-        assert_eq!(*b, 1);
-
-        let objects = store.iter().collect::<Vec<_>>();
-        assert_eq!(objects, [a, b]);
     }
 }

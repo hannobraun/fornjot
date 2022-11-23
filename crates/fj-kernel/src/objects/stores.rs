@@ -80,10 +80,20 @@ pub struct Curves {
 }
 
 impl Curves {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Curve> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Curve`] into the store
-    pub fn insert(&self, curve: Curve) -> Result<Handle<Curve>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Curve>,
+        curve: Curve,
+    ) -> Result<(), Infallible> {
         curve.validate()?;
-        Ok(self.store.insert(curve))
+        self.store.insert(handle, curve);
+        Ok(())
     }
 }
 
@@ -94,13 +104,20 @@ pub struct Cycles {
 }
 
 impl Cycles {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Cycle> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Cycle`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Cycle>,
         cycle: Cycle,
-    ) -> Result<Handle<Cycle>, CycleValidationError> {
+    ) -> Result<(), CycleValidationError> {
         cycle.validate()?;
-        Ok(self.store.insert(cycle))
+        self.store.insert(handle, cycle);
+        Ok(())
     }
 }
 
@@ -111,13 +128,20 @@ pub struct Faces {
 }
 
 impl Faces {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Face> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Face`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Face>,
         face: Face,
-    ) -> Result<Handle<Face>, FaceValidationError> {
+    ) -> Result<(), FaceValidationError> {
         face.validate()?;
-        Ok(self.store.insert(face))
+        self.store.insert(handle, face);
+        Ok(())
     }
 }
 
@@ -128,13 +152,20 @@ pub struct GlobalCurves {
 }
 
 impl GlobalCurves {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<GlobalCurve> {
+        self.store.reserve()
+    }
+
     /// Insert a [`GlobalCurve`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalCurve>,
         global_curve: GlobalCurve,
-    ) -> Result<Handle<GlobalCurve>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_curve.validate()?;
-        Ok(self.store.insert(global_curve))
+        self.store.insert(handle, global_curve);
+        Ok(())
     }
 }
 
@@ -145,13 +176,20 @@ pub struct GlobalEdges {
 }
 
 impl GlobalEdges {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<GlobalEdge> {
+        self.store.reserve()
+    }
+
     /// Insert a [`GlobalEdge`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalEdge>,
         global_edge: GlobalEdge,
-    ) -> Result<Handle<GlobalEdge>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_edge.validate()?;
-        Ok(self.store.insert(global_edge))
+        self.store.insert(handle, global_edge);
+        Ok(())
     }
 }
 
@@ -162,13 +200,20 @@ pub struct GlobalVertices {
 }
 
 impl GlobalVertices {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<GlobalVertex> {
+        self.store.reserve()
+    }
+
     /// Insert a [`GlobalVertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<GlobalVertex>,
         global_vertex: GlobalVertex,
-    ) -> Result<Handle<GlobalVertex>, Infallible> {
+    ) -> Result<(), Infallible> {
         global_vertex.validate()?;
-        Ok(self.store.insert(global_vertex))
+        self.store.insert(handle, global_vertex);
+        Ok(())
     }
 }
 
@@ -179,13 +224,20 @@ pub struct HalfEdges {
 }
 
 impl HalfEdges {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<HalfEdge> {
+        self.store.reserve()
+    }
+
     /// Insert a [`HalfEdge`] into the store
     pub fn insert(
         &self,
+        handle: Handle<HalfEdge>,
         half_edge: HalfEdge,
-    ) -> Result<Handle<HalfEdge>, HalfEdgeValidationError> {
+    ) -> Result<(), HalfEdgeValidationError> {
         half_edge.validate()?;
-        Ok(self.store.insert(half_edge))
+        self.store.insert(handle, half_edge);
+        Ok(())
     }
 }
 
@@ -196,10 +248,20 @@ pub struct Shells {
 }
 
 impl Shells {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Shell> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Shell`] into the store
-    pub fn insert(&self, shell: Shell) -> Result<Handle<Shell>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Shell>,
+        shell: Shell,
+    ) -> Result<(), Infallible> {
         shell.validate()?;
-        Ok(self.store.insert(shell))
+        self.store.insert(handle, shell);
+        Ok(())
     }
 }
 
@@ -210,10 +272,20 @@ pub struct Sketches {
 }
 
 impl Sketches {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Sketch> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Sketch`] into the store
-    pub fn insert(&self, sketch: Sketch) -> Result<Handle<Sketch>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Sketch>,
+        sketch: Sketch,
+    ) -> Result<(), Infallible> {
         sketch.validate()?;
-        Ok(self.store.insert(sketch))
+        self.store.insert(handle, sketch);
+        Ok(())
     }
 }
 
@@ -224,10 +296,20 @@ pub struct Solids {
 }
 
 impl Solids {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Solid> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Solid`] into the store
-    pub fn insert(&self, solid: Solid) -> Result<Handle<Solid>, Infallible> {
+    pub fn insert(
+        &self,
+        handle: Handle<Solid>,
+        solid: Solid,
+    ) -> Result<(), Infallible> {
         solid.validate()?;
-        Ok(self.store.insert(solid))
+        self.store.insert(handle, solid);
+        Ok(())
     }
 }
 
@@ -238,13 +320,20 @@ pub struct SurfaceVertices {
 }
 
 impl SurfaceVertices {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<SurfaceVertex> {
+        self.store.reserve()
+    }
+
     /// Insert a [`SurfaceVertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<SurfaceVertex>,
         surface_vertex: SurfaceVertex,
-    ) -> Result<Handle<SurfaceVertex>, SurfaceVertexValidationError> {
+    ) -> Result<(), SurfaceVertexValidationError> {
         surface_vertex.validate()?;
-        Ok(self.store.insert(surface_vertex))
+        self.store.insert(handle, surface_vertex);
+        Ok(())
     }
 }
 
@@ -259,13 +348,20 @@ pub struct Surfaces {
 }
 
 impl Surfaces {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Surface> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Surface`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Surface>,
         surface: Surface,
-    ) -> Result<Handle<Surface>, Infallible> {
+    ) -> Result<(), Infallible> {
         surface.validate()?;
-        Ok(self.store.insert(surface))
+        self.store.insert(handle, surface);
+        Ok(())
     }
 
     /// Access the xy-plane
@@ -286,20 +382,33 @@ impl Surfaces {
 
 impl Default for Surfaces {
     fn default() -> Self {
-        let store = Store::new();
+        let store: Store<Surface> = Store::new();
 
-        let xy_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_y(),
-        }));
-        let xz_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::x_axis(),
-            v: Vector::unit_z(),
-        }));
-        let yz_plane = store.insert(Surface::new(SurfaceGeometry {
-            u: GlobalPath::y_axis(),
-            v: Vector::unit_z(),
-        }));
+        let xy_plane = store.reserve();
+        store.insert(
+            xy_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_y(),
+            }),
+        );
+
+        let xz_plane = store.reserve();
+        store.insert(
+            xz_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_z(),
+            }),
+        );
+        let yz_plane = store.reserve();
+        store.insert(
+            yz_plane.clone(),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::y_axis(),
+                v: Vector::unit_z(),
+            }),
+        );
 
         Self {
             store,
@@ -317,12 +426,19 @@ pub struct Vertices {
 }
 
 impl Vertices {
+    /// Reserve a slot for an object in the store
+    pub fn reserve(&self) -> Handle<Vertex> {
+        self.store.reserve()
+    }
+
     /// Insert a [`Vertex`] into the store
     pub fn insert(
         &self,
+        handle: Handle<Vertex>,
         vertex: Vertex,
-    ) -> Result<Handle<Vertex>, VertexValidationError> {
+    ) -> Result<(), VertexValidationError> {
         vertex.validate()?;
-        Ok(self.store.insert(vertex))
+        self.store.insert(handle, vertex);
+        Ok(())
     }
 }
