@@ -142,6 +142,13 @@ impl Index {
             object_index: ObjectIndex(0),
         }
     }
+
+    pub fn inc<T>(&mut self, block: &Block<T>) {
+        self.object_index.0 += 1;
+        if self.object_index.0 >= block.len() {
+            self.block_index.0 += 1;
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
