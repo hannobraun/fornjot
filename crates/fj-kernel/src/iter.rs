@@ -577,7 +577,7 @@ mod tests {
 
         let object = Solid::builder()
             .with_cube_from_edge_length(1., &mut objects)
-            .build(&objects);
+            .build(&mut objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

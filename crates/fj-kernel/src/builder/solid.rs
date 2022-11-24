@@ -40,7 +40,7 @@ impl SolidBuilder {
     }
 
     /// Build the [`Solid`]
-    pub fn build(self, objects: &Objects) -> Handle<Solid> {
+    pub fn build(self, objects: &mut Objects) -> Handle<Solid> {
         Solid::new(self.shells).insert(objects).unwrap()
     }
 }
