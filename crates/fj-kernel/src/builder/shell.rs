@@ -38,7 +38,7 @@ impl ShellBuilder {
     pub fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Self {
         let edge_length = edge_length.into();
 

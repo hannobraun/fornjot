@@ -525,10 +525,10 @@ mod tests {
 
     #[test]
     fn shell() {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let object = Shell::builder()
-            .with_cube_from_edge_length(1., &objects)
+            .with_cube_from_edge_length(1., &mut objects)
             .build(&objects);
 
         assert_eq!(24, object.curve_iter().count());
