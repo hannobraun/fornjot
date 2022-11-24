@@ -30,7 +30,7 @@ impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(
         faces: [&Face; 2],
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Option<Self>, ValidationError> {
         let surfaces = faces.map(|face| face.surface().clone());
 
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn compute_no_intersection() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -98,7 +98,8 @@ mod tests {
                     .build(&objects)
             })?;
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
+        let intersection =
+            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
 
         assert!(intersection.is_none());
 
@@ -107,7 +108,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -125,7 +126,8 @@ mod tests {
                 .build(&objects)
         })?;
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
+        let intersection =
+            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
 
         let expected_curves =
             surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
