@@ -12,7 +12,7 @@ impl Shape for fj::Group {
 
     fn compute_brep(
         &self,
-        objects: &Objects,
+        objects: &mut Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let mut faces = FaceSet::new();

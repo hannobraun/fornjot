@@ -17,7 +17,7 @@ impl Shape for fj::Sketch {
 
     fn compute_brep(
         &self,
-        objects: &Objects,
+        objects: &mut Objects,
         _: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let surface = objects.surfaces.xy_plane();
