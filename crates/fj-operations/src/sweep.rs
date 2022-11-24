@@ -16,7 +16,7 @@ impl Shape for fj::Sweep {
 
     fn compute_brep(
         &self,
-        objects: &Objects,
+        objects: &mut Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let sketch = self.shape().compute_brep(objects, debug_info)?;

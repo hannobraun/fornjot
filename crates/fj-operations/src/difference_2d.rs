@@ -18,7 +18,7 @@ impl Shape for fj::Difference2d {
 
     fn compute_brep(
         &self,
-        objects: &Objects,
+        objects: &mut Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:

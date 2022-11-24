@@ -13,7 +13,7 @@ impl Shape for fj::Transform {
 
     fn compute_brep(
         &self,
-        objects: &Objects,
+        objects: &mut Objects,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let faces = self
