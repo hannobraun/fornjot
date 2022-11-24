@@ -24,7 +24,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let (edge, color) = self;
         let path = path.into();
@@ -202,18 +202,18 @@ mod tests {
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&objects)?
-            .insert(&objects)?;
+            .build(&mut objects)?
+            .insert(&mut objects)?;
 
         let face =
-            (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
+            (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects)?;
 
         let expected_face = {
             let surface = objects.surfaces.xz_plane();
@@ -223,8 +223,8 @@ mod tests {
                     surface.clone(),
                     [[0., 0.], [1., 0.]],
                 )
-                .build(&objects)?
-                .insert(&objects)?;
+                .build(&mut objects)?
+                .insert(&mut objects)?;
             let side_up = {
                 let mut side_up = HalfEdge::partial();
                 side_up.replace(surface.clone());
@@ -246,8 +246,8 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&objects)?
-                    .insert(&objects)?
+                    .build(&mut objects)?
+                    .insert(&mut objects)?
             };
             let top = {
                 let mut top = HalfEdge::partial();
@@ -265,9 +265,9 @@ mod tests {
                     ..Default::default()
                 })
                 .update_as_line_segment()
-                .build(&objects)?
-                .insert(&objects)?
-                .reverse(&objects)?
+                .build(&mut objects)?
+                .insert(&mut objects)?
+                .reverse(&mut objects)?
             };
             let side_down = {
                 let mut side_down = HalfEdge::partial();
@@ -286,18 +286,18 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&objects)?
-                    .insert(&objects)?
-                    .reverse(&objects)?
+                    .build(&mut objects)?
+                    .insert(&mut objects)?
+                    .reverse(&mut objects)?
             };
 
             let cycle = Cycle::new([bottom, side_up, top, side_down])
-                .insert(&objects)?;
+                .insert(&mut objects)?;
 
             Face::partial()
                 .with_exterior(cycle)
-                .build(&objects)?
-                .insert(&objects)?
+                .build(&mut objects)?
+                .insert(&mut objects)?
         };
 
         assert_eq!(face, expected_face);

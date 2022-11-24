@@ -191,7 +191,7 @@ mod tests {
 
     #[test]
     fn vertex_surface_mismatch() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let mut curve = PartialCurve {
             surface: Some(objects.surfaces.xy_plane()),
@@ -204,11 +204,11 @@ mod tests {
             curve: curve.into(),
             ..Default::default()
         }
-        .build(&objects)?;
+        .build(&mut objects)?;
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.surface = Some(objects.surfaces.xz_plane());
-            tmp.build(&objects)?.insert(&objects)?
+            tmp.build(&mut objects)?.insert(&mut objects)?
         });
 
         assert!(valid.validate().is_ok());
@@ -219,7 +219,7 @@ mod tests {
 
     #[test]
     fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let valid = {
             let mut curve = PartialCurve {
@@ -233,13 +233,13 @@ mod tests {
                 curve: curve.into(),
                 ..Default::default()
             }
-            .build(&objects)?
+            .build(&mut objects)?
         };
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.position = Some([1., 0.].into());
             tmp.infer_global_form();
-            tmp.build(&objects)?.insert(&objects)?
+            tmp.build(&mut objects)?.insert(&mut objects)?
         });
 
         assert!(valid.validate().is_ok());
@@ -250,18 +250,18 @@ mod tests {
 
     #[test]
     fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),
             surface: Some(objects.surfaces.xy_plane()),
             ..Default::default()
         }
-        .build(&objects)?;
+        .build(&mut objects)?;
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
-            GlobalVertex::from_position([1., 0., 0.]).insert(&objects)?,
+            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects)?,
         );
 
         assert!(valid.validate().is_ok());

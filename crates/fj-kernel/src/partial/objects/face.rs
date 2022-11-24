@@ -71,7 +71,7 @@ impl PartialFace {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(self, objects: &Objects) -> Result<Face, ValidationError> {
+    pub fn build(self, objects: &mut Objects) -> Result<Face, ValidationError> {
         let exterior = self.exterior.into_full(objects)?;
         let interiors = self
             .interiors

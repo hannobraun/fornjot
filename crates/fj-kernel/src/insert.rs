@@ -16,7 +16,7 @@ pub trait Insert: Sized + Validate {
     /// Insert the object into its respective store
     fn insert(
         self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Handle<Self>, <Self as Validate>::Error>;
 }
 
@@ -26,7 +26,7 @@ macro_rules! impl_insert {
             impl Insert for $ty {
                 fn insert(
                     self,
-                    objects: &Objects,
+                    objects: &mut Objects,
                 ) -> Result<Handle<Self>, <Self as Validate>::Error> {
                     let handle = objects.$store.reserve();
                     objects.$store.insert(handle.clone(), self)?;

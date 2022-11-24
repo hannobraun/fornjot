@@ -30,7 +30,7 @@ impl PartialHalfEdge {
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(
         mut self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<HalfEdge, ValidationError> {
         let global_curve = self
             .curve
@@ -118,7 +118,7 @@ impl PartialGlobalEdge {
     /// Build a full [`GlobalEdge`] from the partial global edge
     pub fn build(
         self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<GlobalEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
         let vertices = self

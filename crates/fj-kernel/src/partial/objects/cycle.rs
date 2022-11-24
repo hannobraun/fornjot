@@ -71,7 +71,7 @@ impl PartialCycle {
     /// Build a full [`Cycle`] from the partial cycle
     pub fn build(
         mut self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Cycle, ValidationError> {
         // Check that the cycle is closed. This will lead to a panic further
         // down anyway, but that panic would be super-confusing. This one should

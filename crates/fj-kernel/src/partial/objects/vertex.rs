@@ -31,7 +31,10 @@ impl PartialVertex {
     /// Panics, if position has not been provided.
     ///
     /// Panics, if curve has not been provided.
-    pub fn build(self, objects: &Objects) -> Result<Vertex, ValidationError> {
+    pub fn build(
+        self,
+        objects: &mut Objects,
+    ) -> Result<Vertex, ValidationError> {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
@@ -103,7 +106,7 @@ impl PartialSurfaceVertex {
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         mut self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<SurfaceVertex, ValidationError> {
         let position = self
             .position

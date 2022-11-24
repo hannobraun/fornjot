@@ -26,7 +26,7 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, objects: &Objects)
+                fn build(self, objects: &mut Objects)
                     -> Result<
                         Self::Full,
                         crate::validate::ValidationError

@@ -38,7 +38,7 @@ impl ShellBuilder {
     pub fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Self {
         let edge_length = edge_length.into();
 
@@ -246,7 +246,8 @@ impl ShellBuilder {
                         .unwrap()
                         .insert(objects)
                         .unwrap()
-                });
+                })
+                .collect::<Vec<_>>();
 
             (sides, tops)
         };
@@ -336,7 +337,7 @@ impl ShellBuilder {
     }
 
     /// Build the [`Shell`]
-    pub fn build(self, objects: &Objects) -> Handle<Shell> {
+    pub fn build(self, objects: &mut Objects) -> Handle<Shell> {
         Shell::new(self.faces).insert(objects).unwrap()
     }
 }

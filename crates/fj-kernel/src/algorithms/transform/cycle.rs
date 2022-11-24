@@ -10,7 +10,7 @@ impl TransformObject for PartialCycle {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let half_edges = self
             .half_edges()

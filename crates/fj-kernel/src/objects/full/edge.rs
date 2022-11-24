@@ -177,7 +177,7 @@ mod tests {
 
     #[test]
     fn global_edge_equality() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
 
@@ -186,10 +186,10 @@ mod tests {
 
         let a_to_b = HalfEdge::partial()
             .update_as_line_segment_from_points(surface.clone(), [a, b])
-            .build(&objects)?;
+            .build(&mut objects)?;
         let b_to_a = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [b, a])
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());
         Ok(())

@@ -12,7 +12,7 @@ impl TransformObject for Handle<Solid> {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let faces = self
             .shells()

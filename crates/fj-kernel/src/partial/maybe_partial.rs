@@ -72,7 +72,7 @@ impl<T: HasPartial> MaybePartial<T> {
     /// object, the full object is built from it, using [`Partial::build`].
     pub fn into_full(
         self,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Handle<T>, ValidationError>
     where
         T: Insert,

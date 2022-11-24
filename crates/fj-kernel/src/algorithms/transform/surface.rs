@@ -11,7 +11,7 @@ impl TransformObject for PartialSurface {
     fn transform(
         self,
         transform: &Transform,
-        _: &Objects,
+        _: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let geometry = self.geometry.map(|geometry| {
             let u = geometry.u.transform(transform);

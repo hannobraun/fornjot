@@ -20,7 +20,7 @@ impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Option<Self>, ValidationError> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn plane_plane() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let xy = objects.surfaces.xy_plane();
         let xz = objects.surfaces.xz_plane();
@@ -110,10 +110,10 @@ mod tests {
                     xy.clone(),
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
-                        &objects
+                        &mut objects
                     )?
                 ],
-                &objects
+                &mut objects
             )?,
             None,
         );
@@ -123,16 +123,18 @@ mod tests {
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
-        let expected_xy = expected_xy.build(&objects)?.insert(&objects)?;
+        let expected_xy =
+            expected_xy.build(&mut objects)?.insert(&mut objects)?;
         let mut expected_xz = PartialCurve {
             surface: Some(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();
-        let expected_xz = expected_xz.build(&objects)?.insert(&objects)?;
+        let expected_xz =
+            expected_xz.build(&mut objects)?.insert(&mut objects)?;
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &objects)?,
+            SurfaceSurfaceIntersection::compute([xy, xz], &mut objects)?,
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn cycle_half_edge_connections() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let valid = Cycle::partial()
             .with_poly_chain_from_points(
@@ -83,7 +83,7 @@ mod tests {
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&objects)?;
+            .build(&mut objects)?;
         let invalid = {
             let mut half_edges = valid
                 .half_edges()
@@ -105,7 +105,7 @@ mod tests {
             let half_edges = half_edges
                 .into_iter()
                 .map(|half_edge| -> anyhow::Result<_, ValidationError> {
-                    Ok(half_edge.build(&objects)?.insert(&objects)?)
+                    Ok(half_edge.build(&mut objects)?.insert(&mut objects)?)
                 })
                 .collect::<Result<Vec<_>, _>>()?;
 

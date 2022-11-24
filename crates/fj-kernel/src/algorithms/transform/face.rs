@@ -13,7 +13,7 @@ impl TransformObject for PartialFace {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
             .surface()
@@ -56,7 +56,7 @@ impl TransformObject for FaceSet {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let mut faces = FaceSet::new();
         faces.extend(

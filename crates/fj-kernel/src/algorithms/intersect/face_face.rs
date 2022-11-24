@@ -30,7 +30,7 @@ impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(
         faces: [&Face; 2],
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Option<Self>, ValidationError> {
         let surfaces = faces.map(|face| face.surface().clone());
 
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn compute_no_intersection() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -95,10 +95,11 @@ mod tests {
                 Face::partial()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
-                    .build(&objects)
+                    .build(&mut objects)
             })?;
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
+        let intersection =
+            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
 
         assert!(intersection.is_none());
 
@@ -107,7 +108,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         #[rustfmt::skip]
         let points = [
@@ -122,10 +123,11 @@ mod tests {
             Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
-                .build(&objects)
+                .build(&mut objects)
         })?;
 
-        let intersection = FaceFaceIntersection::compute([&a, &b], &objects)?;
+        let intersection =
+            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
 
         let expected_curves =
             surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
@@ -134,7 +136,7 @@ mod tests {
                     ..Default::default()
                 };
                 curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-                Ok(curve.build(&objects)?.insert(&objects)?)
+                Ok(curve.build(&mut objects)?.insert(&mut objects)?)
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
