@@ -19,7 +19,7 @@ impl Sweep for Handle<Curve> {
         self,
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         match self.surface().geometry().u {
             GlobalPath::Circle(_) => {

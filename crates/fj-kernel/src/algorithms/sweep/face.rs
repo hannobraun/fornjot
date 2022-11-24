@@ -17,7 +17,7 @@ impl Sweep for Handle<Face> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let path = path.into();
 
@@ -99,14 +99,14 @@ mod tests {
 
     #[test]
     fn sweep_up() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &objects)
             .build(&objects)
-            .sweep(UP, &objects)?;
+            .sweep(UP, &mut objects)?;
 
         let bottom = Face::partial()
             .with_surface(surface.clone())
@@ -134,7 +134,7 @@ mod tests {
                     )
                     .build(&objects)?
                     .insert(&objects)?;
-                (half_edge, Color::default()).sweep(UP, &objects)
+                (half_edge, Color::default()).sweep(UP, &mut objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
 
@@ -146,14 +146,14 @@ mod tests {
 
     #[test]
     fn sweep_down() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &objects)
             .build(&objects)
-            .sweep(DOWN, &objects)?;
+            .sweep(DOWN, &mut objects)?;
 
         let bottom = Face::partial()
             .with_surface(surface.clone().translate(DOWN, &objects)?)
@@ -182,7 +182,7 @@ mod tests {
                     .build(&objects)?
                     .insert(&objects)?
                     .reverse(&objects)?;
-                (half_edge, Color::default()).sweep(DOWN, &objects)
+                (half_edge, Color::default()).sweep(DOWN, &mut objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
 

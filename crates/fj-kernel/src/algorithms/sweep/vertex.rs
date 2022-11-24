@@ -22,7 +22,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let (vertex, surface) = self;
         let path = path.into();
@@ -133,7 +133,7 @@ impl Sweep for Handle<GlobalVertex> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let curve = GlobalCurve.insert(objects)?;
 
@@ -172,7 +172,7 @@ mod tests {
 
     #[test]
     fn vertex_surface() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
@@ -190,7 +190,7 @@ mod tests {
         .insert(&objects)?;
 
         let half_edge =
-            (vertex, surface.clone()).sweep([0., 0., 1.], &objects)?;
+            (vertex, surface.clone()).sweep([0., 0., 1.], &mut objects)?;
 
         let expected_half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])

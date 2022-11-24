@@ -24,7 +24,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let (edge, color) = self;
         let path = path.into();
@@ -202,7 +202,7 @@ mod tests {
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
@@ -213,7 +213,7 @@ mod tests {
             .insert(&objects)?;
 
         let face =
-            (half_edge, Color::default()).sweep([0., 0., 1.], &objects)?;
+            (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects)?;
 
         let expected_face = {
             let surface = objects.surfaces.xz_plane();

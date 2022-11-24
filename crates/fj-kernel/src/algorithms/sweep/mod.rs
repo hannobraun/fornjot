@@ -25,7 +25,7 @@ pub trait Sweep: Sized {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let mut cache = SweepCache::default();
         self.sweep_with_cache(path, &mut cache, objects)
@@ -36,7 +36,7 @@ pub trait Sweep: Sized {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError>;
 }
 

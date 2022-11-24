@@ -15,7 +15,7 @@ impl Sweep for Handle<Sketch> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self::Swept, ValidationError> {
         let path = path.into();
 
