@@ -381,7 +381,7 @@ mod tests {
             ..Default::default()
         };
         object.update_as_u_axis();
-        let object = object.build(&mut objects)?.insert(&objects)?;
+        let object = object.build(&mut objects)?.insert(&mut objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -410,7 +410,7 @@ mod tests {
             )
             .close_with_line_segment()
             .build(&mut objects)?
-            .insert(&objects);
+            .insert(&mut objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -436,7 +436,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build(&mut objects)?
-            .insert(&objects)?;
+            .insert(&mut objects)?;
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -455,9 +455,9 @@ mod tests {
 
     #[test]
     fn global_curve() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
-        let object = GlobalCurve.insert(&objects)?;
+        let object = GlobalCurve.insert(&mut objects)?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -476,10 +476,10 @@ mod tests {
 
     #[test]
     fn global_vertex() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let object =
-            GlobalVertex::from_position([0., 0., 0.]).insert(&objects)?;
+            GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects)?;
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -506,7 +506,7 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut objects)?
-            .insert(&objects)?;
+            .insert(&mut objects)?;
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -553,7 +553,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build(&mut objects)?
-            .insert(&objects)?;
+            .insert(&mut objects)?;
         let object = Sketch::builder().with_faces([face]).build(&mut objects);
 
         assert_eq!(3, object.curve_iter().count());
@@ -621,13 +621,14 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?.insert(&objects)?;
+        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
         let global_vertex =
-            GlobalVertex::from_position([0., 0., 0.]).insert(&objects)?;
+            GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects)?;
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex)
-                .insert(&objects)?;
-        let object = Vertex::new([0.], curve, surface_vertex).insert(&objects);
+                .insert(&mut objects)?;
+        let object =
+            Vertex::new([0.], curve, surface_vertex).insert(&mut objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

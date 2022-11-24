@@ -223,7 +223,7 @@ mod tests {
             let mut vertex = vertices[1].to_partial();
             // Arranging for an equal but not identical curve here.
             vertex.curve = valid.curve().to_partial().into();
-            vertices[1] = vertex.build(&mut objects)?.insert(&objects)?;
+            vertices[1] = vertex.build(&mut objects)?.insert(&mut objects)?;
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
@@ -246,8 +246,8 @@ mod tests {
             .build(&mut objects)?;
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.curve = GlobalCurve.insert(&objects)?.into();
-            tmp.build(&mut objects)?.insert(&objects)?
+            tmp.curve = GlobalCurve.insert(&mut objects)?.into();
+            tmp.build(&mut objects)?.insert(&mut objects)?
         });
 
         assert!(valid.validate().is_ok());
@@ -274,7 +274,7 @@ mod tests {
                 .access_in_normalized_order()
                 // Creating equal but not identical vertices here.
                 .map(|vertex| vertex.to_partial().into());
-            tmp.build(&mut objects)?.insert(&objects)?
+            tmp.build(&mut objects)?.insert(&mut objects)?
         });
 
         assert!(valid.validate().is_ok());
@@ -299,7 +299,7 @@ mod tests {
                     let mut vertex = vertex.to_partial();
                     vertex.position = Some([0.].into());
                     vertex.infer_surface_form();
-                    Ok(vertex.build(&mut objects)?.insert(&objects)?)
+                    Ok(vertex.build(&mut objects)?.insert(&mut objects)?)
                 },
             )?,
             valid.global_form().clone(),

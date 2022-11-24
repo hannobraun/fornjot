@@ -105,7 +105,7 @@ mod tests {
             let half_edges = half_edges
                 .into_iter()
                 .map(|half_edge| -> anyhow::Result<_, ValidationError> {
-                    Ok(half_edge.build(&mut objects)?.insert(&objects)?)
+                    Ok(half_edge.build(&mut objects)?.insert(&mut objects)?)
                 })
                 .collect::<Result<Vec<_>, _>>()?;
 

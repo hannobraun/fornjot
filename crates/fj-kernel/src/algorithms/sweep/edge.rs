@@ -210,7 +210,7 @@ mod tests {
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut objects)?
-            .insert(&objects)?;
+            .insert(&mut objects)?;
 
         let face =
             (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects)?;
@@ -224,7 +224,7 @@ mod tests {
                     [[0., 0.], [1., 0.]],
                 )
                 .build(&mut objects)?
-                .insert(&objects)?;
+                .insert(&mut objects)?;
             let side_up = {
                 let mut side_up = HalfEdge::partial();
                 side_up.replace(surface.clone());
@@ -247,7 +247,7 @@ mod tests {
                     })
                     .update_as_line_segment()
                     .build(&mut objects)?
-                    .insert(&objects)?
+                    .insert(&mut objects)?
             };
             let top = {
                 let mut top = HalfEdge::partial();
@@ -266,7 +266,7 @@ mod tests {
                 })
                 .update_as_line_segment()
                 .build(&mut objects)?
-                .insert(&objects)?
+                .insert(&mut objects)?
                 .reverse(&mut objects)?
             };
             let side_down = {
@@ -287,17 +287,17 @@ mod tests {
                     })
                     .update_as_line_segment()
                     .build(&mut objects)?
-                    .insert(&objects)?
+                    .insert(&mut objects)?
                     .reverse(&mut objects)?
             };
 
             let cycle = Cycle::new([bottom, side_up, top, side_down])
-                .insert(&objects)?;
+                .insert(&mut objects)?;
 
             Face::partial()
                 .with_exterior(cycle)
                 .build(&mut objects)?
-                .insert(&objects)?
+                .insert(&mut objects)?
         };
 
         assert_eq!(face, expected_face);
