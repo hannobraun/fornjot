@@ -105,7 +105,7 @@ mod tests {
         let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &mut objects)
-            .build(&objects)
+            .build(&mut objects)
             .sweep(UP, &mut objects)?;
 
         let bottom = Face::partial()
@@ -152,7 +152,7 @@ mod tests {
         let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &mut objects)
-            .build(&objects)
+            .build(&mut objects)
             .sweep(DOWN, &mut objects)?;
 
         let bottom = Face::partial()
