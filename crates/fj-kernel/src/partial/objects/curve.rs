@@ -23,7 +23,10 @@ pub struct PartialCurve {
 
 impl PartialCurve {
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(self, objects: &Objects) -> Result<Curve, ValidationError> {
+    pub fn build(
+        self,
+        objects: &mut Objects,
+    ) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");

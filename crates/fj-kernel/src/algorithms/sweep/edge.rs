@@ -209,7 +209,7 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
 
         let face =
@@ -223,7 +223,7 @@ mod tests {
                     surface.clone(),
                     [[0., 0.], [1., 0.]],
                 )
-                .build(&objects)?
+                .build(&mut objects)?
                 .insert(&objects)?;
             let side_up = {
                 let mut side_up = HalfEdge::partial();
@@ -246,7 +246,7 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&objects)?
+                    .build(&mut objects)?
                     .insert(&objects)?
             };
             let top = {
@@ -265,7 +265,7 @@ mod tests {
                     ..Default::default()
                 })
                 .update_as_line_segment()
-                .build(&objects)?
+                .build(&mut objects)?
                 .insert(&objects)?
                 .reverse(&mut objects)?
             };
@@ -286,7 +286,7 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&objects)?
+                    .build(&mut objects)?
                     .insert(&objects)?
                     .reverse(&mut objects)?
             };
@@ -296,7 +296,7 @@ mod tests {
 
             Face::partial()
                 .with_exterior(cycle)
-                .build(&objects)?
+                .build(&mut objects)?
                 .insert(&objects)?
         };
 

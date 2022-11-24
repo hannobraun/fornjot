@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -92,10 +92,10 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&objects)?;
+        let curve = curve.build(&mut objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[1., -1.], [1., 1.]])
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn compute_edge_behind_curve_origin() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -118,13 +118,13 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&objects)?;
+        let curve = curve.build(&mut objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
                 [[-1., -1.], [-1., 1.]],
             )
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn compute_edge_parallel_to_curve() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -147,13 +147,13 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&objects)?;
+        let curve = curve.build(&mut objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
                 [[-1., -1.], [1., -1.]],
             )
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -163,7 +163,7 @@ mod tests {
 
     #[test]
     fn compute_edge_on_curve() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -171,10 +171,10 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&objects)?;
+        let curve = curve.build(&mut objects)?;
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[-1., 0.], [1., 0.]])
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 

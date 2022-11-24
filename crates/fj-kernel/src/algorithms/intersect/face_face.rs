@@ -95,7 +95,7 @@ mod tests {
                 Face::partial()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
-                    .build(&objects)
+                    .build(&mut objects)
             })?;
 
         let intersection =
@@ -123,7 +123,7 @@ mod tests {
             Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
-                .build(&objects)
+                .build(&mut objects)
         })?;
 
         let intersection =
@@ -136,7 +136,7 @@ mod tests {
                     ..Default::default()
                 };
                 curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-                Ok(curve.build(&objects)?.insert(&objects)?)
+                Ok(curve.build(&mut objects)?.insert(&objects)?)
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

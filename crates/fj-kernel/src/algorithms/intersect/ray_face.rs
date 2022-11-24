@@ -174,7 +174,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([-1., 0., 0.], &mut objects)?;
 
@@ -197,7 +197,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([1., 0., 0.], &mut objects)?;
 
@@ -223,7 +223,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([0., 0., 2.], &mut objects)?;
 
@@ -246,7 +246,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([1., 1., 0.], &mut objects)?;
 
@@ -280,7 +280,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([1., 1., 1.], &mut objects)?;
 
@@ -299,7 +299,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -312,7 +312,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
 
         assert_eq!(
@@ -338,7 +338,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?
             .translate([0., 0., 1.], &mut objects)?;
 

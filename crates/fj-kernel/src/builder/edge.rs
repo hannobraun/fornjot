@@ -162,10 +162,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             // a hack, but I can't think of something better.
             let global_forms = {
                 let must_switch_order = {
-                    let objects = Objects::new();
+                    let mut objects = Objects::new();
                     let vertices = vertices.clone().map(|vertex| {
                         vertex
-                            .into_full(&objects)
+                            .into_full(&mut objects)
                             .unwrap()
                             .global_form()
                             .clone()

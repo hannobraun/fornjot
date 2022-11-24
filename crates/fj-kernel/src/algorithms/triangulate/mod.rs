@@ -88,7 +88,7 @@ mod tests {
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let a = [0., 0.];
         let b = [2., 0.];
@@ -99,7 +99,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([a, b, c, d])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
 
         let a = Point::from(a).to_xyz();
@@ -119,7 +119,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -136,7 +136,7 @@ mod tests {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
 
         let triangles = triangulate(face)?;
@@ -171,7 +171,7 @@ mod tests {
 
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         //   e       c
         //   |\     /|
@@ -194,7 +194,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
 
         let triangles = triangulate(face)?;

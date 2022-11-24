@@ -145,13 +145,13 @@ mod tests {
 
     #[test]
     fn point_is_outside_face() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([2., 1.]);
 
@@ -163,13 +163,13 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
@@ -184,13 +184,13 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 2.]);
 
@@ -205,7 +205,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -216,7 +216,7 @@ mod tests {
                 [3., 0.],
                 [3., 4.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
@@ -232,7 +232,7 @@ mod tests {
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() -> anyhow::Result<()>
     {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -243,7 +243,7 @@ mod tests {
                 [3., 1.],
                 [0., 2.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
@@ -259,7 +259,7 @@ mod tests {
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there(
     ) -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -271,7 +271,7 @@ mod tests {
                 [4., 0.],
                 [4., 5.],
             ])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 1.]);
 
@@ -286,13 +286,13 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 0.]);
 
@@ -316,13 +316,13 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&objects)?
+            .build(&mut objects)?
             .insert(&objects)?;
         let point = Point::from([1., 0.]);
 

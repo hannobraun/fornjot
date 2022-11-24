@@ -159,7 +159,7 @@ mod tests {
 
     #[test]
     fn compute() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
 
@@ -168,7 +168,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
-        let curve = curve.build(&objects)?;
+        let curve = curve.build(&mut objects)?;
 
         #[rustfmt::skip]
         let exterior = [
@@ -189,7 +189,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
-            .build(&objects)?;
+            .build(&mut objects)?;
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

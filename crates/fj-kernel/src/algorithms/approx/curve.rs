@@ -211,7 +211,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_flat_surface() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
@@ -222,7 +222,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
-        let curve = curve.build(&objects)?.insert(&objects)?;
+        let curve = curve.build(&mut objects)?.insert(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -234,7 +234,7 @@ mod tests {
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() -> anyhow::Result<()>
     {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface = PartialSurface::from_axes(
             GlobalPath::circle_from_radius(1.),
@@ -247,7 +247,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
-        let curve = curve.build(&objects)?.insert(&objects)?;
+        let curve = curve.build(&mut objects)?.insert(&objects)?;
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
@@ -258,7 +258,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_along_curve() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
@@ -269,7 +269,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
-        let curve = curve.build(&objects)?.insert(&objects)?;
+        let curve = curve.build(&mut objects)?.insert(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -293,7 +293,7 @@ mod tests {
 
     #[test]
     fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
@@ -304,7 +304,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_circle_from_radius(1.);
-        let curve = curve.build(&objects)?.insert(&objects)?;
+        let curve = curve.build(&mut objects)?.insert(&objects)?;
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
