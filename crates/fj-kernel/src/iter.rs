@@ -527,7 +527,7 @@ mod tests {
     fn shell() {
         let objects = Objects::new();
 
-        let object = Shell::builder(&objects)
+        let object = Shell::builder()
             .with_cube_from_edge_length(1., &objects)
             .build(&objects);
 
