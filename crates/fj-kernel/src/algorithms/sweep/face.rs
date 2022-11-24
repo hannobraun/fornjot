@@ -113,7 +113,7 @@ mod tests {
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .insert(&objects)?
-            .reverse(&objects)?;
+            .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface.translate(UP, &objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
@@ -160,7 +160,7 @@ mod tests {
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .insert(&objects)?
-            .reverse(&objects)?;
+            .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
@@ -181,7 +181,7 @@ mod tests {
                     )
                     .build(&objects)?
                     .insert(&objects)?
-                    .reverse(&objects)?;
+                    .reverse(&mut objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &mut objects)
             })
             .collect::<Result<Vec<_>, _>>()?;

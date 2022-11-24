@@ -142,7 +142,7 @@ mod tests {
 
     #[test]
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let valid = Face::partial()
             .with_surface(objects.surfaces.xy_plane())
@@ -153,7 +153,7 @@ mod tests {
             let interiors = valid
                 .interiors()
                 .cloned()
-                .map(|cycle| cycle.reverse(&objects))
+                .map(|cycle| cycle.reverse(&mut objects))
                 .collect::<Result<Vec<_>, _>>()?;
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
