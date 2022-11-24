@@ -21,6 +21,6 @@ impl TransformObject for Handle<Solid> {
                 shell.transform(transform, objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
-        Ok(Solid::builder(objects).with_shells(faces).build())
+        Ok(Solid::builder(objects).with_shells(faces).build(objects))
     }
 }
