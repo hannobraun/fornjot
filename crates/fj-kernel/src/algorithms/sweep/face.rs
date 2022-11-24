@@ -74,7 +74,7 @@ impl Sweep for Handle<Face> {
             }
         }
 
-        Ok(Shell::builder(objects).with_faces(faces).build())
+        Ok(Shell::builder().with_faces(faces).build(objects))
     }
 }
 
@@ -102,10 +102,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects)
+        let solid = Sketch::builder()
             .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE)
-            .build()
+            .with_polygon_from_points(TRIANGLE, &objects)
+            .build(&objects)
             .sweep(UP, &objects)?;
 
         let bottom = Face::partial()
@@ -149,10 +149,10 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects)
+        let solid = Sketch::builder()
             .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE)
-            .build()
+            .with_polygon_from_points(TRIANGLE, &objects)
+            .build(&objects)
             .sweep(DOWN, &objects)?;
 
         let bottom = Face::partial()

@@ -1,6 +1,6 @@
 use crate::{
     builder::ShellBuilder,
-    objects::{Face, FaceSet, Objects},
+    objects::{Face, FaceSet},
     storage::Handle,
 };
 
@@ -17,9 +17,8 @@ pub struct Shell {
 
 impl Shell {
     /// Build a `Shell` using [`ShellBuilder`]
-    pub fn builder(objects: &Objects) -> ShellBuilder {
+    pub fn builder() -> ShellBuilder {
         ShellBuilder {
-            objects,
             faces: FaceSet::new(),
         }
     }

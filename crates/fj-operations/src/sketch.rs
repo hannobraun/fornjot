@@ -59,7 +59,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = Sketch::builder(objects).with_faces([face]).build();
+        let sketch = Sketch::builder().with_faces([face]).build(objects);
         Ok(sketch.deref().clone())
     }
 

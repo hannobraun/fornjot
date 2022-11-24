@@ -1,6 +1,6 @@
 use crate::{
     builder::SketchBuilder,
-    objects::{Face, FaceSet, Objects},
+    objects::{Face, FaceSet},
     storage::Handle,
 };
 
@@ -17,9 +17,8 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder(objects: &Objects) -> SketchBuilder {
+    pub fn builder() -> SketchBuilder {
         SketchBuilder {
-            objects,
             surface: None,
             faces: FaceSet::new(),
         }

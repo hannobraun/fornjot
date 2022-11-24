@@ -11,15 +11,12 @@ use crate::{
 /// API for building a [`Solid`]
 ///
 /// Also see [`Solid::builder`].
-pub struct SolidBuilder<'a> {
-    /// The stores that the created objects are put in
-    pub objects: &'a Objects,
-
+pub struct SolidBuilder {
     /// The shells that make up the [`Solid`]
     pub shells: BTreeSet<Handle<Shell>>,
 }
 
-impl<'a> SolidBuilder<'a> {
+impl SolidBuilder {
     /// Build the [`Solid`] with the provided shells
     pub fn with_shells(
         mut self,
@@ -33,16 +30,17 @@ impl<'a> SolidBuilder<'a> {
     pub fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
+        objects: &Objects,
     ) -> Self {
-        let shell = Shell::builder(self.objects)
-            .with_cube_from_edge_length(edge_length)
-            .build();
+        let shell = Shell::builder()
+            .with_cube_from_edge_length(edge_length, objects)
+            .build(objects);
         self.shells.insert(shell);
         self
     }
 
     /// Build the [`Solid`]
-    pub fn build(self) -> Handle<Solid> {
-        Solid::new(self.shells).insert(self.objects).unwrap()
+    pub fn build(self, objects: &Objects) -> Handle<Solid> {
+        Solid::new(self.shells).insert(objects).unwrap()
     }
 }

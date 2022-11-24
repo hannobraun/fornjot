@@ -527,9 +527,9 @@ mod tests {
     fn shell() {
         let objects = Objects::new();
 
-        let object = Shell::builder(&objects)
-            .with_cube_from_edge_length(1.)
-            .build();
+        let object = Shell::builder()
+            .with_cube_from_edge_length(1., &objects)
+            .build(&objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -554,7 +554,7 @@ mod tests {
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build(&objects)?
             .insert(&objects)?;
-        let object = Sketch::builder(&objects).with_faces([face]).build();
+        let object = Sketch::builder().with_faces([face]).build(&objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -575,9 +575,9 @@ mod tests {
     fn solid() {
         let objects = Objects::new();
 
-        let object = Solid::builder(&objects)
-            .with_cube_from_edge_length(1.)
-            .build();
+        let object = Solid::builder()
+            .with_cube_from_edge_length(1., &objects)
+            .build(&objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

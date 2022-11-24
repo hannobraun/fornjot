@@ -19,15 +19,12 @@ use crate::{
 /// API for building a [`Shell`]
 ///
 /// Also see [`Shell::builder`].
-pub struct ShellBuilder<'a> {
-    /// The stores that the created objects are put in
-    pub objects: &'a Objects,
-
+pub struct ShellBuilder {
     /// The faces that make up the [`Shell`]
     pub faces: FaceSet,
 }
 
-impl<'a> ShellBuilder<'a> {
+impl ShellBuilder {
     /// Build the [`Shell`] with the provided faces
     pub fn with_faces(
         mut self,
@@ -41,6 +38,7 @@ impl<'a> ShellBuilder<'a> {
     pub fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
+        objects: &Objects,
     ) -> Self {
         let edge_length = edge_length.into();
 
@@ -49,11 +47,10 @@ impl<'a> ShellBuilder<'a> {
         let h = edge_length / 2.;
 
         let bottom = {
-            let surface = self
-                .objects
+            let surface = objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, -h], self.objects)
+                .translate([Z, Z, -h], objects)
                 .unwrap();
 
             Face::partial()
@@ -64,9 +61,9 @@ impl<'a> ShellBuilder<'a> {
                     [h, h],
                     [-h, h],
                 ])
-                .build(self.objects)
+                .build(objects)
                 .unwrap()
-                .insert(self.objects)
+                .insert(objects)
                 .unwrap()
         };
 
@@ -82,9 +79,9 @@ impl<'a> ShellBuilder<'a> {
                     let c = a + [Z, Z, edge_length];
 
                     PartialSurface::plane_from_points([a, b, c])
-                        .build(self.objects)
+                        .build(objects)
                         .unwrap()
-                        .insert(self.objects)
+                        .insert(objects)
                         .unwrap()
                 })
                 .collect::<Vec<_>>();
@@ -102,9 +99,9 @@ impl<'a> ShellBuilder<'a> {
                         surface.clone(),
                         [[Z, Z], [edge_length, Z]],
                     )
-                    .build(self.objects)
+                    .build(objects)
                     .unwrap()
-                    .insert(self.objects)
+                    .insert(objects)
                     .unwrap()
                 })
                 .collect::<Vec<_>>();
@@ -138,9 +135,9 @@ impl<'a> ShellBuilder<'a> {
                         ..Default::default()
                     }
                     .update_as_line_segment()
-                    .build(self.objects)
+                    .build(objects)
                     .unwrap()
-                    .insert(self.objects)
+                    .insert(objects)
                     .unwrap()
                 })
                 .collect::<Vec<_>>();
@@ -190,9 +187,9 @@ impl<'a> ShellBuilder<'a> {
                             ..Default::default()
                         }
                         .update_as_line_segment()
-                        .build(self.objects)
+                        .build(objects)
                         .unwrap()
-                        .insert(self.objects)
+                        .insert(objects)
                         .unwrap()
                     })
                     .collect::<Vec<_>>()
@@ -223,9 +220,9 @@ impl<'a> ShellBuilder<'a> {
                         ..Default::default()
                     }
                     .update_as_line_segment()
-                    .build(self.objects)
+                    .build(objects)
                     .unwrap()
-                    .insert(self.objects)
+                    .insert(objects)
                     .unwrap()
                 })
                 .collect::<Vec<_>>();
@@ -238,16 +235,16 @@ impl<'a> ShellBuilder<'a> {
                 .map(|(((bottom, side_up), top), side_down)| {
                     let cycle = Cycle::partial()
                         .with_half_edges([bottom, side_up, top, side_down])
-                        .build(self.objects)
+                        .build(objects)
                         .unwrap()
-                        .insert(self.objects)
+                        .insert(objects)
                         .unwrap();
 
                     Face::partial()
                         .with_exterior(cycle)
-                        .build(self.objects)
+                        .build(objects)
                         .unwrap()
-                        .insert(self.objects)
+                        .insert(objects)
                         .unwrap()
                 });
 
@@ -255,11 +252,10 @@ impl<'a> ShellBuilder<'a> {
         };
 
         let top = {
-            let surface = self
-                .objects
+            let surface = objects
                 .surfaces
                 .xy_plane()
-                .translate([Z, Z, h], self.objects)
+                .translate([Z, Z, h], objects)
                 .unwrap();
 
             let mut top_edges = top_edges;
@@ -283,9 +279,9 @@ impl<'a> ShellBuilder<'a> {
                             surface: Some(surface.clone()),
                             global_form: vertex.global_form().clone().into(),
                         }
-                        .build(self.objects)
+                        .build(objects)
                         .unwrap()
-                        .insert(self.objects)
+                        .insert(objects)
                         .unwrap()
                     });
 
@@ -317,18 +313,18 @@ impl<'a> ShellBuilder<'a> {
                         ..Default::default()
                     }
                     .update_as_line_segment()
-                    .build(self.objects)
+                    .build(objects)
                     .unwrap()
-                    .insert(self.objects)
+                    .insert(objects)
                     .unwrap(),
                 );
             }
 
             Face::partial()
-                .with_exterior(Cycle::new(edges).insert(self.objects).unwrap())
-                .build(self.objects)
+                .with_exterior(Cycle::new(edges).insert(objects).unwrap())
+                .build(objects)
                 .unwrap()
-                .insert(self.objects)
+                .insert(objects)
                 .unwrap()
         };
 
@@ -340,7 +336,7 @@ impl<'a> ShellBuilder<'a> {
     }
 
     /// Build the [`Shell`]
-    pub fn build(self) -> Handle<Shell> {
-        Shell::new(self.faces).insert(self.objects).unwrap()
+    pub fn build(self, objects: &Objects) -> Handle<Shell> {
+        Shell::new(self.faces).insert(objects).unwrap()
     }
 }
