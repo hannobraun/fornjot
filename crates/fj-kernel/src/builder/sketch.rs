@@ -40,7 +40,7 @@ impl SketchBuilder {
     pub fn with_polygon_from_points(
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Self {
         let surface = self
             .surface
