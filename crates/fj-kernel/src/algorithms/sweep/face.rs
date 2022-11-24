@@ -102,7 +102,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects)
+        let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &objects)
             .build(&objects)
@@ -149,7 +149,7 @@ mod tests {
         let objects = Objects::new();
 
         let surface = objects.surfaces.xy_plane();
-        let solid = Sketch::builder(&objects)
+        let solid = Sketch::builder()
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &objects)
             .build(&objects)

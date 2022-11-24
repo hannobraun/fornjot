@@ -554,8 +554,7 @@ mod tests {
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
             .build(&objects)?
             .insert(&objects)?;
-        let object =
-            Sketch::builder(&objects).with_faces([face]).build(&objects);
+        let object = Sketch::builder().with_faces([face]).build(&objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());

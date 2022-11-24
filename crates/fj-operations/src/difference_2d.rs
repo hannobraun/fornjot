@@ -89,8 +89,7 @@ impl Shape for fj::Difference2d {
             );
         }
 
-        let difference =
-            Sketch::builder(objects).with_faces(faces).build(objects);
+        let difference = Sketch::builder().with_faces(faces).build(objects);
         Ok(difference.deref().clone())
     }
 

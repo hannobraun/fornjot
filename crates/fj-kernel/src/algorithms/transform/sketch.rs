@@ -20,6 +20,6 @@ impl TransformObject for Handle<Sketch> {
             .cloned()
             .map(|face| face.transform(transform, objects))
             .collect::<Result<Vec<_>, _>>()?;
-        Ok(Sketch::builder(objects).with_faces(faces).build(objects))
+        Ok(Sketch::builder().with_faces(faces).build(objects))
     }
 }
