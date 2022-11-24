@@ -17,9 +17,8 @@ pub struct Shell {
 
 impl Shell {
     /// Build a `Shell` using [`ShellBuilder`]
-    pub fn builder(objects: &Objects) -> ShellBuilder {
+    pub fn builder(_: &Objects) -> ShellBuilder {
         ShellBuilder {
-            objects,
             faces: FaceSet::new(),
         }
     }

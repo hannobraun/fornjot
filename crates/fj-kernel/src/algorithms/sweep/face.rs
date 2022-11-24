@@ -74,7 +74,7 @@ impl Sweep for Handle<Face> {
             }
         }
 
-        Ok(Shell::builder(objects).with_faces(faces).build())
+        Ok(Shell::builder(objects).with_faces(faces).build(objects))
     }
 }
 

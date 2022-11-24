@@ -35,8 +35,8 @@ impl<'a> SolidBuilder<'a> {
         edge_length: impl Into<Scalar>,
     ) -> Self {
         let shell = Shell::builder(self.objects)
-            .with_cube_from_edge_length(edge_length)
-            .build();
+            .with_cube_from_edge_length(edge_length, self.objects)
+            .build(self.objects);
         self.shells.insert(shell);
         self
     }
