@@ -87,7 +87,7 @@ impl Curves {
 
     /// Insert a [`Curve`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Curve>,
         curve: Curve,
     ) -> Result<(), Infallible> {
@@ -111,7 +111,7 @@ impl Cycles {
 
     /// Insert a [`Cycle`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Cycle>,
         cycle: Cycle,
     ) -> Result<(), CycleValidationError> {
@@ -135,7 +135,7 @@ impl Faces {
 
     /// Insert a [`Face`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Face>,
         face: Face,
     ) -> Result<(), FaceValidationError> {
@@ -159,7 +159,7 @@ impl GlobalCurves {
 
     /// Insert a [`GlobalCurve`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<GlobalCurve>,
         global_curve: GlobalCurve,
     ) -> Result<(), Infallible> {
@@ -183,7 +183,7 @@ impl GlobalEdges {
 
     /// Insert a [`GlobalEdge`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<GlobalEdge>,
         global_edge: GlobalEdge,
     ) -> Result<(), Infallible> {
@@ -207,7 +207,7 @@ impl GlobalVertices {
 
     /// Insert a [`GlobalVertex`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<GlobalVertex>,
         global_vertex: GlobalVertex,
     ) -> Result<(), Infallible> {
@@ -231,7 +231,7 @@ impl HalfEdges {
 
     /// Insert a [`HalfEdge`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<HalfEdge>,
         half_edge: HalfEdge,
     ) -> Result<(), HalfEdgeValidationError> {
@@ -255,7 +255,7 @@ impl Shells {
 
     /// Insert a [`Shell`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Shell>,
         shell: Shell,
     ) -> Result<(), Infallible> {
@@ -279,7 +279,7 @@ impl Sketches {
 
     /// Insert a [`Sketch`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Sketch>,
         sketch: Sketch,
     ) -> Result<(), Infallible> {
@@ -303,7 +303,7 @@ impl Solids {
 
     /// Insert a [`Solid`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Solid>,
         solid: Solid,
     ) -> Result<(), Infallible> {
@@ -327,7 +327,7 @@ impl SurfaceVertices {
 
     /// Insert a [`SurfaceVertex`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<SurfaceVertex>,
         surface_vertex: SurfaceVertex,
     ) -> Result<(), SurfaceVertexValidationError> {
@@ -355,7 +355,7 @@ impl Surfaces {
 
     /// Insert a [`Surface`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Surface>,
         surface: Surface,
     ) -> Result<(), Infallible> {
@@ -382,7 +382,7 @@ impl Surfaces {
 
 impl Default for Surfaces {
     fn default() -> Self {
-        let store: Store<Surface> = Store::new();
+        let mut store: Store<Surface> = Store::new();
 
         let xy_plane = store.reserve();
         store.insert(
@@ -433,7 +433,7 @@ impl Vertices {
 
     /// Insert a [`Vertex`] into the store
     pub fn insert(
-        &self,
+        &mut self,
         handle: Handle<Vertex>,
         vertex: Vertex,
     ) -> Result<(), VertexValidationError> {
