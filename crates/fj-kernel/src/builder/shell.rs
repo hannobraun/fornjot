@@ -337,7 +337,7 @@ impl ShellBuilder {
     }
 
     /// Build the [`Shell`]
-    pub fn build(self, objects: &Objects) -> Handle<Shell> {
+    pub fn build(self, objects: &mut Objects) -> Handle<Shell> {
         Shell::new(self.faces).insert(objects).unwrap()
     }
 }
