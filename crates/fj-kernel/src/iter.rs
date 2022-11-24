@@ -575,7 +575,7 @@ mod tests {
     fn solid() {
         let objects = Objects::new();
 
-        let object = Solid::builder(&objects)
+        let object = Solid::builder()
             .with_cube_from_edge_length(1., &objects)
             .build(&objects);
 

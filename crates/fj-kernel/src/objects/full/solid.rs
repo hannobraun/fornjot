@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::{
     builder::SolidBuilder,
-    objects::{Face, Objects, Shell},
+    objects::{Face, Shell},
     storage::Handle,
 };
 
@@ -19,7 +19,7 @@ pub struct Solid {
 
 impl Solid {
     /// Build a `Solid` using [`SolidBuilder`]
-    pub fn builder(_: &Objects) -> SolidBuilder {
+    pub fn builder() -> SolidBuilder {
         SolidBuilder {
             shells: BTreeSet::new(),
         }
