@@ -110,7 +110,7 @@ mod tests {
                     xy.clone(),
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
-                        &objects
+                        &mut objects
                     )?
                 ],
                 &mut objects

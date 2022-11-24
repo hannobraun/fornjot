@@ -161,7 +161,7 @@ mod tests {
 
     #[test]
     fn ray_misses_whole_surface() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -176,7 +176,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([-1., 0., 0.], &objects)?;
+            .translate([-1., 0., 0.], &mut objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())
@@ -184,7 +184,7 @@ mod tests {
 
     #[test]
     fn ray_hits_face() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -199,7 +199,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([1., 0., 0.], &objects)?;
+            .translate([1., 0., 0.], &mut objects)?;
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -210,7 +210,7 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -225,7 +225,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([0., 0., 2.], &objects)?;
+            .translate([0., 0., 2.], &mut objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())
@@ -233,7 +233,7 @@ mod tests {
 
     #[test]
     fn ray_hits_edge() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -248,7 +248,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([1., 1., 0.], &objects)?;
+            .translate([1., 1., 0.], &mut objects)?;
 
         let edge = face
             .half_edge_iter()
@@ -267,7 +267,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -282,7 +282,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([1., 1., 1.], &objects)?;
+            .translate([1., 1., 1.], &mut objects)?;
 
         let vertex = face
             .vertex_iter()
@@ -325,7 +325,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() -> anyhow::Result<()> {
-        let objects = Objects::new();
+        let mut objects = Objects::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -340,7 +340,7 @@ mod tests {
             ])
             .build(&objects)?
             .insert(&objects)?
-            .translate([0., 0., 1.], &objects)?;
+            .translate([0., 0., 1.], &mut objects)?;
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())

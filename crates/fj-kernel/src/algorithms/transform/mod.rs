@@ -34,7 +34,7 @@ pub trait TransformObject: Sized {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError>;
 
     /// Translate the object
@@ -43,7 +43,7 @@ pub trait TransformObject: Sized {
     fn translate(
         self,
         offset: impl Into<Vector<3>>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         self.transform(&Transform::translation(offset), objects)
     }
@@ -54,7 +54,7 @@ pub trait TransformObject: Sized {
     fn rotate(
         self,
         axis_angle: impl Into<Vector<3>>,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         self.transform(&Transform::rotation(axis_angle), objects)
     }
@@ -69,7 +69,7 @@ where
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         Ok(self
             .to_partial()
@@ -88,7 +88,7 @@ where
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let transformed = match self {
             Self::Full(full) => {

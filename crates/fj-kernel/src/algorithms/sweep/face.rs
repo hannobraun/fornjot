@@ -115,7 +115,7 @@ mod tests {
             .insert(&objects)?
             .reverse(&mut objects)?;
         let top = Face::partial()
-            .with_surface(surface.translate(UP, &objects)?)
+            .with_surface(surface.translate(UP, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .insert(&objects)?;
@@ -156,7 +156,7 @@ mod tests {
             .sweep(DOWN, &mut objects)?;
 
         let bottom = Face::partial()
-            .with_surface(surface.clone().translate(DOWN, &objects)?)
+            .with_surface(surface.clone().translate(DOWN, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&objects)?
             .insert(&objects)?

@@ -12,7 +12,7 @@ impl TransformObject for PartialVertex {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let curve = self.curve.transform(transform, objects)?;
         let surface_form = self
@@ -34,7 +34,7 @@ impl TransformObject for PartialSurfaceVertex {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let surface = self
             .surface
@@ -57,7 +57,7 @@ impl TransformObject for PartialGlobalVertex {
     fn transform(
         self,
         transform: &Transform,
-        _: &Objects,
+        _: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let position = self
             .position

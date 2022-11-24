@@ -13,7 +13,7 @@ impl TransformObject for PartialHalfEdge {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let curve = self.curve.transform(transform, objects)?;
         let vertices = self
@@ -33,7 +33,7 @@ impl TransformObject for PartialGlobalEdge {
     fn transform(
         self,
         transform: &Transform,
-        objects: &Objects,
+        objects: &mut Objects,
     ) -> Result<Self, ValidationError> {
         let curve = self.curve.transform(transform, objects)?;
         let vertices = self.vertices.try_map_ext(

@@ -246,7 +246,8 @@ impl ShellBuilder {
                         .unwrap()
                         .insert(objects)
                         .unwrap()
-                });
+                })
+                .collect::<Vec<_>>();
 
             (sides, tops)
         };
