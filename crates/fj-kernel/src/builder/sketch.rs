@@ -12,10 +12,7 @@ use super::FaceBuilder;
 /// API for building a [`Sketch`]
 ///
 /// Also see [`Sketch::builder`].
-pub struct SketchBuilder<'a> {
-    /// The stores that the created objects are put in
-    pub objects: &'a Objects,
-
+pub struct SketchBuilder {
     /// The surface that the [`Sketch`] is defined in
     pub surface: Option<Handle<Surface>>,
 
@@ -23,7 +20,7 @@ pub struct SketchBuilder<'a> {
     pub faces: FaceSet,
 }
 
-impl<'a> SketchBuilder<'a> {
+impl SketchBuilder {
     /// Build the [`Sketch`] with the provided [`Surface`]
     pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
         self.surface = Some(surface);
@@ -43,6 +40,7 @@ impl<'a> SketchBuilder<'a> {
     pub fn with_polygon_from_points(
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
+        objects: &Objects,
     ) -> Self {
         let surface = self
             .surface
@@ -51,15 +49,15 @@ impl<'a> SketchBuilder<'a> {
         self.faces.extend([Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(points)
-            .build(self.objects)
+            .build(objects)
             .unwrap()
-            .insert(self.objects)
+            .insert(objects)
             .unwrap()]);
         self
     }
 
     /// Build the [`Sketch`]
-    pub fn build(self) -> Handle<Sketch> {
-        Sketch::new(self.faces).insert(self.objects).unwrap()
+    pub fn build(self, objects: &Objects) -> Handle<Sketch> {
+        Sketch::new(self.faces).insert(objects).unwrap()
     }
 }

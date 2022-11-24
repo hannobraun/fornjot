@@ -17,9 +17,8 @@ pub struct Sketch {
 
 impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder(objects: &Objects) -> SketchBuilder {
+    pub fn builder(_: &Objects) -> SketchBuilder {
         SketchBuilder {
-            objects,
             surface: None,
             faces: FaceSet::new(),
         }
