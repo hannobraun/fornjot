@@ -65,7 +65,6 @@ impl FaceFaceIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -75,7 +74,6 @@ mod tests {
         objects::{Face, Objects},
         partial::{HasPartial, PartialCurve},
         services::State,
-        validate::ValidationError,
     };
 
     use super::FaceFaceIntersection;
@@ -130,15 +128,14 @@ mod tests {
         let intersection =
             FaceFaceIntersection::compute([&a, &b], &mut objects);
 
-        let expected_curves =
-            surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
-                let mut curve = PartialCurve {
-                    surface: Some(surface),
-                    ..Default::default()
-                };
-                curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-                Ok(curve.build(&mut objects).insert(&mut objects))
-            })?;
+        let expected_curves = surfaces.map(|surface| {
+            let mut curve = PartialCurve {
+                surface: Some(surface),
+                ..Default::default()
+            };
+            curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
+            curve.build(&mut objects).insert(&mut objects)
+        });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
         assert_eq!(
