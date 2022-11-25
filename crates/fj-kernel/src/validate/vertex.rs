@@ -182,20 +182,20 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
-        objects::{GlobalVertex, Objects, SurfaceVertex, Vertex},
+        objects::{GlobalVertex, SurfaceVertex, Vertex},
         partial::{
             HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex,
         },
-        services::State,
+        services::Services,
         validate::Validate,
     };
 
     #[test]
     fn vertex_surface_mismatch() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let mut curve = PartialCurve {
-            surface: Some(objects.surfaces.xy_plane()),
+            surface: Some(services.objects.surfaces.xy_plane()),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -205,11 +205,12 @@ mod tests {
             curve: curve.into(),
             ..Default::default()
         }
-        .build(&mut objects);
+        .build(&mut services.objects);
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
-            tmp.surface = Some(objects.surfaces.xz_plane());
-            tmp.build(&mut objects).insert(&mut objects)
+            tmp.surface = Some(services.objects.surfaces.xz_plane());
+            tmp.build(&mut services.objects)
+                .insert(&mut services.objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -218,11 +219,11 @@ mod tests {
 
     #[test]
     fn vertex_position_mismatch() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let valid = {
             let mut curve = PartialCurve {
-                surface: Some(objects.surfaces.xy_plane()),
+                surface: Some(services.objects.surfaces.xy_plane()),
                 ..Default::default()
             };
             curve.update_as_u_axis();
@@ -232,13 +233,14 @@ mod tests {
                 curve: curve.into(),
                 ..Default::default()
             }
-            .build(&mut objects)
+            .build(&mut services.objects)
         };
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.position = Some([1., 0.].into());
             tmp.infer_global_form();
-            tmp.build(&mut objects).insert(&mut objects)
+            tmp.build(&mut services.objects)
+                .insert(&mut services.objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -247,18 +249,19 @@ mod tests {
 
     #[test]
     fn surface_vertex_position_mismatch() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),
-            surface: Some(objects.surfaces.xy_plane()),
+            surface: Some(services.objects.surfaces.xy_plane()),
             ..Default::default()
         }
-        .build(&mut objects);
+        .build(&mut services.objects);
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
-            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects),
+            GlobalVertex::from_position([1., 0., 0.])
+                .insert(&mut services.objects),
         );
 
         assert!(valid.validate().is_ok());

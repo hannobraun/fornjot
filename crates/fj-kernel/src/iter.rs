@@ -367,22 +367,24 @@ mod tests {
             Sketch, Solid, SurfaceVertex, Vertex,
         },
         partial::{HasPartial, PartialCurve},
-        services::State,
+        services::Services,
     };
 
     use super::ObjectIters as _;
 
     #[test]
     fn curve() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialCurve {
             surface: Some(surface),
             ..Default::default()
         };
         object.update_as_u_axis();
-        let object = object.build(&mut objects).insert(&mut objects);
+        let object = object
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -399,17 +401,17 @@ mod tests {
 
     #[test]
     fn cycle() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let object = Cycle::partial()
             .with_poly_chain_from_points(
                 surface,
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -426,14 +428,14 @@ mod tests {
 
     #[test]
     fn face() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let object = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -450,9 +452,9 @@ mod tests {
 
     #[test]
     fn global_curve() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let object = GlobalCurve.insert(&mut objects);
+        let object = GlobalCurve.insert(&mut services.objects);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -469,10 +471,10 @@ mod tests {
 
     #[test]
     fn global_vertex() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let object =
-            GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects);
+        let object = GlobalVertex::from_position([0., 0., 0.])
+            .insert(&mut services.objects);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -489,15 +491,15 @@ mod tests {
 
     #[test]
     fn half_edge() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let object = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                objects.surfaces.xy_plane(),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -514,11 +516,11 @@ mod tests {
 
     #[test]
     fn shell() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let object = Shell::builder()
-            .with_cube_from_edge_length(1., &mut objects)
-            .build(&mut objects);
+            .with_cube_from_edge_length(1., &mut services.objects)
+            .build(&mut services.objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -535,15 +537,17 @@ mod tests {
 
     #[test]
     fn sketch() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&mut objects)
-            .insert(&mut objects);
-        let object = Sketch::builder().with_faces([face]).build(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let object = Sketch::builder()
+            .with_faces([face])
+            .build(&mut services.objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -560,11 +564,11 @@ mod tests {
 
     #[test]
     fn solid() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let object = Solid::builder()
-            .with_cube_from_edge_length(1., &mut objects)
-            .build(&mut objects);
+            .with_cube_from_edge_length(1., &mut services.objects)
+            .build(&mut services.objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -600,22 +604,24 @@ mod tests {
 
     #[test]
     fn vertex() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects).insert(&mut objects);
-        let global_vertex =
-            GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects);
+        let curve = curve
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let global_vertex = GlobalVertex::from_position([0., 0., 0.])
+            .insert(&mut services.objects);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex)
-                .insert(&mut objects);
-        let object =
-            Vertex::new([0.], curve, surface_vertex).insert(&mut objects);
+                .insert(&mut services.objects);
+        let object = Vertex::new([0.], curve, surface_vertex)
+            .insert(&mut services.objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());

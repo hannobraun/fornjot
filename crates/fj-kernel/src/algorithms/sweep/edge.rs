@@ -191,36 +191,36 @@ mod tests {
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{Cycle, Face, HalfEdge, Objects},
+        objects::{Cycle, Face, HalfEdge},
         partial::{HasPartial, PartialSurfaceVertex, PartialVertex, Replace},
-        services::State,
+        services::Services,
     };
 
     #[test]
     fn sweep() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                objects.surfaces.xy_plane(),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
-        let face =
-            (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects);
+        let face = (half_edge, Color::default())
+            .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
-            let surface = objects.surfaces.xz_plane();
+            let surface = services.objects.surfaces.xz_plane();
 
             let bottom = HalfEdge::partial()
                 .update_as_line_segment_from_points(
                     surface.clone(),
                     [[0., 0.], [1., 0.]],
                 )
-                .build(&mut objects)
-                .insert(&mut objects);
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
             let side_up = {
                 let mut side_up = HalfEdge::partial();
                 side_up.replace(surface.clone());
@@ -242,8 +242,8 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&mut objects)
-                    .insert(&mut objects)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             };
             let top = {
                 let mut top = HalfEdge::partial();
@@ -261,9 +261,9 @@ mod tests {
                     ..Default::default()
                 })
                 .update_as_line_segment()
-                .build(&mut objects)
-                .insert(&mut objects)
-                .reverse(&mut objects)
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+                .reverse(&mut services.objects)
             };
             let side_down = {
                 let mut side_down = HalfEdge::partial();
@@ -282,18 +282,18 @@ mod tests {
                         ..Default::default()
                     })
                     .update_as_line_segment()
-                    .build(&mut objects)
-                    .insert(&mut objects)
-                    .reverse(&mut objects)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
+                    .reverse(&mut services.objects)
             };
 
             let cycle = Cycle::new([bottom, side_up, top, side_down])
-                .insert(&mut objects);
+                .insert(&mut services.objects);
 
             Face::partial()
                 .with_exterior(cycle)
-                .build(&mut objects)
-                .insert(&mut objects)
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
         };
 
         assert_eq!(face, expected_face);

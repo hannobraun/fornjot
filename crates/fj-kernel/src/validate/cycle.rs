@@ -68,23 +68,23 @@ mod tests {
     use crate::{
         builder::{CycleBuilder, HalfEdgeBuilder, VertexBuilder},
         insert::Insert,
-        objects::{Cycle, Objects},
+        objects::Cycle,
         partial::HasPartial,
-        services::State,
+        services::Services,
         validate::Validate,
     };
 
     #[test]
     fn cycle_half_edge_connections() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let valid = Cycle::partial()
             .with_poly_chain_from_points(
-                objects.surfaces.xy_plane(),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&mut objects);
+            .build(&mut services.objects);
         let invalid = {
             let mut half_edges = valid
                 .half_edges()
@@ -104,7 +104,9 @@ mod tests {
                 .infer_global_form();
 
             let half_edges = half_edges.into_iter().map(|half_edge| {
-                half_edge.build(&mut objects).insert(&mut objects)
+                half_edge
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             });
 
             Cycle::new(half_edges)

@@ -71,16 +71,16 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         builder::{CurveBuilder, FaceBuilder},
         insert::Insert,
-        objects::{Face, Objects},
+        objects::Face,
         partial::{HasPartial, PartialCurve},
-        services::State,
+        services::Services,
     };
 
     use super::FaceFaceIntersection;
 
     #[test]
     fn compute_no_intersection() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         #[rustfmt::skip]
         let points = [
@@ -89,23 +89,26 @@ mod tests {
             [2., 2.],
             [1., 2.],
         ];
-        let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
-            .map(|surface| {
-                Face::partial()
-                    .with_surface(surface)
-                    .with_exterior_polygon_from_points(points)
-                    .build(&mut objects)
-            });
+        let [a, b] = [
+            services.objects.surfaces.xy_plane(),
+            services.objects.surfaces.xz_plane(),
+        ]
+        .map(|surface| {
+            Face::partial()
+                .with_surface(surface)
+                .with_exterior_polygon_from_points(points)
+                .build(&mut services.objects)
+        });
 
         let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut objects);
+            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
 
         assert!(intersection.is_none());
     }
 
     #[test]
     fn compute_one_intersection() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         #[rustfmt::skip]
         let points = [
@@ -114,17 +117,19 @@ mod tests {
             [ 1.,  1.],
             [-1.,  1.],
         ];
-        let surfaces =
-            [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
+        let surfaces = [
+            services.objects.surfaces.xy_plane(),
+            services.objects.surfaces.xz_plane(),
+        ];
         let [a, b] = surfaces.clone().map(|surface| {
             Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
-                .build(&mut objects)
+                .build(&mut services.objects)
         });
 
         let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut objects);
+            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
 
         let expected_curves = surfaces.map(|surface| {
             let mut curve = PartialCurve {
@@ -132,7 +137,9 @@ mod tests {
                 ..Default::default()
             };
             curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-            curve.build(&mut objects).insert(&mut objects)
+            curve
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

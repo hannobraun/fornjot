@@ -86,9 +86,9 @@ mod tests {
         algorithms::{reverse::Reverse, transform::TransformObject},
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{Face, HalfEdge, Objects, Sketch},
+        objects::{Face, HalfEdge, Sketch},
         partial::HasPartial,
-        services::State,
+        services::Services,
     };
 
     use super::Sweep;
@@ -100,26 +100,26 @@ mod tests {
 
     #[test]
     fn sweep_up() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let solid = Sketch::builder()
             .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE, &mut objects)
-            .build(&mut objects)
-            .sweep(UP, &mut objects);
+            .with_polygon_from_points(TRIANGLE, &mut services.objects)
+            .build(&mut services.objects)
+            .sweep(UP, &mut services.objects);
 
         let bottom = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)
-            .insert(&mut objects)
-            .reverse(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .reverse(&mut services.objects);
         let top = Face::partial()
-            .with_surface(surface.translate(UP, &mut objects))
+            .with_surface(surface.translate(UP, &mut services.objects))
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -128,12 +128,12 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    objects.surfaces.xy_plane(),
+                    services.objects.surfaces.xy_plane(),
                     [a, b],
                 )
-                .build(&mut objects)
-                .insert(&mut objects);
-            (half_edge, Color::default()).sweep(UP, &mut objects)
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+            (half_edge, Color::default()).sweep(UP, &mut services.objects)
         });
 
         assert!(side_faces
@@ -143,26 +143,28 @@ mod tests {
 
     #[test]
     fn sweep_down() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let solid = Sketch::builder()
             .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE, &mut objects)
-            .build(&mut objects)
-            .sweep(DOWN, &mut objects);
+            .with_polygon_from_points(TRIANGLE, &mut services.objects)
+            .build(&mut services.objects)
+            .sweep(DOWN, &mut services.objects);
 
         let bottom = Face::partial()
-            .with_surface(surface.clone().translate(DOWN, &mut objects))
+            .with_surface(
+                surface.clone().translate(DOWN, &mut services.objects),
+            )
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)
-            .insert(&mut objects)
-            .reverse(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .reverse(&mut services.objects);
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -171,13 +173,13 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    objects.surfaces.xy_plane(),
+                    services.objects.surfaces.xy_plane(),
                     [a, b],
                 )
-                .build(&mut objects)
-                .insert(&mut objects)
-                .reverse(&mut objects);
-            (half_edge, Color::default()).sweep(DOWN, &mut objects)
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+                .reverse(&mut services.objects);
+            (half_edge, Color::default()).sweep(DOWN, &mut services.objects)
         });
 
         assert!(side_faces
