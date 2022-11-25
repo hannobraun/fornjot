@@ -48,11 +48,8 @@ impl ShellBuilder {
         let h = edge_length / 2.;
 
         let bottom = {
-            let surface = objects
-                .surfaces
-                .xy_plane()
-                .translate([Z, Z, -h], objects)
-                .unwrap();
+            let surface =
+                objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
             Face::partial()
                 .with_surface(surface)
@@ -238,11 +235,8 @@ impl ShellBuilder {
         };
 
         let top = {
-            let surface = objects
-                .surfaces
-                .xy_plane()
-                .translate([Z, Z, h], objects)
-                .unwrap();
+            let surface =
+                objects.surfaces.xy_plane().translate([Z, Z, h], objects);
 
             let mut top_edges = top_edges;
             top_edges.reverse();

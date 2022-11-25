@@ -36,7 +36,7 @@ pub trait TransformObject: Sized {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError>;
+    ) -> Self;
 
     /// Translate the object
     ///
@@ -45,7 +45,7 @@ pub trait TransformObject: Sized {
         self,
         offset: impl Into<Vector<3>>,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         self.transform(&Transform::translation(offset), objects)
     }
 
@@ -56,7 +56,7 @@ pub trait TransformObject: Sized {
         self,
         axis_angle: impl Into<Vector<3>>,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         self.transform(&Transform::rotation(axis_angle), objects)
     }
 }
@@ -71,12 +71,11 @@ where
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
-        Ok(self
-            .to_partial()
-            .transform(transform, objects)?
+    ) -> Self {
+        self.to_partial()
+            .transform(transform, objects)
             .build(objects)
-            .insert(objects))
+            .insert(objects)
     }
 }
 
@@ -90,18 +89,16 @@ where
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let transformed = match self {
-            Self::Full(full) => {
-                full.to_partial().transform(transform, objects)?
-            }
-            Self::Partial(partial) => partial.transform(transform, objects)?,
+            Self::Full(full) => full.to_partial().transform(transform, objects),
+            Self::Partial(partial) => partial.transform(transform, objects),
         };
 
         // Transforming a `MaybePartial` *always* results in a partial object.
         // This provides the most flexibility to the caller, who might want to
         // use the transformed partial object for merging or whatever else,
         // before building it themselves.
-        Ok(Self::Partial(transformed))
+        Self::Partial(transformed)
     }
 }

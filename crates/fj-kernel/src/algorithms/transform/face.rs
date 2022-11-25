@@ -5,7 +5,6 @@ use crate::{
     objects::{Face, FaceSet, Objects},
     partial::{HasPartial, PartialFace},
     services::Service,
-    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -15,27 +14,23 @@ impl TransformObject for PartialFace {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let surface = self
             .surface()
-            .map(|surface| surface.transform(transform, objects))
-            .transpose()?;
+            .map(|surface| surface.transform(transform, objects));
         let exterior = self
             .exterior()
             .into_partial()
-            .transform(transform, objects)?
+            .transform(transform, objects)
             .with_surface(surface.clone());
-        let interiors = self
-            .interiors()
-            .map(|cycle| -> Result<_, ValidationError> {
-                Ok(cycle
-                    .into_partial()
-                    .transform(transform, objects)?
-                    .with_surface(surface.clone())
-                    .build(objects)
-                    .insert(objects))
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let interiors = self.interiors().map(|cycle| {
+            cycle
+                .into_partial()
+                .transform(transform, objects)
+                .with_surface(surface.clone())
+                .build(objects)
+                .insert(objects)
+        });
 
         let color = self.color();
 
@@ -49,7 +44,7 @@ impl TransformObject for PartialFace {
             face = face.with_color(color);
         }
 
-        Ok(face)
+        face
     }
 }
 
@@ -58,15 +53,12 @@ impl TransformObject for FaceSet {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let mut faces = FaceSet::new();
         faces.extend(
             self.into_iter()
-                .map(|face| -> Result<_, ValidationError> {
-                    face.transform(transform, objects)
-                })
-                .collect::<Result<Vec<_>, _>>()?,
+                .map(|face| face.transform(transform, objects)),
         );
-        Ok(faces)
+        faces
     }
 }

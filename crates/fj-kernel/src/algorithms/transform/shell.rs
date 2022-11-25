@@ -4,7 +4,6 @@ use crate::{
     objects::{Objects, Shell},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -14,15 +13,12 @@ impl TransformObject for Handle<Shell> {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let faces = self
             .faces()
             .clone()
             .into_iter()
-            .map(|face| -> Result<_, ValidationError> {
-                face.transform(transform, objects)
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-        Ok(Shell::builder().with_faces(faces).build(objects))
+            .map(|face| face.transform(transform, objects));
+        Shell::builder().with_faces(faces).build(objects)
     }
 }

@@ -49,7 +49,7 @@ impl Sweep for Handle<Face> {
         faces.push(bottom_face);
 
         let top_face = {
-            let mut face = self.clone().translate(path, objects)?;
+            let mut face = self.clone().translate(path, objects);
 
             if is_negative_sweep {
                 face = face.reverse(objects);
@@ -117,7 +117,7 @@ mod tests {
             .insert(&mut objects)
             .reverse(&mut objects);
         let top = Face::partial()
-            .with_surface(surface.translate(UP, &mut objects)?)
+            .with_surface(surface.translate(UP, &mut objects))
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)
             .insert(&mut objects);
@@ -158,7 +158,7 @@ mod tests {
             .sweep(DOWN, &mut objects)?;
 
         let bottom = Face::partial()
-            .with_surface(surface.clone().translate(DOWN, &mut objects)?)
+            .with_surface(surface.clone().translate(DOWN, &mut objects))
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)
             .insert(&mut objects)

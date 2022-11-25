@@ -1,11 +1,9 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Transform;
 
 use crate::{
     objects::Objects,
     partial::{PartialGlobalEdge, PartialHalfEdge},
     services::Service,
-    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -15,18 +13,18 @@ impl TransformObject for PartialHalfEdge {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+    ) -> Self {
+        let curve = self.curve.transform(transform, objects);
         let vertices = self
             .vertices
-            .try_map_ext(|vertex| vertex.transform(transform, objects))?;
-        let global_form = self.global_form.transform(transform, objects)?;
+            .map(|vertex| vertex.transform(transform, objects));
+        let global_form = self.global_form.transform(transform, objects);
 
-        Ok(Self {
+        Self {
             curve,
             vertices,
             global_form,
-        })
+        }
     }
 }
 
@@ -35,14 +33,12 @@ impl TransformObject for PartialGlobalEdge {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
-        let vertices = self.vertices.try_map_ext(
-            |vertex| -> Result<_, ValidationError> {
-                vertex.transform(transform, objects)
-            },
-        )?;
+    ) -> Self {
+        let curve = self.curve.transform(transform, objects);
+        let vertices = self
+            .vertices
+            .map(|vertex| vertex.transform(transform, objects));
 
-        Ok(Self { curve, vertices })
+        Self { curve, vertices }
     }
 }

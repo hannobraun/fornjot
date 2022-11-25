@@ -177,7 +177,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([-1., 0., 0.], &mut objects)?;
+            .translate([-1., 0., 0.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())
@@ -200,7 +200,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([1., 0., 0.], &mut objects)?;
+            .translate([1., 0., 0.], &mut objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -226,7 +226,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([0., 0., 2.], &mut objects)?;
+            .translate([0., 0., 2.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())
@@ -249,7 +249,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([1., 1., 0.], &mut objects)?;
+            .translate([1., 1., 0.], &mut objects);
 
         let edge = face
             .half_edge_iter()
@@ -283,7 +283,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([1., 1., 1.], &mut objects)?;
+            .translate([1., 1., 1.], &mut objects);
 
         let vertex = face
             .vertex_iter()
@@ -341,7 +341,7 @@ mod tests {
             ])
             .build(&mut objects)
             .insert(&mut objects)
-            .translate([0., 0., 1.], &mut objects)?;
+            .translate([0., 0., 1.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
         Ok(())

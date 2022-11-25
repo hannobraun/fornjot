@@ -115,7 +115,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     .curve()
                     .global_form()
                     .clone()
-                    .translate(path, objects)?;
+                    .translate(path, objects);
 
                 // Please note that creating a line here is correct, even if the
                 // global curve is a circle. Projected into the side surface, it
