@@ -3,6 +3,7 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     objects::{Curve, Face, Objects},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -30,7 +31,7 @@ impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(
         faces: [&Face; 2],
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Option<Self>, ValidationError> {
         let surfaces = faces.map(|face| face.surface().clone());
 
@@ -74,6 +75,7 @@ mod tests {
         insert::Insert,
         objects::{Face, Objects},
         partial::{HasPartial, PartialCurve},
+        services::State,
         validate::ValidationError,
     };
 
@@ -81,7 +83,7 @@ mod tests {
 
     #[test]
     fn compute_no_intersection() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         #[rustfmt::skip]
         let points = [
@@ -108,7 +110,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         #[rustfmt::skip]
         let points = [

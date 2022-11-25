@@ -4,6 +4,7 @@ use crate::{
     insert::Insert,
     objects::{Face, FaceSet, Objects, Sketch, Surface},
     partial::HasPartial,
+    services::Service,
     storage::Handle,
 };
 
@@ -40,7 +41,7 @@ impl SketchBuilder {
     pub fn with_polygon_from_points(
         mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Self {
         let surface = self
             .surface
@@ -57,7 +58,7 @@ impl SketchBuilder {
     }
 
     /// Build the [`Sketch`]
-    pub fn build(self, objects: &mut Objects) -> Handle<Sketch> {
+    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Sketch> {
         Sketch::new(self.faces).insert(objects).unwrap()
     }
 }

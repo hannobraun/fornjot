@@ -7,6 +7,7 @@ use fj_kernel::{
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
     partial::HasPartial,
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::Aabb;
@@ -18,7 +19,7 @@ impl Shape for fj::Difference2d {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         // This method assumes that `b` is fully contained within `a`:

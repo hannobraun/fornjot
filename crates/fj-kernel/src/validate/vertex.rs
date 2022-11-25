@@ -186,12 +186,13 @@ mod tests {
         partial::{
             HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex,
         },
+        services::State,
         validate::Validate,
     };
 
     #[test]
     fn vertex_surface_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let mut curve = PartialCurve {
             surface: Some(objects.surfaces.xy_plane()),
@@ -219,7 +220,7 @@ mod tests {
 
     #[test]
     fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = {
             let mut curve = PartialCurve {
@@ -250,7 +251,7 @@ mod tests {
 
     #[test]
     fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),

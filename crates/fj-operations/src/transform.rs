@@ -2,6 +2,7 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::transform::TransformObject,
     objects::{FaceSet, Objects},
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::{Aabb, Transform, Vector};
@@ -13,7 +14,7 @@ impl Shape for fj::Transform {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let faces = self

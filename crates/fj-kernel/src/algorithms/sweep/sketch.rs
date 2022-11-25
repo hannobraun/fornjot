@@ -2,6 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{Objects, Sketch, Solid},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -15,7 +16,7 @@ impl Sweep for Handle<Sketch> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         let path = path.into();
 

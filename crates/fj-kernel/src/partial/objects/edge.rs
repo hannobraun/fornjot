@@ -7,6 +7,7 @@ use crate::{
         Surface, Vertex,
     },
     partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex, Replace},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -30,7 +31,7 @@ impl PartialHalfEdge {
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(
         mut self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<HalfEdge, ValidationError> {
         let global_curve = self
             .curve
@@ -118,7 +119,7 @@ impl PartialGlobalEdge {
     /// Build a full [`GlobalEdge`] from the partial global edge
     pub fn build(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<GlobalEdge, ValidationError> {
         let curve = self.curve.into_full(objects)?;
         let vertices = self

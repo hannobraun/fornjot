@@ -5,6 +5,7 @@ use crate::{
     geometry::path::{GlobalPath, SurfacePath},
     insert::Insert,
     objects::{Curve, GlobalCurve, Objects, Surface},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -20,7 +21,7 @@ impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Option<Self>, ValidationError> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
@@ -92,13 +93,14 @@ mod tests {
     use crate::{
         algorithms::transform::TransformObject, builder::CurveBuilder,
         insert::Insert, objects::Objects, partial::PartialCurve,
+        services::State,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let xy = objects.surfaces.xy_plane();
         let xz = objects.surfaces.xz_plane();

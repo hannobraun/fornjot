@@ -1,7 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Objects, partial::PartialCycle, validate::ValidationError,
+    objects::Objects, partial::PartialCycle, services::Service,
+    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -10,7 +11,7 @@ impl TransformObject for PartialCycle {
     fn transform(
         self,
         transform: &Transform,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let half_edges = self
             .half_edges()

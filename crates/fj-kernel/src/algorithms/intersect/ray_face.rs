@@ -157,11 +157,12 @@ mod tests {
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,
+        services::State,
     };
 
     #[test]
     fn ray_misses_whole_surface() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -184,7 +185,7 @@ mod tests {
 
     #[test]
     fn ray_hits_face() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -210,7 +211,7 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -233,7 +234,7 @@ mod tests {
 
     #[test]
     fn ray_hits_edge() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -267,7 +268,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -299,7 +300,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -325,7 +326,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 

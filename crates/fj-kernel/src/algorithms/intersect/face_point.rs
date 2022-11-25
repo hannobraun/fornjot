@@ -141,11 +141,12 @@ mod tests {
         iter::ObjectIters,
         objects::{Face, Objects},
         partial::HasPartial,
+        services::State,
     };
 
     #[test]
     fn point_is_outside_face() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -163,7 +164,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -184,7 +185,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -205,7 +206,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -232,7 +233,7 @@ mod tests {
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() -> anyhow::Result<()>
     {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -259,7 +260,7 @@ mod tests {
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there(
     ) -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -286,7 +287,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -316,7 +317,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()

@@ -9,6 +9,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -22,7 +23,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         let (vertex, surface) = self;
         let path = path.into();
@@ -133,7 +134,7 @@ impl Sweep for Handle<GlobalVertex> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         let curve = GlobalCurve.insert(objects)?;
 
@@ -168,11 +169,12 @@ mod tests {
         insert::Insert,
         objects::{HalfEdge, Objects},
         partial::{HasPartial, PartialCurve, PartialVertex},
+        services::State,
     };
 
     #[test]
     fn vertex_surface() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xz_plane();
         let mut curve = PartialCurve {

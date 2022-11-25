@@ -6,6 +6,7 @@ use crate::{
     insert::Insert,
     objects::{Curve, Objects, Surface},
     partial::PartialSurface,
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -19,7 +20,7 @@ impl Sweep for Handle<Curve> {
         self,
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         match self.surface().geometry().u {
             GlobalPath::Circle(_) => {

@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects},
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::Aabb;
@@ -12,7 +13,7 @@ impl Shape for fj::Group {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let mut faces = FaceSet::new();

@@ -70,12 +70,13 @@ mod tests {
         insert::Insert,
         objects::{Cycle, Objects},
         partial::HasPartial,
+        services::State,
         validate::{Validate, ValidationError},
     };
 
     #[test]
     fn cycle_half_edge_connections() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = Cycle::partial()
             .with_poly_chain_from_points(

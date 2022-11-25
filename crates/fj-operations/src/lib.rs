@@ -32,6 +32,7 @@ mod transform;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects, Sketch},
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::Aabb;
@@ -44,7 +45,7 @@ pub trait Shape {
     /// Compute the boundary representation of the shape
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError>;
 
@@ -60,7 +61,7 @@ impl Shape for fj::Shape {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         match self {
@@ -96,7 +97,7 @@ impl Shape for fj::Shape2d {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         match self {

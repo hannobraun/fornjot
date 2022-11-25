@@ -78,13 +78,14 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         objects::{HalfEdge, Objects},
         partial::{HasPartial, PartialCurve},
+        services::State,
     };
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -110,7 +111,7 @@ mod tests {
 
     #[test]
     fn compute_edge_behind_curve_origin() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -139,7 +140,7 @@ mod tests {
 
     #[test]
     fn compute_edge_parallel_to_curve() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
@@ -163,7 +164,7 @@ mod tests {
 
     #[test]
     fn compute_edge_on_curve() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {

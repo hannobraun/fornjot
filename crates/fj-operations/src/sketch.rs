@@ -6,6 +6,7 @@ use fj_kernel::{
     insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::{HasPartial, Replace},
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
@@ -17,7 +18,7 @@ impl Shape for fj::Sketch {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         _: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let surface = objects.surfaces.xy_plane();

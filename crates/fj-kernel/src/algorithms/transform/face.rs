@@ -4,6 +4,7 @@ use crate::{
     insert::Insert,
     objects::{Face, FaceSet, Objects},
     partial::{HasPartial, PartialFace},
+    services::Service,
     validate::ValidationError,
 };
 
@@ -13,7 +14,7 @@ impl TransformObject for PartialFace {
     fn transform(
         self,
         transform: &Transform,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let surface = self
             .surface()
@@ -56,7 +57,7 @@ impl TransformObject for FaceSet {
     fn transform(
         self,
         transform: &Transform,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let mut faces = FaceSet::new();
         faces.extend(

@@ -4,6 +4,7 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     geometry::path::GlobalPath,
     objects::{Face, Objects, Shell},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -17,7 +18,7 @@ impl Sweep for Handle<Face> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         let path = path.into();
 
@@ -88,6 +89,7 @@ mod tests {
         insert::Insert,
         objects::{Face, HalfEdge, Objects, Sketch},
         partial::HasPartial,
+        services::State,
     };
 
     use super::Sweep;
@@ -99,7 +101,7 @@ mod tests {
 
     #[test]
     fn sweep_up() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder()
@@ -146,7 +148,7 @@ mod tests {
 
     #[test]
     fn sweep_down() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let solid = Sketch::builder()

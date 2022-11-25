@@ -171,13 +171,14 @@ mod tests {
 
     use crate::{
         builder::HalfEdgeBuilder, objects::Objects, partial::HasPartial,
+        services::State,
     };
 
     use super::HalfEdge;
 
     #[test]
     fn global_edge_equality() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
 

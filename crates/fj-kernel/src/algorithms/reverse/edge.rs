@@ -1,6 +1,7 @@
 use crate::{
     insert::Insert,
     objects::{HalfEdge, Objects},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -8,7 +9,10 @@ use crate::{
 use super::Reverse;
 
 impl Reverse for Handle<HalfEdge> {
-    fn reverse(self, objects: &mut Objects) -> Result<Self, ValidationError> {
+    fn reverse(
+        self,
+        objects: &mut Service<Objects>,
+    ) -> Result<Self, ValidationError> {
         let vertices = {
             let [a, b] = self.vertices().clone();
             [b, a]

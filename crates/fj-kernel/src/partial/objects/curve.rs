@@ -2,6 +2,7 @@ use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
     partial::{MaybePartial, MergeWith, Replace},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -25,7 +26,7 @@ impl PartialCurve {
     /// Build a full [`Curve`] from the partial curve
     pub fn build(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Curve, ValidationError> {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =

@@ -8,6 +8,7 @@ use crate::{
         MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
         PartialSurfaceVertex, PartialVertex, Replace,
     },
+    services::{Service, State},
     storage::Handle,
     validate::ValidationError,
 };
@@ -32,7 +33,7 @@ pub trait HalfEdgeBuilder: Sized {
     fn update_as_circle_from_radius(
         self,
         radius: impl Into<Scalar>,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError>;
 
     /// Update partial half-edge as a line segment, from the given points
@@ -71,7 +72,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let mut curve = self.curve.clone().into_partial();
         curve.update_as_circle_from_radius(radius);
@@ -162,7 +163,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             // a hack, but I can't think of something better.
             let global_forms = {
                 let must_switch_order = {
-                    let mut objects = Objects::new();
+                    let mut objects = Objects::new().into_service();
                     let vertices = vertices.clone().map(|vertex| {
                         vertex
                             .into_full(&mut objects)

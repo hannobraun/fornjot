@@ -1,4 +1,4 @@
-use crate::{objects::Objects, validate::ValidationError};
+use crate::{objects::Objects, services::Service, validate::ValidationError};
 
 /// Implemented for objects that a partial object type exists for
 ///
@@ -79,6 +79,6 @@ pub trait Partial: Default + for<'a> From<&'a Self::Full> {
     /// [`Result`].
     fn build(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Full, ValidationError>;
 }

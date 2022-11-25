@@ -8,6 +8,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
+    services::Service,
     storage::Handle,
     validate::{Validate, ValidationError},
 };
@@ -72,7 +73,7 @@ impl<T: HasPartial> MaybePartial<T> {
     /// object, the full object is built from it, using [`Partial::build`].
     pub fn into_full(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Handle<T>, ValidationError>
     where
         T: Insert,
