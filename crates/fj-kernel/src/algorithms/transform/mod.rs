@@ -76,7 +76,7 @@ where
             .to_partial()
             .transform(transform, objects)?
             .build(objects)?
-            .insert(objects)?)
+            .insert(objects))
     }
 }
 

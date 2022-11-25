@@ -1,6 +1,4 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Point, Scalar, Vector};
-use try_insert_ext::EntryInsertExt;
 
 use crate::{
     geometry::path::SurfacePath,
@@ -97,7 +95,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
                 SurfacePath::Line(line),
                 edge_global.curve().clone(),
             )
-            .insert(objects)?
+            .insert(objects)
         };
 
         let vertices_surface = {
@@ -107,23 +105,23 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
             [
                 vertex.surface_form().clone(),
                 SurfaceVertex::new(position, surface, global_form)
-                    .insert(objects)?,
+                    .insert(objects),
             ]
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.try_map_ext(|surface_form| {
+        let vertices = vertices_surface.map(|surface_form| {
             Vertex::new(
                 [surface_form.position().v],
                 curve.clone(),
                 surface_form,
             )
             .insert(objects)
-        })?;
+        });
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        Ok(HalfEdge::new(vertices, edge_global).insert(objects)?)
+        Ok(HalfEdge::new(vertices, edge_global).insert(objects))
     }
 }
 
@@ -136,21 +134,21 @@ impl Sweep for Handle<GlobalVertex> {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
-        let curve = GlobalCurve.insert(objects)?;
+        let curve = GlobalCurve.insert(objects);
 
         let a = self.clone();
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_try_insert_with(|| {
+            .or_insert_with(|| {
                 GlobalVertex::from_position(self.position() + path.into())
                     .insert(objects)
-            })?
+            })
             .clone();
 
         let vertices = [a, b];
         let global_edge =
-            GlobalEdge::new(curve, vertices.clone()).insert(objects)?;
+            GlobalEdge::new(curve, vertices.clone()).insert(objects);
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
@@ -182,14 +180,14 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
+        let curve = curve.build(&mut objects)?.insert(&mut objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
             curve: curve.into(),
             ..Default::default()
         }
         .build(&mut objects)?
-        .insert(&mut objects)?;
+        .insert(&mut objects);
 
         let half_edge =
             (vertex, surface.clone()).sweep([0., 0., 1.], &mut objects)?;
@@ -197,7 +195,7 @@ mod tests {
         let expected_half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
         assert_eq!(half_edge, expected_half_edge);
         Ok(())
     }

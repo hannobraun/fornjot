@@ -21,7 +21,7 @@ impl Shape for fj::Sweep {
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let sketch = self.shape().compute_brep(objects, debug_info)?;
-        let sketch = sketch.insert(objects)?;
+        let sketch = sketch.insert(objects);
 
         let path = Vector::from(self.path());
 

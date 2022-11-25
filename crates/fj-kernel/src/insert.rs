@@ -15,23 +15,18 @@ use crate::{
 /// Convenience trait to insert objects into their respective stores
 pub trait Insert: Sized + Validate {
     /// Insert the object into its respective store
-    fn insert(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Handle<Self>, <Self as Validate>::Error>;
+    fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>;
 }
 
 macro_rules! impl_insert {
     ($($ty:ty, $store:ident;)*) => {
         $(
             impl Insert for $ty {
-                fn insert(
-                    self,
-                    objects: &mut Service<Objects>,
-                ) -> Result<Handle<Self>, <Self as Validate>::Error> {
+                fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>
+                {
                     let handle = objects.$store.reserve();
                     objects.insert(handle.clone(), self);
-                    Ok(handle)
+                    handle
                 }
             }
         )*

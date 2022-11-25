@@ -83,7 +83,7 @@ impl Sweep for Handle<Curve> {
 
         let surface = PartialSurface::from_axes(u, path)
             .build(objects)?
-            .insert(objects)?;
+            .insert(objects);
         Ok(surface)
     }
 }

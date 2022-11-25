@@ -90,7 +90,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             global_form: global_vertex,
         }
         .build(objects)?
-        .insert(objects)?;
+        .insert(objects);
 
         let [back, front] =
             [a_curve, b_curve].map(|point_curve| PartialVertex {

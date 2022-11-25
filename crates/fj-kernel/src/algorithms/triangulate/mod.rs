@@ -101,7 +101,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points([a, b, c, d])
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -138,7 +138,7 @@ mod tests {
             .with_exterior_polygon_from_points([a, b, c, d])
             .with_interior_polygon_from_points([e, f, g, h])
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
 
         let triangles = triangulate(face)?;
 
@@ -196,7 +196,7 @@ mod tests {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points([a, b, c, d, e])
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
 
         let triangles = triangulate(face)?;
 

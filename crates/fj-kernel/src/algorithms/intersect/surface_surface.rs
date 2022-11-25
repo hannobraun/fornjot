@@ -1,4 +1,3 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
@@ -59,12 +58,12 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.try_map_ext(|(surface, plane)| {
+        let curves = surfaces_and_planes.map(|(surface, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
-            let global_form = GlobalCurve.insert(objects)?;
+            let global_form = GlobalCurve.insert(objects);
 
             Curve::new(surface, path, global_form).insert(objects)
-        })?;
+        });
 
         Ok(Some(Self {
             intersection_curves: curves,
@@ -125,15 +124,13 @@ mod tests {
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
-        let expected_xy =
-            expected_xy.build(&mut objects)?.insert(&mut objects)?;
+        let expected_xy = expected_xy.build(&mut objects)?.insert(&mut objects);
         let mut expected_xz = PartialCurve {
             surface: Some(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();
-        let expected_xz =
-            expected_xz.build(&mut objects)?.insert(&mut objects)?;
+        let expected_xz = expected_xz.build(&mut objects)?.insert(&mut objects);
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz], &mut objects)?,

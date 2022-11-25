@@ -33,7 +33,7 @@ impl TransformObject for PartialFace {
                     .transform(transform, objects)?
                     .with_surface(surface.clone())
                     .build(objects)?
-                    .insert(objects)?)
+                    .insert(objects))
             })
             .collect::<Result<Vec<_>, _>>()?;
 

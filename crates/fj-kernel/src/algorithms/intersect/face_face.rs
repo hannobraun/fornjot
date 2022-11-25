@@ -138,7 +138,7 @@ mod tests {
                     ..Default::default()
                 };
                 curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-                Ok(curve.build(&mut objects)?.insert(&mut objects)?)
+                Ok(curve.build(&mut objects)?.insert(&mut objects))
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

@@ -65,7 +65,6 @@ impl ShellBuilder {
                 .build(objects)
                 .unwrap()
                 .insert(objects)
-                .unwrap()
         };
 
         let (sides, top_edges) = {
@@ -83,7 +82,6 @@ impl ShellBuilder {
                         .build(objects)
                         .unwrap()
                         .insert(objects)
-                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -103,7 +101,6 @@ impl ShellBuilder {
                     .build(objects)
                     .unwrap()
                     .insert(objects)
-                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -139,7 +136,6 @@ impl ShellBuilder {
                     .build(objects)
                     .unwrap()
                     .insert(objects)
-                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -191,7 +187,6 @@ impl ShellBuilder {
                         .build(objects)
                         .unwrap()
                         .insert(objects)
-                        .unwrap()
                     })
                     .collect::<Vec<_>>()
             };
@@ -224,7 +219,6 @@ impl ShellBuilder {
                     .build(objects)
                     .unwrap()
                     .insert(objects)
-                    .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -238,15 +232,13 @@ impl ShellBuilder {
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(objects)
                         .unwrap()
-                        .insert(objects)
-                        .unwrap();
+                        .insert(objects);
 
                     Face::partial()
                         .with_exterior(cycle)
                         .build(objects)
                         .unwrap()
                         .insert(objects)
-                        .unwrap()
                 })
                 .collect::<Vec<_>>();
 
@@ -284,7 +276,6 @@ impl ShellBuilder {
                         .build(objects)
                         .unwrap()
                         .insert(objects)
-                        .unwrap()
                     });
 
                 [a.clone(), b, c, d, a]
@@ -317,17 +308,15 @@ impl ShellBuilder {
                     .update_as_line_segment()
                     .build(objects)
                     .unwrap()
-                    .insert(objects)
-                    .unwrap(),
+                    .insert(objects),
                 );
             }
 
             Face::partial()
-                .with_exterior(Cycle::new(edges).insert(objects).unwrap())
+                .with_exterior(Cycle::new(edges).insert(objects))
                 .build(objects)
                 .unwrap()
                 .insert(objects)
-                .unwrap()
         };
 
         self.faces.extend([bottom]);
@@ -339,6 +328,6 @@ impl ShellBuilder {
 
     /// Build the [`Shell`]
     pub fn build(self, objects: &mut Service<Objects>) -> Handle<Shell> {
-        Shell::new(self.faces).insert(objects).unwrap()
+        Shell::new(self.faces).insert(objects)
     }
 }

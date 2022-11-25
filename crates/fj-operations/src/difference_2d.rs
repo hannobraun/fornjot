@@ -86,7 +86,7 @@ impl Shape for fj::Difference2d {
                     .with_interiors(interiors)
                     .with_color(Color(self.color()))
                     .build(objects)?
-                    .insert(objects)?,
+                    .insert(objects),
             );
         }
 

@@ -18,7 +18,6 @@ impl Reverse for Handle<HalfEdge> {
             [b, a]
         };
 
-        Ok(HalfEdge::new(vertices, self.global_form().clone())
-            .insert(objects)?)
+        Ok(HalfEdge::new(vertices, self.global_form().clone()).insert(objects))
     }
 }

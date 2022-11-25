@@ -114,13 +114,13 @@ mod tests {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)?
-            .insert(&mut objects)?
+            .insert(&mut objects)
             .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface.translate(UP, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -135,7 +135,7 @@ mod tests {
                         [a, b],
                     )
                     .build(&mut objects)?
-                    .insert(&mut objects)?;
+                    .insert(&mut objects);
                 (half_edge, Color::default()).sweep(UP, &mut objects)
             })
             .collect::<Result<Vec<_>, _>>()?;
@@ -161,13 +161,13 @@ mod tests {
             .with_surface(surface.clone().translate(DOWN, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)?
-            .insert(&mut objects)?
+            .insert(&mut objects)
             .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)?
-            .insert(&mut objects)?;
+            .insert(&mut objects);
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
@@ -182,7 +182,7 @@ mod tests {
                         [a, b],
                     )
                     .build(&mut objects)?
-                    .insert(&mut objects)?
+                    .insert(&mut objects)
                     .reverse(&mut objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &mut objects)
             })

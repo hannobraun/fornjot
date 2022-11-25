@@ -42,6 +42,6 @@ impl SolidBuilder {
 
     /// Build the [`Solid`]
     pub fn build(self, objects: &mut Service<Objects>) -> Handle<Solid> {
-        Solid::new(self.shells).insert(objects).unwrap()
+        Solid::new(self.shells).insert(objects)
     }
 }

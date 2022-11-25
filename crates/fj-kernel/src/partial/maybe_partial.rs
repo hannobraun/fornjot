@@ -81,7 +81,7 @@ impl<T: HasPartial> MaybePartial<T> {
     {
         match self {
             Self::Partial(partial) => {
-                Ok(partial.build(objects)?.insert(objects)?)
+                Ok(partial.build(objects)?.insert(objects))
             }
             Self::Full(full) => Ok(full),
         }

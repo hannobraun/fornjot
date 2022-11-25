@@ -130,7 +130,7 @@ mod tests {
                 )
                 .close_with_line_segment()
                 .build(&mut objects)?
-                .insert(&mut objects)?];
+                .insert(&mut objects)];
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };

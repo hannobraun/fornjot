@@ -209,7 +209,7 @@ mod tests {
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.surface = Some(objects.surfaces.xz_plane());
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.build(&mut objects)?.insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -240,7 +240,7 @@ mod tests {
             let mut tmp = valid.surface_form().to_partial();
             tmp.position = Some([1., 0.].into());
             tmp.infer_global_form();
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.build(&mut objects)?.insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -262,7 +262,7 @@ mod tests {
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
-            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects)?,
+            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects),
         );
 
         assert!(valid.validate().is_ok());

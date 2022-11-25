@@ -52,13 +52,12 @@ impl SketchBuilder {
             .with_exterior_polygon_from_points(points)
             .build(objects)
             .unwrap()
-            .insert(objects)
-            .unwrap()]);
+            .insert(objects)]);
         self
     }
 
     /// Build the [`Sketch`]
     pub fn build(self, objects: &mut Service<Objects>) -> Handle<Sketch> {
-        Sketch::new(self.faces).insert(objects).unwrap()
+        Sketch::new(self.faces).insert(objects)
     }
 }
