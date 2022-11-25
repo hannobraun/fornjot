@@ -6,7 +6,6 @@ use crate::{
     objects::{Curve, GlobalCurve, Objects, Surface},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// The intersection between two surfaces
@@ -21,7 +20,7 @@ impl SurfaceSurfaceIntersection {
     pub fn compute(
         surfaces: [Handle<Surface>; 2],
         objects: &mut Service<Objects>,
-    ) -> Result<Option<Self>, ValidationError> {
+    ) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -48,7 +47,7 @@ impl SurfaceSurfaceIntersection {
             // I'll just leave it like that, until we had the opportunity to
             // collect some experience with this code.
             // - @hannobraun
-            return Ok(None);
+            return None;
         }
 
         let origin = (b_normal * a_distance - a_normal * b_distance)
@@ -65,9 +64,9 @@ impl SurfaceSurfaceIntersection {
             Curve::new(surface, path, global_form).insert(objects)
         });
 
-        Ok(Some(Self {
+        Some(Self {
             intersection_curves: curves,
-        }))
+        })
     }
 }
 
@@ -115,7 +114,7 @@ mod tests {
                     )?
                 ],
                 &mut objects
-            )?,
+            ),
             None,
         );
 
@@ -133,7 +132,7 @@ mod tests {
         let expected_xz = expected_xz.build(&mut objects)?.insert(&mut objects);
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &mut objects)?,
+            SurfaceSurfaceIntersection::compute([xy, xz], &mut objects),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

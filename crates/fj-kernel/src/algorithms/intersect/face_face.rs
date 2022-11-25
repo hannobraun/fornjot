@@ -36,7 +36,7 @@ impl FaceFaceIntersection {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
-            match SurfaceSurfaceIntersection::compute(surfaces, objects)? {
+            match SurfaceSurfaceIntersection::compute(surfaces, objects) {
                 Some(intersection) => intersection.intersection_curves,
                 None => return Ok(None),
             };
