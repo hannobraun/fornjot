@@ -29,12 +29,14 @@ impl State for Objects {
 ///
 /// You might prefer to use [`ServiceObjectsExt::insert`], which is a convenient
 /// wrapper around `Service<Objects>::execute`.
+#[derive(Clone, Debug)]
 pub struct InsertObject {
     /// The object to insert
     pub object: Object<WithHandle>,
 }
 
 /// Event produced by `Service<Objects>`
+#[derive(Clone, Debug)]
 pub struct ObjectToInsert {
     /// The object to insert
     pub object: Object<WithHandle>,
