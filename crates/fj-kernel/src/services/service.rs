@@ -74,6 +74,15 @@ impl<S: State> Deref for Service<S> {
     }
 }
 
+impl<S: State> Default for Service<S>
+where
+    S: Default,
+{
+    fn default() -> Self {
+        Self::new(S::default())
+    }
+}
+
 /// Implemented for state that can be wrapped by a [`Service`]
 ///
 /// See [`Service`] for a detailed explanation.
