@@ -17,7 +17,7 @@ macro_rules! object {
         /// This enum is generic over the form that the object takes. An
         /// `Object<Bare>` contains bare objects, like `Curve`. An
         /// `Object<BehindHandle>` contains handles, like `Handle<Curve>`.
-        #[derive(Clone)]
+        #[derive(Clone, Debug)]
         pub enum Object<F: Form> {
             $(
                 #[doc = concat!("A ", $name)]
@@ -113,7 +113,7 @@ pub trait Form {
 }
 
 /// Implementation of [`Form`] for bare objects
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Bare;
 
 impl Form for Bare {
@@ -121,7 +121,7 @@ impl Form for Bare {
 }
 
 /// Implementation of [`Form`] for objects behind a handle
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct BehindHandle;
 
 impl Form for BehindHandle {
@@ -129,7 +129,7 @@ impl Form for BehindHandle {
 }
 
 /// Implementation of [`Form`] for objects that are paired with their handle
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct WithHandle;
 
 impl Form for WithHandle {
