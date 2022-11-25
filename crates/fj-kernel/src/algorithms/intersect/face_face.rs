@@ -5,7 +5,6 @@ use crate::{
     objects::{Curve, Face, Objects},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
@@ -32,13 +31,13 @@ impl FaceFaceIntersection {
     pub fn compute(
         faces: [&Face; 2],
         objects: &mut Service<Objects>,
-    ) -> Result<Option<Self>, ValidationError> {
+    ) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
             match SurfaceSurfaceIntersection::compute(surfaces, objects) {
                 Some(intersection) => intersection.intersection_curves,
-                None => return Ok(None),
+                None => return None,
             };
 
         let curve_face_intersections = intersection_curves
@@ -54,13 +53,13 @@ impl FaceFaceIntersection {
         };
 
         if intersection_intervals.is_empty() {
-            return Ok(None);
+            return None;
         }
 
-        Ok(Some(Self {
+        Some(Self {
             intersection_curves,
             intersection_intervals,
-        }))
+        })
     }
 }
 
@@ -101,7 +100,7 @@ mod tests {
             });
 
         let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
+            FaceFaceIntersection::compute([&a, &b], &mut objects);
 
         assert!(intersection.is_none());
 
@@ -129,7 +128,7 @@ mod tests {
         });
 
         let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut objects)?;
+            FaceFaceIntersection::compute([&a, &b], &mut objects);
 
         let expected_curves =
             surfaces.try_map_ext(|surface| -> Result<_, ValidationError> {
