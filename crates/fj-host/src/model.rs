@@ -109,16 +109,16 @@ impl Model {
 
             let version_pkg_model: libloading::Symbol<*const Version> =
                 lib.get(b"VERSION_PKG").map_err(Error::LoadingVersion)?;
-            let version_pkg_mode = (**version_pkg_model).to_string();
+            let version_pkg_model = (**version_pkg_model).to_string();
 
             debug!(
                 "Comparing package versions (host: {}, model: {})",
-                version_pkg_host, version_pkg_mode
+                version_pkg_host, version_pkg_model
             );
-            if version_pkg_host != version_pkg_mode {
+            if version_pkg_host != version_pkg_model {
                 let host = String::from_utf8_lossy(version_pkg_host.as_bytes())
                     .into_owned();
-                let model = version_pkg_mode;
+                let model = version_pkg_model;
 
                 return Err(Error::VersionMismatch { host, model });
             }

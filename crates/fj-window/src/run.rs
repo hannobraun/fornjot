@@ -209,8 +209,10 @@ pub fn run(
                         Ok(new_host) => {
                             host = Some(new_host);
                         }
-                        Err(_) => {
-                            status.update_status("Error creating host.");
+                        Err(err) => {
+                            status.update_status(&format!(
+                                "Error creating host: {err}"
+                            ));
                         }
                     }
                 }
