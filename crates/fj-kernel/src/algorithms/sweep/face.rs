@@ -6,7 +6,6 @@ use crate::{
     objects::{Face, Objects, Shell},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -19,7 +18,7 @@ impl Sweep for Handle<Face> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -69,13 +68,13 @@ impl Sweep for Handle<Face> {
                 };
 
                 let face = (half_edge, self.color())
-                    .sweep_with_cache(path, cache, objects)?;
+                    .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
             }
         }
 
-        Ok(Shell::builder().with_faces(faces).build(objects))
+        Shell::builder().with_faces(faces).build(objects)
     }
 }
 
@@ -108,7 +107,7 @@ mod tests {
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &mut objects)
             .build(&mut objects)
-            .sweep(UP, &mut objects)?;
+            .sweep(UP, &mut objects);
 
         let bottom = Face::partial()
             .with_surface(surface.clone())
@@ -126,19 +125,16 @@ mod tests {
         assert!(solid.find_face(&top).is_some());
 
         let triangle = TRIANGLE.as_slice();
-        let side_faces = triangle
-            .array_windows_ext()
-            .map(|&[a, b]| {
-                let half_edge = HalfEdge::partial()
-                    .update_as_line_segment_from_points(
-                        objects.surfaces.xy_plane(),
-                        [a, b],
-                    )
-                    .build(&mut objects)
-                    .insert(&mut objects);
-                (half_edge, Color::default()).sweep(UP, &mut objects)
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
+            let half_edge = HalfEdge::partial()
+                .update_as_line_segment_from_points(
+                    objects.surfaces.xy_plane(),
+                    [a, b],
+                )
+                .build(&mut objects)
+                .insert(&mut objects);
+            (half_edge, Color::default()).sweep(UP, &mut objects)
+        });
 
         assert!(side_faces
             .into_iter()
@@ -155,7 +151,7 @@ mod tests {
             .with_surface(surface.clone())
             .with_polygon_from_points(TRIANGLE, &mut objects)
             .build(&mut objects)
-            .sweep(DOWN, &mut objects)?;
+            .sweep(DOWN, &mut objects);
 
         let bottom = Face::partial()
             .with_surface(surface.clone().translate(DOWN, &mut objects))
@@ -173,20 +169,17 @@ mod tests {
         assert!(solid.find_face(&top).is_some());
 
         let triangle = TRIANGLE.as_slice();
-        let side_faces = triangle
-            .array_windows_ext()
-            .map(|&[a, b]| {
-                let half_edge = HalfEdge::partial()
-                    .update_as_line_segment_from_points(
-                        objects.surfaces.xy_plane(),
-                        [a, b],
-                    )
-                    .build(&mut objects)
-                    .insert(&mut objects)
-                    .reverse(&mut objects);
-                (half_edge, Color::default()).sweep(DOWN, &mut objects)
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
+            let half_edge = HalfEdge::partial()
+                .update_as_line_segment_from_points(
+                    objects.surfaces.xy_plane(),
+                    [a, b],
+                )
+                .build(&mut objects)
+                .insert(&mut objects)
+                .reverse(&mut objects);
+            (half_edge, Color::default()).sweep(DOWN, &mut objects)
+        });
 
         assert!(side_faces
             .into_iter()

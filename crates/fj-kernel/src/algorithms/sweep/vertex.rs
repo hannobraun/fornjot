@@ -9,7 +9,6 @@ use crate::{
     },
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -22,7 +21,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let (vertex, surface) = self;
         let path = path.into();
 
@@ -64,7 +63,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         let (edge_global, vertices_global) = vertex
             .global_form()
             .clone()
-            .sweep_with_cache(path, cache, objects)?;
+            .sweep_with_cache(path, cache, objects);
 
         // Next, let's compute the surface coordinates of the two vertices of
         // the output `Edge`, as we're going to need these for the rest of this
@@ -121,7 +120,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        Ok(HalfEdge::new(vertices, edge_global).insert(objects))
+        HalfEdge::new(vertices, edge_global).insert(objects)
     }
 }
 
@@ -133,7 +132,7 @@ impl Sweep for Handle<GlobalVertex> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let curve = GlobalCurve.insert(objects);
 
         let a = self.clone();
@@ -153,7 +152,7 @@ impl Sweep for Handle<GlobalVertex> {
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
         // ordered vertices in addition.
-        Ok((global_edge, vertices))
+        (global_edge, vertices)
     }
 }
 
@@ -190,7 +189,7 @@ mod tests {
         .insert(&mut objects);
 
         let half_edge =
-            (vertex, surface.clone()).sweep([0., 0., 1.], &mut objects)?;
+            (vertex, surface.clone()).sweep([0., 0., 1.], &mut objects);
 
         let expected_half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])

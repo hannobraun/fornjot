@@ -13,7 +13,6 @@ use crate::{
     partial::HasPartial,
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -26,14 +25,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface = edge
-            .curve()
-            .clone()
-            .sweep_with_cache(path, cache, objects)?;
+        let surface =
+            edge.curve().clone().sweep_with_cache(path, cache, objects);
 
         // We can't use the edge we're sweeping from as the bottom edge, as that
         // is not defined in the right surface. Let's create a new bottom edge,
@@ -71,8 +68,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     .into_iter_fixed()
                     .zip(points_surface)
                     .collect::<[_; 2]>()
-                    .try_map_ext(
-                    |(vertex, point_surface)| -> Result<_, ValidationError> {
+                    .map(|(vertex, point_surface)| {
                         let surface_vertex = SurfaceVertex::new(
                             point_surface,
                             surface.clone(),
@@ -80,22 +76,21 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         )
                         .insert(objects);
 
-                        Ok(Vertex::new(
+                        Vertex::new(
                             vertex.position(),
                             curve.clone(),
                             surface_vertex,
-                        ).insert(objects))
-                    },
-                )?
+                        )
+                        .insert(objects)
+                    })
             };
 
             HalfEdge::new(vertices, edge.global_form().clone()).insert(objects)
         };
 
-        let side_edges =
-            bottom_edge.vertices().clone().try_map_ext(|vertex| {
-                (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
-            })?;
+        let side_edges = bottom_edge.vertices().clone().map(|vertex| {
+            (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
+        });
 
         let top_edge = {
             let bottom_vertices = bottom_edge.vertices();
@@ -179,11 +174,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             Cycle::new(edges).insert(objects)
         };
 
-        Ok(Face::partial()
+        Face::partial()
             .with_exterior(cycle)
             .with_color(color)
             .build(objects)
-            .insert(objects))
+            .insert(objects)
     }
 }
 
@@ -214,7 +209,7 @@ mod tests {
             .insert(&mut objects);
 
         let face =
-            (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects)?;
+            (half_edge, Color::default()).sweep([0., 0., 1.], &mut objects);
 
         let expected_face = {
             let surface = objects.surfaces.xz_plane();

@@ -8,7 +8,6 @@ use crate::{
     partial::PartialSurface,
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -21,7 +20,7 @@ impl Sweep for Handle<Curve> {
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         match self.surface().geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
@@ -81,9 +80,8 @@ impl Sweep for Handle<Curve> {
             }
         };
 
-        let surface = PartialSurface::from_axes(u, path)
+        PartialSurface::from_axes(u, path)
             .build(objects)
-            .insert(objects);
-        Ok(surface)
+            .insert(objects)
     }
 }
