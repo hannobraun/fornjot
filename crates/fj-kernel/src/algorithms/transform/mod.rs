@@ -75,7 +75,7 @@ where
         Ok(self
             .to_partial()
             .transform(transform, objects)?
-            .build(objects)?
+            .build(objects)
             .insert(objects))
     }
 }

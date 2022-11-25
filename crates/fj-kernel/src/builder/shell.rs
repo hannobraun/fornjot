@@ -63,7 +63,6 @@ impl ShellBuilder {
                     [-h, h],
                 ])
                 .build(objects)
-                .unwrap()
                 .insert(objects)
         };
 
@@ -80,7 +79,6 @@ impl ShellBuilder {
 
                     PartialSurface::plane_from_points([a, b, c])
                         .build(objects)
-                        .unwrap()
                         .insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -99,7 +97,6 @@ impl ShellBuilder {
                         [[Z, Z], [edge_length, Z]],
                     )
                     .build(objects)
-                    .unwrap()
                     .insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -134,7 +131,6 @@ impl ShellBuilder {
                     }
                     .update_as_line_segment()
                     .build(objects)
-                    .unwrap()
                     .insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -185,7 +181,6 @@ impl ShellBuilder {
                         }
                         .update_as_line_segment()
                         .build(objects)
-                        .unwrap()
                         .insert(objects)
                     })
                     .collect::<Vec<_>>()
@@ -217,7 +212,6 @@ impl ShellBuilder {
                     }
                     .update_as_line_segment()
                     .build(objects)
-                    .unwrap()
                     .insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -231,13 +225,11 @@ impl ShellBuilder {
                     let cycle = Cycle::partial()
                         .with_half_edges([bottom, side_up, top, side_down])
                         .build(objects)
-                        .unwrap()
                         .insert(objects);
 
                     Face::partial()
                         .with_exterior(cycle)
                         .build(objects)
-                        .unwrap()
                         .insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -274,7 +266,6 @@ impl ShellBuilder {
                             global_form: vertex.global_form().clone().into(),
                         }
                         .build(objects)
-                        .unwrap()
                         .insert(objects)
                     });
 
@@ -307,7 +298,6 @@ impl ShellBuilder {
                     }
                     .update_as_line_segment()
                     .build(objects)
-                    .unwrap()
                     .insert(objects),
                 );
             }
@@ -315,7 +305,6 @@ impl ShellBuilder {
             Face::partial()
                 .with_exterior(Cycle::new(edges).insert(objects))
                 .build(objects)
-                .unwrap()
                 .insert(objects)
         };
 

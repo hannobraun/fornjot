@@ -5,7 +5,6 @@ use crate::{
     partial::{MaybePartial, MergeWith, Mergeable},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// A partial [`Face`]
@@ -72,19 +71,16 @@ impl PartialFace {
     }
 
     /// Construct a polygon from a list of points
-    pub fn build(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Face, ValidationError> {
-        let exterior = self.exterior.into_full(objects)?;
+    pub fn build(self, objects: &mut Service<Objects>) -> Face {
+        let exterior = self.exterior.into_full(objects);
         let interiors = self
             .interiors
             .into_iter()
             .map(|cycle| cycle.into_full(objects))
-            .collect::<Result<Vec<_>, _>>()?;
+            .collect::<Vec<_>>();
         let color = self.color.unwrap_or_default();
 
-        Ok(Face::new(exterior, interiors, color))
+        Face::new(exterior, interiors, color)
     }
 }
 

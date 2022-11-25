@@ -93,10 +93,10 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?;
+        let curve = curve.build(&mut objects);
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[1., -1.], [1., 1.]])
-            .build(&mut objects)?;
+            .build(&mut objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -119,13 +119,13 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?;
+        let curve = curve.build(&mut objects);
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
                 [[-1., -1.], [-1., 1.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -148,13 +148,13 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?;
+        let curve = curve.build(&mut objects);
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
                 surface,
                 [[-1., -1.], [1., -1.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -172,10 +172,10 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?;
+        let curve = curve.build(&mut objects);
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[-1., 0.], [1., 0.]])
-            .build(&mut objects)?;
+            .build(&mut objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 

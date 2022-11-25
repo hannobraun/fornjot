@@ -6,7 +6,6 @@ use crate::{
     partial::{MaybePartial, MergeWith, Replace},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// A partial [`Vertex`]
@@ -32,14 +31,11 @@ impl PartialVertex {
     /// Panics, if position has not been provided.
     ///
     /// Panics, if curve has not been provided.
-    pub fn build(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Vertex, ValidationError> {
+    pub fn build(self, objects: &mut Service<Objects>) -> Vertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
-        let curve = self.curve.into_full(objects)?;
+        let curve = self.curve.into_full(objects);
 
         let surface_form = self
             .surface_form
@@ -53,9 +49,9 @@ impl PartialVertex {
 
                 partial
             })
-            .into_full(objects)?;
+            .into_full(objects);
 
-        Ok(Vertex::new(position, curve, surface_form))
+        Vertex::new(position, curve, surface_form)
     }
 }
 
@@ -105,10 +101,7 @@ pub struct PartialSurfaceVertex {
 
 impl PartialSurfaceVertex {
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
-    pub fn build(
-        mut self,
-        objects: &mut Service<Objects>,
-    ) -> Result<SurfaceVertex, ValidationError> {
+    pub fn build(mut self, objects: &mut Service<Objects>) -> SurfaceVertex {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
@@ -124,9 +117,9 @@ impl PartialSurfaceVertex {
                 ),
             )
         }
-        let global_form = self.global_form.into_full(objects)?;
+        let global_form = self.global_form.into_full(objects);
 
-        Ok(SurfaceVertex::new(position, surface, global_form))
+        SurfaceVertex::new(position, surface, global_form)
     }
 }
 
@@ -170,12 +163,12 @@ pub struct PartialGlobalVertex {
 
 impl PartialGlobalVertex {
     /// Build a full [`GlobalVertex`] from the partial global vertex
-    pub fn build(self, _: &Objects) -> Result<GlobalVertex, ValidationError> {
+    pub fn build(self, _: &Objects) -> GlobalVertex {
         let position = self
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        Ok(GlobalVertex::from_position(position))
+        GlobalVertex::from_position(position)
     }
 }
 

@@ -24,7 +24,7 @@ impl Reverse for Handle<Face> {
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(self.color())
-            .build(objects)?
+            .build(objects)
             .insert(objects))
     }
 }

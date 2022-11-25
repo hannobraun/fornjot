@@ -33,7 +33,7 @@ impl Shape for fj::Sketch {
                     half_edge.replace(surface);
                     half_edge
                         .update_as_circle_from_radius(circle.radius(), objects)?
-                        .build(objects)?
+                        .build(objects)
                         .insert(objects)
                 };
                 let cycle = Cycle::new([half_edge]).insert(objects);
@@ -41,7 +41,7 @@ impl Shape for fj::Sketch {
                 Face::partial()
                     .with_exterior(cycle)
                     .with_color(Color(self.color()))
-                    .build(objects)?
+                    .build(objects)
                     .insert(objects)
             }
             fj::Chain::PolyChain(poly_chain) => {
@@ -55,7 +55,7 @@ impl Shape for fj::Sketch {
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .with_color(Color(self.color()))
-                    .build(objects)?
+                    .build(objects)
                     .insert(objects)
             }
         };

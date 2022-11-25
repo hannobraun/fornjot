@@ -93,12 +93,12 @@ mod tests {
             [1., 2.],
         ];
         let [a, b] = [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()]
-            .try_map_ext(|surface| {
+            .map(|surface| {
                 Face::partial()
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .build(&mut objects)
-            })?;
+            });
 
         let intersection =
             FaceFaceIntersection::compute([&a, &b], &mut objects)?;
@@ -121,12 +121,12 @@ mod tests {
         ];
         let surfaces =
             [objects.surfaces.xy_plane(), objects.surfaces.xz_plane()];
-        let [a, b] = surfaces.clone().try_map_ext(|surface| {
+        let [a, b] = surfaces.clone().map(|surface| {
             Face::partial()
                 .with_surface(surface)
                 .with_exterior_polygon_from_points(points)
                 .build(&mut objects)
-        })?;
+        });
 
         let intersection =
             FaceFaceIntersection::compute([&a, &b], &mut objects)?;
@@ -138,7 +138,7 @@ mod tests {
                     ..Default::default()
                 };
                 curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-                Ok(curve.build(&mut objects)?.insert(&mut objects))
+                Ok(curve.build(&mut objects).insert(&mut objects))
             })?;
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

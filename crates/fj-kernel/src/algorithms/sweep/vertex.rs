@@ -180,13 +180,13 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?.insert(&mut objects);
+        let curve = curve.build(&mut objects).insert(&mut objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
             curve: curve.into(),
             ..Default::default()
         }
-        .build(&mut objects)?
+        .build(&mut objects)
         .insert(&mut objects);
 
         let half_edge =
@@ -194,7 +194,7 @@ mod tests {
 
         let expected_half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         assert_eq!(half_edge, expected_half_edge);
         Ok(())

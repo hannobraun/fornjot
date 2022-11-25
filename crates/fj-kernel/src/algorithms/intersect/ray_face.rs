@@ -175,7 +175,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([-1., 0., 0.], &mut objects)?;
 
@@ -198,7 +198,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([1., 0., 0.], &mut objects)?;
 
@@ -224,7 +224,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([0., 0., 2.], &mut objects)?;
 
@@ -247,7 +247,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([1., 1., 0.], &mut objects)?;
 
@@ -281,7 +281,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([1., 1., 1.], &mut objects)?;
 
@@ -313,7 +313,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert_eq!(
@@ -339,7 +339,7 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .translate([0., 0., 1.], &mut objects)?;
 

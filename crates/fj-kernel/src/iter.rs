@@ -382,7 +382,7 @@ mod tests {
             ..Default::default()
         };
         object.update_as_u_axis();
-        let object = object.build(&mut objects)?.insert(&mut objects);
+        let object = object.build(&mut objects).insert(&mut objects);
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -410,7 +410,7 @@ mod tests {
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert_eq!(3, object.curve_iter().count());
@@ -436,7 +436,7 @@ mod tests {
         let object = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert_eq!(3, object.curve_iter().count());
@@ -506,7 +506,7 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert_eq!(1, object.curve_iter().count());
@@ -553,7 +553,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let object = Sketch::builder().with_faces([face]).build(&mut objects);
 
@@ -622,7 +622,7 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve.build(&mut objects)?.insert(&mut objects);
+        let curve = curve.build(&mut objects).insert(&mut objects);
         let global_vertex =
             GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects);
         let surface_vertex =

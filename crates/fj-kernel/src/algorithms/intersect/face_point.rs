@@ -152,7 +152,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([2., 1.]);
 
@@ -170,7 +170,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 1.]);
 
@@ -191,7 +191,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 2.]);
 
@@ -217,7 +217,7 @@ mod tests {
                 [3., 0.],
                 [3., 4.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 1.]);
 
@@ -244,7 +244,7 @@ mod tests {
                 [3., 1.],
                 [0., 2.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 1.]);
 
@@ -272,7 +272,7 @@ mod tests {
                 [4., 0.],
                 [4., 5.],
             ])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 1.]);
 
@@ -293,7 +293,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 0.]);
 
@@ -323,7 +323,7 @@ mod tests {
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
         let point = Point::from([1., 0.]);
 

@@ -51,7 +51,6 @@ impl SketchBuilder {
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(points)
             .build(objects)
-            .unwrap()
             .insert(objects)]);
         self
     }

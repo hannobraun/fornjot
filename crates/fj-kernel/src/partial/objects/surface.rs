@@ -2,7 +2,6 @@ use crate::{
     geometry::surface::SurfaceGeometry,
     objects::{Objects, Surface},
     partial::MergeWith,
-    validate::ValidationError,
 };
 
 /// A partial [`Surface`]
@@ -16,12 +15,12 @@ pub struct PartialSurface {
 
 impl PartialSurface {
     /// Build a full [`Surface`] from the partial surface
-    pub fn build(self, _: &Objects) -> Result<Surface, ValidationError> {
+    pub fn build(self, _: &Objects) -> Surface {
         let geometry = self
             .geometry
             .expect("Can't build `Surface` without geometry");
 
-        Ok(Surface::new(geometry))
+        Surface::new(geometry)
     }
 }
 

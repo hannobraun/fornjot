@@ -113,13 +113,13 @@ mod tests {
         let bottom = Face::partial()
             .with_surface(surface.clone())
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface.translate(UP, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert!(solid.find_face(&bottom).is_some());
@@ -134,7 +134,7 @@ mod tests {
                         objects.surfaces.xy_plane(),
                         [a, b],
                     )
-                    .build(&mut objects)?
+                    .build(&mut objects)
                     .insert(&mut objects);
                 (half_edge, Color::default()).sweep(UP, &mut objects)
             })
@@ -160,13 +160,13 @@ mod tests {
         let bottom = Face::partial()
             .with_surface(surface.clone().translate(DOWN, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects)
             .reverse(&mut objects)?;
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
-            .build(&mut objects)?
+            .build(&mut objects)
             .insert(&mut objects);
 
         assert!(solid.find_face(&bottom).is_some());
@@ -181,7 +181,7 @@ mod tests {
                         objects.surfaces.xy_plane(),
                         [a, b],
                     )
-                    .build(&mut objects)?
+                    .build(&mut objects)
                     .insert(&mut objects)
                     .reverse(&mut objects)?;
                 (half_edge, Color::default()).sweep(DOWN, &mut objects)

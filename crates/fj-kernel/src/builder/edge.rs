@@ -89,7 +89,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             surface: curve.surface.clone(),
             global_form: global_vertex,
         }
-        .build(objects)?
+        .build(objects)
         .insert(objects);
 
         let [back, front] =
@@ -165,11 +165,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 let must_switch_order = {
                     let mut objects = Objects::new().into_service();
                     let vertices = vertices.clone().map(|vertex| {
-                        vertex
-                            .into_full(&mut objects)
-                            .unwrap()
-                            .global_form()
-                            .clone()
+                        vertex.into_full(&mut objects).global_form().clone()
                     });
 
                     let (_, must_switch_order) =

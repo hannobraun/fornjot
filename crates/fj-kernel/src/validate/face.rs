@@ -121,7 +121,7 @@ mod tests {
             .with_surface(objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = {
             let interiors = [Cycle::partial()
                 .with_poly_chain_from_points(
@@ -129,7 +129,7 @@ mod tests {
                     [[1., 1.], [1., 2.], [2., 1.]],
                 )
                 .close_with_line_segment()
-                .build(&mut objects)?
+                .build(&mut objects)
                 .insert(&mut objects)];
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
@@ -149,7 +149,7 @@ mod tests {
             .with_surface(objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = {
             let interiors = valid
                 .interiors()

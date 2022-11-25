@@ -71,19 +71,14 @@ impl<T: HasPartial> MaybePartial<T> {
     ///
     /// If this already is a full object, it is returned. If this is a partial
     /// object, the full object is built from it, using [`Partial::build`].
-    pub fn into_full(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Handle<T>, ValidationError>
+    pub fn into_full(self, objects: &mut Service<Objects>) -> Handle<T>
     where
         T: Insert,
         ValidationError: From<<T as Validate>::Error>,
     {
         match self {
-            Self::Partial(partial) => {
-                Ok(partial.build(objects)?.insert(objects))
-            }
-            Self::Full(full) => Ok(full),
+            Self::Partial(partial) => partial.build(objects).insert(objects),
+            Self::Full(full) => full,
         }
     }
 
