@@ -71,7 +71,7 @@ mod tests {
         objects::{Cycle, Objects},
         partial::HasPartial,
         services::State,
-        validate::{Validate, ValidationError},
+        validate::Validate,
     };
 
     #[test]
@@ -103,12 +103,9 @@ mod tests {
                 .with_back_vertex(first_vertex)
                 .infer_global_form();
 
-            let half_edges = half_edges
-                .into_iter()
-                .map(|half_edge| -> anyhow::Result<_, ValidationError> {
-                    Ok(half_edge.build(&mut objects).insert(&mut objects))
-                })
-                .collect::<Result<Vec<_>, _>>()?;
+            let half_edges = half_edges.into_iter().map(|half_edge| {
+                half_edge.build(&mut objects).insert(&mut objects)
+            });
 
             Cycle::new(half_edges)
         };
