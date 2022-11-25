@@ -155,7 +155,7 @@ mod tests {
                 .interiors()
                 .cloned()
                 .map(|cycle| cycle.reverse(&mut objects))
-                .collect::<Result<Vec<_>, _>>()?;
+                .collect::<Vec<_>>();
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };

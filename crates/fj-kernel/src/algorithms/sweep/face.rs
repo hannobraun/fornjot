@@ -43,7 +43,7 @@ impl Sweep for Handle<Face> {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse(objects)?
+                self.clone().reverse(objects)
             }
         };
         faces.push(bottom_face);
@@ -52,7 +52,7 @@ impl Sweep for Handle<Face> {
             let mut face = self.clone().translate(path, objects)?;
 
             if is_negative_sweep {
-                face = face.reverse(objects)?;
+                face = face.reverse(objects);
             };
 
             face
@@ -63,7 +63,7 @@ impl Sweep for Handle<Face> {
         for cycle in self.all_cycles() {
             for half_edge in cycle.half_edges() {
                 let half_edge = if is_negative_sweep {
-                    half_edge.clone().reverse(objects)?
+                    half_edge.clone().reverse(objects)
                 } else {
                     half_edge.clone()
                 };
@@ -115,7 +115,7 @@ mod tests {
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)
             .insert(&mut objects)
-            .reverse(&mut objects)?;
+            .reverse(&mut objects);
         let top = Face::partial()
             .with_surface(surface.translate(UP, &mut objects)?)
             .with_exterior_polygon_from_points(TRIANGLE)
@@ -162,7 +162,7 @@ mod tests {
             .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut objects)
             .insert(&mut objects)
-            .reverse(&mut objects)?;
+            .reverse(&mut objects);
         let top = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points(TRIANGLE)
@@ -183,7 +183,7 @@ mod tests {
                     )
                     .build(&mut objects)
                     .insert(&mut objects)
-                    .reverse(&mut objects)?;
+                    .reverse(&mut objects);
                 (half_edge, Color::default()).sweep(DOWN, &mut objects)
             })
             .collect::<Result<Vec<_>, _>>()?;

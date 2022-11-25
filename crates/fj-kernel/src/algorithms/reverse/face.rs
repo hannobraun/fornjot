@@ -4,27 +4,23 @@ use crate::{
     partial::HasPartial,
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::Reverse;
 
 impl Reverse for Handle<Face> {
-    fn reverse(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
-        let exterior = self.exterior().clone().reverse(objects)?;
+    fn reverse(self, objects: &mut Service<Objects>) -> Self {
+        let exterior = self.exterior().clone().reverse(objects);
         let interiors = self
             .interiors()
             .map(|cycle| cycle.clone().reverse(objects))
-            .collect::<Result<Vec<_>, _>>()?;
+            .collect::<Vec<_>>();
 
-        Ok(Face::partial()
+        Face::partial()
             .with_exterior(exterior)
             .with_interiors(interiors)
             .with_color(self.color())
             .build(objects)
-            .insert(objects))
+            .insert(objects)
     }
 }
