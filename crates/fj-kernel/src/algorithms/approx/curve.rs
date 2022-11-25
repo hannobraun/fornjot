@@ -205,13 +205,14 @@ mod tests {
         insert::Insert,
         objects::Objects,
         partial::{PartialCurve, PartialSurface},
+        services::State,
     };
 
     use super::CurveApprox;
 
     #[test]
     fn approx_line_on_flat_surface() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
@@ -234,7 +235,7 @@ mod tests {
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() -> anyhow::Result<()>
     {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = PartialSurface::from_axes(
             GlobalPath::circle_from_radius(1.),
@@ -258,7 +259,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_along_curve() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
@@ -293,7 +294,7 @@ mod tests {
 
     #[test]
     fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])

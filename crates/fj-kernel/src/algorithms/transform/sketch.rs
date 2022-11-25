@@ -2,6 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Objects, Sketch},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -12,7 +13,7 @@ impl TransformObject for Handle<Sketch> {
     fn transform(
         self,
         transform: &Transform,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let faces = self
             .faces()

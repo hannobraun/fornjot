@@ -3,6 +3,7 @@ use fj_math::Transform;
 use crate::{
     objects::Objects,
     partial::{PartialCurve, PartialGlobalCurve},
+    services::Service,
     validate::ValidationError,
 };
 
@@ -12,7 +13,7 @@ impl TransformObject for PartialGlobalCurve {
     fn transform(
         self,
         _: &Transform,
-        _: &mut Objects,
+        _: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         // `GlobalCurve` doesn't contain any internal geometry. If it did, that
         // would just be redundant with the geometry of other objects, and this
@@ -26,7 +27,7 @@ impl TransformObject for PartialCurve {
     fn transform(
         self,
         transform: &Transform,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let surface = self
             .surface

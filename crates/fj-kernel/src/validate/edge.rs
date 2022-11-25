@@ -205,12 +205,13 @@ mod tests {
         insert::Insert,
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
+        services::State,
         validate::{Validate, ValidationError},
     };
 
     #[test]
     fn half_edge_curve_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
@@ -236,7 +237,7 @@ mod tests {
 
     #[test]
     fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
@@ -258,7 +259,7 @@ mod tests {
 
     #[test]
     fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
@@ -285,7 +286,7 @@ mod tests {
 
     #[test]
     fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(

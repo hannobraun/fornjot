@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     geometry::surface::SurfaceGeometry, objects::Objects,
-    partial::PartialSurface, validate::ValidationError,
+    partial::PartialSurface, services::Service, validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -11,7 +11,7 @@ impl TransformObject for PartialSurface {
     fn transform(
         self,
         transform: &Transform,
-        _: &mut Objects,
+        _: &mut Service<Objects>,
     ) -> Result<Self, ValidationError> {
         let geometry = self.geometry.map(|geometry| {
             let u = geometry.u.transform(transform);

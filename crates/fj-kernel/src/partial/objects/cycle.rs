@@ -4,6 +4,7 @@ use crate::{
     partial::{
         MaybePartial, MergeWith, PartialHalfEdge, PartialVertex, Replace,
     },
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -71,7 +72,7 @@ impl PartialCycle {
     /// Build a full [`Cycle`] from the partial cycle
     pub fn build(
         mut self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Cycle, ValidationError> {
         // Check that the cycle is closed. This will lead to a panic further
         // down anyway, but that panic would be super-confusing. This one should

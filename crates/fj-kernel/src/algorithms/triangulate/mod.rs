@@ -81,6 +81,7 @@ mod tests {
         insert::Insert,
         objects::{Face, Objects},
         partial::HasPartial,
+        services::State,
         storage::Handle,
     };
 
@@ -88,7 +89,7 @@ mod tests {
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let a = [0., 0.];
         let b = [2., 0.];
@@ -119,7 +120,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -171,7 +172,7 @@ mod tests {
 
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         //   e       c
         //   |\     /|

@@ -4,6 +4,7 @@ use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
     partial::{MaybePartial, MergeWith, Replace},
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -33,7 +34,7 @@ impl PartialVertex {
     /// Panics, if curve has not been provided.
     pub fn build(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Vertex, ValidationError> {
         let position = self
             .position
@@ -106,7 +107,7 @@ impl PartialSurfaceVertex {
     /// Build a full [`SurfaceVertex`] from the partial surface vertex
     pub fn build(
         mut self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<SurfaceVertex, ValidationError> {
         let position = self
             .position

@@ -13,6 +13,7 @@ use crate::{
         HasPartial, PartialCurve, PartialHalfEdge, PartialSurface,
         PartialSurfaceVertex, PartialVertex,
     },
+    services::Service,
     storage::Handle,
 };
 
@@ -38,7 +39,7 @@ impl ShellBuilder {
     pub fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Self {
         let edge_length = edge_length.into();
 
@@ -337,7 +338,7 @@ impl ShellBuilder {
     }
 
     /// Build the [`Shell`]
-    pub fn build(self, objects: &mut Objects) -> Handle<Shell> {
+    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Shell> {
         Shell::new(self.faces).insert(objects).unwrap()
     }
 }

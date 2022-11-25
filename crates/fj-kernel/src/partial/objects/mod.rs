@@ -5,9 +5,12 @@ pub mod face;
 pub mod surface;
 pub mod vertex;
 
-use crate::objects::{
-    Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
-    Objects, Surface, SurfaceVertex, Vertex,
+use crate::{
+    objects::{
+        Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
+        Objects, Surface, SurfaceVertex, Vertex,
+    },
+    services::Service,
 };
 
 use super::{
@@ -26,7 +29,7 @@ macro_rules! impl_traits {
             impl Partial for $partial {
                 type Full = $full;
 
-                fn build(self, objects: &mut Objects)
+                fn build(self, objects: &mut Service<Objects>)
                     -> Result<
                         Self::Full,
                         crate::validate::ValidationError

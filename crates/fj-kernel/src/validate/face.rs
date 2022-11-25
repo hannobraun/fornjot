@@ -109,12 +109,13 @@ mod tests {
         insert::Insert,
         objects::{Cycle, Face, Objects},
         partial::HasPartial,
+        services::State,
         validate::Validate,
     };
 
     #[test]
     fn face_surface_mismatch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = Face::partial()
             .with_surface(objects.surfaces.xy_plane())
@@ -142,7 +143,7 @@ mod tests {
 
     #[test]
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let valid = Face::partial()
             .with_surface(objects.surfaces.xy_plane())

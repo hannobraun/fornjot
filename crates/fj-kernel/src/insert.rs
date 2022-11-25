@@ -7,6 +7,7 @@ use crate::{
         Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
         Objects, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
+    services::{Service, ServiceObjectsExt},
     storage::Handle,
     validate::Validate,
 };
@@ -16,7 +17,7 @@ pub trait Insert: Sized + Validate {
     /// Insert the object into its respective store
     fn insert(
         self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Handle<Self>, <Self as Validate>::Error>;
 }
 
@@ -26,10 +27,10 @@ macro_rules! impl_insert {
             impl Insert for $ty {
                 fn insert(
                     self,
-                    objects: &mut Objects,
+                    objects: &mut Service<Objects>,
                 ) -> Result<Handle<Self>, <Self as Validate>::Error> {
                     let handle = objects.$store.reserve();
-                    objects.$store.insert(handle.clone(), self)?;
+                    objects.insert(handle.clone(), self);
                     Ok(handle)
                 }
             }

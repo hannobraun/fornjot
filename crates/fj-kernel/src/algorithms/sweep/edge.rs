@@ -11,6 +11,7 @@ use crate::{
         Vertex,
     },
     partial::HasPartial,
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -24,7 +25,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
     ) -> Result<Self::Swept, ValidationError> {
         let (edge, color) = self;
         let path = path.into();
@@ -198,11 +199,12 @@ mod tests {
         insert::Insert,
         objects::{Cycle, Face, HalfEdge, Objects},
         partial::{HasPartial, PartialSurfaceVertex, PartialVertex, Replace},
+        services::State,
     };
 
     #[test]
     fn sweep() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(

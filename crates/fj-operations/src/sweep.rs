@@ -5,6 +5,7 @@ use fj_kernel::{
     algorithms::sweep::Sweep,
     insert::Insert,
     objects::{Objects, Solid},
+    services::Service,
     validate::ValidationError,
 };
 use fj_math::{Aabb, Vector};
@@ -16,7 +17,7 @@ impl Shape for fj::Sweep {
 
     fn compute_brep(
         &self,
-        objects: &mut Objects,
+        objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
     ) -> Result<Self::Brep, ValidationError> {
         let sketch = self.shape().compute_brep(objects, debug_info)?;

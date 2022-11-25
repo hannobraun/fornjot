@@ -367,13 +367,14 @@ mod tests {
             Sketch, Solid, SurfaceVertex, Vertex,
         },
         partial::{HasPartial, PartialCurve},
+        services::State,
     };
 
     use super::ObjectIters as _;
 
     #[test]
     fn curve() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut object = PartialCurve {
@@ -400,7 +401,7 @@ mod tests {
 
     #[test]
     fn cycle() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let object = Cycle::partial()
@@ -429,7 +430,7 @@ mod tests {
 
     #[test]
     fn face() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let object = Face::partial()
@@ -455,7 +456,7 @@ mod tests {
 
     #[test]
     fn global_curve() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let object = GlobalCurve.insert(&mut objects)?;
 
@@ -476,7 +477,7 @@ mod tests {
 
     #[test]
     fn global_vertex() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let object =
             GlobalVertex::from_position([0., 0., 0.]).insert(&mut objects)?;
@@ -498,7 +499,7 @@ mod tests {
 
     #[test]
     fn half_edge() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let object = HalfEdge::partial()
             .update_as_line_segment_from_points(
@@ -525,7 +526,7 @@ mod tests {
 
     #[test]
     fn shell() {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let object = Shell::builder()
             .with_cube_from_edge_length(1., &mut objects)
@@ -546,7 +547,7 @@ mod tests {
 
     #[test]
     fn sketch() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let face = Face::partial()
@@ -573,7 +574,7 @@ mod tests {
 
     #[test]
     fn solid() {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let object = Solid::builder()
             .with_cube_from_edge_length(1., &mut objects)
@@ -613,7 +614,7 @@ mod tests {
 
     #[test]
     fn vertex() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
         let mut curve = PartialCurve {

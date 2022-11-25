@@ -2,6 +2,7 @@ use crate::{
     insert::Insert,
     objects::{Face, Objects},
     partial::HasPartial,
+    services::Service,
     storage::Handle,
     validate::ValidationError,
 };
@@ -9,7 +10,10 @@ use crate::{
 use super::Reverse;
 
 impl Reverse for Handle<Face> {
-    fn reverse(self, objects: &mut Objects) -> Result<Self, ValidationError> {
+    fn reverse(
+        self,
+        objects: &mut Service<Objects>,
+    ) -> Result<Self, ValidationError> {
         let exterior = self.exterior().clone().reverse(objects)?;
         let interiors = self
             .interiors()

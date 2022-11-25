@@ -153,13 +153,14 @@ mod tests {
         builder::{CurveBuilder, FaceBuilder},
         objects::{Face, Objects},
         partial::{HasPartial, PartialCurve},
+        services::State,
     };
 
     use super::CurveFaceIntersection;
 
     #[test]
     fn compute() -> anyhow::Result<()> {
-        let mut objects = Objects::new();
+        let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
 
