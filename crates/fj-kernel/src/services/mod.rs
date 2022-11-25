@@ -4,12 +4,14 @@
 
 mod objects;
 mod service;
+mod validation;
 
 use crate::objects::Objects;
 
 pub use self::{
     objects::ServiceObjectsExt,
     service::{Service, State},
+    validation::{Validation, ValidationEvent},
 };
 
 /// The kernel services
