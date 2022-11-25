@@ -33,7 +33,6 @@ use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     objects::{FaceSet, Objects, Sketch},
     services::Service,
-    validate::ValidationError,
 };
 use fj_math::Aabb;
 
@@ -47,7 +46,7 @@ pub trait Shape {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError>;
+    ) -> Self::Brep;
 
     /// Access the axis-aligned bounding box of a shape
     ///
@@ -63,21 +62,21 @@ impl Shape for fj::Shape {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
+    ) -> Self::Brep {
         match self {
             Self::Shape2d(shape) => {
-                Ok(shape.compute_brep(objects, debug_info)?.faces().clone())
+                shape.compute_brep(objects, debug_info).faces().clone()
             }
             Self::Group(shape) => shape.compute_brep(objects, debug_info),
-            Self::Sweep(shape) => Ok(shape
-                .compute_brep(objects, debug_info)?
+            Self::Sweep(shape) => shape
+                .compute_brep(objects, debug_info)
                 .shells()
                 .map(|shell| shell.faces().clone())
                 .reduce(|mut a, b| {
                     a.extend(b);
                     a
                 })
-                .unwrap_or_default()),
+                .unwrap_or_default(),
             Self::Transform(shape) => shape.compute_brep(objects, debug_info),
         }
     }
@@ -99,7 +98,7 @@ impl Shape for fj::Shape2d {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
+    ) -> Self::Brep {
         match self {
             Self::Difference(shape) => shape.compute_brep(objects, debug_info),
             Self::Sketch(shape) => shape.compute_brep(objects, debug_info),

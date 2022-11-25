@@ -7,7 +7,6 @@ use fj_kernel::{
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
     partial::{HasPartial, Replace},
     services::Service,
-    validate::ValidationError,
 };
 use fj_math::{Aabb, Point};
 
@@ -20,7 +19,7 @@ impl Shape for fj::Sketch {
         &self,
         objects: &mut Service<Objects>,
         _: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
+    ) -> Self::Brep {
         let surface = objects.surfaces.xy_plane();
 
         let face = match self.chain() {
@@ -61,7 +60,7 @@ impl Shape for fj::Sketch {
         };
 
         let sketch = Sketch::builder().with_faces([face]).build(objects);
-        Ok(sketch.deref().clone())
+        sketch.deref().clone()
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

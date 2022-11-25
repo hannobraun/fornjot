@@ -6,7 +6,6 @@ use fj_kernel::{
     insert::Insert,
     objects::{Objects, Solid},
     services::Service,
-    validate::ValidationError,
 };
 use fj_math::{Aabb, Vector};
 
@@ -19,14 +18,14 @@ impl Shape for fj::Sweep {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
-        let sketch = self.shape().compute_brep(objects, debug_info)?;
+    ) -> Self::Brep {
+        let sketch = self.shape().compute_brep(objects, debug_info);
         let sketch = sketch.insert(objects);
 
         let path = Vector::from(self.path());
 
         let solid = sketch.sweep(path, objects);
-        Ok(solid.deref().clone())
+        solid.deref().clone()
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

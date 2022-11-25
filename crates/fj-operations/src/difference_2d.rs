@@ -8,7 +8,6 @@ use fj_kernel::{
     objects::{Face, Objects, Sketch},
     partial::HasPartial,
     services::Service,
-    validate::ValidationError,
 };
 use fj_math::Aabb;
 
@@ -21,7 +20,7 @@ impl Shape for fj::Difference2d {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
+    ) -> Self::Brep {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
@@ -33,7 +32,7 @@ impl Shape for fj::Difference2d {
         let [a, b] = self
             .shapes()
             .each_ref_ext()
-            .try_map_ext(|shape| shape.compute_brep(objects, debug_info))?;
+            .map(|shape| shape.compute_brep(objects, debug_info));
 
         if let Some(face) = a.face_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -91,7 +90,7 @@ impl Shape for fj::Difference2d {
         }
 
         let difference = Sketch::builder().with_faces(faces).build(objects);
-        Ok(difference.deref().clone())
+        difference.deref().clone()
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
