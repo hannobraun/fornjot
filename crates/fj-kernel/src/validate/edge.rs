@@ -198,15 +198,13 @@ impl HalfEdgeValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
-
     use crate::{
         builder::{HalfEdgeBuilder, VertexBuilder},
         insert::Insert,
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
         services::State,
-        validate::{Validate, ValidationError},
+        validate::Validate,
     };
 
     #[test]
@@ -295,14 +293,12 @@ mod tests {
             )
             .build(&mut objects);
         let invalid = HalfEdge::new(
-            valid.vertices().clone().try_map_ext(
-                |vertex| -> anyhow::Result<_, ValidationError> {
-                    let mut vertex = vertex.to_partial();
-                    vertex.position = Some([0.].into());
-                    vertex.infer_surface_form();
-                    Ok(vertex.build(&mut objects).insert(&mut objects))
-                },
-            )?,
+            valid.vertices().clone().map(|vertex| {
+                let mut vertex = vertex.to_partial();
+                vertex.position = Some([0.].into());
+                vertex.infer_surface_form();
+                vertex.build(&mut objects).insert(&mut objects)
+            }),
             valid.global_form().clone(),
         );
 
