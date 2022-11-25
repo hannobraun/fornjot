@@ -98,17 +98,6 @@ pub trait State {
     /// [`State::evolve`].
     type Event;
 
-    /// Convert this state into the service that wraps it
-    ///
-    /// This is a convenience method that just calls [`Service::new`]
-    /// internally.
-    fn into_service(self) -> Service<Self>
-    where
-        Self: Sized,
-    {
-        Service::new(self)
-    }
-
     /// Decide how to react to the provided command
     ///
     /// If the command must result in changes to the state, any number of events
