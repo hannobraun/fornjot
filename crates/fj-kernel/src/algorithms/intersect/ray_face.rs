@@ -161,7 +161,7 @@ mod tests {
     };
 
     #[test]
-    fn ray_misses_whole_surface() -> anyhow::Result<()> {
+    fn ray_misses_whole_surface() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -175,16 +175,15 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([-1., 0., 0.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([-1., 0., 0.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_face() -> anyhow::Result<()> {
+    fn ray_hits_face() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -198,19 +197,18 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([1., 0., 0.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([1., 0., 0.], &mut objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFace)
         );
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_surface_but_misses_face() -> anyhow::Result<()> {
+    fn ray_hits_surface_but_misses_face() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -224,16 +222,15 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([0., 0., 2.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([0., 0., 2.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_edge() -> anyhow::Result<()> {
+    fn ray_hits_edge() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -247,9 +244,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([1., 1., 0.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([1., 1., 0.], &mut objects);
 
         let edge = face
             .half_edge_iter()
@@ -263,11 +260,10 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsEdge(edge.clone()))
         );
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex() -> anyhow::Result<()> {
+    fn ray_hits_vertex() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -281,9 +277,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([1., 1., 1.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([1., 1., 1.], &mut objects);
 
         let vertex = face
             .vertex_iter()
@@ -295,11 +291,10 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex.clone()))
         );
-        Ok(())
     }
 
     #[test]
-    fn ray_is_parallel_to_surface_and_hits() -> anyhow::Result<()> {
+    fn ray_is_parallel_to_surface_and_hits() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -313,19 +308,17 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFaceAndAreParallel)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn ray_is_parallel_to_surface_and_misses() -> anyhow::Result<()> {
+    fn ray_is_parallel_to_surface_and_misses() {
         let mut objects = Objects::new().into_service();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
@@ -339,11 +332,10 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)?
-            .insert(&mut objects)?
-            .translate([0., 0., 1.], &mut objects)?;
+            .build(&mut objects)
+            .insert(&mut objects)
+            .translate([0., 0., 1.], &mut objects);
 
         assert_eq!((&ray, &face).intersect(), None);
-        Ok(())
     }
 }

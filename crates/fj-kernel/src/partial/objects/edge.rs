@@ -1,5 +1,3 @@
-use fj_interop::ext::ArrayExt;
-
 use crate::{
     builder::GlobalEdgeBuilder,
     objects::{
@@ -9,7 +7,6 @@ use crate::{
     partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex, Replace},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// A partial [`HalfEdge`]
@@ -29,10 +26,7 @@ pub struct PartialHalfEdge {
 
 impl PartialHalfEdge {
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(
-        mut self,
-        objects: &mut Service<Objects>,
-    ) -> Result<HalfEdge, ValidationError> {
+    pub fn build(mut self, objects: &mut Service<Objects>) -> HalfEdge {
         let global_curve = self
             .curve
             .global_form()
@@ -44,25 +38,25 @@ impl PartialHalfEdge {
                 ..Default::default()
             });
 
-            self.curve.into_full(objects)?
+            self.curve.into_full(objects)
         };
-        let vertices = self.vertices.try_map_ext(|vertex| {
+        let vertices = self.vertices.map(|vertex| {
             vertex
                 .merge_with(PartialVertex {
                     curve: curve.clone().into(),
                     ..Default::default()
                 })
                 .into_full(objects)
-        })?;
+        });
 
         let global_form = self
             .global_form
             .update_partial(|partial| {
                 partial.update_from_curve_and_vertices(&curve, &vertices)
             })
-            .into_full(objects)?;
+            .into_full(objects);
 
-        Ok(HalfEdge::new(vertices, global_form))
+        HalfEdge::new(vertices, global_form)
     }
 }
 
@@ -117,16 +111,13 @@ pub struct PartialGlobalEdge {
 
 impl PartialGlobalEdge {
     /// Build a full [`GlobalEdge`] from the partial global edge
-    pub fn build(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<GlobalEdge, ValidationError> {
-        let curve = self.curve.into_full(objects)?;
+    pub fn build(self, objects: &mut Service<Objects>) -> GlobalEdge {
+        let curve = self.curve.into_full(objects);
         let vertices = self
             .vertices
-            .try_map_ext(|global_vertex| global_vertex.into_full(objects))?;
+            .map(|global_vertex| global_vertex.into_full(objects));
 
-        Ok(GlobalEdge::new(curve, vertices))
+        GlobalEdge::new(curve, vertices)
     }
 }
 

@@ -6,7 +6,6 @@ use crate::{
     },
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// A partial [`Cycle`]
@@ -70,10 +69,7 @@ impl PartialCycle {
     }
 
     /// Build a full [`Cycle`] from the partial cycle
-    pub fn build(
-        mut self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Cycle, ValidationError> {
+    pub fn build(mut self, objects: &mut Service<Objects>) -> Cycle {
         // Check that the cycle is closed. This will lead to a panic further
         // down anyway, but that panic would be super-confusing. This one should
         // be a bit more explicit on what is wrong.
@@ -97,7 +93,7 @@ impl PartialCycle {
         for half_edge in &mut self.half_edges {
             let back_vertex = previous_vertex.unwrap_or_default();
             let front_vertex =
-                half_edge.front().surface_form().into_full(objects)?;
+                half_edge.front().surface_form().into_full(objects);
 
             *half_edge = half_edge.clone().merge_with(PartialHalfEdge {
                 vertices: [
@@ -133,11 +129,11 @@ impl PartialCycle {
         // All connections made! All that's left is to build the half-edges.
         let mut half_edges = Vec::new();
         for half_edge in self.half_edges {
-            let half_edge = half_edge.into_full(objects)?;
+            let half_edge = half_edge.into_full(objects);
             half_edges.push(half_edge);
         }
 
-        Ok(Cycle::new(half_edges))
+        Cycle::new(half_edges)
     }
 }
 

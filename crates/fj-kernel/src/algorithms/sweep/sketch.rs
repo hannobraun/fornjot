@@ -4,7 +4,6 @@ use crate::{
     objects::{Objects, Sketch, Solid},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::{Sweep, SweepCache};
@@ -17,15 +16,15 @@ impl Sweep for Handle<Sketch> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let path = path.into();
 
         let mut shells = Vec::new();
         for face in self.faces().clone() {
-            let shell = face.sweep_with_cache(path, cache, objects)?;
+            let shell = face.sweep_with_cache(path, cache, objects);
             shells.push(shell);
         }
 
-        Ok(Solid::builder().with_shells(shells).build(objects))
+        Solid::builder().with_shells(shells).build(objects)
     }
 }

@@ -14,7 +14,6 @@ use crate::{
     objects::{GlobalVertex, Objects},
     services::Service,
     storage::{Handle, ObjectId},
-    validate::ValidationError,
 };
 
 /// Sweep an object along a path to create another object
@@ -27,7 +26,7 @@ pub trait Sweep: Sized {
         self,
         path: impl Into<Vector<3>>,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError> {
+    ) -> Self::Swept {
         let mut cache = SweepCache::default();
         self.sweep_with_cache(path, &mut cache, objects)
     }
@@ -38,7 +37,7 @@ pub trait Sweep: Sized {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
-    ) -> Result<Self::Swept, ValidationError>;
+    ) -> Self::Swept;
 }
 
 /// A cache used for sweeping

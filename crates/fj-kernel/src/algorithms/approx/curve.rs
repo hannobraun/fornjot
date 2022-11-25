@@ -211,66 +211,63 @@ mod tests {
     use super::CurveApprox;
 
     #[test]
-    fn approx_line_on_flat_surface() -> anyhow::Result<()> {
+    fn approx_line_on_flat_surface() {
         let mut objects = Objects::new().into_service();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
-                .build(&objects)?
-                .insert(&mut objects)?;
+                .build(&objects)
+                .insert(&mut objects);
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
-        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
+        let curve = curve.build(&mut objects).insert(&mut objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
-        Ok(())
     }
 
     #[test]
-    fn approx_line_on_curved_surface_but_not_along_curve() -> anyhow::Result<()>
-    {
+    fn approx_line_on_curved_surface_but_not_along_curve() {
         let mut objects = Objects::new().into_service();
 
         let surface = PartialSurface::from_axes(
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
         )
-        .build(&objects)?
-        .insert(&mut objects)?;
+        .build(&objects)
+        .insert(&mut objects);
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
-        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
+        let curve = curve.build(&mut objects).insert(&mut objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
         let approx = (&curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
-        Ok(())
     }
 
     #[test]
-    fn approx_line_on_curved_surface_along_curve() -> anyhow::Result<()> {
+    fn approx_line_on_curved_surface_along_curve() {
         let mut objects = Objects::new().into_service();
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
-            .build(&objects)?
-            .insert(&mut objects)?;
+            .build(&objects)
+            .insert(&mut objects);
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
-        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
+        let curve = curve.build(&mut objects).insert(&mut objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -289,23 +286,22 @@ mod tests {
             })
             .collect::<Vec<_>>();
         assert_eq!(approx.points, expected_approx);
-        Ok(())
     }
 
     #[test]
-    fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
+    fn approx_circle_on_flat_surface() {
         let mut objects = Objects::new().into_service();
 
         let surface =
             PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
-                .build(&objects)?
-                .insert(&mut objects)?;
+                .build(&objects)
+                .insert(&mut objects);
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
         };
         curve.update_as_circle_from_radius(1.);
-        let curve = curve.build(&mut objects)?.insert(&mut objects)?;
+        let curve = curve.build(&mut objects).insert(&mut objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
@@ -323,6 +319,5 @@ mod tests {
             })
             .collect::<Vec<_>>();
         assert_eq!(approx.points, expected_approx);
-        Ok(())
     }
 }

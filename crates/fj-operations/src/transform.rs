@@ -20,7 +20,7 @@ impl Shape for fj::Transform {
         let faces = self
             .shape
             .compute_brep(objects, debug_info)?
-            .transform(&make_transform(self), objects)?;
+            .transform(&make_transform(self), objects);
 
         Ok(faces)
     }

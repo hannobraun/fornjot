@@ -32,17 +32,17 @@ impl Shape for fj::Sketch {
                     let mut half_edge = HalfEdge::partial();
                     half_edge.replace(surface);
                     half_edge
-                        .update_as_circle_from_radius(circle.radius(), objects)?
-                        .build(objects)?
-                        .insert(objects)?
+                        .update_as_circle_from_radius(circle.radius(), objects)
+                        .build(objects)
+                        .insert(objects)
                 };
-                let cycle = Cycle::new([half_edge]).insert(objects)?;
+                let cycle = Cycle::new([half_edge]).insert(objects);
 
                 Face::partial()
                     .with_exterior(cycle)
                     .with_color(Color(self.color()))
-                    .build(objects)?
-                    .insert(objects)?
+                    .build(objects)
+                    .insert(objects)
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
@@ -55,8 +55,8 @@ impl Shape for fj::Sketch {
                     .with_surface(surface)
                     .with_exterior_polygon_from_points(points)
                     .with_color(Color(self.color()))
-                    .build(objects)?
-                    .insert(objects)?
+                    .build(objects)
+                    .insert(objects)
             }
         };
 

@@ -71,11 +71,11 @@ mod tests {
         objects::{Cycle, Objects},
         partial::HasPartial,
         services::State,
-        validate::{Validate, ValidationError},
+        validate::Validate,
     };
 
     #[test]
-    fn cycle_half_edge_connections() -> anyhow::Result<()> {
+    fn cycle_half_edge_connections() {
         let mut objects = Objects::new().into_service();
 
         let valid = Cycle::partial()
@@ -84,7 +84,7 @@ mod tests {
                 [[0., 0.], [1., 0.], [0., 1.]],
             )
             .close_with_line_segment()
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = {
             let mut half_edges = valid
                 .half_edges()
@@ -103,19 +103,14 @@ mod tests {
                 .with_back_vertex(first_vertex)
                 .infer_global_form();
 
-            let half_edges = half_edges
-                .into_iter()
-                .map(|half_edge| -> anyhow::Result<_, ValidationError> {
-                    Ok(half_edge.build(&mut objects)?.insert(&mut objects)?)
-                })
-                .collect::<Result<Vec<_>, _>>()?;
+            let half_edges = half_edges.into_iter().map(|half_edge| {
+                half_edge.build(&mut objects).insert(&mut objects)
+            });
 
             Cycle::new(half_edges)
         };
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

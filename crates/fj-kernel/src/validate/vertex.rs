@@ -191,7 +191,7 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface_mismatch() -> anyhow::Result<()> {
+    fn vertex_surface_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let mut curve = PartialCurve {
@@ -205,21 +205,19 @@ mod tests {
             curve: curve.into(),
             ..Default::default()
         }
-        .build(&mut objects)?;
+        .build(&mut objects);
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.surface = Some(objects.surfaces.xz_plane());
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.build(&mut objects).insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
+    fn vertex_position_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = {
@@ -234,23 +232,21 @@ mod tests {
                 curve: curve.into(),
                 ..Default::default()
             }
-            .build(&mut objects)?
+            .build(&mut objects)
         };
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
             tmp.position = Some([1., 0.].into());
             tmp.infer_global_form();
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.build(&mut objects).insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
+    fn surface_vertex_position_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = PartialSurfaceVertex {
@@ -258,16 +254,14 @@ mod tests {
             surface: Some(objects.surfaces.xy_plane()),
             ..Default::default()
         }
-        .build(&mut objects)?;
+        .build(&mut objects);
         let invalid = SurfaceVertex::new(
             valid.position(),
             valid.surface().clone(),
-            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects)?,
+            GlobalVertex::from_position([1., 0., 0.]).insert(&mut objects),
         );
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

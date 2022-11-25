@@ -4,7 +4,6 @@ use crate::{
     partial::{MaybePartial, MergeWith, Replace},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 /// A partial [`Curve`]
@@ -24,17 +23,14 @@ pub struct PartialCurve {
 
 impl PartialCurve {
     /// Build a full [`Curve`] from the partial curve
-    pub fn build(
-        self,
-        objects: &mut Service<Objects>,
-    ) -> Result<Curve, ValidationError> {
+    pub fn build(self, objects: &mut Service<Objects>) -> Curve {
         let path = self.path.expect("Can't build `Curve` without path");
         let surface =
             self.surface.expect("Can't build `Curve` without surface");
 
-        let global_form = self.global_form.into_full(objects)?;
+        let global_form = self.global_form.into_full(objects);
 
-        Ok(Curve::new(surface, path, global_form))
+        Curve::new(surface, path, global_form)
     }
 }
 
@@ -80,8 +76,8 @@ pub struct PartialGlobalCurve;
 
 impl PartialGlobalCurve {
     /// Build a full [`GlobalCurve`] from the partial global curve
-    pub fn build(self, _: &Objects) -> Result<GlobalCurve, ValidationError> {
-        Ok(GlobalCurve)
+    pub fn build(self, _: &Objects) -> GlobalCurve {
+        GlobalCurve
     }
 }
 

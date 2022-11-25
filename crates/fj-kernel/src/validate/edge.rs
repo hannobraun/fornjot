@@ -198,19 +198,17 @@ impl HalfEdgeValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
-
     use crate::{
         builder::{HalfEdgeBuilder, VertexBuilder},
         insert::Insert,
         objects::{GlobalCurve, HalfEdge, Objects},
         partial::HasPartial,
         services::State,
-        validate::{Validate, ValidationError},
+        validate::Validate,
     };
 
     #[test]
-    fn half_edge_curve_mismatch() -> anyhow::Result<()> {
+    fn half_edge_curve_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -218,25 +216,23 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = {
             let mut vertices = valid.vertices().clone();
             let mut vertex = vertices[1].to_partial();
             // Arranging for an equal but not identical curve here.
             vertex.curve = valid.curve().to_partial().into();
-            vertices[1] = vertex.build(&mut objects)?.insert(&mut objects)?;
+            vertices[1] = vertex.build(&mut objects).insert(&mut objects);
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
+    fn half_edge_global_curve_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -244,21 +240,19 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.curve = GlobalCurve.insert(&mut objects)?.into();
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.curve = GlobalCurve.insert(&mut objects).into();
+            tmp.build(&mut objects).insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
+    fn half_edge_global_vertex_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -266,7 +260,7 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
             tmp.vertices = valid
@@ -275,17 +269,15 @@ mod tests {
                 .access_in_normalized_order()
                 // Creating equal but not identical vertices here.
                 .map(|vertex| vertex.to_partial().into());
-            tmp.build(&mut objects)?.insert(&mut objects)?
+            tmp.build(&mut objects).insert(&mut objects)
         });
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
+    fn half_edge_vertices_are_coincident() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -293,22 +285,18 @@ mod tests {
                 objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             )
-            .build(&mut objects)?;
+            .build(&mut objects);
         let invalid = HalfEdge::new(
-            valid.vertices().clone().try_map_ext(
-                |vertex| -> anyhow::Result<_, ValidationError> {
-                    let mut vertex = vertex.to_partial();
-                    vertex.position = Some([0.].into());
-                    vertex.infer_surface_form();
-                    Ok(vertex.build(&mut objects)?.insert(&mut objects)?)
-                },
-            )?,
+            valid.vertices().clone().map(|vertex| {
+                let mut vertex = vertex.to_partial();
+                vertex.position = Some([0.].into());
+                vertex.infer_surface_form();
+                vertex.build(&mut objects).insert(&mut objects)
+            }),
             valid.global_form().clone(),
         );
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

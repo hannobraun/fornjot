@@ -4,7 +4,6 @@ use crate::{
     objects::Objects,
     partial::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     services::Service,
-    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -14,20 +13,20 @@ impl TransformObject for PartialVertex {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
-        let curve = self.curve.transform(transform, objects)?;
+    ) -> Self {
+        let curve = self.curve.transform(transform, objects);
         let surface_form = self
             .surface_form
             .into_partial()
-            .transform(transform, objects)?;
+            .transform(transform, objects);
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
-        Ok(Self {
+        Self {
             position: self.position,
             curve,
             surface_form: surface_form.into(),
-        })
+        }
     }
 }
 
@@ -36,21 +35,20 @@ impl TransformObject for PartialSurfaceVertex {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let surface = self
             .surface
             .clone()
-            .map(|surface| surface.transform(transform, objects))
-            .transpose()?;
-        let global_form = self.global_form.transform(transform, objects)?;
+            .map(|surface| surface.transform(transform, objects));
+        let global_form = self.global_form.transform(transform, objects);
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.
-        Ok(Self {
+        Self {
             position: self.position,
             surface,
             global_form,
-        })
+        }
     }
 }
 
@@ -59,11 +57,11 @@ impl TransformObject for PartialGlobalVertex {
         self,
         transform: &Transform,
         _: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let position = self
             .position
             .map(|position| transform.transform_point(&position));
 
-        Ok(Self { position })
+        Self { position }
     }
 }

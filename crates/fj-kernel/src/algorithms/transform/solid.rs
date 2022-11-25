@@ -4,7 +4,6 @@ use crate::{
     objects::{Objects, Solid},
     services::Service,
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::TransformObject;
@@ -14,14 +13,11 @@ impl TransformObject for Handle<Solid> {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let faces = self
             .shells()
             .cloned()
-            .map(|shell| -> Result<_, ValidationError> {
-                shell.transform(transform, objects)
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-        Ok(Solid::builder().with_shells(faces).build(objects))
+            .map(|shell| shell.transform(transform, objects));
+        Solid::builder().with_shells(faces).build(objects)
     }
 }
