@@ -177,7 +177,7 @@ mod tests {
     use super::HalfEdge;
 
     #[test]
-    fn global_edge_equality() -> anyhow::Result<()> {
+    fn global_edge_equality() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -193,6 +193,5 @@ mod tests {
             .build(&mut objects);
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());
-        Ok(())
     }
 }

@@ -159,7 +159,7 @@ mod tests {
     use super::CurveFaceIntersection;
 
     #[test]
-    fn compute() -> anyhow::Result<()> {
+    fn compute() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -195,7 +195,6 @@ mod tests {
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
         assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
-        Ok(())
     }
 
     #[test]

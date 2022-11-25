@@ -145,7 +145,7 @@ mod tests {
     };
 
     #[test]
-    fn point_is_outside_face() -> anyhow::Result<()> {
+    fn point_is_outside_face() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -158,12 +158,10 @@ mod tests {
 
         let intersection = (&face, &point).intersect();
         assert_eq!(intersection, None);
-
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_while_passing_outside() -> anyhow::Result<()> {
+    fn ray_hits_vertex_while_passing_outside() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -179,12 +177,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_at_cycle_seam() -> anyhow::Result<()> {
+    fn ray_hits_vertex_at_cycle_seam() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -200,12 +196,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_vertex_while_staying_inside() -> anyhow::Result<()> {
+    fn ray_hits_vertex_while_staying_inside() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -226,13 +220,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() -> anyhow::Result<()>
-    {
+    fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -253,13 +244,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn ray_hits_parallel_edge_and_does_not_leave_face_there(
-    ) -> anyhow::Result<()> {
+    fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -281,12 +269,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        Ok(())
     }
 
     #[test]
-    fn point_is_coincident_with_edge() -> anyhow::Result<()> {
+    fn point_is_coincident_with_edge() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -311,12 +297,10 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnEdge(edge.clone()))
         );
-
-        Ok(())
     }
 
     #[test]
-    fn point_is_coincident_with_vertex() -> anyhow::Result<()> {
+    fn point_is_coincident_with_vertex() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -339,7 +323,5 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex.clone()))
         );
-
-        Ok(())
     }
 }

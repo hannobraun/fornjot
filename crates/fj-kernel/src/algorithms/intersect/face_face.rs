@@ -79,7 +79,7 @@ mod tests {
     use super::FaceFaceIntersection;
 
     #[test]
-    fn compute_no_intersection() -> anyhow::Result<()> {
+    fn compute_no_intersection() {
         let mut objects = Objects::new().into_service();
 
         #[rustfmt::skip]
@@ -101,12 +101,10 @@ mod tests {
             FaceFaceIntersection::compute([&a, &b], &mut objects);
 
         assert!(intersection.is_none());
-
-        Ok(())
     }
 
     #[test]
-    fn compute_one_intersection() -> anyhow::Result<()> {
+    fn compute_one_intersection() {
         let mut objects = Objects::new().into_service();
 
         #[rustfmt::skip]
@@ -145,6 +143,5 @@ mod tests {
                 intersection_intervals: expected_intervals
             })
         );
-        Ok(())
     }
 }

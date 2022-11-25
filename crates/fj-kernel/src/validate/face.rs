@@ -114,7 +114,7 @@ mod tests {
     };
 
     #[test]
-    fn face_surface_mismatch() -> anyhow::Result<()> {
+    fn face_surface_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = Face::partial()
@@ -137,12 +137,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn face_invalid_interior_winding() -> anyhow::Result<()> {
+    fn face_invalid_interior_winding() {
         let mut objects = Objects::new().into_service();
 
         let valid = Face::partial()
@@ -162,7 +160,5 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

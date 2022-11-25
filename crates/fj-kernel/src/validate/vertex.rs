@@ -191,7 +191,7 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface_mismatch() -> anyhow::Result<()> {
+    fn vertex_surface_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let mut curve = PartialCurve {
@@ -214,12 +214,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
+    fn vertex_position_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = {
@@ -245,12 +243,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
+    fn surface_vertex_position_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = PartialSurfaceVertex {
@@ -267,7 +263,5 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

@@ -97,7 +97,7 @@ mod tests {
     use super::SurfaceSurfaceIntersection;
 
     #[test]
-    fn plane_plane() -> anyhow::Result<()> {
+    fn plane_plane() {
         let mut objects = Objects::new().into_service();
 
         let xy = objects.surfaces.xy_plane();
@@ -137,6 +137,5 @@ mod tests {
                 intersection_curves: [expected_xy, expected_xz],
             })
         );
-        Ok(())
     }
 }

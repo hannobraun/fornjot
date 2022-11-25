@@ -373,7 +373,7 @@ mod tests {
     use super::ObjectIters as _;
 
     #[test]
-    fn curve() -> anyhow::Result<()> {
+    fn curve() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -395,12 +395,10 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
-    fn cycle() -> anyhow::Result<()> {
+    fn cycle() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -424,12 +422,10 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
-    fn face() -> anyhow::Result<()> {
+    fn face() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -450,12 +446,10 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(1, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
-    fn global_curve() -> anyhow::Result<()> {
+    fn global_curve() {
         let mut objects = Objects::new().into_service();
 
         let object = GlobalCurve.insert(&mut objects);
@@ -471,12 +465,10 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
-    fn global_vertex() -> anyhow::Result<()> {
+    fn global_vertex() {
         let mut objects = Objects::new().into_service();
 
         let object =
@@ -493,12 +485,10 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(0, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge() -> anyhow::Result<()> {
+    fn half_edge() {
         let mut objects = Objects::new().into_service();
 
         let object = HalfEdge::partial()
@@ -520,8 +510,6 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(2, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
@@ -546,7 +534,7 @@ mod tests {
     }
 
     #[test]
-    fn sketch() -> anyhow::Result<()> {
+    fn sketch() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -568,8 +556,6 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(1, object.surface_iter().count());
         assert_eq!(6, object.vertex_iter().count());
-
-        Ok(())
     }
 
     #[test]
@@ -613,7 +599,7 @@ mod tests {
     }
 
     #[test]
-    fn vertex() -> anyhow::Result<()> {
+    fn vertex() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -642,7 +628,5 @@ mod tests {
         assert_eq!(0, object.solid_iter().count());
         assert_eq!(0, object.surface_iter().count());
         assert_eq!(1, object.vertex_iter().count());
-
-        Ok(())
     }
 }

@@ -170,7 +170,7 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface() -> anyhow::Result<()> {
+    fn vertex_surface() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xz_plane();
@@ -196,6 +196,5 @@ mod tests {
             .build(&mut objects)
             .insert(&mut objects);
         assert_eq!(half_edge, expected_half_edge);
-        Ok(())
     }
 }

@@ -211,7 +211,7 @@ mod tests {
     use super::CurveApprox;
 
     #[test]
-    fn approx_line_on_flat_surface() -> anyhow::Result<()> {
+    fn approx_line_on_flat_surface() {
         let mut objects = Objects::new().into_service();
 
         let surface =
@@ -229,12 +229,10 @@ mod tests {
         let approx = (&curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
-        Ok(())
     }
 
     #[test]
-    fn approx_line_on_curved_surface_but_not_along_curve() -> anyhow::Result<()>
-    {
+    fn approx_line_on_curved_surface_but_not_along_curve() {
         let mut objects = Objects::new().into_service();
 
         let surface = PartialSurface::from_axes(
@@ -254,11 +252,10 @@ mod tests {
         let approx = (&curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
-        Ok(())
     }
 
     #[test]
-    fn approx_line_on_curved_surface_along_curve() -> anyhow::Result<()> {
+    fn approx_line_on_curved_surface_along_curve() {
         let mut objects = Objects::new().into_service();
 
         let path = GlobalPath::circle_from_radius(1.);
@@ -289,11 +286,10 @@ mod tests {
             })
             .collect::<Vec<_>>();
         assert_eq!(approx.points, expected_approx);
-        Ok(())
     }
 
     #[test]
-    fn approx_circle_on_flat_surface() -> anyhow::Result<()> {
+    fn approx_circle_on_flat_surface() {
         let mut objects = Objects::new().into_service();
 
         let surface =
@@ -323,6 +319,5 @@ mod tests {
             })
             .collect::<Vec<_>>();
         assert_eq!(approx.points, expected_approx);
-        Ok(())
     }
 }

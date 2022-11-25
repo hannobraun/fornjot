@@ -75,7 +75,7 @@ mod tests {
     };
 
     #[test]
-    fn cycle_half_edge_connections() -> anyhow::Result<()> {
+    fn cycle_half_edge_connections() {
         let mut objects = Objects::new().into_service();
 
         let valid = Cycle::partial()
@@ -112,7 +112,5 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

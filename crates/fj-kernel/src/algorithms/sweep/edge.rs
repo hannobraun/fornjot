@@ -197,7 +197,7 @@ mod tests {
     };
 
     #[test]
-    fn sweep() -> anyhow::Result<()> {
+    fn sweep() {
         let mut objects = Objects::new().into_service();
 
         let half_edge = HalfEdge::partial()
@@ -297,6 +297,5 @@ mod tests {
         };
 
         assert_eq!(face, expected_face);
-        Ok(())
     }
 }

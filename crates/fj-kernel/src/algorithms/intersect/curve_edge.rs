@@ -84,7 +84,7 @@ mod tests {
     use super::CurveEdgeIntersection;
 
     #[test]
-    fn compute_edge_in_front_of_curve_origin() -> anyhow::Result<()> {
+    fn compute_edge_in_front_of_curve_origin() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -106,11 +106,10 @@ mod tests {
                 point_on_curve: Point::from([1.])
             })
         );
-        Ok(())
     }
 
     #[test]
-    fn compute_edge_behind_curve_origin() -> anyhow::Result<()> {
+    fn compute_edge_behind_curve_origin() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -135,11 +134,10 @@ mod tests {
                 point_on_curve: Point::from([-1.])
             })
         );
-        Ok(())
     }
 
     #[test]
-    fn compute_edge_parallel_to_curve() -> anyhow::Result<()> {
+    fn compute_edge_parallel_to_curve() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -159,11 +157,10 @@ mod tests {
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert!(intersection.is_none());
-        Ok(())
     }
 
     #[test]
-    fn compute_edge_on_curve() -> anyhow::Result<()> {
+    fn compute_edge_on_curve() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -185,6 +182,5 @@ mod tests {
                 points_on_curve: [Point::from([-1.]), Point::from([1.]),]
             })
         );
-        Ok(())
     }
 }

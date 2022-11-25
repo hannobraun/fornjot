@@ -208,7 +208,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edge_curve_mismatch() -> anyhow::Result<()> {
+    fn half_edge_curve_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -229,12 +229,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
+    fn half_edge_global_curve_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -251,12 +249,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
+    fn half_edge_global_vertex_mismatch() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -278,12 +274,10 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 
     #[test]
-    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
+    fn half_edge_vertices_are_coincident() {
         let mut objects = Objects::new().into_service();
 
         let valid = HalfEdge::partial()
@@ -304,7 +298,5 @@ mod tests {
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
-
-        Ok(())
     }
 }

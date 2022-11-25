@@ -99,7 +99,7 @@ mod tests {
     const DOWN: [f64; 3] = [0., 0., -1.];
 
     #[test]
-    fn sweep_up() -> anyhow::Result<()> {
+    fn sweep_up() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -139,11 +139,10 @@ mod tests {
         assert!(side_faces
             .into_iter()
             .all(|face| solid.find_face(&face).is_some()));
-        Ok(())
     }
 
     #[test]
-    fn sweep_down() -> anyhow::Result<()> {
+    fn sweep_down() {
         let mut objects = Objects::new().into_service();
 
         let surface = objects.surfaces.xy_plane();
@@ -184,6 +183,5 @@ mod tests {
         assert!(side_faces
             .into_iter()
             .all(|face| solid.find_face(&face).is_some()));
-        Ok(())
     }
 }
