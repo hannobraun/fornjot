@@ -45,7 +45,7 @@ impl ShapeProcessor {
 
         let mut objects = Objects::new().into_service();
         let mut debug_info = DebugInfo::new();
-        let shape = shape.compute_brep(&mut objects, &mut debug_info)?;
+        let shape = shape.compute_brep(&mut objects, &mut debug_info);
         let mesh = (&shape, tolerance).triangulate();
 
         Ok(ProcessedShape {

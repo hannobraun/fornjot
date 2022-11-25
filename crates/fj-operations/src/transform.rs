@@ -3,7 +3,6 @@ use fj_kernel::{
     algorithms::transform::TransformObject,
     objects::{FaceSet, Objects},
     services::Service,
-    validate::ValidationError,
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -16,13 +15,10 @@ impl Shape for fj::Transform {
         &self,
         objects: &mut Service<Objects>,
         debug_info: &mut DebugInfo,
-    ) -> Result<Self::Brep, ValidationError> {
-        let faces = self
-            .shape
-            .compute_brep(objects, debug_info)?
-            .transform(&make_transform(self), objects);
-
-        Ok(faces)
+    ) -> Self::Brep {
+        self.shape
+            .compute_brep(objects, debug_info)
+            .transform(&make_transform(self), objects)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
