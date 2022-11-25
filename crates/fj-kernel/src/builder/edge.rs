@@ -10,7 +10,6 @@ use crate::{
     },
     services::{Service, State},
     storage::Handle,
-    validate::ValidationError,
 };
 
 use super::CurveBuilder;
@@ -34,7 +33,7 @@ pub trait HalfEdgeBuilder: Sized {
         self,
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError>;
+    ) -> Self;
 
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
@@ -73,7 +72,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         mut self,
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Result<Self, ValidationError> {
+    ) -> Self {
         let mut curve = self.curve.clone().into_partial();
         curve.update_as_circle_from_radius(radius);
 
@@ -102,7 +101,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.curve = curve.into();
         self.vertices = [back, front].map(Into::into);
 
-        Ok(self)
+        self
     }
 
     fn update_as_line_segment_from_points(

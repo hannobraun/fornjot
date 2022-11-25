@@ -32,7 +32,7 @@ impl Shape for fj::Sketch {
                     let mut half_edge = HalfEdge::partial();
                     half_edge.replace(surface);
                     half_edge
-                        .update_as_circle_from_radius(circle.radius(), objects)?
+                        .update_as_circle_from_radius(circle.radius(), objects)
                         .build(objects)
                         .insert(objects)
                 };
