@@ -71,11 +71,13 @@ pub fn run(
                 match event {
                     ModelEvent::ChangeDetected => {
                         status.update_status(
-                            "Change in model detected. Compiling...",
+                            "Change in model detected. Evaluating model...",
                         );
                     }
                     ModelEvent::Evaluation(evaluation) => {
-                        status.update_status("Model compiled. Processing...");
+                        status.update_status(
+                            "Model evaluated. Processing model...",
+                        );
 
                         match shape_processor.process(&evaluation.shape) {
                             Ok(shape) => {
