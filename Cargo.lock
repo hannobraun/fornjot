@@ -1165,7 +1165,6 @@ dependencies = [
  "fj-operations",
  "fj-viewer",
  "fj-window",
- "include_dir",
  "serde",
  "tracing-subscriber",
 ]
@@ -1215,7 +1214,6 @@ dependencies = [
  "robust-predicates",
  "spade",
  "thiserror",
- "try-insert-ext",
 ]
 
 [[package]]
@@ -1806,25 +1804,6 @@ dependencies = [
  "matches",
  "unicode-bidi",
  "unicode-normalization",
-]
-
-[[package]]
-name = "include_dir"
-version = "0.7.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18762faeff7122e89e0857b02f7ce6fcc0d101d5e9ad2ad7846cc01d61b7f19e"
-dependencies = [
- "include_dir_macros",
-]
-
-[[package]]
-name = "include_dir_macros"
-version = "0.7.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b139284b5cf57ecfa712bcc66950bb635b31aff41c188e8a4cfc758eca374a3f"
-dependencies = [
- "proc-macro2",
- "quote",
 ]
 
 [[package]]
@@ -3905,12 +3884,6 @@ dependencies = [
  "tracing-core",
  "tracing-log",
 ]
-
-[[package]]
-name = "try-insert-ext"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "213664d0ee69fc59a5fb6cdf16786db532bd0aba3792091e3e874cd581dc0ed2"
 
 [[package]]
 name = "try-lock"
