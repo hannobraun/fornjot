@@ -17,11 +17,7 @@ impl State for Objects {
     }
 
     fn evolve(&mut self, event: &Self::Event) {
-        // This operation being fallible goes against the spirit of the `evolve`
-        // method. The reason for that is, that `Objects` is not fully adapted
-        // to this new design yet. In the future, validation will most likely
-        // move into its own service, making this operation infallible.
-        event.object.clone().insert(self).unwrap();
+        event.object.clone().insert(self);
     }
 }
 
