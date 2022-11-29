@@ -34,8 +34,6 @@ pub fn run(
     let window = Window::new(&event_loop)?;
     let viewer = block_on(Viewer::new(&window))?;
 
-    let mut held_mouse_button = None;
-
     let mut egui_winit_state = egui_winit::State::new(&event_loop);
 
     let mut host = model.map(Host::from_model).transpose()?;
@@ -50,6 +48,7 @@ pub fn run(
         window,
         viewer,
         status: StatusReport::new(),
+        held_mouse_button: None,
     };
 
     event_loop.run(move |event, _, control_flow| {
@@ -173,11 +172,11 @@ pub fn run(
                 ..
             } => match state {
                 ElementState::Pressed => {
-                    held_mouse_button = Some(button);
+                    handler.held_mouse_button = Some(button);
                     handler.viewer.add_focus_point();
                 }
                 ElementState::Released => {
-                    held_mouse_button = None;
+                    handler.held_mouse_button = None;
                     handler.viewer.remove_focus_point();
                 }
             },
@@ -233,7 +232,7 @@ pub fn run(
         let input_event = input_event(
             &event,
             &handler.window,
-            &held_mouse_button,
+            &handler.held_mouse_button,
             &mut handler.viewer.cursor,
             invert_zoom,
         );
@@ -309,6 +308,7 @@ struct EventLoopHandler {
     window: Window,
     viewer: Viewer,
     status: StatusReport,
+    held_mouse_button: Option<MouseButton>,
 }
 
 /// Error in main loop
