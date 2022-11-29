@@ -21,7 +21,7 @@ impl Validate for Face {
 }
 
 /// [`Face`] validation error
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
     /// [`Surface`] of an interior [`Cycle`] doesn't match [`Face`]'s `Surface`
     #[error(

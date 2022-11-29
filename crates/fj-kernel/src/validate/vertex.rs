@@ -46,7 +46,7 @@ impl Validate for GlobalVertex {
 }
 
 /// [`Vertex`] validation failed
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum VertexValidationError {
     /// Mismatch between the surface's of the curve and surface form
     #[error(
@@ -126,7 +126,7 @@ impl VertexValidationError {
 }
 
 /// [`SurfaceVertex`] validation error
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum SurfaceVertexValidationError {
     /// Mismatch between position and position of global form
     #[error(

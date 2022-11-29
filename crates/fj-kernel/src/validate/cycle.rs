@@ -25,7 +25,7 @@ impl Validate for Cycle {
 }
 
 /// [`Cycle`] validation error
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum CycleValidationError {
     /// Half-edges are not connected
     #[error(

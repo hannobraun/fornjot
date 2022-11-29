@@ -45,7 +45,7 @@ impl Validate for GlobalEdge {
 }
 
 /// [`HalfEdge`] validation failed
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum HalfEdgeValidationError {
     /// [`HalfEdge`] vertices are not defined on the same `Curve`
     #[error(
