@@ -52,8 +52,34 @@ pub fn run(
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
+        handler.handle_event(event, control_flow);
+    });
+}
 
-        if let Some(host) = &handler.host {
+struct EventLoopHandler {
+    invert_zoom: bool,
+    shape_processor: ShapeProcessor,
+    window: Window,
+    viewer: Viewer,
+    egui_winit_state: egui_winit::State,
+    host: Option<Host>,
+    status: StatusReport,
+    held_mouse_button: Option<MouseButton>,
+
+    /// Only handle resize events once every frame. This filters out spurious
+    /// resize events that can lead to wgpu warnings. See this issue for some
+    /// context:
+    /// <https://github.com/rust-windowing/winit/issues/2094>
+    new_size: Option<ScreenSize>,
+}
+
+impl EventLoopHandler {
+    fn handle_event(
+        &mut self,
+        event: Event<()>,
+        control_flow: &mut ControlFlow,
+    ) {
+        if let Some(host) = &self.host {
             loop {
                 let events = host.events();
                 let event = events
@@ -72,19 +98,18 @@ pub fn run(
 
                 match event {
                     ModelEvent::ChangeDetected => {
-                        handler.status.update_status(
+                        self.status.update_status(
                             "Change in model detected. Evaluating model...",
                         );
                     }
                     ModelEvent::Evaluation(evaluation) => {
-                        handler.status.update_status(
+                        self.status.update_status(
                             "Model evaluated. Processing model...",
                         );
 
-                        match handler.shape_processor.process(&evaluation.shape)
-                        {
+                        match self.shape_processor.process(&evaluation.shape) {
                             Ok(shape) => {
-                                handler.viewer.handle_shape_update(shape);
+                                self.viewer.handle_shape_update(shape);
                             }
                             Err(err) => {
                                 // Can be cleaned up, once `Report` is stable:
@@ -103,11 +128,11 @@ pub fn run(
                             }
                         }
 
-                        handler.status.update_status("Model processed.");
+                        self.status.update_status("Model processed.");
                     }
 
                     ModelEvent::Error(err) => {
-                        handler.status.update_status(&err.to_string());
+                        self.status.update_status(&err.to_string());
                     }
                 }
             }
@@ -122,9 +147,8 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            handler
-                .egui_winit_state
-                .on_event(handler.viewer.gui.context(), event);
+            self.egui_winit_state
+                .on_event(self.viewer.gui.context(), event);
         }
 
         // fj-window events
@@ -150,13 +174,13 @@ pub fn run(
             } => match virtual_key_code {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
-                    handler.viewer.toggle_draw_model();
+                    self.viewer.toggle_draw_model();
                 }
                 VirtualKeyCode::Key2 => {
-                    handler.viewer.toggle_draw_mesh();
+                    self.viewer.toggle_draw_mesh();
                 }
                 VirtualKeyCode::Key3 => {
-                    handler.viewer.toggle_draw_debug();
+                    self.viewer.toggle_draw_debug();
                 }
                 _ => {}
             },
@@ -164,7 +188,7 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                handler.new_size = Some(ScreenSize {
+                self.new_size = Some(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
@@ -174,57 +198,51 @@ pub fn run(
                 ..
             } => match state {
                 ElementState::Pressed => {
-                    handler.held_mouse_button = Some(button);
-                    handler.viewer.add_focus_point();
+                    self.held_mouse_button = Some(button);
+                    self.viewer.add_focus_point();
                 }
                 ElementState::Released => {
-                    handler.held_mouse_button = None;
-                    handler.viewer.remove_focus_point();
+                    self.held_mouse_button = None;
+                    self.viewer.remove_focus_point();
                 }
             },
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { .. },
                 ..
-            } => handler.viewer.add_focus_point(),
+            } => self.viewer.add_focus_point(),
             Event::MainEventsCleared => {
-                handler.window.window().request_redraw();
+                self.window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
-                if let Some(size) = handler.new_size.take() {
-                    handler.viewer.handle_screen_resize(size);
+                if let Some(size) = self.new_size.take() {
+                    self.viewer.handle_screen_resize(size);
                 }
 
                 let pixels_per_point =
-                    handler.window.window().scale_factor() as f32;
+                    self.window.window().scale_factor() as f32;
 
-                handler
-                    .egui_winit_state
-                    .set_pixels_per_point(pixels_per_point);
-                let egui_input = handler
-                    .egui_winit_state
-                    .take_egui_input(handler.window.window());
+                self.egui_winit_state.set_pixels_per_point(pixels_per_point);
+                let egui_input =
+                    self.egui_winit_state.take_egui_input(self.window.window());
 
                 let gui_state = GuiState {
-                    status: &handler.status,
-                    model_available: handler.host.is_some(),
+                    status: &self.status,
+                    model_available: self.host.is_some(),
                 };
-                let new_model_path = handler.viewer.draw(
-                    pixels_per_point,
-                    egui_input,
-                    gui_state,
-                );
+                let new_model_path =
+                    self.viewer.draw(pixels_per_point, egui_input, gui_state);
 
                 if let Some(model_path) = new_model_path {
                     let model =
                         Model::new(model_path, Parameters::empty()).unwrap();
                     match Host::from_model(model) {
                         Ok(new_host) => {
-                            handler.host = Some(new_host);
+                            self.host = Some(new_host);
                         }
                         Err(err) => {
-                            handler.status.update_status(&format!(
+                            self.status.update_status(&format!(
                                 "Error creating host: {err}"
                             ));
                         }
@@ -236,32 +254,15 @@ pub fn run(
 
         let input_event = input_event(
             &event,
-            &handler.window,
-            &handler.held_mouse_button,
-            &mut handler.viewer.cursor,
-            handler.invert_zoom,
+            &self.window,
+            &self.held_mouse_button,
+            &mut self.viewer.cursor,
+            self.invert_zoom,
         );
         if let Some(input_event) = input_event {
-            handler.viewer.handle_input_event(input_event);
+            self.viewer.handle_input_event(input_event);
         }
-    });
-}
-
-struct EventLoopHandler {
-    invert_zoom: bool,
-    shape_processor: ShapeProcessor,
-    window: Window,
-    viewer: Viewer,
-    egui_winit_state: egui_winit::State,
-    host: Option<Host>,
-    status: StatusReport,
-    held_mouse_button: Option<MouseButton>,
-
-    /// Only handle resize events once every frame. This filters out spurious
-    /// resize events that can lead to wgpu warnings. See this issue for some
-    /// context:
-    /// <https://github.com/rust-windowing/winit/issues/2094>
-    new_size: Option<ScreenSize>,
+    }
 }
 
 fn input_event<T>(
