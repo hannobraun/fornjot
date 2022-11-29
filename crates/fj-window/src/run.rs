@@ -54,19 +54,7 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         if let Err(err) = handler.handle_event(event, control_flow) {
-            // Can be cleaned up, once `Report` is stable:
-            // https://doc.rust-lang.org/std/error/struct.Report.html
-
-            println!("Shape processing error: {}", err);
-
-            let mut current_err = &err as &dyn error::Error;
-            while let Some(err) = current_err.source() {
-                println!();
-                println!("Caused by:");
-                println!("    {}", err);
-
-                current_err = err;
-            }
+            handle_error(err);
         }
     });
 }
@@ -325,6 +313,22 @@ fn input_event<T>(
             Some(InputEvent::Zoom(delta))
         }
         _ => None,
+    }
+}
+
+fn handle_error(err: fj_operations::shape_processor::Error) {
+    // Can be cleaned up, once `Report` is stable:
+    // https://doc.rust-lang.org/std/error/struct.Report.html
+
+    println!("Shape processing error: {}", err);
+
+    let mut current_err = &err as &dyn error::Error;
+    while let Some(err) = current_err.source() {
+        println!();
+        println!("Caused by:");
+        println!("    {}", err);
+
+        current_err = err;
     }
 }
 
