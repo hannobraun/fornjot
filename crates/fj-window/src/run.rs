@@ -52,7 +52,22 @@ pub fn run(
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
-        handler.handle_event(event, control_flow);
+
+        if let Err(err) = handler.handle_event(event, control_flow) {
+            // Can be cleaned up, once `Report` is stable:
+            // https://doc.rust-lang.org/std/error/struct.Report.html
+
+            println!("Shape processing error: {}", err);
+
+            let mut current_err = &err as &dyn error::Error;
+            while let Some(err) = current_err.source() {
+                println!();
+                println!("Caused by:");
+                println!("    {}", err);
+
+                current_err = err;
+            }
+        }
     });
 }
 
@@ -74,11 +89,12 @@ struct EventLoopHandler {
 }
 
 impl EventLoopHandler {
+    #[allow(clippy::result_large_err)]
     fn handle_event(
         &mut self,
         event: Event<()>,
         control_flow: &mut ControlFlow,
-    ) {
+    ) -> Result<(), fj_operations::shape_processor::Error> {
         if let Some(host) = &self.host {
             loop {
                 let events = host.events();
@@ -107,26 +123,9 @@ impl EventLoopHandler {
                             "Model evaluated. Processing model...",
                         );
 
-                        match self.shape_processor.process(&evaluation.shape) {
-                            Ok(shape) => {
-                                self.viewer.handle_shape_update(shape);
-                            }
-                            Err(err) => {
-                                // Can be cleaned up, once `Report` is stable:
-                                // https://doc.rust-lang.org/std/error/struct.Report.html
-
-                                println!("Shape processing error: {}", err);
-
-                                let mut current_err = &err as &dyn error::Error;
-                                while let Some(err) = current_err.source() {
-                                    println!();
-                                    println!("Caused by:");
-                                    println!("    {}", err);
-
-                                    current_err = err;
-                                }
-                            }
-                        }
+                        let shape =
+                            self.shape_processor.process(&evaluation.shape)?;
+                        self.viewer.handle_shape_update(shape);
 
                         self.status.update_status("Model processed.");
                     }
@@ -262,6 +261,8 @@ impl EventLoopHandler {
         if let Some(input_event) = input_event {
             self.viewer.handle_input_event(input_event);
         }
+
+        Ok(())
     }
 }
 
