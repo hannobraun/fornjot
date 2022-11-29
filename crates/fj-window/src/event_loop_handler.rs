@@ -75,7 +75,7 @@ impl EventLoopHandler {
                     }
 
                     ModelEvent::Error(err) => {
-                        self.status.update_status(&err.to_string());
+                        return Err(err.into());
                     }
                 }
             }
@@ -274,6 +274,9 @@ fn input_event<T>(
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    #[error("Host error")]
+    Host(#[from] fj_host::Error),
+
     #[error("Shape processing error")]
     ShapeProcessor(#[from] shape_processor::Error),
 }
