@@ -90,13 +90,13 @@ pub trait State {
     /// A command that relates to the state
     ///
     /// Commands are processed by [`State::decide`].
-    type Command;
+    type Command: Clone;
 
     /// An event that captures modifications to this state
     ///
     /// Events are produced by [`State::decide`] and processed by
     /// [`State::evolve`].
-    type Event;
+    type Event: Clone;
 
     /// Decide how to react to the provided command
     ///
