@@ -30,8 +30,6 @@ pub fn run(
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
-    let mut status = StatusReport::new();
-
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
@@ -47,6 +45,10 @@ pub fn run(
     // context:
     // https://github.com/rust-windowing/winit/issues/2094
     let mut new_size = None;
+
+    let mut state = EventLoopHandler {
+        status: StatusReport::new(),
+    };
 
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
@@ -70,12 +72,12 @@ pub fn run(
 
                 match event {
                     ModelEvent::ChangeDetected => {
-                        status.update_status(
+                        state.status.update_status(
                             "Change in model detected. Evaluating model...",
                         );
                     }
                     ModelEvent::Evaluation(evaluation) => {
-                        status.update_status(
+                        state.status.update_status(
                             "Model evaluated. Processing model...",
                         );
 
@@ -100,11 +102,11 @@ pub fn run(
                             }
                         }
 
-                        status.update_status("Model processed.");
+                        state.status.update_status("Model processed.");
                     }
 
                     ModelEvent::Error(err) => {
-                        status.update_status(&err.to_string());
+                        state.status.update_status(&err.to_string());
                     }
                 }
             }
@@ -198,7 +200,7 @@ pub fn run(
                     egui_winit_state.take_egui_input(window.window());
 
                 let gui_state = GuiState {
-                    status: &status,
+                    status: &state.status,
                     model_available: host.is_some(),
                 };
                 let new_model_path =
@@ -212,7 +214,7 @@ pub fn run(
                             host = Some(new_host);
                         }
                         Err(err) => {
-                            status.update_status(&format!(
+                            state.status.update_status(&format!(
                                 "Error creating host: {err}"
                             ));
                         }
@@ -295,6 +297,10 @@ fn input_event<T>(
         }
         _ => None,
     }
+}
+
+struct EventLoopHandler {
+    status: StatusReport,
 }
 
 /// Error in main loop
