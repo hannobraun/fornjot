@@ -36,7 +36,7 @@ pub fn run(
 
     let egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut host = model.map(Host::from_model).transpose()?;
+    let host = model.map(Host::from_model).transpose()?;
 
     // Only handle resize events once every frame. This filters out spurious
     // resize events that can lead to wgpu warnings. See this issue for some
@@ -48,6 +48,7 @@ pub fn run(
         window,
         viewer,
         egui_winit_state,
+        host,
         status: StatusReport::new(),
         held_mouse_button: None,
     };
@@ -55,7 +56,7 @@ pub fn run(
     event_loop.run(move |event, _, control_flow| {
         trace!("Handling event: {:?}", event);
 
-        if let Some(host) = &host {
+        if let Some(host) = &handler.host {
             loop {
                 let events = host.events();
                 let event = events
@@ -209,7 +210,7 @@ pub fn run(
 
                 let gui_state = GuiState {
                     status: &handler.status,
-                    model_available: host.is_some(),
+                    model_available: handler.host.is_some(),
                 };
                 let new_model_path = handler.viewer.draw(
                     pixels_per_point,
@@ -222,7 +223,7 @@ pub fn run(
                         Model::new(model_path, Parameters::empty()).unwrap();
                     match Host::from_model(model) {
                         Ok(new_host) => {
-                            host = Some(new_host);
+                            handler.host = Some(new_host);
                         }
                         Err(err) => {
                             handler.status.update_status(&format!(
@@ -314,6 +315,7 @@ struct EventLoopHandler {
     window: Window,
     viewer: Viewer,
     egui_winit_state: egui_winit::State,
+    host: Option<Host>,
     status: StatusReport,
     held_mouse_button: Option<MouseButton>,
 }
