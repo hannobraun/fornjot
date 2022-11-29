@@ -68,7 +68,7 @@ macro_rules! object {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
-                            objects.$store.insert(handle.clone(), object)?;
+                            objects.$store.insert(handle.clone(), object);
                             Ok(handle.into())
                         }
                     )*
