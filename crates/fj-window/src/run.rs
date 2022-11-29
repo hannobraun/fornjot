@@ -3,7 +3,10 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-use std::error;
+use std::{
+    error,
+    fmt::{self, Write},
+};
 
 use fj_host::{Host, Model, ModelEvent, Parameters};
 use fj_operations::shape_processor::ShapeProcessor;
@@ -54,7 +57,8 @@ pub fn run(
         trace!("Handling event: {:?}", event);
 
         if let Err(err) = handler.handle_event(event, control_flow) {
-            handle_error(err);
+            handle_error(err, &mut handler.status)
+                .expect("Expected error handling not to fail");
         }
     });
 }
@@ -316,20 +320,29 @@ fn input_event<T>(
     }
 }
 
-fn handle_error(err: fj_operations::shape_processor::Error) {
+fn handle_error(
+    err: fj_operations::shape_processor::Error,
+    status: &mut StatusReport,
+) -> Result<(), fmt::Error> {
     // Can be cleaned up, once `Report` is stable:
     // https://doc.rust-lang.org/std/error/struct.Report.html
 
-    println!("Shape processing error: {}", err);
+    let mut msg = String::new();
+
+    writeln!(msg, "Shape processing error: {}", err)?;
 
     let mut current_err = &err as &dyn error::Error;
     while let Some(err) = current_err.source() {
-        println!();
-        println!("Caused by:");
-        println!("    {}", err);
+        writeln!(msg)?;
+        writeln!(msg, "Caused by:")?;
+        writeln!(msg, "    {}", err)?;
 
         current_err = err;
     }
+
+    status.update_status(&msg);
+
+    Ok(())
 }
 
 /// Error in main loop
