@@ -13,7 +13,6 @@ pub use self::{
 };
 
 /// The kernel services
-#[derive(Default)]
 pub struct Services {
     /// The objects service
     ///
@@ -27,6 +26,13 @@ pub struct Services {
 impl Services {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
-        Self::default()
+        let objects = Service::default();
+        Self { objects }
+    }
+}
+
+impl Default for Services {
+    fn default() -> Self {
+        Self::new()
     }
 }
