@@ -32,7 +32,7 @@ pub fn run(
 ) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
-    let mut viewer = block_on(Viewer::new(&window))?;
+    let viewer = block_on(Viewer::new(&window))?;
 
     let mut held_mouse_button = None;
 
@@ -48,6 +48,7 @@ pub fn run(
 
     let mut handler = EventLoopHandler {
         window,
+        viewer,
         status: StatusReport::new(),
     };
 
@@ -84,7 +85,7 @@ pub fn run(
 
                         match shape_processor.process(&evaluation.shape) {
                             Ok(shape) => {
-                                viewer.handle_shape_update(shape);
+                                handler.viewer.handle_shape_update(shape);
                             }
                             Err(err) => {
                                 // Can be cleaned up, once `Report` is stable:
@@ -122,7 +123,7 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(viewer.gui.context(), event);
+            egui_winit_state.on_event(handler.viewer.gui.context(), event);
         }
 
         // fj-window events
@@ -148,13 +149,13 @@ pub fn run(
             } => match virtual_key_code {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
-                    viewer.toggle_draw_model();
+                    handler.viewer.toggle_draw_model();
                 }
                 VirtualKeyCode::Key2 => {
-                    viewer.toggle_draw_mesh();
+                    handler.viewer.toggle_draw_mesh();
                 }
                 VirtualKeyCode::Key3 => {
-                    viewer.toggle_draw_debug();
+                    handler.viewer.toggle_draw_debug();
                 }
                 _ => {}
             },
@@ -173,17 +174,17 @@ pub fn run(
             } => match state {
                 ElementState::Pressed => {
                     held_mouse_button = Some(button);
-                    viewer.add_focus_point();
+                    handler.viewer.add_focus_point();
                 }
                 ElementState::Released => {
                     held_mouse_button = None;
-                    viewer.remove_focus_point();
+                    handler.viewer.remove_focus_point();
                 }
             },
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { .. },
                 ..
-            } => viewer.add_focus_point(),
+            } => handler.viewer.add_focus_point(),
             Event::MainEventsCleared => {
                 handler.window.window().request_redraw();
             }
@@ -191,7 +192,7 @@ pub fn run(
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = new_size.take() {
-                    viewer.handle_screen_resize(size);
+                    handler.viewer.handle_screen_resize(size);
                 }
 
                 let pixels_per_point =
@@ -205,8 +206,11 @@ pub fn run(
                     status: &handler.status,
                     model_available: host.is_some(),
                 };
-                let new_model_path =
-                    viewer.draw(pixels_per_point, egui_input, gui_state);
+                let new_model_path = handler.viewer.draw(
+                    pixels_per_point,
+                    egui_input,
+                    gui_state,
+                );
 
                 if let Some(model_path) = new_model_path {
                     let model =
@@ -230,11 +234,11 @@ pub fn run(
             &event,
             &handler.window,
             &held_mouse_button,
-            &mut viewer.cursor,
+            &mut handler.viewer.cursor,
             invert_zoom,
         );
         if let Some(input_event) = input_event {
-            viewer.handle_input_event(input_event);
+            handler.viewer.handle_input_event(input_event);
         }
     });
 }
@@ -303,6 +307,7 @@ fn input_event<T>(
 
 struct EventLoopHandler {
     window: Window,
+    viewer: Viewer,
     status: StatusReport,
 }
 
