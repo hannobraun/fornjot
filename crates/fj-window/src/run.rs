@@ -46,7 +46,7 @@ pub fn run(
     // https://github.com/rust-windowing/winit/issues/2094
     let mut new_size = None;
 
-    let mut state = EventLoopHandler {
+    let mut handler = EventLoopHandler {
         window,
         status: StatusReport::new(),
     };
@@ -73,12 +73,12 @@ pub fn run(
 
                 match event {
                     ModelEvent::ChangeDetected => {
-                        state.status.update_status(
+                        handler.status.update_status(
                             "Change in model detected. Evaluating model...",
                         );
                     }
                     ModelEvent::Evaluation(evaluation) => {
-                        state.status.update_status(
+                        handler.status.update_status(
                             "Model evaluated. Processing model...",
                         );
 
@@ -103,11 +103,11 @@ pub fn run(
                             }
                         }
 
-                        state.status.update_status("Model processed.");
+                        handler.status.update_status("Model processed.");
                     }
 
                     ModelEvent::Error(err) => {
-                        state.status.update_status(&err.to_string());
+                        handler.status.update_status(&err.to_string());
                     }
                 }
             }
@@ -185,7 +185,7 @@ pub fn run(
                 ..
             } => viewer.add_focus_point(),
             Event::MainEventsCleared => {
-                state.window.window().request_redraw();
+                handler.window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
                 // Only do a screen resize once per frame. This protects against
@@ -195,14 +195,14 @@ pub fn run(
                 }
 
                 let pixels_per_point =
-                    state.window.window().scale_factor() as f32;
+                    handler.window.window().scale_factor() as f32;
 
                 egui_winit_state.set_pixels_per_point(pixels_per_point);
                 let egui_input =
-                    egui_winit_state.take_egui_input(state.window.window());
+                    egui_winit_state.take_egui_input(handler.window.window());
 
                 let gui_state = GuiState {
-                    status: &state.status,
+                    status: &handler.status,
                     model_available: host.is_some(),
                 };
                 let new_model_path =
@@ -216,7 +216,7 @@ pub fn run(
                             host = Some(new_host);
                         }
                         Err(err) => {
-                            state.status.update_status(&format!(
+                            handler.status.update_status(&format!(
                                 "Error creating host: {err}"
                             ));
                         }
@@ -228,7 +228,7 @@ pub fn run(
 
         let input_event = input_event(
             &event,
-            &state.window,
+            &handler.window,
             &held_mouse_button,
             &mut viewer.cursor,
             invert_zoom,
