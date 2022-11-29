@@ -180,16 +180,8 @@ impl EventLoopHandler {
                 if let Some(model_path) = new_model_path {
                     let model =
                         Model::new(model_path, Parameters::empty()).unwrap();
-                    match Host::from_model(model) {
-                        Ok(new_host) => {
-                            self.host = Some(new_host);
-                        }
-                        Err(err) => {
-                            self.status.update_status(&format!(
-                                "Error creating host: {err}"
-                            ));
-                        }
-                    }
+                    let new_host = Host::from_model(model)?;
+                    self.host = Some(new_host);
                 }
             }
             _ => {}
