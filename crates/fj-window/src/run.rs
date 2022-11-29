@@ -39,6 +39,7 @@ pub fn run(
     let host = model.map(Host::from_model).transpose()?;
 
     let mut handler = EventLoopHandler {
+        shape_processor,
         window,
         viewer,
         egui_winit_state,
@@ -79,7 +80,8 @@ pub fn run(
                             "Model evaluated. Processing model...",
                         );
 
-                        match shape_processor.process(&evaluation.shape) {
+                        match handler.shape_processor.process(&evaluation.shape)
+                        {
                             Ok(shape) => {
                                 handler.viewer.handle_shape_update(shape);
                             }
@@ -245,6 +247,7 @@ pub fn run(
 }
 
 struct EventLoopHandler {
+    shape_processor: ShapeProcessor,
     window: Window,
     viewer: Viewer,
     egui_winit_state: egui_winit::State,
