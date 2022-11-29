@@ -21,263 +21,49 @@ use super::{
 #[derive(Debug, Default)]
 pub struct Objects {
     /// Store for [`Curve`]s
-    pub curves: Curves,
+    pub curves: Store<Curve>,
 
     /// Store for [`Cycle`]s
-    pub cycles: Cycles,
+    pub cycles: Store<Cycle>,
 
     /// Store for [`Face`]s
-    pub faces: Faces,
+    pub faces: Store<Face>,
 
     /// Store for [`GlobalCurve`]s
-    pub global_curves: GlobalCurves,
+    pub global_curves: Store<GlobalCurve>,
 
     /// Store for [`GlobalEdge`]s
-    pub global_edges: GlobalEdges,
+    pub global_edges: Store<GlobalEdge>,
 
     /// Store for [`GlobalVertex`] objects
-    pub global_vertices: GlobalVertices,
+    pub global_vertices: Store<GlobalVertex>,
 
     /// Store for [`HalfEdge`]s
-    pub half_edges: HalfEdges,
+    pub half_edges: Store<HalfEdge>,
 
     /// Store for [`Shell`]s
-    pub shells: Shells,
+    pub shells: Store<Shell>,
 
     /// Store for [`Sketch`]es
-    pub sketches: Sketches,
+    pub sketches: Store<Sketch>,
 
     /// Store for [`Solid`]s
-    pub solids: Solids,
+    pub solids: Store<Solid>,
 
     /// Store for [`SurfaceVertex`] objects
-    pub surface_vertices: SurfaceVertices,
+    pub surface_vertices: Store<SurfaceVertex>,
 
     /// Store for [`Surface`]s
     pub surfaces: Surfaces,
 
     /// Store for [`Vertex`] objects
-    pub vertices: Vertices,
+    pub vertices: Store<Vertex>,
 }
 
 impl Objects {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()
-    }
-}
-
-/// Store for [`Curve`]s
-#[derive(Debug, Default)]
-pub struct Curves {
-    store: Store<Curve>,
-}
-
-impl Curves {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Curve> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Curve`] into the store
-    pub fn insert(&mut self, handle: Handle<Curve>, curve: Curve) {
-        self.store.insert(handle, curve);
-    }
-}
-
-/// Store for [`Cycle`]s
-#[derive(Debug, Default)]
-pub struct Cycles {
-    store: Store<Cycle>,
-}
-
-impl Cycles {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Cycle> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Cycle`] into the store
-    pub fn insert(&mut self, handle: Handle<Cycle>, cycle: Cycle) {
-        self.store.insert(handle, cycle);
-    }
-}
-
-/// Store for [`Face`]s
-#[derive(Debug, Default)]
-pub struct Faces {
-    store: Store<Face>,
-}
-
-impl Faces {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Face> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Face`] into the store
-    pub fn insert(&mut self, handle: Handle<Face>, face: Face) {
-        self.store.insert(handle, face);
-    }
-}
-
-/// Store for [`GlobalCurve`]s
-#[derive(Debug, Default)]
-pub struct GlobalCurves {
-    store: Store<GlobalCurve>,
-}
-
-impl GlobalCurves {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<GlobalCurve> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`GlobalCurve`] into the store
-    pub fn insert(
-        &mut self,
-        handle: Handle<GlobalCurve>,
-        global_curve: GlobalCurve,
-    ) {
-        self.store.insert(handle, global_curve);
-    }
-}
-
-/// Store for [`GlobalEdge`]s
-#[derive(Debug, Default)]
-pub struct GlobalEdges {
-    store: Store<GlobalEdge>,
-}
-
-impl GlobalEdges {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<GlobalEdge> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`GlobalEdge`] into the store
-    pub fn insert(
-        &mut self,
-        handle: Handle<GlobalEdge>,
-        global_edge: GlobalEdge,
-    ) {
-        self.store.insert(handle, global_edge);
-    }
-}
-
-/// Store for [`GlobalVertex`] objects
-#[derive(Debug, Default)]
-pub struct GlobalVertices {
-    store: Store<GlobalVertex>,
-}
-
-impl GlobalVertices {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<GlobalVertex> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`GlobalVertex`] into the store
-    pub fn insert(
-        &mut self,
-        handle: Handle<GlobalVertex>,
-        global_vertex: GlobalVertex,
-    ) {
-        self.store.insert(handle, global_vertex);
-    }
-}
-
-/// Store for [`HalfEdge`]s
-#[derive(Debug, Default)]
-pub struct HalfEdges {
-    store: Store<HalfEdge>,
-}
-
-impl HalfEdges {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<HalfEdge> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`HalfEdge`] into the store
-    pub fn insert(&mut self, handle: Handle<HalfEdge>, half_edge: HalfEdge) {
-        self.store.insert(handle, half_edge);
-    }
-}
-
-/// Store for [`Shell`]s
-#[derive(Debug, Default)]
-pub struct Shells {
-    store: Store<Shell>,
-}
-
-impl Shells {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Shell> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Shell`] into the store
-    pub fn insert(&mut self, handle: Handle<Shell>, shell: Shell) {
-        self.store.insert(handle, shell);
-    }
-}
-
-/// Store for [`Sketch`]es
-#[derive(Debug, Default)]
-pub struct Sketches {
-    store: Store<Sketch>,
-}
-
-impl Sketches {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Sketch> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Sketch`] into the store
-    pub fn insert(&mut self, handle: Handle<Sketch>, sketch: Sketch) {
-        self.store.insert(handle, sketch);
-    }
-}
-
-/// Store for [`Solid`]s
-#[derive(Debug, Default)]
-pub struct Solids {
-    store: Store<Solid>,
-}
-
-impl Solids {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Solid> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Solid`] into the store
-    pub fn insert(&mut self, handle: Handle<Solid>, solid: Solid) {
-        self.store.insert(handle, solid);
-    }
-}
-
-/// Store for [`SurfaceVertex`] objects
-#[derive(Debug, Default)]
-pub struct SurfaceVertices {
-    store: Store<SurfaceVertex>,
-}
-
-impl SurfaceVertices {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<SurfaceVertex> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`SurfaceVertex`] into the store
-    pub fn insert(
-        &mut self,
-        handle: Handle<SurfaceVertex>,
-        surface_vertex: SurfaceVertex,
-    ) {
-        self.store.insert(handle, surface_vertex);
     }
 }
 
@@ -354,23 +140,5 @@ impl Default for Surfaces {
             xz_plane,
             yz_plane,
         }
-    }
-}
-
-/// Store for [`Vertex`] objects
-#[derive(Debug, Default)]
-pub struct Vertices {
-    store: Store<Vertex>,
-}
-
-impl Vertices {
-    /// Reserve a slot for an object in the store
-    pub fn reserve(&self) -> Handle<Vertex> {
-        self.store.reserve()
-    }
-
-    /// Insert a [`Vertex`] into the store
-    pub fn insert(&mut self, handle: Handle<Vertex>, vertex: Vertex) {
-        self.store.insert(handle, vertex);
     }
 }
