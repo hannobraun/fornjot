@@ -38,12 +38,6 @@ pub fn run(
 
     let host = model.map(Host::from_model).transpose()?;
 
-    // Only handle resize events once every frame. This filters out spurious
-    // resize events that can lead to wgpu warnings. See this issue for some
-    // context:
-    // https://github.com/rust-windowing/winit/issues/2094
-    let mut new_size = None;
-
     let mut handler = EventLoopHandler {
         window,
         viewer,
@@ -51,6 +45,7 @@ pub fn run(
         host,
         status: StatusReport::new(),
         held_mouse_button: None,
+        new_size: None,
     };
 
     event_loop.run(move |event, _, control_flow| {
@@ -166,7 +161,7 @@ pub fn run(
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                new_size = Some(ScreenSize {
+                handler.new_size = Some(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
@@ -194,7 +189,7 @@ pub fn run(
             Event::RedrawRequested(_) => {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
-                if let Some(size) = new_size.take() {
+                if let Some(size) = handler.new_size.take() {
                     handler.viewer.handle_screen_resize(size);
                 }
 
@@ -256,6 +251,12 @@ struct EventLoopHandler {
     host: Option<Host>,
     status: StatusReport,
     held_mouse_button: Option<MouseButton>,
+
+    /// Only handle resize events once every frame. This filters out spurious
+    /// resize events that can lead to wgpu warnings. See this issue for some
+    /// context:
+    /// <https://github.com/rust-windowing/winit/issues/2094>
+    new_size: Option<ScreenSize>,
 }
 
 fn input_event<T>(
