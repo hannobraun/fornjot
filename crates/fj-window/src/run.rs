@@ -16,7 +16,7 @@ use tracing::trace;
 use winit::event_loop::EventLoop;
 
 use crate::{
-    event_loop_handler::EventLoopHandler,
+    event_loop_handler::{self, EventLoopHandler},
     window::{self, Window},
 };
 
@@ -57,7 +57,7 @@ pub fn run(
 }
 
 fn handle_error(
-    err: fj_operations::shape_processor::Error,
+    err: event_loop_handler::Error,
     status: &mut StatusReport,
 ) -> Result<(), fmt::Error> {
     // Can be cleaned up, once `Report` is stable:

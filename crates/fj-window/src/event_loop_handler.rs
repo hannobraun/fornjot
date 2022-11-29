@@ -1,5 +1,5 @@
 use fj_host::{Host, Model, ModelEvent, Parameters};
-use fj_operations::shape_processor::ShapeProcessor;
+use fj_operations::shape_processor::{self, ShapeProcessor};
 use fj_viewer::{
     GuiState, InputEvent, NormalizedScreenPosition, Screen, ScreenSize,
     StatusReport, Viewer,
@@ -38,7 +38,7 @@ impl EventLoopHandler {
         &mut self,
         event: Event<()>,
         control_flow: &mut ControlFlow,
-    ) -> Result<(), fj_operations::shape_processor::Error> {
+    ) -> Result<(), Error> {
         if let Some(host) = &self.host {
             loop {
                 let events = host.events();
@@ -270,6 +270,12 @@ fn input_event<T>(
         }
         _ => None,
     }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("Shape processing error")]
+    ShapeProcessor(#[from] shape_processor::Error),
 }
 
 /// Affects the speed of zoom movement given a scroll wheel input in lines.
