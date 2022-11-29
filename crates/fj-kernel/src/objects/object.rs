@@ -6,7 +6,7 @@ use crate::{
         Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
         Objects, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
-    storage::Handle,
+    storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
 };
 
@@ -37,6 +37,17 @@ macro_rules! object {
                         Self::$ty(object) =>
                             (object as &dyn Any).downcast_ref(),
 
+                    )*
+                }
+            }
+        }
+
+        impl Object<BehindHandle> {
+            /// Access the ID of the object
+            pub fn id(&self) -> ObjectId {
+                match self {
+                    $(
+                        Self::$ty(handle) => handle.id(),
                     )*
                 }
             }
