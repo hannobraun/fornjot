@@ -39,6 +39,7 @@ pub fn run(
     let host = model.map(Host::from_model).transpose()?;
 
     let mut handler = EventLoopHandler {
+        invert_zoom,
         shape_processor,
         window,
         viewer,
@@ -238,7 +239,7 @@ pub fn run(
             &handler.window,
             &handler.held_mouse_button,
             &mut handler.viewer.cursor,
-            invert_zoom,
+            handler.invert_zoom,
         );
         if let Some(input_event) = input_event {
             handler.viewer.handle_input_event(input_event);
@@ -247,6 +248,7 @@ pub fn run(
 }
 
 struct EventLoopHandler {
+    invert_zoom: bool,
     shape_processor: ShapeProcessor,
     window: Window,
     viewer: Viewer,
