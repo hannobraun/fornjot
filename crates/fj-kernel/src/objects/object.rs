@@ -6,7 +6,7 @@ use crate::{
         Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
         Objects, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
     },
-    storage::Handle,
+    storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
 };
 
@@ -17,7 +17,7 @@ macro_rules! object {
         /// This enum is generic over the form that the object takes. An
         /// `Object<Bare>` contains bare objects, like `Curve`. An
         /// `Object<BehindHandle>` contains handles, like `Handle<Curve>`.
-        #[derive(Clone)]
+        #[derive(Clone, Debug)]
         pub enum Object<F: Form> {
             $(
                 #[doc = concat!("A ", $name)]
@@ -42,6 +42,17 @@ macro_rules! object {
             }
         }
 
+        impl Object<BehindHandle> {
+            /// Access the ID of the object
+            pub fn id(&self) -> ObjectId {
+                match self {
+                    $(
+                        Self::$ty(handle) => handle.id(),
+                    )*
+                }
+            }
+        }
+
         impl Object<WithHandle> {
             /// Insert the object into its respective store
             pub fn insert(
@@ -60,6 +71,27 @@ macro_rules! object {
                             objects.$store.insert(handle.clone(), object)?;
                             Ok(handle.into())
                         }
+                    )*
+                }
+            }
+
+            /// Validate the object
+            pub fn validate(&self) -> Result<(), ValidationError> {
+                match self {
+                    $(
+                        Self::$ty((_, object)) => object.validate()?,
+                    )*
+                }
+
+                Ok(())
+            }
+        }
+
+        impl From<Object<WithHandle>> for Object<BehindHandle> {
+            fn from(object: Object<WithHandle>) -> Self {
+                match object {
+                    $(
+                        Object::$ty((handle, _)) => Self::$ty(handle),
                     )*
                 }
             }
@@ -105,15 +137,15 @@ object!(
 
 /// The form that an object can take
 ///
-/// An object can be bare (see [`Bare`]) or behind a [`Handle`] (see
-/// [`BehindHandle`]).
+/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`BehindHandle`]), or
+/// can take the form of a handle *and* an object [`WithHandle`].
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
 }
 
 /// Implementation of [`Form`] for bare objects
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Bare;
 
 impl Form for Bare {
@@ -121,7 +153,7 @@ impl Form for Bare {
 }
 
 /// Implementation of [`Form`] for objects behind a handle
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct BehindHandle;
 
 impl Form for BehindHandle {
@@ -129,7 +161,7 @@ impl Form for BehindHandle {
 }
 
 /// Implementation of [`Form`] for objects that are paired with their handle
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct WithHandle;
 
 impl Form for WithHandle {
