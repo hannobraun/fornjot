@@ -34,7 +34,7 @@ pub fn run(
     let window = Window::new(&event_loop)?;
     let viewer = block_on(Viewer::new(&window))?;
 
-    let mut egui_winit_state = egui_winit::State::new(&event_loop);
+    let egui_winit_state = egui_winit::State::new(&event_loop);
 
     let mut host = model.map(Host::from_model).transpose()?;
 
@@ -47,6 +47,7 @@ pub fn run(
     let mut handler = EventLoopHandler {
         window,
         viewer,
+        egui_winit_state,
         status: StatusReport::new(),
         held_mouse_button: None,
     };
@@ -122,7 +123,9 @@ pub fn run(
             // The primary visible impact of this currently is that if you drag
             // a title bar that overlaps the model then both the model & window
             // get moved.
-            egui_winit_state.on_event(handler.viewer.gui.context(), event);
+            handler
+                .egui_winit_state
+                .on_event(handler.viewer.gui.context(), event);
         }
 
         // fj-window events
@@ -197,9 +200,12 @@ pub fn run(
                 let pixels_per_point =
                     handler.window.window().scale_factor() as f32;
 
-                egui_winit_state.set_pixels_per_point(pixels_per_point);
-                let egui_input =
-                    egui_winit_state.take_egui_input(handler.window.window());
+                handler
+                    .egui_winit_state
+                    .set_pixels_per_point(pixels_per_point);
+                let egui_input = handler
+                    .egui_winit_state
+                    .take_egui_input(handler.window.window());
 
                 let gui_state = GuiState {
                     status: &handler.status,
@@ -307,6 +313,7 @@ fn input_event<T>(
 struct EventLoopHandler {
     window: Window,
     viewer: Viewer,
+    egui_winit_state: egui_winit::State,
     status: StatusReport,
     held_mouse_button: Option<MouseButton>,
 }
