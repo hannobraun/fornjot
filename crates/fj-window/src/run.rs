@@ -249,6 +249,15 @@ pub fn run(
     });
 }
 
+struct EventLoopHandler {
+    window: Window,
+    viewer: Viewer,
+    egui_winit_state: egui_winit::State,
+    host: Option<Host>,
+    status: StatusReport,
+    held_mouse_button: Option<MouseButton>,
+}
+
 fn input_event<T>(
     event: &Event<T>,
     window: &Window,
@@ -309,15 +318,6 @@ fn input_event<T>(
         }
         _ => None,
     }
-}
-
-struct EventLoopHandler {
-    window: Window,
-    viewer: Viewer,
-    egui_winit_state: egui_winit::State,
-    host: Option<Host>,
-    status: StatusReport,
-    held_mouse_button: Option<MouseButton>,
 }
 
 /// Error in main loop
