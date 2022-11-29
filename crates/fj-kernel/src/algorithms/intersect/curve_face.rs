@@ -151,25 +151,25 @@ where
 mod tests {
     use crate::{
         builder::{CurveBuilder, FaceBuilder},
-        objects::{Face, Objects},
+        objects::Face,
         partial::{HasPartial, PartialCurve},
-        services::State,
+        services::Services,
     };
 
     use super::CurveFaceIntersection;
 
     #[test]
     fn compute() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
 
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
-        let curve = curve.build(&mut objects);
+        let curve = curve.build(&mut services.objects);
 
         #[rustfmt::skip]
         let exterior = [
@@ -190,7 +190,7 @@ mod tests {
             .with_surface(surface)
             .with_exterior_polygon_from_points(exterior)
             .with_interior_polygon_from_points(interior)
-            .build(&mut objects);
+            .build(&mut services.objects);
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

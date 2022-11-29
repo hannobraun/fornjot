@@ -90,18 +90,17 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject, builder::CurveBuilder,
-        insert::Insert, objects::Objects, partial::PartialCurve,
-        services::State,
+        insert::Insert, partial::PartialCurve, services::Services,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let xy = objects.surfaces.xy_plane();
-        let xz = objects.surfaces.xz_plane();
+        let xy = services.objects.surfaces.xy_plane();
+        let xz = services.objects.surfaces.xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
@@ -110,10 +109,10 @@ mod tests {
                     xy.clone(),
                     xy.clone().transform(
                         &Transform::translation([0., 0., 1.],),
-                        &mut objects
+                        &mut services.objects
                     )
                 ],
-                &mut objects
+                &mut services.objects
             ),
             None,
         );
@@ -123,16 +122,23 @@ mod tests {
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
-        let expected_xy = expected_xy.build(&mut objects).insert(&mut objects);
+        let expected_xy = expected_xy
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
         let mut expected_xz = PartialCurve {
             surface: Some(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();
-        let expected_xz = expected_xz.build(&mut objects).insert(&mut objects);
+        let expected_xz = expected_xz
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute([xy, xz], &mut objects),
+            SurfaceSurfaceIntersection::compute(
+                [xy, xz],
+                &mut services.objects
+            ),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

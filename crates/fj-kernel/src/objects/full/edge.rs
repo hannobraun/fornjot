@@ -170,27 +170,26 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        builder::HalfEdgeBuilder, objects::Objects, partial::HasPartial,
-        services::State,
+        builder::HalfEdgeBuilder, partial::HasPartial, services::Services,
     };
 
     use super::HalfEdge;
 
     #[test]
     fn global_edge_equality() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
 
         let a = [0., 0.];
         let b = [1., 0.];
 
         let a_to_b = HalfEdge::partial()
             .update_as_line_segment_from_points(surface.clone(), [a, b])
-            .build(&mut objects);
+            .build(&mut services.objects);
         let b_to_a = HalfEdge::partial()
             .update_as_line_segment_from_points(surface, [b, a])
-            .build(&mut objects);
+            .build(&mut services.objects);
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());
     }

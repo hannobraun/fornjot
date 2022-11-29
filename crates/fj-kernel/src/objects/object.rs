@@ -1,7 +1,6 @@
 use std::any::Any;
 
 use crate::{
-    insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
         Objects, Shell, Sketch, Solid, Surface, SurfaceVertex, Vertex,
@@ -55,21 +54,12 @@ macro_rules! object {
 
         impl Object<WithHandle> {
             /// Insert the object into its respective store
-            pub fn insert(
-                self,
-                objects: &mut Objects,
-            ) -> Result<Object<BehindHandle>, ValidationError>
-            where
-                $(
-                    crate::objects::$ty: Insert,
-                    ValidationError: From<<$ty as Validate>::Error>,
-                )*
-            {
+            pub fn insert(self, objects: &mut Objects) -> Object<BehindHandle> {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
-                            objects.$store.insert(handle.clone(), object)?;
-                            Ok(handle.into())
+                            objects.$store.insert(handle.clone(), object);
+                            handle.into()
                         }
                     )*
                 }

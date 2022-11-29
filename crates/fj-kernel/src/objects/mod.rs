@@ -90,9 +90,5 @@ pub use self::{
         vertex::{GlobalVertex, SurfaceVertex, Vertex},
     },
     object::{Bare, BehindHandle, Form, Object, WithHandle},
-    stores::{
-        Curves, Cycles, Faces, GlobalCurves, GlobalEdges, GlobalVertices,
-        HalfEdges, Objects, Shells, Sketches, Solids, SurfaceVertices,
-        Surfaces, Vertices,
-    },
+    stores::{Objects, Surfaces},
 };

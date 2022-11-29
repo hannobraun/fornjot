@@ -8,7 +8,7 @@ use crate::{
         MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
         PartialSurfaceVertex, PartialVertex, Replace,
     },
-    services::{Service, State},
+    services::{Service, Services},
     storage::Handle,
 };
 
@@ -162,9 +162,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             // a hack, but I can't think of something better.
             let global_forms = {
                 let must_switch_order = {
-                    let mut objects = Objects::new().into_service();
+                    let mut services = Services::new();
                     let vertices = vertices.clone().map(|vertex| {
-                        vertex.into_full(&mut objects).global_form().clone()
+                        vertex
+                            .into_full(&mut services.objects)
+                            .global_form()
+                            .clone()
                     });
 
                     let (_, must_switch_order) =

@@ -21,7 +21,7 @@ impl Validate for Face {
 }
 
 /// [`Face`] validation error
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
     /// [`Surface`] of an interior [`Cycle`] doesn't match [`Face`]'s `Surface`
     #[error(
@@ -107,30 +107,30 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
-        objects::{Cycle, Face, Objects},
+        objects::{Cycle, Face},
         partial::HasPartial,
-        services::State,
+        services::Services,
         validate::Validate,
     };
 
     #[test]
     fn face_surface_mismatch() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let valid = Face::partial()
-            .with_surface(objects.surfaces.xy_plane())
+            .with_surface(services.objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
-            .build(&mut objects);
+            .build(&mut services.objects);
         let invalid = {
             let interiors = [Cycle::partial()
                 .with_poly_chain_from_points(
-                    objects.surfaces.xz_plane(),
+                    services.objects.surfaces.xz_plane(),
                     [[1., 1.], [1., 2.], [2., 1.]],
                 )
                 .close_with_line_segment()
-                .build(&mut objects)
-                .insert(&mut objects)];
+                .build(&mut services.objects)
+                .insert(&mut services.objects)];
 
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
@@ -141,18 +141,18 @@ mod tests {
 
     #[test]
     fn face_invalid_interior_winding() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let valid = Face::partial()
-            .with_surface(objects.surfaces.xy_plane())
+            .with_surface(services.objects.surfaces.xy_plane())
             .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
             .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
-            .build(&mut objects);
+            .build(&mut services.objects);
         let invalid = {
             let interiors = valid
                 .interiors()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut objects))
+                .map(|cycle| cycle.reverse(&mut services.objects))
                 .collect::<Vec<_>>();
 
             Face::new(valid.exterior().clone(), interiors, valid.color())

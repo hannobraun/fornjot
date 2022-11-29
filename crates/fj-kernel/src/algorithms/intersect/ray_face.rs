@@ -155,18 +155,18 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         iter::ObjectIters,
-        objects::{Face, Objects},
+        objects::Face,
         partial::HasPartial,
-        services::State,
+        services::Services,
     };
 
     #[test]
     fn ray_misses_whole_surface() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.yz_plane();
+        let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -175,20 +175,20 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([-1., 0., 0.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([-1., 0., 0.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_face() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.yz_plane();
+        let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -197,9 +197,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([1., 0., 0.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([1., 0., 0.], &mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -209,11 +209,11 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.yz_plane();
+        let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -222,20 +222,20 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([0., 0., 2.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([0., 0., 2.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_edge() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.yz_plane();
+        let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -244,9 +244,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([1., 1., 0.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([1., 1., 0.], &mut services.objects);
 
         let edge = face
             .half_edge_iter()
@@ -264,11 +264,11 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.yz_plane();
+        let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -277,9 +277,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([1., 1., 1.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([1., 1., 1.], &mut services.objects);
 
         let vertex = face
             .vertex_iter()
@@ -295,11 +295,11 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -308,8 +308,8 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -319,11 +319,11 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() {
-        let mut objects = Objects::new().into_service();
+        let mut services = Services::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
             .with_surface(surface)
             .with_exterior_polygon_from_points([
@@ -332,9 +332,9 @@ mod tests {
                 [1., 1.],
                 [-1., 1.],
             ])
-            .build(&mut objects)
-            .insert(&mut objects)
-            .translate([0., 0., 1.], &mut objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects)
+            .translate([0., 0., 1.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }

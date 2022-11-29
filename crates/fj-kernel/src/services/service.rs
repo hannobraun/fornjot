@@ -1,13 +1,6 @@
-//! Service API that promotes monitoring and interactivity
-//!
-//! See [`Service`].
+use std::{ops::Deref, sync::Arc};
 
-use std::ops::Deref;
-
-use crate::{
-    objects::{Object, Objects, WithHandle},
-    storage::Handle,
-};
+use parking_lot::Mutex;
 
 /// A service that controls access to some state
 ///
@@ -31,6 +24,7 @@ use crate::{
 pub struct Service<S: State> {
     state: S,
     events: Vec<S::Event>,
+    subscribers: Vec<Arc<Mutex<dyn Subscriber<S::Event>>>>,
 }
 
 impl<S: State> Service<S> {
@@ -39,7 +33,16 @@ impl<S: State> Service<S> {
         Self {
             state,
             events: Vec::new(),
+            subscribers: Vec::new(),
         }
+    }
+
+    /// Add a subscriber
+    pub fn subscribe(
+        &mut self,
+        subscriber: Arc<Mutex<dyn Subscriber<S::Event>>>,
+    ) {
+        self.subscribers.push(subscriber);
     }
 
     /// Execute a command
@@ -52,6 +55,11 @@ impl<S: State> Service<S> {
 
         for event in &events {
             self.state.evolve(event);
+
+            for subscriber in &self.subscribers {
+                let mut subscriber = subscriber.lock();
+                subscriber.handle_event(event);
+            }
         }
 
         self.events.extend(events);
@@ -83,6 +91,21 @@ impl<S: State> Deref for Service<S> {
     }
 }
 
+impl<S: State> Default for Service<S>
+where
+    S: Default,
+{
+    fn default() -> Self {
+        Self::new(S::default())
+    }
+}
+
+impl<S: State> Subscriber<S::Command> for Service<S> {
+    fn handle_event(&mut self, event: &S::Command) {
+        self.execute(event.clone());
+    }
+}
+
 /// Implemented for state that can be wrapped by a [`Service`]
 ///
 /// See [`Service`] for a detailed explanation.
@@ -90,24 +113,13 @@ pub trait State {
     /// A command that relates to the state
     ///
     /// Commands are processed by [`State::decide`].
-    type Command;
+    type Command: Clone;
 
     /// An event that captures modifications to this state
     ///
     /// Events are produced by [`State::decide`] and processed by
     /// [`State::evolve`].
-    type Event;
-
-    /// Convert this state into the service that wraps it
-    ///
-    /// This is a convenience method that just calls [`Service::new`]
-    /// internally.
-    fn into_service(self) -> Service<Self>
-    where
-        Self: Sized,
-    {
-        Service::new(self)
-    }
+    type Event: Clone;
 
     /// Decide how to react to the provided command
     ///
@@ -126,56 +138,6 @@ pub trait State {
     fn evolve(&mut self, event: &Self::Event);
 }
 
-impl State for Objects {
-    type Command = InsertObject;
-    type Event = ObjectToInsert;
-
-    fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let event = ObjectToInsert {
-            object: command.object,
-        };
-        events.push(event);
-    }
-
-    fn evolve(&mut self, event: &Self::Event) {
-        // This operation being fallible goes against the spirit of the `evolve`
-        // method. The reason for that is, that `Objects` is not fully adapted
-        // to this new design yet. In the future, validation will most likely
-        // move into its own service, making this operation infallible.
-        event.object.clone().insert(self).unwrap();
-    }
-}
-
-/// Command for `Service<Objects>`
-///
-/// You might prefer to use [`ServiceObjectsExt::insert`], which is a convenient
-/// wrapper around `Service<Objects>::execute`.
-pub struct InsertObject {
-    /// The object to insert
-    pub object: Object<WithHandle>,
-}
-
-/// Event produced by `Service<Objects>`
-pub struct ObjectToInsert {
-    /// The object to insert
-    pub object: Object<WithHandle>,
-}
-
-/// Convenient API for `Service<Objects>`
-pub trait ServiceObjectsExt {
-    /// Insert an object
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>;
-}
-
-impl ServiceObjectsExt for Service<Objects> {
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>,
-    {
-        self.execute(InsertObject {
-            object: (handle, object).into(),
-        })
-    }
+pub trait Subscriber<T> {
+    fn handle_event(&mut self, event: &T);
 }
