@@ -76,6 +76,16 @@ macro_rules! object {
             }
         }
 
+        impl From<Object<WithHandle>> for Object<BehindHandle> {
+            fn from(object: Object<WithHandle>) -> Self {
+                match object {
+                    $(
+                        Object::$ty((handle, _)) => Self::$ty(handle),
+                    )*
+                }
+            }
+        }
+
         $(
             impl From<$ty> for Object<Bare> {
                 fn from(object: $ty) -> Self {
