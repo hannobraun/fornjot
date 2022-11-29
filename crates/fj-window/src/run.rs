@@ -47,6 +47,7 @@ pub fn run(
     let mut new_size = None;
 
     let mut state = EventLoopHandler {
+        window,
         status: StatusReport::new(),
     };
 
@@ -184,7 +185,7 @@ pub fn run(
                 ..
             } => viewer.add_focus_point(),
             Event::MainEventsCleared => {
-                window.window().request_redraw();
+                state.window.window().request_redraw();
             }
             Event::RedrawRequested(_) => {
                 // Only do a screen resize once per frame. This protects against
@@ -193,11 +194,12 @@ pub fn run(
                     viewer.handle_screen_resize(size);
                 }
 
-                let pixels_per_point = window.window().scale_factor() as f32;
+                let pixels_per_point =
+                    state.window.window().scale_factor() as f32;
 
                 egui_winit_state.set_pixels_per_point(pixels_per_point);
                 let egui_input =
-                    egui_winit_state.take_egui_input(window.window());
+                    egui_winit_state.take_egui_input(state.window.window());
 
                 let gui_state = GuiState {
                     status: &state.status,
@@ -226,7 +228,7 @@ pub fn run(
 
         let input_event = input_event(
             &event,
-            &window,
+            &state.window,
             &held_mouse_button,
             &mut viewer.cursor,
             invert_zoom,
@@ -300,6 +302,7 @@ fn input_event<T>(
 }
 
 struct EventLoopHandler {
+    window: Window,
     status: StatusReport,
 }
 
