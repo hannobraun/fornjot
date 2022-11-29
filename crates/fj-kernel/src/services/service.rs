@@ -1,4 +1,6 @@
-use std::ops::Deref;
+use std::{ops::Deref, sync::Arc};
+
+use parking_lot::Mutex;
 
 /// A service that controls access to some state
 ///
@@ -22,6 +24,7 @@ use std::ops::Deref;
 pub struct Service<S: State> {
     state: S,
     events: Vec<S::Event>,
+    subscribers: Vec<Arc<Mutex<dyn Subscriber<S::Event>>>>,
 }
 
 impl<S: State> Service<S> {
@@ -30,7 +33,16 @@ impl<S: State> Service<S> {
         Self {
             state,
             events: Vec::new(),
+            subscribers: Vec::new(),
         }
+    }
+
+    /// Add a subscriber
+    pub fn subscribe(
+        &mut self,
+        subscriber: Arc<Mutex<dyn Subscriber<S::Event>>>,
+    ) {
+        self.subscribers.push(subscriber);
     }
 
     /// Execute a command
@@ -43,6 +55,11 @@ impl<S: State> Service<S> {
 
         for event in &events {
             self.state.evolve(event);
+
+            for subscriber in &self.subscribers {
+                let mut subscriber = subscriber.lock();
+                subscriber.handle_event(event);
+            }
         }
 
         self.events.extend(events);
@@ -83,6 +100,12 @@ where
     }
 }
 
+impl<S: State> Subscriber<S::Command> for Service<S> {
+    fn handle_event(&mut self, event: &S::Command) {
+        self.execute(event.clone());
+    }
+}
+
 /// Implemented for state that can be wrapped by a [`Service`]
 ///
 /// See [`Service`] for a detailed explanation.
@@ -113,4 +136,8 @@ pub trait State {
     /// decisions that go into updating the state should be made in
     /// [`State::decide`], and encoded into the event.
     fn evolve(&mut self, event: &Self::Event);
+}
+
+pub trait Subscriber<T> {
+    fn handle_event(&mut self, event: &T);
 }
