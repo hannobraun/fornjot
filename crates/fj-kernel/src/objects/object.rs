@@ -63,6 +63,17 @@ macro_rules! object {
                     )*
                 }
             }
+
+            /// Validate the object
+            pub fn validate(&self) -> Result<(), ValidationError> {
+                match self {
+                    $(
+                        Self::$ty((_, object)) => object.validate()?,
+                    )*
+                }
+
+                Ok(())
+            }
         }
 
         $(
