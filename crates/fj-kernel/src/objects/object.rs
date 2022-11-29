@@ -126,8 +126,8 @@ object!(
 
 /// The form that an object can take
 ///
-/// An object can be bare (see [`Bare`]) or behind a [`Handle`] (see
-/// [`BehindHandle`]).
+/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`BehindHandle`]), or
+/// can take the form of a handle *and* an object [`WithHandle`].
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
