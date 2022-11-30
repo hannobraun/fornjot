@@ -10,15 +10,16 @@ mod solid;
 mod surface;
 mod vertex;
 
+use std::collections::BTreeMap;
+
 use fj_math::{Transform, Vector};
+use type_map::TypeMap;
 
 use crate::{
     insert::Insert,
     objects::Objects,
-    partial::{HasPartial, MaybePartial, Partial},
     services::Service,
-    storage::Handle,
-    validate::{Validate, ValidationError},
+    storage::{Handle, ObjectId},
 };
 
 /// Transform an object
@@ -74,9 +75,7 @@ pub trait TransformObject: Sized {
 
 impl<T> TransformObject for Handle<T>
 where
-    T: HasPartial + Insert,
-    T::Partial: TransformObject,
-    ValidationError: From<<T as Validate>::Error>,
+    T: Clone + Insert + TransformObject + 'static,
 {
     fn transform_with_cache(
         self,
@@ -84,39 +83,18 @@ where
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        self.to_partial()
+        if let Some(object) = cache.get(&self) {
+            return object.clone();
+        }
+
+        let transformed = self
+            .clone_object()
             .transform_with_cache(transform, objects, cache)
-            .build(objects)
-            .insert(objects)
-    }
-}
+            .insert(objects);
 
-impl<T> TransformObject for MaybePartial<T>
-where
-    T: HasPartial,
-    Handle<T>: TransformObject,
-    T::Partial: TransformObject,
-{
-    fn transform_with_cache(
-        self,
-        transform: &Transform,
-        objects: &mut Service<Objects>,
-        cache: &mut TransformCache,
-    ) -> Self {
-        let transformed = match self {
-            Self::Full(full) => full
-                .to_partial()
-                .transform_with_cache(transform, objects, cache),
-            Self::Partial(partial) => {
-                partial.transform_with_cache(transform, objects, cache)
-            }
-        };
+        cache.insert(self.clone(), transformed.clone());
 
-        // Transforming a `MaybePartial` *always* results in a partial object.
-        // This provides the most flexibility to the caller, who might want to
-        // use the transformed partial object for merging or whatever else,
-        // before building it themselves.
-        Self::Partial(transformed)
+        transformed
     }
 }
 
@@ -124,4 +102,24 @@ where
 ///
 /// See [`TransformObject`].
 #[derive(Default)]
-pub struct TransformCache;
+pub struct TransformCache(TypeMap);
+
+impl TransformCache {
+    fn get<T: 'static>(&mut self, key: &Handle<T>) -> Option<&Handle<T>> {
+        let map = self
+            .0
+            .entry::<BTreeMap<ObjectId, Handle<T>>>()
+            .or_insert_with(BTreeMap::new);
+
+        map.get(&key.id())
+    }
+
+    fn insert<T: 'static>(&mut self, key: Handle<T>, value: Handle<T>) {
+        let map = self
+            .0
+            .entry::<BTreeMap<ObjectId, Handle<T>>>()
+            .or_insert_with(BTreeMap::new);
+
+        map.insert(key.id(), value);
+    }
+}

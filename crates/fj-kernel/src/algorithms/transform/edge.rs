@@ -1,48 +1,47 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Objects,
-    partial::{PartialGlobalEdge, PartialHalfEdge},
+    objects::{GlobalEdge, HalfEdge, Objects},
     services::Service,
 };
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for PartialHalfEdge {
+impl TransformObject for HalfEdge {
     fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let curve = self.curve.transform_with_cache(transform, objects, cache);
-        let vertices = self.vertices.map(|vertex| {
+        let vertices = self.vertices().clone().map(|vertex| {
             vertex.transform_with_cache(transform, objects, cache)
         });
         let global_form = self
-            .global_form
+            .global_form()
+            .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self {
-            curve,
-            vertices,
-            global_form,
-        }
+        Self::new(vertices, global_form)
     }
 }
 
-impl TransformObject for PartialGlobalEdge {
+impl TransformObject for GlobalEdge {
     fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let curve = self.curve.transform_with_cache(transform, objects, cache);
-        let vertices = self.vertices.map(|vertex| {
-            vertex.transform_with_cache(transform, objects, cache)
-        });
+        let curve = self
+            .curve()
+            .clone()
+            .transform_with_cache(transform, objects, cache);
+        let vertices =
+            self.vertices().access_in_normalized_order().map(|vertex| {
+                vertex.transform_with_cache(transform, objects, cache)
+            });
 
-        Self { curve, vertices }
+        Self::new(curve, vertices)
     }
 }

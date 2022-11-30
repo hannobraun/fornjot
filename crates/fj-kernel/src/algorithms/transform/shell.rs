@@ -3,12 +3,11 @@ use fj_math::Transform;
 use crate::{
     objects::{Objects, Shell},
     services::Service,
-    storage::Handle,
 };
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for Handle<Shell> {
+impl TransformObject for Shell {
     fn transform_with_cache(
         self,
         transform: &Transform,
@@ -19,6 +18,7 @@ impl TransformObject for Handle<Shell> {
             self.faces().clone().into_iter().map(|face| {
                 face.transform_with_cache(transform, objects, cache)
             });
-        Shell::builder().with_faces(faces).build(objects)
+
+        Shell::new(faces)
     }
 }
