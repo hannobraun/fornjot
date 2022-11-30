@@ -279,6 +279,14 @@ impl MaybePartial<SurfaceVertex> {
 }
 
 impl MaybePartial<Vertex> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve.clone(),
+        }
+    }
+
     /// Access the surface form
     pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
         match self {
