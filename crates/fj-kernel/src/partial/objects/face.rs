@@ -12,7 +12,6 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialFace {
-    surface: Option<Handle<Surface>>,
     exterior: MaybePartial<Cycle>,
     interiors: Vec<MaybePartial<Cycle>>,
     color: Option<Color>,
@@ -21,7 +20,7 @@ pub struct PartialFace {
 impl PartialFace {
     /// Access th surface that the [`Face`] is defined in
     pub fn surface(&self) -> Option<Handle<Surface>> {
-        self.surface.clone()
+        self.exterior.surface()
     }
 
     /// Access the [`Face`]'s exterior cycle
@@ -37,12 +36,6 @@ impl PartialFace {
     /// Access the color of the [`Face`]
     pub fn color(&self) -> Option<Color> {
         self.color
-    }
-
-    /// Build the [`Face`] with the provided surface
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
-        self
     }
 
     /// Build the [`Face`] with the provided exterior
@@ -89,7 +82,6 @@ impl MergeWith for PartialFace {
         let other = other.into();
 
         Self {
-            surface: self.surface.merge_with(other.surface),
             exterior: self.exterior.merge_with(other.exterior),
             interiors: Mergeable(self.interiors)
                 .merge_with(Mergeable(other.interiors))
@@ -102,7 +94,6 @@ impl MergeWith for PartialFace {
 impl From<&Face> for PartialFace {
     fn from(face: &Face) -> Self {
         Self {
-            surface: Some(face.surface().clone()),
             exterior: face.exterior().clone().into(),
             interiors: face.interiors().cloned().map(Into::into).collect(),
             color: Some(face.color()),

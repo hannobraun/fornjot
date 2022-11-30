@@ -117,10 +117,17 @@ mod tests {
     fn face_surface_mismatch() {
         let mut services = Services::new();
 
+        let surface = services.objects.surfaces.xy_plane();
+
         let valid = Face::partial()
-            .with_surface(services.objects.surfaces.xy_plane())
-            .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
-            .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
+            .with_exterior_polygon_from_points(
+                surface.clone(),
+                [[0., 0.], [3., 0.], [0., 3.]],
+            )
+            .with_interior_polygon_from_points(
+                surface,
+                [[1., 1.], [1., 2.], [2., 1.]],
+            )
             .build(&mut services.objects);
         let invalid = {
             let interiors = [Cycle::partial()
@@ -143,10 +150,17 @@ mod tests {
     fn face_invalid_interior_winding() {
         let mut services = Services::new();
 
+        let surface = services.objects.surfaces.xy_plane();
+
         let valid = Face::partial()
-            .with_surface(services.objects.surfaces.xy_plane())
-            .with_exterior_polygon_from_points([[0., 0.], [3., 0.], [0., 3.]])
-            .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
+            .with_exterior_polygon_from_points(
+                surface.clone(),
+                [[0., 0.], [3., 0.], [0., 3.]],
+            )
+            .with_interior_polygon_from_points(
+                surface,
+                [[1., 1.], [1., 2.], [2., 1.]],
+            )
             .build(&mut services.objects);
         let invalid = {
             let interiors = valid

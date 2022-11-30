@@ -52,13 +52,10 @@ impl ShellBuilder {
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
             Face::partial()
-                .with_surface(surface)
-                .with_exterior_polygon_from_points([
-                    [-h, -h],
-                    [h, -h],
-                    [h, h],
-                    [-h, h],
-                ])
+                .with_exterior_polygon_from_points(
+                    surface,
+                    [[-h, -h], [h, -h], [h, h], [-h, h]],
+                )
                 .build(objects)
                 .insert(objects)
         };
@@ -162,13 +159,14 @@ impl ShellBuilder {
                         };
 
                         PartialHalfEdge {
-                            curve: curve.into(),
                             vertices: [
                                 PartialVertex {
+                                    curve: curve.clone().into(),
                                     surface_form: from.into(),
                                     ..Default::default()
                                 },
                                 PartialVertex {
+                                    curve: curve.into(),
                                     surface_form: to.into(),
                                     ..Default::default()
                                 },
@@ -288,7 +286,6 @@ impl ShellBuilder {
                     PartialHalfEdge {
                         vertices: vertices.map(Into::into),
                         global_form: edge.global_form().clone().into(),
-                        ..Default::default()
                     }
                     .update_as_line_segment()
                     .build(objects)

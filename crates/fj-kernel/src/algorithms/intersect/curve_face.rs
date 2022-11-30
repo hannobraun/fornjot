@@ -187,9 +187,8 @@ mod tests {
         ];
 
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points(exterior)
-            .with_interior_polygon_from_points(interior)
+            .with_exterior_polygon_from_points(surface.clone(), exterior)
+            .with_interior_polygon_from_points(surface, interior)
             .build(&mut services.objects);
 
         let expected =

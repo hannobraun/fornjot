@@ -48,8 +48,7 @@ impl SketchBuilder {
             .as_ref()
             .expect("Can't build `Sketch` without `Surface`");
         self.faces.extend([Face::partial()
-            .with_surface(surface.clone())
-            .with_exterior_polygon_from_points(points)
+            .with_exterior_polygon_from_points(surface.clone(), points)
             .build(objects)
             .insert(objects)]);
         self

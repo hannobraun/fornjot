@@ -83,7 +83,6 @@ impl CycleBuilder for PartialCycle {
                 );
 
                 half_edges.push(PartialHalfEdge {
-                    curve: curve.into(),
                     vertices: vertices.map(Into::into),
                     ..Default::default()
                 });

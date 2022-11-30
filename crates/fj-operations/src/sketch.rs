@@ -51,8 +51,7 @@ impl Shape for fj::Sketch {
                     .map(Point::from);
 
                 Face::partial()
-                    .with_surface(surface)
-                    .with_exterior_polygon_from_points(points)
+                    .with_exterior_polygon_from_points(surface, points)
                     .with_color(Color(self.color()))
                     .build(objects)
                     .insert(objects)

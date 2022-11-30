@@ -110,14 +110,15 @@ mod tests {
             .sweep(UP, &mut services.objects);
 
         let bottom = Face::partial()
-            .with_surface(surface.clone())
-            .with_exterior_polygon_from_points(TRIANGLE)
+            .with_exterior_polygon_from_points(surface.clone(), TRIANGLE)
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let top = Face::partial()
-            .with_surface(surface.translate(UP, &mut services.objects))
-            .with_exterior_polygon_from_points(TRIANGLE)
+            .with_exterior_polygon_from_points(
+                surface.translate(UP, &mut services.objects),
+                TRIANGLE,
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
@@ -153,16 +154,15 @@ mod tests {
             .sweep(DOWN, &mut services.objects);
 
         let bottom = Face::partial()
-            .with_surface(
+            .with_exterior_polygon_from_points(
                 surface.clone().translate(DOWN, &mut services.objects),
+                TRIANGLE,
             )
-            .with_exterior_polygon_from_points(TRIANGLE)
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let top = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points(TRIANGLE)
+            .with_exterior_polygon_from_points(surface, TRIANGLE)
             .build(&mut services.objects)
             .insert(&mut services.objects);
 

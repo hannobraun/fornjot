@@ -14,9 +14,6 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialHalfEdge {
-    /// The curve that the [`HalfEdge`] is defined in
-    pub curve: MaybePartial<Curve>,
-
     /// The vertices that bound the [`HalfEdge`] in the curve
     pub vertices: [MaybePartial<Vertex>; 2],
 
@@ -25,21 +22,26 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Access the partial half-edge's curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        let [a, b] = &self.vertices;
+        a.curve().merge_with(b.curve())
+    }
+
     /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(mut self, objects: &mut Service<Objects>) -> HalfEdge {
+    pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
         let global_curve = self
-            .curve
+            .curve()
             .global_form()
             .merge_with(self.global_form.curve());
 
-        let curve = {
-            self.curve = self.curve.merge_with(PartialCurve {
+        let curve = self
+            .curve()
+            .merge_with(PartialCurve {
                 global_form: global_curve,
                 ..Default::default()
-            });
-
-            self.curve.into_full(objects)
-        };
+            })
+            .into_full(objects);
         let vertices = self.vertices.map(|vertex| {
             vertex
                 .merge_with(PartialVertex {
@@ -65,7 +67,6 @@ impl MergeWith for PartialHalfEdge {
         let other = other.into();
 
         Self {
-            curve: self.curve.merge_with(other.curve),
             vertices: self.vertices.merge_with(other.vertices),
             global_form: self.global_form.merge_with(other.global_form),
         }
@@ -74,8 +75,6 @@ impl MergeWith for PartialHalfEdge {
 
 impl Replace<Surface> for PartialHalfEdge {
     fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.curve.replace(surface.clone());
-
         for vertex in &mut self.vertices {
             vertex.replace(surface.clone());
         }
@@ -90,7 +89,6 @@ impl From<&HalfEdge> for PartialHalfEdge {
             half_edge.vertices().clone().map(Into::into);
 
         Self {
-            curve: half_edge.curve().clone().into(),
             vertices: [back_vertex, front_vertex],
             global_form: half_edge.global_form().clone().into(),
         }
