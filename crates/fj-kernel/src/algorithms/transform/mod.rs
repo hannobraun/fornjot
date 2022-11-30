@@ -102,3 +102,9 @@ where
         Self::Partial(transformed)
     }
 }
+
+/// A cache for transformed objects
+///
+/// See [`TransformObject`].
+#[derive(Default)]
+pub struct TransformCache;
