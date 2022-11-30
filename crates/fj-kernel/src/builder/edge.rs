@@ -73,7 +73,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let mut curve = self.curve.clone().into_partial();
+        let mut curve = self.curve().into_partial();
         curve.update_as_circle_from_radius(radius);
 
         let path = curve.path.expect("Expected path that was just created");
@@ -133,7 +133,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [&from, &to].map(|vertex| vertex.surface_form());
 
         let surface = self
-            .curve
+            .curve()
             .surface()
             .merge_with(from_surface.surface())
             .merge_with(to_surface.surface())
@@ -144,7 +144,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = self.curve.clone().into_partial();
+        let mut curve = self.curve().into_partial();
         curve.surface = Some(surface);
         curve.update_as_line_from_points(points);
 

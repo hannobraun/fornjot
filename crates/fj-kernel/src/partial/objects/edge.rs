@@ -25,15 +25,20 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
+    /// Access the partial half-edge's curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        self.curve.clone()
+    }
+
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(mut self, objects: &mut Service<Objects>) -> HalfEdge {
         let global_curve = self
-            .curve
+            .curve()
             .global_form()
             .merge_with(self.global_form.curve());
 
         let curve = {
-            self.curve = self.curve.merge_with(PartialCurve {
+            self.curve = self.curve().merge_with(PartialCurve {
                 global_form: global_curve,
                 ..Default::default()
             });
