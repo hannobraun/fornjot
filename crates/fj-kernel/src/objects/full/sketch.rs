@@ -19,7 +19,6 @@ impl Sketch {
     /// Build a `Sketch` using [`SketchBuilder`]
     pub fn builder() -> SketchBuilder {
         SketchBuilder {
-            surface: None,
             faces: FaceSet::new(),
         }
     }

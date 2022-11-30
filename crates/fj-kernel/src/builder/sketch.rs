@@ -14,20 +14,11 @@ use super::FaceBuilder;
 ///
 /// Also see [`Sketch::builder`].
 pub struct SketchBuilder {
-    /// The surface that the [`Sketch`] is defined in
-    pub surface: Option<Handle<Surface>>,
-
     /// The faces that make up the [`Sketch`]
     pub faces: FaceSet,
 }
 
 impl SketchBuilder {
-    /// Build the [`Sketch`] with the provided [`Surface`]
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
-        self
-    }
-
     /// Build the [`Sketch`] with the provided faces
     pub fn with_faces(
         mut self,
