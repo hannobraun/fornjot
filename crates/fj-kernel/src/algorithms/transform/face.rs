@@ -1,63 +1,46 @@
 use fj_math::Transform;
 
 use crate::{
-    insert::Insert,
     objects::{Face, FaceSet, Objects},
-    partial::{HasPartial, PartialFace},
     services::Service,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
-impl TransformObject for PartialFace {
-    fn transform(
+impl TransformObject for Face {
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        cache: &mut TransformCache,
     ) -> Self {
-        let surface = self
-            .surface()
-            .map(|surface| surface.transform(transform, objects));
-        let exterior = self
-            .exterior()
-            .into_partial()
-            .transform(transform, objects)
-            .with_surface(surface.clone());
-        let interiors = self.interiors().map(|cycle| {
-            cycle
-                .into_partial()
-                .transform(transform, objects)
-                .with_surface(surface.clone())
-                .build(objects)
-                .insert(objects)
-        });
-
+        // Color does not need to be transformed.
         let color = self.color();
 
-        let mut face = Face::partial()
-            .with_exterior(exterior)
-            .with_interiors(interiors);
-        if let Some(surface) = surface {
-            face = face.with_surface(surface);
-        }
-        if let Some(color) = color {
-            face = face.with_color(color);
-        }
+        let exterior = self
+            .exterior()
+            .clone()
+            .transform_with_cache(transform, objects, cache);
+        let interiors = self.interiors().cloned().map(|interior| {
+            interior.transform_with_cache(transform, objects, cache)
+        });
 
-        face
+        Self::new(exterior, interiors, color)
     }
 }
 
 impl TransformObject for FaceSet {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        cache: &mut TransformCache,
     ) -> Self {
         let mut faces = FaceSet::new();
         faces.extend(
-            self.into_iter()
-                .map(|face| face.transform(transform, objects)),
+            self.into_iter().map(|face| {
+                face.transform_with_cache(transform, objects, cache)
+            }),
         );
         faces
     }
