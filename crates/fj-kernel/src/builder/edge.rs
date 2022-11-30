@@ -98,7 +98,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 surface_form: surface_vertex.clone().into(),
             });
 
-        self.curve = curve.into();
         self.vertices = [back, front].map(Into::into);
 
         self
@@ -201,7 +200,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 })
         };
 
-        self.curve = curve.into();
         self.vertices = [back, front];
 
         self

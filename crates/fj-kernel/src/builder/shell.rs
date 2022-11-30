@@ -162,7 +162,6 @@ impl ShellBuilder {
                         };
 
                         PartialHalfEdge {
-                            curve: curve.clone().into(),
                             vertices: [
                                 PartialVertex {
                                     curve: curve.clone().into(),
@@ -290,7 +289,6 @@ impl ShellBuilder {
                     PartialHalfEdge {
                         vertices: vertices.map(Into::into),
                         global_form: edge.global_form().clone().into(),
-                        ..Default::default()
                     }
                     .update_as_line_segment()
                     .build(objects)
