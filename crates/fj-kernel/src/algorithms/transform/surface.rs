@@ -1,9 +1,6 @@
 use fj_math::Transform;
 
-use crate::{
-    geometry::surface::SurfaceGeometry, objects::Objects,
-    partial::PartialSurface, services::Service,
-};
+use crate::{objects::Objects, partial::PartialSurface, services::Service};
 
 use super::{TransformCache, TransformObject};
 
@@ -14,12 +11,8 @@ impl TransformObject for PartialSurface {
         _: &mut Service<Objects>,
         _: &mut TransformCache,
     ) -> Self {
-        let geometry = self.geometry.map(|geometry| {
-            let u = geometry.u.transform(transform);
-            let v = transform.transform_vector(&geometry.v);
-
-            SurfaceGeometry { u, v }
-        });
+        let geometry =
+            self.geometry.map(|geometry| geometry.transform(transform));
 
         Self { geometry }
     }

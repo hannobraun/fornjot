@@ -1,6 +1,6 @@
 //! The geometry that defines a surface
 
-use fj_math::{Line, Point, Vector};
+use fj_math::{Line, Point, Transform, Vector};
 
 use super::path::GlobalPath;
 
@@ -37,6 +37,14 @@ impl SurfaceGeometry {
 
     fn path_to_line(&self) -> Line<3> {
         Line::from_origin_and_direction(self.u.origin(), self.v)
+    }
+
+    /// Transform the surface geometry
+    #[must_use]
+    pub fn transform(self, transform: &Transform) -> Self {
+        let u = self.u.transform(transform);
+        let v = transform.transform_vector(&self.v);
+        Self { u, v }
     }
 }
 
