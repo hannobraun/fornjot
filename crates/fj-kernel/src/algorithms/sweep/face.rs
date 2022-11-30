@@ -104,8 +104,11 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let solid = Sketch::builder()
-            .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE, &mut services.objects)
+            .with_polygon_from_points(
+                surface.clone(),
+                TRIANGLE,
+                &mut services.objects,
+            )
             .build(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
@@ -148,8 +151,11 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let solid = Sketch::builder()
-            .with_surface(surface.clone())
-            .with_polygon_from_points(TRIANGLE, &mut services.objects)
+            .with_polygon_from_points(
+                surface.clone(),
+                TRIANGLE,
+                &mut services.objects,
+            )
             .build(&mut services.objects)
             .sweep(DOWN, &mut services.objects);
 

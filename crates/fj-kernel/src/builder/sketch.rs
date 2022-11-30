@@ -40,15 +40,12 @@ impl SketchBuilder {
     /// Construct a polygon from a list of points
     pub fn with_polygon_from_points(
         mut self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let surface = self
-            .surface
-            .as_ref()
-            .expect("Can't build `Sketch` without `Surface`");
         self.faces.extend([Face::partial()
-            .with_exterior_polygon_from_points(surface.clone(), points)
+            .with_exterior_polygon_from_points(surface, points)
             .build(objects)
             .insert(objects)]);
         self
