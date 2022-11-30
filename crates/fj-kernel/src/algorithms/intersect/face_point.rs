@@ -150,8 +150,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([[0., 0.], [1., 1.], [0., 2.]])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [1., 1.], [0., 2.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([2., 1.]);
@@ -166,8 +168,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([[0., 0.], [2., 1.], [0., 2.]])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [2., 1.], [0., 2.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 1.]);
@@ -185,8 +189,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([[4., 2.], [0., 4.], [0., 0.]])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[4., 2.], [0., 4.], [0., 0.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 2.]);
@@ -204,13 +210,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [0., 0.],
-                [2., 1.],
-                [3., 0.],
-                [3., 4.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 1.]);
@@ -228,13 +231,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [0., 0.],
-                [2., 1.],
-                [3., 1.],
-                [0., 2.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 1.]);
@@ -252,14 +252,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [0., 0.],
-                [2., 1.],
-                [3., 1.],
-                [4., 0.],
-                [4., 5.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 1.]);
@@ -277,8 +273,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([[0., 0.], [2., 0.], [0., 1.]])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [2., 0.], [0., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 0.]);
@@ -305,8 +303,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let point = Point::from([1., 0.]);

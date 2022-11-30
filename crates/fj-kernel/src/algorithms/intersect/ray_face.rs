@@ -168,13 +168,10 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([-1., 0., 0.], &mut services.objects);
@@ -190,13 +187,10 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 0., 0.], &mut services.objects);
@@ -215,13 +209,10 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([0., 0., 2.], &mut services.objects);
@@ -237,13 +228,10 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 1., 0.], &mut services.objects);
@@ -270,13 +258,10 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 1., 1.], &mut services.objects);
@@ -301,13 +286,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
@@ -325,13 +307,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let face = Face::partial()
-            .with_surface(surface)
-            .with_exterior_polygon_from_points([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ])
+            .with_exterior_polygon_from_points(
+                surface,
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([0., 0., 1.], &mut services.objects);

@@ -95,8 +95,7 @@ mod tests {
         ]
         .map(|surface| {
             Face::partial()
-                .with_surface(surface)
-                .with_exterior_polygon_from_points(points)
+                .with_exterior_polygon_from_points(surface, points)
                 .build(&mut services.objects)
         });
 
@@ -123,8 +122,7 @@ mod tests {
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             Face::partial()
-                .with_surface(surface)
-                .with_exterior_polygon_from_points(points)
+                .with_exterior_polygon_from_points(surface, points)
                 .build(&mut services.objects)
         });
 

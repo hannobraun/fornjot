@@ -1,8 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::Cycle,
+    objects::{Cycle, Surface},
     partial::{HasPartial, PartialFace},
+    storage::Handle,
 };
 
 use super::CycleBuilder;
@@ -12,6 +13,7 @@ pub trait FaceBuilder {
     /// Update the [`PartialFace`] with an exterior polygon
     fn with_exterior_polygon_from_points(
         self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self;
 
@@ -25,10 +27,9 @@ pub trait FaceBuilder {
 impl FaceBuilder for PartialFace {
     fn with_exterior_polygon_from_points(
         self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        let surface = self.surface().expect("Need surface to create polygon");
-
         self.with_exterior(
             Cycle::partial()
                 .with_poly_chain_from_points(surface, points)
