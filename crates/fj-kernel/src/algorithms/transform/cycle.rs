@@ -9,11 +9,12 @@ impl TransformObject for PartialCycle {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let half_edges = self
-            .half_edges()
-            .map(|edge| edge.into_partial().transform(transform, objects));
+        let half_edges = self.half_edges().map(|edge| {
+            edge.into_partial()
+                .transform_with_cache(transform, objects, cache)
+        });
 
         Self::default().with_half_edges(half_edges)
     }

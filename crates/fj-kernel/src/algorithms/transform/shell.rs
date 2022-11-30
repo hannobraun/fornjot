@@ -13,13 +13,12 @@ impl TransformObject for Handle<Shell> {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let faces = self
-            .faces()
-            .clone()
-            .into_iter()
-            .map(|face| face.transform(transform, objects));
+        let faces =
+            self.faces().clone().into_iter().map(|face| {
+                face.transform_with_cache(transform, objects, cache)
+            });
         Shell::builder().with_faces(faces).build(objects)
     }
 }

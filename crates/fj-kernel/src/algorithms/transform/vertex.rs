@@ -13,13 +13,13 @@ impl TransformObject for PartialVertex {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let curve = self.curve.transform(transform, objects);
+        let curve = self.curve.transform_with_cache(transform, objects, cache);
         let surface_form = self
             .surface_form
             .into_partial()
-            .transform(transform, objects);
+            .transform_with_cache(transform, objects, cache);
 
         // Don't need to transform `self.position`, as that is in curve
         // coordinates and thus transforming the curve takes care of it.
@@ -36,13 +36,14 @@ impl TransformObject for PartialSurfaceVertex {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let surface = self
-            .surface
-            .clone()
-            .map(|surface| surface.transform(transform, objects));
-        let global_form = self.global_form.transform(transform, objects);
+        let surface = self.surface.clone().map(|surface| {
+            surface.transform_with_cache(transform, objects, cache)
+        });
+        let global_form = self
+            .global_form
+            .transform_with_cache(transform, objects, cache);
 
         // Don't need to transform `self.position`, as that is in surface
         // coordinates and thus transforming the surface takes care of it.

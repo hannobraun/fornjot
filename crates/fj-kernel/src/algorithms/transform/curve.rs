@@ -28,12 +28,14 @@ impl TransformObject for PartialCurve {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let surface = self
-            .surface
-            .map(|surface| surface.transform(transform, objects));
-        let global_form = self.global_form.transform(transform, objects);
+        let surface = self.surface.map(|surface| {
+            surface.transform_with_cache(transform, objects, cache)
+        });
+        let global_form = self
+            .global_form
+            .transform_with_cache(transform, objects, cache);
 
         // Don't need to transform `self.path`, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.

@@ -14,20 +14,20 @@ impl TransformObject for PartialFace {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let surface = self
-            .surface()
-            .map(|surface| surface.transform(transform, objects));
+        let surface = self.surface().map(|surface| {
+            surface.transform_with_cache(transform, objects, cache)
+        });
         let exterior = self
             .exterior()
             .into_partial()
-            .transform(transform, objects)
+            .transform_with_cache(transform, objects, cache)
             .with_surface(surface.clone());
         let interiors = self.interiors().map(|cycle| {
             cycle
                 .into_partial()
-                .transform(transform, objects)
+                .transform_with_cache(transform, objects, cache)
                 .with_surface(surface.clone())
                 .build(objects)
                 .insert(objects)
@@ -54,12 +54,13 @@ impl TransformObject for FaceSet {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
         let mut faces = FaceSet::new();
         faces.extend(
-            self.into_iter()
-                .map(|face| face.transform(transform, objects)),
+            self.into_iter().map(|face| {
+                face.transform_with_cache(transform, objects, cache)
+            }),
         );
         faces
     }

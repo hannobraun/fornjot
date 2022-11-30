@@ -13,13 +13,15 @@ impl TransformObject for PartialHalfEdge {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let curve = self.curve.transform(transform, objects);
-        let vertices = self
-            .vertices
-            .map(|vertex| vertex.transform(transform, objects));
-        let global_form = self.global_form.transform(transform, objects);
+        let curve = self.curve.transform_with_cache(transform, objects, cache);
+        let vertices = self.vertices.map(|vertex| {
+            vertex.transform_with_cache(transform, objects, cache)
+        });
+        let global_form = self
+            .global_form
+            .transform_with_cache(transform, objects, cache);
 
         Self {
             curve,
@@ -34,12 +36,12 @@ impl TransformObject for PartialGlobalEdge {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
-        let curve = self.curve.transform(transform, objects);
-        let vertices = self
-            .vertices
-            .map(|vertex| vertex.transform(transform, objects));
+        let curve = self.curve.transform_with_cache(transform, objects, cache);
+        let vertices = self.vertices.map(|vertex| {
+            vertex.transform_with_cache(transform, objects, cache)
+        });
 
         Self { curve, vertices }
     }

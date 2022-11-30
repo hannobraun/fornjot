@@ -13,12 +13,12 @@ impl TransformObject for Handle<Solid> {
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
         let faces = self
             .shells()
             .cloned()
-            .map(|shell| shell.transform(transform, objects));
+            .map(|shell| shell.transform_with_cache(transform, objects, cache));
         Solid::builder().with_shells(faces).build(objects)
     }
 }

@@ -82,10 +82,10 @@ where
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
         self.to_partial()
-            .transform(transform, objects)
+            .transform_with_cache(transform, objects, cache)
             .build(objects)
             .insert(objects)
     }
@@ -101,11 +101,15 @@ where
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
-        _: &mut TransformCache,
+        cache: &mut TransformCache,
     ) -> Self {
         let transformed = match self {
-            Self::Full(full) => full.to_partial().transform(transform, objects),
-            Self::Partial(partial) => partial.transform(transform, objects),
+            Self::Full(full) => full
+                .to_partial()
+                .transform_with_cache(transform, objects, cache),
+            Self::Partial(partial) => {
+                partial.transform_with_cache(transform, objects, cache)
+            }
         };
 
         // Transforming a `MaybePartial` *always* results in a partial object.
