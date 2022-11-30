@@ -1214,6 +1214,7 @@ dependencies = [
  "robust-predicates",
  "spade",
  "thiserror",
+ "type-map",
 ]
 
 [[package]]
