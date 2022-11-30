@@ -6,13 +6,14 @@ use crate::{
     storage::Handle,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
 impl TransformObject for Handle<Sketch> {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let faces = self
             .faces()

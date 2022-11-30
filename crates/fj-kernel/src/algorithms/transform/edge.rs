@@ -6,13 +6,14 @@ use crate::{
     services::Service,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
 impl TransformObject for PartialHalfEdge {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let curve = self.curve.transform(transform, objects);
         let vertices = self
@@ -29,10 +30,11 @@ impl TransformObject for PartialHalfEdge {
 }
 
 impl TransformObject for PartialGlobalEdge {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let curve = self.curve.transform(transform, objects);
         let vertices = self

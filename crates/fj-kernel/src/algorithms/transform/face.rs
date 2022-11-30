@@ -7,13 +7,14 @@ use crate::{
     services::Service,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
 impl TransformObject for PartialFace {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let surface = self
             .surface()
@@ -49,10 +50,11 @@ impl TransformObject for PartialFace {
 }
 
 impl TransformObject for FaceSet {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let mut faces = FaceSet::new();
         faces.extend(

@@ -6,10 +6,15 @@ use crate::{
     services::Service,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
 impl TransformObject for PartialGlobalCurve {
-    fn transform(self, _: &Transform, _: &mut Service<Objects>) -> Self {
+    fn transform_with_cache(
+        self,
+        _: &Transform,
+        _: &mut Service<Objects>,
+        _: &mut TransformCache,
+    ) -> Self {
         // `GlobalCurve` doesn't contain any internal geometry. If it did, that
         // would just be redundant with the geometry of other objects, and this
         // other geometry is already being transformed by other implementations
@@ -19,10 +24,11 @@ impl TransformObject for PartialGlobalCurve {
 }
 
 impl TransformObject for PartialCurve {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let surface = self
             .surface

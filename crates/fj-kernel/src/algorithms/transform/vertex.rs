@@ -6,13 +6,14 @@ use crate::{
     services::Service,
 };
 
-use super::TransformObject;
+use super::{TransformCache, TransformObject};
 
 impl TransformObject for PartialVertex {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let curve = self.curve.transform(transform, objects);
         let surface_form = self
@@ -31,10 +32,11 @@ impl TransformObject for PartialVertex {
 }
 
 impl TransformObject for PartialSurfaceVertex {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         objects: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let surface = self
             .surface
@@ -53,10 +55,11 @@ impl TransformObject for PartialSurfaceVertex {
 }
 
 impl TransformObject for PartialGlobalVertex {
-    fn transform(
+    fn transform_with_cache(
         self,
         transform: &Transform,
         _: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         let position = self
             .position
