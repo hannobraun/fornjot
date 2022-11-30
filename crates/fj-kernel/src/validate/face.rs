@@ -120,12 +120,14 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let valid = Face::partial()
-            .with_surface(surface.clone())
             .with_exterior_polygon_from_points(
-                surface,
+                surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             )
-            .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
+            .with_interior_polygon_from_points(
+                surface,
+                [[1., 1.], [1., 2.], [2., 1.]],
+            )
             .build(&mut services.objects);
         let invalid = {
             let interiors = [Cycle::partial()
@@ -151,12 +153,14 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let valid = Face::partial()
-            .with_surface(surface.clone())
             .with_exterior_polygon_from_points(
-                surface,
+                surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             )
-            .with_interior_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]])
+            .with_interior_polygon_from_points(
+                surface,
+                [[1., 1.], [1., 2.], [2., 1.]],
+            )
             .build(&mut services.objects);
         let invalid = {
             let interiors = valid
