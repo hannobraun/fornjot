@@ -14,20 +14,11 @@ use super::FaceBuilder;
 ///
 /// Also see [`Sketch::builder`].
 pub struct SketchBuilder {
-    /// The surface that the [`Sketch`] is defined in
-    pub surface: Option<Handle<Surface>>,
-
     /// The faces that make up the [`Sketch`]
     pub faces: FaceSet,
 }
 
 impl SketchBuilder {
-    /// Build the [`Sketch`] with the provided [`Surface`]
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
-        self
-    }
-
     /// Build the [`Sketch`] with the provided faces
     pub fn with_faces(
         mut self,
@@ -40,15 +31,12 @@ impl SketchBuilder {
     /// Construct a polygon from a list of points
     pub fn with_polygon_from_points(
         mut self,
+        surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let surface = self
-            .surface
-            .as_ref()
-            .expect("Can't build `Sketch` without `Surface`");
         self.faces.extend([Face::partial()
-            .with_exterior_polygon_from_points(surface.clone(), points)
+            .with_exterior_polygon_from_points(surface, points)
             .build(objects)
             .insert(objects)]);
         self
