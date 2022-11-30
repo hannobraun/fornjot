@@ -5,7 +5,7 @@ use crate::{
     get::Get,
     insert::Insert,
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
+        Curve, Cycle, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex, Vertex,
     },
     services::Service,
@@ -179,6 +179,16 @@ impl MaybePartial<Curve> {
         match self {
             Self::Full(full) => full.global_form().clone().into(),
             Self::Partial(partial) => partial.global_form.clone(),
+        }
+    }
+}
+
+impl MaybePartial<Cycle> {
+    /// Access the surface
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        match self {
+            Self::Full(full) => full.surface().clone().into(),
+            Self::Partial(partial) => partial.surface(),
         }
     }
 }
