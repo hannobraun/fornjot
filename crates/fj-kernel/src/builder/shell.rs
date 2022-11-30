@@ -162,13 +162,15 @@ impl ShellBuilder {
                         };
 
                         PartialHalfEdge {
-                            curve: curve.into(),
+                            curve: curve.clone().into(),
                             vertices: [
                                 PartialVertex {
+                                    curve: curve.clone().into(),
                                     surface_form: from.into(),
                                     ..Default::default()
                                 },
                                 PartialVertex {
+                                    curve: curve.into(),
                                     surface_form: to.into(),
                                     ..Default::default()
                                 },
