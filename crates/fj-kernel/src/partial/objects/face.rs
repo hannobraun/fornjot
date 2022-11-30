@@ -39,12 +39,6 @@ impl PartialFace {
         self.color
     }
 
-    /// Build the [`Face`] with the provided surface
-    pub fn with_surface(mut self, surface: Handle<Surface>) -> Self {
-        self.surface = Some(surface);
-        self
-    }
-
     /// Build the [`Face`] with the provided exterior
     pub fn with_exterior(
         mut self,
