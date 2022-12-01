@@ -11,15 +11,19 @@
 //! API][crate::partial]. This is still a work in progress.
 
 mod objects;
+mod traits;
 
-pub use self::objects::{
-    curve::{PartialCurve, PartialGlobalCurve},
-    cycle::PartialCycle,
-    edge::{PartialGlobalEdge, PartialHalfEdge},
-    face::PartialFace,
-    shell::PartialShell,
-    sketch::PartialSketch,
-    solid::PartialSolid,
-    surface::PartialSurface,
-    vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+pub use self::{
+    objects::{
+        curve::{PartialCurve, PartialGlobalCurve},
+        cycle::PartialCycle,
+        edge::{PartialGlobalEdge, PartialHalfEdge},
+        face::PartialFace,
+        shell::PartialShell,
+        sketch::PartialSketch,
+        solid::PartialSolid,
+        surface::PartialSurface,
+        vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+    },
+    traits::HasPartial,
 };
