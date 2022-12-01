@@ -22,8 +22,25 @@ impl PartialObject for PartialVertex {
     type Full = Vertex;
 }
 
+impl Default for PartialVertex {
+    fn default() -> Self {
+        let mut curve = Partial::<Curve>::new();
+        let mut surface_form = Partial::<SurfaceVertex>::new();
+
+        let surface = Partial::new();
+        curve.write().surface = surface.clone();
+        surface_form.write().surface = surface;
+
+        Self {
+            position: None,
+            curve,
+            surface_form,
+        }
+    }
+}
+
 /// A partial [`SurfaceVertex`]
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -40,7 +57,7 @@ impl PartialObject for PartialSurfaceVertex {
 }
 
 /// A partial [`GlobalVertex`]
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,

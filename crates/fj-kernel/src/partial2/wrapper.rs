@@ -16,6 +16,11 @@ pub struct Partial<T: HasPartial> {
 }
 
 impl<T: HasPartial> Partial<T> {
+    /// Construct a `Partial` with a default inner partial object
+    pub fn new() -> Self {
+        Self::from_partial(T::Partial::default())
+    }
+
     /// Construct a `Partial` from a partial object
     pub fn from_partial(partial: T::Partial) -> Self {
         let inner = Inner::new(InnerObject { partial });
@@ -43,6 +48,12 @@ impl<T: HasPartial> Clone for Partial<T> {
         Self {
             inner: self.inner.clone(),
         }
+    }
+}
+
+impl<T: HasPartial> Default for Partial<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
