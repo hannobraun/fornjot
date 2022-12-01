@@ -45,10 +45,11 @@ pub trait HasPartial {
 /// # Implementation Note
 ///
 /// It would be nicer to require an [`Into`] bound instead of [`From`] (see
-/// documentation of those types for more information). But I think we'd need a
-/// `where` clause on the associated type to specify that, which is unstable. It
-/// should become stable soon though, together with generic associated types:
-/// <https://github.com/rust-lang/rust/issues/44265>
+/// documentation of those types for more information). Unfortunately, this
+/// doesn't seem to be possible without a `where` clause on `HasPartial`, which
+/// significantly reduces the convenience of using that trait, as the `where`
+/// clause needs to be repeated everywhere `HasPartial` is specialized as a
+/// bound.
 pub trait Partial: Default + for<'a> From<&'a Self::Full> {
     /// The type representing the full variant of this object
     type Full;
