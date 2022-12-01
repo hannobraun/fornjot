@@ -1,4 +1,7 @@
-use crate::{objects::Face, partial2::Partial};
+use crate::{
+    objects::{Face, Sketch},
+    partial2::{Partial, PartialObject},
+};
 
 /// A partial [`Sketch`]
 ///
@@ -6,4 +9,8 @@ use crate::{objects::Face, partial2::Partial};
 pub struct PartialSketch {
     /// The faces that make up the sketch
     pub faces: Vec<Partial<Face>>,
+}
+
+impl PartialObject for PartialSketch {
+    type Full = Sketch;
 }

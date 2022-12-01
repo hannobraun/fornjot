@@ -1,8 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalVertex, Surface, SurfaceVertex},
-    partial2::Partial,
+    objects::{Curve, GlobalVertex, Surface, SurfaceVertex, Vertex},
+    partial2::{Partial, PartialObject},
 };
 
 /// A partial [`Vertex`]
@@ -19,6 +19,10 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
+impl PartialObject for PartialVertex {
+    type Full = Vertex;
+}
+
 /// A partial [`SurfaceVertex`]
 ///
 /// [`SurfaceVertex`]: crate::objects::SurfaceVertex
@@ -33,10 +37,18 @@ pub struct PartialSurfaceVertex {
     pub global_form: Partial<GlobalVertex>,
 }
 
+impl PartialObject for PartialSurfaceVertex {
+    type Full = SurfaceVertex;
+}
+
 /// A partial [`GlobalVertex`]
 ///
 /// [`GlobalVertex`]: crate::objects::GlobalVertex
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
+}
+
+impl PartialObject for PartialGlobalVertex {
+    type Full = GlobalVertex;
 }

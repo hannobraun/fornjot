@@ -26,6 +26,6 @@ pub use self::{
         surface::PartialSurface,
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
-    traits::HasPartial,
+    traits::{HasPartial, PartialObject},
     wrapper::Partial,
 };

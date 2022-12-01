@@ -1,6 +1,6 @@
 use crate::{
-    objects::{GlobalCurve, GlobalEdge, GlobalVertex, Vertex},
-    partial2::Partial,
+    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Vertex},
+    partial2::{Partial, PartialObject},
 };
 
 /// A partial [`HalfEdge`]
@@ -14,6 +14,10 @@ pub struct PartialHalfEdge {
     pub global_form: Partial<GlobalEdge>,
 }
 
+impl PartialObject for PartialHalfEdge {
+    type Full = HalfEdge;
+}
+
 /// A partial [`GlobalEdge`]
 ///
 /// [`GlobalEdge`]: crate::objects::GlobalEdge
@@ -23,4 +27,8 @@ pub struct PartialGlobalEdge {
 
     /// The vertices that bound the edge on the curve
     pub vertices: [Partial<GlobalVertex>; 2],
+}
+
+impl PartialObject for PartialGlobalEdge {
+    type Full = GlobalEdge;
 }

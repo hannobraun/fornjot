@@ -1,6 +1,9 @@
 use fj_interop::mesh::Color;
 
-use crate::{objects::Cycle, partial2::Partial};
+use crate::{
+    objects::{Cycle, Face},
+    partial2::{Partial, PartialObject},
+};
 
 /// A partial [`Face`]
 ///
@@ -16,4 +19,8 @@ pub struct PartialFace {
 
     /// The color of the face
     pub color: Option<Color>,
+}
+
+impl PartialObject for PartialFace {
+    type Full = Face;
 }

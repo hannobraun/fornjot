@@ -1,4 +1,7 @@
-use crate::{objects::HalfEdge, partial2::Partial};
+use crate::{
+    objects::{Cycle, HalfEdge},
+    partial2::{Partial, PartialObject},
+};
 
 /// A partial [`Cycle`]
 ///
@@ -6,4 +9,8 @@ use crate::{objects::HalfEdge, partial2::Partial};
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
+}
+
+impl PartialObject for PartialCycle {
+    type Full = Cycle;
 }
