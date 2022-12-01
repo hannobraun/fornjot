@@ -9,3 +9,17 @@
 //!
 //! This API was created as a replacement for the [original partial object
 //! API][crate::partial]. This is still a work in progress.
+
+mod objects;
+
+pub use self::objects::{
+    curve::{PartialCurve, PartialGlobalCurve},
+    cycle::PartialCycle,
+    edge::{PartialGlobalEdge, PartialHalfEdge},
+    face::PartialFace,
+    shell::PartialShell,
+    sketch::PartialSketch,
+    solid::PartialSolid,
+    surface::PartialSurface,
+    vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+};
