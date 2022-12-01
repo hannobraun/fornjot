@@ -213,10 +213,7 @@ mod tests {
     fn approx_line_on_flat_surface() {
         let mut services = Services::new();
 
-        let surface =
-            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
-                .build(&services.objects)
-                .insert(&mut services.objects);
+        let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
@@ -297,10 +294,7 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let mut services = Services::new();
 
-        let surface =
-            PartialSurface::from_axes(GlobalPath::x_axis(), [0., 0., 1.])
-                .build(&services.objects)
-                .insert(&mut services.objects);
+        let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
             surface: Some(surface),
             ..Default::default()
