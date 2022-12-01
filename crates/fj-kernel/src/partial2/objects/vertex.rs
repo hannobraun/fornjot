@@ -6,8 +6,6 @@ use crate::{
 };
 
 /// A partial [`Vertex`]
-///
-/// [`Vertex`]: crate::objects::Vertex
 pub struct PartialVertex {
     /// The position of the vertex on the curve
     pub position: Option<Point<1>>,
@@ -24,8 +22,6 @@ impl PartialObject for PartialVertex {
 }
 
 /// A partial [`SurfaceVertex`]
-///
-/// [`SurfaceVertex`]: crate::objects::SurfaceVertex
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -42,8 +38,6 @@ impl PartialObject for PartialSurfaceVertex {
 }
 
 /// A partial [`GlobalVertex`]
-///
-/// [`GlobalVertex`]: crate::objects::GlobalVertex
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,

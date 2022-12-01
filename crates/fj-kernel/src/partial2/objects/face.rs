@@ -6,8 +6,6 @@ use crate::{
 };
 
 /// A partial [`Face`]
-///
-/// [`Face`]: crate::objects::Face
 pub struct PartialFace {
     /// The cycle that bounds the face on the outside
     pub exterior: Partial<Cycle>,
