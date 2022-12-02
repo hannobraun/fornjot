@@ -475,8 +475,8 @@ mod tests {
     fn global_vertex() {
         let mut services = Services::new();
 
-        let object = GlobalVertex::from_position([0., 0., 0.])
-            .insert(&mut services.objects);
+        let object =
+            GlobalVertex::new([0., 0., 0.]).insert(&mut services.objects);
 
         assert_eq!(0, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
@@ -619,8 +619,8 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let global_vertex = GlobalVertex::from_position([0., 0., 0.])
-            .insert(&mut services.objects);
+        let global_vertex =
+            GlobalVertex::new([0., 0., 0.]).insert(&mut services.objects);
         let surface_vertex =
             SurfaceVertex::new([0., 0.], surface, global_vertex)
                 .insert(&mut services.objects);

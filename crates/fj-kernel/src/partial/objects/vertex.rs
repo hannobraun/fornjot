@@ -169,7 +169,7 @@ impl PartialGlobalVertex {
             .position
             .expect("Can't build a `GlobalVertex` without a position");
 
-        GlobalVertex::from_position(position)
+        GlobalVertex::new(position)
     }
 }
 
