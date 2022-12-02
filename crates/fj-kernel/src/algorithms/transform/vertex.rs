@@ -63,6 +63,6 @@ impl TransformObject for GlobalVertex {
         _: &mut TransformCache,
     ) -> Self {
         let position = transform.transform_point(&self.position());
-        Self::from_position(position)
+        Self::new(position)
     }
 }
