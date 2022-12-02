@@ -13,7 +13,7 @@ use crate::{
         HasPartial, PartialCurve, PartialHalfEdge, PartialSurfaceVertex,
         PartialVertex,
     },
-    partial2::{PartialObject, PartialSurface},
+    partial2::{Partial, PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
 };
@@ -83,9 +83,24 @@ impl ShellBuilder {
                 .half_edges()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
+                    let global_edge = half_edge.global_form();
+                    let global_curve = Partial::from_full_entry_point(
+                        global_edge.curve().clone(),
+                    );
+
                     PartialHalfEdge {
-                        global_form: half_edge.global_form().clone().into(),
-                        ..Default::default()
+                        vertices: array::from_fn(|_| {
+                            PartialVertex {
+                                curve: PartialCurve {
+                                    global_form: global_curve.clone(),
+                                    ..Default::default()
+                                }
+                                .into(),
+                                ..Default::default()
+                            }
+                            .into()
+                        }),
+                        global_form: global_edge.clone().into(),
                     }
                     .update_as_line_segment_from_points(
                         surface.clone(),
@@ -151,11 +166,9 @@ impl ShellBuilder {
                         };
 
                         let curve = PartialCurve {
-                            global_form: side_up_prev
-                                .curve()
-                                .global_form()
-                                .clone()
-                                .into(),
+                            global_form: Partial::from_full_entry_point(
+                                side_up_prev.curve().global_form().clone(),
+                            ),
                             ..Default::default()
                         };
 
@@ -279,8 +292,14 @@ impl ShellBuilder {
                     .collect::<[_; 2]>()
                     .map(|(vertex, surface_form)| PartialVertex {
                         position: Some(vertex.position()),
+                        curve: PartialCurve {
+                            global_form: Partial::from_full_entry_point(
+                                vertex.curve().global_form().clone(),
+                            ),
+                            ..Default::default()
+                        }
+                        .into(),
                         surface_form: surface_form.into(),
-                        ..Default::default()
                     });
 
                 edges.push(

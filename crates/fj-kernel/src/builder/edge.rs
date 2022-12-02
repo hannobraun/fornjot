@@ -9,6 +9,7 @@ use crate::{
         MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
         PartialSurfaceVertex, PartialVertex,
     },
+    partial2::Partial,
     services::{Service, Services},
     storage::Handle,
 };
@@ -225,7 +226,8 @@ impl GlobalEdgeBuilder for PartialGlobalEdge {
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
-        self.curve = curve.global_form().clone().into();
+        self.curve =
+            Partial::from_full_entry_point(curve.global_form().clone());
         self.vertices = vertices
             .clone()
             .map(|vertex| vertex.global_form().clone().into());

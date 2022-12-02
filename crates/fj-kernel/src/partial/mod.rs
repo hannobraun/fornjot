@@ -44,7 +44,7 @@ pub use self::{
     maybe_partial::MaybePartial,
     merge::{MergeWith, Mergeable},
     objects::{
-        curve::{PartialCurve, PartialGlobalCurve},
+        curve::PartialCurve,
         cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         face::PartialFace,

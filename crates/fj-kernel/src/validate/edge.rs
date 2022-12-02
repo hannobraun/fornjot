@@ -203,6 +203,7 @@ mod tests {
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
         partial::HasPartial,
+        partial2::Partial,
         services::Services,
         validate::Validate,
     };
@@ -245,7 +246,9 @@ mod tests {
             .build(&mut services.objects);
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.curve = GlobalCurve.insert(&mut services.objects).into();
+            tmp.curve = Partial::from_full_entry_point(
+                GlobalCurve.insert(&mut services.objects),
+            );
             tmp.build(&mut services.objects)
                 .insert(&mut services.objects)
         });
