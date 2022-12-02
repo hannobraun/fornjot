@@ -1,5 +1,3 @@
-use std::array;
-
 use fj_interop::ext::ArrayExt;
 
 use crate::{
@@ -20,21 +18,14 @@ pub struct PartialHalfEdge {
     pub global_form: Partial<GlobalEdge>,
 }
 
-impl PartialObject for PartialHalfEdge {
-    type Full = HalfEdge;
-
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let vertices = self.vertices.map(|vertex| vertex.build(objects));
-        let global_form = self.global_form.build(objects);
-
-        HalfEdge::new(vertices, global_form)
-    }
-}
-
-impl Default for PartialHalfEdge {
-    fn default() -> Self {
-        let mut vertices = array::from_fn(|_| Partial::<Vertex>::new());
-        let mut global_form = Partial::<GlobalEdge>::new();
+impl PartialHalfEdge {
+    /// Construct an instance of `PartialHalfEdge`
+    pub fn new(
+        vertices: [Option<Partial<Vertex>>; 2],
+        global_form: Option<Partial<GlobalEdge>>,
+    ) -> Self {
+        let mut vertices = vertices.map(Option::unwrap_or_default);
+        let mut global_form = global_form.unwrap_or_default();
 
         let curve = Partial::new();
         for vertex in &mut vertices {
@@ -62,6 +53,23 @@ impl Default for PartialHalfEdge {
     }
 }
 
+impl PartialObject for PartialHalfEdge {
+    type Full = HalfEdge;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let vertices = self.vertices.map(|vertex| vertex.build(objects));
+        let global_form = self.global_form.build(objects);
+
+        HalfEdge::new(vertices, global_form)
+    }
+}
+
+impl Default for PartialHalfEdge {
+    fn default() -> Self {
+        Self::new([None, None], None)
+    }
+}
+
 /// A partial [`GlobalEdge`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
@@ -70,6 +78,19 @@ pub struct PartialGlobalEdge {
 
     /// The vertices that bound the edge on the curve
     pub vertices: [Partial<GlobalVertex>; 2],
+}
+
+impl PartialGlobalEdge {
+    /// Construct an instance of `PartialGlobalEdge`
+    pub fn new(
+        curve: Option<Partial<GlobalCurve>>,
+        vertices: [Option<Partial<GlobalVertex>>; 2],
+    ) -> Self {
+        let curve = curve.unwrap_or_default();
+        let vertices = vertices.map(Option::unwrap_or_default);
+
+        Self { curve, vertices }
+    }
 }
 
 impl PartialObject for PartialGlobalEdge {

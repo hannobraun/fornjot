@@ -19,6 +19,28 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
+impl PartialVertex {
+    /// Construct an instance of `PartialVertex`
+    pub fn new(
+        position: Option<Point<1>>,
+        curve: Option<Partial<Curve>>,
+        surface_form: Option<Partial<SurfaceVertex>>,
+    ) -> Self {
+        let mut curve = curve.unwrap_or_default();
+        let mut surface_form = surface_form.unwrap_or_default();
+
+        let surface = Partial::new();
+        curve.write().surface = surface.clone();
+        surface_form.write().surface = surface;
+
+        Self {
+            position,
+            curve,
+            surface_form,
+        }
+    }
+}
+
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
@@ -42,18 +64,7 @@ impl PartialObject for PartialVertex {
 
 impl Default for PartialVertex {
     fn default() -> Self {
-        let mut curve = Partial::<Curve>::new();
-        let mut surface_form = Partial::<SurfaceVertex>::new();
-
-        let surface = Partial::new();
-        curve.write().surface = surface.clone();
-        surface_form.write().surface = surface;
-
-        Self {
-            position: None,
-            curve,
-            surface_form,
-        }
+        Self::new(None, None, None)
     }
 }
 
@@ -68,6 +79,24 @@ pub struct PartialSurfaceVertex {
 
     /// The global form of the vertex
     pub global_form: Partial<GlobalVertex>,
+}
+
+impl PartialSurfaceVertex {
+    /// Construct an instance of `PartialSurfaceVertex`
+    pub fn new(
+        position: Option<Point<2>>,
+        surface: Option<Partial<Surface>>,
+        global_form: Option<Partial<GlobalVertex>>,
+    ) -> Self {
+        let surface = surface.unwrap_or_default();
+        let global_form = global_form.unwrap_or_default();
+
+        Self {
+            position,
+            surface,
+            global_form,
+        }
+    }
 }
 
 impl PartialObject for PartialSurfaceVertex {
@@ -96,6 +125,13 @@ impl PartialObject for PartialSurfaceVertex {
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
+}
+
+impl PartialGlobalVertex {
+    /// Construct an instance of `PartialGlobalVertex`
+    pub fn new(position: Option<Point<3>>) -> Self {
+        Self { position }
+    }
 }
 
 impl PartialObject for PartialGlobalVertex {

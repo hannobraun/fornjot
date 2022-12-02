@@ -11,6 +11,13 @@ pub struct PartialSolid {
     pub shells: Vec<Partial<Shell>>,
 }
 
+impl PartialSolid {
+    /// Construct an instance of `PartialSolid`
+    pub fn new(shells: Vec<Partial<Shell>>) -> Self {
+        Self { shells }
+    }
+}
+
 impl PartialObject for PartialSolid {
     type Full = Solid;
 

@@ -18,6 +18,24 @@ pub struct PartialCurve {
     pub global_form: Partial<GlobalCurve>,
 }
 
+impl PartialCurve {
+    /// Construct an instance of `PartialCurve`
+    pub fn new(
+        path: Option<SurfacePath>,
+        surface: Option<Partial<Surface>>,
+        global_form: Option<Partial<GlobalCurve>>,
+    ) -> Self {
+        let surface = surface.unwrap_or_default();
+        let global_form = global_form.unwrap_or_default();
+
+        Self {
+            path,
+            surface,
+            global_form,
+        }
+    }
+}
+
 impl PartialObject for PartialCurve {
     type Full = Curve;
 
@@ -33,6 +51,13 @@ impl PartialObject for PartialCurve {
 /// A partial [`GlobalCurve`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalCurve;
+
+impl PartialGlobalCurve {
+    /// Construct an instance of `PartialGlobalCurve`
+    pub fn new() -> Self {
+        Self
+    }
+}
 
 impl PartialObject for PartialGlobalCurve {
     type Full = GlobalCurve;

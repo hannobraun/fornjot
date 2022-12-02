@@ -11,6 +11,13 @@ pub struct PartialCycle {
     pub half_edges: Vec<Partial<HalfEdge>>,
 }
 
+impl PartialCycle {
+    /// Construct an instance of `PartialCycle`
+    pub fn new(half_edges: Vec<Partial<HalfEdge>>) -> Self {
+        Self { half_edges }
+    }
+}
+
 impl PartialObject for PartialCycle {
     type Full = Cycle;
 

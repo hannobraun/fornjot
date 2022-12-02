@@ -11,6 +11,13 @@ pub struct PartialSketch {
     pub faces: Vec<Partial<Face>>,
 }
 
+impl PartialSketch {
+    /// Construct an instance of `PartialSketch`
+    pub fn new(faces: Vec<Partial<Face>>) -> Self {
+        Self { faces }
+    }
+}
+
 impl PartialObject for PartialSketch {
     type Full = Sketch;
 

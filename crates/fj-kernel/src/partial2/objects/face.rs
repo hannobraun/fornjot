@@ -21,6 +21,23 @@ pub struct PartialFace {
     pub color: Option<Color>,
 }
 
+impl PartialFace {
+    /// Construct an instance of `PartialFace`
+    pub fn new(
+        exterior: Option<Partial<Cycle>>,
+        interiors: Vec<Partial<Cycle>>,
+        color: Option<Color>,
+    ) -> Self {
+        let exterior = exterior.unwrap_or_default();
+
+        Self {
+            exterior,
+            interiors,
+            color,
+        }
+    }
+}
+
 impl PartialObject for PartialFace {
     type Full = Face;
 
