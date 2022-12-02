@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial2::{Partial, PartialObject},
+    partial2::{Partial, PartialCurve, PartialObject},
     services::Service,
 };
 
@@ -26,12 +26,22 @@ impl PartialVertex {
         curve: Option<Partial<Curve>>,
         surface_form: Option<Partial<SurfaceVertex>>,
     ) -> Self {
-        let mut curve = curve.unwrap_or_default();
-        let mut surface_form = surface_form.unwrap_or_default();
-
         let surface = Partial::new();
-        curve.write().surface = surface.clone();
-        surface_form.write().surface = surface;
+
+        let curve = curve.unwrap_or_else(|| {
+            Partial::from_partial(PartialCurve::new(
+                None,
+                Some(surface.clone()),
+                None,
+            ))
+        });
+        let surface_form = surface_form.unwrap_or_else(|| {
+            Partial::from_partial(PartialSurfaceVertex::new(
+                None,
+                Some(surface),
+                None,
+            ))
+        });
 
         Self {
             position,

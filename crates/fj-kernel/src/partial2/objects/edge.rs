@@ -2,9 +2,9 @@ use fj_interop::ext::ArrayExt;
 
 use crate::{
     objects::{
-        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial2::{Partial, PartialObject},
+    partial2::{Partial, PartialObject, PartialVertex},
     services::Service,
 };
 
@@ -24,27 +24,32 @@ impl PartialHalfEdge {
         vertices: [Option<Partial<Vertex>>; 2],
         global_form: Option<Partial<GlobalEdge>>,
     ) -> Self {
-        let mut vertices = vertices.map(Option::unwrap_or_default);
-        let mut global_form = global_form.unwrap_or_default();
+        let curve = Partial::<Curve>::new();
 
-        let curve = Partial::new();
-        for vertex in &mut vertices {
-            vertex.write().curve = curve.clone();
-        }
+        let vertices = vertices.map(|vertex| {
+            vertex.unwrap_or_else(|| {
+                Partial::from_partial(PartialVertex::new(
+                    None,
+                    Some(curve.clone()),
+                    None,
+                ))
+            })
+        });
 
         let global_curve = curve.read().global_form.clone();
         let global_vertices =
             vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
                 let surface_vertex = vertex.read().surface_form.clone();
                 let global_vertex = surface_vertex.read().global_form.clone();
-                global_vertex
+                Some(global_vertex)
             });
 
-        {
-            let mut global_form = global_form.write();
-            global_form.curve = global_curve;
-            global_form.vertices = global_vertices;
-        }
+        let global_form = global_form.unwrap_or_else(|| {
+            Partial::from_partial(PartialGlobalEdge::new(
+                Some(global_curve),
+                global_vertices,
+            ))
+        });
 
         Self {
             vertices,
