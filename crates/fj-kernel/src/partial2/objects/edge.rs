@@ -3,8 +3,11 @@ use std::array;
 use fj_interop::ext::ArrayExt;
 
 use crate::{
-    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Vertex},
+    objects::{
+        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
+    },
     partial2::{Partial, PartialObject},
+    services::Service,
 };
 
 /// A partial [`HalfEdge`]
@@ -19,6 +22,13 @@ pub struct PartialHalfEdge {
 
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let vertices = self.vertices.map(|vertex| vertex.build(objects));
+        let global_form = self.global_form.build(objects);
+
+        HalfEdge::new(vertices, global_form)
+    }
 }
 
 impl Default for PartialHalfEdge {
@@ -64,4 +74,11 @@ pub struct PartialGlobalEdge {
 
 impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let curve = self.curve.build(objects);
+        let vertices = self.vertices.map(|vertex| vertex.build(objects));
+
+        GlobalEdge::new(curve, vertices)
+    }
 }

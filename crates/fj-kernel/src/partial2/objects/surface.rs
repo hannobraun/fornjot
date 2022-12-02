@@ -1,6 +1,8 @@
 use crate::{
-    geometry::surface::SurfaceGeometry, objects::Surface,
+    geometry::surface::SurfaceGeometry,
+    objects::{Objects, Surface},
     partial2::PartialObject,
+    services::Service,
 };
 
 /// A partial [`Surface`]
@@ -12,4 +14,12 @@ pub struct PartialSurface {
 
 impl PartialObject for PartialSurface {
     type Full = Surface;
+
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
+        let geometry = self
+            .geometry
+            .expect("Can't build `Surface` without geometry");
+
+        Surface::new(geometry)
+    }
 }

@@ -1,6 +1,7 @@
 use crate::{
-    objects::{Shell, Solid},
+    objects::{Objects, Shell, Solid},
     partial2::{Partial, PartialObject},
+    services::Service,
 };
 
 /// A partial [`Solid`]
@@ -12,4 +13,9 @@ pub struct PartialSolid {
 
 impl PartialObject for PartialSolid {
     type Full = Solid;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let shells = self.shells.into_iter().map(|shell| shell.build(objects));
+        Solid::new(shells)
+    }
 }

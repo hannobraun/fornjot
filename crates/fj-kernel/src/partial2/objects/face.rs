@@ -1,8 +1,9 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{Cycle, Face},
+    objects::{Cycle, Face, Objects},
     partial2::{Partial, PartialObject},
+    services::Service,
 };
 
 /// A partial [`Face`]
@@ -22,4 +23,13 @@ pub struct PartialFace {
 
 impl PartialObject for PartialFace {
     type Full = Face;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let exterior = self.exterior.build(objects);
+        let interiors =
+            self.interiors.into_iter().map(|cycle| cycle.build(objects));
+        let color = self.color.unwrap_or_default();
+
+        Face::new(exterior, interiors, color)
+    }
 }

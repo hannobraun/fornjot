@@ -5,6 +5,11 @@ use std::{
 
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 
+use crate::{
+    insert::Insert, objects::Objects, partial2::traits::PartialObject,
+    services::Service, storage::Handle,
+};
+
 use super::HasPartial;
 
 /// Wrapper around a partial object
@@ -23,7 +28,10 @@ impl<T: HasPartial> Partial<T> {
 
     /// Construct a `Partial` from a partial object
     pub fn from_partial(partial: T::Partial) -> Self {
-        let inner = Inner::new(InnerObject { partial });
+        let inner = Inner::new(InnerObject {
+            partial,
+            full: None,
+        });
         Self { inner }
     }
 
@@ -40,6 +48,27 @@ impl<T: HasPartial> Partial<T> {
     /// call is still borrowed.
     pub fn write(&mut self) -> impl DerefMut<Target = T::Partial> + '_ {
         RwLockWriteGuard::map(self.inner.write(), |inner| &mut inner.partial)
+    }
+
+    /// Build a full object from this partial one
+    ///
+    /// # Panics
+    ///
+    /// Panics, if a return value of [`Self::write`] is still borrowed.
+    pub fn build(self, objects: &mut Service<Objects>) -> Handle<T>
+    where
+        T: Insert,
+    {
+        let mut inner = self.inner.write();
+
+        // If another instance of this `Partial` has already been built, re-use
+        // the resulting full object.
+        let partial = inner.partial.clone();
+        let full = inner
+            .full
+            .get_or_insert_with(|| partial.build(objects).insert(objects));
+
+        full.clone()
     }
 }
 
@@ -83,4 +112,5 @@ impl<T: HasPartial> Clone for Inner<T> {
 
 struct InnerObject<T: HasPartial> {
     partial: T::Partial,
+    full: Option<Handle<T>>,
 }

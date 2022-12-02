@@ -1,6 +1,7 @@
 use crate::{
-    objects::{Face, Sketch},
+    objects::{Face, Objects, Sketch},
     partial2::{Partial, PartialObject},
+    services::Service,
 };
 
 /// A partial [`Sketch`]
@@ -12,4 +13,9 @@ pub struct PartialSketch {
 
 impl PartialObject for PartialSketch {
     type Full = Sketch;
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let faces = self.faces.into_iter().map(|face| face.build(objects));
+        Sketch::new(faces)
+    }
 }
