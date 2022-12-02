@@ -12,6 +12,7 @@
 
 mod objects;
 mod traits;
+mod wrapper;
 
 pub use self::{
     objects::{
@@ -26,4 +27,5 @@ pub use self::{
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
     traits::HasPartial,
+    wrapper::Partial,
 };
