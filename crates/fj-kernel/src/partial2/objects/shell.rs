@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Shell`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialShell {
     /// The faces that make up the shell
     pub faces: Vec<Partial<Face>>,

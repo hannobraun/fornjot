@@ -11,7 +11,7 @@ use crate::{
 };
 
 /// A partial [`HalfEdge`]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The vertices that bound the half-edge on the curve
     pub vertices: [Partial<Vertex>; 2],
@@ -63,7 +63,7 @@ impl Default for PartialHalfEdge {
 }
 
 /// A partial [`GlobalEdge`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
     /// The curve that defines the edge's geometry
     pub curve: Partial<GlobalCurve>,

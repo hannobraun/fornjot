@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Sketch`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSketch {
     /// The faces that make up the sketch
     pub faces: Vec<Partial<Face>>,

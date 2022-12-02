@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A partial [`Face`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialFace {
     /// The cycle that bounds the face on the outside
     pub exterior: Partial<Cycle>,

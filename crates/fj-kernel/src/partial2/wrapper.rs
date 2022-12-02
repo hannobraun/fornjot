@@ -16,6 +16,7 @@ use super::HasPartial;
 ///
 /// Controls access to the partial object. Can be cloned, to access the same
 /// partial object from multiple locations.
+#[derive(Debug)]
 pub struct Partial<T: HasPartial> {
     inner: Inner<T>,
 }
@@ -86,6 +87,7 @@ impl<T: HasPartial> Default for Partial<T> {
     }
 }
 
+#[derive(Debug)]
 struct Inner<T: HasPartial>(Arc<RwLock<InnerObject<T>>>);
 
 impl<T: HasPartial> Inner<T> {
@@ -110,6 +112,7 @@ impl<T: HasPartial> Clone for Inner<T> {
     }
 }
 
+#[derive(Debug)]
 struct InnerObject<T: HasPartial> {
     partial: T::Partial,
     full: Option<Handle<T>>,

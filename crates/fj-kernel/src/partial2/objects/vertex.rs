@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A partial [`Vertex`]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct PartialVertex {
     /// The position of the vertex on the curve
     pub position: Option<Point<1>>,
@@ -58,7 +58,7 @@ impl Default for PartialVertex {
 }
 
 /// A partial [`SurfaceVertex`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -92,7 +92,7 @@ impl PartialObject for PartialSurfaceVertex {
 }
 
 /// A partial [`GlobalVertex`]
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,

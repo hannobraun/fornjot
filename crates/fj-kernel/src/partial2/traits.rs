@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use crate::{objects::Objects, services::Service};
 
 /// Implemented for objects that a partial object variant exists for
@@ -7,7 +9,7 @@ pub trait HasPartial {
 }
 
 /// Implemented for partial objects
-pub trait PartialObject: Clone + Default {
+pub trait PartialObject: Clone + Debug + Default {
     /// The type representing the full object
     type Full: HasPartial<Partial = Self>;
 
