@@ -4,6 +4,7 @@ use crate::{
 };
 
 /// A partial [`Cycle`]
+#[derive(Clone)]
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,

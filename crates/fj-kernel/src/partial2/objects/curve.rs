@@ -5,6 +5,7 @@ use crate::{
 };
 
 /// A partial [`Curve`]
+#[derive(Clone)]
 pub struct PartialCurve {
     /// The path that defines the curve
     pub path: Option<SurfacePath>,
@@ -21,6 +22,7 @@ impl PartialObject for PartialCurve {
 }
 
 /// A partial [`GlobalCurve`]
+#[derive(Clone)]
 pub struct PartialGlobalCurve;
 
 impl PartialObject for PartialGlobalCurve {
