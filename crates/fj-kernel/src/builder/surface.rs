@@ -2,7 +2,7 @@ use fj_math::{Line, Point, Vector};
 
 use crate::{
     geometry::{path::GlobalPath, surface::SurfaceGeometry},
-    partial::PartialSurface,
+    partial2::PartialSurface,
 };
 
 /// Builder API for [`PartialSurface`]

@@ -10,9 +10,10 @@ use crate::{
     insert::Insert,
     objects::{Cycle, Face, FaceSet, Objects, Shell},
     partial::{
-        HasPartial, PartialCurve, PartialHalfEdge, PartialSurface,
-        PartialSurfaceVertex, PartialVertex,
+        HasPartial, PartialCurve, PartialHalfEdge, PartialSurfaceVertex,
+        PartialVertex,
     },
+    partial2::{PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
 };

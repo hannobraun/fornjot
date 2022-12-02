@@ -203,7 +203,8 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        partial::{PartialCurve, PartialSurface},
+        partial::PartialCurve,
+        partial2::{PartialObject, PartialSurface},
         services::Services,
     };
 
@@ -237,7 +238,7 @@ mod tests {
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
         )
-        .build(&services.objects)
+        .build(&mut services.objects)
         .insert(&mut services.objects);
         let mut curve = PartialCurve {
             surface: Some(surface),
@@ -260,7 +261,7 @@ mod tests {
 
         let path = GlobalPath::circle_from_radius(1.);
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
-            .build(&services.objects)
+            .build(&mut services.objects)
             .insert(&mut services.objects);
         let mut curve = PartialCurve {
             surface: Some(surface.clone()),
