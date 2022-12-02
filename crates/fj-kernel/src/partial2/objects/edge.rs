@@ -4,7 +4,7 @@ use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial2::{Partial, PartialObject, PartialVertex},
+    partial2::{FullToPartialCache, Partial, PartialObject, PartialVertex},
     services::Service,
 };
 
@@ -61,6 +61,19 @@ impl PartialHalfEdge {
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
+    fn from_full(
+        half_edge: &Self::Full,
+        cache: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(
+            half_edge
+                .vertices()
+                .clone()
+                .map(|vertex| Some(Partial::from_full(vertex, cache))),
+            Some(Partial::from_full(half_edge.global_form().clone(), cache)),
+        )
+    }
+
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
         let global_form = self.global_form.build(objects);
@@ -100,6 +113,19 @@ impl PartialGlobalEdge {
 
 impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
+
+    fn from_full(
+        global_edge: &Self::Full,
+        cache: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(
+            Some(Partial::from_full(global_edge.curve().clone(), cache)),
+            global_edge
+                .vertices()
+                .access_in_normalized_order()
+                .map(|vertex| Some(Partial::from_full(vertex, cache))),
+        )
+    }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let curve = self.curve.build(objects);

@@ -1,7 +1,7 @@
 use crate::{
     geometry::surface::SurfaceGeometry,
     objects::{Objects, Surface},
-    partial2::PartialObject,
+    partial2::{FullToPartialCache, PartialObject},
     services::Service,
 };
 
@@ -21,6 +21,10 @@ impl PartialSurface {
 
 impl PartialObject for PartialSurface {
     type Full = Surface;
+
+    fn from_full(surface: &Self::Full, _: &mut FullToPartialCache) -> Self {
+        Self::new(Some(surface.geometry()))
+    }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
         let geometry = self

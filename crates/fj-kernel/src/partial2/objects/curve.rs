@@ -1,7 +1,7 @@
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial2::{Partial, PartialObject},
+    partial2::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -39,6 +39,14 @@ impl PartialCurve {
 impl PartialObject for PartialCurve {
     type Full = Curve;
 
+    fn from_full(curve: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            Some(curve.path()),
+            Some(Partial::from_full(curve.surface().clone(), cache)),
+            Some(Partial::from_full(curve.global_form().clone(), cache)),
+        )
+    }
+
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let path = self.path.expect("Need path to build curve");
         let surface = self.surface.build(objects);
@@ -67,6 +75,10 @@ impl PartialGlobalCurve {
 
 impl PartialObject for PartialGlobalCurve {
     type Full = GlobalCurve;
+
+    fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
+        Self::new()
+    }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
         GlobalCurve

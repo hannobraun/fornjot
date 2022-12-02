@@ -1,6 +1,6 @@
 use crate::{
     objects::{Objects, Shell, Solid},
-    partial2::{Partial, PartialObject},
+    partial2::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -20,6 +20,15 @@ impl PartialSolid {
 
 impl PartialObject for PartialSolid {
     type Full = Solid;
+
+    fn from_full(solid: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            solid
+                .shells()
+                .map(|shell| Partial::from_full(shell.clone(), cache))
+                .collect(),
+        )
+    }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let shells = self.shells.into_iter().map(|shell| shell.build(objects));

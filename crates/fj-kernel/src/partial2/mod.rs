@@ -27,5 +27,5 @@ pub use self::{
         vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
     traits::{HasPartial, PartialObject},
-    wrapper::Partial,
+    wrapper::{FullToPartialCache, Partial},
 };

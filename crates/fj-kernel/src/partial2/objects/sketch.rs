@@ -1,6 +1,6 @@
 use crate::{
     objects::{Face, Objects, Sketch},
-    partial2::{Partial, PartialObject},
+    partial2::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -20,6 +20,16 @@ impl PartialSketch {
 
 impl PartialObject for PartialSketch {
     type Full = Sketch;
+
+    fn from_full(sketch: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            sketch
+                .faces()
+                .into_iter()
+                .map(|face| Partial::from_full(face.clone(), cache))
+                .collect(),
+        )
+    }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let faces = self.faces.into_iter().map(|face| face.build(objects));

@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial2::{Partial, PartialCurve, PartialObject},
+    partial2::{FullToPartialCache, Partial, PartialCurve, PartialObject},
     services::Service,
 };
 
@@ -53,6 +53,14 @@ impl PartialVertex {
 
 impl PartialObject for PartialVertex {
     type Full = Vertex;
+
+    fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            Some(vertex.position()),
+            Some(Partial::from_full(vertex.curve().clone(), cache)),
+            Some(Partial::from_full(vertex.surface_form().clone(), cache)),
+        )
+    }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
         let position = self
@@ -112,6 +120,20 @@ impl PartialSurfaceVertex {
 impl PartialObject for PartialSurfaceVertex {
     type Full = SurfaceVertex;
 
+    fn from_full(
+        surface_vertex: &Self::Full,
+        cache: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(
+            Some(surface_vertex.position()),
+            Some(Partial::from_full(surface_vertex.surface().clone(), cache)),
+            Some(Partial::from_full(
+                surface_vertex.global_form().clone(),
+                cache,
+            )),
+        )
+    }
+
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
         let position = self
             .position
@@ -152,6 +174,13 @@ impl PartialGlobalVertex {
 
 impl PartialObject for PartialGlobalVertex {
     type Full = GlobalVertex;
+
+    fn from_full(
+        global_vertex: &Self::Full,
+        _: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(Some(global_vertex.position()))
+    }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
         let position = self

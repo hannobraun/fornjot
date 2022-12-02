@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 
 use crate::{
     objects::{Cycle, Face, Objects},
-    partial2::{Partial, PartialObject},
+    partial2::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -40,6 +40,16 @@ impl PartialFace {
 
 impl PartialObject for PartialFace {
     type Full = Face;
+
+    fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            Some(Partial::from_full(face.exterior().clone(), cache)),
+            face.interiors()
+                .map(|cycle| Partial::from_full(cycle.clone(), cache))
+                .collect(),
+            Some(face.color()),
+        )
+    }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let exterior = self.exterior.build(objects);
