@@ -71,7 +71,7 @@ impl Default for PartialHalfEdge {
 }
 
 /// A partial [`GlobalEdge`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialGlobalEdge {
     /// The curve that defines the edge's geometry
     pub curve: Partial<GlobalCurve>,
@@ -101,5 +101,11 @@ impl PartialObject for PartialGlobalEdge {
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
 
         GlobalEdge::new(curve, vertices)
+    }
+}
+
+impl Default for PartialGlobalEdge {
+    fn default() -> Self {
+        Self::new(None, [None, None])
     }
 }

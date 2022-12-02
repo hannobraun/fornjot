@@ -69,7 +69,7 @@ impl Default for PartialVertex {
 }
 
 /// A partial [`SurfaceVertex`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -120,8 +120,14 @@ impl PartialObject for PartialSurfaceVertex {
     }
 }
 
+impl Default for PartialSurfaceVertex {
+    fn default() -> Self {
+        Self::new(None, None, None)
+    }
+}
+
 /// A partial [`GlobalVertex`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
@@ -143,5 +149,11 @@ impl PartialObject for PartialGlobalVertex {
             .expect("Can't build `GlobalVertex` without position");
 
         GlobalVertex::new(position)
+    }
+}
+
+impl Default for PartialGlobalVertex {
+    fn default() -> Self {
+        Self::new(None)
     }
 }
