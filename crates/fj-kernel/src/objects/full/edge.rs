@@ -110,10 +110,6 @@ impl GlobalEdge {
     }
 
     /// Access the curve that defines the edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> &Handle<GlobalCurve> {
         &self.curve
     }

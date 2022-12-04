@@ -21,9 +21,6 @@ impl Cycle {
     /// # Panics
     ///
     /// Panics, if `half_edges` does not yield at least one half-edge.
-    ///
-    /// Panic, if the end of each half-edge does not connect to the beginning of
-    /// the next one.
     pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 

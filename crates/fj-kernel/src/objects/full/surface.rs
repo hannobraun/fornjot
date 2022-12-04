@@ -7,7 +7,7 @@ pub struct Surface {
 }
 
 impl Surface {
-    /// Construct a `Surface` from two paths that define its coordinate system
+    /// Construct an instance of `Surface`
     pub fn new(geometry: SurfaceGeometry) -> Self {
         Self { geometry }
     }
