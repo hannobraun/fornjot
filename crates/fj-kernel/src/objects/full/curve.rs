@@ -27,17 +27,17 @@ impl Curve {
         }
     }
 
-    /// Access the path that defines this curve
+    /// Access the path that defines the curve
     pub fn path(&self) -> SurfacePath {
         self.path
     }
 
-    /// Access the surface that this curve is defined in
+    /// Access the surface that the curve is defined in
     pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 
-    /// Access the global form of this curve
+    /// Access the global form of the curve
     pub fn global_form(&self) -> &Handle<GlobalCurve> {
         &self.global_form
     }

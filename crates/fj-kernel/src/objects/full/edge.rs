@@ -14,7 +14,7 @@ pub struct HalfEdge {
 }
 
 impl HalfEdge {
-    /// Create a new instance of `HalfEdge`
+    /// Create an instance of `HalfEdge`
     pub fn new(
         vertices: [Handle<Vertex>; 2],
         global_form: Handle<GlobalEdge>,
@@ -53,7 +53,7 @@ impl HalfEdge {
         self.curve().surface()
     }
 
-    /// Access the global form of this half-edge
+    /// Access the global form of the half-edge
     pub fn global_form(&self) -> &Handle<GlobalEdge> {
         &self.global_form
     }
@@ -110,10 +110,6 @@ impl GlobalEdge {
     }
 
     /// Access the curve that defines the edge's geometry
-    ///
-    /// The edge can be a segment of the curve that is bounded by two vertices,
-    /// or if the curve is continuous (i.e. connects to itself), the edge could
-    /// be defined by the whole curve, and have no bounding vertices.
     pub fn curve(&self) -> &Handle<GlobalCurve> {
         &self.curve
     }

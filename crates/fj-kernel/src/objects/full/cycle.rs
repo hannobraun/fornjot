@@ -16,14 +16,11 @@ pub struct Cycle {
 }
 
 impl Cycle {
-    /// Create a new cycle
+    /// Create an instance of `Cycle`
     ///
     /// # Panics
     ///
     /// Panics, if `half_edges` does not yield at least one half-edge.
-    ///
-    /// Panic, if the end of each half-edge does not connect to the beginning of
-    /// the next one.
     pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
@@ -39,7 +36,7 @@ impl Cycle {
         Self { half_edges }
     }
 
-    /// Access the surface that this cycle is in
+    /// Access the surface that the cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
         if let Some(half_edge) = self.half_edges.first() {
             return half_edge.surface();

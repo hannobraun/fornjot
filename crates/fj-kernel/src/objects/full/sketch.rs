@@ -30,7 +30,7 @@ impl Sketch {
         }
     }
 
-    /// Access the sketch's faces
+    /// Access the faces of the sketch
     pub fn faces(&self) -> &FaceSet {
         &self.faces
     }
