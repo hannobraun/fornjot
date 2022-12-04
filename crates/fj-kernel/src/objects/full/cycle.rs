@@ -16,7 +16,7 @@ pub struct Cycle {
 }
 
 impl Cycle {
-    /// Create a new cycle
+    /// Create an instance of `Cycle`
     ///
     /// # Panics
     ///
@@ -36,7 +36,7 @@ impl Cycle {
         Self { half_edges }
     }
 
-    /// Access the surface that this cycle is in
+    /// Access the surface that the cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
         if let Some(half_edge) = self.half_edges.first() {
             return half_edge.surface();

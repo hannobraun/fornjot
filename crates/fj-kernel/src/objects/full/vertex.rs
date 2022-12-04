@@ -39,7 +39,7 @@ impl Vertex {
         self.position
     }
 
-    /// Access the curve that the vertex is defined on
+    /// Access the curve that the vertex is defined in
     pub fn curve(&self) -> &Handle<Curve> {
         &self.curve
     }
@@ -113,12 +113,12 @@ impl SurfaceVertex {
         self.position
     }
 
-    /// Access the surface that the vertex is defined on
+    /// Access the surface that the vertex is defined in
     pub fn surface(&self) -> &Handle<Surface> {
         &self.surface
     }
 
-    /// Access the global form of this vertex
+    /// Access the global form of the vertex
     pub fn global_form(&self) -> &Handle<GlobalVertex> {
         &self.global_form
     }

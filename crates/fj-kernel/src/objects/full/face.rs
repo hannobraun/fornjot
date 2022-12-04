@@ -40,7 +40,7 @@ pub struct Face {
 }
 
 impl Face {
-    /// Construct a new instance of `Face`
+    /// Construct an instance of `Face`
     pub fn new(
         exterior: Handle<Cycle>,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
@@ -55,7 +55,7 @@ impl Face {
         }
     }
 
-    /// Access this face's surface
+    /// Access the surface of the face
     pub fn surface(&self) -> &Handle<Surface> {
         self.exterior().surface()
     }
@@ -72,7 +72,7 @@ impl Face {
         self.interiors.iter()
     }
 
-    /// Access all cycles of this face
+    /// Access all cycles of the face
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
         [self.exterior()].into_iter().chain(self.interiors())
     }

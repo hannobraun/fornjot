@@ -37,7 +37,7 @@ impl Solid {
         self.shells.iter()
     }
 
-    /// Find the given face in this solid
+    /// Find the given face in the solid
     pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
         for shell in self.shells() {
             if let Some(face) = shell.find_face(face) {
