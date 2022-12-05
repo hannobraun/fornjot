@@ -6,7 +6,6 @@ pub struct Rotation;
 
 impl Rotation {
     pub fn apply(
-        &self,
         angle_x: f64,
         angle_y: f64,
         focus_point: FocusPoint,

@@ -88,11 +88,7 @@ impl Viewer {
     /// Handle an input event
     pub fn handle_input_event(&mut self, event: InputEvent) {
         if let Some(focus_point) = self.focus_point {
-            self.input_handler.handle_event(
-                event,
-                focus_point,
-                &mut self.camera,
-            );
+            InputHandler::handle_event(event, focus_point, &mut self.camera);
         }
     }
 

@@ -38,7 +38,7 @@ impl Release {
                 "Could not find a pull request with hash {sha} and label \
                 {label}",
             );
-            return self.miss();
+            return Self::miss();
         }
 
         let commit: String = cmd_lib::run_fun!(git log -n 1 "${sha}")?;
@@ -47,18 +47,18 @@ impl Release {
         let version = find_version_in_str(&commit)?;
 
         match version {
-            Some(v) => self.hit(&v.to_string()),
+            Some(v) => Self::hit(&v.to_string()),
             None => {
                 log::info!(
                     "Commit message is missing version number:\n\
                     {commit}",
                 );
-                self.miss()
+                Self::miss()
             }
         }
     }
 
-    fn hit(&self, tag: &str) -> anyhow::Result<()> {
+    fn hit(tag: &str) -> anyhow::Result<()> {
         let tag = format!("v{tag}");
         log::info!("detected release of {tag}");
 
@@ -70,7 +70,7 @@ impl Release {
         Ok(())
     }
 
-    fn miss(&self) -> anyhow::Result<()> {
+    fn miss() -> anyhow::Result<()> {
         log::info!("no release detected");
         Actions::set_output([(Outputs::ReleaseDetected, "false")])?;
         Ok(())

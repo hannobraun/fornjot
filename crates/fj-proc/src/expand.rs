@@ -7,7 +7,7 @@ use crate::parse::{
 };
 
 impl Initializer {
-    fn register(&self) -> TokenStream {
+    fn register() -> TokenStream {
         quote! {
             const _: () = {
                 fj::register_model!(|host| {
@@ -30,13 +30,13 @@ impl ToTokens for Initializer {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let Self { model } = self;
 
-        tokens.extend(self.register());
+        tokens.extend(Self::register());
         model.to_tokens(tokens);
     }
 }
 
 impl Model {
-    fn definition(&self) -> TokenStream {
+    fn definition() -> TokenStream {
         quote! { struct Model; }
     }
 
@@ -54,7 +54,7 @@ impl Model {
 
 impl ToTokens for Model {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        tokens.extend(self.definition());
+        tokens.extend(Self::definition());
         tokens.extend(self.trait_implementation());
     }
 }

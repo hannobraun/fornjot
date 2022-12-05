@@ -6,7 +6,6 @@ pub struct Zoom;
 
 impl Zoom {
     pub fn apply(
-        &mut self,
         zoom_delta: f64,
         focus_point: FocusPoint,
         camera: &mut Camera,
