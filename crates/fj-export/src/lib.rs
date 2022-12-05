@@ -43,7 +43,7 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
 }
 
 fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
-    let vertices = mesh.vertices().map(|vertex| vertex.into()).collect();
+    let vertices = mesh.vertices().map(Into::into).collect();
 
     let indices: Vec<_> = mesh.indices().collect();
     let triangles = indices

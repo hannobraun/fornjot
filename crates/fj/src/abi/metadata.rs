@@ -19,7 +19,7 @@ impl From<ModelMetadata> for crate::models::ModelMetadata {
         Self {
             name: name.into(),
             description: description.map(Into::into).into(),
-            arguments: arguments.iter().cloned().map(|a| a.into()).collect(),
+            arguments: arguments.iter().cloned().map(Into::into).collect(),
         }
     }
 }

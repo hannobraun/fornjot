@@ -58,7 +58,7 @@ impl<const D: usize> Triangle<D> {
 impl Triangle<2> {
     /// Returns the direction of the line through the points of the triangle.
     pub fn winding(&self) -> Winding {
-        let [pa, pb, pc] = self.points.map(|point| point.into());
+        let [pa, pb, pc] = self.points.map(Into::into);
         let orient2d = robust_predicates::orient2d(&pa, &pb, &pc);
 
         if orient2d < 0. {
@@ -96,7 +96,7 @@ impl Triangle<3> {
 
         self.to_parry()
             .cast_local_ray(&ray, max_toi, solid)
-            .map(|f| f.into())
+            .map(Into::into)
     }
 
     /// Compute the triangle's normal
