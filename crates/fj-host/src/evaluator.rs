@@ -49,8 +49,8 @@ impl Evaluator {
         });
 
         Self {
-            event_rx,
             trigger_tx,
+            event_rx,
         }
     }
 
