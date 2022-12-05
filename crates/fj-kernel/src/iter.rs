@@ -299,7 +299,7 @@ where
     fn referenced_objects(&'r self) -> Vec<&'r dyn ObjectIters> {
         let mut objects = Vec::new();
 
-        for object in self.into_iter() {
+        for object in self {
             objects.push(object as &dyn ObjectIters);
         }
 
