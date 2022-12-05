@@ -69,8 +69,7 @@ impl MergeWith for PartialVertex {
 
 impl Replace<Surface> for PartialVertex {
     fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.curve.replace(surface.clone());
-        self.surface_form.replace(surface);
+        self.curve.replace(surface);
         self
     }
 }
@@ -133,13 +132,6 @@ impl MergeWith for PartialSurfaceVertex {
             surface: self.surface.merge_with(other.surface),
             global_form: self.global_form.merge_with(other.global_form),
         }
-    }
-}
-
-impl Replace<Surface> for PartialSurfaceVertex {
-    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.surface = Some(surface);
-        self
     }
 }
 
