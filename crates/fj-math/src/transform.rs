@@ -89,12 +89,12 @@ impl Transform {
     }
 
     /// Inverse transform
-    pub fn inverse(&self) -> Transform {
+    pub fn inverse(&self) -> Self {
         Self(self.0.inverse())
     }
 
     /// Transpose transform
-    pub fn transpose(&self) -> Transform {
+    pub fn transpose(&self) -> Self {
         Self(nalgebra::Transform::from_matrix_unchecked(
             self.0.to_homogeneous().transpose(),
         ))
@@ -133,14 +133,14 @@ impl Transform {
     }
 
     /// Extract the rotation component of this transform
-    pub fn extract_rotation(&self) -> Transform {
+    pub fn extract_rotation(&self) -> Self {
         Self(nalgebra::Transform::from_matrix_unchecked(
             self.0.matrix().fixed_resize::<3, 3>(0.).to_homogeneous(),
         ))
     }
 
     /// Extract the translation component of this transform
-    pub fn extract_translation(&self) -> Transform {
+    pub fn extract_translation(&self) -> Self {
         *self * self.extract_rotation().inverse()
     }
 }

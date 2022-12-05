@@ -257,7 +257,7 @@ impl FromStr for Crate {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Crate {
+        Ok(Self {
             path: PathBuf::from(s),
         })
     }

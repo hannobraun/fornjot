@@ -113,19 +113,19 @@ impl<const D: usize> Vector<D> {
 impl Vector<1> {
     /// Construct a `Vector` that represents the t-axis
     pub fn unit_t() -> Self {
-        Vector::from([1.])
+        Self::from([1.])
     }
 }
 
 impl Vector<2> {
     /// Construct a `Vector` that represents the u-axis
     pub fn unit_u() -> Self {
-        Vector::from([1., 0.])
+        Self::from([1., 0.])
     }
 
     /// Construct a `Vector` that represents the v-axis
     pub fn unit_v() -> Self {
-        Vector::from([0., 1.])
+        Self::from([0., 1.])
     }
 
     /// Compute the 2D cross product with another vector
@@ -143,17 +143,17 @@ impl Vector<2> {
 impl Vector<3> {
     /// Construct a `Vector` that represents the x-axis
     pub fn unit_x() -> Self {
-        Vector::from([1., 0., 0.])
+        Self::from([1., 0., 0.])
     }
 
     /// Construct a `Vector` that represents the y-axis
     pub fn unit_y() -> Self {
-        Vector::from([0., 1., 0.])
+        Self::from([0., 1., 0.])
     }
 
     /// Construct a `Vector` that represents the z-axis
     pub fn unit_z() -> Self {
-        Vector::from([0., 0., 1.])
+        Self::from([0., 0., 1.])
     }
 
     /// Compute the cross product with another vector

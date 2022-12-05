@@ -39,10 +39,7 @@ impl SurfacePath {
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        SurfacePath::Circle(Circle::from_center_and_radius(
-            Point::origin(),
-            radius,
-        ))
+        Self::Circle(Circle::from_center_and_radius(Point::origin(), radius))
     }
 
     /// Construct a line from two points
@@ -101,10 +98,7 @@ impl GlobalPath {
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
         let radius = radius.into();
 
-        GlobalPath::Circle(Circle::from_center_and_radius(
-            Point::origin(),
-            radius,
-        ))
+        Self::Circle(Circle::from_center_and_radius(Point::origin(), radius))
     }
 
     /// Construct a line from two points

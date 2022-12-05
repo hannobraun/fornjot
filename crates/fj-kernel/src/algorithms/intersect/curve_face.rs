@@ -58,7 +58,7 @@ impl CurveFaceIntersection {
             .map(|&[start, end]| CurveFaceIntersectionInterval { start, end })
             .collect();
 
-        CurveFaceIntersection { intervals }
+        Self { intervals }
     }
 
     /// Merge this intersection list with another
@@ -143,7 +143,7 @@ where
 {
     fn from(interval: [P; 2]) -> Self {
         let [start, end] = interval.map(Into::into);
-        CurveFaceIntersectionInterval { start, end }
+        Self { start, end }
     }
 }
 

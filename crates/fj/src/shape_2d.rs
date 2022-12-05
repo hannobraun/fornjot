@@ -16,8 +16,8 @@ impl Shape2d {
     /// Get the rendering color of the larger object in RGBA
     pub fn color(&self) -> [u8; 4] {
         match &self {
-            Shape2d::Sketch(s) => s.color(),
-            Shape2d::Difference(d) => d.color(),
+            Self::Sketch(s) => s.color(),
+            Self::Difference(d) => d.color(),
         }
     }
 }
@@ -142,7 +142,7 @@ impl From<Sketch> for Shape {
 
 impl From<Sketch> for Shape2d {
     fn from(shape: Sketch) -> Self {
-        Shape2d::Sketch(shape)
+        Self::Sketch(shape)
     }
 }
 

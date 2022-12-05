@@ -20,7 +20,7 @@ impl crate::models::Model for Model {
     ) -> Result<crate::Shape, Error> {
         let ctx = Context::from(&ctx);
 
-        let Model { ptr, shape, .. } = *self;
+        let Self { ptr, shape, .. } = *self;
 
         let result = unsafe { shape(ptr, ctx) };
 
@@ -31,7 +31,7 @@ impl crate::models::Model for Model {
     }
 
     fn metadata(&self) -> crate::models::ModelMetadata {
-        let Model { ptr, metadata, .. } = *self;
+        let Self { ptr, metadata, .. } = *self;
 
         unsafe { metadata(ptr).into() }
     }
@@ -76,7 +76,7 @@ impl From<Box<dyn crate::models::Model>> for Model {
             };
         }
 
-        Model {
+        Self {
             ptr: Box::into_raw(Box::new(m)).cast(),
             metadata,
             shape,
@@ -87,7 +87,7 @@ impl From<Box<dyn crate::models::Model>> for Model {
 
 impl Drop for Model {
     fn drop(&mut self) {
-        let Model { ptr, free, .. } = *self;
+        let Self { ptr, free, .. } = *self;
 
         unsafe {
             free(ptr);

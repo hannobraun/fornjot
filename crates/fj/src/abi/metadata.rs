@@ -16,7 +16,7 @@ impl From<ModelMetadata> for crate::models::ModelMetadata {
             arguments,
         } = m;
 
-        crate::models::ModelMetadata {
+        Self {
             name: name.into(),
             description: description.map(Into::into).into(),
             arguments: arguments.iter().cloned().map(|a| a.into()).collect(),
@@ -32,7 +32,7 @@ impl From<crate::models::ModelMetadata> for ModelMetadata {
             arguments,
         } = m;
 
-        ModelMetadata {
+        Self {
             name: name.into(),
             description: description.into(),
             arguments: arguments.into_iter().map(Into::into).collect(),
@@ -64,7 +64,7 @@ impl From<Metadata> for crate::models::Metadata {
             license,
         } = m;
 
-        crate::models::Metadata {
+        Self {
             name: name.into(),
             version: version.into(),
             short_description: short_description.map(Into::into).into(),
@@ -88,7 +88,7 @@ impl From<crate::models::Metadata> for Metadata {
             license,
         } = m;
 
-        Metadata {
+        Self {
             name: name.into(),
             version: version.into(),
             short_description: short_description.into(),
@@ -116,7 +116,7 @@ impl From<crate::models::ArgumentMetadata> for ArgumentMetadata {
             default_value,
         } = meta;
 
-        ArgumentMetadata {
+        Self {
             name: name.into(),
             description: description.into(),
             default_value: default_value.into(),
@@ -132,7 +132,7 @@ impl From<ArgumentMetadata> for crate::models::ArgumentMetadata {
             default_value,
         } = meta;
 
-        crate::models::ArgumentMetadata {
+        Self {
             name: name.into(),
             description: description.map(Into::into).into(),
             default_value: default_value.map(Into::into).into(),

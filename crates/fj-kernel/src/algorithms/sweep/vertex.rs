@@ -125,7 +125,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
 }
 
 impl Sweep for Handle<GlobalVertex> {
-    type Swept = (Handle<GlobalEdge>, [Handle<GlobalVertex>; 2]);
+    type Swept = (Handle<GlobalEdge>, [Self; 2]);
 
     fn sweep_with_cache(
         self,

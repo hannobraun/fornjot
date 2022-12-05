@@ -36,7 +36,7 @@ impl TransformObject for FaceSet {
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let mut faces = FaceSet::new();
+        let mut faces = Self::new();
         faces.extend(
             self.into_iter().map(|face| {
                 face.transform_with_cache(transform, objects, cache)

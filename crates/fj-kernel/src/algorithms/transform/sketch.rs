@@ -19,6 +19,6 @@ impl TransformObject for Sketch {
                 face.transform_with_cache(transform, objects, cache)
             });
 
-        Sketch::new(faces)
+        Self::new(faces)
     }
 }

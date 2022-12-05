@@ -71,8 +71,8 @@ enum ModelPathSource {
 impl ModelPathSource {
     fn path(&self) -> &Path {
         match self {
-            ModelPathSource::Args(path) => path,
-            ModelPathSource::Config(path) => path,
+            Self::Args(path) => path,
+            Self::Config(path) => path,
         }
     }
 }

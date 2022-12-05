@@ -64,7 +64,7 @@ impl Angle {
 }
 
 impl std::ops::Add for Angle {
-    type Output = Angle;
+    type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
         Self::from_rad(self.rad + rhs.rad)
     }
@@ -78,7 +78,7 @@ impl std::ops::AddAssign for Angle {
 }
 
 impl std::ops::Sub for Angle {
-    type Output = Angle;
+    type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         Self::from_rad(self.rad - rhs.rad)
     }
@@ -92,7 +92,7 @@ impl std::ops::SubAssign for Angle {
 }
 
 impl std::ops::Mul<f64> for Angle {
-    type Output = Angle;
+    type Output = Self;
     fn mul(self, rhs: f64) -> Self::Output {
         Self::from_rad(self.rad * rhs)
     }
@@ -113,7 +113,7 @@ impl std::ops::MulAssign<f64> for Angle {
 }
 
 impl std::ops::Div<f64> for Angle {
-    type Output = Angle;
+    type Output = Self;
     fn div(self, rhs: f64) -> Self::Output {
         Self::from_rad(self.rad / rhs)
     }
@@ -128,7 +128,7 @@ impl std::ops::DivAssign<f64> for Angle {
 
 impl std::ops::Div for Angle {
     type Output = f64;
-    fn div(self, rhs: Angle) -> Self::Output {
+    fn div(self, rhs: Self) -> Self::Output {
         self.rad / rhs.rad
     }
 }

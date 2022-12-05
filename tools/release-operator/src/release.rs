@@ -16,8 +16,8 @@ pub enum Outputs {
 impl Display for Outputs {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match &self {
-            Outputs::ReleaseDetected => write!(f, "release-detected"),
-            Outputs::TagName => write!(f, "tag-name"),
+            Self::ReleaseDetected => write!(f, "release-detected"),
+            Self::TagName => write!(f, "tag-name"),
         }
     }
 }
