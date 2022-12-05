@@ -22,10 +22,7 @@ impl<const D: usize> Line<D> {
         direction: Vector<D>,
     ) -> Self {
         if direction.magnitude() == Scalar::ZERO {
-            panic!(
-                "Can't construct `Line`. Direction is zero: {:?}",
-                direction
-            );
+            panic!("Can't construct `Line`. Direction is zero: {direction:?}");
         }
 
         Self { origin, direction }

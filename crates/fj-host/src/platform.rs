@@ -14,19 +14,19 @@ struct Unix;
 
 impl Platform for Windows {
     fn model_lib_file_name(&self, name: &str) -> String {
-        format!("{}.dll", name)
+        format!("{name}.dll")
     }
 }
 
 impl Platform for Macos {
     fn model_lib_file_name(&self, name: &str) -> String {
-        format!("lib{}.dylib", name)
+        format!("lib{name}.dylib")
     }
 }
 
 impl Platform for Unix {
     fn model_lib_file_name(&self, name: &str) -> String {
-        format!("lib{}.so", name)
+        format!("lib{name}.so")
     }
 }
 

@@ -202,8 +202,7 @@ impl Parse for HelperAttribute {
             return Err(syn::Error::new_spanned(
                 ident.clone(),
                 format!(
-                    "Unknown attribute \"{}\" found, expected \"param\"",
-                    ident
+                    "Unknown attribute \"{ident}\" found, expected \"param\""
                 ),
             ));
         }

@@ -74,7 +74,7 @@ impl Get<GlobalCurve> for HalfEdge {
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
-        write!(f, "edge from {:?} to {:?}", a, b)?;
+        write!(f, "edge from {a:?} to {b:?}")?;
         write!(f, " on {:?}", self.curve().global_form())?;
 
         Ok(())

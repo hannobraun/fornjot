@@ -23,7 +23,7 @@ impl PullRequestsSinceLastRelease {
         let (version_of_last_release, time_of_last_release) = 'outer: loop {
             const MAX_RESULTS_PER_PAGE: u8 = 100;
 
-            println!("Fetching page {}...", page);
+            println!("Fetching page {page}...");
             let pull_request_page = octocrab
                 .pulls("hannobraun", "Fornjot")
                 .list()
