@@ -51,9 +51,8 @@ impl EventLoopHandler {
                     })
                     .ok();
 
-                let event = match event {
-                    Some(status_update) => status_update,
-                    None => break,
+                let Some(event) = event else {
+                    break
                 };
 
                 match event {

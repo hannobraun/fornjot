@@ -115,9 +115,8 @@ fn contains_result(ty: &Type) -> bool {
 }
 
 fn argument_constraints(arg: &Argument) -> Vec<Constraint> {
-    let attr = match arg.attr.as_ref() {
-        Some(a) => a,
-        None => return Vec::new(),
+    let Some(attr) = arg.attr.as_ref() else {
+        return Vec::new()
     };
 
     let mut constraints = Vec::new();
