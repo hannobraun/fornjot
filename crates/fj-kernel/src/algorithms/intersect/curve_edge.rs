@@ -78,6 +78,7 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         objects::HalfEdge,
         partial::{HasPartial, PartialCurve},
+        partial2::Partial,
         services::Services,
     };
 
@@ -87,9 +88,11 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -112,9 +115,11 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -140,9 +145,11 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -163,9 +170,11 @@ mod tests {
     fn compute_edge_on_curve() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();

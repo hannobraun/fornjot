@@ -73,6 +73,7 @@ mod tests {
         insert::Insert,
         objects::Face,
         partial::{HasPartial, PartialCurve},
+        partial2::Partial,
         services::Services,
     };
 
@@ -131,7 +132,7 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             let mut curve = PartialCurve {
-                surface: Some(surface),
+                surface: Partial::from_full_entry_point(surface),
                 ..Default::default()
             };
             curve.update_as_line_from_points([[0., 0.], [1., 0.]]);

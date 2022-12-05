@@ -186,6 +186,7 @@ mod tests {
         partial::{
             HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex,
         },
+        partial2::Partial,
         services::Services,
         validate::Validate,
     };
@@ -195,7 +196,9 @@ mod tests {
         let mut services = Services::new();
 
         let mut curve = PartialCurve {
-            surface: Some(services.objects.surfaces.xy_plane()),
+            surface: Partial::from_full_entry_point(
+                services.objects.surfaces.xy_plane(),
+            ),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -208,7 +211,9 @@ mod tests {
         .build(&mut services.objects);
         let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
             let mut tmp = valid.surface_form().to_partial();
-            tmp.surface = Some(services.objects.surfaces.xz_plane());
+            tmp.surface = Partial::from_full_entry_point(
+                services.objects.surfaces.xz_plane(),
+            );
             tmp.build(&mut services.objects)
                 .insert(&mut services.objects)
         });
@@ -223,7 +228,9 @@ mod tests {
 
         let valid = {
             let mut curve = PartialCurve {
-                surface: Some(services.objects.surfaces.xy_plane()),
+                surface: Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 ..Default::default()
             };
             curve.update_as_u_axis();
@@ -253,7 +260,9 @@ mod tests {
 
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),
-            surface: Some(services.objects.surfaces.xy_plane()),
+            surface: Partial::from_full_entry_point(
+                services.objects.surfaces.xy_plane(),
+            ),
             ..Default::default()
         }
         .build(&mut services.objects);

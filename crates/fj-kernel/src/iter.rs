@@ -367,6 +367,7 @@ mod tests {
             Sketch, Solid, SurfaceVertex, Vertex,
         },
         partial::{HasPartial, PartialCurve},
+        partial2::Partial,
         services::Services,
     };
 
@@ -378,7 +379,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialCurve {
-            surface: Some(surface),
+            surface: Partial::from_full_entry_point(surface),
             ..Default::default()
         };
         object.update_as_u_axis();
@@ -497,7 +498,9 @@ mod tests {
 
         let object = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects)
@@ -612,7 +615,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: Partial::from_full_entry_point(surface.clone()),
             ..Default::default()
         };
         curve.update_as_u_axis();

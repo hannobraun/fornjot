@@ -16,7 +16,7 @@ pub struct PartialCurve {
     pub path: Option<SurfacePath>,
 
     /// The surface that the [`Curve`] is defined in
-    pub surface: Option<Handle<Surface>>,
+    pub surface: Partial<Surface>,
 
     /// The global form of the [`Curve`]
     pub global_form: Partial<GlobalCurve>,
@@ -26,8 +26,7 @@ impl PartialCurve {
     /// Build a full [`Curve`] from the partial curve
     pub fn build(self, objects: &mut Service<Objects>) -> Curve {
         let path = self.path.expect("Can't build `Curve` without path");
-        let surface =
-            self.surface.expect("Can't build `Curve` without surface");
+        let surface = self.surface.build(objects);
 
         let global_form = self.global_form.build(objects);
 
@@ -41,7 +40,7 @@ impl MergeWith for PartialCurve {
 
         Self {
             path: self.path.merge_with(other.path),
-            surface: self.surface.merge_with(other.surface),
+            surface: self.surface,
             global_form: self.global_form,
         }
     }
@@ -49,7 +48,7 @@ impl MergeWith for PartialCurve {
 
 impl Replace<Surface> for PartialCurve {
     fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.surface = Some(surface);
+        self.surface = Partial::from_full_entry_point(surface);
         self
     }
 }
@@ -58,7 +57,7 @@ impl From<&Curve> for PartialCurve {
     fn from(curve: &Curve) -> Self {
         Self {
             path: Some(curve.path()),
-            surface: Some(curve.surface().clone()),
+            surface: Partial::from_full_entry_point(curve.surface().clone()),
             global_form: Partial::from_full_entry_point(
                 curve.global_form().clone(),
             ),
@@ -76,9 +75,11 @@ impl MaybePartial<Curve> {
     }
 
     /// Access the surface
-    pub fn surface(&self) -> Option<Handle<Surface>> {
+    pub fn surface(&self) -> Partial<Surface> {
         match self {
-            Self::Full(full) => Some(full.surface().clone()),
+            Self::Full(full) => {
+                Partial::from_full_entry_point(full.surface().clone())
+            }
             Self::Partial(partial) => partial.surface.clone(),
         }
     }

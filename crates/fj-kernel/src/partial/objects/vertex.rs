@@ -4,8 +4,8 @@ use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
     partial::{MaybePartial, MergeWith},
+    partial2::Partial,
     services::Service,
-    storage::Handle,
 };
 
 /// A partial [`Vertex`]
@@ -45,7 +45,8 @@ impl PartialVertex {
                 });
 
                 partial.position = Some(position);
-                partial.surface = Some(curve.surface().clone());
+                partial.surface =
+                    Partial::from_full_entry_point(curve.surface().clone());
 
                 partial
             })
@@ -104,7 +105,7 @@ pub struct PartialSurfaceVertex {
     pub position: Option<Point<2>>,
 
     /// The surface that the [`SurfaceVertex`] is defined in
-    pub surface: Option<Handle<Surface>>,
+    pub surface: Partial<Surface>,
 
     /// The global form of the [`SurfaceVertex`]
     pub global_form: MaybePartial<GlobalVertex>,
@@ -116,9 +117,7 @@ impl PartialSurfaceVertex {
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
-        let surface = self
-            .surface
-            .expect("Can't build `SurfaceVertex` without `Surface`");
+        let surface = self.surface.build(objects);
 
         if self.global_form.position().is_none() {
             self.global_form = self.global_form.merge_with(
@@ -140,7 +139,7 @@ impl MergeWith for PartialSurfaceVertex {
 
         Self {
             position: self.position.merge_with(other.position),
-            surface: self.surface.merge_with(other.surface),
+            surface: self.surface,
             global_form: self.global_form.merge_with(other.global_form),
         }
     }
@@ -150,7 +149,9 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
     fn from(surface_vertex: &SurfaceVertex) -> Self {
         Self {
             position: Some(surface_vertex.position()),
-            surface: Some(surface_vertex.surface().clone()),
+            surface: Partial::from_full_entry_point(
+                surface_vertex.surface().clone(),
+            ),
             global_form: (surface_vertex.global_form().clone()).into(),
         }
     }
@@ -166,9 +167,11 @@ impl MaybePartial<SurfaceVertex> {
     }
 
     /// Access the surface
-    pub fn surface(&self) -> Option<Handle<Surface>> {
+    pub fn surface(&self) -> Partial<Surface> {
         match self {
-            Self::Full(full) => Some(full.surface().clone()),
+            Self::Full(full) => {
+                Partial::from_full_entry_point(full.surface().clone())
+            }
             Self::Partial(partial) => partial.surface.clone(),
         }
     }

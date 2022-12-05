@@ -60,12 +60,9 @@ impl GlobalVertexBuilder for PartialGlobalVertex {
         let path = curve.path.expect(
             "Need path to create `GlobalVertex` from curve and position",
         );
-        let surface = curve
-            .surface
-            .expect(
-                "Need surface to create `GlobalVertex` from curve and position",
-            )
-            .geometry();
+        let surface = curve.surface.read().geometry.expect(
+            "Need surface to create `GlobalVertex` from curve and position",
+        );
 
         let position_surface = path.point_from_path_coords(position);
 

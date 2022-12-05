@@ -8,6 +8,7 @@ use fj_kernel::{
     partial::{
         HasPartial, MaybePartial, PartialCurve, PartialHalfEdge, PartialVertex,
     },
+    partial2::Partial,
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -34,7 +35,9 @@ impl Shape for fj::Sketch {
                         vertices: array::from_fn(|_| {
                             MaybePartial::from(PartialVertex {
                                 curve: MaybePartial::from(PartialCurve {
-                                    surface: Some(surface.clone()),
+                                    surface: Partial::from_full_entry_point(
+                                        surface.clone(),
+                                    ),
                                     ..Default::default()
                                 }),
                                 ..Default::default()

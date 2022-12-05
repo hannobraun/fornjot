@@ -90,7 +90,8 @@ mod tests {
 
     use crate::{
         algorithms::transform::TransformObject, builder::CurveBuilder,
-        insert::Insert, partial::PartialCurve, services::Services,
+        insert::Insert, partial::PartialCurve, partial2::Partial,
+        services::Services,
     };
 
     use super::SurfaceSurfaceIntersection;
@@ -118,7 +119,7 @@ mod tests {
         );
 
         let mut expected_xy = PartialCurve {
-            surface: Some(xy.clone()),
+            surface: Partial::from_full_entry_point(xy.clone()),
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
@@ -126,7 +127,7 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let mut expected_xz = PartialCurve {
-            surface: Some(xz.clone()),
+            surface: Partial::from_full_entry_point(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();

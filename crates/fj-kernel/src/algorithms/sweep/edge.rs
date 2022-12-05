@@ -192,7 +192,11 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial::{
+            HasPartial, MaybePartial, PartialCurve, PartialSurfaceVertex,
+            PartialVertex,
+        },
+        partial2::Partial,
         services::Services,
     };
 
@@ -202,7 +206,9 @@ mod tests {
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects)
@@ -216,7 +222,7 @@ mod tests {
 
             let bottom = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    surface,
+                    Partial::from_full_entry_point(surface),
                     [[0., 0.], [1., 0.]],
                 )
                 .build(&mut services.objects)
@@ -225,6 +231,12 @@ mod tests {
                 let side_up = HalfEdge::partial();
                 side_up
                     .with_back_vertex(PartialVertex {
+                        curve: MaybePartial::from(PartialCurve {
+                            surface: Partial::from_full_entry_point(
+                                bottom.front().surface_form().surface().clone(),
+                            ),
+                            ..Default::default()
+                        }),
                         surface_form: bottom
                             .front()
                             .surface_form()
@@ -247,6 +259,12 @@ mod tests {
             let top = {
                 let top = HalfEdge::partial();
                 top.with_back_vertex(PartialVertex {
+                    curve: MaybePartial::from(PartialCurve {
+                        surface: Partial::from_full_entry_point(
+                            side_up.front().surface_form().surface().clone(),
+                        ),
+                        ..Default::default()
+                    }),
                     surface_form: PartialSurfaceVertex {
                         position: Some([0., 1.].into()),
                         ..Default::default()
@@ -267,6 +285,12 @@ mod tests {
                 let side_down = HalfEdge::partial();
                 side_down
                     .with_back_vertex(PartialVertex {
+                        curve: MaybePartial::from(PartialCurve {
+                            surface: Partial::from_full_entry_point(
+                                bottom.back().surface_form().surface().clone(),
+                            ),
+                            ..Default::default()
+                        }),
                         surface_form: bottom
                             .back()
                             .surface_form()

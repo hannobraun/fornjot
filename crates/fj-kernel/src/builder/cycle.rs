@@ -6,6 +6,7 @@ use crate::{
         HasPartial, MaybePartial, PartialCurve, PartialCycle, PartialHalfEdge,
         PartialSurfaceVertex, PartialVertex,
     },
+    partial2::Partial,
     storage::Handle,
 };
 
@@ -48,9 +49,7 @@ impl CycleBuilder for PartialCycle {
         let mut half_edges = Vec::new();
         for vertex_next in vertices {
             if let Some(vertex_prev) = previous {
-                let surface = vertex_prev
-                    .surface()
-                    .expect("Need surface to extend cycle with poly-chain");
+                let surface = vertex_prev.surface();
 
                 let [position_prev, position_next] =
                     [&vertex_prev, &vertex_next].map(|vertex| {
@@ -62,7 +61,7 @@ impl CycleBuilder for PartialCycle {
                 previous = Some(vertex_next.clone());
 
                 let mut curve = PartialCurve {
-                    surface: Some(surface.clone()),
+                    surface: surface.clone(),
                     ..Default::default()
                 };
                 curve
@@ -98,7 +97,7 @@ impl CycleBuilder for PartialCycle {
         self.with_poly_chain(points.into_iter().map(|position| {
             PartialSurfaceVertex {
                 position: Some(position.into()),
-                surface: Some(surface.clone()),
+                surface: Partial::from_full_entry_point(surface.clone()),
                 ..Default::default()
             }
         }))

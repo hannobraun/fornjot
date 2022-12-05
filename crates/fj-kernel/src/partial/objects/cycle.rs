@@ -2,8 +2,8 @@ use crate::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
     partial::{MaybePartial, MergeWith, PartialHalfEdge, PartialVertex},
+    partial2::Partial,
     services::Service,
-    storage::Handle,
 };
 
 /// A partial [`Cycle`]
@@ -21,10 +21,10 @@ impl PartialCycle {
     }
 
     /// Access the surface that the [`Cycle`]'s [`HalfEdge`]s are defined in
-    pub fn surface(&self) -> Option<Handle<Surface>> {
+    pub fn surface(&self) -> Option<Partial<Surface>> {
         self.half_edges
             .first()
-            .and_then(|half_edge| half_edge.curve().surface())
+            .map(|half_edge| half_edge.curve().surface())
     }
 
     /// Add the provided half-edges to the partial cycle
@@ -41,9 +41,7 @@ impl PartialCycle {
     ) -> Self {
         let half_edges = half_edges.into_iter().map(Into::into);
 
-        let mut surface = self.surface();
         for half_edge in half_edges {
-            surface = surface.merge_with(half_edge.curve().surface());
             self.half_edges.push(half_edge);
         }
 
@@ -139,9 +137,11 @@ impl From<&Cycle> for PartialCycle {
 
 impl MaybePartial<Cycle> {
     /// Access the surface
-    pub fn surface(&self) -> Option<Handle<Surface>> {
+    pub fn surface(&self) -> Option<Partial<Surface>> {
         match self {
-            Self::Full(full) => full.surface().clone().into(),
+            Self::Full(full) => {
+                Some(Partial::from_full_entry_point(full.surface().clone()))
+            }
             Self::Partial(partial) => partial.surface(),
         }
     }

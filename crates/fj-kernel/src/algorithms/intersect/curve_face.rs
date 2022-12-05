@@ -153,6 +153,7 @@ mod tests {
         builder::{CurveBuilder, FaceBuilder},
         objects::Face,
         partial::{HasPartial, PartialCurve},
+        partial2::Partial,
         services::Services,
     };
 
@@ -165,7 +166,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: Partial::from_full_entry_point(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);

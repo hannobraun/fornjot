@@ -166,7 +166,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        builder::HalfEdgeBuilder, partial::HasPartial, services::Services,
+        builder::HalfEdgeBuilder, partial::HasPartial, partial2::Partial,
+        services::Services,
     };
 
     use super::HalfEdge;
@@ -175,7 +176,9 @@ mod tests {
     fn global_edge_equality() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
 
         let a = [0., 0.];
         let b = [1., 0.];

@@ -214,7 +214,9 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
@@ -240,7 +242,9 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
@@ -263,7 +267,9 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
@@ -289,7 +295,9 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
