@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, thread};
 
 use crate::{
     objects::{BehindHandle, Object},
@@ -23,7 +23,9 @@ impl Drop for Validation {
                 println!("{err}");
             }
 
-            panic!();
+            if !thread::panicking() {
+                panic!();
+            }
         }
     }
 }
