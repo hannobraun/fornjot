@@ -182,7 +182,7 @@ impl Hash for Scalar {
 
 impl From<f32> for Scalar {
     fn from(scalar: f32) -> Self {
-        Self::from_f64(scalar as f64)
+        Self::from_f64(scalar.into())
     }
 }
 

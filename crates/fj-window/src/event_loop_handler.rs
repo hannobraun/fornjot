@@ -248,7 +248,7 @@ fn input_event<T>(
         } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
-                    (*y as f64) * ZOOM_FACTOR_LINE
+                    f64::from(*y) * ZOOM_FACTOR_LINE
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..
