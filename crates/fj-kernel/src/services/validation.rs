@@ -16,8 +16,12 @@ pub struct Validation(
 
 impl Drop for Validation {
     fn drop(&mut self) {
-        if !self.0.is_empty() {
-            println!("Dropping `Validation` with unhandled validation errors:");
+        let num_errors = self.0.len();
+        if num_errors > 0 {
+            println!(
+                "Dropping `Validation` with {num_errors} unhandled validation \
+                errors:"
+            );
 
             for (_, err) in self.0.values() {
                 println!("{err}");
