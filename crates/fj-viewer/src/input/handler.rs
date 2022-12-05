@@ -20,13 +20,13 @@ impl InputHandler {
     ) {
         match event {
             InputEvent::Translation { previous, current } => {
-                self.movement.apply(previous, current, focus_point, camera)
+                self.movement.apply(previous, current, focus_point, camera);
             }
             InputEvent::Rotation { angle_x, angle_y } => {
-                self.rotation.apply(angle_x, angle_y, focus_point, camera)
+                self.rotation.apply(angle_x, angle_y, focus_point, camera);
             }
             InputEvent::Zoom(zoom_delta) => {
-                self.zoom.apply(zoom_delta, focus_point, camera)
+                self.zoom.apply(zoom_delta, focus_point, camera);
             }
         }
     }

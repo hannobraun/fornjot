@@ -73,7 +73,7 @@ impl std::ops::Add for Angle {
 impl std::ops::AddAssign for Angle {
     fn add_assign(&mut self, rhs: Self) {
         self.rad += rhs.rad;
-        self.wrap_assign()
+        self.wrap_assign();
     }
 }
 
@@ -87,7 +87,7 @@ impl std::ops::Sub for Angle {
 impl std::ops::SubAssign for Angle {
     fn sub_assign(&mut self, rhs: Self) {
         self.rad -= rhs.rad;
-        self.wrap_assign()
+        self.wrap_assign();
     }
 }
 
@@ -108,7 +108,7 @@ impl std::ops::Mul<Angle> for f64 {
 impl std::ops::MulAssign<f64> for Angle {
     fn mul_assign(&mut self, rhs: f64) {
         self.rad *= rhs;
-        self.wrap_assign()
+        self.wrap_assign();
     }
 }
 
@@ -122,7 +122,7 @@ impl std::ops::Div<f64> for Angle {
 impl std::ops::DivAssign<f64> for Angle {
     fn div_assign(&mut self, rhs: f64) {
         self.rad /= rhs;
-        self.wrap_assign()
+        self.wrap_assign();
     }
 }
 

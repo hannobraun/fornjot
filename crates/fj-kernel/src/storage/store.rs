@@ -179,6 +179,6 @@ mod tests {
         store.insert(b.clone(), 1);
 
         let objects = store.iter().collect::<Vec<_>>();
-        assert_eq!(objects, [a, b])
+        assert_eq!(objects, [a, b]);
     }
 }

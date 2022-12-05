@@ -99,10 +99,10 @@ fn load_error_context_inner(
     )?;
     match model_path {
         ModelPathSource::Args(_) => {
-            write!(error, "\n- Passed via command-line argument")?
+            write!(error, "\n- Passed via command-line argument")?;
         }
         ModelPathSource::Config(_) => {
-            write!(error, "\n- Specified as default model in configuration")?
+            write!(error, "\n- Specified as default model in configuration")?;
         }
     }
     write!(error, "\n- Path of model: {}", path.display())?;

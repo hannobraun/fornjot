@@ -86,7 +86,7 @@ impl Watcher {
         thread::spawn(move || {
             watch_tx_2
                 .send(TriggerEvaluation)
-                .expect("Channel is disconnected")
+                .expect("Channel is disconnected");
         });
 
         Ok(Self {

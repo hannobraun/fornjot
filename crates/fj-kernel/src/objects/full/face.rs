@@ -126,7 +126,7 @@ impl FaceSet {
 
 impl Extend<Handle<Face>> for FaceSet {
     fn extend<T: IntoIterator<Item = Handle<Face>>>(&mut self, iter: T) {
-        self.inner.extend(iter)
+        self.inner.extend(iter);
     }
 }
 

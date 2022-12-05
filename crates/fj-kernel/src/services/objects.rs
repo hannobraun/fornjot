@@ -53,6 +53,6 @@ impl ServiceObjectsExt for Service<Objects> {
     {
         self.execute(InsertObject {
             object: (handle, object).into(),
-        })
+        });
     }
 }

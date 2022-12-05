@@ -57,20 +57,20 @@ impl Viewer {
 
     /// Toggle the "draw model" setting
     pub fn toggle_draw_model(&mut self) {
-        self.draw_config.draw_model = !self.draw_config.draw_model
+        self.draw_config.draw_model = !self.draw_config.draw_model;
     }
 
     /// Toggle the "draw mesh" setting
     pub fn toggle_draw_mesh(&mut self) {
         if self.renderer.is_line_drawing_available() {
-            self.draw_config.draw_mesh = !self.draw_config.draw_mesh
+            self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
         }
     }
 
     /// Toggle the "draw debug" setting
     pub fn toggle_draw_debug(&mut self) {
         if self.renderer.is_line_drawing_available() {
-            self.draw_config.draw_debug = !self.draw_config.draw_debug
+            self.draw_config.draw_debug = !self.draw_config.draw_debug;
         }
     }
 
@@ -81,7 +81,7 @@ impl Viewer {
 
         let aabb = shape.aabb;
         if self.shape.replace(shape).is_none() {
-            self.camera.init_planes(&aabb)
+            self.camera.init_planes(&aabb);
         }
     }
 
@@ -98,7 +98,7 @@ impl Viewer {
 
     /// Handle the screen being resized
     pub fn handle_screen_resize(&mut self, screen_size: ScreenSize) {
-        self.renderer.handle_resize(screen_size)
+        self.renderer.handle_resize(screen_size);
     }
 
     /// Compute and store a focus point, unless one is already stored
