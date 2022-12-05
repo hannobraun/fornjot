@@ -95,6 +95,35 @@ impl From<&HalfEdge> for PartialHalfEdge {
     }
 }
 
+impl MaybePartial<HalfEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve(),
+        }
+    }
+
+    /// Access the front vertex
+    pub fn front(&self) -> MaybePartial<Vertex> {
+        match self {
+            Self::Full(full) => full.front().clone().into(),
+            Self::Partial(partial) => {
+                let [_, front] = &partial.vertices;
+                front.clone()
+            }
+        }
+    }
+
+    /// Access the vertices
+    pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
+        match self {
+            Self::Full(full) => full.vertices().clone().map(Into::into),
+            Self::Partial(partial) => partial.vertices.clone(),
+        }
+    }
+}
+
 /// A partial [`GlobalEdge`]
 ///
 /// See [`crate::partial`] for more information.
@@ -138,6 +167,26 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
                 .vertices()
                 .access_in_normalized_order()
                 .map(Into::into),
+        }
+    }
+}
+
+impl MaybePartial<GlobalEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<GlobalCurve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve.clone(),
+        }
+    }
+
+    /// Access the vertices
+    pub fn vertices(&self) -> [MaybePartial<GlobalVertex>; 2] {
+        match self {
+            Self::Full(full) => {
+                full.vertices().access_in_normalized_order().map(Into::into)
+            }
+            Self::Partial(partial) => partial.vertices.clone(),
         }
     }
 }
