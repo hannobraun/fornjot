@@ -17,7 +17,7 @@ impl Evaluator {
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
         thread::spawn(move || {
-            while let Ok(TriggerEvaluation) = trigger_rx.recv() {
+            while matches!(trigger_rx.recv(), Ok(TriggerEvaluation)) {
                 if let Err(SendError(_)) =
                     event_tx.send(ModelEvent::ChangeDetected)
                 {
