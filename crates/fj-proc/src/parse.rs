@@ -166,10 +166,11 @@ impl Argument {
 
 impl Parse for Argument {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let mut attr = None;
-        if input.peek(syn::token::Pound) {
-            attr = Some(input.parse()?);
-        }
+        let attr = if input.peek(syn::token::Pound) {
+            Some(input.parse()?)
+        } else {
+            None
+        };
         let ident: Ident = input.parse()?;
 
         let _: syn::token::Colon = input.parse()?;
