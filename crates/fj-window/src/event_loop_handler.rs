@@ -45,9 +45,10 @@ impl EventLoopHandler {
                 let event = events
                     .try_recv()
                     .map_err(|err| {
-                        if err.is_disconnected() {
-                            panic!("Expected channel to never disconnect");
-                        }
+                        assert!(
+                            !err.is_disconnected(),
+                            "Expected channel to never disconnect"
+                        );
                     })
                     .ok();
 

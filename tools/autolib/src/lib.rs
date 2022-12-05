@@ -9,7 +9,7 @@ pub fn find_version_in_str(s: &str) -> anyhow::Result<Option<semver::Version>> {
                 version.as_str(),
             );
         })
-        .filter_map(|m| {
+        .find_map(|m| {
             let version = semver::Version::parse(m.as_str()).ok();
 
             if version.is_some() {
@@ -19,8 +19,7 @@ pub fn find_version_in_str(s: &str) -> anyhow::Result<Option<semver::Version>> {
             }
 
             version
-        })
-        .next();
+        });
 
     Ok(version)
 }
