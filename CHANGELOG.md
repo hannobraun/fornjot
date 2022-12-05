@@ -1,5 +1,46 @@
 # Fornjot - Changelog
 
+## v0.27.0 (2022-12-05)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Display more errors in the GUI and display more information about them ([#1405])
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Move validation to separate service ([#1403], [#1404])
+- Continue cleanup of object construction code ([#1406], [#1407], [#1408], [#1409])
+- Rename `GlobalVertex::from_position` to `new` ([#1410])
+- Touch up documentation of objects ([#1411])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1397], [#1398], [#1399], [#1400], [#1402])
+
+[#1397]: https://github.com/hannobraun/Fornjot/pull/1397
+[#1398]: https://github.com/hannobraun/Fornjot/pull/1398
+[#1399]: https://github.com/hannobraun/Fornjot/pull/1399
+[#1400]: https://github.com/hannobraun/Fornjot/pull/1400
+[#1402]: https://github.com/hannobraun/Fornjot/pull/1402
+[#1403]: https://github.com/hannobraun/Fornjot/pull/1403
+[#1404]: https://github.com/hannobraun/Fornjot/pull/1404
+[#1405]: https://github.com/hannobraun/Fornjot/pull/1405
+[#1406]: https://github.com/hannobraun/Fornjot/pull/1406
+[#1407]: https://github.com/hannobraun/Fornjot/pull/1407
+[#1408]: https://github.com/hannobraun/Fornjot/pull/1408
+[#1409]: https://github.com/hannobraun/Fornjot/pull/1409
+[#1410]: https://github.com/hannobraun/Fornjot/pull/1410
+[#1411]: https://github.com/hannobraun/Fornjot/pull/1411
+
+
 ## v0.26.0 (2022-11-28)
 
 ### End-user improvements
