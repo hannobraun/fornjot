@@ -1,9 +1,7 @@
 use crate::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{
-        MaybePartial, MergeWith, PartialHalfEdge, PartialVertex, Replace,
-    },
+    partial::{MaybePartial, MergeWith, PartialHalfEdge, PartialVertex},
     services::Service,
     storage::Handle,
 };
@@ -49,22 +47,6 @@ impl PartialCycle {
             self.half_edges.push(half_edge);
         }
 
-        self.with_surface(surface)
-    }
-
-    /// Update the partial cycle with the provided surface
-    ///
-    /// All [`HalfEdge`]s will be updated with this surface.
-    pub fn with_surface(mut self, surface: Option<Handle<Surface>>) -> Self {
-        if let Some(surface) = surface {
-            for half_edge in &mut self.half_edges {
-                *half_edge =
-                    half_edge.clone().update_partial(|mut half_edge| {
-                        half_edge.replace(surface.clone());
-                        half_edge
-                    });
-            }
-        }
         self
     }
 
