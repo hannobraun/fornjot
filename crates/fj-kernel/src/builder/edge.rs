@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 use iter_fixed::IntoIteratorFixed;
 
@@ -108,21 +109,19 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: Handle<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        let vertices = points.map(|point| {
-            let surface_form = PartialSurfaceVertex {
+        self.vertices = self.vertices.zip_ext(points).map(|(vertex, point)| {
+            let mut vertex = vertex.into_partial();
+
+            vertex.surface_form = MaybePartial::from(PartialSurfaceVertex {
                 position: Some(point.into()),
                 surface: Some(surface.clone()),
                 ..Default::default()
-            };
+            });
 
-            PartialVertex {
-                surface_form: surface_form.into(),
-                ..Default::default()
-            }
+            vertex.into()
         });
 
         self.replace(surface);
-        self.vertices = vertices.map(Into::into);
         self.update_as_line_segment()
     }
 
