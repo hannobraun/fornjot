@@ -7,7 +7,7 @@ use crate::{
     objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
         MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex, Replace,
+        PartialSurfaceVertex, PartialVertex,
     },
     services::{Service, Services},
     storage::Handle,
@@ -121,7 +121,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             vertex.into()
         });
 
-        self.replace(surface);
         self.update_as_line_segment()
     }
 
