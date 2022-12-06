@@ -72,8 +72,8 @@ mod tests {
         builder::{CurveBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::{HasPartial, PartialCurve},
-        partial2::Partial,
+        partial::HasPartial,
+        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 

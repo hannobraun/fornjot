@@ -10,10 +10,9 @@ use crate::{
     insert::Insert,
     objects::{Cycle, Face, FaceSet, Objects, Shell},
     partial::{
-        HasPartial, MaybePartial, PartialCurve, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex,
+        HasPartial, PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
-    partial2::{Partial, PartialObject, PartialSurface},
+    partial2::{Partial, PartialCurve, PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
 };
@@ -91,11 +90,10 @@ impl ShellBuilder {
                     PartialHalfEdge {
                         vertices: array::from_fn(|_| {
                             PartialVertex {
-                                curve: PartialCurve {
+                                curve: Partial::from_partial(PartialCurve {
                                     global_form: global_curve.clone(),
                                     ..Default::default()
-                                }
-                                .into(),
+                                }),
                                 ..Default::default()
                             }
                             .into()
@@ -130,7 +128,7 @@ impl ShellBuilder {
                     PartialHalfEdge {
                         vertices: [
                             PartialVertex {
-                                curve: MaybePartial::from(PartialCurve {
+                                curve: Partial::from_partial(PartialCurve {
                                     surface: Partial::from_full_entry_point(
                                         from.surface().clone(),
                                     ),
@@ -140,7 +138,7 @@ impl ShellBuilder {
                                 ..Default::default()
                             },
                             PartialVertex {
-                                curve: MaybePartial::from(PartialCurve {
+                                curve: Partial::from_partial(PartialCurve {
                                     surface: to.surface.clone(),
                                     ..Default::default()
                                 }),
@@ -189,20 +187,25 @@ impl ShellBuilder {
                         PartialHalfEdge {
                             vertices: [
                                 PartialVertex {
-                                    curve: MaybePartial::from(PartialCurve {
-                                        surface: from.surface.clone(),
-                                        ..curve.clone()
-                                    }),
+                                    curve: Partial::from_partial(
+                                        PartialCurve {
+                                            surface: from.surface.clone(),
+                                            ..curve.clone()
+                                        },
+                                    ),
                                     surface_form: from.into(),
                                     ..Default::default()
                                 },
                                 PartialVertex {
-                                    curve: MaybePartial::from(PartialCurve {
-                                        surface: Partial::from_full_entry_point(
-                                            to.surface().clone(),
-                                        ),
-                                        ..curve
-                                    }),
+                                    curve: Partial::from_partial(
+                                        PartialCurve {
+                                            surface:
+                                                Partial::from_full_entry_point(
+                                                    to.surface().clone(),
+                                                ),
+                                            ..curve
+                                        },
+                                    ),
                                     surface_form: to.into(),
                                     ..Default::default()
                                 },
@@ -229,7 +232,7 @@ impl ShellBuilder {
                     let to = to.surface_form().clone();
 
                     let from = PartialVertex {
-                        curve: MaybePartial::from(PartialCurve {
+                        curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 from.surface().clone(),
                             ),
@@ -239,7 +242,7 @@ impl ShellBuilder {
                         ..Default::default()
                     };
                     let to = PartialVertex {
-                        curve: MaybePartial::from(PartialCurve {
+                        curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 to.surface().clone(),
                             ),
@@ -328,7 +331,7 @@ impl ShellBuilder {
                     .collect::<[_; 2]>()
                     .map(|(vertex, surface_form)| PartialVertex {
                         position: Some(vertex.position()),
-                        curve: PartialCurve {
+                        curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 surface_form.surface().clone(),
                             ),
@@ -336,8 +339,7 @@ impl ShellBuilder {
                                 vertex.curve().global_form().clone(),
                             ),
                             ..Default::default()
-                        }
-                        .into(),
+                        }),
                         surface_form: surface_form.into(),
                     });
 

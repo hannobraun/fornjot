@@ -6,10 +6,10 @@ use crate::{
     insert::Insert,
     objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
     partial::{
-        MaybePartial, MergeWith, PartialCurve, PartialGlobalEdge,
-        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+        MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
+        PartialSurfaceVertex, PartialVertex,
     },
-    partial2::Partial,
+    partial2::{Partial, PartialCurve},
     services::{Service, Services},
     storage::Handle,
 };
@@ -75,10 +75,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let mut curve = self.curve().into_partial();
-        curve.update_as_circle_from_radius(radius);
+        let mut curve = self.curve();
+        curve.write().update_as_circle_from_radius(radius);
 
-        let path = curve.path.expect("Expected path that was just created");
+        let path = curve
+            .read()
+            .path
+            .expect("Expected path that was just created");
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -87,7 +90,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = PartialSurfaceVertex {
             position: Some(path.point_from_path_coords(a_curve)),
-            surface: curve.surface.clone(),
+            surface: curve.read().surface.clone(),
             global_form: global_vertex,
         }
         .build(objects)
@@ -96,7 +99,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [back, front] =
             [a_curve, b_curve].map(|point_curve| PartialVertex {
                 position: Some(point_curve),
-                curve: curve.clone().into(),
+                curve: curve.clone(),
                 surface_form: surface_vertex.clone().into(),
             });
 
@@ -113,10 +116,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.vertices = self.vertices.zip_ext(points).map(|(vertex, point)| {
             let mut vertex = vertex.into_partial();
 
-            vertex.curve = MaybePartial::from(PartialCurve {
-                surface: surface.clone(),
-                ..vertex.curve.into_partial()
-            });
+            vertex.curve = {
+                let curve = vertex.curve.read().clone();
+                Partial::from_partial(PartialCurve {
+                    surface: surface.clone(),
+                    ..curve
+                })
+            };
             vertex.surface_form = MaybePartial::from(PartialSurfaceVertex {
                 position: Some(point.into()),
                 surface: surface.clone(),
@@ -134,22 +140,22 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.surface_form());
 
-        let surface = self.curve().surface();
+        let surface = self.curve().read().surface.clone();
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
                 .position()
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = self.curve().into_partial();
-        curve.surface = surface;
-        curve.update_as_line_from_points(points);
+        let mut curve = self.curve();
+        curve.write().surface = surface;
+        curve.write().update_as_line_from_points(points);
 
         let [back, front] = {
             let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
                 vertex.update_partial(|mut vertex| {
                     vertex.position = Some([position].into());
-                    vertex.curve = curve.clone().into();
+                    vertex.curve = self.curve();
                     vertex
                 })
             });

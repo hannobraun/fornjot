@@ -192,11 +192,8 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{
-            HasPartial, MaybePartial, PartialCurve, PartialSurfaceVertex,
-            PartialVertex,
-        },
-        partial2::Partial,
+        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial2::{Partial, PartialCurve},
         services::Services,
     };
 
@@ -231,7 +228,7 @@ mod tests {
                 let side_up = HalfEdge::partial();
                 side_up
                     .with_back_vertex(PartialVertex {
-                        curve: MaybePartial::from(PartialCurve {
+                        curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 bottom.front().surface_form().surface().clone(),
                             ),
@@ -259,7 +256,7 @@ mod tests {
             let top = {
                 let top = HalfEdge::partial();
                 top.with_back_vertex(PartialVertex {
-                    curve: MaybePartial::from(PartialCurve {
+                    curve: Partial::from_partial(PartialCurve {
                         surface: Partial::from_full_entry_point(
                             side_up.front().surface_form().surface().clone(),
                         ),
@@ -285,7 +282,7 @@ mod tests {
                 let side_down = HalfEdge::partial();
                 side_down
                     .with_back_vertex(PartialVertex {
-                        curve: MaybePartial::from(PartialCurve {
+                        curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 bottom.back().surface_form().surface().clone(),
                             ),

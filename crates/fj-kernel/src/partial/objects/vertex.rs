@@ -17,7 +17,7 @@ pub struct PartialVertex {
     pub position: Option<Point<1>>,
 
     /// The curve that the [`Vertex`] is defined in
-    pub curve: MaybePartial<Curve>,
+    pub curve: Partial<Curve>,
 
     /// The surface form of the [`Vertex`]
     pub surface_form: MaybePartial<SurfaceVertex>,
@@ -35,7 +35,7 @@ impl PartialVertex {
         let position = self
             .position
             .expect("Cant' build `Vertex` without position");
-        let curve = self.curve.into_full(objects);
+        let curve = self.curve.build(objects);
 
         let surface_form = self
             .surface_form
@@ -62,7 +62,7 @@ impl MergeWith for PartialVertex {
 
         Self {
             position: self.position.merge_with(other.position),
-            curve: self.curve.merge_with(other.curve),
+            curve: self.curve,
             surface_form: self.surface_form.merge_with(other.surface_form),
         }
     }
@@ -72,7 +72,7 @@ impl From<&Vertex> for PartialVertex {
     fn from(vertex: &Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
-            curve: vertex.curve().clone().into(),
+            curve: Partial::from_full_entry_point(vertex.curve().clone()),
             surface_form: vertex.surface_form().clone().into(),
         }
     }
@@ -80,9 +80,11 @@ impl From<&Vertex> for PartialVertex {
 
 impl MaybePartial<Vertex> {
     /// Access the curve
-    pub fn curve(&self) -> MaybePartial<Curve> {
+    pub fn curve(&self) -> Partial<Curve> {
         match self {
-            Self::Full(full) => full.curve().clone().into(),
+            Self::Full(full) => {
+                Partial::from_full_entry_point(full.curve().clone())
+            }
             Self::Partial(partial) => partial.curve.clone(),
         }
     }

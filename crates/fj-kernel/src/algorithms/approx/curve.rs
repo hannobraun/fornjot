@@ -203,8 +203,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        partial::PartialCurve,
-        partial2::{Partial, PartialObject, PartialSurface},
+        partial2::{Partial, PartialCurve, PartialObject, PartialSurface},
         services::Services,
     };
 

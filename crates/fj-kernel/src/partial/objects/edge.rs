@@ -22,18 +22,18 @@ pub struct PartialHalfEdge {
 
 impl PartialHalfEdge {
     /// Access the partial half-edge's curve
-    pub fn curve(&self) -> MaybePartial<Curve> {
-        let [a, b] = &self.vertices;
-        a.curve().merge_with(b.curve())
+    pub fn curve(&self) -> Partial<Curve> {
+        let [a, _] = &self.vertices;
+        a.curve()
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
-        let curve = self.curve().into_full(objects);
+        let curve = self.curve().build(objects);
         let vertices = self.vertices.map(|vertex| {
             vertex
                 .merge_with(PartialVertex {
-                    curve: curve.clone().into(),
+                    curve: Partial::from_full_entry_point(curve.clone()),
                     ..Default::default()
                 })
                 .into_full(objects)
@@ -75,9 +75,11 @@ impl From<&HalfEdge> for PartialHalfEdge {
 
 impl MaybePartial<HalfEdge> {
     /// Access the curve
-    pub fn curve(&self) -> MaybePartial<Curve> {
+    pub fn curve(&self) -> Partial<Curve> {
         match self {
-            Self::Full(full) => full.curve().clone().into(),
+            Self::Full(full) => {
+                Partial::from_full_entry_point(full.curve().clone())
+            }
             Self::Partial(partial) => partial.curve(),
         }
     }

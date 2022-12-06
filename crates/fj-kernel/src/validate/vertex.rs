@@ -183,10 +183,8 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial::{
-            HasPartial, PartialCurve, PartialSurfaceVertex, PartialVertex,
-        },
-        partial2::Partial,
+        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial2::{Partial, PartialCurve},
         services::Services,
         validate::Validate,
     };
@@ -205,7 +203,7 @@ mod tests {
 
         let valid = PartialVertex {
             position: Some([0.].into()),
-            curve: curve.into(),
+            curve: Partial::from_partial(curve),
             ..Default::default()
         }
         .build(&mut services.objects);
@@ -237,7 +235,7 @@ mod tests {
 
             PartialVertex {
                 position: Some([0.].into()),
-                curve: curve.into(),
+                curve: Partial::from_partial(curve),
                 ..Default::default()
             }
             .build(&mut services.objects)

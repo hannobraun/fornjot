@@ -152,8 +152,8 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, FaceBuilder},
         objects::Face,
-        partial::{HasPartial, PartialCurve},
-        partial2::Partial,
+        partial::HasPartial,
+        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 

@@ -89,8 +89,10 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject, builder::CurveBuilder,
-        insert::Insert, partial::PartialCurve, partial2::Partial,
+        algorithms::transform::TransformObject,
+        builder::CurveBuilder,
+        insert::Insert,
+        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 

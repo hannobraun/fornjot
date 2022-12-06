@@ -164,8 +164,8 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::HalfEdge,
-        partial::{HasPartial, PartialCurve, PartialVertex},
-        partial2::Partial,
+        partial::{HasPartial, PartialVertex},
+        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 
@@ -184,7 +184,7 @@ mod tests {
             .insert(&mut services.objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
-            curve: curve.into(),
+            curve: Partial::from_full_entry_point(curve),
             ..Default::default()
         }
         .build(&mut services.objects)

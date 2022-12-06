@@ -24,7 +24,7 @@ impl PartialCycle {
     pub fn surface(&self) -> Option<Partial<Surface>> {
         self.half_edges
             .first()
-            .map(|half_edge| half_edge.curve().surface())
+            .map(|half_edge| half_edge.curve().read().surface.clone())
     }
 
     /// Add the provided half-edges to the partial cycle

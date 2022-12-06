@@ -77,8 +77,8 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
         objects::HalfEdge,
-        partial::{HasPartial, PartialCurve},
-        partial2::Partial,
+        partial::HasPartial,
+        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 

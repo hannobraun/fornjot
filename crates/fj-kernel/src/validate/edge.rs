@@ -224,7 +224,11 @@ mod tests {
             let mut vertices = valid.vertices().clone();
             let mut vertex = vertices[1].to_partial();
             // Arranging for an equal but not identical curve here.
-            vertex.curve = valid.curve().to_partial().into();
+            vertex.curve = Partial::from_partial(
+                Partial::from_full_entry_point(valid.curve().clone())
+                    .read()
+                    .clone(),
+            );
             vertices[1] = vertex
                 .build(&mut services.objects)
                 .insert(&mut services.objects);

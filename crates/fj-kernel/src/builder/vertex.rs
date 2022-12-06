@@ -4,9 +4,9 @@ use crate::{
     geometry::surface::SurfaceGeometry,
     objects::{Curve, GlobalVertex},
     partial::{
-        HasPartial, MaybePartial, PartialGlobalVertex, PartialSurfaceVertex,
-        PartialVertex,
+        HasPartial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
     },
+    partial2::Partial,
 };
 
 /// Builder API for [`PartialVertex`]
@@ -39,7 +39,7 @@ impl SurfaceVertexBuilder for PartialSurfaceVertex {
 pub trait GlobalVertexBuilder {
     /// Update partial global vertex from the given curve and position on it
     fn from_curve_and_position(
-        curve: impl Into<MaybePartial<Curve>>,
+        curve: Partial<Curve>,
         position: impl Into<Point<1>>,
     ) -> Self;
 
@@ -52,15 +52,13 @@ pub trait GlobalVertexBuilder {
 
 impl GlobalVertexBuilder for PartialGlobalVertex {
     fn from_curve_and_position(
-        curve: impl Into<MaybePartial<Curve>>,
+        curve: Partial<Curve>,
         position: impl Into<Point<1>>,
     ) -> Self {
-        let curve = curve.into().into_partial();
-
-        let path = curve.path.expect(
+        let path = curve.read().path.expect(
             "Need path to create `GlobalVertex` from curve and position",
         );
-        let surface = curve.surface.read().geometry.expect(
+        let surface = curve.read().surface.read().geometry.expect(
             "Need surface to create `GlobalVertex` from curve and position",
         );
 
