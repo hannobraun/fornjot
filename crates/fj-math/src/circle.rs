@@ -67,7 +67,7 @@ impl<const D: usize> Circle<D> {
         a[0] = radius;
         b[1] = radius;
 
-        Circle::new(center, a, b)
+        Self::new(center, a, b)
     }
 
     /// Access the center point of the circle

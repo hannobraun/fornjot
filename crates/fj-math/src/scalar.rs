@@ -82,7 +82,7 @@ impl Scalar {
 
     /// Indicate whether the scalar is zero
     pub fn is_zero(self) -> bool {
-        self == Scalar::ZERO
+        self == Self::ZERO
     }
 
     /// The sign of the scalar
@@ -182,7 +182,7 @@ impl Hash for Scalar {
 
 impl From<f32> for Scalar {
     fn from(scalar: f32) -> Self {
-        Self::from_f64(scalar as f64)
+        Self::from_f64(scalar.into())
     }
 }
 
@@ -206,7 +206,7 @@ impl ops::Neg for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::Add<T> for Scalar {
+impl<T: Into<Self>> ops::Add<T> for Scalar {
     type Output = Self;
 
     fn add(self, rhs: T) -> Self::Output {
@@ -214,7 +214,7 @@ impl<T: Into<Scalar>> ops::Add<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::Sub<T> for Scalar {
+impl<T: Into<Self>> ops::Sub<T> for Scalar {
     type Output = Self;
 
     fn sub(self, rhs: T) -> Self::Output {
@@ -222,7 +222,7 @@ impl<T: Into<Scalar>> ops::Sub<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::Mul<T> for Scalar {
+impl<T: Into<Self>> ops::Mul<T> for Scalar {
     type Output = Self;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -230,7 +230,7 @@ impl<T: Into<Scalar>> ops::Mul<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::Div<T> for Scalar {
+impl<T: Into<Self>> ops::Div<T> for Scalar {
     type Output = Self;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -238,7 +238,7 @@ impl<T: Into<Scalar>> ops::Div<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::Rem<T> for Scalar {
+impl<T: Into<Self>> ops::Rem<T> for Scalar {
     type Output = Self;
 
     fn rem(self, rhs: T) -> Self::Output {
@@ -246,35 +246,35 @@ impl<T: Into<Scalar>> ops::Rem<T> for Scalar {
     }
 }
 
-impl<T: Into<Scalar>> ops::AddAssign<T> for Scalar {
+impl<T: Into<Self>> ops::AddAssign<T> for Scalar {
     fn add_assign(&mut self, rhs: T) {
         self.0.add_assign(rhs.into().0);
         *self = self.0.into();
     }
 }
 
-impl<T: Into<Scalar>> ops::SubAssign<T> for Scalar {
+impl<T: Into<Self>> ops::SubAssign<T> for Scalar {
     fn sub_assign(&mut self, rhs: T) {
         self.0.sub_assign(rhs.into().0);
         *self = self.0.into();
     }
 }
 
-impl<T: Into<Scalar>> ops::MulAssign<T> for Scalar {
+impl<T: Into<Self>> ops::MulAssign<T> for Scalar {
     fn mul_assign(&mut self, rhs: T) {
         self.0.mul_assign(rhs.into().0);
         *self = self.0.into();
     }
 }
 
-impl<T: Into<Scalar>> ops::DivAssign<T> for Scalar {
+impl<T: Into<Self>> ops::DivAssign<T> for Scalar {
     fn div_assign(&mut self, rhs: T) {
         self.0.div_assign(rhs.into().0);
         *self = self.0.into();
     }
 }
 
-impl<T: Into<Scalar>> ops::RemAssign<T> for Scalar {
+impl<T: Into<Self>> ops::RemAssign<T> for Scalar {
     fn rem_assign(&mut self, rhs: T) {
         self.0.rem_assign(rhs.into().0);
         *self = self.0.into();
@@ -608,9 +608,9 @@ impl Sign {
     /// Convert this sign back to a scalar
     pub fn to_scalar(self) -> Scalar {
         match self {
-            Sign::Negative => -Scalar::ONE,
-            Sign::Positive => Scalar::ONE,
-            Sign::Zero => Scalar::ZERO,
+            Self::Negative => -Scalar::ONE,
+            Self::Positive => Scalar::ONE,
+            Self::Zero => Scalar::ZERO,
         }
     }
 }

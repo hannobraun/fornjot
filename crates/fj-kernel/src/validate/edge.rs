@@ -117,7 +117,7 @@ impl HalfEdgeValidationError {
         let front_curve = half_edge.front().curve();
 
         if back_curve.id() != front_curve.id() {
-            return Err(HalfEdgeValidationError::CurveMismatch {
+            return Err(Self::CurveMismatch {
                 back_curve: back_curve.clone(),
                 front_curve: front_curve.clone(),
             });

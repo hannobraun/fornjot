@@ -161,16 +161,16 @@ impl MaybePartial<Curve> {
     /// Access the path
     pub fn path(&self) -> Option<SurfacePath> {
         match self {
-            MaybePartial::Full(full) => Some(full.path()),
-            MaybePartial::Partial(partial) => partial.path,
+            Self::Full(full) => Some(full.path()),
+            Self::Partial(partial) => partial.path,
         }
     }
 
     /// Access the surface
     pub fn surface(&self) -> Option<Handle<Surface>> {
         match self {
-            MaybePartial::Full(full) => Some(full.surface().clone()),
-            MaybePartial::Partial(partial) => partial.surface.clone(),
+            Self::Full(full) => Some(full.surface().clone()),
+            Self::Partial(partial) => partial.surface.clone(),
         }
     }
 

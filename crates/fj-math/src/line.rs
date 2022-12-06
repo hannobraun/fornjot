@@ -21,12 +21,10 @@ impl<const D: usize> Line<D> {
         origin: Point<D>,
         direction: Vector<D>,
     ) -> Self {
-        if direction.magnitude() == Scalar::ZERO {
-            panic!(
-                "Can't construct `Line`. Direction is zero: {:?}",
-                direction
-            );
-        }
+        assert!(
+            direction.magnitude() != Scalar::ZERO,
+            "Can't construct `Line`. Direction is zero: {direction:?}"
+        );
 
         Self { origin, direction }
     }

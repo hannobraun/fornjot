@@ -115,7 +115,7 @@ impl PartialSurfaceVertex {
                     &surface.geometry(),
                     position,
                 ),
-            )
+            );
         }
         let global_form = self.global_form.into_full(objects);
 

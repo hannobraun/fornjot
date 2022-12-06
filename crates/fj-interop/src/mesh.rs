@@ -96,10 +96,10 @@ impl Mesh<Point<3>> {
 impl<V> Default for Mesh<V> {
     fn default() -> Self {
         Self {
-            vertices: Default::default(),
-            indices: Default::default(),
-            indices_by_vertex: Default::default(),
-            triangles: Default::default(),
+            vertices: Vec::default(),
+            indices: Vec::default(),
+            indices_by_vertex: HashMap::default(),
+            triangles: Vec::default(),
         }
     }
 }

@@ -101,7 +101,7 @@ impl Aabb<3> {
 
     /// Access the vertices of the AABB
     pub fn vertices(&self) -> [Point<3>; 8] {
-        self.to_parry().vertices().map(|vertex| vertex.into())
+        self.to_parry().vertices().map(Into::into)
     }
 
     /// Compute the center point of the AABB

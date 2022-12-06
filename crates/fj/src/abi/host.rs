@@ -19,7 +19,7 @@ impl<'a, H: crate::models::Host + Sized> From<&'a mut H> for Host<'a> {
             let host = unsafe { &mut *(user_data as *mut H) };
 
             if let Err(e) = std::panic::catch_unwind(AssertUnwindSafe(|| {
-                host.register_boxed_model(Box::new(model))
+                host.register_boxed_model(Box::new(model));
             })) {
                 crate::abi::on_panic(e);
             }

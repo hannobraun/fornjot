@@ -204,7 +204,7 @@ impl<'a> fj::models::Host for Host<'a> {
 
 impl<'a> fj::models::Context for Host<'a> {
     fn get_argument(&self, name: &str) -> Option<&str> {
-        self.args.get(name).map(|s| s.as_str())
+        self.args.get(name).map(String::as_str)
     }
 }
 

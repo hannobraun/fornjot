@@ -71,8 +71,8 @@ enum ModelPathSource {
 impl ModelPathSource {
     fn path(&self) -> &Path {
         match self {
-            ModelPathSource::Args(path) => path,
-            ModelPathSource::Config(path) => path,
+            Self::Args(path) => path,
+            Self::Config(path) => path,
         }
     }
 }
@@ -99,10 +99,10 @@ fn load_error_context_inner(
     )?;
     match model_path {
         ModelPathSource::Args(_) => {
-            write!(error, "\n- Passed via command-line argument")?
+            write!(error, "\n- Passed via command-line argument")?;
         }
         ModelPathSource::Config(_) => {
-            write!(error, "\n- Specified as default model in configuration")?
+            write!(error, "\n- Specified as default model in configuration")?;
         }
     }
     write!(error, "\n- Path of model: {}", path.display())?;

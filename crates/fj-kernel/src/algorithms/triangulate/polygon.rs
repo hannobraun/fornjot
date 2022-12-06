@@ -5,6 +5,7 @@ use crate::algorithms::intersect::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
 };
 
+#[derive(Default)]
 pub struct Polygon {
     exterior: PolyChain<2>,
     interiors: Vec<PolyChain<2>>,
@@ -13,10 +14,7 @@ pub struct Polygon {
 impl Polygon {
     /// Construct an instance of `Polygon`
     pub fn new() -> Self {
-        Self {
-            exterior: PolyChain::new(),
-            interiors: Vec::new(),
-        }
+        Self::default()
     }
 
     pub fn with_exterior(mut self, exterior: impl Into<PolyChain<2>>) -> Self {

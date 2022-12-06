@@ -45,15 +45,15 @@ impl EventLoopHandler {
                 let event = events
                     .try_recv()
                     .map_err(|err| {
-                        if err.is_disconnected() {
-                            panic!("Expected channel to never disconnect");
-                        }
+                        assert!(
+                            !err.is_disconnected(),
+                            "Expected channel to never disconnect"
+                        );
                     })
                     .ok();
 
-                let event = match event {
-                    Some(status_update) => status_update,
-                    None => break,
+                let Some(event) = event else {
+                    break
                 };
 
                 match event {
@@ -249,7 +249,7 @@ fn input_event<T>(
         } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
-                    (*y as f64) * ZOOM_FACTOR_LINE
+                    f64::from(*y) * ZOOM_FACTOR_LINE
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..

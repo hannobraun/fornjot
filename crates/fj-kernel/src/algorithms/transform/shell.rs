@@ -19,6 +19,6 @@ impl TransformObject for Shell {
                 face.transform_with_cache(transform, objects, cache)
             });
 
-        Shell::new(faces)
+        Self::new(faces)
     }
 }

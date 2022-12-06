@@ -9,7 +9,6 @@ pub struct Movement;
 
 impl Movement {
     pub fn apply(
-        &mut self,
         previous: NormalizedScreenPosition,
         current: NormalizedScreenPosition,
         focus_point: FocusPoint,

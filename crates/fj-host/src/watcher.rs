@@ -29,16 +29,10 @@ impl Watcher {
                 // Various acceptable ModifyKind kinds. Varies across platforms
                 // (e.g. MacOs vs. Windows10)
                 if let notify::EventKind::Modify(
-                    notify::event::ModifyKind::Any,
-                )
-                | notify::EventKind::Modify(
-                    notify::event::ModifyKind::Data(
-                        notify::event::DataChange::Any,
-                    ),
-                )
-                | notify::EventKind::Modify(
-                    notify::event::ModifyKind::Data(
-                        notify::event::DataChange::Content,
+                    notify::event::ModifyKind::Any
+                    | notify::event::ModifyKind::Data(
+                        notify::event::DataChange::Any
+                        | notify::event::DataChange::Content,
                     ),
                 ) = event.kind
                 {
@@ -86,7 +80,7 @@ impl Watcher {
         thread::spawn(move || {
             watch_tx_2
                 .send(TriggerEvaluation)
-                .expect("Channel is disconnected")
+                .expect("Channel is disconnected");
         });
 
         Ok(Self {

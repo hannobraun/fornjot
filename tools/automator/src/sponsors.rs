@@ -9,7 +9,7 @@ pub struct Sponsors {
 }
 
 impl Sponsors {
-    pub async fn query(octocrab: &Octocrab) -> anyhow::Result<Sponsors> {
+    pub async fn query(octocrab: &Octocrab) -> anyhow::Result<Self> {
         let response: QueryResult = octocrab
             .graphql(
                 "query {
@@ -74,7 +74,7 @@ impl Sponsors {
 
         sponsors.sort();
 
-        Ok(Sponsors { inner: sponsors })
+        Ok(Self { inner: sponsors })
     }
 
     pub fn as_markdown(

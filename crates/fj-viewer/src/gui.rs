@@ -75,7 +75,7 @@ impl Gui {
         Self {
             context,
             render_pass,
-            options: Default::default(),
+            options: Options::default(),
         }
     }
 

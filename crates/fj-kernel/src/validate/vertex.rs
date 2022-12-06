@@ -91,7 +91,7 @@ impl VertexValidationError {
         let surface_form_surface = vertex.surface_form().surface();
 
         if curve_surface.id() != surface_form_surface.id() {
-            return Err(VertexValidationError::SurfaceMismatch {
+            return Err(Self::SurfaceMismatch {
                 curve_surface: curve_surface.clone(),
                 surface_form_surface: surface_form_surface.clone(),
             });
@@ -113,7 +113,7 @@ impl VertexValidationError {
         let distance = curve_position_as_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
-            return Err(VertexValidationError::PositionMismatch {
+            return Err(Self::PositionMismatch {
                 vertex: vertex.clone(),
                 surface_vertex: vertex.surface_form().clone_object(),
                 curve_position_as_surface,

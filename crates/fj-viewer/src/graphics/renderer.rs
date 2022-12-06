@@ -204,8 +204,8 @@ impl Renderer {
         scale_factor: f32,
         gui: &mut Gui,
     ) -> Result<(), DrawError> {
-        let aspect_ratio = self.surface_config.width as f64
-            / self.surface_config.height as f64;
+        let aspect_ratio = f64::from(self.surface_config.width)
+            / f64::from(self.surface_config.height);
         let uniforms = Uniforms {
             transform: Transform::for_vertices(camera, aspect_ratio),
             transform_normals: Transform::for_normals(camera),

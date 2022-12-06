@@ -55,7 +55,7 @@ impl<T> From<std::vec::Vec<T>> for Vec<T> {
             // the items are gone, time to free the original vec
             drop(items);
 
-            Vec { ptr, len }
+            Self { ptr, len }
         }
     }
 }
@@ -74,7 +74,7 @@ impl<T: Clone> Clone for Vec<T> {
 
 impl<T: Copy> From<Vec<T>> for Box<[T]> {
     fn from(v: Vec<T>) -> Self {
-        Box::from(&*v)
+        Self::from(&*v)
     }
 }
 
@@ -98,7 +98,7 @@ impl<T> Deref for Vec<T> {
         // Safety: We control "ptr" and "len", so we know they are always
         // initialized and within bounds.
         unsafe {
-            let Vec { ptr, len } = *self;
+            let Self { ptr, len } = *self;
             std::slice::from_raw_parts(ptr.as_ptr(), len)
         }
     }
@@ -106,7 +106,7 @@ impl<T> Deref for Vec<T> {
 
 impl<T> Drop for Vec<T> {
     fn drop(&mut self) {
-        let Vec { ptr, len } = *self;
+        let Self { ptr, len } = *self;
         let ptr = ptr.as_ptr();
 
         for i in 0..self.len {
@@ -169,7 +169,7 @@ pub struct String(Vec<u8>);
 
 impl From<std::string::String> for String {
     fn from(s: std::string::String) -> Self {
-        String(s.into_bytes().into())
+        Self(s.into_bytes().into())
     }
 }
 
@@ -181,7 +181,7 @@ impl From<String> for std::string::String {
 
 impl From<String> for Box<str> {
     fn from(s: String) -> Self {
-        Box::from(&*s)
+        Self::from(&*s)
     }
 }
 impl PartialEq<str> for String {
@@ -223,8 +223,8 @@ pub enum Result<T, E> {
 impl<T, E: Debug> Result<T, E> {
     pub fn unwrap(self) -> T {
         match self {
-            Result::Ok(value) => value,
-            Result::Err(e) => panic!("Unwrapped an Err({e:?})"),
+            Self::Ok(value) => value,
+            Self::Err(e) => panic!("Unwrapped an Err({e:?})"),
         }
     }
 }
@@ -232,8 +232,8 @@ impl<T, E: Debug> Result<T, E> {
 impl<T, E> From<std::result::Result<T, E>> for Result<T, E> {
     fn from(result: std::result::Result<T, E>) -> Self {
         match result {
-            Ok(ok) => Result::Ok(ok),
-            Err(err) => Result::Err(err),
+            Ok(ok) => Self::Ok(ok),
+            Err(err) => Self::Err(err),
         }
     }
 }
@@ -241,8 +241,8 @@ impl<T, E> From<std::result::Result<T, E>> for Result<T, E> {
 impl<T, E> From<Result<T, E>> for std::result::Result<T, E> {
     fn from(result: Result<T, E>) -> Self {
         match result {
-            Result::Ok(ok) => std::result::Result::Ok(ok),
-            Result::Err(err) => std::result::Result::Err(err),
+            Result::Ok(ok) => Self::Ok(ok),
+            Result::Err(err) => Self::Err(err),
         }
     }
 }
@@ -263,7 +263,7 @@ impl<T> Slice<T> {
     pub unsafe fn from_slice(items: &[T]) -> Self {
         let ptr = items.as_ptr();
         let len = items.len();
-        Slice {
+        Self {
             // Safety: It's okay to cast away the const because you can't mutate
             // a slice.
             ptr: NonNull::new(ptr as *mut T).unwrap(),
@@ -272,7 +272,7 @@ impl<T> Slice<T> {
     }
 
     pub unsafe fn into_slice<'a>(self) -> &'a [T] {
-        let Slice { ptr, len } = self;
+        let Self { ptr, len } = self;
         std::slice::from_raw_parts(ptr.as_ptr(), len)
     }
 }
@@ -300,7 +300,7 @@ impl<T> Deref for Slice<T> {
         // this should be safe as long as people can never get a Slice<T> that
         // outlives the data it points to.
         unsafe {
-            let Slice { ptr, len, .. } = *self;
+            let Self { ptr, len, .. } = *self;
             std::slice::from_raw_parts(ptr.as_ptr(), len)
         }
     }
@@ -316,8 +316,8 @@ impl StringSlice {
     ///
     /// It is the caller's responsibility to make sure this [`Slice`] doesn't
     /// outlive the slice that was passed in.
-    pub unsafe fn from_str(s: &str) -> StringSlice {
-        StringSlice(Slice::from_slice(s.as_bytes()))
+    pub unsafe fn from_str(s: &str) -> Self {
+        Self(Slice::from_slice(s.as_bytes()))
     }
 
     pub unsafe fn into_str<'a>(self) -> &'a str {
@@ -356,7 +356,7 @@ impl From<Error> for BoxedError {
         // where `Source` is a private wrapper around String that implements
         // std::error::Error, however then people will see what *looks* like a
         // particular error type, but they won't be able to downcast to it.
-        BoxedError {
+        Self {
             msg: err.to_string().into(),
         }
     }
@@ -372,8 +372,8 @@ pub enum Option<T> {
 impl<T> Option<T> {
     pub fn map<T2>(self, func: impl FnOnce(T) -> T2) -> Option<T2> {
         match self {
-            Option::Some(value) => Option::Some(func(value)),
-            Option::None => Option::None,
+            Self::Some(value) => Option::Some(func(value)),
+            Self::None => Option::None,
         }
     }
 }
@@ -384,8 +384,8 @@ where
 {
     fn from(opt: std::option::Option<T1>) -> Self {
         match opt {
-            Some(value) => Option::Some(value.into()),
-            None => Option::None,
+            Some(value) => Self::Some(value.into()),
+            None => Self::None,
         }
     }
 }

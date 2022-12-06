@@ -108,7 +108,7 @@ where
     T: Hash,
 {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.deref().hash(state)
+        self.deref().hash(state);
     }
 }
 
@@ -244,7 +244,7 @@ impl<T> Hash for HandleWrapper<T> {
             return;
         }
 
-        self.0.id().hash(state)
+        self.0.id().hash(state);
     }
 }
 

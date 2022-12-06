@@ -19,6 +19,6 @@ impl TransformObject for Solid {
             .cloned()
             .map(|shell| shell.transform_with_cache(transform, objects, cache));
 
-        Solid::new(shells)
+        Self::new(shells)
     }
 }

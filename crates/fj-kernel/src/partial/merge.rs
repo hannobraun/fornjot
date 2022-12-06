@@ -46,9 +46,10 @@ where
         }
 
         // We know that `self != other`, or we wouldn't have made it here.
-        if self.is_some() && other.is_some() {
-            panic!("Can't merge two `Option`s that are both `Some`")
-        }
+        assert!(
+            self.is_none() || other.is_none(),
+            "Can't merge two `Option`s that are both `Some`"
+        );
 
         self.xor(other)
     }

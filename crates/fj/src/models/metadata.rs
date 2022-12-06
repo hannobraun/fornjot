@@ -41,7 +41,7 @@ impl Metadata {
         let version = version.into();
         assert!(!version.is_empty());
 
-        Metadata {
+        Self {
             name,
             version,
             short_description: None,
@@ -62,7 +62,7 @@ impl Metadata {
             return self;
         }
 
-        Metadata {
+        Self {
             short_description: Some(short_description),
             ..self
         }
@@ -75,7 +75,7 @@ impl Metadata {
             return self;
         }
 
-        Metadata {
+        Self {
             description: Some(description),
             ..self
         }
@@ -88,7 +88,7 @@ impl Metadata {
             return self;
         }
 
-        Metadata {
+        Self {
             homepage: Some(homepage),
             ..self
         }
@@ -101,7 +101,7 @@ impl Metadata {
             return self;
         }
 
-        Metadata {
+        Self {
             repository: Some(repository),
             ..self
         }
@@ -114,7 +114,7 @@ impl Metadata {
             return self;
         }
 
-        Metadata {
+        Self {
             license: Some(license),
             ..self
         }
@@ -144,7 +144,7 @@ impl ModelMetadata {
         let name = name.into();
         assert!(!name.is_empty());
 
-        ModelMetadata {
+        Self {
             name,
             description: None,
             arguments: Vec::new(),
@@ -158,7 +158,7 @@ impl ModelMetadata {
             return self;
         }
 
-        ModelMetadata {
+        Self {
             description: Some(description),
             ..self
         }
@@ -197,7 +197,7 @@ impl ArgumentMetadata {
     pub fn new(name: impl Into<String>) -> Self {
         let name = name.into();
         assert!(!name.is_empty());
-        ArgumentMetadata {
+        Self {
             name,
             description: None,
             default_value: None,
@@ -227,6 +227,6 @@ impl ArgumentMetadata {
 
 impl From<&str> for ArgumentMetadata {
     fn from(name: &str) -> Self {
-        ArgumentMetadata::new(name)
+        Self::new(name)
     }
 }

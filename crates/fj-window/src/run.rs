@@ -65,13 +65,13 @@ fn handle_error(
 
     let mut msg = String::new();
 
-    writeln!(msg, "Shape processing error: {}", err)?;
+    writeln!(msg, "Shape processing error: {err}")?;
 
     let mut current_err = &err as &dyn error::Error;
     while let Some(err) = current_err.source() {
         writeln!(msg)?;
         writeln!(msg, "Caused by:")?;
-        writeln!(msg, "    {}", err)?;
+        writeln!(msg, "    {err}")?;
 
         current_err = err;
     }

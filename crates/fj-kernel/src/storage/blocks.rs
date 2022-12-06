@@ -94,9 +94,7 @@ impl<T> Block<T> {
     pub fn insert(&mut self, index: ObjectIndex, object: T) {
         let slot = &mut self.objects[index.0];
 
-        if slot.is_some() {
-            panic!("Attempting to overwrite object in store")
-        }
+        assert!(slot.is_none(), "Attempting to overwrite object in store");
 
         *slot = Some(object);
     }

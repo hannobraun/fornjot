@@ -7,7 +7,7 @@ use crate::parse::{
 };
 
 impl Initializer {
-    fn register(&self) -> TokenStream {
+    fn register() -> TokenStream {
         quote! {
             const _: () = {
                 fj::register_model!(|host| {
@@ -28,20 +28,20 @@ impl Initializer {
 
 impl ToTokens for Initializer {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let Initializer { model } = self;
+        let Self { model } = self;
 
-        tokens.extend(self.register());
+        tokens.extend(Self::register());
         model.to_tokens(tokens);
     }
 }
 
 impl Model {
-    fn definition(&self) -> TokenStream {
+    fn definition() -> TokenStream {
         quote! { struct Model; }
     }
 
     fn trait_implementation(&self) -> TokenStream {
-        let Model { metadata, geometry } = self;
+        let Self { metadata, geometry } = self;
 
         quote! {
             impl fj::models::Model for Model {
@@ -54,14 +54,14 @@ impl Model {
 
 impl ToTokens for Model {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        tokens.extend(self.definition());
+        tokens.extend(Self::definition());
         tokens.extend(self.trait_implementation());
     }
 }
 
 impl ToTokens for Metadata {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let Metadata { name, arguments } = self;
+        let Self { name, arguments } = self;
 
         tokens.extend(quote! {
             fn metadata(&self) -> fj::models::ModelMetadata {
@@ -74,7 +74,7 @@ impl ToTokens for Metadata {
 
 impl ToTokens for ArgumentMetadata {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let ArgumentMetadata {
+        let Self {
             name,
             default_value,
         } = self;
@@ -91,7 +91,7 @@ impl ToTokens for ArgumentMetadata {
 
 impl ToTokens for GeometryFunction {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let GeometryFunction {
+        let Self {
             geometry_function,
             arguments,
             constraints,
@@ -124,7 +124,7 @@ impl ToTokens for GeometryFunction {
 
 impl ToTokens for ExtractedArgument {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let ExtractedArgument {
+        let Self {
             ident,
             ty,
             default_value,
@@ -155,7 +155,7 @@ impl ToTokens for ExtractedArgument {
 
 impl ToTokens for Constraint {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let Constraint { target, expr, kind } = self;
+        let Self { target, expr, kind } = self;
 
         let operator = match kind {
             ConstraintKind::Max => quote!(<=),

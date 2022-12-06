@@ -115,9 +115,8 @@ fn contains_result(ty: &Type) -> bool {
 }
 
 fn argument_constraints(arg: &Argument) -> Vec<Constraint> {
-    let attr = match arg.attr.as_ref() {
-        Some(a) => a,
-        None => return Vec::new(),
+    let Some(attr) = arg.attr.as_ref() else {
+        return Vec::new()
     };
 
     let mut constraints = Vec::new();
@@ -167,10 +166,11 @@ impl Argument {
 
 impl Parse for Argument {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let mut attr = None;
-        if input.peek(syn::token::Pound) {
-            attr = Some(input.parse()?);
-        }
+        let attr = if input.peek(syn::token::Pound) {
+            Some(input.parse()?)
+        } else {
+            None
+        };
         let ident: Ident = input.parse()?;
 
         let _: syn::token::Colon = input.parse()?;
@@ -202,8 +202,7 @@ impl Parse for HelperAttribute {
             return Err(syn::Error::new_spanned(
                 ident.clone(),
                 format!(
-                    "Unknown attribute \"{}\" found, expected \"param\"",
-                    ident
+                    "Unknown attribute \"{ident}\" found, expected \"param\""
                 ),
             ));
         }
