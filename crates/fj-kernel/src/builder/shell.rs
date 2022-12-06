@@ -10,7 +10,8 @@ use crate::{
     insert::Insert,
     objects::{Cycle, Face, FaceSet, Objects, Shell},
     partial::{
-        HasPartial, PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+        HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
+        PartialSurfaceVertex, PartialVertex,
     },
     partial2::{Partial, PartialCurve, PartialObject, PartialSurface},
     services::Service,
@@ -82,23 +83,39 @@ impl ShellBuilder {
                 .half_edges()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
-                    let global_edge = half_edge.global_form();
-                    let global_curve = Partial::from_full_entry_point(
-                        global_edge.curve().clone(),
-                    );
+                    let global_edge = Partial::from_full_entry_point(
+                        half_edge.global_form().clone(),
+                    )
+                    .read()
+                    .clone();
 
                     PartialHalfEdge {
-                        vertices: array::from_fn(|_| {
-                            PartialVertex {
-                                curve: Partial::from_partial(PartialCurve {
-                                    global_form: global_curve.clone(),
+                        vertices: global_edge.vertices.clone().map(
+                            |global_vertex| {
+                                PartialVertex {
+                                    curve: Partial::from_partial(
+                                        PartialCurve {
+                                            global_form: global_edge
+                                                .curve
+                                                .clone(),
+                                            ..Default::default()
+                                        },
+                                    ),
+                                    surface_form: MaybePartial::from(
+                                        PartialSurfaceVertex {
+                                            global_form: global_vertex,
+                                            ..Default::default()
+                                        },
+                                    ),
                                     ..Default::default()
-                                }),
-                                ..Default::default()
-                            }
-                            .into()
+                                }
+                                .into()
+                            },
+                        ),
+                        global_form: MaybePartial::from(PartialGlobalEdge {
+                            curve: global_edge.curve,
+                            vertices: global_edge.vertices,
                         }),
-                        global_form: global_edge.clone().into(),
                     }
                     .update_as_line_segment_from_points(
                         Partial::from_full_entry_point(surface.clone()),
@@ -174,7 +191,9 @@ impl ShellBuilder {
                             surface: Partial::from_full_entry_point(
                                 surface.clone(),
                             ),
-                            global_form: from.global_form().clone().into(),
+                            global_form: Partial::from_full_entry_point(
+                                from.global_form().clone(),
+                            ),
                         };
 
                         let curve = PartialCurve {
@@ -308,7 +327,9 @@ impl ShellBuilder {
                             surface: Partial::from_full_entry_point(
                                 surface.clone(),
                             ),
-                            global_form: vertex.global_form().clone().into(),
+                            global_form: Partial::from_full_entry_point(
+                                vertex.global_form().clone(),
+                            ),
                         }
                         .build(objects)
                         .insert(objects)
@@ -323,6 +344,11 @@ impl ShellBuilder {
                 .array_windows_ext()
                 .zip(top_edges)
             {
+                let global_edge =
+                    Partial::from_full_entry_point(edge.global_form().clone())
+                        .read()
+                        .clone();
+
                 let vertices = edge
                     .vertices()
                     .each_ref_ext()
@@ -346,7 +372,10 @@ impl ShellBuilder {
                 edges.push(
                     PartialHalfEdge {
                         vertices: vertices.map(Into::into),
-                        global_form: edge.global_form().clone().into(),
+                        global_form: MaybePartial::from(PartialGlobalEdge {
+                            curve: global_edge.curve,
+                            vertices: global_edge.vertices,
+                        }),
                     }
                     .update_as_line_segment()
                     .build(objects)

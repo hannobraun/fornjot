@@ -284,7 +284,11 @@ mod tests {
                 .vertices()
                 .access_in_normalized_order()
                 // Creating equal but not identical vertices here.
-                .map(|vertex| vertex.to_partial().into());
+                .map(|vertex| {
+                    Partial::from_partial(
+                        Partial::from_full_entry_point(vertex).read().clone(),
+                    )
+                });
             tmp.build(&mut services.objects)
                 .insert(&mut services.objects)
         });

@@ -2,11 +2,9 @@ use fj_math::Point;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{Curve, GlobalVertex},
-    partial::{
-        HasPartial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
-    },
-    partial2::Partial,
+    objects::Curve,
+    partial::{PartialSurfaceVertex, PartialVertex},
+    partial2::{Partial, PartialGlobalVertex},
 };
 
 /// Builder API for [`PartialVertex`]
@@ -30,7 +28,7 @@ pub trait SurfaceVertexBuilder {
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
     fn infer_global_form(&mut self) -> &mut Self {
-        self.global_form = GlobalVertex::partial().into();
+        self.global_form = Partial::new();
         self
     }
 }

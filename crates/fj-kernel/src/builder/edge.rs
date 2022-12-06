@@ -233,9 +233,9 @@ impl GlobalEdgeBuilder for PartialGlobalEdge {
     ) -> Self {
         self.curve =
             Partial::from_full_entry_point(curve.global_form().clone());
-        self.vertices = vertices
-            .clone()
-            .map(|vertex| vertex.global_form().clone().into());
+        self.vertices = vertices.clone().map(|vertex| {
+            Partial::from_full_entry_point(vertex.global_form().clone())
+        });
         self
     }
 }

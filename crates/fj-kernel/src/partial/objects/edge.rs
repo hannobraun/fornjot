@@ -113,7 +113,7 @@ pub struct PartialGlobalEdge {
     pub curve: Partial<GlobalCurve>,
 
     /// The vertices that bound the [`GlobalEdge`] in the curve
-    pub vertices: [MaybePartial<GlobalVertex>; 2],
+    pub vertices: [Partial<GlobalVertex>; 2],
 }
 
 impl PartialGlobalEdge {
@@ -122,19 +122,17 @@ impl PartialGlobalEdge {
         let curve = self.curve.build(objects);
         let vertices = self
             .vertices
-            .map(|global_vertex| global_vertex.into_full(objects));
+            .map(|global_vertex| global_vertex.build(objects));
 
         GlobalEdge::new(curve, vertices)
     }
 }
 
 impl MergeWith for PartialGlobalEdge {
-    fn merge_with(self, other: impl Into<Self>) -> Self {
-        let other = other.into();
-
+    fn merge_with(self, _: impl Into<Self>) -> Self {
         Self {
             curve: self.curve,
-            vertices: self.vertices.merge_with(other.vertices),
+            vertices: self.vertices,
         }
     }
 }
@@ -146,7 +144,7 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
             vertices: global_edge
                 .vertices()
                 .access_in_normalized_order()
-                .map(Into::into),
+                .map(Partial::from_full_entry_point),
         }
     }
 }
@@ -163,11 +161,12 @@ impl MaybePartial<GlobalEdge> {
     }
 
     /// Access the vertices
-    pub fn vertices(&self) -> [MaybePartial<GlobalVertex>; 2] {
+    pub fn vertices(&self) -> [Partial<GlobalVertex>; 2] {
         match self {
-            Self::Full(full) => {
-                full.vertices().access_in_normalized_order().map(Into::into)
-            }
+            Self::Full(full) => full
+                .vertices()
+                .access_in_normalized_order()
+                .map(Partial::from_full_entry_point),
             Self::Partial(partial) => partial.vertices.clone(),
         }
     }
