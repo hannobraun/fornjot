@@ -60,6 +60,17 @@ impl<T: HasPartial + 'static> Partial<T> {
         Self { inner }
     }
 
+    /// Construct a partial from the entry point to an object graph
+    ///
+    /// This is a convenience wrapper around [`Self::from_full`], passing an
+    /// empty cache to that method. It it not appropriate to call this method,
+    /// unless to start a conversion of an object graph by passing its entry
+    /// point.
+    pub fn from_full_entry_point(full: Handle<T>) -> Self {
+        let mut cache = FullToPartialCache::default();
+        Self::from_full(full, &mut cache)
+    }
+
     /// Access the partial object
     pub fn read(&self) -> impl Deref<Target = T::Partial> + '_ {
         RwLockReadGuard::map(self.inner.read(), |inner| &inner.partial)
