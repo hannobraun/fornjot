@@ -1,12 +1,10 @@
 use crate::{
     builder::GlobalEdgeBuilder,
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex, Replace},
+    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex},
     services::Service,
-    storage::Handle,
 };
 
 /// A partial [`HalfEdge`]
@@ -73,16 +71,6 @@ impl MergeWith for PartialHalfEdge {
     }
 }
 
-impl Replace<Surface> for PartialHalfEdge {
-    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        for vertex in &mut self.vertices {
-            vertex.replace(surface.clone());
-        }
-
-        self
-    }
-}
-
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
         let [back_vertex, front_vertex] =
@@ -91,6 +79,35 @@ impl From<&HalfEdge> for PartialHalfEdge {
         Self {
             vertices: [back_vertex, front_vertex],
             global_form: half_edge.global_form().clone().into(),
+        }
+    }
+}
+
+impl MaybePartial<HalfEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve(),
+        }
+    }
+
+    /// Access the front vertex
+    pub fn front(&self) -> MaybePartial<Vertex> {
+        match self {
+            Self::Full(full) => full.front().clone().into(),
+            Self::Partial(partial) => {
+                let [_, front] = &partial.vertices;
+                front.clone()
+            }
+        }
+    }
+
+    /// Access the vertices
+    pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
+        match self {
+            Self::Full(full) => full.vertices().clone().map(Into::into),
+            Self::Partial(partial) => partial.vertices.clone(),
         }
     }
 }
@@ -138,6 +155,26 @@ impl From<&GlobalEdge> for PartialGlobalEdge {
                 .vertices()
                 .access_in_normalized_order()
                 .map(Into::into),
+        }
+    }
+}
+
+impl MaybePartial<GlobalEdge> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<GlobalCurve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve.clone(),
+        }
+    }
+
+    /// Access the vertices
+    pub fn vertices(&self) -> [MaybePartial<GlobalVertex>; 2] {
+        match self {
+            Self::Full(full) => {
+                full.vertices().access_in_normalized_order().map(Into::into)
+            }
+            Self::Partial(partial) => partial.vertices.clone(),
         }
     }
 }

@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::GlobalVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{MaybePartial, MergeWith, Replace},
+    partial::{MaybePartial, MergeWith},
     services::Service,
     storage::Handle,
 };
@@ -67,19 +67,30 @@ impl MergeWith for PartialVertex {
     }
 }
 
-impl Replace<Surface> for PartialVertex {
-    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        self.curve.replace(surface);
-        self
-    }
-}
-
 impl From<&Vertex> for PartialVertex {
     fn from(vertex: &Vertex) -> Self {
         Self {
             position: Some(vertex.position()),
             curve: vertex.curve().clone().into(),
             surface_form: vertex.surface_form().clone().into(),
+        }
+    }
+}
+
+impl MaybePartial<Vertex> {
+    /// Access the curve
+    pub fn curve(&self) -> MaybePartial<Curve> {
+        match self {
+            Self::Full(full) => full.curve().clone().into(),
+            Self::Partial(partial) => partial.curve.clone(),
+        }
+    }
+
+    /// Access the surface form
+    pub fn surface_form(&self) -> MaybePartial<SurfaceVertex> {
+        match self {
+            Self::Full(full) => full.surface_form().clone().into(),
+            Self::Partial(partial) => partial.surface_form.clone(),
         }
     }
 }
@@ -145,6 +156,32 @@ impl From<&SurfaceVertex> for PartialSurfaceVertex {
     }
 }
 
+impl MaybePartial<SurfaceVertex> {
+    /// Access the position
+    pub fn position(&self) -> Option<Point<2>> {
+        match self {
+            Self::Full(full) => Some(full.position()),
+            Self::Partial(partial) => partial.position,
+        }
+    }
+
+    /// Access the surface
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        match self {
+            Self::Full(full) => Some(full.surface().clone()),
+            Self::Partial(partial) => partial.surface.clone(),
+        }
+    }
+
+    /// Access the global form
+    pub fn global_form(&self) -> MaybePartial<GlobalVertex> {
+        match self {
+            Self::Full(full) => full.global_form().clone().into(),
+            Self::Partial(partial) => partial.global_form.clone(),
+        }
+    }
+}
+
 /// A partial [`GlobalVertex`]
 ///
 /// See [`crate::partial`] for more information.
@@ -179,6 +216,16 @@ impl From<&GlobalVertex> for PartialGlobalVertex {
     fn from(global_vertex: &GlobalVertex) -> Self {
         Self {
             position: Some(global_vertex.position()),
+        }
+    }
+}
+
+impl MaybePartial<GlobalVertex> {
+    /// Access the position
+    pub fn position(&self) -> Option<Point<3>> {
+        match self {
+            Self::Full(full) => Some(full.position()),
+            Self::Partial(partial) => partial.position,
         }
     }
 }

@@ -136,3 +136,13 @@ impl From<&Cycle> for PartialCycle {
         }
     }
 }
+
+impl MaybePartial<Cycle> {
+    /// Access the surface
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        match self {
+            Self::Full(full) => full.surface().clone().into(),
+            Self::Partial(partial) => partial.surface(),
+        }
+    }
+}

@@ -1,11 +1,13 @@
-use std::ops::Deref;
+use std::{array, ops::Deref};
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Face, HalfEdge, Objects, Sketch},
-    partial::{HasPartial, Replace},
+    objects::{Cycle, Face, Objects, Sketch},
+    partial::{
+        HasPartial, MaybePartial, PartialCurve, PartialHalfEdge, PartialVertex,
+    },
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -28,8 +30,18 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = {
-                    let mut half_edge = HalfEdge::partial();
-                    half_edge.replace(surface);
+                    let half_edge = PartialHalfEdge {
+                        vertices: array::from_fn(|_| {
+                            MaybePartial::from(PartialVertex {
+                                curve: MaybePartial::from(PartialCurve {
+                                    surface: Some(surface.clone()),
+                                    ..Default::default()
+                                }),
+                                ..Default::default()
+                            })
+                        }),
+                        ..Default::default()
+                    };
                     half_edge
                         .update_as_circle_from_radius(circle.radius(), objects)
                         .build(objects)

@@ -1,7 +1,7 @@
 use crate::{
     geometry::surface::SurfaceGeometry,
     objects::{Objects, Surface},
-    partial::MergeWith,
+    partial::{MaybePartial, MergeWith},
 };
 
 /// A partial [`Surface`]
@@ -38,6 +38,16 @@ impl From<&Surface> for PartialSurface {
     fn from(surface: &Surface) -> Self {
         Self {
             geometry: Some(surface.geometry()),
+        }
+    }
+}
+
+impl MaybePartial<Surface> {
+    /// Access the geometry
+    pub fn geometry(&self) -> Option<SurfaceGeometry> {
+        match self {
+            Self::Full(full) => Some(full.geometry()),
+            Self::Partial(partial) => partial.geometry,
         }
     }
 }

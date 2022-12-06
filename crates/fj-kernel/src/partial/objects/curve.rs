@@ -63,6 +63,32 @@ impl From<&Curve> for PartialCurve {
     }
 }
 
+impl MaybePartial<Curve> {
+    /// Access the path
+    pub fn path(&self) -> Option<SurfacePath> {
+        match self {
+            Self::Full(full) => Some(full.path()),
+            Self::Partial(partial) => partial.path,
+        }
+    }
+
+    /// Access the surface
+    pub fn surface(&self) -> Option<Handle<Surface>> {
+        match self {
+            Self::Full(full) => Some(full.surface().clone()),
+            Self::Partial(partial) => partial.surface.clone(),
+        }
+    }
+
+    /// Access the global form
+    pub fn global_form(&self) -> MaybePartial<GlobalCurve> {
+        match self {
+            Self::Full(full) => full.global_form().clone().into(),
+            Self::Partial(partial) => partial.global_form.clone(),
+        }
+    }
+}
+
 /// A partial [`GlobalCurve`]
 ///
 /// This struct might seem unnecessary. [`GlobalCurve`] literally has nothing in
