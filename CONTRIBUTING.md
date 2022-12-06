@@ -63,6 +63,11 @@ This requires [`just`](https://crates.io/crates/just), which you can install lik
 cargo install just
 ```
 
+There might be additional setup required, depending on the platform you develop on. For example, the following [was reported](https://github.com/hannobraun/Fornjot/pull/1342#issue-1447029944):
+
+- > To make `just build` work on Windows I had to install [`Visual Studio` with `clang`](https://www.wikihow.com/Install-Clang-on-Windows) and then [`MinGW` with `ar`](https://winlibs.com/) and add both tools to `PATH` env var to make `cross-compiler` work.
+- > On Linux, I had to install `libfontconfig-dev` and `clang`.
+
 The purpose of `just build` is to run the same suite of checks and tests that the CI build runs, so you can figure out any issues in advance, without having to submit a pull request, and having to wait for a CI run to finish.
 
 This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration, and most deviations should be considered bugs in `justfile`.
