@@ -1,12 +1,10 @@
 use crate::{
     builder::GlobalEdgeBuilder,
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex, Replace},
+    partial::{MaybePartial, MergeWith, PartialCurve, PartialVertex},
     services::Service,
-    storage::Handle,
 };
 
 /// A partial [`HalfEdge`]
@@ -70,16 +68,6 @@ impl MergeWith for PartialHalfEdge {
             vertices: self.vertices.merge_with(other.vertices),
             global_form: self.global_form.merge_with(other.global_form),
         }
-    }
-}
-
-impl Replace<Surface> for PartialHalfEdge {
-    fn replace(&mut self, surface: Handle<Surface>) -> &mut Self {
-        for vertex in &mut self.vertices {
-            vertex.replace(surface.clone());
-        }
-
-        self
     }
 }
 
