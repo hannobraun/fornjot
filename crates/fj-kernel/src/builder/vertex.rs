@@ -3,8 +3,8 @@ use fj_math::Point;
 use crate::{
     geometry::surface::SurfaceGeometry,
     objects::Curve,
-    partial::{PartialSurfaceVertex, PartialVertex},
-    partial2::{Partial, PartialGlobalVertex},
+    partial::PartialVertex,
+    partial2::{Partial, PartialGlobalVertex, PartialSurfaceVertex},
 };
 
 /// Builder API for [`PartialVertex`]
@@ -15,7 +15,7 @@ pub trait VertexBuilder {
 
 impl VertexBuilder for PartialVertex {
     fn infer_surface_form(&mut self) -> &mut Self {
-        self.surface_form = PartialSurfaceVertex::default().into();
+        self.surface_form = Partial::new();
         self
     }
 }

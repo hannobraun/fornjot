@@ -183,10 +183,10 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial::{
-            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
+        partial::PartialVertex,
+        partial2::{
+            Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
         },
-        partial2::{Partial, PartialCurve},
         services::Services,
         validate::Validate,
     };
@@ -207,20 +207,19 @@ mod tests {
         let valid = PartialVertex {
             position: Some([0.].into()),
             curve: Partial::from_partial(curve),
-            surface_form: MaybePartial::from(PartialSurfaceVertex {
+            surface_form: Partial::from_partial(PartialSurfaceVertex {
                 surface,
                 ..Default::default()
             }),
         }
         .build(&mut services.objects);
         let invalid = {
-            let mut surface_form = valid.surface_form().to_partial();
-            surface_form.surface = Partial::from_full_entry_point(
+            let mut surface_form =
+                Partial::from_full_entry_point(valid.surface_form().clone());
+            surface_form.write().surface = Partial::from_full_entry_point(
                 services.objects.surfaces.xz_plane(),
             );
-            let surface_form = surface_form
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+            let surface_form = surface_form.build(&mut services.objects);
 
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
@@ -246,7 +245,7 @@ mod tests {
             PartialVertex {
                 position: Some([0.].into()),
                 curve: Partial::from_partial(curve),
-                surface_form: MaybePartial::from(PartialSurfaceVertex {
+                surface_form: Partial::from_partial(PartialSurfaceVertex {
                     surface,
                     ..Default::default()
                 }),
@@ -254,12 +253,11 @@ mod tests {
             .build(&mut services.objects)
         };
         let invalid = {
-            let mut surface_form = valid.surface_form().to_partial();
-            surface_form.position = Some([1., 0.].into());
-            surface_form.infer_global_form();
-            let surface_form = surface_form
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+            let mut surface_form =
+                Partial::from_full_entry_point(valid.surface_form().clone());
+            surface_form.write().position = Some([1., 0.].into());
+            surface_form.write().infer_global_form();
+            let surface_form = surface_form.build(&mut services.objects);
 
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };

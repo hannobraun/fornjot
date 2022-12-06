@@ -47,7 +47,7 @@ pub use self::{
         cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         face::PartialFace,
-        vertex::{PartialSurfaceVertex, PartialVertex},
+        vertex::PartialVertex,
     },
     replace::Replace,
     traits::{HasPartial, Partial},

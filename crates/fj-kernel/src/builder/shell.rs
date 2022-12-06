@@ -11,9 +11,12 @@ use crate::{
     objects::{Cycle, Face, FaceSet, Objects, Shell},
     partial::{
         HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex,
+        PartialVertex,
     },
-    partial2::{Partial, PartialCurve, PartialObject, PartialSurface},
+    partial2::{
+        Partial, PartialCurve, PartialObject, PartialSurface,
+        PartialSurfaceVertex,
+    },
     services::Service,
     storage::Handle,
 };
@@ -101,7 +104,7 @@ impl ShellBuilder {
                                             ..Default::default()
                                         },
                                     ),
-                                    surface_form: MaybePartial::from(
+                                    surface_form: Partial::from_partial(
                                         PartialSurfaceVertex {
                                             global_form: global_vertex,
                                             ..Default::default()
@@ -151,7 +154,9 @@ impl ShellBuilder {
                                     ),
                                     ..Default::default()
                                 }),
-                                surface_form: from.into(),
+                                surface_form: Partial::from_full_entry_point(
+                                    from,
+                                ),
                                 ..Default::default()
                             },
                             PartialVertex {
@@ -159,7 +164,7 @@ impl ShellBuilder {
                                     surface: to.surface.clone(),
                                     ..Default::default()
                                 }),
-                                surface_form: to.into(),
+                                surface_form: Partial::from_partial(to),
                                 ..Default::default()
                             },
                         ]
@@ -212,7 +217,7 @@ impl ShellBuilder {
                                             ..curve.clone()
                                         },
                                     ),
-                                    surface_form: from.into(),
+                                    surface_form: Partial::from_partial(from),
                                     ..Default::default()
                                 },
                                 PartialVertex {
@@ -225,7 +230,8 @@ impl ShellBuilder {
                                             ..curve
                                         },
                                     ),
-                                    surface_form: to.into(),
+                                    surface_form:
+                                        Partial::from_full_entry_point(to),
                                     ..Default::default()
                                 },
                             ]
@@ -257,7 +263,7 @@ impl ShellBuilder {
                             ),
                             ..Default::default()
                         }),
-                        surface_form: from.into(),
+                        surface_form: Partial::from_full_entry_point(from),
                         ..Default::default()
                     };
                     let to = PartialVertex {
@@ -267,7 +273,7 @@ impl ShellBuilder {
                             ),
                             ..Default::default()
                         }),
-                        surface_form: to.into(),
+                        surface_form: Partial::from_full_entry_point(to),
                         ..Default::default()
                     };
 
@@ -366,7 +372,9 @@ impl ShellBuilder {
                             ),
                             ..Default::default()
                         }),
-                        surface_form: surface_form.into(),
+                        surface_form: Partial::from_full_entry_point(
+                            surface_form,
+                        ),
                     });
 
                 edges.push(

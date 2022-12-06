@@ -69,9 +69,8 @@ mod tests {
         builder::{CycleBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::Cycle,
-        partial::{
-            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
-        },
+        partial::{HasPartial, PartialVertex},
+        partial2::{Partial, PartialSurfaceVertex},
         services::Services,
         validate::Validate,
     };
@@ -99,8 +98,8 @@ mod tests {
             // Sever connection between the last and first half-edge in the
             // cycle.
             let first_vertex = PartialVertex {
-                surface_form: MaybePartial::from(PartialSurfaceVertex {
-                    surface: first_vertex.surface_form().surface(),
+                surface_form: Partial::from_partial(PartialSurfaceVertex {
+                    surface: first_vertex.surface_form().read().surface.clone(),
                     ..Default::default()
                 }),
                 ..first_vertex.into_partial()

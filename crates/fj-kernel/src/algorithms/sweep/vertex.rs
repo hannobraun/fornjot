@@ -164,10 +164,10 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::HalfEdge,
-        partial::{
-            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
+        partial::{HasPartial, PartialVertex},
+        partial2::{
+            Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
         },
-        partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 
@@ -187,7 +187,7 @@ mod tests {
         let vertex = PartialVertex {
             position: Some([0.].into()),
             curve: Partial::from_full_entry_point(curve),
-            surface_form: MaybePartial::from(PartialSurfaceVertex {
+            surface_form: Partial::from_partial(PartialSurfaceVertex {
                 surface: Partial::from_full_entry_point(surface.clone()),
                 ..Default::default()
             }),

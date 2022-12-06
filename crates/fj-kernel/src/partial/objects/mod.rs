@@ -4,15 +4,13 @@ pub mod face;
 pub mod vertex;
 
 use crate::{
-    objects::{
-        Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex, Vertex,
-    },
+    objects::{Cycle, Face, GlobalEdge, HalfEdge, Objects, Vertex},
     services::Service,
 };
 
 use super::{
     HasPartial, MaybePartial, Partial, PartialCycle, PartialFace,
-    PartialGlobalEdge, PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+    PartialGlobalEdge, PartialHalfEdge, PartialVertex,
 };
 
 macro_rules! impl_traits {
@@ -44,6 +42,5 @@ impl_traits!(
     Face, PartialFace;
     GlobalEdge, PartialGlobalEdge;
     HalfEdge, PartialHalfEdge;
-    SurfaceVertex, PartialSurfaceVertex;
     Vertex, PartialVertex;
 );

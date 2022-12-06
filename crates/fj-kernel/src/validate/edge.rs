@@ -202,10 +202,8 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
-        partial::{
-            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
-        },
-        partial2::Partial,
+        partial::{HasPartial, PartialVertex},
+        partial2::{Partial, PartialSurfaceVertex},
         services::Services,
         validate::Validate,
     };
@@ -314,10 +312,11 @@ mod tests {
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {
                 let vertex = vertex.to_partial();
+                let surface = vertex.surface_form.read().surface.clone();
                 PartialVertex {
                     position: Some([0.].into()),
-                    surface_form: MaybePartial::from(PartialSurfaceVertex {
-                        surface: vertex.surface_form.surface(),
+                    surface_form: Partial::from_partial(PartialSurfaceVertex {
+                        surface,
                         ..Default::default()
                     }),
                     ..vertex

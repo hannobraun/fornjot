@@ -1,12 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, HalfEdge, Surface, SurfaceVertex},
-    partial::{
-        HasPartial, MaybePartial, PartialCycle, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex,
-    },
-    partial2::{Partial, PartialCurve},
+    objects::{Curve, Surface, SurfaceVertex},
+    partial::{PartialCycle, PartialHalfEdge, PartialVertex},
+    partial2::{Partial, PartialCurve, PartialSurfaceVertex},
     storage::Handle,
 };
 
@@ -38,9 +35,9 @@ impl CycleBuilder for PartialCycle {
         self,
         vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
     ) -> Self {
-        let vertices = vertices.into_iter().map(Into::into);
+        let vertices = vertices.into_iter();
 
-        let mut previous: Option<MaybePartial<SurfaceVertex>> =
+        let mut previous: Option<Partial<SurfaceVertex>> =
             self.half_edges().last().map(|half_edge| {
                 let [_, last] = half_edge.vertices();
                 last.surface_form()
@@ -48,13 +45,16 @@ impl CycleBuilder for PartialCycle {
 
         let mut half_edges = Vec::new();
         for vertex_next in vertices {
+            let vertex_next = Partial::from_partial(vertex_next);
+
             if let Some(vertex_prev) = previous {
-                let surface = vertex_prev.surface();
+                let surface = vertex_prev.read().surface.clone();
 
                 let [position_prev, position_next] =
                     [&vertex_prev, &vertex_next].map(|vertex| {
                         vertex
-                            .position()
+                            .read()
+                            .position
                             .expect("Need surface position to extend cycle")
                     });
 
@@ -116,17 +116,24 @@ impl CycleBuilder for PartialCycle {
             return self;
         };
 
-        let vertices = [last, first].map(|vertex| {
-            vertex
-                .surface_form()
-                .position()
-                .expect("Need surface position to close cycle")
-        });
         let surface = self.surface().expect("Need surface to close cycle");
 
         self.with_half_edges(Some(
-            HalfEdge::partial()
-                .update_as_line_segment_from_points(surface, vertices),
+            PartialHalfEdge {
+                vertices: [last, first].map(|vertex| {
+                    PartialVertex {
+                        curve: Partial::from_partial(PartialCurve {
+                            surface: surface.clone(),
+                            ..Default::default()
+                        }),
+                        surface_form: vertex.surface_form(),
+                        ..Default::default()
+                    }
+                    .into()
+                }),
+                ..Default::default()
+            }
+            .update_as_line_segment(),
         ))
     }
 }

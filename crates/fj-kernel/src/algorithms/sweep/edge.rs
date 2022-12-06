@@ -192,8 +192,8 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
-        partial2::{Partial, PartialCurve},
+        partial::{HasPartial, PartialVertex},
+        partial2::{Partial, PartialCurve, PartialSurfaceVertex},
         services::Services,
     };
 
@@ -236,20 +236,19 @@ mod tests {
                             ),
                             ..Default::default()
                         }),
-                        surface_form: bottom
-                            .front()
-                            .surface_form()
-                            .clone()
-                            .into(),
+                        surface_form: Partial::from_full_entry_point(
+                            bottom.front().surface_form().clone(),
+                        ),
                         ..Default::default()
                     })
                     .with_front_vertex(PartialVertex {
-                        surface_form: PartialSurfaceVertex {
-                            position: Some([1., 1.].into()),
-                            surface: surface.clone(),
-                            ..Default::default()
-                        }
-                        .into(),
+                        surface_form: Partial::from_partial(
+                            PartialSurfaceVertex {
+                                position: Some([1., 1.].into()),
+                                surface: surface.clone(),
+                                ..Default::default()
+                            },
+                        ),
                         ..Default::default()
                     })
                     .update_as_line_segment()
@@ -265,16 +264,17 @@ mod tests {
                         ),
                         ..Default::default()
                     }),
-                    surface_form: PartialSurfaceVertex {
+                    surface_form: Partial::from_partial(PartialSurfaceVertex {
                         position: Some([0., 1.].into()),
                         surface,
                         ..Default::default()
-                    }
-                    .into(),
+                    }),
                     ..Default::default()
                 })
                 .with_front_vertex(PartialVertex {
-                    surface_form: side_up.front().surface_form().clone().into(),
+                    surface_form: Partial::from_full_entry_point(
+                        side_up.front().surface_form().clone(),
+                    ),
                     ..Default::default()
                 })
                 .update_as_line_segment()
@@ -292,15 +292,15 @@ mod tests {
                             ),
                             ..Default::default()
                         }),
-                        surface_form: bottom
-                            .back()
-                            .surface_form()
-                            .clone()
-                            .into(),
+                        surface_form: Partial::from_full_entry_point(
+                            bottom.back().surface_form().clone(),
+                        ),
                         ..Default::default()
                     })
                     .with_front_vertex(PartialVertex {
-                        surface_form: top.front().surface_form().clone().into(),
+                        surface_form: Partial::from_full_entry_point(
+                            top.front().surface_form().clone(),
+                        ),
                         ..Default::default()
                     })
                     .update_as_line_segment()

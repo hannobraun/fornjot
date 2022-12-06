@@ -1,16 +1,14 @@
 use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
-use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     insert::Insert,
-    objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
+    objects::{Curve, Objects, Surface, Vertex},
     partial::{
-        MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex,
+        MaybePartial, PartialGlobalEdge, PartialHalfEdge, PartialVertex,
     },
-    partial2::{Partial, PartialCurve},
-    services::{Service, Services},
+    partial2::{Partial, PartialCurve, PartialObject, PartialSurfaceVertex},
+    services::Service,
     storage::Handle,
 };
 
@@ -100,7 +98,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [a_curve, b_curve].map(|point_curve| PartialVertex {
                 position: Some(point_curve),
                 curve: curve.clone(),
-                surface_form: surface_vertex.clone().into(),
+                surface_form: Partial::from_full_entry_point(
+                    surface_vertex.clone(),
+                ),
             });
 
         self.vertices = [back, front].map(Into::into);
@@ -123,7 +123,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     ..curve
                 })
             };
-            vertex.surface_form = MaybePartial::from(PartialSurfaceVertex {
+            vertex.surface_form = Partial::from_partial(PartialSurfaceVertex {
                 position: Some(point.into()),
                 surface: surface.clone(),
                 ..Default::default()
@@ -143,7 +143,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let surface = self.curve().read().surface.clone();
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
-                .position()
+                .read()
+                .position
                 .expect("Can't infer line segment without surface position")
         });
 
@@ -152,56 +153,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         curve.write().update_as_line_from_points(points);
 
         let [back, front] = {
-            let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
+            [(from, 0.), (to, 1.)].map(|(vertex, position)| {
                 vertex.update_partial(|mut vertex| {
                     vertex.position = Some([position].into());
                     vertex.curve = self.curve();
                     vertex
                 })
-            });
-
-            // The global vertices we extracted are in normalized order, which
-            // means we might need to switch their order here. This is a bit of
-            // a hack, but I can't think of something better.
-            let global_forms = {
-                let must_switch_order = {
-                    let mut services = Services::new();
-                    let vertices = vertices.clone().map(|vertex| {
-                        vertex
-                            .into_full(&mut services.objects)
-                            .global_form()
-                            .clone()
-                    });
-
-                    let (_, must_switch_order) =
-                        VerticesInNormalizedOrder::new(vertices);
-
-                    must_switch_order
-                };
-
-                let [a, b] = self.global_form.vertices();
-                if must_switch_order {
-                    [b, a]
-                } else {
-                    [a, b]
-                }
-            };
-
-            vertices
-                .into_iter_fixed()
-                .zip(global_forms)
-                .collect::<[_; 2]>()
-                .map(|(vertex, global_form)| {
-                    vertex.update_partial(|mut vertex| {
-                        vertex.surface_form = vertex.surface_form.merge_with(
-                            PartialSurfaceVertex {
-                                global_form,
-                                ..Default::default()
-                            },
-                        );
-                        vertex
-                    })
-                })
+            })
         };
 
         self.vertices = [back, front];

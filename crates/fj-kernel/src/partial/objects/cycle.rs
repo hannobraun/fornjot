@@ -1,7 +1,6 @@
 use crate::{
-    builder::HalfEdgeBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
-    partial::{MaybePartial, MergeWith, PartialHalfEdge, PartialVertex},
+    partial::{MaybePartial, MergeWith},
     partial2::Partial,
     services::Service,
 };
@@ -49,64 +48,7 @@ impl PartialCycle {
     }
 
     /// Build a full [`Cycle`] from the partial cycle
-    pub fn build(mut self, objects: &mut Service<Objects>) -> Cycle {
-        // Check that the cycle is closed. This will lead to a panic further
-        // down anyway, but that panic would be super-confusing. This one should
-        // be a bit more explicit on what is wrong.
-        if let (Some(first), Some(last)) =
-            (self.half_edges.first(), self.half_edges.last())
-        {
-            let [first, _] = first.vertices();
-            let [_, last] = last.vertices();
-
-            assert_eq!(
-                first.surface_form().position(),
-                last.surface_form().position(),
-                "Attempting to build un-closed cycle"
-            );
-        }
-
-        // To create a cycle, we need to make sure that all its half-edges
-        // connect to each other. Let's start with all the connections between
-        // the first and the last half-edge.
-        let mut previous_vertex = None;
-        for half_edge in &mut self.half_edges {
-            let back_vertex = previous_vertex.unwrap_or_default();
-            let front_vertex =
-                half_edge.front().surface_form().into_full(objects);
-
-            *half_edge = half_edge.clone().merge_with(PartialHalfEdge {
-                vertices: [
-                    PartialVertex {
-                        surface_form: back_vertex,
-                        ..Default::default()
-                    },
-                    PartialVertex {
-                        surface_form: front_vertex.clone().into(),
-                        ..Default::default()
-                    },
-                ]
-                .map(Into::into),
-                ..Default::default()
-            });
-
-            previous_vertex = Some(MaybePartial::from(front_vertex));
-        }
-
-        // We're not quite done yet. We need to close the cycle, by connecting
-        // the last half-edge back around to the first one.
-        if let Some(half_edge) = self.half_edges.first_mut() {
-            let back_vertex = previous_vertex.unwrap_or_default();
-
-            *half_edge = half_edge.clone().merge_with(
-                PartialHalfEdge::default().with_back_vertex(PartialVertex {
-                    surface_form: back_vertex,
-                    ..Default::default()
-                }),
-            );
-        }
-
-        // All connections made! All that's left is to build the half-edges.
+    pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
         let mut half_edges = Vec::new();
         for half_edge in self.half_edges {
             let half_edge = half_edge.into_full(objects);
