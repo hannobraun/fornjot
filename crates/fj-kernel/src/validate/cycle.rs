@@ -66,10 +66,12 @@ impl CycleValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder, VertexBuilder},
+        builder::{CycleBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::Cycle,
-        partial::HasPartial,
+        partial::{
+            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
+        },
         services::Services,
         validate::Validate,
     };
@@ -96,8 +98,13 @@ mod tests {
 
             // Sever connection between the last and first half-edge in the
             // cycle.
-            let mut first_vertex = first_vertex.into_partial();
-            first_vertex.infer_surface_form();
+            let first_vertex = PartialVertex {
+                surface_form: MaybePartial::from(PartialSurfaceVertex {
+                    surface: first_vertex.surface_form().surface(),
+                    ..Default::default()
+                }),
+                ..first_vertex.into_partial()
+            };
             *first_half_edge = first_half_edge
                 .clone()
                 .with_back_vertex(first_vertex)

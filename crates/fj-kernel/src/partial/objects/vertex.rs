@@ -44,8 +44,6 @@ impl PartialVertex {
                 });
 
                 partial.position = Some(position);
-                partial.surface =
-                    Partial::from_full_entry_point(curve.surface().clone());
 
                 partial
             })

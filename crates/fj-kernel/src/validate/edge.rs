@@ -199,10 +199,12 @@ impl HalfEdgeValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{HalfEdgeBuilder, VertexBuilder},
+        builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
-        partial::HasPartial,
+        partial::{
+            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
+        },
         partial2::Partial,
         services::Services,
         validate::Validate,
@@ -311,12 +313,17 @@ mod tests {
             .build(&mut services.objects);
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {
-                let mut vertex = vertex.to_partial();
-                vertex.position = Some([0.].into());
-                vertex.infer_surface_form();
-                vertex
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
+                let vertex = vertex.to_partial();
+                PartialVertex {
+                    position: Some([0.].into()),
+                    surface_form: MaybePartial::from(PartialSurfaceVertex {
+                        surface: vertex.surface_form.surface(),
+                        ..Default::default()
+                    }),
+                    ..vertex
+                }
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             }),
             valid.global_form().clone(),
         );

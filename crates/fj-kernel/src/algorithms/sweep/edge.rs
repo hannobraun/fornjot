@@ -221,7 +221,7 @@ mod tests {
 
             let bottom = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    surface,
+                    surface.clone(),
                     [[0., 0.], [1., 0.]],
                 )
                 .build(&mut services.objects)
@@ -246,6 +246,7 @@ mod tests {
                     .with_front_vertex(PartialVertex {
                         surface_form: PartialSurfaceVertex {
                             position: Some([1., 1.].into()),
+                            surface: surface.clone(),
                             ..Default::default()
                         }
                         .into(),
@@ -266,6 +267,7 @@ mod tests {
                     }),
                     surface_form: PartialSurfaceVertex {
                         position: Some([0., 1.].into()),
+                        surface,
                         ..Default::default()
                     }
                     .into(),

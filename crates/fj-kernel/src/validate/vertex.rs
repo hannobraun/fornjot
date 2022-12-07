@@ -183,7 +183,9 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial::{
+            HasPartial, MaybePartial, PartialSurfaceVertex, PartialVertex,
+        },
         partial2::{Partial, PartialCurve},
         services::Services,
         validate::Validate,
@@ -197,7 +199,7 @@ mod tests {
             services.objects.surfaces.xy_plane(),
         );
         let mut curve = PartialCurve {
-            surface,
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -205,7 +207,10 @@ mod tests {
         let valid = PartialVertex {
             position: Some([0.].into()),
             curve: Partial::from_partial(curve),
-            ..Default::default()
+            surface_form: MaybePartial::from(PartialSurfaceVertex {
+                surface,
+                ..Default::default()
+            }),
         }
         .build(&mut services.objects);
         let invalid = {
@@ -233,7 +238,7 @@ mod tests {
                 services.objects.surfaces.xy_plane(),
             );
             let mut curve = PartialCurve {
-                surface,
+                surface: surface.clone(),
                 ..Default::default()
             };
             curve.update_as_u_axis();
@@ -241,7 +246,10 @@ mod tests {
             PartialVertex {
                 position: Some([0.].into()),
                 curve: Partial::from_partial(curve),
-                ..Default::default()
+                surface_form: MaybePartial::from(PartialSurfaceVertex {
+                    surface,
+                    ..Default::default()
+                }),
             }
             .build(&mut services.objects)
         };
