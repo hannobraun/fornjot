@@ -193,10 +193,11 @@ mod tests {
     fn vertex_surface_mismatch() {
         let mut services = Services::new();
 
+        let surface = Partial::from_full_entry_point(
+            services.objects.surfaces.xy_plane(),
+        );
         let mut curve = PartialCurve {
-            surface: Partial::from_full_entry_point(
-                services.objects.surfaces.xy_plane(),
-            ),
+            surface,
             ..Default::default()
         };
         curve.update_as_u_axis();
