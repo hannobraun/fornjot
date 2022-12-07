@@ -199,10 +199,13 @@ impl HalfEdgeValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{HalfEdgeBuilder, VertexBuilder},
+        builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
         partial::HasPartial,
+        partial2::{
+            Partial, PartialObject, PartialSurfaceVertex, PartialVertex,
+        },
         services::Services,
         validate::Validate,
     };
@@ -213,18 +216,23 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
         let invalid = {
             let mut vertices = valid.vertices().clone();
-            let mut vertex = vertices[1].to_partial();
+            let mut vertex =
+                Partial::from_full_entry_point(vertices[1].clone());
             // Arranging for an equal but not identical curve here.
-            vertex.curve = valid.curve().to_partial().into();
-            vertices[1] = vertex
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+            vertex.write().curve = Partial::from_partial(
+                Partial::from_full_entry_point(valid.curve().clone())
+                    .read()
+                    .clone(),
+            );
+            vertices[1] = vertex.build(&mut services.objects);
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
@@ -239,13 +247,17 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp = valid.global_form().to_partial();
-            tmp.curve = GlobalCurve.insert(&mut services.objects).into();
+            tmp.curve = Partial::from_full_entry_point(
+                GlobalCurve.insert(&mut services.objects),
+            );
             tmp.build(&mut services.objects)
                 .insert(&mut services.objects)
         });
@@ -260,7 +272,9 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
@@ -271,7 +285,11 @@ mod tests {
                 .vertices()
                 .access_in_normalized_order()
                 // Creating equal but not identical vertices here.
-                .map(|vertex| vertex.to_partial().into());
+                .map(|vertex| {
+                    Partial::from_partial(
+                        Partial::from_full_entry_point(vertex).read().clone(),
+                    )
+                });
             tmp.build(&mut services.objects)
                 .insert(&mut services.objects)
         });
@@ -286,18 +304,27 @@ mod tests {
 
         let valid = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects);
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {
-                let mut vertex = vertex.to_partial();
-                vertex.position = Some([0.].into());
-                vertex.infer_surface_form();
-                vertex
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
+                let vertex =
+                    Partial::from_full_entry_point(vertex).read().clone();
+                let surface = vertex.surface_form.read().surface.clone();
+                PartialVertex {
+                    position: Some([0.].into()),
+                    surface_form: Partial::from_partial(PartialSurfaceVertex {
+                        surface,
+                        ..Default::default()
+                    }),
+                    ..vertex
+                }
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             }),
             valid.global_form().clone(),
         );

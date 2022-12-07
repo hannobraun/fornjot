@@ -192,7 +192,10 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{HasPartial, PartialSurfaceVertex, PartialVertex},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialCurve, PartialSurfaceVertex, PartialVertex,
+        },
         services::Services,
     };
 
@@ -202,7 +205,9 @@ mod tests {
 
         let half_edge = HalfEdge::partial()
             .update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.]],
             )
             .build(&mut services.objects)
@@ -212,11 +217,13 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
-            let surface = services.objects.surfaces.xz_plane();
+            let surface = Partial::from_full_entry_point(
+                services.objects.surfaces.xz_plane(),
+            );
 
             let bottom = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    surface,
+                    surface.clone(),
                     [[0., 0.], [1., 0.]],
                 )
                 .build(&mut services.objects)
@@ -224,40 +231,54 @@ mod tests {
             let side_up = {
                 let side_up = HalfEdge::partial();
                 side_up
-                    .with_back_vertex(PartialVertex {
-                        surface_form: bottom
-                            .front()
-                            .surface_form()
-                            .clone()
-                            .into(),
-                        ..Default::default()
-                    })
-                    .with_front_vertex(PartialVertex {
-                        surface_form: PartialSurfaceVertex {
-                            position: Some([1., 1.].into()),
+                    .with_back_vertex(Partial::from_partial(PartialVertex {
+                        curve: Partial::from_partial(PartialCurve {
+                            surface: Partial::from_full_entry_point(
+                                bottom.front().surface_form().surface().clone(),
+                            ),
                             ..Default::default()
-                        }
-                        .into(),
+                        }),
+                        surface_form: Partial::from_full_entry_point(
+                            bottom.front().surface_form().clone(),
+                        ),
                         ..Default::default()
-                    })
+                    }))
+                    .with_front_vertex(Partial::from_partial(PartialVertex {
+                        surface_form: Partial::from_partial(
+                            PartialSurfaceVertex {
+                                position: Some([1., 1.].into()),
+                                surface: surface.clone(),
+                                ..Default::default()
+                            },
+                        ),
+                        ..Default::default()
+                    }))
                     .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
             let top = {
                 let top = HalfEdge::partial();
-                top.with_back_vertex(PartialVertex {
-                    surface_form: PartialSurfaceVertex {
-                        position: Some([0., 1.].into()),
+                top.with_back_vertex(Partial::from_partial(PartialVertex {
+                    curve: Partial::from_partial(PartialCurve {
+                        surface: Partial::from_full_entry_point(
+                            side_up.front().surface_form().surface().clone(),
+                        ),
                         ..Default::default()
-                    }
-                    .into(),
+                    }),
+                    surface_form: Partial::from_partial(PartialSurfaceVertex {
+                        position: Some([0., 1.].into()),
+                        surface,
+                        ..Default::default()
+                    }),
                     ..Default::default()
-                })
-                .with_front_vertex(PartialVertex {
-                    surface_form: side_up.front().surface_form().clone().into(),
+                }))
+                .with_front_vertex(Partial::from_partial(PartialVertex {
+                    surface_form: Partial::from_full_entry_point(
+                        side_up.front().surface_form().clone(),
+                    ),
                     ..Default::default()
-                })
+                }))
                 .update_as_line_segment()
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
@@ -266,18 +287,24 @@ mod tests {
             let side_down = {
                 let side_down = HalfEdge::partial();
                 side_down
-                    .with_back_vertex(PartialVertex {
-                        surface_form: bottom
-                            .back()
-                            .surface_form()
-                            .clone()
-                            .into(),
+                    .with_back_vertex(Partial::from_partial(PartialVertex {
+                        curve: Partial::from_partial(PartialCurve {
+                            surface: Partial::from_full_entry_point(
+                                bottom.back().surface_form().surface().clone(),
+                            ),
+                            ..Default::default()
+                        }),
+                        surface_form: Partial::from_full_entry_point(
+                            bottom.back().surface_form().clone(),
+                        ),
                         ..Default::default()
-                    })
-                    .with_front_vertex(PartialVertex {
-                        surface_form: top.front().surface_form().clone().into(),
+                    }))
+                    .with_front_vertex(Partial::from_partial(PartialVertex {
+                        surface_form: Partial::from_full_entry_point(
+                            top.front().surface_form().clone(),
+                        ),
                         ..Default::default()
-                    })
+                    }))
                     .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)

@@ -88,6 +88,7 @@ mod tests {
         insert::Insert,
         objects::{Face, HalfEdge, Sketch},
         partial::HasPartial,
+        partial2::Partial,
         services::Services,
     };
 
@@ -132,7 +133,9 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    services.objects.surfaces.xy_plane(),
+                    Partial::from_full_entry_point(
+                        services.objects.surfaces.xy_plane(),
+                    ),
                     [a, b],
                 )
                 .build(&mut services.objects)
@@ -179,7 +182,9 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    services.objects.surfaces.xy_plane(),
+                    Partial::from_full_entry_point(
+                        services.objects.surfaces.xy_plane(),
+                    ),
                     [a, b],
                 )
                 .build(&mut services.objects)

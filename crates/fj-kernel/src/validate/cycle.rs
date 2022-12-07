@@ -66,10 +66,11 @@ impl CycleValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder, VertexBuilder},
+        builder::{CycleBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::Cycle,
         partial::HasPartial,
+        partial2::{Partial, PartialSurfaceVertex, PartialVertex},
         services::Services,
         validate::Validate,
     };
@@ -96,11 +97,21 @@ mod tests {
 
             // Sever connection between the last and first half-edge in the
             // cycle.
-            let mut first_vertex = first_vertex.into_partial();
-            first_vertex.infer_surface_form();
+            let first_vertex = PartialVertex {
+                surface_form: Partial::from_partial(PartialSurfaceVertex {
+                    surface: first_vertex
+                        .read()
+                        .surface_form
+                        .read()
+                        .surface
+                        .clone(),
+                    ..Default::default()
+                }),
+                ..first_vertex.read().clone()
+            };
             *first_half_edge = first_half_edge
                 .clone()
-                .with_back_vertex(first_vertex)
+                .with_back_vertex(Partial::from_partial(first_vertex))
                 .infer_global_form();
 
             let half_edges = half_edges.into_iter().map(|half_edge| {

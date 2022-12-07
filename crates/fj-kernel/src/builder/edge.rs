@@ -1,15 +1,15 @@
 use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
-use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     insert::Insert,
-    objects::{Curve, Objects, Surface, Vertex, VerticesInNormalizedOrder},
-    partial::{
-        MaybePartial, MergeWith, PartialGlobalEdge, PartialHalfEdge,
-        PartialSurfaceVertex, PartialVertex,
+    objects::{Curve, Objects, Surface, Vertex},
+    partial::{PartialGlobalEdge, PartialHalfEdge},
+    partial2::{
+        Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
+        PartialVertex,
     },
-    services::{Service, Services},
+    services::Service,
     storage::Handle,
 };
 
@@ -18,10 +18,10 @@ use super::CurveBuilder;
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
     /// Update the partial half-edge with the given back vertex
-    fn with_back_vertex(self, back: impl Into<MaybePartial<Vertex>>) -> Self;
+    fn with_back_vertex(self, back: Partial<Vertex>) -> Self;
 
     /// Update the partial half-edge with the given front vertex
-    fn with_front_vertex(self, front: impl Into<MaybePartial<Vertex>>) -> Self;
+    fn with_front_vertex(self, front: Partial<Vertex>) -> Self;
 
     /// Update partial half-edge as a circle, from the given radius
     ///
@@ -39,7 +39,7 @@ pub trait HalfEdgeBuilder: Sized {
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
         self,
-        surface: Handle<Surface>,
+        surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self;
 
@@ -51,21 +51,15 @@ pub trait HalfEdgeBuilder: Sized {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn with_back_vertex(
-        mut self,
-        back: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
+    fn with_back_vertex(mut self, back: Partial<Vertex>) -> Self {
         let [_, front] = self.vertices.clone();
-        self.vertices = [back.into(), front];
+        self.vertices = [back, front];
         self
     }
 
-    fn with_front_vertex(
-        mut self,
-        front: impl Into<MaybePartial<Vertex>>,
-    ) -> Self {
+    fn with_front_vertex(mut self, front: Partial<Vertex>) -> Self {
         let [back, _] = self.vertices.clone();
-        self.vertices = [back, front.into()];
+        self.vertices = [back, front];
         self
     }
 
@@ -74,10 +68,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let mut curve = self.curve().into_partial();
-        curve.update_as_circle_from_radius(radius);
+        let mut curve = self.curve();
+        curve.write().update_as_circle_from_radius(radius);
 
-        let path = curve.path.expect("Expected path that was just created");
+        let path = curve
+            .read()
+            .path
+            .expect("Expected path that was just created");
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -86,7 +83,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let surface_vertex = PartialSurfaceVertex {
             position: Some(path.point_from_path_coords(a_curve)),
-            surface: curve.surface.clone(),
+            surface: curve.read().surface.clone(),
             global_form: global_vertex,
         }
         .build(objects)
@@ -95,31 +92,40 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [back, front] =
             [a_curve, b_curve].map(|point_curve| PartialVertex {
                 position: Some(point_curve),
-                curve: curve.clone().into(),
-                surface_form: surface_vertex.clone().into(),
+                curve: curve.clone(),
+                surface_form: Partial::from_full_entry_point(
+                    surface_vertex.clone(),
+                ),
             });
 
-        self.vertices = [back, front].map(Into::into);
+        self.vertices = [back, front].map(Partial::from_partial);
 
         self
     }
 
     fn update_as_line_segment_from_points(
         mut self,
-        surface: Handle<Surface>,
+        surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        self.vertices = self.vertices.zip_ext(points).map(|(vertex, point)| {
-            let mut vertex = vertex.into_partial();
+        self.vertices =
+            self.vertices.zip_ext(points).map(|(mut vertex, point)| {
+                vertex.write().curve = {
+                    let curve = vertex.read().curve.read().clone();
+                    Partial::from_partial(PartialCurve {
+                        surface: surface.clone(),
+                        ..curve
+                    })
+                };
+                vertex.write().surface_form =
+                    Partial::from_partial(PartialSurfaceVertex {
+                        position: Some(point.into()),
+                        surface: surface.clone(),
+                        ..Default::default()
+                    });
 
-            vertex.surface_form = MaybePartial::from(PartialSurfaceVertex {
-                position: Some(point.into()),
-                surface: Some(surface.clone()),
-                ..Default::default()
+                vertex
             });
-
-            vertex.into()
-        });
 
         self.update_as_line_segment()
     }
@@ -127,75 +133,26 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_line_segment(mut self) -> Self {
         let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
-            [&from, &to].map(|vertex| vertex.surface_form());
+            [&from, &to].map(|vertex| vertex.read().surface_form.clone());
 
-        let surface = self
-            .curve()
-            .surface()
-            .merge_with(from_surface.surface())
-            .merge_with(to_surface.surface())
-            .expect("Can't infer line segment without a surface");
+        let surface = self.curve().read().surface.clone();
         let points = [&from_surface, &to_surface].map(|vertex| {
             vertex
-                .position()
+                .read()
+                .position
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = self.curve().into_partial();
-        curve.surface = Some(surface);
-        curve.update_as_line_from_points(points);
+        let mut curve = self.curve();
+        curve.write().surface = surface;
+        curve.write().update_as_line_from_points(points);
 
         let [back, front] = {
-            let vertices = [(from, 0.), (to, 1.)].map(|(vertex, position)| {
-                vertex.update_partial(|mut vertex| {
-                    vertex.position = Some([position].into());
-                    vertex.curve = curve.clone().into();
-                    vertex
-                })
-            });
-
-            // The global vertices we extracted are in normalized order, which
-            // means we might need to switch their order here. This is a bit of
-            // a hack, but I can't think of something better.
-            let global_forms = {
-                let must_switch_order = {
-                    let mut services = Services::new();
-                    let vertices = vertices.clone().map(|vertex| {
-                        vertex
-                            .into_full(&mut services.objects)
-                            .global_form()
-                            .clone()
-                    });
-
-                    let (_, must_switch_order) =
-                        VerticesInNormalizedOrder::new(vertices);
-
-                    must_switch_order
-                };
-
-                let [a, b] = self.global_form.vertices();
-                if must_switch_order {
-                    [b, a]
-                } else {
-                    [a, b]
-                }
-            };
-
-            vertices
-                .into_iter_fixed()
-                .zip(global_forms)
-                .collect::<[_; 2]>()
-                .map(|(vertex, global_form)| {
-                    vertex.update_partial(|mut vertex| {
-                        vertex.surface_form = vertex.surface_form.merge_with(
-                            PartialSurfaceVertex {
-                                global_form,
-                                ..Default::default()
-                            },
-                        );
-                        vertex
-                    })
-                })
+            [(from, 0.), (to, 1.)].map(|(mut vertex, position)| {
+                vertex.write().position = Some([position].into());
+                vertex.write().curve = self.curve();
+                vertex
+            })
         };
 
         self.vertices = [back, front];
@@ -225,10 +182,11 @@ impl GlobalEdgeBuilder for PartialGlobalEdge {
         curve: &Curve,
         vertices: &[Handle<Vertex>; 2],
     ) -> Self {
-        self.curve = curve.global_form().clone().into();
-        self.vertices = vertices
-            .clone()
-            .map(|vertex| vertex.global_form().clone().into());
+        self.curve =
+            Partial::from_full_entry_point(curve.global_form().clone());
+        self.vertices = vertices.clone().map(|vertex| {
+            Partial::from_full_entry_point(vertex.global_form().clone())
+        });
         self
     }
 }

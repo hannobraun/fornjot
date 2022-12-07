@@ -5,7 +5,7 @@ use crate::{
     geometry::path::{GlobalPath, SurfacePath},
     insert::Insert,
     objects::{Curve, Objects, Surface},
-    partial::PartialSurface,
+    partial2::{PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
 };

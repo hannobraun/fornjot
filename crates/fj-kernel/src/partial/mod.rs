@@ -44,12 +44,9 @@ pub use self::{
     maybe_partial::MaybePartial,
     merge::{MergeWith, Mergeable},
     objects::{
-        curve::{PartialCurve, PartialGlobalCurve},
         cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         face::PartialFace,
-        surface::PartialSurface,
-        vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
     },
     replace::Replace,
     traits::{HasPartial, Partial},

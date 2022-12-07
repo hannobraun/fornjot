@@ -5,9 +5,8 @@ use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, Objects, Sketch},
-    partial::{
-        HasPartial, MaybePartial, PartialCurve, PartialHalfEdge, PartialVertex,
-    },
+    partial::{HasPartial, PartialHalfEdge},
+    partial2::{Partial, PartialCurve, PartialVertex},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -32,9 +31,11 @@ impl Shape for fj::Sketch {
                 let half_edge = {
                     let half_edge = PartialHalfEdge {
                         vertices: array::from_fn(|_| {
-                            MaybePartial::from(PartialVertex {
-                                curve: MaybePartial::from(PartialCurve {
-                                    surface: Some(surface.clone()),
+                            Partial::from_partial(PartialVertex {
+                                curve: Partial::from_partial(PartialCurve {
+                                    surface: Partial::from_full_entry_point(
+                                        surface.clone(),
+                                    ),
                                     ..Default::default()
                                 }),
                                 ..Default::default()

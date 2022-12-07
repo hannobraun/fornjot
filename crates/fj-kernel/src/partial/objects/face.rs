@@ -3,8 +3,8 @@ use fj_interop::mesh::Color;
 use crate::{
     objects::{Cycle, Face, Objects, Surface},
     partial::{MaybePartial, MergeWith, Mergeable},
+    partial2::Partial,
     services::Service,
-    storage::Handle,
 };
 
 /// A partial [`Face`]
@@ -19,7 +19,7 @@ pub struct PartialFace {
 
 impl PartialFace {
     /// Access th surface that the [`Face`] is defined in
-    pub fn surface(&self) -> Option<Handle<Surface>> {
+    pub fn surface(&self) -> Option<Partial<Surface>> {
         self.exterior.surface()
     }
 

@@ -164,7 +164,11 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::HalfEdge,
-        partial::{HasPartial, PartialCurve, PartialVertex},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
+            PartialVertex,
+        },
         services::Services,
     };
 
@@ -174,7 +178,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Some(surface.clone()),
+            surface: Partial::from_full_entry_point(surface.clone()),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -183,8 +187,11 @@ mod tests {
             .insert(&mut services.objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
-            curve: curve.into(),
-            ..Default::default()
+            curve: Partial::from_full_entry_point(curve),
+            surface_form: Partial::from_partial(PartialSurfaceVertex {
+                surface: Partial::from_full_entry_point(surface.clone()),
+                ..Default::default()
+            }),
         }
         .build(&mut services.objects)
         .insert(&mut services.objects);
@@ -193,7 +200,10 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(surface, [[0., 0.], [0., 1.]])
+            .update_as_line_segment_from_points(
+                Partial::from_full_entry_point(surface),
+                [[0., 0.], [0., 1.]],
+            )
             .build(&mut services.objects)
             .insert(&mut services.objects);
         assert_eq!(half_edge, expected_half_edge);

@@ -2,10 +2,9 @@ use fj_math::Point;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{Curve, GlobalVertex},
-    partial::{
-        HasPartial, MaybePartial, PartialGlobalVertex, PartialSurfaceVertex,
-        PartialVertex,
+    objects::Curve,
+    partial2::{
+        Partial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
     },
 };
 
@@ -17,7 +16,7 @@ pub trait VertexBuilder {
 
 impl VertexBuilder for PartialVertex {
     fn infer_surface_form(&mut self) -> &mut Self {
-        self.surface_form = PartialSurfaceVertex::default().into();
+        self.surface_form = Partial::new();
         self
     }
 }
@@ -30,7 +29,7 @@ pub trait SurfaceVertexBuilder {
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
     fn infer_global_form(&mut self) -> &mut Self {
-        self.global_form = GlobalVertex::partial().into();
+        self.global_form = Partial::new();
         self
     }
 }
@@ -39,7 +38,7 @@ impl SurfaceVertexBuilder for PartialSurfaceVertex {
 pub trait GlobalVertexBuilder {
     /// Update partial global vertex from the given curve and position on it
     fn from_curve_and_position(
-        curve: impl Into<MaybePartial<Curve>>,
+        curve: Partial<Curve>,
         position: impl Into<Point<1>>,
     ) -> Self;
 
@@ -52,20 +51,15 @@ pub trait GlobalVertexBuilder {
 
 impl GlobalVertexBuilder for PartialGlobalVertex {
     fn from_curve_and_position(
-        curve: impl Into<MaybePartial<Curve>>,
+        curve: Partial<Curve>,
         position: impl Into<Point<1>>,
     ) -> Self {
-        let curve = curve.into().into_partial();
-
-        let path = curve.path.expect(
+        let path = curve.read().path.expect(
             "Need path to create `GlobalVertex` from curve and position",
         );
-        let surface = curve
-            .surface
-            .expect(
-                "Need surface to create `GlobalVertex` from curve and position",
-            )
-            .geometry();
+        let surface = curve.read().surface.read().geometry.expect(
+            "Need surface to create `GlobalVertex` from curve and position",
+        );
 
         let position_surface = path.point_from_path_coords(position);
 
