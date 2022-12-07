@@ -207,14 +207,17 @@ mod tests {
             ..Default::default()
         }
         .build(&mut services.objects);
-        let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
-            let mut tmp = valid.surface_form().to_partial();
-            tmp.surface = Partial::from_full_entry_point(
+        let invalid = {
+            let mut surface_form = valid.surface_form().to_partial();
+            surface_form.surface = Partial::from_full_entry_point(
                 services.objects.surfaces.xz_plane(),
             );
-            tmp.build(&mut services.objects)
-                .insert(&mut services.objects)
-        });
+            let surface_form = surface_form
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+
+            Vertex::new(valid.position(), valid.curve().clone(), surface_form)
+        };
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
@@ -240,13 +243,16 @@ mod tests {
             }
             .build(&mut services.objects)
         };
-        let invalid = Vertex::new(valid.position(), valid.curve().clone(), {
-            let mut tmp = valid.surface_form().to_partial();
-            tmp.position = Some([1., 0.].into());
-            tmp.infer_global_form();
-            tmp.build(&mut services.objects)
-                .insert(&mut services.objects)
-        });
+        let invalid = {
+            let mut surface_form = valid.surface_form().to_partial();
+            surface_form.position = Some([1., 0.].into());
+            surface_form.infer_global_form();
+            let surface_form = surface_form
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+
+            Vertex::new(valid.position(), valid.curve().clone(), surface_form)
+        };
 
         assert!(valid.validate().is_ok());
         assert!(invalid.validate().is_err());
