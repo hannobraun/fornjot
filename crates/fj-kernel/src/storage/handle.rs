@@ -30,7 +30,7 @@ pub struct Handle<T> {
 impl<T> Handle<T> {
     /// Access this pointer's unique id
     pub fn id(&self) -> ObjectId {
-        ObjectId(self.ptr as u64)
+        ObjectId::from_ptr(self.ptr)
     }
 
     /// Return a clone of the object this handle refers to
@@ -169,6 +169,12 @@ unsafe impl<T> Sync for Handle<T> {}
 /// See [`Handle::id`].
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct ObjectId(u64);
+
+impl ObjectId {
+    pub(crate) fn from_ptr<T>(ptr: *const T) -> ObjectId {
+        Self(ptr as u64)
+    }
+}
 
 impl fmt::Debug for ObjectId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
