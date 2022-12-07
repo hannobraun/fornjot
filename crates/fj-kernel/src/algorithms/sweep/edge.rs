@@ -215,11 +215,13 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
-            let surface = services.objects.surfaces.xz_plane();
+            let surface = Partial::from_full_entry_point(
+                services.objects.surfaces.xz_plane(),
+            );
 
             let bottom = HalfEdge::partial()
                 .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(surface),
+                    surface,
                     [[0., 0.], [1., 0.]],
                 )
                 .build(&mut services.objects)
