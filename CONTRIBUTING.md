@@ -54,7 +54,12 @@ cargo test -p fj-kernel
 You can run the full suite of checks and tests like this:
 
 ``` sh
-just build
+just ci
+```
+
+You can also run a lighter version that just checks for code correctness:
+``` sh
+just test
 ```
 
 This requires [`just`](https://crates.io/crates/just), which you can install like this:
