@@ -71,6 +71,11 @@ impl<T: HasPartial + 'static> Partial<T> {
         Self::from_full(full, &mut cache)
     }
 
+    /// Access the ID of this partial object
+    pub fn id(&self) -> ObjectId {
+        self.inner.id()
+    }
+
     /// Access the partial object
     pub fn read(&self) -> impl Deref<Target = T::Partial> + '_ {
         RwLockReadGuard::map(self.inner.read(), |inner| &inner.partial)
@@ -134,6 +139,10 @@ struct Inner<T: HasPartial>(Arc<RwLock<InnerObject<T>>>);
 impl<T: HasPartial> Inner<T> {
     fn new(inner: InnerObject<T>) -> Self {
         Self(Arc::new(RwLock::new(inner)))
+    }
+
+    fn id(&self) -> ObjectId {
+        ObjectId::from_ptr(Arc::as_ptr(&self.0))
     }
 
     fn read(&self) -> RwLockReadGuard<InnerObject<T>> {
