@@ -2,8 +2,8 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, Surface, SurfaceVertex},
-    partial::{PartialCycle, PartialHalfEdge, PartialVertex},
-    partial2::{Partial, PartialCurve, PartialSurfaceVertex},
+    partial::{PartialCycle, PartialHalfEdge},
+    partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     storage::Handle,
 };
 
@@ -40,7 +40,8 @@ impl CycleBuilder for PartialCycle {
         let mut previous: Option<Partial<SurfaceVertex>> =
             self.half_edges().last().map(|half_edge| {
                 let [_, last] = half_edge.vertices();
-                last.surface_form()
+                let last = last.read();
+                last.surface_form.clone()
             });
 
         let mut half_edges = Vec::new();
@@ -78,7 +79,7 @@ impl CycleBuilder for PartialCycle {
                 );
 
                 half_edges.push(PartialHalfEdge {
-                    vertices: vertices.map(Into::into),
+                    vertices: vertices.map(Partial::from_partial),
                     ..Default::default()
                 });
 
@@ -121,15 +122,14 @@ impl CycleBuilder for PartialCycle {
         self.with_half_edges(Some(
             PartialHalfEdge {
                 vertices: [last, first].map(|vertex| {
-                    PartialVertex {
+                    Partial::from_partial(PartialVertex {
                         curve: Partial::from_partial(PartialCurve {
                             surface: surface.clone(),
                             ..Default::default()
                         }),
-                        surface_form: vertex.surface_form(),
+                        surface_form: vertex.read().surface_form.clone(),
                         ..Default::default()
-                    }
-                    .into()
+                    })
                 }),
                 ..Default::default()
             }

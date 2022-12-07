@@ -9,13 +9,10 @@ use crate::{
     builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
     objects::{Cycle, Face, FaceSet, Objects, Shell},
-    partial::{
-        HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        PartialVertex,
-    },
+    partial::{HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     partial2::{
         Partial, PartialCurve, PartialObject, PartialSurface,
-        PartialSurfaceVertex,
+        PartialSurfaceVertex, PartialVertex,
     },
     services::Service,
     storage::Handle,
@@ -95,7 +92,7 @@ impl ShellBuilder {
                     PartialHalfEdge {
                         vertices: global_edge.vertices.clone().map(
                             |global_vertex| {
-                                PartialVertex {
+                                Partial::from_partial(PartialVertex {
                                     curve: Partial::from_partial(
                                         PartialCurve {
                                             global_form: global_edge
@@ -111,8 +108,7 @@ impl ShellBuilder {
                                         },
                                     ),
                                     ..Default::default()
-                                }
-                                .into()
+                                })
                             },
                         ),
                         global_form: MaybePartial::from(PartialGlobalEdge {
@@ -168,7 +164,7 @@ impl ShellBuilder {
                                 ..Default::default()
                             },
                         ]
-                        .map(Into::into),
+                        .map(Partial::from_partial),
                         ..Default::default()
                     }
                     .update_as_line_segment()
@@ -235,7 +231,7 @@ impl ShellBuilder {
                                     ..Default::default()
                                 },
                             ]
-                            .map(Into::into),
+                            .map(Partial::from_partial),
                             ..Default::default()
                         }
                         .update_as_line_segment()
@@ -278,7 +274,7 @@ impl ShellBuilder {
                     };
 
                     PartialHalfEdge {
-                        vertices: [from, to].map(Into::into),
+                        vertices: [from, to].map(Partial::from_partial),
                         ..Default::default()
                     }
                     .update_as_line_segment()
@@ -379,7 +375,7 @@ impl ShellBuilder {
 
                 edges.push(
                     PartialHalfEdge {
-                        vertices: vertices.map(Into::into),
+                        vertices: vertices.map(Partial::from_partial),
                         global_form: MaybePartial::from(PartialGlobalEdge {
                             curve: global_edge.curve,
                             vertices: global_edge.vertices,

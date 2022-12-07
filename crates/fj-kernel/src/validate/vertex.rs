@@ -183,9 +183,9 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial::PartialVertex,
         partial2::{
             Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
+            PartialVertex,
         },
         services::Services,
         validate::Validate,

@@ -192,8 +192,10 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{HasPartial, PartialVertex},
-        partial2::{Partial, PartialCurve, PartialSurfaceVertex},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialCurve, PartialSurfaceVertex, PartialVertex,
+        },
         services::Services,
     };
 
@@ -229,7 +231,7 @@ mod tests {
             let side_up = {
                 let side_up = HalfEdge::partial();
                 side_up
-                    .with_back_vertex(PartialVertex {
+                    .with_back_vertex(Partial::from_partial(PartialVertex {
                         curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 bottom.front().surface_form().surface().clone(),
@@ -240,8 +242,8 @@ mod tests {
                             bottom.front().surface_form().clone(),
                         ),
                         ..Default::default()
-                    })
-                    .with_front_vertex(PartialVertex {
+                    }))
+                    .with_front_vertex(Partial::from_partial(PartialVertex {
                         surface_form: Partial::from_partial(
                             PartialSurfaceVertex {
                                 position: Some([1., 1.].into()),
@@ -250,14 +252,14 @@ mod tests {
                             },
                         ),
                         ..Default::default()
-                    })
+                    }))
                     .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
             let top = {
                 let top = HalfEdge::partial();
-                top.with_back_vertex(PartialVertex {
+                top.with_back_vertex(Partial::from_partial(PartialVertex {
                     curve: Partial::from_partial(PartialCurve {
                         surface: Partial::from_full_entry_point(
                             side_up.front().surface_form().surface().clone(),
@@ -270,13 +272,13 @@ mod tests {
                         ..Default::default()
                     }),
                     ..Default::default()
-                })
-                .with_front_vertex(PartialVertex {
+                }))
+                .with_front_vertex(Partial::from_partial(PartialVertex {
                     surface_form: Partial::from_full_entry_point(
                         side_up.front().surface_form().clone(),
                     ),
                     ..Default::default()
-                })
+                }))
                 .update_as_line_segment()
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
@@ -285,7 +287,7 @@ mod tests {
             let side_down = {
                 let side_down = HalfEdge::partial();
                 side_down
-                    .with_back_vertex(PartialVertex {
+                    .with_back_vertex(Partial::from_partial(PartialVertex {
                         curve: Partial::from_partial(PartialCurve {
                             surface: Partial::from_full_entry_point(
                                 bottom.back().surface_form().surface().clone(),
@@ -296,13 +298,13 @@ mod tests {
                             bottom.back().surface_form().clone(),
                         ),
                         ..Default::default()
-                    })
-                    .with_front_vertex(PartialVertex {
+                    }))
+                    .with_front_vertex(Partial::from_partial(PartialVertex {
                         surface_form: Partial::from_full_entry_point(
                             top.front().surface_form().clone(),
                         ),
                         ..Default::default()
-                    })
+                    }))
                     .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)

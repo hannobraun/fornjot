@@ -202,8 +202,10 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
-        partial::{HasPartial, PartialVertex},
-        partial2::{Partial, PartialSurfaceVertex},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialObject, PartialSurfaceVertex, PartialVertex,
+        },
         services::Services,
         validate::Validate,
     };
@@ -222,16 +224,15 @@ mod tests {
             .build(&mut services.objects);
         let invalid = {
             let mut vertices = valid.vertices().clone();
-            let mut vertex = vertices[1].to_partial();
+            let mut vertex =
+                Partial::from_full_entry_point(vertices[1].clone());
             // Arranging for an equal but not identical curve here.
-            vertex.curve = Partial::from_partial(
+            vertex.write().curve = Partial::from_partial(
                 Partial::from_full_entry_point(valid.curve().clone())
                     .read()
                     .clone(),
             );
-            vertices[1] = vertex
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+            vertices[1] = vertex.build(&mut services.objects);
 
             HalfEdge::new(vertices, valid.global_form().clone())
         };
@@ -311,7 +312,8 @@ mod tests {
             .build(&mut services.objects);
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {
-                let vertex = vertex.to_partial();
+                let vertex =
+                    Partial::from_full_entry_point(vertex).read().clone();
                 let surface = vertex.surface_form.read().surface.clone();
                 PartialVertex {
                     position: Some([0.].into()),

@@ -3,8 +3,9 @@ use fj_math::Point;
 use crate::{
     geometry::surface::SurfaceGeometry,
     objects::Curve,
-    partial::PartialVertex,
-    partial2::{Partial, PartialGlobalVertex, PartialSurfaceVertex},
+    partial2::{
+        Partial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
+    },
 };
 
 /// Builder API for [`PartialVertex`]

@@ -3,7 +3,7 @@ use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial::{MaybePartial, MergeWith, PartialVertex},
+    partial::{MaybePartial, MergeWith},
     partial2::Partial,
     services::Service,
 };
@@ -14,7 +14,7 @@ use crate::{
 #[derive(Clone, Debug, Default)]
 pub struct PartialHalfEdge {
     /// The vertices that bound the [`HalfEdge`] in the curve
-    pub vertices: [MaybePartial<Vertex>; 2],
+    pub vertices: [Partial<Vertex>; 2],
 
     /// The global form of the [`HalfEdge`]
     pub global_form: MaybePartial<GlobalEdge>,
@@ -24,20 +24,13 @@ impl PartialHalfEdge {
     /// Access the partial half-edge's curve
     pub fn curve(&self) -> Partial<Curve> {
         let [a, _] = &self.vertices;
-        a.curve()
+        a.read().curve.clone()
     }
 
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
         let curve = self.curve().build(objects);
-        let vertices = self.vertices.map(|vertex| {
-            vertex
-                .merge_with(PartialVertex {
-                    curve: Partial::from_full_entry_point(curve.clone()),
-                    ..Default::default()
-                })
-                .into_full(objects)
-        });
+        let vertices = self.vertices.map(|vertex| vertex.build(objects));
 
         let global_form = self
             .global_form
@@ -55,7 +48,7 @@ impl MergeWith for PartialHalfEdge {
         let other = other.into();
 
         Self {
-            vertices: self.vertices.merge_with(other.vertices),
+            vertices: self.vertices,
             global_form: self.global_form.merge_with(other.global_form),
         }
     }
@@ -63,8 +56,10 @@ impl MergeWith for PartialHalfEdge {
 
 impl From<&HalfEdge> for PartialHalfEdge {
     fn from(half_edge: &HalfEdge) -> Self {
-        let [back_vertex, front_vertex] =
-            half_edge.vertices().clone().map(Into::into);
+        let [back_vertex, front_vertex] = half_edge
+            .vertices()
+            .clone()
+            .map(Partial::from_full_entry_point);
 
         Self {
             vertices: [back_vertex, front_vertex],
@@ -85,9 +80,11 @@ impl MaybePartial<HalfEdge> {
     }
 
     /// Access the front vertex
-    pub fn front(&self) -> MaybePartial<Vertex> {
+    pub fn front(&self) -> Partial<Vertex> {
         match self {
-            Self::Full(full) => full.front().clone().into(),
+            Self::Full(full) => {
+                Partial::from_full_entry_point(full.front().clone())
+            }
             Self::Partial(partial) => {
                 let [_, front] = &partial.vertices;
                 front.clone()
@@ -96,9 +93,11 @@ impl MaybePartial<HalfEdge> {
     }
 
     /// Access the vertices
-    pub fn vertices(&self) -> [MaybePartial<Vertex>; 2] {
+    pub fn vertices(&self) -> [Partial<Vertex>; 2] {
         match self {
-            Self::Full(full) => full.vertices().clone().map(Into::into),
+            Self::Full(full) => {
+                full.vertices().clone().map(Partial::from_full_entry_point)
+            }
             Self::Partial(partial) => partial.vertices.clone(),
         }
     }
