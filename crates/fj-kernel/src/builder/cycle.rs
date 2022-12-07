@@ -39,20 +39,14 @@ impl CycleBuilder for PartialCycle {
     ) -> Self {
         let vertices = vertices.into_iter().map(Into::into);
 
-        let iter = self
-            .half_edges()
-            .last()
-            .map(|half_edge| {
+        let mut previous: Option<MaybePartial<SurfaceVertex>> =
+            self.half_edges().last().map(|half_edge| {
                 let [_, last] = half_edge.vertices();
                 last.surface_form()
-            })
-            .into_iter()
-            .chain(vertices);
-
-        let mut previous: Option<MaybePartial<SurfaceVertex>> = None;
+            });
 
         let mut half_edges = Vec::new();
-        for vertex_next in iter {
+        for vertex_next in vertices {
             if let Some(vertex_prev) = previous {
                 let surface = vertex_prev
                     .surface()
