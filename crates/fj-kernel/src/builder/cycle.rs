@@ -1,8 +1,9 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, Surface, SurfaceVertex},
-    partial::{PartialCycle, PartialHalfEdge},
+    objects::{Curve, Surface, SurfaceVertex, Vertex},
+    partial::{MaybePartial, PartialCycle, PartialGlobalEdge, PartialHalfEdge},
     partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     storage::Handle,
 };
@@ -80,9 +81,17 @@ impl CycleBuilder for PartialCycle {
                     },
                 );
 
+                let global_vertices =
+                    vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
+                        vertex.read().surface_form.read().global_form.clone()
+                    });
+
                 half_edges.push(PartialHalfEdge {
                     vertices,
-                    ..Default::default()
+                    global_form: MaybePartial::from(PartialGlobalEdge {
+                        curve: curve.read().global_form.clone(),
+                        vertices: global_vertices,
+                    }),
                 });
 
                 continue;
@@ -121,7 +130,7 @@ impl CycleBuilder for PartialCycle {
 
         let surface = self.surface().expect("Need surface to close cycle");
         let vertices = [last, first].map(|vertex| {
-            Partial::from_partial(PartialVertex {
+            Partial::<Vertex>::from_partial(PartialVertex {
                 curve: Partial::from_partial(PartialCurve {
                     surface: surface.clone(),
                     ..Default::default()
@@ -130,10 +139,20 @@ impl CycleBuilder for PartialCycle {
                 ..Default::default()
             })
         });
+        let curve = {
+            let [vertex, _] = &vertices;
+            vertex.read().curve.read().global_form.clone()
+        };
+        let global_vertices = vertices.each_ref_ext().map(|vertex| {
+            vertex.read().surface_form.read().global_form.clone()
+        });
 
         let half_edge = PartialHalfEdge {
             vertices,
-            ..Default::default()
+            global_form: MaybePartial::from(PartialGlobalEdge {
+                curve,
+                vertices: global_vertices,
+            }),
         }
         .update_as_line_segment();
 

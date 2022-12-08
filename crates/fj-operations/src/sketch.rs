@@ -1,11 +1,11 @@
 use std::{array, ops::Deref};
 
-use fj_interop::{debug::DebugInfo, mesh::Color};
+use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Face, Objects, Sketch},
-    partial::{HasPartial, PartialHalfEdge},
+    objects::{Cycle, Face, Objects, Sketch, Vertex},
+    partial::{HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     services::Service,
 };
@@ -46,10 +46,23 @@ impl Shape for fj::Sketch {
                             ..Default::default()
                         })
                     });
+                    let global_vertices = vertices.each_ref_ext().map(
+                        |vertex: &Partial<Vertex>| {
+                            vertex
+                                .read()
+                                .surface_form
+                                .read()
+                                .global_form
+                                .clone()
+                        },
+                    );
 
                     let half_edge = PartialHalfEdge {
                         vertices,
-                        ..Default::default()
+                        global_form: MaybePartial::from(PartialGlobalEdge {
+                            curve: curve.read().global_form.clone(),
+                            vertices: global_vertices,
+                        }),
                     };
                     half_edge
                         .update_as_circle_from_radius(circle.radius())

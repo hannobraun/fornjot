@@ -157,14 +157,17 @@ impl Sweep for Handle<GlobalVertex> {
 
 #[cfg(test)]
 mod tests {
+    use std::array;
+
+    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::HalfEdge,
-        partial::HasPartial,
+        objects::Vertex,
+        partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
         partial2::{
             Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
             PartialVertex,
@@ -199,13 +202,32 @@ mod tests {
         let half_edge = (vertex, surface.clone())
             .sweep([0., 0., 1.], &mut services.objects);
 
-        let expected_half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(
-                Partial::from_full_entry_point(surface),
-                [[0., 0.], [0., 1.]],
-            )
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let expected_half_edge = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: MaybePartial::from(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    Partial::from_full_entry_point(surface),
+                    [[0., 0.], [0., 1.]],
+                )
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
         assert_eq!(half_edge, expected_half_edge);
     }
 }

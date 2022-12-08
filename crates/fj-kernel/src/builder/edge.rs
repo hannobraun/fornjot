@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{Curve, Surface, Vertex},
-    partial::{PartialGlobalEdge, PartialHalfEdge},
+    partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
     partial2::Partial,
     storage::Handle,
 };
@@ -76,6 +76,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             vertex.position = Some(point_curve);
             vertex.surface_form = surface_vertex.clone();
         }
+
+        let global_vertex = surface_vertex.read().global_form.clone();
+        self.global_form = MaybePartial::from(PartialGlobalEdge {
+            vertices: [global_vertex.clone(), global_vertex],
+            ..self.global_form.into_partial()
+        });
 
         self
     }

@@ -1,5 +1,4 @@
 use crate::{
-    builder::GlobalEdgeBuilder,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
@@ -29,15 +28,8 @@ impl PartialHalfEdge {
 
     /// Build a full [`HalfEdge`] from the partial half-edge
     pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
-        let curve = self.curve().build(objects);
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
-
-        let global_form = self
-            .global_form
-            .update_partial(|partial| {
-                partial.update_from_curve_and_vertices(&curve, &vertices)
-            })
-            .into_full(objects);
+        let global_form = self.global_form.into_full(objects);
 
         HalfEdge::new(vertices, global_form)
     }

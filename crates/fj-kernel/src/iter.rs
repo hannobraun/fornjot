@@ -359,14 +359,20 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
+    use std::array;
+
+    use fj_interop::ext::ArrayExt;
+
     use crate::{
         builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{
-            Cycle, Face, GlobalCurve, GlobalVertex, HalfEdge, Objects, Shell,
-            Sketch, Solid, SurfaceVertex, Vertex,
+            Cycle, Face, GlobalCurve, GlobalVertex, Objects, Shell, Sketch,
+            Solid, SurfaceVertex, Vertex,
         },
-        partial::HasPartial,
+        partial::{
+            HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
+        },
         partial2::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
@@ -496,15 +502,34 @@ mod tests {
     fn half_edge() {
         let mut services = Services::new();
 
-        let object = HalfEdge::partial()
-            .update_as_line_segment_from_points(
-                Partial::from_full_entry_point(
-                    services.objects.surfaces.xy_plane(),
-                ),
-                [[0., 0.], [1., 0.]],
-            )
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let object = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: MaybePartial::from(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    Partial::from_full_entry_point(
+                        services.objects.surfaces.xy_plane(),
+                    ),
+                    [[0., 0.], [1., 0.]],
+                )
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
 
         assert_eq!(1, object.curve_iter().count());
         assert_eq!(0, object.cycle_iter().count());
