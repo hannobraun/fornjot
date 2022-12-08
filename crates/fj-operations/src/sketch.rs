@@ -29,18 +29,20 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = {
+                    let surface = Partial::from_full_entry_point(surface);
+                    let curve = Partial::from_partial(PartialCurve {
+                        surface,
+                        ..Default::default()
+                    });
+                    let vertices = array::from_fn(|_| {
+                        Partial::from_partial(PartialVertex {
+                            curve: curve.clone(),
+                            ..Default::default()
+                        })
+                    });
+
                     let half_edge = PartialHalfEdge {
-                        vertices: array::from_fn(|_| {
-                            Partial::from_partial(PartialVertex {
-                                curve: Partial::from_partial(PartialCurve {
-                                    surface: Partial::from_full_entry_point(
-                                        surface.clone(),
-                                    ),
-                                    ..Default::default()
-                                }),
-                                ..Default::default()
-                            })
-                        }),
+                        vertices,
                         ..Default::default()
                     };
                     half_edge
