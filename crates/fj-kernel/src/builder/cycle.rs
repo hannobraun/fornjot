@@ -120,22 +120,23 @@ impl CycleBuilder for PartialCycle {
         };
 
         let surface = self.surface().expect("Need surface to close cycle");
-
-        self.with_half_edges(Some(
-            PartialHalfEdge {
-                vertices: [last, first].map(|vertex| {
-                    Partial::from_partial(PartialVertex {
-                        curve: Partial::from_partial(PartialCurve {
-                            surface: surface.clone(),
-                            ..Default::default()
-                        }),
-                        surface_form: vertex.read().surface_form.clone(),
-                        ..Default::default()
-                    })
+        let vertices = [last, first].map(|vertex| {
+            Partial::from_partial(PartialVertex {
+                curve: Partial::from_partial(PartialCurve {
+                    surface: surface.clone(),
+                    ..Default::default()
                 }),
+                surface_form: vertex.read().surface_form.clone(),
                 ..Default::default()
-            }
-            .update_as_line_segment(),
-        ))
+            })
+        });
+
+        let half_edge = PartialHalfEdge {
+            vertices,
+            ..Default::default()
+        }
+        .update_as_line_segment();
+
+        self.with_half_edges(Some(half_edge))
     }
 }
