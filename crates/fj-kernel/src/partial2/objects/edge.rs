@@ -56,6 +56,12 @@ impl PartialHalfEdge {
             global_form,
         }
     }
+
+    /// Access the curve the partial edge is defined on
+    pub fn curve(&self) -> Partial<Curve> {
+        let [vertex, _] = &self.vertices;
+        vertex.read().curve.clone()
+    }
 }
 
 impl PartialObject for PartialHalfEdge {
