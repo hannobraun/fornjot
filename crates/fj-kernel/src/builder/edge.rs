@@ -2,10 +2,9 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    insert::Insert,
     objects::{Curve, Objects, Surface, Vertex},
     partial::{PartialGlobalEdge, PartialHalfEdge},
-    partial2::{Partial, PartialObject, PartialSurfaceVertex, PartialVertex},
+    partial2::Partial,
     services::Service,
     storage::Handle,
 };
@@ -63,7 +62,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
+        _: &mut Service<Objects>,
     ) -> Self {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);
@@ -76,26 +75,19 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let [global_vertex, _] = self.global_form.vertices();
+        let [vertex, _] = &mut self.vertices;
 
-        let surface_vertex = PartialSurfaceVertex {
-            position: Some(path.point_from_path_coords(a_curve)),
-            surface: curve.read().surface.clone(),
-            global_form: global_vertex,
+        let mut surface_vertex = vertex.write().surface_form.clone();
+        surface_vertex.write().position =
+            Some(path.point_from_path_coords(a_curve));
+
+        for (vertex, point_curve) in
+            self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])
+        {
+            let mut vertex = vertex.write();
+            vertex.position = Some(point_curve);
+            vertex.surface_form = surface_vertex.clone();
         }
-        .build(objects)
-        .insert(objects);
-
-        let [back, front] =
-            [a_curve, b_curve].map(|point_curve| PartialVertex {
-                position: Some(point_curve),
-                curve: curve.clone(),
-                surface_form: Partial::from_full_entry_point(
-                    surface_vertex.clone(),
-                ),
-            });
-
-        self.vertices = [back, front].map(Partial::from_partial);
 
         self
     }

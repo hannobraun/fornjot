@@ -6,7 +6,7 @@ use fj_kernel::{
     insert::Insert,
     objects::{Cycle, Face, Objects, Sketch},
     partial::{HasPartial, PartialHalfEdge},
-    partial2::{Partial, PartialCurve, PartialVertex},
+    partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -31,12 +31,18 @@ impl Shape for fj::Sketch {
                 let half_edge = {
                     let surface = Partial::from_full_entry_point(surface);
                     let curve = Partial::from_partial(PartialCurve {
-                        surface,
+                        surface: surface.clone(),
                         ..Default::default()
                     });
                     let vertices = array::from_fn(|_| {
                         Partial::from_partial(PartialVertex {
                             curve: curve.clone(),
+                            surface_form: Partial::from_partial(
+                                PartialSurfaceVertex {
+                                    surface: surface.clone(),
+                                    ..Default::default()
+                                },
+                            ),
                             ..Default::default()
                         })
                     });
