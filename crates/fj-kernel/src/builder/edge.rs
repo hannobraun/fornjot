@@ -5,15 +5,12 @@ use crate::{
     insert::Insert,
     objects::{Curve, Objects, Surface, Vertex},
     partial::{PartialGlobalEdge, PartialHalfEdge},
-    partial2::{
-        Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
-        PartialVertex,
-    },
+    partial2::{Partial, PartialObject, PartialSurfaceVertex, PartialVertex},
     services::Service,
     storage::Handle,
 };
 
-use super::CurveBuilder;
+use super::{CurveBuilder, SurfaceVertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
@@ -111,18 +108,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut vertex = vertex.write();
 
-            vertex.curve = {
-                let curve = vertex.curve.read().clone();
-                Partial::from_partial(PartialCurve {
-                    surface: surface.clone(),
-                    ..curve
-                })
-            };
-            vertex.surface_form = Partial::from_partial(PartialSurfaceVertex {
-                position: Some(point.into()),
-                surface: surface.clone(),
-                ..Default::default()
-            });
+            vertex.curve.write().surface = surface.clone();
+
+            let mut surface_form = vertex.surface_form.write();
+            surface_form.position = Some(point.into());
+            surface_form.surface = surface.clone();
+            surface_form.infer_global_position();
         }
 
         self.update_as_line_segment()
