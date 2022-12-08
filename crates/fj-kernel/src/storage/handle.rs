@@ -168,7 +168,7 @@ unsafe impl<T> Sync for Handle<T> {}
 ///
 /// See [`Handle::id`].
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct ObjectId(u64);
+pub struct ObjectId(pub(crate) u64);
 
 impl ObjectId {
     pub(crate) fn from_ptr<T>(ptr: *const T) -> ObjectId {
