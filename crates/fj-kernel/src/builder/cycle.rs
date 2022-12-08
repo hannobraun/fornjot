@@ -3,10 +3,10 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, Surface, SurfaceVertex, Vertex},
-    partial::{PartialCycle, PartialHalfEdge},
+    partial::PartialCycle,
     partial2::{
-        Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
-        PartialVertex,
+        Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
+        PartialSurfaceVertex, PartialVertex,
     },
     storage::Handle,
 };
@@ -43,7 +43,7 @@ impl CycleBuilder for PartialCycle {
 
         let mut previous: Option<Partial<SurfaceVertex>> =
             self.half_edges().last().map(|half_edge| {
-                let [_, last] = half_edge.vertices();
+                let [_, last] = &half_edge.read().vertices;
                 let last = last.read();
                 last.surface_form.clone()
             });
@@ -89,13 +89,13 @@ impl CycleBuilder for PartialCycle {
                         vertex.read().surface_form.read().global_form.clone()
                     });
 
-                half_edges.push(PartialHalfEdge {
+                half_edges.push(Partial::from_partial(PartialHalfEdge {
                     vertices,
                     global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: curve.read().global_form.clone(),
                         vertices: global_vertices,
                     }),
-                });
+                }));
 
                 continue;
             }
@@ -124,8 +124,9 @@ impl CycleBuilder for PartialCycle {
         let first = self.half_edges().next();
         let last = self.half_edges().last();
 
-        let vertices = [first, last]
-            .map(|option| option.map(|half_edge| half_edge.vertices()));
+        let vertices = [first, last].map(|option| {
+            option.map(|half_edge| half_edge.read().vertices.clone())
+        });
 
         let [Some([first, _]), Some([_, last])] = vertices else {
             return self;
@@ -150,14 +151,16 @@ impl CycleBuilder for PartialCycle {
             vertex.read().surface_form.read().global_form.clone()
         });
 
-        let half_edge = PartialHalfEdge {
-            vertices,
-            global_form: Partial::from_partial(PartialGlobalEdge {
-                curve,
-                vertices: global_vertices,
-            }),
-        }
-        .update_as_line_segment();
+        let half_edge = Partial::from_partial(
+            PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve,
+                    vertices: global_vertices,
+                }),
+            }
+            .update_as_line_segment(),
+        );
 
         self.with_half_edges(Some(half_edge))
     }

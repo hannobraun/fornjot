@@ -66,9 +66,8 @@ impl CycleValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CycleBuilder, insert::Insert, objects::Cycle,
-        partial::HasPartial, partial2::Partial, services::Services,
-        validate::Validate,
+        builder::CycleBuilder, objects::Cycle, partial::HasPartial,
+        partial2::Partial, services::Services, validate::Validate,
     };
 
     #[test]
@@ -85,23 +84,25 @@ mod tests {
         let invalid = {
             let mut half_edges = valid
                 .half_edges()
-                .map(|half_edge| half_edge.to_partial())
+                .map(|half_edge| {
+                    Partial::from_full_entry_point(half_edge.clone())
+                })
                 .collect::<Vec<_>>();
 
             // Sever connection between the last and first half-edge in the
             // cycle.
-            let first_half_edge = half_edges.first_mut().unwrap();
-            let [first_vertex, _] = &mut first_half_edge.vertices;
-            let surface_vertex = Partial::from_partial(
-                first_vertex.read().surface_form.read().clone(),
-            );
-            first_vertex.write().surface_form = surface_vertex;
+            {
+                let first_half_edge = half_edges.first_mut().unwrap();
+                let [first_vertex, _] = &mut first_half_edge.write().vertices;
+                let surface_vertex = Partial::from_partial(
+                    first_vertex.read().surface_form.read().clone(),
+                );
+                first_vertex.write().surface_form = surface_vertex;
+            }
 
-            let half_edges = half_edges.into_iter().map(|half_edge| {
-                half_edge
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-            });
+            let half_edges = half_edges
+                .into_iter()
+                .map(|half_edge| half_edge.build(&mut services.objects));
 
             Cycle::new(half_edges)
         };

@@ -1,16 +1,12 @@
 pub mod cycle;
-pub mod edge;
 pub mod face;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Objects},
+    objects::{Cycle, Face, Objects},
     services::Service,
 };
 
-use super::{
-    HasPartial, MaybePartial, Partial, PartialCycle, PartialFace,
-    PartialHalfEdge,
-};
+use super::{HasPartial, MaybePartial, Partial, PartialCycle, PartialFace};
 
 macro_rules! impl_traits {
     ($($full:ty, $partial:ty;)*) => {
@@ -39,5 +35,4 @@ macro_rules! impl_traits {
 impl_traits!(
     Cycle, PartialCycle;
     Face, PartialFace;
-    HalfEdge, PartialHalfEdge;
 );

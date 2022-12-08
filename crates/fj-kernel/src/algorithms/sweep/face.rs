@@ -92,8 +92,10 @@ mod tests {
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{Face, Sketch, Vertex},
-        partial::{HasPartial, PartialHalfEdge},
-        partial2::{Partial, PartialGlobalEdge},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject,
+        },
         services::Services,
     };
 

@@ -370,8 +370,11 @@ mod tests {
             Cycle, Face, GlobalCurve, GlobalVertex, Objects, Shell, Sketch,
             Solid, SurfaceVertex, Vertex,
         },
-        partial::{HasPartial, PartialHalfEdge},
-        partial2::{Partial, PartialCurve, PartialGlobalEdge, PartialObject},
+        partial::HasPartial,
+        partial2::{
+            Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
+            PartialObject,
+        },
         services::Services,
     };
 

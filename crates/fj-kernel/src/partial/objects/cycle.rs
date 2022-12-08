@@ -10,12 +10,12 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    half_edges: Vec<MaybePartial<HalfEdge>>,
+    half_edges: Vec<Partial<HalfEdge>>,
 }
 
 impl PartialCycle {
     /// Access the half-edges that make up the [`Cycle`]
-    pub fn half_edges(&self) -> impl Iterator<Item = MaybePartial<HalfEdge>> {
+    pub fn half_edges(&self) -> impl Iterator<Item = Partial<HalfEdge>> {
         self.half_edges.clone().into_iter()
     }
 
@@ -23,7 +23,7 @@ impl PartialCycle {
     pub fn surface(&self) -> Option<Partial<Surface>> {
         self.half_edges
             .first()
-            .map(|half_edge| half_edge.curve().read().surface.clone())
+            .map(|half_edge| half_edge.read().curve().read().surface.clone())
     }
 
     /// Add the provided half-edges to the partial cycle
@@ -36,7 +36,7 @@ impl PartialCycle {
     /// Panics, if the surfaces can't be merged.
     pub fn with_half_edges(
         mut self,
-        half_edges: impl IntoIterator<Item = impl Into<MaybePartial<HalfEdge>>>,
+        half_edges: impl IntoIterator<Item = Partial<HalfEdge>>,
     ) -> Self {
         let half_edges = half_edges.into_iter().map(Into::into);
 
@@ -51,7 +51,7 @@ impl PartialCycle {
     pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
         let mut half_edges = Vec::new();
         for half_edge in self.half_edges {
-            let half_edge = half_edge.into_full(objects);
+            let half_edge = half_edge.build(objects);
             half_edges.push(half_edge);
         }
 
@@ -72,7 +72,11 @@ impl MergeWith for PartialCycle {
 impl From<&Cycle> for PartialCycle {
     fn from(cycle: &Cycle) -> Self {
         Self {
-            half_edges: cycle.half_edges().cloned().map(Into::into).collect(),
+            half_edges: cycle
+                .half_edges()
+                .cloned()
+                .map(Partial::from_full_entry_point)
+                .collect(),
         }
     }
 }
