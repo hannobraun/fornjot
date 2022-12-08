@@ -80,8 +80,8 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
         objects::Vertex,
-        partial::{MaybePartial, PartialGlobalEdge, PartialHalfEdge},
-        partial2::{Partial, PartialCurve, PartialObject},
+        partial::PartialHalfEdge,
+        partial2::{Partial, PartialCurve, PartialGlobalEdge, PartialObject},
         services::Services,
     };
 
@@ -112,7 +112,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -161,7 +161,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -210,7 +210,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -254,7 +254,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),

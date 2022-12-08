@@ -370,10 +370,8 @@ mod tests {
             Cycle, Face, GlobalCurve, GlobalVertex, Objects, Shell, Sketch,
             Solid, SurfaceVertex, Vertex,
         },
-        partial::{
-            HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        },
-        partial2::{Partial, PartialCurve, PartialObject},
+        partial::{HasPartial, PartialHalfEdge},
+        partial2::{Partial, PartialCurve, PartialGlobalEdge, PartialObject},
         services::Services,
     };
 
@@ -514,7 +512,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),

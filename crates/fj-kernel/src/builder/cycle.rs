@@ -3,8 +3,11 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, Surface, SurfaceVertex, Vertex},
-    partial::{MaybePartial, PartialCycle, PartialGlobalEdge, PartialHalfEdge},
-    partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
+    partial::{PartialCycle, PartialHalfEdge},
+    partial2::{
+        Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
+        PartialVertex,
+    },
     storage::Handle,
 };
 
@@ -88,7 +91,7 @@ impl CycleBuilder for PartialCycle {
 
                 half_edges.push(PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: curve.read().global_form.clone(),
                         vertices: global_vertices,
                     }),
@@ -149,7 +152,7 @@ impl CycleBuilder for PartialCycle {
 
         let half_edge = PartialHalfEdge {
             vertices,
-            global_form: MaybePartial::from(PartialGlobalEdge {
+            global_form: Partial::from_partial(PartialGlobalEdge {
                 curve,
                 vertices: global_vertices,
             }),

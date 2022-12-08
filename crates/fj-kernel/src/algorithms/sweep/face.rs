@@ -92,10 +92,8 @@ mod tests {
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{Face, Sketch, Vertex},
-        partial::{
-            HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        },
-        partial2::Partial,
+        partial::{HasPartial, PartialHalfEdge},
+        partial2::{Partial, PartialGlobalEdge},
         services::Services,
     };
 
@@ -150,7 +148,7 @@ mod tests {
 
                 let half_edge = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
@@ -218,7 +216,7 @@ mod tests {
 
                 let half_edge = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),

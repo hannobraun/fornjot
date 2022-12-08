@@ -206,11 +206,10 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge, Vertex},
-        partial::{
-            HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        },
+        partial::PartialHalfEdge,
         partial2::{
-            Partial, PartialObject, PartialSurfaceVertex, PartialVertex,
+            Partial, PartialGlobalEdge, PartialObject, PartialSurfaceVertex,
+            PartialVertex,
         },
         services::Services,
         validate::Validate,
@@ -232,7 +231,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -282,7 +281,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -298,12 +297,12 @@ mod tests {
                 .build(&mut services.objects)
         };
         let invalid = HalfEdge::new(valid.vertices().clone(), {
-            let mut tmp = valid.global_form().to_partial();
-            tmp.curve = Partial::from_full_entry_point(
+            let mut tmp =
+                Partial::from_full_entry_point(valid.global_form().clone());
+            tmp.write().curve = Partial::from_full_entry_point(
                 GlobalCurve.insert(&mut services.objects),
             );
             tmp.build(&mut services.objects)
-                .insert(&mut services.objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -326,7 +325,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -342,8 +341,9 @@ mod tests {
                 .build(&mut services.objects)
         };
         let invalid = HalfEdge::new(valid.vertices().clone(), {
-            let mut tmp = valid.global_form().to_partial();
-            tmp.vertices = valid
+            let mut tmp =
+                Partial::from_full_entry_point(valid.global_form().clone());
+            tmp.write().vertices = valid
                 .global_form()
                 .vertices()
                 .access_in_normalized_order()
@@ -354,7 +354,6 @@ mod tests {
                     )
                 });
             tmp.build(&mut services.objects)
-                .insert(&mut services.objects)
         });
 
         assert!(valid.validate().is_ok());
@@ -377,7 +376,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),

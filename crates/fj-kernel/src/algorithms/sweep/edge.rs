@@ -194,11 +194,10 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Face, Vertex},
-        partial::{
-            HasPartial, MaybePartial, PartialGlobalEdge, PartialHalfEdge,
-        },
+        partial::{HasPartial, PartialHalfEdge},
         partial2::{
-            Partial, PartialCurve, PartialSurfaceVertex, PartialVertex,
+            Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
+            PartialVertex,
         },
         services::Services,
     };
@@ -219,7 +218,7 @@ mod tests {
 
             let half_edge = PartialHalfEdge {
                 vertices,
-                global_form: MaybePartial::from(PartialGlobalEdge {
+                global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
@@ -256,7 +255,7 @@ mod tests {
 
                 let half_edge = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
@@ -307,7 +306,7 @@ mod tests {
 
                 let side_up = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
@@ -359,7 +358,7 @@ mod tests {
 
                 let top = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
@@ -403,7 +402,7 @@ mod tests {
 
                 let side_down = PartialHalfEdge {
                     vertices,
-                    global_form: MaybePartial::from(PartialGlobalEdge {
+                    global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
