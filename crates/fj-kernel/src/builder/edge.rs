@@ -108,24 +108,22 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        self.vertices =
-            self.vertices.zip_ext(points).map(|(mut vertex, point)| {
-                vertex.write().curve = {
-                    let curve = vertex.read().curve.read().clone();
-                    Partial::from_partial(PartialCurve {
-                        surface: surface.clone(),
-                        ..curve
-                    })
-                };
-                vertex.write().surface_form =
-                    Partial::from_partial(PartialSurfaceVertex {
-                        position: Some(point.into()),
-                        surface: surface.clone(),
-                        ..Default::default()
-                    });
+        for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
+            let mut vertex = vertex.write();
 
-                vertex
+            vertex.curve = {
+                let curve = vertex.curve.read().clone();
+                Partial::from_partial(PartialCurve {
+                    surface: surface.clone(),
+                    ..curve
+                })
+            };
+            vertex.surface_form = Partial::from_partial(PartialSurfaceVertex {
+                position: Some(point.into()),
+                surface: surface.clone(),
+                ..Default::default()
             });
+        }
 
         self.update_as_line_segment()
     }
