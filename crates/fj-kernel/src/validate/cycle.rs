@@ -66,12 +66,8 @@ impl CycleValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder},
-        insert::Insert,
-        objects::Cycle,
-        partial::HasPartial,
-        partial2::{Partial, PartialSurfaceVertex, PartialVertex},
-        services::Services,
+        builder::CycleBuilder, insert::Insert, objects::Cycle,
+        partial::HasPartial, partial2::Partial, services::Services,
         validate::Validate,
     };
 
@@ -92,27 +88,14 @@ mod tests {
                 .map(|half_edge| half_edge.to_partial())
                 .collect::<Vec<_>>();
 
-            let first_half_edge = &mut half_edges[0];
-            let [first_vertex, _] = first_half_edge.vertices.clone();
-
             // Sever connection between the last and first half-edge in the
             // cycle.
-            let first_vertex = PartialVertex {
-                surface_form: Partial::from_partial(PartialSurfaceVertex {
-                    surface: first_vertex
-                        .read()
-                        .surface_form
-                        .read()
-                        .surface
-                        .clone(),
-                    ..Default::default()
-                }),
-                ..first_vertex.read().clone()
-            };
-            *first_half_edge = first_half_edge
-                .clone()
-                .with_back_vertex(Partial::from_partial(first_vertex))
-                .infer_global_form();
+            let first_half_edge = half_edges.first_mut().unwrap();
+            let [first_vertex, _] = &mut first_half_edge.vertices;
+            let surface_vertex = Partial::from_partial(
+                first_vertex.read().surface_form.read().clone(),
+            );
+            first_vertex.write().surface_form = surface_vertex;
 
             let half_edges = half_edges.into_iter().map(|half_edge| {
                 half_edge
