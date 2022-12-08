@@ -1,5 +1,7 @@
 use std::{
+    any::type_name,
     collections::BTreeMap,
+    fmt::{self, Debug},
     ops::{Deref, DerefMut},
     sync::Arc,
 };
@@ -21,7 +23,6 @@ use super::HasPartial;
 ///
 /// Controls access to the partial object. Can be cloned, to access the same
 /// partial object from multiple locations.
-#[derive(Debug)]
 pub struct Partial<T: HasPartial> {
     inner: Inner<T>,
 }
@@ -116,6 +117,31 @@ impl<T: HasPartial + 'static> Partial<T> {
             .get_or_insert_with(|| partial.build(objects).insert(objects));
 
         full.clone()
+    }
+}
+
+impl<T: HasPartial + 'static> fmt::Debug for Partial<T>
+where
+    T::Partial: Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let name = {
+            let type_name = type_name::<T::Partial>();
+            match type_name.rsplit_once("::") {
+                Some((_, name)) => name,
+                None => type_name,
+            }
+        };
+        let id = self.id().0;
+        let object = self.read().clone();
+
+        if f.alternate() {
+            write!(f, "{name} @ {id:#x} => {object:#?}")?;
+        } else {
+            write!(f, "{name} @ {id:#x}")?;
+        }
+
+        Ok(())
     }
 }
 

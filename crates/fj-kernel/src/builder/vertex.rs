@@ -23,11 +23,30 @@ impl VertexBuilder for PartialVertex {
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
+    /// Infer the position of the surface vertex' global form
+    fn infer_global_position(&mut self) -> &mut Self;
+
     /// Infer the global form of the partial vertex
     fn infer_global_form(&mut self) -> &mut Self;
 }
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
+    fn infer_global_position(&mut self) -> &mut Self {
+        let position = self
+            .position
+            .expect("Can't infer global position without surface position");
+        let surface = self
+            .surface
+            .read()
+            .geometry
+            .expect("Can't infer global position without surface geometry");
+
+        self.global_form.write().position =
+            Some(surface.point_from_surface_coords(position));
+
+        self
+    }
+
     fn infer_global_form(&mut self) -> &mut Self {
         self.global_form = Partial::new();
         self

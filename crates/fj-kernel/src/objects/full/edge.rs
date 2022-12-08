@@ -163,14 +163,18 @@ impl VerticesInNormalizedOrder {
 
 #[cfg(test)]
 mod tests {
+    use std::array;
+
+    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
-        builder::HalfEdgeBuilder, partial::HasPartial, partial2::Partial,
+        builder::HalfEdgeBuilder,
+        objects::Vertex,
+        partial::PartialHalfEdge,
+        partial2::{Partial, PartialGlobalEdge},
         services::Services,
     };
-
-    use super::HalfEdge;
 
     #[test]
     fn global_edge_equality() {
@@ -183,12 +187,49 @@ mod tests {
         let a = [0., 0.];
         let b = [1., 0.];
 
-        let a_to_b = HalfEdge::partial()
-            .update_as_line_segment_from_points(surface.clone(), [a, b])
-            .build(&mut services.objects);
-        let b_to_a = HalfEdge::partial()
-            .update_as_line_segment_from_points(surface, [b, a])
-            .build(&mut services.objects);
+        let a_to_b = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(surface.clone(), [a, b])
+                .build(&mut services.objects)
+        };
+        let b_to_a = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+            half_edge
+                .update_as_line_segment_from_points(surface, [b, a])
+                .build(&mut services.objects)
+        };
 
         assert_eq!(a_to_b.global_form(), b_to_a.global_form());
     }

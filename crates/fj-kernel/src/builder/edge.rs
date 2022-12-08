@@ -2,18 +2,13 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    insert::Insert,
-    objects::{Curve, Objects, Surface, Vertex},
-    partial::{PartialGlobalEdge, PartialHalfEdge},
-    partial2::{
-        Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
-        PartialVertex,
-    },
-    services::Service,
+    objects::{Curve, Surface, Vertex},
+    partial::PartialHalfEdge,
+    partial2::{Partial, PartialGlobalEdge},
     storage::Handle,
 };
 
-use super::CurveBuilder;
+use super::{CurveBuilder, SurfaceVertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
@@ -24,17 +19,7 @@ pub trait HalfEdgeBuilder: Sized {
     fn with_front_vertex(self, front: Partial<Vertex>) -> Self;
 
     /// Update partial half-edge as a circle, from the given radius
-    ///
-    /// # Implementation Note
-    ///
-    /// In principle, only the `build` method should take a reference to
-    /// [`Objects`]. As of this writing, this method is the only one that
-    /// deviates from that. I couldn't think of a way to do it better.
-    fn update_as_circle_from_radius(
-        self,
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Self;
+    fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
 
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
@@ -66,7 +51,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
     ) -> Self {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);
@@ -79,26 +63,23 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let [global_vertex, _] = self.global_form.vertices();
+        let [vertex, _] = &mut self.vertices;
 
-        let surface_vertex = PartialSurfaceVertex {
-            position: Some(path.point_from_path_coords(a_curve)),
-            surface: curve.read().surface.clone(),
-            global_form: global_vertex,
+        let mut surface_vertex = vertex.write().surface_form.clone();
+        surface_vertex.write().position =
+            Some(path.point_from_path_coords(a_curve));
+
+        for (vertex, point_curve) in
+            self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])
+        {
+            let mut vertex = vertex.write();
+            vertex.position = Some(point_curve);
+            vertex.surface_form = surface_vertex.clone();
         }
-        .build(objects)
-        .insert(objects);
 
-        let [back, front] =
-            [a_curve, b_curve].map(|point_curve| PartialVertex {
-                position: Some(point_curve),
-                curve: curve.clone(),
-                surface_form: Partial::from_full_entry_point(
-                    surface_vertex.clone(),
-                ),
-            });
-
-        self.vertices = [back, front].map(Partial::from_partial);
+        let global_vertex = surface_vertex.read().global_form.clone();
+        self.global_form.write().vertices =
+            [global_vertex.clone(), global_vertex];
 
         self
     }
@@ -108,24 +89,16 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
     ) -> Self {
-        self.vertices =
-            self.vertices.zip_ext(points).map(|(mut vertex, point)| {
-                vertex.write().curve = {
-                    let curve = vertex.read().curve.read().clone();
-                    Partial::from_partial(PartialCurve {
-                        surface: surface.clone(),
-                        ..curve
-                    })
-                };
-                vertex.write().surface_form =
-                    Partial::from_partial(PartialSurfaceVertex {
-                        position: Some(point.into()),
-                        surface: surface.clone(),
-                        ..Default::default()
-                    });
+        for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
+            let mut vertex = vertex.write();
 
-                vertex
-            });
+            vertex.curve.write().surface = surface.clone();
+
+            let mut surface_form = vertex.surface_form.write();
+            surface_form.position = Some(point.into());
+            surface_form.surface = surface.clone();
+            surface_form.infer_global_position();
+        }
 
         self.update_as_line_segment()
     }
@@ -157,11 +130,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self.vertices = [back, front];
 
+        self.global_form.write().curve = curve.read().global_form.clone();
+
         self
     }
 
     fn infer_global_form(mut self) -> Self {
-        self.global_form = PartialGlobalEdge::default().into();
+        self.global_form = Partial::new();
         self
     }
 }

@@ -1,12 +1,15 @@
 use std::{array, ops::Deref};
 
-use fj_interop::{debug::DebugInfo, mesh::Color};
+use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Face, Objects, Sketch},
+    objects::{Cycle, Face, Objects, Sketch, Vertex},
     partial::{HasPartial, PartialHalfEdge},
-    partial2::{Partial, PartialCurve, PartialVertex},
+    partial2::{
+        Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
+        PartialVertex,
+    },
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -29,22 +32,43 @@ impl Shape for fj::Sketch {
                 // none need to be added here.
 
                 let half_edge = {
-                    let half_edge = PartialHalfEdge {
-                        vertices: array::from_fn(|_| {
-                            Partial::from_partial(PartialVertex {
-                                curve: Partial::from_partial(PartialCurve {
-                                    surface: Partial::from_full_entry_point(
-                                        surface.clone(),
-                                    ),
-                                    ..Default::default()
-                                }),
-                                ..Default::default()
-                            })
-                        }),
+                    let surface = Partial::from_full_entry_point(surface);
+                    let curve = Partial::from_partial(PartialCurve {
+                        surface: surface.clone(),
                         ..Default::default()
+                    });
+                    let vertices = array::from_fn(|_| {
+                        Partial::from_partial(PartialVertex {
+                            curve: curve.clone(),
+                            surface_form: Partial::from_partial(
+                                PartialSurfaceVertex {
+                                    surface: surface.clone(),
+                                    ..Default::default()
+                                },
+                            ),
+                            ..Default::default()
+                        })
+                    });
+                    let global_vertices = vertices.each_ref_ext().map(
+                        |vertex: &Partial<Vertex>| {
+                            vertex
+                                .read()
+                                .surface_form
+                                .read()
+                                .global_form
+                                .clone()
+                        },
+                    );
+
+                    let half_edge = PartialHalfEdge {
+                        vertices,
+                        global_form: Partial::from_partial(PartialGlobalEdge {
+                            curve: curve.read().global_form.clone(),
+                            vertices: global_vertices,
+                        }),
                     };
                     half_edge
-                        .update_as_circle_from_radius(circle.radius(), objects)
+                        .update_as_circle_from_radius(circle.radius())
                         .build(objects)
                         .insert(objects)
                 };

@@ -80,15 +80,20 @@ impl Sweep for Handle<Face> {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::{ext::SliceExt, mesh::Color};
+    use std::array;
+
+    use fj_interop::{
+        ext::{ArrayExt, SliceExt},
+        mesh::Color,
+    };
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{Face, HalfEdge, Sketch},
-        partial::HasPartial,
-        partial2::Partial,
+        objects::{Face, Sketch, Vertex},
+        partial::{HasPartial, PartialHalfEdge},
+        partial2::{Partial, PartialGlobalEdge},
         services::Services,
     };
 
@@ -131,15 +136,34 @@ mod tests {
 
         let triangle = TRIANGLE.as_slice();
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = HalfEdge::partial()
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [a, b],
-                )
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+            let half_edge = {
+                let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+                let global_curve = {
+                    let [vertex, _] = &vertices;
+                    vertex.read().curve.read().global_form.clone()
+                };
+                let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                    vertex.read().surface_form.read().global_form.clone()
+                });
+
+                let half_edge = PartialHalfEdge {
+                    vertices,
+                    global_form: Partial::from_partial(PartialGlobalEdge {
+                        curve: global_curve,
+                        vertices: global_vertices,
+                    }),
+                };
+
+                half_edge
+                    .update_as_line_segment_from_points(
+                        Partial::from_full_entry_point(
+                            services.objects.surfaces.xy_plane(),
+                        ),
+                        [a, b],
+                    )
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
+            };
             (half_edge, Color::default()).sweep(UP, &mut services.objects)
         });
 
@@ -180,16 +204,35 @@ mod tests {
 
         let triangle = TRIANGLE.as_slice();
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
-            let half_edge = HalfEdge::partial()
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [a, b],
-                )
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-                .reverse(&mut services.objects);
+            let half_edge = {
+                let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+                let global_curve = {
+                    let [vertex, _] = &vertices;
+                    vertex.read().curve.read().global_form.clone()
+                };
+                let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                    vertex.read().surface_form.read().global_form.clone()
+                });
+
+                let half_edge = PartialHalfEdge {
+                    vertices,
+                    global_form: Partial::from_partial(PartialGlobalEdge {
+                        curve: global_curve,
+                        vertices: global_vertices,
+                    }),
+                };
+
+                half_edge
+                    .update_as_line_segment_from_points(
+                        Partial::from_full_entry_point(
+                            services.objects.surfaces.xy_plane(),
+                        ),
+                        [a, b],
+                    )
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
+                    .reverse(&mut services.objects)
+            };
             (half_edge, Color::default()).sweep(DOWN, &mut services.objects)
         });
 

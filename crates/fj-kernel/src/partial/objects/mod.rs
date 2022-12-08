@@ -3,13 +3,13 @@ pub mod edge;
 pub mod face;
 
 use crate::{
-    objects::{Cycle, Face, GlobalEdge, HalfEdge, Objects},
+    objects::{Cycle, Face, HalfEdge, Objects},
     services::Service,
 };
 
 use super::{
     HasPartial, MaybePartial, Partial, PartialCycle, PartialFace,
-    PartialGlobalEdge, PartialHalfEdge,
+    PartialHalfEdge,
 };
 
 macro_rules! impl_traits {
@@ -39,6 +39,5 @@ macro_rules! impl_traits {
 impl_traits!(
     Cycle, PartialCycle;
     Face, PartialFace;
-    GlobalEdge, PartialGlobalEdge;
     HalfEdge, PartialHalfEdge;
 );

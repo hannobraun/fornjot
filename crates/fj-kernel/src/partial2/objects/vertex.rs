@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    builder::SurfaceVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
     partial2::{FullToPartialCache, Partial, PartialCurve, PartialObject},
     services::Service,
@@ -135,17 +136,14 @@ impl PartialObject for PartialSurfaceVertex {
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
+        if self.global_form.read().position.is_none() {
+            self.infer_global_position();
+        }
+
         let position = self
             .position
             .expect("Can't build `SurfaceVertex` without position");
         let surface = self.surface.build(objects);
-
-        // Infer global position, if not available.
-        if self.global_form.read().position.is_none() {
-            self.global_form.write().position =
-                Some(surface.geometry().point_from_surface_coords(position));
-        }
-
         let global_form = self.global_form.build(objects);
 
         SurfaceVertex::new(position, surface, global_form)

@@ -1,9 +1,13 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, Surface, SurfaceVertex},
+    objects::{Curve, Surface, SurfaceVertex, Vertex},
     partial::{PartialCycle, PartialHalfEdge},
-    partial2::{Partial, PartialCurve, PartialSurfaceVertex, PartialVertex},
+    partial2::{
+        Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
+        PartialVertex,
+    },
     storage::Handle,
 };
 
@@ -71,16 +75,26 @@ impl CycleBuilder for PartialCycle {
                     .update_as_line_from_points([position_prev, position_next]);
 
                 let vertices = [(0., vertex_prev), (1., vertex_next)].map(
-                    |(position, surface_form)| PartialVertex {
-                        position: Some([position].into()),
-                        curve: curve.clone(),
-                        surface_form,
+                    |(position, surface_form)| {
+                        Partial::from_partial(PartialVertex {
+                            position: Some([position].into()),
+                            curve: curve.clone(),
+                            surface_form,
+                        })
                     },
                 );
 
+                let global_vertices =
+                    vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
+                        vertex.read().surface_form.read().global_form.clone()
+                    });
+
                 half_edges.push(PartialHalfEdge {
-                    vertices: vertices.map(Partial::from_partial),
-                    ..Default::default()
+                    vertices,
+                    global_form: Partial::from_partial(PartialGlobalEdge {
+                        curve: curve.read().global_form.clone(),
+                        vertices: global_vertices,
+                    }),
                 });
 
                 continue;
@@ -118,22 +132,33 @@ impl CycleBuilder for PartialCycle {
         };
 
         let surface = self.surface().expect("Need surface to close cycle");
-
-        self.with_half_edges(Some(
-            PartialHalfEdge {
-                vertices: [last, first].map(|vertex| {
-                    Partial::from_partial(PartialVertex {
-                        curve: Partial::from_partial(PartialCurve {
-                            surface: surface.clone(),
-                            ..Default::default()
-                        }),
-                        surface_form: vertex.read().surface_form.clone(),
-                        ..Default::default()
-                    })
+        let vertices = [last, first].map(|vertex| {
+            Partial::<Vertex>::from_partial(PartialVertex {
+                curve: Partial::from_partial(PartialCurve {
+                    surface: surface.clone(),
+                    ..Default::default()
                 }),
+                surface_form: vertex.read().surface_form.clone(),
                 ..Default::default()
-            }
-            .update_as_line_segment(),
-        ))
+            })
+        });
+        let curve = {
+            let [vertex, _] = &vertices;
+            vertex.read().curve.read().global_form.clone()
+        };
+        let global_vertices = vertices.each_ref_ext().map(|vertex| {
+            vertex.read().surface_form.read().global_form.clone()
+        });
+
+        let half_edge = PartialHalfEdge {
+            vertices,
+            global_form: Partial::from_partial(PartialGlobalEdge {
+                curve,
+                vertices: global_vertices,
+            }),
+        }
+        .update_as_line_segment();
+
+        self.with_half_edges(Some(half_edge))
     }
 }

@@ -72,13 +72,16 @@ impl CurveEdgeIntersection {
 
 #[cfg(test)]
 mod tests {
+    use std::array;
+
+    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
-        objects::HalfEdge,
-        partial::HasPartial,
-        partial2::{Partial, PartialCurve, PartialObject},
+        objects::Vertex,
+        partial::PartialHalfEdge,
+        partial2::{Partial, PartialCurve, PartialGlobalEdge, PartialObject},
         services::Services,
     };
 
@@ -97,9 +100,31 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
-        let half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(surface, [[1., -1.], [1., 1.]])
-            .build(&mut services.objects);
+        let half_edge = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    surface,
+                    [[1., -1.], [1., 1.]],
+                )
+                .build(&mut services.objects)
+        };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -124,12 +149,31 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
-        let half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(
-                surface,
-                [[-1., -1.], [-1., 1.]],
-            )
-            .build(&mut services.objects);
+        let half_edge = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    surface,
+                    [[-1., -1.], [-1., 1.]],
+                )
+                .build(&mut services.objects)
+        };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -154,12 +198,31 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
-        let half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(
-                surface,
-                [[-1., -1.], [1., -1.]],
-            )
-            .build(&mut services.objects);
+        let half_edge = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    surface,
+                    [[-1., -1.], [1., -1.]],
+                )
+                .build(&mut services.objects)
+        };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -179,9 +242,31 @@ mod tests {
         };
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
-        let half_edge = HalfEdge::partial()
-            .update_as_line_segment_from_points(surface, [[-1., 0.], [1., 0.]])
-            .build(&mut services.objects);
+        let half_edge = {
+            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
+            let global_curve = {
+                let [vertex, _] = &vertices;
+                vertex.read().curve.read().global_form.clone()
+            };
+            let global_vertices = vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+            let half_edge = PartialHalfEdge {
+                vertices,
+                global_form: Partial::from_partial(PartialGlobalEdge {
+                    curve: global_curve,
+                    vertices: global_vertices,
+                }),
+            };
+
+            half_edge
+                .update_as_line_segment_from_points(
+                    surface,
+                    [[-1., 0.], [1., 0.]],
+                )
+                .build(&mut services.objects)
+        };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
