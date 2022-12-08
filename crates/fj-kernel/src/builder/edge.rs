@@ -2,10 +2,9 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{Curve, Objects, Surface, Vertex},
+    objects::{Curve, Surface, Vertex},
     partial::{PartialGlobalEdge, PartialHalfEdge},
     partial2::Partial,
-    services::Service,
     storage::Handle,
 };
 
@@ -26,11 +25,7 @@ pub trait HalfEdgeBuilder: Sized {
     /// In principle, only the `build` method should take a reference to
     /// [`Objects`]. As of this writing, this method is the only one that
     /// deviates from that. I couldn't think of a way to do it better.
-    fn update_as_circle_from_radius(
-        self,
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Self;
+    fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
 
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
@@ -62,7 +57,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
-        _: &mut Service<Objects>,
     ) -> Self {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);

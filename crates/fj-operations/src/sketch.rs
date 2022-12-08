@@ -52,7 +52,7 @@ impl Shape for fj::Sketch {
                         ..Default::default()
                     };
                     half_edge
-                        .update_as_circle_from_radius(circle.radius(), objects)
+                        .update_as_circle_from_radius(circle.radius())
                         .build(objects)
                         .insert(objects)
                 };
