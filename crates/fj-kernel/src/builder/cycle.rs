@@ -71,15 +71,17 @@ impl CycleBuilder for PartialCycle {
                     .update_as_line_from_points([position_prev, position_next]);
 
                 let vertices = [(0., vertex_prev), (1., vertex_next)].map(
-                    |(position, surface_form)| PartialVertex {
-                        position: Some([position].into()),
-                        curve: curve.clone(),
-                        surface_form,
+                    |(position, surface_form)| {
+                        Partial::from_partial(PartialVertex {
+                            position: Some([position].into()),
+                            curve: curve.clone(),
+                            surface_form,
+                        })
                     },
                 );
 
                 half_edges.push(PartialHalfEdge {
-                    vertices: vertices.map(Partial::from_partial),
+                    vertices,
                     ..Default::default()
                 });
 
