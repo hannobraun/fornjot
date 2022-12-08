@@ -19,12 +19,6 @@ pub trait HalfEdgeBuilder: Sized {
     fn with_front_vertex(self, front: Partial<Vertex>) -> Self;
 
     /// Update partial half-edge as a circle, from the given radius
-    ///
-    /// # Implementation Note
-    ///
-    /// In principle, only the `build` method should take a reference to
-    /// [`Objects`]. As of this writing, this method is the only one that
-    /// deviates from that. I couldn't think of a way to do it better.
     fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
 
     /// Update partial half-edge as a line segment, from the given points
