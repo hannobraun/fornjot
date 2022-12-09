@@ -16,6 +16,8 @@ mod args;
 mod config;
 mod path;
 
+use std::{env, error::Error};
+
 use anyhow::{anyhow, Context};
 use fj_export::export;
 use fj_host::Parameters;
@@ -28,16 +30,9 @@ use tracing_subscriber::EnvFilter;
 use crate::{args::Args, config::Config};
 
 fn main() -> anyhow::Result<()> {
-    // Respect `RUST_LOG`. If that's not defined or erroneous, log warnings and
-    // above.
-    //
-    // It would be better to fail, if `RUST_LOG` is erroneous, but I don't know
-    // how to distinguish between that and the "not defined" case.
+    // Respect `RUST_LOG`. If that's not defined, log warnings and above. Fail if it's erroneous.
     tracing_subscriber::fmt()
-        .with_env_filter(
-            EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| EnvFilter::new("WARN")),
-        )
+        .with_env_filter(try_default_env_filter()?)
         .event_format(format().pretty())
         .init();
 
@@ -74,4 +69,30 @@ fn no_model_error() -> anyhow::Error {
         - Pass a model as a command-line argument. See `fj-app --help`.\n\
         - Specify a default model in the configuration file."
     )
+}
+
+fn try_default_env_filter() -> anyhow::Result<EnvFilter> {
+    let env_filter = EnvFilter::try_from_default_env();
+
+    match env_filter {
+        Ok(env_filter) => Ok(env_filter),
+
+        Err(err) => {
+            if let Some(kind) = err.source() {
+                if let Some(env::VarError::NotPresent) =
+                    kind.downcast_ref::<env::VarError>()
+                {
+                    return Ok(EnvFilter::new("WARN"));
+                }
+            } else {
+                // `tracing_subscriber::filter::FromEnvError` currently returns a source
+                // in all cases.
+                unreachable!()
+            }
+
+            Err(anyhow!(
+                "There was an error parsing the RUST_LOG environment variable."
+            ))
+        }
+    }
 }
