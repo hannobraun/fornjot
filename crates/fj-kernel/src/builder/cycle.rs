@@ -36,7 +36,7 @@ pub trait CycleBuilder {
 
 impl CycleBuilder for PartialCycle {
     fn with_poly_chain(
-        self,
+        mut self,
         vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
     ) -> Self {
         let vertices = vertices.into_iter();
@@ -103,7 +103,8 @@ impl CycleBuilder for PartialCycle {
             previous = Some(vertex_next);
         }
 
-        self.with_half_edges(half_edges)
+        self.half_edges.extend(half_edges);
+        self
     }
 
     fn with_poly_chain_from_points(
@@ -120,7 +121,7 @@ impl CycleBuilder for PartialCycle {
         }))
     }
 
-    fn close_with_line_segment(self) -> Self {
+    fn close_with_line_segment(mut self) -> Self {
         let first = self.half_edges.first();
         let last = self.half_edges.last();
 
@@ -162,6 +163,7 @@ impl CycleBuilder for PartialCycle {
             .update_as_line_segment(),
         );
 
-        self.with_half_edges(Some(half_edge))
+        self.half_edges.push(half_edge);
+        self
     }
 }

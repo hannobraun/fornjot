@@ -355,10 +355,9 @@ impl ShellBuilder {
                 .zip(tops.clone())
                 .zip(sides_down)
                 .map(|(((bottom, side_up), top), side_down)| {
-                    let cycle = Cycle::partial()
-                        .with_half_edges([bottom, side_up, top, side_down])
-                        .build(objects)
-                        .insert(objects);
+                    let mut cycle = Cycle::partial();
+                    cycle.half_edges.extend([bottom, side_up, top, side_down]);
+                    let cycle = cycle.build(objects).insert(objects);
 
                     Face::partial()
                         .with_exterior(cycle)
