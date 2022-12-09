@@ -152,9 +152,7 @@ mod tests {
     use crate::{
         builder::HalfEdgeBuilder,
         objects::Vertex,
-        partial2::{
-            Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject,
-        },
+        partial::{Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject},
         services::Services,
     };
 

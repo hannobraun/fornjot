@@ -5,7 +5,7 @@ use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Objects, Sketch, Vertex},
-    partial2::{
+    partial::{
         Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
         PartialHalfEdge, PartialObject, PartialSurfaceVertex, PartialVertex,
     },

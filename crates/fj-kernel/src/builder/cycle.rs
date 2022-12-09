@@ -3,7 +3,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Curve, Surface, SurfaceVertex, Vertex},
-    partial2::{
+    partial::{
         Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
         PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },

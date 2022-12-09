@@ -167,7 +167,7 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::Vertex,
-        partial2::{
+        partial::{
             Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
             PartialObject, PartialSurfaceVertex, PartialVertex,
         },

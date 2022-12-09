@@ -139,7 +139,7 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         iter::ObjectIters,
-        partial2::{PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
     };
 

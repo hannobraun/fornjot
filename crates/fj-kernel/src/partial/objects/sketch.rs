@@ -1,29 +1,29 @@
 use crate::{
-    objects::{Face, Objects, Shell},
-    partial2::{FullToPartialCache, Partial, PartialObject},
+    objects::{Face, Objects, Sketch},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
-/// A partial [`Shell`]
+/// A partial [`Sketch`]
 #[derive(Clone, Debug)]
-pub struct PartialShell {
-    /// The faces that make up the shell
+pub struct PartialSketch {
+    /// The faces that make up the sketch
     pub faces: Vec<Partial<Face>>,
 }
 
-impl PartialShell {
-    /// Construct an instance of `PartialShell`
+impl PartialSketch {
+    /// Construct an instance of `PartialSketch`
     pub fn new(faces: Vec<Partial<Face>>) -> Self {
         Self { faces }
     }
 }
 
-impl PartialObject for PartialShell {
-    type Full = Shell;
+impl PartialObject for PartialSketch {
+    type Full = Sketch;
 
-    fn from_full(shell: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+    fn from_full(sketch: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self::new(
-            shell
+            sketch
                 .faces()
                 .into_iter()
                 .map(|face| Partial::from_full(face.clone(), cache))
@@ -33,11 +33,11 @@ impl PartialObject for PartialShell {
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let faces = self.faces.into_iter().map(|face| face.build(objects));
-        Shell::new(faces)
+        Sketch::new(faces)
     }
 }
 
-impl Default for PartialShell {
+impl Default for PartialSketch {
     fn default() -> Self {
         Self::new(Vec::new())
     }

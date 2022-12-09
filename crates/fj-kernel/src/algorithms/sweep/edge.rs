@@ -10,7 +10,7 @@ use crate::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
         Vertex,
     },
-    partial2::{Partial, PartialFace, PartialObject},
+    partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -195,7 +195,7 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{Cycle, Vertex},
-        partial2::{
+        partial::{
             Partial, PartialCurve, PartialFace, PartialGlobalEdge,
             PartialHalfEdge, PartialObject, PartialSurfaceVertex,
             PartialVertex,

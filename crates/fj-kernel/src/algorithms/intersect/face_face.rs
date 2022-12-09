@@ -71,7 +71,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         builder::{CurveBuilder, FaceBuilder},
         insert::Insert,
-        partial2::{Partial, PartialCurve, PartialFace, PartialObject},
+        partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
     };
 

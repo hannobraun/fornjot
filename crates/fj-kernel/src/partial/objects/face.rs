@@ -2,7 +2,7 @@ use fj_interop::mesh::Color;
 
 use crate::{
     objects::{Cycle, Face, Objects},
-    partial2::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 

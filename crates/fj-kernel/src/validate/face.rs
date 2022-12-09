@@ -108,7 +108,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial2::{PartialCycle, PartialFace, PartialObject},
+        partial::{PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };

@@ -1,7 +1,7 @@
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
-    partial2::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 

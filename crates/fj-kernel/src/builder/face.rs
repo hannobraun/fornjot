@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::Surface,
-    partial2::{Partial, PartialCycle, PartialFace},
+    partial::{Partial, PartialCycle, PartialFace},
     storage::Handle,
 };
 

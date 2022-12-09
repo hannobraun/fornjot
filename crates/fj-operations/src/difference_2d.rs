@@ -6,7 +6,7 @@ use fj_kernel::{
     insert::Insert,
     iter::ObjectIters,
     objects::{Objects, Sketch},
-    partial2::{Partial, PartialFace, PartialObject},
+    partial::{Partial, PartialFace, PartialObject},
     services::Service,
 };
 use fj_math::Aabb;

@@ -9,7 +9,7 @@ use crate::{
     builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
     objects::{Face, FaceSet, HalfEdge, Objects, Shell, Vertex},
-    partial2::{
+    partial::{
         Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
         PartialHalfEdge, PartialObject, PartialSurface, PartialSurfaceVertex,
         PartialVertex,

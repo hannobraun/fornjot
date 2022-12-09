@@ -1,7 +1,7 @@
 use crate::{
     insert::Insert,
     objects::{Face, Objects},
-    partial2::{FullToPartialCache, Partial, PartialFace, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };

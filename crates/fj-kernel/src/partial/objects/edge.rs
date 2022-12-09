@@ -4,7 +4,7 @@ use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
-    partial2::{FullToPartialCache, Partial, PartialObject, PartialVertex},
+    partial::{FullToPartialCache, Partial, PartialObject, PartialVertex},
     services::Service,
 };
 

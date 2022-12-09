@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     insert::Insert,
     objects::{Face, FaceSet, Objects, Sketch, Surface},
-    partial2::{PartialFace, PartialObject},
+    partial::{PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };

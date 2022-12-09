@@ -151,7 +151,7 @@ where
 mod tests {
     use crate::{
         builder::{CurveBuilder, FaceBuilder},
-        partial2::{Partial, PartialCurve, PartialFace, PartialObject},
+        partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
     };
 

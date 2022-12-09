@@ -80,7 +80,7 @@ mod tests {
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
         objects::Vertex,
-        partial2::{
+        partial::{
             Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
             PartialObject,
         },

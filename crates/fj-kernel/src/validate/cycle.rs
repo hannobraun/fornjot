@@ -68,7 +68,7 @@ mod tests {
     use crate::{
         builder::CycleBuilder,
         objects::Cycle,
-        partial2::{Partial, PartialCycle, PartialObject},
+        partial::{Partial, PartialCycle, PartialObject},
         services::Services,
         validate::Validate,
     };

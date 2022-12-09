@@ -1,6 +1,6 @@
 use crate::{
     objects::{Objects, Shell, Solid},
-    partial2::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 

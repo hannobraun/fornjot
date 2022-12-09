@@ -80,7 +80,7 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         objects::Face,
-        partial2::{PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
