@@ -43,9 +43,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let [vertex, _] = &mut self.vertices;
-
-        let mut surface_vertex = vertex.write().surface_form.clone();
+        let mut surface_vertex = {
+            let [vertex, _] = &mut self.vertices;
+            vertex.write().surface_form.clone()
+        };
         surface_vertex.write().position =
             Some(path.point_from_path_coords(a_curve));
 
