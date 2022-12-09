@@ -89,41 +89,39 @@ impl ShellBuilder {
                     .read()
                     .clone();
 
-                    Partial::from_partial(
-                        PartialHalfEdge {
-                            vertices: global_edge.vertices.clone().map(
-                                |global_vertex| {
-                                    Partial::from_partial(PartialVertex {
-                                        curve: Partial::from_partial(
-                                            PartialCurve {
-                                                global_form: global_edge
-                                                    .curve
-                                                    .clone(),
-                                                ..Default::default()
-                                            },
-                                        ),
-                                        surface_form: Partial::from_partial(
-                                            PartialSurfaceVertex {
-                                                global_form: global_vertex,
-                                                ..Default::default()
-                                            },
-                                        ),
-                                        ..Default::default()
-                                    })
-                                },
-                            ),
-                            global_form: Partial::from_partial(
-                                PartialGlobalEdge {
-                                    curve: global_edge.curve,
-                                    vertices: global_edge.vertices,
-                                },
-                            ),
-                        }
-                        .update_as_line_segment_from_points(
-                            Partial::from_full_entry_point(surface.clone()),
-                            [[Z, Z], [edge_length, Z]],
+                    let mut half_edge = PartialHalfEdge {
+                        vertices: global_edge.vertices.clone().map(
+                            |global_vertex| {
+                                Partial::from_partial(PartialVertex {
+                                    curve: Partial::from_partial(
+                                        PartialCurve {
+                                            global_form: global_edge
+                                                .curve
+                                                .clone(),
+                                            ..Default::default()
+                                        },
+                                    ),
+                                    surface_form: Partial::from_partial(
+                                        PartialSurfaceVertex {
+                                            global_form: global_vertex,
+                                            ..Default::default()
+                                        },
+                                    ),
+                                    ..Default::default()
+                                })
+                            },
                         ),
-                    )
+                        global_form: Partial::from_partial(PartialGlobalEdge {
+                            curve: global_edge.curve,
+                            vertices: global_edge.vertices,
+                        }),
+                    };
+                    half_edge.update_as_line_segment_from_points(
+                        Partial::from_full_entry_point(surface.clone()),
+                        [[Z, Z], [edge_length, Z]],
+                    );
+
+                    Partial::from_partial(half_edge)
                 })
                 .collect::<Vec<_>>();
 

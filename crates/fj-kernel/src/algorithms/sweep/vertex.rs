@@ -211,19 +211,19 @@ mod tests {
                 vertex.read().surface_form.read().global_form.clone()
             });
 
-            let half_edge = PartialHalfEdge {
+            let mut half_edge = PartialHalfEdge {
                 vertices,
                 global_form: Partial::from_partial(PartialGlobalEdge {
                     curve: global_curve,
                     vertices: global_vertices,
                 }),
             };
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(surface),
+                [[0., 0.], [0., 1.]],
+            );
 
             half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(surface),
-                    [[0., 0.], [0., 1.]],
-                )
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
         };
