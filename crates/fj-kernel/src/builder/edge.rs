@@ -11,7 +11,10 @@ use super::{CurveBuilder, SurfaceVertexBuilder};
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
     /// Update partial half-edge as a circle, from the given radius
-    fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
+    fn update_as_circle_from_radius(
+        &mut self,
+        radius: impl Into<Scalar>,
+    ) -> &mut Self;
 
     /// Update partial half-edge as a line segment, from the given points
     fn update_as_line_segment_from_points(
@@ -26,9 +29,9 @@ pub trait HalfEdgeBuilder: Sized {
 
 impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
-        mut self,
+        &mut self,
         radius: impl Into<Scalar>,
-    ) -> Self {
+    ) -> &mut Self {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);
 
