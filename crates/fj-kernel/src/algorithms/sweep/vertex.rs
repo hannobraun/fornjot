@@ -157,19 +157,15 @@ impl Sweep for Handle<GlobalVertex> {
 
 #[cfg(test)]
 mod tests {
-    use std::array;
-
-    use fj_interop::ext::ArrayExt;
     use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::Vertex,
         partial::{
-            Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
-            PartialObject, PartialSurfaceVertex, PartialVertex,
+            Partial, PartialCurve, PartialHalfEdge, PartialObject,
+            PartialSurfaceVertex, PartialVertex,
         },
         services::Services,
     };
@@ -202,22 +198,7 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_half_edge = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
-
-            let mut half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
+            let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
                 Partial::from_full_entry_point(surface),
                 [[0., 0.], [0., 1.]],

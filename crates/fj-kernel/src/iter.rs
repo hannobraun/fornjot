@@ -359,10 +359,6 @@ impl<T> Iterator for Iter<T> {
 
 #[cfg(test)]
 mod tests {
-    use std::array;
-
-    use fj_interop::ext::ArrayExt;
-
     use crate::{
         builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
@@ -371,8 +367,8 @@ mod tests {
             SurfaceVertex, Vertex,
         },
         partial::{
-            Partial, PartialCurve, PartialCycle, PartialFace,
-            PartialGlobalEdge, PartialHalfEdge, PartialObject,
+            Partial, PartialCurve, PartialCycle, PartialFace, PartialHalfEdge,
+            PartialObject,
         },
         services::Services,
     };
@@ -503,22 +499,7 @@ mod tests {
         let mut services = Services::new();
 
         let object = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
-
-            let mut half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
+            let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
                 Partial::from_full_entry_point(
                     services.objects.surfaces.xy_plane(),
