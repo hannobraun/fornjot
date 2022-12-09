@@ -43,7 +43,7 @@ mod traits;
 pub use self::{
     maybe_partial::MaybePartial,
     merge::{MergeWith, Mergeable},
-    objects::{cycle::PartialCycle, face::PartialFace},
+    objects::face::PartialFace,
     replace::Replace,
     traits::{HasPartial, Partial},
 };

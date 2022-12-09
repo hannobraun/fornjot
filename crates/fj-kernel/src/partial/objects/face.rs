@@ -12,8 +12,8 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialFace {
-    exterior: MaybePartial<Cycle>,
-    interiors: Vec<MaybePartial<Cycle>>,
+    exterior: Partial<Cycle>,
+    interiors: Vec<Partial<Cycle>>,
     color: Option<Color>,
 }
 
@@ -24,7 +24,7 @@ impl PartialFace {
     }
 
     /// Access the [`Face`]'s exterior cycle
-    pub fn exterior(&self) -> MaybePartial<Cycle> {
+    pub fn exterior(&self) -> Partial<Cycle> {
         self.exterior.clone()
     }
 
@@ -39,10 +39,7 @@ impl PartialFace {
     }
 
     /// Build the [`Face`] with the provided exterior
-    pub fn with_exterior(
-        mut self,
-        exterior: impl Into<MaybePartial<Cycle>>,
-    ) -> Self {
+    pub fn with_exterior(mut self, exterior: Partial<Cycle>) -> Self {
         self.exterior = exterior.into();
         self
     }
@@ -50,7 +47,7 @@ impl PartialFace {
     /// Build the [`Face`] with the provided interior polygons
     pub fn with_interiors(
         mut self,
-        interiors: impl IntoIterator<Item = impl Into<MaybePartial<Cycle>>>,
+        interiors: impl IntoIterator<Item = Partial<Cycle>>,
     ) -> Self {
         let interiors = interiors.into_iter().map(Into::into);
         self.interiors.extend(interiors);

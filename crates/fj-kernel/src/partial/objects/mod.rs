@@ -1,4 +1,3 @@
-pub mod cycle;
 pub mod face;
 
 use crate::{
@@ -6,7 +5,7 @@ use crate::{
     services::Service,
 };
 
-use super::{HasPartial, MaybePartial, Partial, PartialCycle, PartialFace};
+use super::{HasPartial, MaybePartial, Partial, PartialFace};
 
 macro_rules! impl_traits {
     ($($full:ty, $partial:ty;)*) => {
@@ -33,6 +32,5 @@ macro_rules! impl_traits {
 }
 
 impl_traits!(
-    Cycle, PartialCycle;
     Face, PartialFace;
 );

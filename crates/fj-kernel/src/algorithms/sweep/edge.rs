@@ -11,6 +11,7 @@ use crate::{
         Vertex,
     },
     partial::HasPartial,
+    partial2::Partial,
     services::Service,
     storage::Handle,
 };
@@ -175,7 +176,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         };
 
         Face::partial()
-            .with_exterior(cycle)
+            .with_exterior(Partial::from_full_entry_point(cycle))
             .with_color(color)
             .build(objects)
             .insert(objects)
@@ -419,7 +420,7 @@ mod tests {
                 .insert(&mut services.objects);
 
             Face::partial()
-                .with_exterior(cycle)
+                .with_exterior(Partial::from_full_entry_point(cycle))
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
         };
