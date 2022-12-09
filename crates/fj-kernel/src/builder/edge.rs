@@ -87,7 +87,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [back, front] = self.vertices.clone();
 
         let surface = self.curve().read().surface.clone();
-        let points = [&back, &front].map(|vertex| {
+        let points_surface = [&back, &front].map(|vertex| {
             vertex
                 .read()
                 .surface_form
@@ -98,7 +98,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let mut curve = self.curve();
         curve.write().surface = surface;
-        curve.write().update_as_line_from_points(points);
+        curve.write().update_as_line_from_points(points_surface);
 
         self.vertices =
             [back, front]
