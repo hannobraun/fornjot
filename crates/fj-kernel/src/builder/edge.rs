@@ -100,15 +100,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         curve.write().surface = surface;
         curve.write().update_as_line_from_points(points);
 
-        let [back, front] = {
+        self.vertices = {
             [(back, 0.), (front, 1.)].map(|(mut vertex, position)| {
                 vertex.write().position = Some([position].into());
                 vertex.write().curve = self.curve();
                 vertex
             })
         };
-
-        self.vertices = [back, front];
 
         self.global_form.write().curve = curve.read().global_form.clone();
 
