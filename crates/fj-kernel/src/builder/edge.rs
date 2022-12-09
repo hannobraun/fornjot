@@ -84,8 +84,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_line_segment(&mut self) -> &mut Self {
-        let [back, front] = self.vertices.clone();
-
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
                 .read()
@@ -98,14 +96,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let mut curve = self.curve();
         curve.write().update_as_line_from_points(points_surface);
 
-        self.vertices =
-            [back, front]
-                .zip_ext([0., 1.])
-                .map(|(mut vertex, position)| {
-                    vertex.write().position = Some([position].into());
-                    vertex.write().curve = self.curve();
-                    vertex
-                });
+        for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
+        {
+            vertex.write().position = Some([position].into());
+            vertex.write().curve = curve.clone();
+        }
 
         self.global_form.write().curve = curve.read().global_form.clone();
 
