@@ -72,7 +72,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) -> &mut Self {
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut vertex = vertex.write();
-
             vertex.curve.write().surface = surface.clone();
 
             let mut surface_form = vertex.surface_form.write();
