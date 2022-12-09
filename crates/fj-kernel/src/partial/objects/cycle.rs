@@ -10,15 +10,11 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    half_edges: Vec<Partial<HalfEdge>>,
+    /// The half-edges that make up the [`Cycle`]
+    pub half_edges: Vec<Partial<HalfEdge>>,
 }
 
 impl PartialCycle {
-    /// Access the half-edges that make up the [`Cycle`]
-    pub fn half_edges(&self) -> impl Iterator<Item = Partial<HalfEdge>> {
-        self.half_edges.clone().into_iter()
-    }
-
     /// Access the surface that the [`Cycle`]'s [`HalfEdge`]s are defined in
     pub fn surface(&self) -> Option<Partial<Surface>> {
         self.half_edges

@@ -42,7 +42,7 @@ impl CycleBuilder for PartialCycle {
         let vertices = vertices.into_iter();
 
         let mut previous: Option<Partial<SurfaceVertex>> =
-            self.half_edges().last().map(|half_edge| {
+            self.half_edges.last().map(|half_edge| {
                 let [_, last] = &half_edge.read().vertices;
                 let last = last.read();
                 last.surface_form.clone()
@@ -121,8 +121,8 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn close_with_line_segment(self) -> Self {
-        let first = self.half_edges().next();
-        let last = self.half_edges().last();
+        let first = self.half_edges.first();
+        let last = self.half_edges.last();
 
         let vertices = [first, last].map(|option| {
             option.map(|half_edge| half_edge.read().vertices.clone())
