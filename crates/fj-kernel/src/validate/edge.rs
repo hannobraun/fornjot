@@ -198,17 +198,13 @@ impl HalfEdgeValidationError {
 
 #[cfg(test)]
 mod tests {
-    use std::array;
-
-    use fj_interop::ext::ArrayExt;
-
     use crate::{
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{GlobalCurve, HalfEdge, Vertex},
+        objects::{GlobalCurve, HalfEdge},
         partial::{
-            Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject,
-            PartialSurfaceVertex, PartialVertex,
+            Partial, PartialHalfEdge, PartialObject, PartialSurfaceVertex,
+            PartialVertex,
         },
         services::Services,
         validate::Validate,
@@ -219,31 +215,15 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
+                [[0., 0.], [1., 0.]],
+            );
 
-            let half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
-
-            half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [[0., 0.], [1., 0.]],
-                )
-                .build(&mut services.objects)
+            half_edge.build(&mut services.objects)
         };
         let invalid = {
             let mut vertices = valid.vertices().clone();
@@ -269,31 +249,15 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
+                [[0., 0.], [1., 0.]],
+            );
 
-            let half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
-
-            half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [[0., 0.], [1., 0.]],
-                )
-                .build(&mut services.objects)
+            half_edge.build(&mut services.objects)
         };
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp =
@@ -313,31 +277,15 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
+                [[0., 0.], [1., 0.]],
+            );
 
-            let half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
-
-            half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [[0., 0.], [1., 0.]],
-                )
-                .build(&mut services.objects)
+            half_edge.build(&mut services.objects)
         };
         let invalid = HalfEdge::new(valid.vertices().clone(), {
             let mut tmp =
@@ -364,31 +312,15 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
+                [[0., 0.], [1., 0.]],
+            );
 
-            let half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
-
-            half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [[0., 0.], [1., 0.]],
-                )
-                .build(&mut services.objects)
+            half_edge.build(&mut services.objects)
         };
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {

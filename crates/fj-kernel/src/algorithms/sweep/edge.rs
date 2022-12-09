@@ -185,20 +185,15 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
 #[cfg(test)]
 mod tests {
-    use std::array;
-
-    use fj_interop::{ext::ArrayExt, mesh::Color};
+    use fj_interop::mesh::Color;
     use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{Cycle, Vertex},
         partial::{
-            Partial, PartialCurve, PartialFace, PartialGlobalEdge,
-            PartialHalfEdge, PartialObject, PartialSurfaceVertex,
-            PartialVertex,
+            Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
         },
         services::Services,
     };
@@ -208,30 +203,15 @@ mod tests {
         let mut services = Services::new();
 
         let half_edge = {
-            let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-            let global_curve = {
-                let [vertex, _] = &vertices;
-                vertex.read().curve.read().global_form.clone()
-            };
-            let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
-
-            let half_edge = PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve: global_curve,
-                    vertices: global_vertices,
-                }),
-            };
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
+                [[0., 0.], [1., 0.]],
+            );
 
             half_edge
-                .update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
-                    [[0., 0.], [1., 0.]],
-                )
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
         };
@@ -245,182 +225,99 @@ mod tests {
             );
 
             let bottom = {
-                let vertices = array::from_fn(|_| Partial::<Vertex>::new());
-                let global_curve = {
-                    let [vertex, _] = &vertices;
-                    vertex.read().curve.read().global_form.clone()
-                };
-                let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                    vertex.read().surface_form.read().global_form.clone()
-                });
-
-                let half_edge = PartialHalfEdge {
-                    vertices,
-                    global_form: Partial::from_partial(PartialGlobalEdge {
-                        curve: global_curve,
-                        vertices: global_vertices,
-                    }),
-                };
+                let mut half_edge = PartialHalfEdge::default();
+                half_edge.update_as_line_segment_from_points(
+                    surface.clone(),
+                    [[0., 0.], [1., 0.]],
+                );
 
                 half_edge
-                    .update_as_line_segment_from_points(
-                        surface.clone(),
-                        [[0., 0.], [1., 0.]],
-                    )
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
             };
             let side_up = {
-                let vertices = [
-                    PartialVertex {
-                        curve: Partial::from_partial(PartialCurve {
-                            surface: Partial::from_full_entry_point(
-                                bottom.front().surface_form().surface().clone(),
-                            ),
-                            ..Default::default()
-                        }),
-                        surface_form: Partial::from_full_entry_point(
-                            bottom.front().surface_form().clone(),
-                        ),
-                        ..Default::default()
-                    },
-                    PartialVertex {
-                        surface_form: Partial::from_partial(
-                            PartialSurfaceVertex {
-                                position: Some([1., 1.].into()),
-                                surface: surface.clone(),
-                                ..Default::default()
-                            },
-                        ),
-                        ..Default::default()
-                    },
-                ]
-                .map(Partial::<Vertex>::from_partial);
+                let mut side_up = PartialHalfEdge::default();
+                side_up.curve().write().surface = surface.clone();
 
-                let global_curve = {
-                    let [vertex, _] = &vertices;
-                    vertex.read().curve.read().global_form.clone()
-                };
-                let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                    vertex.read().surface_form.read().global_form.clone()
-                });
+                {
+                    let [back, front] = &mut side_up.vertices;
 
-                let side_up = PartialHalfEdge {
-                    vertices,
-                    global_form: Partial::from_partial(PartialGlobalEdge {
-                        curve: global_curve,
-                        vertices: global_vertices,
-                    }),
-                };
+                    back.write().surface_form =
+                        bottom.vertices[1].read().surface_form.clone();
+                    side_up.global_form.write().vertices[0] =
+                        back.read().surface_form.read().global_form.clone();
+
+                    let mut front = front.write();
+                    let mut front = front.surface_form.write();
+                    front.position = Some([1., 1.].into());
+                    front.surface = surface.clone();
+                }
+
+                side_up.update_as_line_segment();
 
                 side_up
-                    .update_as_line_segment()
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
             };
             let top = {
-                let vertices = [
-                    PartialVertex {
-                        curve: Partial::from_partial(PartialCurve {
-                            surface: Partial::from_full_entry_point(
-                                side_up
-                                    .front()
-                                    .surface_form()
-                                    .surface()
-                                    .clone(),
-                            ),
-                            ..Default::default()
-                        }),
-                        surface_form: Partial::from_partial(
-                            PartialSurfaceVertex {
-                                position: Some([0., 1.].into()),
-                                surface,
-                                ..Default::default()
-                            },
-                        ),
-                        ..Default::default()
-                    },
-                    PartialVertex {
-                        surface_form: Partial::from_full_entry_point(
-                            side_up.front().surface_form().clone(),
-                        ),
-                        ..Default::default()
-                    },
-                ]
-                .map(Partial::<Vertex>::from_partial);
+                let mut top = PartialHalfEdge::default();
+                top.curve().write().surface = surface.clone();
 
-                let global_curve = {
-                    let [vertex, _] = &vertices;
-                    vertex.read().curve.read().global_form.clone()
-                };
-                let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                    vertex.read().surface_form.read().global_form.clone()
-                });
+                {
+                    let [back, front] = &mut top.vertices;
 
-                let top = PartialHalfEdge {
-                    vertices,
-                    global_form: Partial::from_partial(PartialGlobalEdge {
-                        curve: global_curve,
-                        vertices: global_vertices,
-                    }),
-                };
+                    let mut back = back.write();
+                    let mut back = back.surface_form.write();
+                    back.position = Some([0., 1.].into());
+                    back.surface = surface.clone();
 
-                top.update_as_line_segment()
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-                    .reverse(&mut services.objects)
+                    front.write().surface_form =
+                        side_up.vertices[1].read().surface_form.clone();
+                    top.global_form.write().vertices[1] =
+                        front.read().surface_form.read().global_form.clone();
+                }
+
+                top.update_as_line_segment();
+
+                Partial::from_full_entry_point(
+                    top.build(&mut services.objects)
+                        .insert(&mut services.objects)
+                        .reverse(&mut services.objects),
+                )
+                .read()
+                .clone()
             };
             let side_down = {
-                let vertices = [
-                    PartialVertex {
-                        curve: Partial::from_partial(PartialCurve {
-                            surface: Partial::from_full_entry_point(
-                                bottom.back().surface_form().surface().clone(),
-                            ),
-                            ..Default::default()
-                        }),
-                        surface_form: Partial::from_full_entry_point(
-                            bottom.back().surface_form().clone(),
-                        ),
-                        ..Default::default()
-                    },
-                    PartialVertex {
-                        surface_form: Partial::from_full_entry_point(
-                            top.front().surface_form().clone(),
-                        ),
-                        ..Default::default()
-                    },
-                ]
-                .map(Partial::<Vertex>::from_partial);
+                let mut side_down = PartialHalfEdge::default();
+                side_down.curve().write().surface = surface;
 
-                let global_curve = {
-                    let [vertex, _] = &vertices;
-                    vertex.read().curve.read().global_form.clone()
-                };
-                let global_vertices = vertices.each_ref_ext().map(|vertex| {
-                    vertex.read().surface_form.read().global_form.clone()
-                });
+                let [back, front] = &mut side_down.vertices;
 
-                let side_down = PartialHalfEdge {
-                    vertices,
-                    global_form: Partial::from_partial(PartialGlobalEdge {
-                        curve: global_curve,
-                        vertices: global_vertices,
-                    }),
-                };
+                back.write().surface_form =
+                    bottom.vertices[0].read().surface_form.clone();
+                side_down.global_form.write().vertices[0] =
+                    back.read().surface_form.read().global_form.clone();
 
-                side_down
-                    .update_as_line_segment()
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-                    .reverse(&mut services.objects)
+                front.write().surface_form =
+                    top.vertices[1].read().surface_form.clone();
+                side_down.global_form.write().vertices[1] =
+                    front.read().surface_form.read().global_form.clone();
+
+                side_down.update_as_line_segment();
+
+                Partial::from_full_entry_point(
+                    side_down
+                        .build(&mut services.objects)
+                        .insert(&mut services.objects)
+                        .reverse(&mut services.objects),
+                )
+                .read()
+                .clone()
             };
 
-            let cycle = Cycle::new([bottom, side_up, top, side_down])
-                .insert(&mut services.objects);
+            let mut cycle = PartialCycle::default();
+            cycle.half_edges.extend(
+                [bottom, side_up, top, side_down].map(Partial::from_partial),
+            );
 
             let face = PartialFace {
-                exterior: Partial::from_full_entry_point(cycle),
+                exterior: Partial::from_partial(cycle),
                 ..Default::default()
             };
             face.build(&mut services.objects)

@@ -59,16 +59,16 @@ impl Shape for fj::Sketch {
                         },
                     );
 
-                    let half_edge = PartialHalfEdge {
+                    let mut half_edge = PartialHalfEdge {
                         vertices,
                         global_form: Partial::from_partial(PartialGlobalEdge {
                             curve: curve.read().global_form.clone(),
                             vertices: global_vertices,
                         }),
                     };
-                    Partial::from_partial(
-                        half_edge.update_as_circle_from_radius(circle.radius()),
-                    )
+                    half_edge.update_as_circle_from_radius(circle.radius());
+
+                    Partial::from_partial(half_edge)
                 };
                 let cycle =
                     Partial::from_partial(PartialCycle::new(vec![half_edge]));

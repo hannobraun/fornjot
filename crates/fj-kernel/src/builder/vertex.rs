@@ -1,33 +1,19 @@
-use fj_math::Point;
-
-use crate::{
-    geometry::surface::SurfaceGeometry,
-    objects::Curve,
-    partial::{
-        Partial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
-    },
+use crate::partial::{
+    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
 };
 
 /// Builder API for [`PartialVertex`]
 pub trait VertexBuilder {
-    /// Remove the surface form of the partial vertex, inferring it on build
-    fn infer_surface_form(&mut self) -> &mut Self;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl VertexBuilder for PartialVertex {
-    fn infer_surface_form(&mut self) -> &mut Self {
-        self.surface_form = Partial::new();
-        self
-    }
-}
+impl VertexBuilder for PartialVertex {}
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
     /// Infer the position of the surface vertex' global form
     fn infer_global_position(&mut self) -> &mut Self;
-
-    /// Infer the global form of the partial vertex
-    fn infer_global_form(&mut self) -> &mut Self;
 }
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
@@ -46,51 +32,12 @@ impl SurfaceVertexBuilder for PartialSurfaceVertex {
 
         self
     }
-
-    fn infer_global_form(&mut self) -> &mut Self {
-        self.global_form = Partial::new();
-        self
-    }
 }
 
 /// Builder API for [`PartialGlobalVertex`]
-pub trait GlobalVertexBuilder {
-    /// Update partial global vertex from the given curve and position on it
-    fn from_curve_and_position(
-        curve: Partial<Curve>,
-        position: impl Into<Point<1>>,
-    ) -> Self;
-
-    /// Update partial global vertex from the given surface and position on it
-    fn from_surface_and_position(
-        surface: &SurfaceGeometry,
-        position: impl Into<Point<2>>,
-    ) -> Self;
-}
+pub trait GlobalVertexBuilder {}
 
 impl GlobalVertexBuilder for PartialGlobalVertex {
-    fn from_curve_and_position(
-        curve: Partial<Curve>,
-        position: impl Into<Point<1>>,
-    ) -> Self {
-        let path = curve.read().path.expect(
-            "Need path to create `GlobalVertex` from curve and position",
-        );
-        let surface = curve.read().surface.read().geometry.expect(
-            "Need surface to create `GlobalVertex` from curve and position",
-        );
-
-        let position_surface = path.point_from_path_coords(position);
-
-        Self::from_surface_and_position(&surface, position_surface)
-    }
-
-    fn from_surface_and_position(
-        surface: &SurfaceGeometry,
-        position: impl Into<Point<2>>,
-    ) -> Self {
-        Self {
-            position: Some(surface.point_from_surface_coords(position)),
-        }
-    }
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }

@@ -180,7 +180,7 @@ impl SurfaceVertexValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, SurfaceVertexBuilder},
+        builder::CurveBuilder,
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
         partial::{
@@ -256,7 +256,7 @@ mod tests {
             let mut surface_form =
                 Partial::from_full_entry_point(valid.surface_form().clone());
             surface_form.write().position = Some([1., 0.].into());
-            surface_form.write().infer_global_form();
+            surface_form.write().global_form = Partial::new();
             let surface_form = surface_form.build(&mut services.objects);
 
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
