@@ -12,30 +12,20 @@ use crate::{
 /// See [`crate::partial`] for more information.
 #[derive(Clone, Debug, Default)]
 pub struct PartialFace {
-    exterior: Partial<Cycle>,
-    interiors: Vec<Partial<Cycle>>,
-    color: Option<Color>,
+    /// The [`Face`]'s exterior cycle
+    pub exterior: Partial<Cycle>,
+
+    /// The [`Face`]'s interior cycles
+    pub interiors: Vec<Partial<Cycle>>,
+
+    /// The color of the [`Face`]
+    pub color: Option<Color>,
 }
 
 impl PartialFace {
     /// Access th surface that the [`Face`] is defined in
     pub fn surface(&self) -> Option<Partial<Surface>> {
         self.exterior.read().surface()
-    }
-
-    /// Access the [`Face`]'s exterior cycle
-    pub fn exterior(&self) -> Partial<Cycle> {
-        self.exterior.clone()
-    }
-
-    /// Access the [`Face`]'s interior cycles
-    pub fn interiors(&self) -> impl Iterator<Item = Partial<Cycle>> + '_ {
-        self.interiors.iter().cloned()
-    }
-
-    /// Access the color of the [`Face`]
-    pub fn color(&self) -> Option<Color> {
-        self.color
     }
 
     /// Build the [`Face`] with the provided exterior
