@@ -2,21 +2,14 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{Curve, Surface, Vertex},
+    objects::Surface,
     partial::{Partial, PartialGlobalEdge, PartialHalfEdge},
-    storage::Handle,
 };
 
 use super::{CurveBuilder, SurfaceVertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder: Sized {
-    /// Update the partial half-edge with the given back vertex
-    fn with_back_vertex(self, back: Partial<Vertex>) -> Self;
-
-    /// Update the partial half-edge with the given front vertex
-    fn with_front_vertex(self, front: Partial<Vertex>) -> Self;
-
     /// Update partial half-edge as a circle, from the given radius
     fn update_as_circle_from_radius(self, radius: impl Into<Scalar>) -> Self;
 
@@ -29,24 +22,9 @@ pub trait HalfEdgeBuilder: Sized {
 
     /// Update partial half-edge as a line segment, reusing existing vertices
     fn update_as_line_segment(self) -> Self;
-
-    /// Infer the global form of the partial half-edge
-    fn infer_global_form(self) -> Self;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn with_back_vertex(mut self, back: Partial<Vertex>) -> Self {
-        let [_, front] = self.vertices.clone();
-        self.vertices = [back, front];
-        self
-    }
-
-    fn with_front_vertex(mut self, front: Partial<Vertex>) -> Self {
-        let [back, _] = self.vertices.clone();
-        self.vertices = [back, front];
-        self
-    }
-
     fn update_as_circle_from_radius(
         mut self,
         radius: impl Into<Scalar>,
@@ -133,34 +111,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self
     }
-
-    fn infer_global_form(mut self) -> Self {
-        self.global_form = Partial::new();
-        self
-    }
 }
 
 /// Builder API for [`PartialGlobalEdge`]
 pub trait GlobalEdgeBuilder {
-    /// Update partial global edge from the given curve and vertices
-    fn update_from_curve_and_vertices(
-        self,
-        curve: &Curve,
-        vertices: &[Handle<Vertex>; 2],
-    ) -> Self;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl GlobalEdgeBuilder for PartialGlobalEdge {
-    fn update_from_curve_and_vertices(
-        mut self,
-        curve: &Curve,
-        vertices: &[Handle<Vertex>; 2],
-    ) -> Self {
-        self.curve =
-            Partial::from_full_entry_point(curve.global_form().clone());
-        self.vertices = vertices.clone().map(|vertex| {
-            Partial::from_full_entry_point(vertex.global_form().clone())
-        });
-        self
-    }
-}
+impl GlobalEdgeBuilder for PartialGlobalEdge {}
