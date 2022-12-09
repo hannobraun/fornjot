@@ -177,18 +177,16 @@ impl ShellBuilder {
                                 .clone()
                         });
 
-                    Partial::from_partial(
-                        PartialHalfEdge {
-                            vertices,
-                            global_form: Partial::from_partial(
-                                PartialGlobalEdge {
-                                    curve: global_curve,
-                                    vertices: global_vertices,
-                                },
-                            ),
-                        }
-                        .update_as_line_segment(),
-                    )
+                    let half_edge = PartialHalfEdge {
+                        vertices,
+                        global_form: Partial::from_partial(PartialGlobalEdge {
+                            curve: global_curve,
+                            vertices: global_vertices,
+                        }),
+                    }
+                    .update_as_line_segment();
+
+                    Partial::from_partial(half_edge)
                 })
                 .collect::<Vec<_>>();
 
@@ -271,18 +269,18 @@ impl ShellBuilder {
                                         .clone()
                                 });
 
-                            Partial::from_partial(
-                                PartialHalfEdge {
-                                    vertices,
-                                    global_form: Partial::from_partial(
-                                        PartialGlobalEdge {
-                                            vertices: global_vertices,
-                                            curve: curve.global_form,
-                                        },
-                                    ),
-                                }
-                                .update_as_line_segment(),
-                            )
+                            let half_edge = PartialHalfEdge {
+                                vertices,
+                                global_form: Partial::from_partial(
+                                    PartialGlobalEdge {
+                                        vertices: global_vertices,
+                                        curve: curve.global_form,
+                                    },
+                                ),
+                            }
+                            .update_as_line_segment();
+
+                            Partial::from_partial(half_edge)
                         },
                     )
                     .collect::<Vec<_>>()
@@ -332,18 +330,16 @@ impl ShellBuilder {
                                 .clone()
                         });
 
-                    Partial::from_partial(
-                        PartialHalfEdge {
-                            vertices,
-                            global_form: Partial::from_partial(
-                                PartialGlobalEdge {
-                                    curve: global_curve,
-                                    vertices: global_vertices,
-                                },
-                            ),
-                        }
-                        .update_as_line_segment(),
-                    )
+                    let half_edge = PartialHalfEdge {
+                        vertices,
+                        global_form: Partial::from_partial(PartialGlobalEdge {
+                            curve: global_curve,
+                            vertices: global_vertices,
+                        }),
+                    }
+                    .update_as_line_segment();
+
+                    Partial::from_partial(half_edge)
                 })
                 .collect::<Vec<_>>();
 
@@ -441,16 +437,16 @@ impl ShellBuilder {
                         ),
                     });
 
-                edges.push(Partial::from_partial(
-                    PartialHalfEdge {
-                        vertices: vertices.map(Partial::from_partial),
-                        global_form: Partial::from_partial(PartialGlobalEdge {
-                            curve: global_edge.read().curve.clone(),
-                            vertices: global_edge.read().vertices.clone(),
-                        }),
-                    }
-                    .update_as_line_segment(),
-                ));
+                let half_edge = PartialHalfEdge {
+                    vertices: vertices.map(Partial::from_partial),
+                    global_form: Partial::from_partial(PartialGlobalEdge {
+                        curve: global_edge.read().curve.clone(),
+                        vertices: global_edge.read().vertices.clone(),
+                    }),
+                }
+                .update_as_line_segment();
+
+                edges.push(Partial::from_partial(half_edge));
             }
 
             let face = PartialFace {

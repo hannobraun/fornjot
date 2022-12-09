@@ -151,18 +151,16 @@ impl CycleBuilder for PartialCycle {
             vertex.read().surface_form.read().global_form.clone()
         });
 
-        let half_edge = Partial::from_partial(
-            PartialHalfEdge {
-                vertices,
-                global_form: Partial::from_partial(PartialGlobalEdge {
-                    curve,
-                    vertices: global_vertices,
-                }),
-            }
-            .update_as_line_segment(),
-        );
+        let half_edge = PartialHalfEdge {
+            vertices,
+            global_form: Partial::from_partial(PartialGlobalEdge {
+                curve,
+                vertices: global_vertices,
+            }),
+        }
+        .update_as_line_segment();
 
-        self.half_edges.push(half_edge);
+        self.half_edges.push(Partial::from_partial(half_edge));
         self
     }
 }
