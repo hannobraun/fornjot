@@ -85,12 +85,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment(&mut self) -> &mut Self {
         let [back, front] = self.vertices.clone();
-        let [from_surface, to_surface] =
-            [&back, &front].map(|vertex| vertex.read().surface_form.clone());
 
         let surface = self.curve().read().surface.clone();
-        let points = [&from_surface, &to_surface].map(|vertex| {
+        let points = [&back, &front].map(|vertex| {
             vertex
+                .read()
+                .surface_form
                 .read()
                 .position
                 .expect("Can't infer line segment without surface position")
