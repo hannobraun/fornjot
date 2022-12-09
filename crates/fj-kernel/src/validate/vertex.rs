@@ -183,7 +183,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceVertexBuilder},
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial2::{
+        partial::{
             Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
             PartialVertex,
         },

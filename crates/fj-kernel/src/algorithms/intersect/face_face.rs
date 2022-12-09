@@ -71,9 +71,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         builder::{CurveBuilder, FaceBuilder},
         insert::Insert,
-        objects::Face,
-        partial::HasPartial,
-        partial2::{Partial, PartialCurve, PartialObject},
+        partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -95,7 +93,7 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            Face::partial()
+            PartialFace::default()
                 .with_exterior_polygon_from_points(surface, points)
                 .build(&mut services.objects)
         });
@@ -122,7 +120,7 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::partial()
+            PartialFace::default()
                 .with_exterior_polygon_from_points(surface, points)
                 .build(&mut services.objects)
         });

@@ -151,9 +151,7 @@ where
 mod tests {
     use crate::{
         builder::{CurveBuilder, FaceBuilder},
-        objects::Face,
-        partial::HasPartial,
-        partial2::{Partial, PartialCurve, PartialObject},
+        partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -187,7 +185,7 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(surface.clone(), exterior)
             .with_interior_polygon_from_points(surface, interior)
             .build(&mut services.objects);

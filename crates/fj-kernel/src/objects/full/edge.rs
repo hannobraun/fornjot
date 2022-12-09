@@ -1,7 +1,6 @@
 use std::fmt;
 
 use crate::{
-    get::Get,
     objects::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
@@ -59,18 +58,6 @@ impl HalfEdge {
     }
 }
 
-impl Get<GlobalEdge> for HalfEdge {
-    fn get(&self) -> Handle<GlobalEdge> {
-        self.global_form().clone()
-    }
-}
-
-impl Get<GlobalCurve> for HalfEdge {
-    fn get(&self) -> Handle<GlobalCurve> {
-        self.global_form().curve().clone()
-    }
-}
-
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
@@ -125,12 +112,6 @@ impl GlobalEdge {
     }
 }
 
-impl Get<GlobalCurve> for GlobalEdge {
-    fn get(&self) -> Handle<GlobalCurve> {
-        self.curve().clone()
-    }
-}
-
 /// The vertices of a [`GlobalEdge`]
 ///
 /// Since [`GlobalEdge`] is the single global representation of an edge in
@@ -171,8 +152,7 @@ mod tests {
     use crate::{
         builder::HalfEdgeBuilder,
         objects::Vertex,
-        partial::PartialHalfEdge,
-        partial2::{Partial, PartialGlobalEdge},
+        partial::{Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject},
         services::Services,
     };
 

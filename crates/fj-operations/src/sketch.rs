@@ -4,11 +4,10 @@ use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Face, Objects, Sketch, Vertex},
-    partial::{HasPartial, PartialHalfEdge},
-    partial2::{
-        Partial, PartialCurve, PartialGlobalEdge, PartialSurfaceVertex,
-        PartialVertex,
+    objects::{Objects, Sketch, Vertex},
+    partial::{
+        Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
+        PartialHalfEdge, PartialObject, PartialSurfaceVertex, PartialVertex,
     },
     services::Service,
 };
@@ -67,18 +66,19 @@ impl Shape for fj::Sketch {
                             vertices: global_vertices,
                         }),
                     };
-                    half_edge
-                        .update_as_circle_from_radius(circle.radius())
-                        .build(objects)
-                        .insert(objects)
+                    Partial::from_partial(
+                        half_edge.update_as_circle_from_radius(circle.radius()),
+                    )
                 };
-                let cycle = Cycle::new([half_edge]).insert(objects);
+                let cycle =
+                    Partial::from_partial(PartialCycle::new(vec![half_edge]));
 
-                Face::partial()
-                    .with_exterior(cycle)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects)
+                let face = PartialFace {
+                    exterior: cycle,
+                    color: Some(Color(self.color())),
+                    ..Default::default()
+                };
+                face.build(objects).insert(objects)
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
@@ -87,11 +87,11 @@ impl Shape for fj::Sketch {
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from);
 
-                Face::partial()
-                    .with_exterior_polygon_from_points(surface, points)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects)
+                let mut face = PartialFace::default()
+                    .with_exterior_polygon_from_points(surface, points);
+                face.color = Some(Color(self.color()));
+
+                face.build(objects).insert(objects)
             }
         };
 

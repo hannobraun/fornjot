@@ -1,31 +1,86 @@
+use fj_interop::ext::ArrayExt;
+
 use crate::{
-    objects::{Curve, GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::{MaybePartial, MergeWith},
-    partial2::Partial,
+    objects::{
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
+    },
+    partial::{FullToPartialCache, Partial, PartialObject, PartialVertex},
     services::Service,
 };
 
 /// A partial [`HalfEdge`]
-///
-/// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
-    /// The vertices that bound the [`HalfEdge`] in the curve
+    /// The vertices that bound the half-edge on the curve
     pub vertices: [Partial<Vertex>; 2],
 
-    /// The global form of the [`HalfEdge`]
+    /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
-    /// Access the partial half-edge's curve
-    pub fn curve(&self) -> Partial<Curve> {
-        let [a, _] = &self.vertices;
-        a.read().curve.clone()
+    /// Construct an instance of `PartialHalfEdge`
+    pub fn new(
+        vertices: [Option<Partial<Vertex>>; 2],
+        global_form: Option<Partial<GlobalEdge>>,
+    ) -> Self {
+        let curve = Partial::<Curve>::new();
+
+        let vertices = vertices.map(|vertex| {
+            vertex.unwrap_or_else(|| {
+                Partial::from_partial(PartialVertex::new(
+                    None,
+                    Some(curve.clone()),
+                    None,
+                ))
+            })
+        });
+
+        let global_curve = curve.read().global_form.clone();
+        let global_vertices =
+            vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
+                let surface_vertex = vertex.read().surface_form.clone();
+                let global_vertex = surface_vertex.read().global_form.clone();
+                Some(global_vertex)
+            });
+
+        let global_form = global_form.unwrap_or_else(|| {
+            Partial::from_partial(PartialGlobalEdge::new(
+                Some(global_curve),
+                global_vertices,
+            ))
+        });
+
+        Self {
+            vertices,
+            global_form,
+        }
     }
 
-    /// Build a full [`HalfEdge`] from the partial half-edge
-    pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
+    /// Access the curve the partial edge is defined on
+    pub fn curve(&self) -> Partial<Curve> {
+        let [vertex, _] = &self.vertices;
+        vertex.read().curve.clone()
+    }
+}
+
+impl PartialObject for PartialHalfEdge {
+    type Full = HalfEdge;
+
+    fn from_full(
+        half_edge: &Self::Full,
+        cache: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(
+            half_edge
+                .vertices()
+                .clone()
+                .map(|vertex| Some(Partial::from_full(vertex, cache))),
+            Some(Partial::from_full(half_edge.global_form().clone(), cache)),
+        )
+    }
+
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
         let global_form = self.global_form.build(objects);
 
@@ -33,62 +88,61 @@ impl PartialHalfEdge {
     }
 }
 
-impl MergeWith for PartialHalfEdge {
-    fn merge_with(self, _: impl Into<Self>) -> Self {
-        Self {
-            vertices: self.vertices,
-            global_form: self.global_form,
-        }
+impl Default for PartialHalfEdge {
+    fn default() -> Self {
+        Self::new([None, None], None)
     }
 }
 
-impl From<&HalfEdge> for PartialHalfEdge {
-    fn from(half_edge: &HalfEdge) -> Self {
-        let [back_vertex, front_vertex] = half_edge
-            .vertices()
-            .clone()
-            .map(Partial::from_full_entry_point);
+/// A partial [`GlobalEdge`]
+#[derive(Clone, Debug)]
+pub struct PartialGlobalEdge {
+    /// The curve that defines the edge's geometry
+    pub curve: Partial<GlobalCurve>,
 
-        Self {
-            vertices: [back_vertex, front_vertex],
-            global_form: Partial::from_full_entry_point(
-                half_edge.global_form().clone(),
-            ),
-        }
+    /// The vertices that bound the edge on the curve
+    pub vertices: [Partial<GlobalVertex>; 2],
+}
+
+impl PartialGlobalEdge {
+    /// Construct an instance of `PartialGlobalEdge`
+    pub fn new(
+        curve: Option<Partial<GlobalCurve>>,
+        vertices: [Option<Partial<GlobalVertex>>; 2],
+    ) -> Self {
+        let curve = curve.unwrap_or_default();
+        let vertices = vertices.map(Option::unwrap_or_default);
+
+        Self { curve, vertices }
     }
 }
 
-impl MaybePartial<HalfEdge> {
-    /// Access the curve
-    pub fn curve(&self) -> Partial<Curve> {
-        match self {
-            Self::Full(full) => {
-                Partial::from_full_entry_point(full.curve().clone())
-            }
-            Self::Partial(partial) => partial.curve(),
-        }
+impl PartialObject for PartialGlobalEdge {
+    type Full = GlobalEdge;
+
+    fn from_full(
+        global_edge: &Self::Full,
+        cache: &mut FullToPartialCache,
+    ) -> Self {
+        Self::new(
+            Some(Partial::from_full(global_edge.curve().clone(), cache)),
+            global_edge
+                .vertices()
+                .access_in_normalized_order()
+                .map(|vertex| Some(Partial::from_full(vertex, cache))),
+        )
     }
 
-    /// Access the front vertex
-    pub fn front(&self) -> Partial<Vertex> {
-        match self {
-            Self::Full(full) => {
-                Partial::from_full_entry_point(full.front().clone())
-            }
-            Self::Partial(partial) => {
-                let [_, front] = &partial.vertices;
-                front.clone()
-            }
-        }
-    }
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let curve = self.curve.build(objects);
+        let vertices = self.vertices.map(|vertex| vertex.build(objects));
 
-    /// Access the vertices
-    pub fn vertices(&self) -> [Partial<Vertex>; 2] {
-        match self {
-            Self::Full(full) => {
-                full.vertices().clone().map(Partial::from_full_entry_point)
-            }
-            Self::Partial(partial) => partial.vertices.clone(),
-        }
+        GlobalEdge::new(curve, vertices)
+    }
+}
+
+impl Default for PartialGlobalEdge {
+    fn default() -> Self {
+        Self::new(None, [None, None])
     }
 }

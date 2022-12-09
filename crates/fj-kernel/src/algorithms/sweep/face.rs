@@ -91,9 +91,11 @@ mod tests {
         algorithms::{reverse::Reverse, transform::TransformObject},
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{Face, Sketch, Vertex},
-        partial::{HasPartial, PartialHalfEdge},
-        partial2::{Partial, PartialGlobalEdge},
+        objects::{Sketch, Vertex},
+        partial::{
+            Partial, PartialFace, PartialGlobalEdge, PartialHalfEdge,
+            PartialObject,
+        },
         services::Services,
     };
 
@@ -118,12 +120,12 @@ mod tests {
             .build(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
-        let bottom = Face::partial()
+        let bottom = PartialFace::default()
             .with_exterior_polygon_from_points(surface.clone(), TRIANGLE)
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
-        let top = Face::partial()
+        let top = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.translate(UP, &mut services.objects),
                 TRIANGLE,
@@ -186,7 +188,7 @@ mod tests {
             .build(&mut services.objects)
             .sweep(DOWN, &mut services.objects);
 
-        let bottom = Face::partial()
+        let bottom = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.clone().translate(DOWN, &mut services.objects),
                 TRIANGLE,
@@ -194,7 +196,7 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
-        let top = Face::partial()
+        let top = PartialFace::default()
             .with_exterior_polygon_from_points(surface, TRIANGLE)
             .build(&mut services.objects)
             .insert(&mut services.objects);

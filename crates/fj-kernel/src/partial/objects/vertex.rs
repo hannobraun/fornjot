@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     builder::SurfaceVertexBuilder,
     objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial2::{FullToPartialCache, Partial, PartialCurve, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialCurve, PartialObject},
     services::Service,
 };
 

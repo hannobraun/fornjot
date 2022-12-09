@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     insert::Insert,
     objects::{Face, FaceSet, Objects, Sketch, Surface},
-    partial::HasPartial,
+    partial::{PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -35,7 +35,7 @@ impl SketchBuilder {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        self.faces.extend([Face::partial()
+        self.faces.extend([PartialFace::default()
             .with_exterior_polygon_from_points(surface, points)
             .build(objects)
             .insert(objects)]);

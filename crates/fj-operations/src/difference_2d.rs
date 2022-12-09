@@ -5,8 +5,8 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     insert::Insert,
     iter::ObjectIters,
-    objects::{Face, Objects, Sketch},
-    partial::HasPartial,
+    objects::{Objects, Sketch},
+    partial::{Partial, PartialFace, PartialObject},
     services::Service,
 };
 use fj_math::Aabb;
@@ -48,7 +48,9 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors.push(cycle.clone().reverse(objects));
+                    interiors.push(Partial::from_full_entry_point(
+                        cycle.clone().reverse(objects),
+                    ));
                 }
             }
 
@@ -59,7 +61,9 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(face.exterior().clone().reverse(objects));
+                interiors.push(Partial::from_full_entry_point(
+                    face.exterior().clone().reverse(objects),
+                ));
             }
 
             // Faces only support one exterior, while the code here comes from
@@ -79,14 +83,12 @@ impl Shape for fj::Difference2d {
                 "Can't construct face with multiple exteriors"
             );
 
-            faces.push(
-                Face::partial()
-                    .with_exterior(exterior)
-                    .with_interiors(interiors)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects),
-            );
+            let face = PartialFace {
+                exterior: Partial::from_full_entry_point(exterior),
+                interiors,
+                color: Some(Color(self.color())),
+            };
+            faces.push(face.build(objects).insert(objects));
         }
 
         let difference = Sketch::builder().with_faces(faces).build(objects);

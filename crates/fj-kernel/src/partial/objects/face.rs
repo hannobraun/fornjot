@@ -1,102 +1,68 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{Cycle, Face, Objects, Surface},
-    partial::{MaybePartial, MergeWith, Mergeable},
-    partial2::Partial,
+    objects::{Cycle, Face, Objects},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
 /// A partial [`Face`]
-///
-/// See [`crate::partial`] for more information.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialFace {
-    exterior: MaybePartial<Cycle>,
-    interiors: Vec<MaybePartial<Cycle>>,
-    color: Option<Color>,
+    /// The cycle that bounds the face on the outside
+    pub exterior: Partial<Cycle>,
+
+    /// The cycles that bound the face on the inside
+    ///
+    /// Each of these cycles defines a hole in the face.
+    pub interiors: Vec<Partial<Cycle>>,
+
+    /// The color of the face
+    pub color: Option<Color>,
 }
 
 impl PartialFace {
-    /// Access th surface that the [`Face`] is defined in
-    pub fn surface(&self) -> Option<Partial<Surface>> {
-        self.exterior.surface()
-    }
-
-    /// Access the [`Face`]'s exterior cycle
-    pub fn exterior(&self) -> MaybePartial<Cycle> {
-        self.exterior.clone()
-    }
-
-    /// Access the [`Face`]'s interior cycles
-    pub fn interiors(&self) -> impl Iterator<Item = MaybePartial<Cycle>> + '_ {
-        self.interiors.iter().cloned()
-    }
-
-    /// Access the color of the [`Face`]
-    pub fn color(&self) -> Option<Color> {
-        self.color
-    }
-
-    /// Build the [`Face`] with the provided exterior
-    pub fn with_exterior(
-        mut self,
-        exterior: impl Into<MaybePartial<Cycle>>,
+    /// Construct an instance of `PartialFace`
+    pub fn new(
+        exterior: Option<Partial<Cycle>>,
+        interiors: Vec<Partial<Cycle>>,
+        color: Option<Color>,
     ) -> Self {
-        self.exterior = exterior.into();
-        self
+        let exterior = exterior.unwrap_or_default();
+
+        Self {
+            exterior,
+            interiors,
+            color,
+        }
+    }
+}
+
+impl PartialObject for PartialFace {
+    type Full = Face;
+
+    fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+        Self::new(
+            Some(Partial::from_full(face.exterior().clone(), cache)),
+            face.interiors()
+                .map(|cycle| Partial::from_full(cycle.clone(), cache))
+                .collect(),
+            Some(face.color()),
+        )
     }
 
-    /// Build the [`Face`] with the provided interior polygons
-    pub fn with_interiors(
-        mut self,
-        interiors: impl IntoIterator<Item = impl Into<MaybePartial<Cycle>>>,
-    ) -> Self {
-        let interiors = interiors.into_iter().map(Into::into);
-        self.interiors.extend(interiors);
-        self
-    }
-
-    /// Build the [`Face`] with the provided color
-    pub fn with_color(mut self, color: Color) -> Self {
-        self.color = Some(color);
-        self
-    }
-
-    /// Construct a polygon from a list of points
-    pub fn build(self, objects: &mut Service<Objects>) -> Face {
-        let exterior = self.exterior.into_full(objects);
-        let interiors = self
-            .interiors
-            .into_iter()
-            .map(|cycle| cycle.into_full(objects))
-            .collect::<Vec<_>>();
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let exterior = self.exterior.build(objects);
+        let interiors =
+            self.interiors.into_iter().map(|cycle| cycle.build(objects));
         let color = self.color.unwrap_or_default();
 
         Face::new(exterior, interiors, color)
     }
 }
 
-impl MergeWith for PartialFace {
-    fn merge_with(self, other: impl Into<Self>) -> Self {
-        let other = other.into();
-
-        Self {
-            exterior: self.exterior.merge_with(other.exterior),
-            interiors: Mergeable(self.interiors)
-                .merge_with(Mergeable(other.interiors))
-                .0,
-            color: self.color.merge_with(other.color),
-        }
-    }
-}
-
-impl From<&Face> for PartialFace {
-    fn from(face: &Face) -> Self {
-        Self {
-            exterior: face.exterior().clone().into(),
-            interiors: face.interiors().cloned().map(Into::into).collect(),
-            color: Some(face.color()),
-        }
+impl Default for PartialFace {
+    fn default() -> Self {
+        Self::new(None, Vec::new(), None)
     }
 }

@@ -206,10 +206,9 @@ mod tests {
         builder::HalfEdgeBuilder,
         insert::Insert,
         objects::{GlobalCurve, HalfEdge, Vertex},
-        partial::PartialHalfEdge,
-        partial2::{
-            Partial, PartialGlobalEdge, PartialObject, PartialSurfaceVertex,
-            PartialVertex,
+        partial::{
+            Partial, PartialGlobalEdge, PartialHalfEdge, PartialObject,
+            PartialSurfaceVertex, PartialVertex,
         },
         services::Services,
         validate::Validate,

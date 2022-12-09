@@ -155,8 +155,7 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         iter::ObjectIters,
-        objects::Face,
-        partial::HasPartial,
+        partial::{PartialFace, PartialObject},
         services::Services,
     };
 
@@ -167,7 +166,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.yz_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -186,7 +185,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.yz_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -208,7 +207,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.yz_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -227,7 +226,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.yz_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -257,7 +256,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.yz_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -285,7 +284,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -306,7 +305,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],

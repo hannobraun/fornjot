@@ -12,7 +12,7 @@ use type_map::TypeMap;
 use crate::{
     insert::Insert,
     objects::Objects,
-    partial2::traits::PartialObject,
+    partial::traits::PartialObject,
     services::Service,
     storage::{Handle, ObjectId},
 };

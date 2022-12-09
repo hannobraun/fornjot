@@ -107,8 +107,8 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
-        objects::{Cycle, Face},
-        partial::HasPartial,
+        objects::Face,
+        partial::{PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -119,7 +119,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = Face::partial()
+        let valid = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
@@ -130,7 +130,7 @@ mod tests {
             )
             .build(&mut services.objects);
         let invalid = {
-            let interiors = [Cycle::partial()
+            let interiors = [PartialCycle::default()
                 .with_poly_chain_from_points(
                     services.objects.surfaces.xz_plane(),
                     [[1., 1.], [1., 2.], [2., 1.]],
@@ -152,7 +152,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = Face::partial()
+        let valid = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],

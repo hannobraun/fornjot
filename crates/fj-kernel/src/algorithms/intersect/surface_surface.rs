@@ -92,7 +92,7 @@ mod tests {
         algorithms::transform::TransformObject,
         builder::CurveBuilder,
         insert::Insert,
-        partial2::{Partial, PartialCurve, PartialObject},
+        partial::{Partial, PartialCurve, PartialObject},
         services::Services,
     };
 
