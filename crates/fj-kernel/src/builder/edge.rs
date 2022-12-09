@@ -9,7 +9,7 @@ use crate::{
 use super::{CurveBuilder, SurfaceVertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
-pub trait HalfEdgeBuilder: Sized {
+pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(
         &mut self,
