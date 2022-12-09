@@ -24,7 +24,7 @@ pub trait HalfEdgeBuilder: Sized {
     ) -> &mut Self;
 
     /// Update partial half-edge as a line segment, reusing existing vertices
-    fn update_as_line_segment(self) -> Self;
+    fn update_as_line_segment(&mut self) -> &mut Self;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -80,11 +80,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             surface_form.infer_global_position();
         }
 
-        *self = self.clone().update_as_line_segment();
-        self
+        self.update_as_line_segment()
     }
 
-    fn update_as_line_segment(mut self) -> Self {
+    fn update_as_line_segment(&mut self) -> &mut Self {
         let [from, to] = self.vertices.clone();
         let [from_surface, to_surface] =
             [&from, &to].map(|vertex| vertex.read().surface_form.clone());

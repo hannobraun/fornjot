@@ -177,14 +177,14 @@ impl ShellBuilder {
                                 .clone()
                         });
 
-                    let half_edge = PartialHalfEdge {
+                    let mut half_edge = PartialHalfEdge {
                         vertices,
                         global_form: Partial::from_partial(PartialGlobalEdge {
                             curve: global_curve,
                             vertices: global_vertices,
                         }),
-                    }
-                    .update_as_line_segment();
+                    };
+                    half_edge.update_as_line_segment();
 
                     Partial::from_partial(half_edge)
                 })
@@ -269,7 +269,7 @@ impl ShellBuilder {
                                         .clone()
                                 });
 
-                            let half_edge = PartialHalfEdge {
+                            let mut half_edge = PartialHalfEdge {
                                 vertices,
                                 global_form: Partial::from_partial(
                                     PartialGlobalEdge {
@@ -277,8 +277,8 @@ impl ShellBuilder {
                                         curve: curve.global_form,
                                     },
                                 ),
-                            }
-                            .update_as_line_segment();
+                            };
+                            half_edge.update_as_line_segment();
 
                             Partial::from_partial(half_edge)
                         },
@@ -330,14 +330,14 @@ impl ShellBuilder {
                                 .clone()
                         });
 
-                    let half_edge = PartialHalfEdge {
+                    let mut half_edge = PartialHalfEdge {
                         vertices,
                         global_form: Partial::from_partial(PartialGlobalEdge {
                             curve: global_curve,
                             vertices: global_vertices,
                         }),
-                    }
-                    .update_as_line_segment();
+                    };
+                    half_edge.update_as_line_segment();
 
                     Partial::from_partial(half_edge)
                 })
@@ -437,14 +437,14 @@ impl ShellBuilder {
                         ),
                     });
 
-                let half_edge = PartialHalfEdge {
+                let mut half_edge = PartialHalfEdge {
                     vertices: vertices.map(Partial::from_partial),
                     global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_edge.read().curve.clone(),
                         vertices: global_edge.read().vertices.clone(),
                     }),
-                }
-                .update_as_line_segment();
+                };
+                half_edge.update_as_line_segment();
 
                 edges.push(Partial::from_partial(half_edge));
             }

@@ -305,16 +305,16 @@ mod tests {
                     vertex.read().surface_form.read().global_form.clone()
                 });
 
-                let side_up = PartialHalfEdge {
+                let mut side_up = PartialHalfEdge {
                     vertices,
                     global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
                 };
+                side_up.update_as_line_segment();
 
                 side_up
-                    .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
@@ -357,16 +357,16 @@ mod tests {
                     vertex.read().surface_form.read().global_form.clone()
                 });
 
-                let top = PartialHalfEdge {
+                let mut top = PartialHalfEdge {
                     vertices,
                     global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
                 };
+                top.update_as_line_segment();
 
-                top.update_as_line_segment()
-                    .build(&mut services.objects)
+                top.build(&mut services.objects)
                     .insert(&mut services.objects)
                     .reverse(&mut services.objects)
             };
@@ -401,16 +401,16 @@ mod tests {
                     vertex.read().surface_form.read().global_form.clone()
                 });
 
-                let side_down = PartialHalfEdge {
+                let mut side_down = PartialHalfEdge {
                     vertices,
                     global_form: Partial::from_partial(PartialGlobalEdge {
                         curve: global_curve,
                         vertices: global_vertices,
                     }),
                 };
+                side_down.update_as_line_segment();
 
                 side_down
-                    .update_as_line_segment()
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
                     .reverse(&mut services.objects)
