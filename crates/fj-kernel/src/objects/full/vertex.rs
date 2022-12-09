@@ -1,8 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    get::Get,
-    objects::{Curve, GlobalCurve, Surface},
+    objects::{Curve, Surface},
     storage::Handle,
 };
 
@@ -55,36 +54,6 @@ impl Vertex {
     }
 }
 
-impl Get<Curve> for Vertex {
-    fn get(&self) -> Handle<Curve> {
-        self.curve().clone()
-    }
-}
-
-impl Get<SurfaceVertex> for Vertex {
-    fn get(&self) -> Handle<SurfaceVertex> {
-        self.surface_form().clone()
-    }
-}
-
-impl Get<Surface> for Vertex {
-    fn get(&self) -> Handle<Surface> {
-        self.curve().surface().clone()
-    }
-}
-
-impl Get<GlobalCurve> for Vertex {
-    fn get(&self) -> Handle<GlobalCurve> {
-        self.curve().global_form().clone()
-    }
-}
-
-impl Get<GlobalVertex> for Vertex {
-    fn get(&self) -> Handle<GlobalVertex> {
-        self.surface_form().global_form().clone()
-    }
-}
-
 /// A vertex, defined in surface (2D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
@@ -121,18 +90,6 @@ impl SurfaceVertex {
     /// Access the global form of the vertex
     pub fn global_form(&self) -> &Handle<GlobalVertex> {
         &self.global_form
-    }
-}
-
-impl Get<Surface> for SurfaceVertex {
-    fn get(&self) -> Handle<Surface> {
-        self.surface().clone()
-    }
-}
-
-impl Get<GlobalVertex> for SurfaceVertex {
-    fn get(&self) -> Handle<GlobalVertex> {
-        self.global_form().clone()
     }
 }
 

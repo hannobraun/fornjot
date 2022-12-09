@@ -1,6 +1,5 @@
 use crate::{
     geometry::path::SurfacePath,
-    get::Get,
     objects::Surface,
     storage::{Handle, HandleWrapper},
 };
@@ -40,18 +39,6 @@ impl Curve {
     /// Access the global form of the curve
     pub fn global_form(&self) -> &Handle<GlobalCurve> {
         &self.global_form
-    }
-}
-
-impl Get<Surface> for Curve {
-    fn get(&self) -> Handle<Surface> {
-        self.surface().clone()
-    }
-}
-
-impl Get<GlobalCurve> for Curve {
-    fn get(&self) -> Handle<GlobalCurve> {
-        self.global_form().clone()
     }
 }
 
