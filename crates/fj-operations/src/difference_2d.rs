@@ -7,6 +7,7 @@ use fj_kernel::{
     iter::ObjectIters,
     objects::{Face, Objects, Sketch},
     partial::HasPartial,
+    partial2::Partial,
     services::Service,
 };
 use fj_math::Aabb;
@@ -48,7 +49,9 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors.push(cycle.clone().reverse(objects));
+                    interiors.push(Partial::from_full_entry_point(
+                        cycle.clone().reverse(objects),
+                    ));
                 }
             }
 
@@ -59,7 +62,9 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(face.exterior().clone().reverse(objects));
+                interiors.push(Partial::from_full_entry_point(
+                    face.exterior().clone().reverse(objects),
+                ));
             }
 
             // Faces only support one exterior, while the code here comes from
@@ -81,7 +86,7 @@ impl Shape for fj::Difference2d {
 
             faces.push(
                 Face::partial()
-                    .with_exterior(exterior)
+                    .with_exterior(Partial::from_full_entry_point(exterior))
                     .with_interiors(interiors)
                     .with_color(Color(self.color()))
                     .build(objects)

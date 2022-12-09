@@ -1,8 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Surface},
-    partial::{HasPartial, PartialFace},
+    objects::Surface,
+    partial::PartialFace,
+    partial2::{Partial, PartialCycle},
     storage::Handle,
 };
 
@@ -31,11 +32,11 @@ impl FaceBuilder for PartialFace {
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        self.with_exterior(
-            Cycle::partial()
+        self.with_exterior(Partial::from_partial(
+            PartialCycle::default()
                 .with_poly_chain_from_points(surface, points)
                 .close_with_line_segment(),
-        )
+        ))
     }
 
     fn with_interior_polygon_from_points(
@@ -43,8 +44,10 @@ impl FaceBuilder for PartialFace {
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
-        self.with_interiors([Cycle::partial()
-            .with_poly_chain_from_points(surface, points)
-            .close_with_line_segment()])
+        self.with_interiors([Partial::from_partial(
+            PartialCycle::default()
+                .with_poly_chain_from_points(surface, points)
+                .close_with_line_segment(),
+        )])
     }
 }

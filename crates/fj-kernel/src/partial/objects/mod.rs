@@ -1,7 +1,7 @@
 pub mod face;
 
 use crate::{
-    objects::{Cycle, Face, Objects},
+    objects::{Face, Objects},
     services::Service,
 };
 

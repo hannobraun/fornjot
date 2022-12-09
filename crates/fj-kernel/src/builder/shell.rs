@@ -8,11 +8,12 @@ use crate::{
     algorithms::transform::TransformObject,
     builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
-    objects::{Cycle, Face, FaceSet, HalfEdge, Objects, Shell, Vertex},
+    objects::{Face, FaceSet, HalfEdge, Objects, Shell, Vertex},
     partial::HasPartial,
     partial2::{
-        Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
-        PartialObject, PartialSurface, PartialSurfaceVertex, PartialVertex,
+        Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
+        PartialHalfEdge, PartialObject, PartialSurface, PartialSurfaceVertex,
+        PartialVertex,
     },
     services::Service,
     storage::Handle,
@@ -355,12 +356,11 @@ impl ShellBuilder {
                 .zip(tops.clone())
                 .zip(sides_down)
                 .map(|(((bottom, side_up), top), side_down)| {
-                    let mut cycle = Cycle::partial();
+                    let mut cycle = PartialCycle::default();
                     cycle.half_edges.extend([bottom, side_up, top, side_down]);
-                    let cycle = cycle.build(objects).insert(objects);
 
                     Face::partial()
-                        .with_exterior(cycle)
+                        .with_exterior(Partial::from_partial(cycle))
                         .build(objects)
                         .insert(objects)
                 })
@@ -443,7 +443,7 @@ impl ShellBuilder {
                         ),
                     });
 
-                edges.push(
+                edges.push(Partial::from_partial(
                     PartialHalfEdge {
                         vertices: vertices.map(Partial::from_partial),
                         global_form: Partial::from_partial(PartialGlobalEdge {
@@ -451,14 +451,12 @@ impl ShellBuilder {
                             vertices: global_edge.read().vertices.clone(),
                         }),
                     }
-                    .update_as_line_segment()
-                    .build(objects)
-                    .insert(objects),
-                );
+                    .update_as_line_segment(),
+                ));
             }
 
             Face::partial()
-                .with_exterior(Cycle::new(edges).insert(objects))
+                .with_exterior(Partial::from_partial(PartialCycle::new(edges)))
                 .build(objects)
                 .insert(objects)
         };

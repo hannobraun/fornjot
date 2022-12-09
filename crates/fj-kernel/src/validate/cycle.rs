@@ -66,15 +66,18 @@ impl CycleValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CycleBuilder, objects::Cycle, partial::HasPartial,
-        partial2::Partial, services::Services, validate::Validate,
+        builder::CycleBuilder,
+        objects::Cycle,
+        partial2::{Partial, PartialCycle, PartialObject},
+        services::Services,
+        validate::Validate,
     };
 
     #[test]
     fn cycle_half_edge_connections() {
         let mut services = Services::new();
 
-        let valid = Cycle::partial()
+        let valid = PartialCycle::default()
             .with_poly_chain_from_points(
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.], [0., 1.]],

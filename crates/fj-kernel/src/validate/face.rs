@@ -107,8 +107,9 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
-        objects::{Cycle, Face},
+        objects::Face,
         partial::HasPartial,
+        partial2::{PartialCycle, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -130,7 +131,7 @@ mod tests {
             )
             .build(&mut services.objects);
         let invalid = {
-            let interiors = [Cycle::partial()
+            let interiors = [PartialCycle::default()
                 .with_poly_chain_from_points(
                     services.objects.surfaces.xz_plane(),
                     [[1., 1.], [1., 2.], [2., 1.]],

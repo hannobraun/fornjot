@@ -4,11 +4,11 @@ use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Face, Objects, Sketch, Vertex},
+    objects::{Face, Objects, Sketch, Vertex},
     partial::HasPartial,
     partial2::{
-        Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
-        PartialObject, PartialSurfaceVertex, PartialVertex,
+        Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
+        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
     },
     services::Service,
 };
@@ -67,12 +67,12 @@ impl Shape for fj::Sketch {
                             vertices: global_vertices,
                         }),
                     };
-                    half_edge
-                        .update_as_circle_from_radius(circle.radius())
-                        .build(objects)
-                        .insert(objects)
+                    Partial::from_partial(
+                        half_edge.update_as_circle_from_radius(circle.radius()),
+                    )
                 };
-                let cycle = Cycle::new([half_edge]).insert(objects);
+                let cycle =
+                    Partial::from_partial(PartialCycle::new(vec![half_edge]));
 
                 Face::partial()
                     .with_exterior(cycle)
