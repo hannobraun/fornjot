@@ -9,9 +9,8 @@ use crate::{
     builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
     insert::Insert,
     objects::{Face, FaceSet, HalfEdge, Objects, Shell, Vertex},
-    partial::HasPartial,
     partial2::{
-        Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
+        Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
         PartialHalfEdge, PartialObject, PartialSurface, PartialSurfaceVertex,
         PartialVertex,
     },
@@ -53,7 +52,7 @@ impl ShellBuilder {
             let surface =
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
-            Face::partial()
+            PartialFace::default()
                 .with_exterior_polygon_from_points(
                     surface,
                     [[-h, -h], [h, -h], [h, h], [-h, h]],
@@ -359,9 +358,10 @@ impl ShellBuilder {
                     let mut cycle = PartialCycle::default();
                     cycle.half_edges.extend([bottom, side_up, top, side_down]);
 
-                    let mut face = Face::partial();
-                    face.exterior = Partial::from_partial(cycle);
-
+                    let face = PartialFace {
+                        exterior: Partial::from_partial(cycle),
+                        ..Default::default()
+                    };
                     face.build(objects).insert(objects)
                 })
                 .collect::<Vec<_>>();
@@ -455,9 +455,10 @@ impl ShellBuilder {
                 ));
             }
 
-            let mut face = Face::partial();
-            face.exterior = Partial::from_partial(PartialCycle::new(edges));
-
+            let face = PartialFace {
+                exterior: Partial::from_partial(PartialCycle::new(edges)),
+                ..Default::default()
+            };
             face.build(objects).insert(objects)
         };
 

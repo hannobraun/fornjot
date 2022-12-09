@@ -367,13 +367,12 @@ mod tests {
         builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{
-            Face, GlobalCurve, GlobalVertex, Objects, Shell, Sketch, Solid,
+            GlobalCurve, GlobalVertex, Objects, Shell, Sketch, Solid,
             SurfaceVertex, Vertex,
         },
-        partial::HasPartial,
         partial2::{
-            Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
-            PartialHalfEdge, PartialObject,
+            Partial, PartialCurve, PartialCycle, PartialFace,
+            PartialGlobalEdge, PartialHalfEdge, PartialObject,
         },
         services::Services,
     };
@@ -439,7 +438,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let object = Face::partial()
+        let object = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[0., 0.], [1., 0.], [0., 1.]],
@@ -571,7 +570,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface,
                 [[0., 0.], [1., 0.], [0., 1.]],

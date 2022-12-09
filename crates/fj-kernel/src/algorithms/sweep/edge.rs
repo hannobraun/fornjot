@@ -10,8 +10,7 @@ use crate::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
         Vertex,
     },
-    partial::HasPartial,
-    partial2::Partial,
+    partial2::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -175,10 +174,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             Cycle::new(edges).insert(objects)
         };
 
-        let mut face = Face::partial();
-        face.exterior = Partial::from_full_entry_point(cycle);
-        face.color = Some(color);
-
+        let face = PartialFace {
+            exterior: Partial::from_full_entry_point(cycle),
+            color: Some(color),
+            ..Default::default()
+        };
         face.build(objects).insert(objects)
     }
 }
@@ -194,11 +194,11 @@ mod tests {
         algorithms::{reverse::Reverse, sweep::Sweep},
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{Cycle, Face, Vertex},
-        partial::HasPartial,
+        objects::{Cycle, Vertex},
         partial2::{
-            Partial, PartialCurve, PartialGlobalEdge, PartialHalfEdge,
-            PartialObject, PartialSurfaceVertex, PartialVertex,
+            Partial, PartialCurve, PartialFace, PartialGlobalEdge,
+            PartialHalfEdge, PartialObject, PartialSurfaceVertex,
+            PartialVertex,
         },
         services::Services,
     };
@@ -419,9 +419,10 @@ mod tests {
             let cycle = Cycle::new([bottom, side_up, top, side_down])
                 .insert(&mut services.objects);
 
-            let mut face = Face::partial();
-            face.exterior = Partial::from_full_entry_point(cycle);
-
+            let face = PartialFace {
+                exterior: Partial::from_full_entry_point(cycle),
+                ..Default::default()
+            };
             face.build(&mut services.objects)
                 .insert(&mut services.objects)
         };

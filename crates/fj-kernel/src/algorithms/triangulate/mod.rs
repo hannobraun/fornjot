@@ -80,7 +80,7 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         objects::Face,
-        partial::HasPartial,
+        partial2::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
@@ -97,7 +97,7 @@ mod tests {
         let d = [0., 1.];
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(surface, [a, b, c, d])
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -132,7 +132,7 @@ mod tests {
         let h = [3., 1.];
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(surface.clone(), [a, b, c, d])
             .with_interior_polygon_from_points(surface.clone(), [e, f, g, h])
             .build(&mut services.objects)
@@ -190,7 +190,7 @@ mod tests {
         let e = [0.0, 1.0];
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = Face::partial()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(surface.clone(), [a, b, c, d, e])
             .build(&mut services.objects)
             .insert(&mut services.objects);

@@ -108,8 +108,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::HasPartial,
-        partial2::{PartialCycle, PartialObject},
+        partial2::{PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -120,7 +119,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = Face::partial()
+        let valid = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
@@ -153,7 +152,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = Face::partial()
+        let valid = PartialFace::default()
             .with_exterior_polygon_from_points(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],

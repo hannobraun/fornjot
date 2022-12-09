@@ -4,11 +4,10 @@ use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, Objects, Sketch, Vertex},
-    partial::HasPartial,
+    objects::{Objects, Sketch, Vertex},
     partial2::{
-        Partial, PartialCurve, PartialCycle, PartialGlobalEdge,
-        PartialHalfEdge, PartialSurfaceVertex, PartialVertex,
+        Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
+        PartialHalfEdge, PartialObject, PartialSurfaceVertex, PartialVertex,
     },
     services::Service,
 };
@@ -74,10 +73,11 @@ impl Shape for fj::Sketch {
                 let cycle =
                     Partial::from_partial(PartialCycle::new(vec![half_edge]));
 
-                let mut face = Face::partial();
-                face.exterior = cycle;
-                face.color = Some(Color(self.color()));
-
+                let face = PartialFace {
+                    exterior: cycle,
+                    color: Some(Color(self.color())),
+                    ..Default::default()
+                };
                 face.build(objects).insert(objects)
             }
             fj::Chain::PolyChain(poly_chain) => {
@@ -87,7 +87,7 @@ impl Shape for fj::Sketch {
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from);
 
-                let mut face = Face::partial()
+                let mut face = PartialFace::default()
                     .with_exterior_polygon_from_points(surface, points);
                 face.color = Some(Color(self.color()));
 

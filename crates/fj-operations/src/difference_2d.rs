@@ -5,9 +5,8 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     insert::Insert,
     iter::ObjectIters,
-    objects::{Face, Objects, Sketch},
-    partial::HasPartial,
-    partial2::Partial,
+    objects::{Objects, Sketch},
+    partial2::{Partial, PartialFace, PartialObject},
     services::Service,
 };
 use fj_math::Aabb;
@@ -84,11 +83,11 @@ impl Shape for fj::Difference2d {
                 "Can't construct face with multiple exteriors"
             );
 
-            let mut face = Face::partial();
-            face.exterior = Partial::from_full_entry_point(exterior);
-            face.interiors = interiors;
-            face.color = Some(Color(self.color()));
-
+            let face = PartialFace {
+                exterior: Partial::from_full_entry_point(exterior),
+                interiors,
+                color: Some(Color(self.color())),
+            };
             faces.push(face.build(objects).insert(objects));
         }
 

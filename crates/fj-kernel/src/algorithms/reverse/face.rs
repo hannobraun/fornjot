@@ -1,8 +1,7 @@
 use crate::{
     insert::Insert,
     objects::{Face, Objects},
-    partial::HasPartial,
-    partial2::{FullToPartialCache, Partial},
+    partial2::{FullToPartialCache, Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -24,11 +23,11 @@ impl Reverse for Handle<Face> {
             })
             .collect::<Vec<_>>();
 
-        let mut face = Face::partial();
-        face.exterior = exterior;
-        face.interiors = interiors;
-        face.color = Some(self.color());
-
+        let face = PartialFace {
+            exterior,
+            interiors,
+            color: Some(self.color()),
+        };
         face.build(objects).insert(objects)
     }
 }

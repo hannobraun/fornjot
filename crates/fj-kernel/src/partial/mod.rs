@@ -36,14 +36,12 @@
 
 mod maybe_partial;
 mod merge;
-mod objects;
 mod replace;
 mod traits;
 
 pub use self::{
     maybe_partial::MaybePartial,
     merge::{MergeWith, Mergeable},
-    objects::face::PartialFace,
     replace::Replace,
     traits::{HasPartial, Partial},
 };
