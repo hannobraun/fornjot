@@ -359,10 +359,10 @@ impl ShellBuilder {
                     let mut cycle = PartialCycle::default();
                     cycle.half_edges.extend([bottom, side_up, top, side_down]);
 
-                    Face::partial()
-                        .with_exterior(Partial::from_partial(cycle))
-                        .build(objects)
-                        .insert(objects)
+                    let mut face = Face::partial();
+                    face.exterior = Partial::from_partial(cycle);
+
+                    face.build(objects).insert(objects)
                 })
                 .collect::<Vec<_>>();
 
@@ -455,10 +455,10 @@ impl ShellBuilder {
                 ));
             }
 
-            Face::partial()
-                .with_exterior(Partial::from_partial(PartialCycle::new(edges)))
-                .build(objects)
-                .insert(objects)
+            let mut face = Face::partial();
+            face.exterior = Partial::from_partial(PartialCycle::new(edges));
+
+            face.build(objects).insert(objects)
         };
 
         self.faces.extend([bottom]);

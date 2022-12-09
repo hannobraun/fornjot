@@ -28,28 +28,6 @@ impl PartialFace {
         self.exterior.read().surface()
     }
 
-    /// Build the [`Face`] with the provided exterior
-    pub fn with_exterior(mut self, exterior: Partial<Cycle>) -> Self {
-        self.exterior = exterior;
-        self
-    }
-
-    /// Build the [`Face`] with the provided interior polygons
-    pub fn with_interiors(
-        mut self,
-        interiors: impl IntoIterator<Item = Partial<Cycle>>,
-    ) -> Self {
-        let interiors = interiors.into_iter().map(Into::into);
-        self.interiors.extend(interiors);
-        self
-    }
-
-    /// Build the [`Face`] with the provided color
-    pub fn with_color(mut self, color: Color) -> Self {
-        self.color = Some(color);
-        self
-    }
-
     /// Construct a polygon from a list of points
     pub fn build(self, objects: &mut Service<Objects>) -> Face {
         let exterior = self.exterior.build(objects);

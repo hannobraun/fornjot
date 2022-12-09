@@ -74,11 +74,11 @@ impl Shape for fj::Sketch {
                 let cycle =
                     Partial::from_partial(PartialCycle::new(vec![half_edge]));
 
-                Face::partial()
-                    .with_exterior(cycle)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects)
+                let mut face = Face::partial();
+                face.exterior = cycle;
+                face.color = Some(Color(self.color()));
+
+                face.build(objects).insert(objects)
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
@@ -87,11 +87,11 @@ impl Shape for fj::Sketch {
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from);
 
-                Face::partial()
-                    .with_exterior_polygon_from_points(surface, points)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects)
+                let mut face = Face::partial()
+                    .with_exterior_polygon_from_points(surface, points);
+                face.color = Some(Color(self.color()));
+
+                face.build(objects).insert(objects)
             }
         };
 

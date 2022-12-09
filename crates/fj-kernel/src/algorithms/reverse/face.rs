@@ -24,11 +24,11 @@ impl Reverse for Handle<Face> {
             })
             .collect::<Vec<_>>();
 
-        Face::partial()
-            .with_exterior(exterior)
-            .with_interiors(interiors)
-            .with_color(self.color())
-            .build(objects)
-            .insert(objects)
+        let mut face = Face::partial();
+        face.exterior = exterior;
+        face.interiors = interiors;
+        face.color = Some(self.color());
+
+        face.build(objects).insert(objects)
     }
 }

@@ -175,11 +175,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             Cycle::new(edges).insert(objects)
         };
 
-        Face::partial()
-            .with_exterior(Partial::from_full_entry_point(cycle))
-            .with_color(color)
-            .build(objects)
-            .insert(objects)
+        let mut face = Face::partial();
+        face.exterior = Partial::from_full_entry_point(cycle);
+        face.color = Some(color);
+
+        face.build(objects).insert(objects)
     }
 }
 
@@ -419,9 +419,10 @@ mod tests {
             let cycle = Cycle::new([bottom, side_up, top, side_down])
                 .insert(&mut services.objects);
 
-            Face::partial()
-                .with_exterior(Partial::from_full_entry_point(cycle))
-                .build(&mut services.objects)
+            let mut face = Face::partial();
+            face.exterior = Partial::from_full_entry_point(cycle);
+
+            face.build(&mut services.objects)
                 .insert(&mut services.objects)
         };
 

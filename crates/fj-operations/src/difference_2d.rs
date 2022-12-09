@@ -84,14 +84,12 @@ impl Shape for fj::Difference2d {
                 "Can't construct face with multiple exteriors"
             );
 
-            faces.push(
-                Face::partial()
-                    .with_exterior(Partial::from_full_entry_point(exterior))
-                    .with_interiors(interiors)
-                    .with_color(Color(self.color()))
-                    .build(objects)
-                    .insert(objects),
-            );
+            let mut face = Face::partial();
+            face.exterior = Partial::from_full_entry_point(exterior);
+            face.interiors = interiors;
+            face.color = Some(Color(self.color()));
+
+            faces.push(face.build(objects).insert(objects));
         }
 
         let difference = Sketch::builder().with_faces(faces).build(objects);
