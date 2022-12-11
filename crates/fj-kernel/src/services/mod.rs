@@ -15,7 +15,7 @@ use crate::objects::Objects;
 pub use self::{
     objects::ServiceObjectsExt,
     service::{Service, State},
-    validation::{Validation, ValidationEvent},
+    validation::{Validation, ValidationFailed},
 };
 
 /// The kernel services
