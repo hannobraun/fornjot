@@ -58,9 +58,9 @@ impl State for Validation {
 /// An event produced by the validation service
 #[derive(Clone)]
 pub struct ValidationFailed {
-    /// The object for which validation has been attempted
+    /// The object for which validation failed
     pub object: Object<BehindHandle>,
 
-    /// The validation error, if the validation resulted in one
+    /// The validation error
     pub err: ValidationError,
 }
