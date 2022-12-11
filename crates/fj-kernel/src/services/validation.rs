@@ -36,11 +36,11 @@ impl Drop for Validation {
 
 impl State for Validation {
     type Command = ObjectToInsert;
-    type Event = ValidationEvent;
+    type Event = ValidationFailed;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
         if let Err(err) = command.object.validate() {
-            events.push(ValidationEvent {
+            events.push(ValidationFailed {
                 object: command.object.into(),
                 err,
             });
@@ -57,7 +57,7 @@ impl State for Validation {
 
 /// An event produced by the validation service
 #[derive(Clone)]
-pub struct ValidationEvent {
+pub struct ValidationFailed {
     /// The object for which validation has been attempted
     pub object: Object<BehindHandle>,
 
