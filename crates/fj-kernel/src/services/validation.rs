@@ -39,18 +39,19 @@ impl State for Validation {
     type Event = ValidationEvent;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let err = command.object.validate().err();
-        events.push(ValidationEvent {
-            object: command.object.into(),
-            err,
-        });
+        if let Err(err) = command.object.validate() {
+            events.push(ValidationEvent {
+                object: command.object.into(),
+                err,
+            });
+        }
     }
 
     fn evolve(&mut self, event: &Self::Event) {
-        if let Some(err) = &event.err {
-            self.0
-                .insert(event.object.id(), (event.object.clone(), err.clone()));
-        }
+        self.0.insert(
+            event.object.id(),
+            (event.object.clone(), event.err.clone()),
+        );
     }
 }
 
@@ -61,7 +62,5 @@ pub struct ValidationEvent {
     pub object: Object<BehindHandle>,
 
     /// The validation error, if the validation resulted in one
-    ///
-    /// If this is `None`, the object has been validated successfully.
-    pub err: Option<ValidationError>,
+    pub err: ValidationError,
 }
