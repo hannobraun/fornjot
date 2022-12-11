@@ -10,9 +10,7 @@ use super::{objects::ObjectToInsert, State};
 
 /// Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
-pub struct Validation(
-    pub BTreeMap<ObjectId, (Object<BehindHandle>, ValidationError)>,
-);
+pub struct Validation(pub BTreeMap<ObjectId, ValidationFailed>);
 
 impl Drop for Validation {
     fn drop(&mut self) {
@@ -23,8 +21,8 @@ impl Drop for Validation {
                 errors:"
             );
 
-            for (_, err) in self.0.values() {
-                println!("{err}");
+            for event in self.0.values() {
+                println!("{}", event.err);
             }
 
             if !thread::panicking() {
@@ -48,10 +46,7 @@ impl State for Validation {
     }
 
     fn evolve(&mut self, event: &Self::Event) {
-        self.0.insert(
-            event.object.id(),
-            (event.object.clone(), event.err.clone()),
-        );
+        self.0.insert(event.object.id(), event.clone());
     }
 }
 
