@@ -92,34 +92,22 @@ impl ShellBuilder {
                 .map(|(half_edge, surface)| {
                     let global_edge = half_edge.read().global_form.clone();
 
-                    let mut half_edge = PartialHalfEdge {
-                        vertices: global_edge.read().vertices.clone().map(
-                            |global_vertex| {
-                                Partial::from_partial(PartialVertex {
-                                    curve: Partial::from_partial(
-                                        PartialCurve {
-                                            global_form: global_edge
-                                                .read()
-                                                .curve
-                                                .clone(),
-                                            ..Default::default()
-                                        },
-                                    ),
-                                    surface_form: Partial::from_partial(
-                                        PartialSurfaceVertex {
-                                            global_form: global_vertex,
-                                            ..Default::default()
-                                        },
-                                    ),
-                                    ..Default::default()
-                                })
-                            },
-                        ),
-                        global_form: Partial::from_partial(PartialGlobalEdge {
-                            curve: global_edge.read().curve.clone(),
-                            vertices: global_edge.read().vertices.clone(),
-                        }),
-                    };
+                    let mut half_edge = PartialHalfEdge::default();
+
+                    half_edge.curve().write().global_form =
+                        global_edge.read().curve.clone();
+
+                    for (vertex, global_form) in half_edge
+                        .vertices
+                        .iter_mut()
+                        .zip(&global_edge.read().vertices)
+                    {
+                        vertex.write().surface_form.write().global_form =
+                            global_form.clone();
+                    }
+
+                    half_edge.global_form = global_edge;
+
                     half_edge.update_as_line_segment_from_points(
                         surface.clone(),
                         [[Z, Z], [edge_length, Z]],
