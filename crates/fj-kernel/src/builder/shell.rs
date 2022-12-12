@@ -448,11 +448,10 @@ impl ShellBuilder {
                 edges.push(Partial::from_partial(half_edge));
             }
 
-            let face = PartialFace {
+            PartialFace {
                 exterior: Partial::from_partial(PartialCycle::new(edges)),
                 ..Default::default()
-            };
-            face.build(objects).insert(objects)
+            }
         };
 
         self.faces.extend([bottom.build(objects).insert(objects)]);
@@ -462,7 +461,7 @@ impl ShellBuilder {
                 .cloned()
                 .map(|face| face.build(objects).insert(objects)),
         );
-        self.faces.extend([top]);
+        self.faces.extend([top.build(objects).insert(objects)]);
 
         self
     }
