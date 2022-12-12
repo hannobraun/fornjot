@@ -82,16 +82,8 @@ impl EventLoopHandler {
         }
 
         if let Event::WindowEvent { event, .. } = &event {
-            // In theory we could/should check if `egui` wants "exclusive" use
-            // of this event here. But with the current integration with Fornjot
-            // we're kinda blurring the lines between "app" and "platform", so
-            // for the moment we pass every event to both `egui` & Fornjot.
-            //
-            // The primary visible impact of this currently is that if you drag
-            // a title bar that overlaps the model then both the model & window
-            // get moved.
             let egui_winit::EventResponse {
-                consumed: _,
+                consumed,
                 // This flag was introduced in egui-winit 0.20. I don't think we
                 // need to handle this, as we already do a full update of the
                 // GUI every frame. It might be possible to do less repainting
@@ -100,6 +92,10 @@ impl EventLoopHandler {
             } = self
                 .egui_winit_state
                 .on_event(self.viewer.gui.context(), event);
+
+            if consumed {
+                return Ok(());
+            }
         }
 
         // fj-window events
