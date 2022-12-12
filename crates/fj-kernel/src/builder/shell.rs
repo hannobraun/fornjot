@@ -122,9 +122,11 @@ impl ShellBuilder {
                 .into_iter()
                 .zip(&surfaces)
                 .map(|(bottom, surface): (Partial<HalfEdge>, _)| {
-                    let [_, from] = &bottom.read().vertices;
-
-                    let from_surface = from.read().surface_form.clone();
+                    let from_surface = {
+                        let [_, from] = &bottom.read().vertices;
+                        let from = from.read();
+                        from.surface_form.clone()
+                    };
                     let to = PartialSurfaceVertex {
                         position: Some(
                             from_surface.read().position.unwrap()
