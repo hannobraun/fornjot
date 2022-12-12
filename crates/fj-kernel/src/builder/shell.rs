@@ -124,10 +124,11 @@ impl ShellBuilder {
                 .map(|(bottom, surface): (Partial<HalfEdge>, _)| {
                     let [_, from] = &bottom.read().vertices;
 
-                    let from = from.read().surface_form.clone();
+                    let from_surface = from.read().surface_form.clone();
                     let to = PartialSurfaceVertex {
                         position: Some(
-                            from.read().position.unwrap() + [Z, edge_length],
+                            from_surface.read().position.unwrap()
+                                + [Z, edge_length],
                         ),
                         surface: surface.clone(),
                         ..Default::default()
@@ -136,10 +137,10 @@ impl ShellBuilder {
                     let vertices = [
                         PartialVertex {
                             curve: Partial::from_partial(PartialCurve {
-                                surface: from.read().surface.clone(),
+                                surface: from_surface.read().surface.clone(),
                                 ..Default::default()
                             }),
-                            surface_form: from.clone(),
+                            surface_form: from_surface.clone(),
                             ..Default::default()
                         },
                         PartialVertex {
