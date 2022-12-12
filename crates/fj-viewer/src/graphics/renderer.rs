@@ -91,11 +91,30 @@ impl Renderer {
             )
             .await?;
 
-        let color_format = surface
-            .get_supported_formats(&adapter)
-            .get(0)
-            .copied()
-            .expect("Error determining preferred color format");
+        let color_format = 'color_format: {
+            let supported_formats = surface.get_supported_formats(&adapter);
+
+            // We don't really care which color format we use, as long as we
+            // find one that's supported. `egui_wgpu` prints a warning though,
+            // unless we choose one of the following ones.
+            let preferred_formats = [
+                wgpu::TextureFormat::Rgba8Unorm,
+                wgpu::TextureFormat::Bgra8Unorm,
+            ];
+
+            for format in preferred_formats {
+                if supported_formats.contains(&format) {
+                    break 'color_format format;
+                }
+            }
+
+            // None of the preferred color formats are supported. Just use one
+            // of the supported ones then.
+            supported_formats
+                .into_iter()
+                .next()
+                .expect("Error determining preferred color format")
+        };
 
         let ScreenSize { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
