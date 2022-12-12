@@ -454,14 +454,13 @@ impl ShellBuilder {
             }
         };
 
-        self.faces.extend([bottom.build(objects).insert(objects)]);
         self.faces.extend(
-            sides
-                .iter()
-                .cloned()
+            [bottom]
+                .into_iter()
+                .chain(sides)
+                .chain([top])
                 .map(|face| face.build(objects).insert(objects)),
         );
-        self.faces.extend([top.build(objects).insert(objects)]);
 
         self
     }
