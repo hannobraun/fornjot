@@ -32,7 +32,7 @@ use crate::{
 /// The GUI
 pub struct Gui {
     context: egui::Context,
-    render_pass: egui_wgpu::Renderer,
+    renderer: egui_wgpu::Renderer,
     options: Options,
 }
 
@@ -72,7 +72,7 @@ impl Gui {
         // ```
         //
         // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        let render_pass = egui_wgpu::Renderer::new(
+        let renderer = egui_wgpu::Renderer::new(
             device,
             texture_format,
             Some(DEPTH_FORMAT),
@@ -81,7 +81,7 @@ impl Gui {
 
         Self {
             context,
-            render_pass,
+            renderer,
             options: Options::default(),
         }
     }
@@ -296,14 +296,14 @@ impl Gui {
         let clipped_primitives = self.context.tessellate(egui_output.shapes);
 
         for (id, image_delta) in &egui_output.textures_delta.set {
-            self.render_pass
+            self.renderer
                 .update_texture(device, queue, *id, image_delta);
         }
         for id in &egui_output.textures_delta.free {
-            self.render_pass.free_texture(id);
+            self.renderer.free_texture(id);
         }
 
-        self.render_pass.update_buffers(
+        self.renderer.update_buffers(
             device,
             queue,
             encoder,
@@ -320,7 +320,7 @@ impl Gui {
         clipped_primitives: &[egui::ClippedPrimitive],
         screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
     ) {
-        self.render_pass.render(
+        self.renderer.render(
             render_pass,
             clipped_primitives,
             screen_descriptor,
