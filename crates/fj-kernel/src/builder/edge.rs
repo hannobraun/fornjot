@@ -11,27 +11,21 @@ use super::{CurveBuilder, SurfaceVertexBuilder};
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a circle, from the given radius
-    fn update_as_circle_from_radius(
-        &mut self,
-        radius: impl Into<Scalar>,
-    ) -> &mut Self;
+    fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
 
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
         surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
-    ) -> &mut Self;
+    );
 
     /// Update partial half-edge to be a line segment
-    fn update_as_line_segment(&mut self) -> &mut Self;
+    fn update_as_line_segment(&mut self);
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn update_as_circle_from_radius(
-        &mut self,
-        radius: impl Into<Scalar>,
-    ) -> &mut Self {
+    fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);
 
@@ -61,15 +55,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let global_vertex = surface_vertex.read().global_form.clone();
         self.global_form.write().vertices =
             [global_vertex.clone(), global_vertex];
-
-        self
     }
 
     fn update_as_line_segment_from_points(
         &mut self,
         surface: Partial<Surface>,
         points: [impl Into<Point<2>>; 2],
-    ) -> &mut Self {
+    ) {
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut vertex = vertex.write();
             vertex.curve.write().surface = surface.clone();
@@ -83,7 +75,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.update_as_line_segment()
     }
 
-    fn update_as_line_segment(&mut self) -> &mut Self {
+    fn update_as_line_segment(&mut self) {
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
                 .read()
@@ -103,8 +95,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         }
 
         self.global_form.write().curve = curve.read().global_form.clone();
-
-        self
     }
 }
 
