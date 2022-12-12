@@ -290,7 +290,7 @@ impl Renderer {
             &self.queue,
             &mut encoder,
             &color_view,
-            egui_wgpu::renderer::ScreenDescriptor {
+            &egui_wgpu::renderer::ScreenDescriptor {
                 size_in_pixels: [
                     self.surface_config.width,
                     self.surface_config.height,

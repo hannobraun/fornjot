@@ -284,7 +284,7 @@ impl Gui {
         queue: &wgpu::Queue,
         encoder: &mut wgpu::CommandEncoder,
         color_view: &wgpu::TextureView,
-        screen_descriptor: egui_wgpu::renderer::ScreenDescriptor,
+        screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
     ) {
         let egui_output = self.context.end_frame();
         let clipped_primitives = self.context.tessellate(egui_output.shapes);
@@ -301,14 +301,14 @@ impl Gui {
             device,
             queue,
             &clipped_primitives,
-            &screen_descriptor,
+            screen_descriptor,
         );
 
         self.render_pass.execute(
             encoder,
             color_view,
             &clipped_primitives,
-            &screen_descriptor,
+            screen_descriptor,
             None,
         );
     }
