@@ -278,14 +278,12 @@ impl Gui {
         new_model_path
     }
 
-    pub(crate) fn draw(
+    pub(crate) fn prepare_draw(
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
-        encoder: &mut wgpu::CommandEncoder,
-        color_view: &wgpu::TextureView,
         screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
-    ) {
+    ) -> Vec<egui::ClippedPrimitive> {
         let egui_output = self.context.end_frame();
         let clipped_primitives = self.context.tessellate(egui_output.shapes);
 
@@ -304,10 +302,20 @@ impl Gui {
             screen_descriptor,
         );
 
+        clipped_primitives
+    }
+
+    pub(crate) fn draw(
+        &mut self,
+        encoder: &mut wgpu::CommandEncoder,
+        color_view: &wgpu::TextureView,
+        clipped_primitives: &[egui::ClippedPrimitive],
+        screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
+    ) {
         self.render_pass.execute(
             encoder,
             color_view,
-            &clipped_primitives,
+            clipped_primitives,
             screen_descriptor,
             None,
         );

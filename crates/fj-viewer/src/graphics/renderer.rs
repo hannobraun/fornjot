@@ -239,6 +239,16 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
+        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
+            size_in_pixels: [
+                self.surface_config.width,
+                self.surface_config.height,
+            ],
+            pixels_per_point: scale_factor,
+        };
+        let clipped_primitives =
+            gui.prepare_draw(&self.device, &self.queue, &screen_descriptor);
+
         // Need this block here, as a render pass only takes effect once it's
         // dropped.
         {
@@ -286,17 +296,10 @@ impl Renderer {
         };
 
         gui.draw(
-            &self.device,
-            &self.queue,
             &mut encoder,
             &color_view,
-            &egui_wgpu::renderer::ScreenDescriptor {
-                size_in_pixels: [
-                    self.surface_config.width,
-                    self.surface_config.height,
-                ],
-                pixels_per_point: scale_factor,
-            },
+            &clipped_primitives,
+            &screen_descriptor,
         );
 
         let command_buffer = encoder.finish();
