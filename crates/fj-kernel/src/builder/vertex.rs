@@ -18,7 +18,7 @@ pub trait SurfaceVertexBuilder {
 
 impl SurfaceVertexBuilder for PartialSurfaceVertex {
     fn infer_global_position(&mut self) {
-        let position = self
+        let position_surface = self
             .position
             .expect("Can't infer global position without surface position");
         let surface = self
@@ -28,7 +28,7 @@ impl SurfaceVertexBuilder for PartialSurfaceVertex {
             .expect("Can't infer global position without surface geometry");
 
         self.global_form.write().position =
-            Some(surface.point_from_surface_coords(position));
+            Some(surface.point_from_surface_coords(position_surface));
     }
 }
 
