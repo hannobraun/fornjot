@@ -1,5 +1,52 @@
 # Fornjot - Changelog
 
+## v0.28.0 (2022-12-12)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fail, if RUST_LOG is invalid ([#1435]; thank you, [@zthompson47]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Improve behavior around validation failures ([#1417], [#1418], [#1436])
+- Continue cleanup of object construction code ([#1419], [#1423], [#1428], [#1429], [#1430], [#1432], [#1433])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1412], [#1414], [#1416])
+- Fix some Clippy lints ([#1421]; thank you, [@danieleades]!)
+- Improve usage and documentation of `justfile` ([#1422], [#1425])
+
+[#1412]: https://github.com/hannobraun/Fornjot/pull/1412
+[#1414]: https://github.com/hannobraun/Fornjot/pull/1414
+[#1416]: https://github.com/hannobraun/Fornjot/pull/1416
+[#1417]: https://github.com/hannobraun/Fornjot/pull/1417
+[#1418]: https://github.com/hannobraun/Fornjot/pull/1418
+[#1419]: https://github.com/hannobraun/Fornjot/pull/1419
+[#1421]: https://github.com/hannobraun/Fornjot/pull/1421
+[#1422]: https://github.com/hannobraun/Fornjot/pull/1422
+[#1423]: https://github.com/hannobraun/Fornjot/pull/1423
+[#1425]: https://github.com/hannobraun/Fornjot/pull/1425
+[#1428]: https://github.com/hannobraun/Fornjot/pull/1428
+[#1429]: https://github.com/hannobraun/Fornjot/pull/1429
+[#1430]: https://github.com/hannobraun/Fornjot/pull/1430
+[#1432]: https://github.com/hannobraun/Fornjot/pull/1432
+[#1433]: https://github.com/hannobraun/Fornjot/pull/1433
+[#1435]: https://github.com/hannobraun/Fornjot/pull/1435
+[#1436]: https://github.com/hannobraun/Fornjot/pull/1436
+
+[@danieleades]: https://github.com/danieleades
+[@zthompson47]: https://github.com/zthompson47
+
+
 ## v0.27.0 (2022-12-05)
 
 ### End-user improvements
