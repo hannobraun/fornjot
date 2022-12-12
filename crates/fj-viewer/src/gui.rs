@@ -60,18 +60,6 @@ impl Gui {
         // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
 
         let context = egui::Context::default();
-
-        // We need to hold on to this, otherwise it might cause the egui font
-        // texture to get dropped after drawing one frame.
-        //
-        // This then results in an `egui_wgpu_backend` error of
-        // `BackendError::Internal` with message:
-        //
-        // ```
-        // Texture 0 used but not live
-        // ```
-        //
-        // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
         let renderer = egui_wgpu::Renderer::new(
             device,
             texture_format,
