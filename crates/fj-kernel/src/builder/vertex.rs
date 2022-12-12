@@ -15,6 +15,9 @@ impl VertexBuilder for PartialVertex {}
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
     /// Infer the position of the surface vertex' global form
+    ///
+    /// Updates the global vertex referenced by this surface vertex with the
+    /// inferred position, and also returns the position.
     fn infer_global_position(&mut self) -> Point<3>;
 }
 
