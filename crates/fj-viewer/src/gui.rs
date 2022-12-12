@@ -24,12 +24,15 @@ use rfd::FileDialog;
 
 use fj_math::{Aabb, Scalar};
 
-use crate::{graphics::DrawConfig, StatusReport};
+use crate::{
+    graphics::{DrawConfig, DEPTH_FORMAT, SAMPLE_COUNT},
+    StatusReport,
+};
 
 /// The GUI
 pub struct Gui {
     context: egui::Context,
-    render_pass: egui_wgpu::renderer::RenderPass,
+    renderer: egui_wgpu::Renderer,
     options: Options,
 }
 
@@ -57,24 +60,16 @@ impl Gui {
         // - https://github.com/emilk/egui/blob/eeae485629fca24a81a7251739460b671e1420f7/README.md#how-do-i-render-3d-stuff-in-an-egui-area
 
         let context = egui::Context::default();
-
-        // We need to hold on to this, otherwise it might cause the egui font
-        // texture to get dropped after drawing one frame.
-        //
-        // This then results in an `egui_wgpu_backend` error of
-        // `BackendError::Internal` with message:
-        //
-        // ```
-        // Texture 0 used but not live
-        // ```
-        //
-        // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        let render_pass =
-            egui_wgpu::renderer::RenderPass::new(device, texture_format, 1);
+        let renderer = egui_wgpu::Renderer::new(
+            device,
+            texture_format,
+            Some(DEPTH_FORMAT),
+            SAMPLE_COUNT,
+        );
 
         Self {
             context,
-            render_pass,
+            renderer,
             options: Options::default(),
         }
     }
@@ -278,38 +273,45 @@ impl Gui {
         new_model_path
     }
 
-    pub(crate) fn draw(
+    pub(crate) fn prepare_draw(
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         encoder: &mut wgpu::CommandEncoder,
-        color_view: &wgpu::TextureView,
-        screen_descriptor: egui_wgpu::renderer::ScreenDescriptor,
-    ) {
+        screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
+    ) -> Vec<egui::ClippedPrimitive> {
         let egui_output = self.context.end_frame();
         let clipped_primitives = self.context.tessellate(egui_output.shapes);
 
         for (id, image_delta) in &egui_output.textures_delta.set {
-            self.render_pass
+            self.renderer
                 .update_texture(device, queue, *id, image_delta);
         }
         for id in &egui_output.textures_delta.free {
-            self.render_pass.free_texture(id);
+            self.renderer.free_texture(id);
         }
 
-        self.render_pass.update_buffers(
+        self.renderer.update_buffers(
             device,
             queue,
+            encoder,
             &clipped_primitives,
-            &screen_descriptor,
+            screen_descriptor,
         );
 
-        self.render_pass.execute(
-            encoder,
-            color_view,
-            &clipped_primitives,
-            &screen_descriptor,
-            None,
+        clipped_primitives
+    }
+
+    pub(crate) fn draw<'s: 'r, 'r>(
+        &'s mut self,
+        render_pass: &mut wgpu::RenderPass<'r>,
+        clipped_primitives: &[egui::ClippedPrimitive],
+        screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
+    ) {
+        self.renderer.render(
+            render_pass,
+            clipped_primitives,
+            screen_descriptor,
         );
     }
 }

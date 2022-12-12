@@ -91,11 +91,30 @@ impl Renderer {
             )
             .await?;
 
-        let color_format = surface
-            .get_supported_formats(&adapter)
-            .get(0)
-            .copied()
-            .expect("Error determining preferred color format");
+        let color_format = 'color_format: {
+            let supported_formats = surface.get_supported_formats(&adapter);
+
+            // We don't really care which color format we use, as long as we
+            // find one that's supported. `egui_wgpu` prints a warning though,
+            // unless we choose one of the following ones.
+            let preferred_formats = [
+                wgpu::TextureFormat::Rgba8Unorm,
+                wgpu::TextureFormat::Bgra8Unorm,
+            ];
+
+            for format in preferred_formats {
+                if supported_formats.contains(&format) {
+                    break 'color_format format;
+                }
+            }
+
+            // None of the preferred color formats are supported. Just use one
+            // of the supported ones then.
+            supported_formats
+                .into_iter()
+                .next()
+                .expect("No color formats supported")
+        };
 
         let ScreenSize { width, height } = screen.size();
         let surface_config = wgpu::SurfaceConfiguration {
@@ -104,6 +123,17 @@ impl Renderer {
             width,
             height,
             present_mode: wgpu::PresentMode::AutoVsync,
+            // I don't understand what this option does. It was introduced with
+            // wgpu 0.14, but we had already been using premultiplied alpha
+            // blending before that. See the `BlendState` configuration of the
+            // render pipelines.
+            //
+            // For that reason, I tried to set this to `PreMultiplied`, but that
+            // failed on Linux/Wayland (with in integrated AMD GPU). Setting it
+            // to `Auto` seems to just work.
+            //
+            // @hannobraun
+            alpha_mode: wgpu::CompositeAlphaMode::Auto,
         };
         surface.configure(&device, &surface_config);
 
@@ -239,6 +269,20 @@ impl Renderer {
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
+        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
+            size_in_pixels: [
+                self.surface_config.width,
+                self.surface_config.height,
+            ],
+            pixels_per_point: scale_factor,
+        };
+        let clipped_primitives = gui.prepare_draw(
+            &self.device,
+            &self.queue,
+            &mut encoder,
+            &screen_descriptor,
+        );
+
         // Need this block here, as a render pass only takes effect once it's
         // dropped.
         {
@@ -283,21 +327,9 @@ impl Renderer {
                     drawables.lines.draw(&mut render_pass);
                 }
             }
-        };
 
-        gui.draw(
-            &self.device,
-            &self.queue,
-            &mut encoder,
-            &color_view,
-            egui_wgpu::renderer::ScreenDescriptor {
-                size_in_pixels: [
-                    self.surface_config.width,
-                    self.surface_config.height,
-                ],
-                pixels_per_point: scale_factor,
-            },
-        );
+            gui.draw(&mut render_pass, &clipped_primitives, &screen_descriptor);
+        }
 
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
