@@ -77,7 +77,9 @@ impl ShellBuilder {
                         });
                     let c = a + [Z, Z, edge_length];
 
-                    PartialSurface::plane_from_points([a, b, c])
+                    Partial::from_partial(PartialSurface::plane_from_points([
+                        a, b, c,
+                    ]))
                 })
                 .collect::<Vec<_>>();
 
@@ -119,7 +121,7 @@ impl ShellBuilder {
                         }),
                     };
                     half_edge.update_as_line_segment_from_points(
-                        Partial::from_partial(surface.clone()),
+                        surface.clone(),
                         [[Z, Z], [edge_length, Z]],
                     );
 
@@ -139,7 +141,7 @@ impl ShellBuilder {
                         position: Some(
                             from.read().position.unwrap() + [Z, edge_length],
                         ),
-                        surface: Partial::from_partial(surface.clone()),
+                        surface: surface.clone(),
                         ..Default::default()
                     };
 
@@ -214,7 +216,7 @@ impl ShellBuilder {
                                     to.read().position.unwrap()
                                         + [Z, edge_length],
                                 ),
-                                surface: Partial::from_partial(surface.clone()),
+                                surface: surface.clone(),
                                 global_form: from
                                     .read()
                                     .surface_form
