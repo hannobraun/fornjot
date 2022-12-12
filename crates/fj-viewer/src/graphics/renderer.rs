@@ -113,7 +113,7 @@ impl Renderer {
             supported_formats
                 .into_iter()
                 .next()
-                .expect("Error determining preferred color format")
+                .expect("No color formats supported")
         };
 
         let ScreenSize { width, height } = screen.size();
