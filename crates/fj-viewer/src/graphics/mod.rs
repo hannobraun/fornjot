@@ -15,5 +15,5 @@ pub use self::{
     renderer::{DrawError, Renderer, RendererInitError},
 };
 
-const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
-const SAMPLE_COUNT: u32 = 4;
+pub const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth32Float;
+pub const SAMPLE_COUNT: u32 = 4;
