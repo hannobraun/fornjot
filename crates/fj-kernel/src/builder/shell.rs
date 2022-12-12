@@ -6,7 +6,9 @@ use iter_fixed::IntoIteratorFixed;
 
 use crate::{
     algorithms::transform::TransformObject,
-    builder::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
+    builder::{
+        FaceBuilder, HalfEdgeBuilder, SurfaceBuilder, SurfaceVertexBuilder,
+    },
     insert::Insert,
     objects::{Face, FaceSet, HalfEdge, Objects, Shell, Vertex},
     partial::{
@@ -52,24 +54,27 @@ impl ShellBuilder {
             let surface =
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
-            PartialFace::default()
-                .with_exterior_polygon_from_points(
-                    surface,
-                    [[-h, -h], [h, -h], [h, h], [-h, h]],
-                )
-                .build(objects)
-                .insert(objects)
+            PartialFace::default().with_exterior_polygon_from_points(
+                surface,
+                [[-h, -h], [h, -h], [h, h], [-h, h]],
+            )
         };
 
         let (sides, top_edges) = {
             let surfaces = bottom
-                .exterior()
-                .half_edges()
+                .exterior
+                .read()
+                .half_edges
+                .iter()
                 .map(|half_edge| {
-                    let [a, b] = half_edge
-                        .vertices()
-                        .clone()
-                        .map(|vertex| vertex.global_form().position());
+                    let [a, b] =
+                        half_edge.read().vertices.clone().map(|mut vertex| {
+                            vertex
+                                .write()
+                                .surface_form
+                                .write()
+                                .infer_global_position()
+                        });
                     let c = a + [Z, Z, edge_length];
 
                     PartialSurface::plane_from_points([a, b, c])
@@ -79,23 +84,22 @@ impl ShellBuilder {
                 .collect::<Vec<_>>();
 
             let bottoms = bottom
-                .exterior()
-                .half_edges()
+                .exterior
+                .read()
+                .half_edges
+                .iter()
                 .zip(&surfaces)
                 .map(|(half_edge, surface)| {
-                    let global_edge = Partial::from_full_entry_point(
-                        half_edge.global_form().clone(),
-                    )
-                    .read()
-                    .clone();
+                    let global_edge = half_edge.read().global_form.clone();
 
                     let mut half_edge = PartialHalfEdge {
-                        vertices: global_edge.vertices.clone().map(
+                        vertices: global_edge.read().vertices.clone().map(
                             |global_vertex| {
                                 Partial::from_partial(PartialVertex {
                                     curve: Partial::from_partial(
                                         PartialCurve {
                                             global_form: global_edge
+                                                .read()
                                                 .curve
                                                 .clone(),
                                             ..Default::default()
@@ -112,8 +116,8 @@ impl ShellBuilder {
                             },
                         ),
                         global_form: Partial::from_partial(PartialGlobalEdge {
-                            curve: global_edge.curve,
-                            vertices: global_edge.vertices,
+                            curve: global_edge.read().curve.clone(),
+                            vertices: global_edge.read().vertices.clone(),
                         }),
                     };
                     half_edge.update_as_line_segment_from_points(
@@ -456,7 +460,7 @@ impl ShellBuilder {
             face.build(objects).insert(objects)
         };
 
-        self.faces.extend([bottom]);
+        self.faces.extend([bottom.build(objects).insert(objects)]);
         self.faces.extend(sides);
         self.faces.extend([top]);
 
