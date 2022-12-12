@@ -24,12 +24,15 @@ use rfd::FileDialog;
 
 use fj_math::{Aabb, Scalar};
 
-use crate::{graphics::DrawConfig, StatusReport};
+use crate::{
+    graphics::{DrawConfig, DEPTH_FORMAT, SAMPLE_COUNT},
+    StatusReport,
+};
 
 /// The GUI
 pub struct Gui {
     context: egui::Context,
-    render_pass: egui_wgpu::renderer::RenderPass,
+    render_pass: egui_wgpu::Renderer,
     options: Options,
 }
 
@@ -69,8 +72,12 @@ impl Gui {
         // ```
         //
         // See also: <https://github.com/hasenbanck/egui_wgpu_backend/blob/b2d3e7967351690c6425f37cd6d4ffb083a7e8e6/src/lib.rs#L373>
-        let render_pass =
-            egui_wgpu::renderer::RenderPass::new(device, texture_format, 1);
+        let render_pass = egui_wgpu::Renderer::new(
+            device,
+            texture_format,
+            Some(DEPTH_FORMAT),
+            SAMPLE_COUNT,
+        );
 
         Self {
             context,
@@ -282,6 +289,7 @@ impl Gui {
         &mut self,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
+        encoder: &mut wgpu::CommandEncoder,
         screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
     ) -> Vec<egui::ClippedPrimitive> {
         let egui_output = self.context.end_frame();
@@ -298,6 +306,7 @@ impl Gui {
         self.render_pass.update_buffers(
             device,
             queue,
+            encoder,
             &clipped_primitives,
             screen_descriptor,
         );
@@ -305,19 +314,16 @@ impl Gui {
         clipped_primitives
     }
 
-    pub(crate) fn draw(
-        &mut self,
-        encoder: &mut wgpu::CommandEncoder,
-        color_view: &wgpu::TextureView,
+    pub(crate) fn draw<'s: 'r, 'r>(
+        &'s mut self,
+        render_pass: &mut wgpu::RenderPass<'r>,
         clipped_primitives: &[egui::ClippedPrimitive],
         screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
     ) {
-        self.render_pass.execute(
-            encoder,
-            color_view,
+        self.render_pass.render(
+            render_pass,
             clipped_primitives,
             screen_descriptor,
-            None,
         );
     }
 }

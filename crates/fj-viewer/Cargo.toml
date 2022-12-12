@@ -14,14 +14,14 @@ categories.workspace = true
 bytemuck = "1.12.3"
 chrono = "0.4.23"
 crossbeam-channel = "0.5.6"
-egui = "0.19.0"
-egui-wgpu = "0.19.0"
+egui = "0.20.1"
+egui-wgpu = "0.20.0"
 fj-interop.workspace = true
 fj-math.workspace = true
-raw-window-handle = "0.4.3"
+raw-window-handle = "0.5.0"
 thiserror = "1.0.35"
 tracing = "0.1.37"
-wgpu_glyph = "0.17.0"
+wgpu_glyph = "0.18.0"
 
 [dependencies.rfd]
 version = "0.10.0"
@@ -29,7 +29,7 @@ default_features = false
 features = ["xdg-portal"]
 
 [dependencies.wgpu]
-version = "0.13.1"
+version = "0.14.2"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`

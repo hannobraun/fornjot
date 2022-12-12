@@ -1,11 +1,12 @@
 //! Types that describe aspects of the screen
 
+use raw_window_handle::HasRawDisplayHandle;
 pub use raw_window_handle::HasRawWindowHandle;
 
 /// Needs to be implemented by types that can serve as a screen to render to
 pub trait Screen {
     /// The window
-    type Window: HasRawWindowHandle;
+    type Window: HasRawDisplayHandle + HasRawWindowHandle;
 
     /// Access the size of the screen
     fn size(&self) -> ScreenSize;
