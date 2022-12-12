@@ -19,7 +19,7 @@ anyhow = "1.0.66"
 fj-proc.workspace = true
 
 [dependencies.serde]
-version = "1.0.149"
+version = "1.0.150"
 features = ["derive"]
 optional = true
 
