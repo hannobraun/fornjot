@@ -30,6 +30,7 @@ pub struct EventLoopHandler {
     /// context:
     /// <https://github.com/rust-windowing/winit/issues/2094>
     pub new_size: Option<ScreenSize>,
+    pub stop_drawing: bool,
 }
 
 impl EventLoopHandler {
@@ -164,28 +165,37 @@ impl EventLoopHandler {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = self.new_size.take() {
-                    self.viewer.handle_screen_resize(size);
+                    self.stop_drawing = size.width == 0 || size.height == 0;
+                    if !self.stop_drawing {
+                        self.viewer.handle_screen_resize(size);
+                    }
                 }
 
-                let pixels_per_point =
-                    self.window.window().scale_factor() as f32;
+                if !self.stop_drawing {
+                    let pixels_per_point =
+                        self.window.window().scale_factor() as f32;
 
-                self.egui_winit_state.set_pixels_per_point(pixels_per_point);
-                let egui_input =
-                    self.egui_winit_state.take_egui_input(self.window.window());
+                    self.egui_winit_state
+                        .set_pixels_per_point(pixels_per_point);
+                    let egui_input = self
+                        .egui_winit_state
+                        .take_egui_input(self.window.window());
 
-                let gui_state = GuiState {
-                    status: &self.status,
-                    model_available: self.host.is_some(),
-                };
-                let new_model_path =
-                    self.viewer.draw(pixels_per_point, egui_input, gui_state);
-
-                if let Some(model_path) = new_model_path {
-                    let model =
-                        Model::new(model_path, Parameters::empty()).unwrap();
-                    let new_host = Host::from_model(model)?;
-                    self.host = Some(new_host);
+                    let gui_state = GuiState {
+                        status: &self.status,
+                        model_available: self.host.is_some(),
+                    };
+                    let new_model_path = self.viewer.draw(
+                        pixels_per_point,
+                        egui_input,
+                        gui_state,
+                    );
+                    if let Some(model_path) = new_model_path {
+                        let model = Model::new(model_path, Parameters::empty())
+                            .unwrap();
+                        let new_host = Host::from_model(model)?;
+                        self.host = Some(new_host);
+                    }
                 }
             }
             _ => {}

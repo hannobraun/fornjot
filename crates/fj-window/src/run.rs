@@ -44,6 +44,7 @@ pub fn run(
         status: StatusReport::new(),
         held_mouse_button: None,
         new_size: None,
+        stop_drawing: false,
     };
 
     event_loop.run(move |event, _, control_flow| {
