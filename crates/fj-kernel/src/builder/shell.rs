@@ -313,7 +313,7 @@ impl ShellBuilder {
                 [a.clone(), b, c, d, a]
             };
 
-            let mut edges = Vec::new();
+            let mut half_edges = Vec::new();
             for (surface_vertices, edge) in surface_vertices
                 .as_slice()
                 .array_windows_ext()
@@ -339,11 +339,11 @@ impl ShellBuilder {
 
                 half_edge.update_as_line_segment();
 
-                edges.push(Partial::from_partial(half_edge));
+                half_edges.push(Partial::from_partial(half_edge));
             }
 
             PartialFace {
-                exterior: Partial::from_partial(PartialCycle::new(edges)),
+                exterior: Partial::from_partial(PartialCycle::new(half_edges)),
                 ..Default::default()
             }
         };
