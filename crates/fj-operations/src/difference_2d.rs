@@ -48,9 +48,8 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors.push(Partial::from_full_entry_point(
-                        cycle.clone().reverse(objects),
-                    ));
+                    interiors
+                        .push(Partial::from(cycle.clone().reverse(objects)));
                 }
             }
 
@@ -61,7 +60,7 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(Partial::from_full_entry_point(
+                interiors.push(Partial::from(
                     face.exterior().clone().reverse(objects),
                 ));
             }
@@ -84,7 +83,7 @@ impl Shape for fj::Difference2d {
             );
 
             let face = PartialFace {
-                exterior: Partial::from_full_entry_point(exterior),
+                exterior: Partial::from(exterior),
                 interiors,
                 color: Some(Color(self.color())),
             };

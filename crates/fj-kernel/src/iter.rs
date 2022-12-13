@@ -381,7 +381,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialCurve {
-            surface: Partial::from_full_entry_point(surface),
+            surface: Partial::from(surface),
             ..Default::default()
         };
         object.update_as_u_axis();
@@ -410,7 +410,7 @@ mod tests {
         let object = {
             let mut cycle = PartialCycle::default();
             cycle.with_poly_chain_from_points(
-                Partial::from_full_entry_point(surface),
+                surface,
                 [[0., 0.], [1., 0.], [0., 1.]],
             );
             cycle.close_with_line_segment();
@@ -440,7 +440,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialFace::default();
         object.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface),
+            surface,
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let object = object
@@ -506,9 +506,7 @@ mod tests {
         let object = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                Partial::from_full_entry_point(
-                    services.objects.surfaces.xy_plane(),
-                ),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
 
@@ -558,7 +556,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface),
+            surface,
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let face = face
@@ -627,7 +625,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from_full_entry_point(surface.clone()),
+            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_u_axis();

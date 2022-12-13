@@ -55,7 +55,7 @@ impl ShellBuilder {
 
             let mut face = PartialFace::default();
             face.with_exterior_polygon_from_points(
-                Partial::from_full_entry_point(surface),
+                surface,
                 [[-h, -h], [h, -h], [h, h], [-h, h]],
             );
 
@@ -276,7 +276,7 @@ impl ShellBuilder {
         };
 
         let top = {
-            let surface = Partial::from_full_entry_point(
+            let surface = Partial::from(
                 objects.surfaces.xy_plane().translate([Z, Z, h], objects),
             );
 

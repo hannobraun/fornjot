@@ -176,7 +176,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from_full_entry_point(surface.clone()),
+            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -185,9 +185,9 @@ mod tests {
             .insert(&mut services.objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
-            curve: Partial::from_full_entry_point(curve),
+            curve: Partial::from(curve),
             surface_form: Partial::from_partial(PartialSurfaceVertex {
-                surface: Partial::from_full_entry_point(surface.clone()),
+                surface: Partial::from(surface.clone()),
                 ..Default::default()
             }),
         }
@@ -200,7 +200,7 @@ mod tests {
         let expected_half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                Partial::from_full_entry_point(surface),
+                surface,
                 [[0., 0.], [0., 1.]],
             );
 

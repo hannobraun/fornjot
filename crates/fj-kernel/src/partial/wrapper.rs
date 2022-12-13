@@ -61,16 +61,6 @@ impl<T: HasPartial + 'static> Partial<T> {
         Self { inner }
     }
 
-    /// Construct a partial from the entry point to an object graph
-    ///
-    /// This is a convenience wrapper around [`Self::from_full`], passing an
-    /// empty cache to that method. It it not appropriate to call this method,
-    /// unless to start a conversion of an object graph by passing its entry
-    /// point.
-    pub fn from_full_entry_point(full: Handle<T>) -> Self {
-        Self::from(full)
-    }
-
     /// Access the ID of this partial object
     pub fn id(&self) -> ObjectId {
         self.inner.id()

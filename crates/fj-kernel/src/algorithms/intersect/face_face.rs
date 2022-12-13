@@ -94,10 +94,7 @@ mod tests {
         ]
         .map(|surface| {
             let mut face = PartialFace::default();
-            face.with_exterior_polygon_from_points(
-                Partial::from_full_entry_point(surface),
-                points,
-            );
+            face.with_exterior_polygon_from_points(surface, points);
 
             face.build(&mut services.objects)
         });
@@ -125,10 +122,7 @@ mod tests {
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             let mut face = PartialFace::default();
-            face.with_exterior_polygon_from_points(
-                Partial::from_full_entry_point(surface),
-                points,
-            );
+            face.with_exterior_polygon_from_points(surface, points);
 
             face.build(&mut services.objects)
         });
@@ -138,7 +132,7 @@ mod tests {
 
         let expected_curves = surfaces.map(|surface| {
             let mut curve = PartialCurve {
-                surface: Partial::from_full_entry_point(surface),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
             curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
