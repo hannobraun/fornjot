@@ -40,14 +40,14 @@ impl PartialHalfEdge {
             vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
                 let surface_vertex = vertex.read().surface_form.clone();
                 let global_vertex = surface_vertex.read().global_form.clone();
-                Some(global_vertex)
+                global_vertex
             });
 
         let global_form = global_form.unwrap_or_else(|| {
-            Partial::from_partial(PartialGlobalEdge::new(
-                Some(global_curve),
-                global_vertices,
-            ))
+            Partial::from_partial(PartialGlobalEdge {
+                curve: global_curve,
+                vertices: global_vertices,
+            })
         });
 
         Self {
