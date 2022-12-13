@@ -19,10 +19,10 @@ pub trait CycleBuilder {
 
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain_from_points(
-        self,
+        &mut self,
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self;
+    );
 
     /// Update the partial cycle by closing it with a line segment
     ///
@@ -86,17 +86,21 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn with_poly_chain_from_points(
-        self,
+        &mut self,
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
-        self.with_poly_chain(points.into_iter().map(|position| {
-            PartialSurfaceVertex {
-                position: Some(position.into()),
-                surface: Partial::from_full_entry_point(surface.clone()),
-                ..Default::default()
-            }
-        }))
+    ) {
+        *self =
+            self.clone()
+                .with_poly_chain(points.into_iter().map(|position| {
+                    PartialSurfaceVertex {
+                        position: Some(position.into()),
+                        surface: Partial::from_full_entry_point(
+                            surface.clone(),
+                        ),
+                        ..Default::default()
+                    }
+                }));
     }
 
     fn close_with_line_segment(&mut self) {

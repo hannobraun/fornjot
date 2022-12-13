@@ -408,11 +408,11 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let object = {
-            let mut cycle = PartialCycle::default()
-                .with_poly_chain_from_points(
-                    surface,
-                    [[0., 0.], [1., 0.], [0., 1.]],
-                );
+            let mut cycle = PartialCycle::default();
+            cycle.with_poly_chain_from_points(
+                surface,
+                [[0., 0.], [1., 0.], [0., 1.]],
+            );
             cycle.close_with_line_segment();
 
             cycle
