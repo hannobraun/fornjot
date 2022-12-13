@@ -20,47 +20,18 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
-impl PartialVertex {
-    /// Construct an instance of `PartialVertex`
-    pub fn new(
-        position: Option<Point<1>>,
-        curve: Option<Partial<Curve>>,
-        surface_form: Option<Partial<SurfaceVertex>>,
-    ) -> Self {
-        let surface = Partial::new();
-
-        let curve = curve.unwrap_or_else(|| {
-            Partial::from_partial(PartialCurve::new(
-                None,
-                Some(surface.clone()),
-                None,
-            ))
-        });
-        let surface_form = surface_form.unwrap_or_else(|| {
-            Partial::from_partial(PartialSurfaceVertex::new(
-                None,
-                Some(surface),
-                None,
-            ))
-        });
-
-        Self {
-            position,
-            curve,
-            surface_form,
-        }
-    }
-}
-
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
     fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            Some(vertex.position()),
-            Some(Partial::from_full(vertex.curve().clone(), cache)),
-            Some(Partial::from_full(vertex.surface_form().clone(), cache)),
-        )
+        Self {
+            position: Some(vertex.position()),
+            curve: Partial::from_full(vertex.curve().clone(), cache),
+            surface_form: Partial::from_full(
+                vertex.surface_form().clone(),
+                cache,
+            ),
+        }
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
@@ -83,12 +54,27 @@ impl PartialObject for PartialVertex {
 
 impl Default for PartialVertex {
     fn default() -> Self {
-        Self::new(None, None, None)
+        let surface = Partial::new();
+
+        let curve = Partial::from_partial(PartialCurve {
+            surface: surface.clone(),
+            ..Default::default()
+        });
+        let surface_form = Partial::from_partial(PartialSurfaceVertex {
+            surface,
+            ..Default::default()
+        });
+
+        Self {
+            position: None,
+            curve,
+            surface_form,
+        }
     }
 }
 
 /// A partial [`SurfaceVertex`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -100,24 +86,6 @@ pub struct PartialSurfaceVertex {
     pub global_form: Partial<GlobalVertex>,
 }
 
-impl PartialSurfaceVertex {
-    /// Construct an instance of `PartialSurfaceVertex`
-    pub fn new(
-        position: Option<Point<2>>,
-        surface: Option<Partial<Surface>>,
-        global_form: Option<Partial<GlobalVertex>>,
-    ) -> Self {
-        let surface = surface.unwrap_or_default();
-        let global_form = global_form.unwrap_or_default();
-
-        Self {
-            position,
-            surface,
-            global_form,
-        }
-    }
-}
-
 impl PartialObject for PartialSurfaceVertex {
     type Full = SurfaceVertex;
 
@@ -125,14 +93,17 @@ impl PartialObject for PartialSurfaceVertex {
         surface_vertex: &Self::Full,
         cache: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(
-            Some(surface_vertex.position()),
-            Some(Partial::from_full(surface_vertex.surface().clone(), cache)),
-            Some(Partial::from_full(
+        Self {
+            position: Some(surface_vertex.position()),
+            surface: Partial::from_full(
+                surface_vertex.surface().clone(),
+                cache,
+            ),
+            global_form: Partial::from_full(
                 surface_vertex.global_form().clone(),
                 cache,
-            )),
-        )
+            ),
+        }
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
@@ -150,24 +121,11 @@ impl PartialObject for PartialSurfaceVertex {
     }
 }
 
-impl Default for PartialSurfaceVertex {
-    fn default() -> Self {
-        Self::new(None, None, None)
-    }
-}
-
 /// A partial [`GlobalVertex`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
-}
-
-impl PartialGlobalVertex {
-    /// Construct an instance of `PartialGlobalVertex`
-    pub fn new(position: Option<Point<3>>) -> Self {
-        Self { position }
-    }
 }
 
 impl PartialObject for PartialGlobalVertex {
@@ -177,7 +135,9 @@ impl PartialObject for PartialGlobalVertex {
         global_vertex: &Self::Full,
         _: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(Some(global_vertex.position()))
+        Self {
+            position: Some(global_vertex.position()),
+        }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
@@ -186,11 +146,5 @@ impl PartialObject for PartialGlobalVertex {
             .expect("Can't build `GlobalVertex` without position");
 
         GlobalVertex::new(position)
-    }
-}
-
-impl Default for PartialGlobalVertex {
-    fn default() -> Self {
-        Self::new(None)
     }
 }

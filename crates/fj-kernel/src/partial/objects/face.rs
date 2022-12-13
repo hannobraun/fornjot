@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A partial [`Face`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialFace {
     /// The cycle that bounds the face on the outside
     pub exterior: Partial<Cycle>,
@@ -21,34 +21,18 @@ pub struct PartialFace {
     pub color: Option<Color>,
 }
 
-impl PartialFace {
-    /// Construct an instance of `PartialFace`
-    pub fn new(
-        exterior: Option<Partial<Cycle>>,
-        interiors: Vec<Partial<Cycle>>,
-        color: Option<Color>,
-    ) -> Self {
-        let exterior = exterior.unwrap_or_default();
-
-        Self {
-            exterior,
-            interiors,
-            color,
-        }
-    }
-}
-
 impl PartialObject for PartialFace {
     type Full = Face;
 
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            Some(Partial::from_full(face.exterior().clone(), cache)),
-            face.interiors()
+        Self {
+            exterior: Partial::from_full(face.exterior().clone(), cache),
+            interiors: face
+                .interiors()
                 .map(|cycle| Partial::from_full(cycle.clone(), cache))
                 .collect(),
-            Some(face.color()),
-        )
+            color: Some(face.color()),
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
@@ -58,11 +42,5 @@ impl PartialObject for PartialFace {
         let color = self.color.unwrap_or_default();
 
         Face::new(exterior, interiors, color)
-    }
-}
-
-impl Default for PartialFace {
-    fn default() -> Self {
-        Self::new(None, Vec::new(), None)
     }
 }

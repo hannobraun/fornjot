@@ -42,8 +42,9 @@ impl Shape for fj::Sketch {
 
                     Partial::from_partial(half_edge)
                 };
-                let cycle =
-                    Partial::from_partial(PartialCycle::new(vec![half_edge]));
+                let cycle = Partial::from_partial(PartialCycle {
+                    half_edges: vec![half_edge],
+                });
 
                 let face = PartialFace {
                     exterior: cycle,
