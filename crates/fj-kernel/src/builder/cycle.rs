@@ -19,7 +19,7 @@ pub trait CycleBuilder {
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     );
 
@@ -85,9 +85,11 @@ impl CycleBuilder for PartialCycle {
 
     fn with_poly_chain_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
+        let surface = surface.into();
+
         self.with_poly_chain(points.into_iter().map(|position| {
             PartialSurfaceVertex {
                 position: Some(position.into()),

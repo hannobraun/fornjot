@@ -12,14 +12,14 @@ pub trait FaceBuilder {
     /// Update the [`PartialFace`] with an exterior polygon
     fn with_exterior_polygon_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     );
 
     /// Update the [`PartialFace`] with an interior polygon
     fn with_interior_polygon_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     );
 }
@@ -27,7 +27,7 @@ pub trait FaceBuilder {
 impl FaceBuilder for PartialFace {
     fn with_exterior_polygon_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         let mut cycle = PartialCycle::default();
@@ -39,7 +39,7 @@ impl FaceBuilder for PartialFace {
 
     fn with_interior_polygon_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         let mut cycle = PartialCycle::default();

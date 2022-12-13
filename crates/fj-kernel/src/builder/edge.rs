@@ -16,7 +16,7 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     );
 
@@ -59,9 +59,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment_from_points(
         &mut self,
-        surface: Partial<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     ) {
+        let surface = surface.into();
+
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut vertex = vertex.write();
             vertex.curve.write().surface = surface.clone();
