@@ -27,7 +27,7 @@ pub trait CycleBuilder {
     /// Update the partial cycle by closing it with a line segment
     ///
     /// Builds a line segment from the last and first vertex, closing the cycle.
-    fn close_with_line_segment(self) -> Self;
+    fn close_with_line_segment(&mut self);
 }
 
 impl CycleBuilder for PartialCycle {
@@ -99,7 +99,7 @@ impl CycleBuilder for PartialCycle {
         }))
     }
 
-    fn close_with_line_segment(mut self) -> Self {
+    fn close_with_line_segment(&mut self) {
         let first = self.half_edges.first();
         let last = self.half_edges.last();
 
@@ -114,7 +114,7 @@ impl CycleBuilder for PartialCycle {
         });
 
         let [Some([first, _]), Some([_, last])] = vertices else {
-            return self;
+            return;
         };
 
         let mut half_edge = PartialHalfEdge::default();
@@ -138,6 +138,5 @@ impl CycleBuilder for PartialCycle {
         half_edge.update_as_line_segment();
 
         self.half_edges.push(Partial::from_partial(half_edge));
-        self
     }
 }

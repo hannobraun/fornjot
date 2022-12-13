@@ -407,12 +407,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let object = PartialCycle::default()
-            .with_poly_chain_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )
-            .close_with_line_segment()
+        let mut object = PartialCycle::default().with_poly_chain_from_points(
+            surface,
+            [[0., 0.], [1., 0.], [0., 1.]],
+        );
+        object.close_with_line_segment();
+        let object = object
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
