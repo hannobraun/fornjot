@@ -35,10 +35,12 @@ impl SketchBuilder {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        self.faces.extend([PartialFace::default()
+        let face = PartialFace::default()
             .with_exterior_polygon_from_points(surface, points)
             .build(objects)
-            .insert(objects)]);
+            .insert(objects);
+
+        self.faces.extend([face]);
         self
     }
 
