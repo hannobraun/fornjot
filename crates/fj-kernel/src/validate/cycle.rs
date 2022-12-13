@@ -80,9 +80,7 @@ mod tests {
         let valid = {
             let mut cycle = PartialCycle::default();
             cycle.with_poly_chain_from_points(
-                Partial::from_full_entry_point(
-                    services.objects.surfaces.xy_plane(),
-                ),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.], [0., 1.]],
             );
             cycle.close_with_line_segment();
@@ -92,9 +90,7 @@ mod tests {
         let invalid = {
             let mut half_edges = valid
                 .half_edges()
-                .map(|half_edge| {
-                    Partial::from_full_entry_point(half_edge.clone())
-                })
+                .map(|half_edge| Partial::from(half_edge.clone()))
                 .collect::<Vec<_>>();
 
             // Sever connection between the last and first half-edge in the

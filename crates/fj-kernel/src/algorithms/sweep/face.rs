@@ -87,7 +87,7 @@ mod tests {
         builder::{FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::Sketch,
-        partial::{Partial, PartialFace, PartialHalfEdge, PartialObject},
+        partial::{PartialFace, PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -113,19 +113,14 @@ mod tests {
             .sweep(UP, &mut services.objects);
 
         let mut bottom = PartialFace::default();
-        bottom.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface.clone()),
-            TRIANGLE,
-        );
+        bottom.with_exterior_polygon_from_points(surface.clone(), TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
         top.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(
-                surface.translate(UP, &mut services.objects),
-            ),
+            surface.translate(UP, &mut services.objects),
             TRIANGLE,
         );
         let top = top
@@ -140,9 +135,7 @@ mod tests {
             let half_edge = {
                 let mut half_edge = PartialHalfEdge::default();
                 half_edge.update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
+                    services.objects.surfaces.xy_plane(),
                     [a, b],
                 );
 
@@ -174,9 +167,7 @@ mod tests {
 
         let mut bottom = PartialFace::default();
         bottom.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(
-                surface.clone().translate(DOWN, &mut services.objects),
-            ),
+            surface.clone().translate(DOWN, &mut services.objects),
             TRIANGLE,
         );
         let bottom = bottom
@@ -184,10 +175,7 @@ mod tests {
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
-        top.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface),
-            TRIANGLE,
-        );
+        top.with_exterior_polygon_from_points(surface, TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -200,9 +188,7 @@ mod tests {
             let half_edge = {
                 let mut half_edge = PartialHalfEdge::default();
                 half_edge.update_as_line_segment_from_points(
-                    Partial::from_full_entry_point(
-                        services.objects.surfaces.xy_plane(),
-                    ),
+                    services.objects.surfaces.xy_plane(),
                     [a, b],
                 );
 

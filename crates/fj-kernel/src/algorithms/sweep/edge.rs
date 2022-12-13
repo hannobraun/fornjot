@@ -175,7 +175,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         };
 
         let face = PartialFace {
-            exterior: Partial::from_full_entry_point(cycle),
+            exterior: Partial::from(cycle),
             color: Some(color),
             ..Default::default()
         };
@@ -205,9 +205,7 @@ mod tests {
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                Partial::from_full_entry_point(
-                    services.objects.surfaces.xy_plane(),
-                ),
+                services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
 
@@ -220,9 +218,7 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
-            let surface = Partial::from_full_entry_point(
-                services.objects.surfaces.xz_plane(),
-            );
+            let surface = Partial::from(services.objects.surfaces.xz_plane());
 
             let bottom = {
                 let mut half_edge = PartialHalfEdge::default();
@@ -275,7 +271,7 @@ mod tests {
 
                 top.update_as_line_segment();
 
-                Partial::from_full_entry_point(
+                Partial::from(
                     top.build(&mut services.objects)
                         .insert(&mut services.objects)
                         .reverse(&mut services.objects),
@@ -301,7 +297,7 @@ mod tests {
 
                 side_down.update_as_line_segment();
 
-                Partial::from_full_entry_point(
+                Partial::from(
                     side_down
                         .build(&mut services.objects)
                         .insert(&mut services.objects)

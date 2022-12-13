@@ -121,7 +121,7 @@ mod tests {
         );
 
         let mut expected_xy = PartialCurve {
-            surface: Partial::from_full_entry_point(xy.clone()),
+            surface: Partial::from(xy.clone()),
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
@@ -129,7 +129,7 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let mut expected_xz = PartialCurve {
-            surface: Partial::from_full_entry_point(xz.clone()),
+            surface: Partial::from(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();

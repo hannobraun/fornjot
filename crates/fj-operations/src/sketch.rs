@@ -27,7 +27,7 @@ impl Shape for fj::Sketch {
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
                 let half_edge = {
-                    let surface = Partial::from_full_entry_point(surface);
+                    let surface = Partial::from(surface);
 
                     let mut half_edge = PartialHalfEdge::default();
 
@@ -61,10 +61,7 @@ impl Shape for fj::Sketch {
                     .map(Point::from);
 
                 let mut face = PartialFace::default();
-                face.with_exterior_polygon_from_points(
-                    Partial::from_full_entry_point(surface),
-                    points,
-                );
+                face.with_exterior_polygon_from_points(surface, points);
                 face.color = Some(Color(self.color()));
 
                 face.build(objects).insert(objects)

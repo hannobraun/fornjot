@@ -80,7 +80,7 @@ mod tests {
         builder::FaceBuilder,
         insert::Insert,
         objects::Face,
-        partial::{Partial, PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
@@ -98,10 +98,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface),
-            [a, b, c, d],
-        );
+        face.with_exterior_polygon_from_points(surface, [a, b, c, d]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -137,14 +134,8 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface.clone()),
-            [a, b, c, d],
-        );
-        face.with_interior_polygon_from_points(
-            Partial::from_full_entry_point(surface.clone()),
-            [e, f, g, h],
-        );
+        face.with_exterior_polygon_from_points(surface.clone(), [a, b, c, d]);
+        face.with_interior_polygon_from_points(surface.clone(), [e, f, g, h]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -203,7 +194,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.with_exterior_polygon_from_points(
-            Partial::from_full_entry_point(surface.clone()),
+            surface.clone(),
             [a, b, c, d, e],
         );
         let face = face

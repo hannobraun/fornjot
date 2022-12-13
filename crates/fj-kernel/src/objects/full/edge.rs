@@ -148,7 +148,7 @@ mod tests {
 
     use crate::{
         builder::HalfEdgeBuilder,
-        partial::{Partial, PartialHalfEdge, PartialObject},
+        partial::{PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -156,9 +156,7 @@ mod tests {
     fn global_edge_equality() {
         let mut services = Services::new();
 
-        let surface = Partial::from_full_entry_point(
-            services.objects.surfaces.xy_plane(),
-        );
+        let surface = services.objects.surfaces.xy_plane();
 
         let a = [0., 0.];
         let b = [1., 0.];
