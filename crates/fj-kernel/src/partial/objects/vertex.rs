@@ -30,11 +30,10 @@ impl PartialVertex {
         let surface = Partial::new();
 
         let curve = curve.unwrap_or_else(|| {
-            Partial::from_partial(PartialCurve::new(
-                None,
-                Some(surface.clone()),
-                None,
-            ))
+            Partial::from_partial(PartialCurve {
+                surface: surface.clone(),
+                ..Default::default()
+            })
         });
         let surface_form = surface_form.unwrap_or_else(|| {
             Partial::from_partial(PartialSurfaceVertex::new(
