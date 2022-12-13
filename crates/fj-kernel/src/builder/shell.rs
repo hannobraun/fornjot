@@ -343,7 +343,7 @@ impl ShellBuilder {
             }
 
             PartialFace {
-                exterior: Partial::from_partial(PartialCycle::new(half_edges)),
+                exterior: Partial::from_partial(PartialCycle { half_edges }),
                 ..Default::default()
             }
         };
