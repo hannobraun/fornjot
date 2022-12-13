@@ -19,10 +19,10 @@ pub trait FaceBuilder {
 
     /// Update the [`PartialFace`] with an interior polygon
     fn with_interior_polygon_from_points(
-        self,
+        &mut self,
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self;
+    );
 }
 
 impl FaceBuilder for PartialFace {
@@ -43,10 +43,10 @@ impl FaceBuilder for PartialFace {
     }
 
     fn with_interior_polygon_from_points(
-        mut self,
+        &mut self,
         surface: Handle<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
+    ) {
         let mut cycle = PartialCycle::default();
         cycle.with_poly_chain_from_points(
             Partial::from_full_entry_point(surface),
@@ -55,6 +55,5 @@ impl FaceBuilder for PartialFace {
         cycle.close_with_line_segment();
 
         self.interiors = vec![Partial::from_partial(cycle)];
-        self
     }
 }
