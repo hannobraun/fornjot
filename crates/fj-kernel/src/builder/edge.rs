@@ -91,7 +91,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
             vertex.write().position = Some([position].into());
-            vertex.write().curve = curve.clone();
         }
 
         self.global_form.write().curve = curve.read().global_form.clone();
