@@ -108,7 +108,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::{PartialCycle, PartialFace, PartialObject},
+        partial::{Partial, PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -119,26 +119,33 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface.clone(),
+        let valid = {
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface.clone()),
                 [[0., 0.], [3., 0.], [0., 3.]],
-            )
-            .with_interior_polygon_from_points(
-                surface,
+            );
+            face.with_interior_polygon_from_points(
+                Partial::from_full_entry_point(surface),
                 [[1., 1.], [1., 2.], [2., 1.]],
-            )
-            .build(&mut services.objects);
-        let invalid = {
-            let interiors = [PartialCycle::default()
-                .with_poly_chain_from_points(
-                    services.objects.surfaces.xz_plane(),
-                    [[1., 1.], [1., 2.], [2., 1.]],
-                )
-                .close_with_line_segment()
-                .build(&mut services.objects)
-                .insert(&mut services.objects)];
+            );
 
+            face.build(&mut services.objects)
+        };
+        let invalid = {
+            let mut cycle = PartialCycle::default();
+            cycle.with_poly_chain_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xz_plane(),
+                ),
+                [[1., 1.], [1., 2.], [2., 1.]],
+            );
+            cycle.close_with_line_segment();
+            let cycle = cycle
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+
+            let interiors = [cycle];
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
@@ -152,16 +159,18 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let valid = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface.clone(),
+        let valid = {
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface.clone()),
                 [[0., 0.], [3., 0.], [0., 3.]],
-            )
-            .with_interior_polygon_from_points(
-                surface,
+            );
+            face.with_interior_polygon_from_points(
+                Partial::from_full_entry_point(surface),
                 [[1., 1.], [1., 2.], [2., 1.]],
-            )
-            .build(&mut services.objects);
+            );
+            face.build(&mut services.objects)
+        };
         let invalid = {
             let interiors = valid
                 .interiors()

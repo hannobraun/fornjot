@@ -77,13 +77,18 @@ mod tests {
     fn cycle_half_edge_connections() {
         let mut services = Services::new();
 
-        let valid = PartialCycle::default()
-            .with_poly_chain_from_points(
-                services.objects.surfaces.xy_plane(),
+        let valid = {
+            let mut cycle = PartialCycle::default();
+            cycle.with_poly_chain_from_points(
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xy_plane(),
+                ),
                 [[0., 0.], [1., 0.], [0., 1.]],
-            )
-            .close_with_line_segment()
-            .build(&mut services.objects);
+            );
+            cycle.close_with_line_segment();
+
+            cycle.build(&mut services.objects)
+        };
         let invalid = {
             let mut half_edges = valid
                 .half_edges()

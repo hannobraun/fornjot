@@ -1,13 +1,12 @@
-use std::{array, ops::Deref};
+use std::ops::Deref;
 
-use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
+use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Objects, Sketch, Vertex},
+    objects::{Objects, Sketch},
     partial::{
-        Partial, PartialCurve, PartialCycle, PartialFace, PartialGlobalEdge,
-        PartialHalfEdge, PartialObject, PartialSurfaceVertex, PartialVertex,
+        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
     },
     services::Service,
 };
@@ -27,45 +26,18 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                // Circles have just a single round edge with no vertices. So
-                // none need to be added here.
-
                 let half_edge = {
                     let surface = Partial::from_full_entry_point(surface);
-                    let curve = Partial::from_partial(PartialCurve {
-                        surface: surface.clone(),
-                        ..Default::default()
-                    });
-                    let vertices = array::from_fn(|_| {
-                        Partial::from_partial(PartialVertex {
-                            curve: curve.clone(),
-                            surface_form: Partial::from_partial(
-                                PartialSurfaceVertex {
-                                    surface: surface.clone(),
-                                    ..Default::default()
-                                },
-                            ),
-                            ..Default::default()
-                        })
-                    });
-                    let global_vertices = vertices.each_ref_ext().map(
-                        |vertex: &Partial<Vertex>| {
-                            vertex
-                                .read()
-                                .surface_form
-                                .read()
-                                .global_form
-                                .clone()
-                        },
-                    );
 
-                    let mut half_edge = PartialHalfEdge {
-                        vertices,
-                        global_form: Partial::from_partial(PartialGlobalEdge {
-                            curve: curve.read().global_form.clone(),
-                            vertices: global_vertices,
-                        }),
-                    };
+                    let mut half_edge = PartialHalfEdge::default();
+
+                    half_edge.curve().write().surface = surface.clone();
+
+                    for vertex in &mut half_edge.vertices {
+                        vertex.write().surface_form.write().surface =
+                            surface.clone();
+                    }
+
                     half_edge.update_as_circle_from_radius(circle.radius());
 
                     Partial::from_partial(half_edge)
@@ -87,8 +59,11 @@ impl Shape for fj::Sketch {
                     .map(|fj::SketchSegment::LineTo { point }| point)
                     .map(Point::from);
 
-                let mut face = PartialFace::default()
-                    .with_exterior_polygon_from_points(surface, points);
+                let mut face = PartialFace::default();
+                face.with_exterior_polygon_from_points(
+                    Partial::from_full_entry_point(surface),
+                    points,
+                );
                 face.color = Some(Color(self.color()));
 
                 face.build(objects).insert(objects)

@@ -112,16 +112,23 @@ mod tests {
             .build(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
-        let bottom = PartialFace::default()
-            .with_exterior_polygon_from_points(surface.clone(), TRIANGLE)
+        let mut bottom = PartialFace::default();
+        bottom.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface.clone()),
+            TRIANGLE,
+        );
+        let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
-        let top = PartialFace::default()
-            .with_exterior_polygon_from_points(
+        let mut top = PartialFace::default();
+        top.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(
                 surface.translate(UP, &mut services.objects),
-                TRIANGLE,
-            )
+            ),
+            TRIANGLE,
+        );
+        let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
@@ -165,16 +172,23 @@ mod tests {
             .build(&mut services.objects)
             .sweep(DOWN, &mut services.objects);
 
-        let bottom = PartialFace::default()
-            .with_exterior_polygon_from_points(
+        let mut bottom = PartialFace::default();
+        bottom.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(
                 surface.clone().translate(DOWN, &mut services.objects),
-                TRIANGLE,
-            )
+            ),
+            TRIANGLE,
+        );
+        let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
-        let top = PartialFace::default()
-            .with_exterior_polygon_from_points(surface, TRIANGLE)
+        let mut top = PartialFace::default();
+        top.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface),
+            TRIANGLE,
+        );
+        let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
 

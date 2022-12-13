@@ -4,7 +4,6 @@ use fj_math::Point;
 use crate::{
     objects::{Surface, SurfaceVertex},
     partial::{Partial, PartialCycle, PartialHalfEdge, PartialSurfaceVertex},
-    storage::Handle,
 };
 
 use super::HalfEdgeBuilder;
@@ -13,28 +12,28 @@ use super::HalfEdgeBuilder;
 pub trait CycleBuilder {
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain(
-        self,
+        &mut self,
         vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
-    ) -> Self;
+    );
 
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain_from_points(
-        self,
-        surface: Handle<Surface>,
+        &mut self,
+        surface: Partial<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self;
+    );
 
     /// Update the partial cycle by closing it with a line segment
     ///
     /// Builds a line segment from the last and first vertex, closing the cycle.
-    fn close_with_line_segment(self) -> Self;
+    fn close_with_line_segment(&mut self);
 }
 
 impl CycleBuilder for PartialCycle {
     fn with_poly_chain(
-        mut self,
+        &mut self,
         vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
-    ) -> Self {
+    ) {
         let vertices = vertices.into_iter();
 
         let mut previous: Option<Partial<SurfaceVertex>> =
@@ -82,24 +81,23 @@ impl CycleBuilder for PartialCycle {
         }
 
         self.half_edges.extend(half_edges);
-        self
     }
 
     fn with_poly_chain_from_points(
-        self,
-        surface: Handle<Surface>,
+        &mut self,
+        surface: Partial<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
+    ) {
         self.with_poly_chain(points.into_iter().map(|position| {
             PartialSurfaceVertex {
                 position: Some(position.into()),
-                surface: Partial::from_full_entry_point(surface.clone()),
+                surface: surface.clone(),
                 ..Default::default()
             }
-        }))
+        }));
     }
 
-    fn close_with_line_segment(mut self) -> Self {
+    fn close_with_line_segment(&mut self) {
         let first = self.half_edges.first();
         let last = self.half_edges.last();
 
@@ -114,7 +112,7 @@ impl CycleBuilder for PartialCycle {
         });
 
         let [Some([first, _]), Some([_, last])] = vertices else {
-            return self;
+            return;
         };
 
         let mut half_edge = PartialHalfEdge::default();
@@ -138,6 +136,5 @@ impl CycleBuilder for PartialCycle {
         half_edge.update_as_line_segment();
 
         self.half_edges.push(Partial::from_partial(half_edge));
-        self
     }
 }

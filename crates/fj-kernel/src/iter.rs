@@ -407,14 +407,18 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let object = PartialCycle::default()
-            .with_poly_chain_from_points(
-                surface,
+        let object = {
+            let mut cycle = PartialCycle::default();
+            cycle.with_poly_chain_from_points(
+                Partial::from_full_entry_point(surface),
                 [[0., 0.], [1., 0.], [0., 1.]],
-            )
-            .close_with_line_segment()
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+            );
+            cycle.close_with_line_segment();
+
+            cycle
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -434,11 +438,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let object = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )
+        let mut object = PartialFace::default();
+        object.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface),
+            [[0., 0.], [1., 0.], [0., 1.]],
+        );
+        let object = object
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
@@ -551,11 +556,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )
+        let mut face = PartialFace::default();
+        face.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface),
+            [[0., 0.], [1., 0.], [0., 1.]],
+        );
+        let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let object = Sketch::builder()

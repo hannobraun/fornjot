@@ -93,9 +93,13 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            PartialFace::default()
-                .with_exterior_polygon_from_points(surface, points)
-                .build(&mut services.objects)
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface),
+                points,
+            );
+
+            face.build(&mut services.objects)
         });
 
         let intersection =
@@ -120,9 +124,13 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            PartialFace::default()
-                .with_exterior_polygon_from_points(surface, points)
-                .build(&mut services.objects)
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface),
+                points,
+            );
+
+            face.build(&mut services.objects)
         });
 
         let intersection =

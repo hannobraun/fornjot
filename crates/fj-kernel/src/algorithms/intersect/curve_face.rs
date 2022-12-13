@@ -185,10 +185,19 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = PartialFace::default()
-            .with_exterior_polygon_from_points(surface.clone(), exterior)
-            .with_interior_polygon_from_points(surface, interior)
-            .build(&mut services.objects);
+        let face = {
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface.clone()),
+                exterior,
+            );
+            face.with_interior_polygon_from_points(
+                Partial::from_full_entry_point(surface),
+                interior,
+            );
+
+            face.build(&mut services.objects)
+        };
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
