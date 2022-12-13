@@ -27,9 +27,6 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                // Circles have just a single round edge with no vertices. So
-                // none need to be added here.
-
                 let half_edge = {
                     let surface = Partial::from_full_entry_point(surface);
                     let curve = Partial::from_partial(PartialCurve {
