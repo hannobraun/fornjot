@@ -60,7 +60,10 @@ impl Shape for fj::Sketch {
                     .map(Point::from);
 
                 let mut face = PartialFace::default();
-                face.with_exterior_polygon_from_points(surface, points);
+                face.with_exterior_polygon_from_points(
+                    Partial::from_full_entry_point(surface),
+                    points,
+                );
                 face.color = Some(Color(self.color()));
 
                 face.build(objects).insert(objects)

@@ -113,14 +113,19 @@ mod tests {
             .sweep(UP, &mut services.objects);
 
         let mut bottom = PartialFace::default();
-        bottom.with_exterior_polygon_from_points(surface.clone(), TRIANGLE);
+        bottom.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface.clone()),
+            TRIANGLE,
+        );
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
         top.with_exterior_polygon_from_points(
-            surface.translate(UP, &mut services.objects),
+            Partial::from_full_entry_point(
+                surface.translate(UP, &mut services.objects),
+            ),
             TRIANGLE,
         );
         let top = top
@@ -169,7 +174,9 @@ mod tests {
 
         let mut bottom = PartialFace::default();
         bottom.with_exterior_polygon_from_points(
-            surface.clone().translate(DOWN, &mut services.objects),
+            Partial::from_full_entry_point(
+                surface.clone().translate(DOWN, &mut services.objects),
+            ),
             TRIANGLE,
         );
         let bottom = bottom
@@ -177,7 +184,10 @@ mod tests {
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
-        top.with_exterior_polygon_from_points(surface, TRIANGLE);
+        top.with_exterior_polygon_from_points(
+            Partial::from_full_entry_point(surface),
+            TRIANGLE,
+        );
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);

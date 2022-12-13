@@ -187,7 +187,10 @@ mod tests {
 
         let face = {
             let mut face = PartialFace::default();
-            face.with_exterior_polygon_from_points(surface.clone(), exterior);
+            face.with_exterior_polygon_from_points(
+                Partial::from_full_entry_point(surface.clone()),
+                exterior,
+            );
             face.with_interior_polygon_from_points(
                 Partial::from_full_entry_point(surface),
                 interior,

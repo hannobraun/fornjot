@@ -55,7 +55,7 @@ impl ShellBuilder {
 
             let mut face = PartialFace::default();
             face.with_exterior_polygon_from_points(
-                surface,
+                Partial::from_full_entry_point(surface),
                 [[-h, -h], [h, -h], [h, h], [-h, h]],
             );
 

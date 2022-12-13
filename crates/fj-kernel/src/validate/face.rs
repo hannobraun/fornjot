@@ -122,7 +122,7 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.with_exterior_polygon_from_points(
-                surface.clone(),
+                Partial::from_full_entry_point(surface.clone()),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
             face.with_interior_polygon_from_points(
@@ -162,7 +162,7 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.with_exterior_polygon_from_points(
-                surface.clone(),
+                Partial::from_full_entry_point(surface.clone()),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
             face.with_interior_polygon_from_points(

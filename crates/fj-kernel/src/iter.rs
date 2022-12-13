@@ -440,7 +440,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialFace::default();
         object.with_exterior_polygon_from_points(
-            surface,
+            Partial::from_full_entry_point(surface),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let object = object
@@ -558,7 +558,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.with_exterior_polygon_from_points(
-            surface,
+            Partial::from_full_entry_point(surface),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let face = face
