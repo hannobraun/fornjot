@@ -53,10 +53,13 @@ impl ShellBuilder {
             let surface =
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
-            PartialFace::default().with_exterior_polygon_from_points(
+            let mut face = PartialFace::default();
+            face.with_exterior_polygon_from_points(
                 surface,
                 [[-h, -h], [h, -h], [h, h], [-h, h]],
-            )
+            );
+
+            face
         };
 
         let (sides, top_edges) = {

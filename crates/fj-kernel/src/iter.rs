@@ -438,11 +438,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let object = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )
+        let mut object = PartialFace::default();
+        object.with_exterior_polygon_from_points(
+            surface,
+            [[0., 0.], [1., 0.], [0., 1.]],
+        );
+        let object = object
             .build(&mut services.objects)
             .insert(&mut services.objects);
 
@@ -555,11 +556,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let face = PartialFace::default()
-            .with_exterior_polygon_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            )
+        let mut face = PartialFace::default();
+        face.with_exterior_polygon_from_points(
+            surface,
+            [[0., 0.], [1., 0.], [0., 1.]],
+        );
+        let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let object = Sketch::builder()
