@@ -14,8 +14,8 @@ pub struct PartialSurface {
 
 impl PartialSurface {
     /// Construct an instance of `PartialSurface`
-    pub fn new(geometry: Option<SurfaceGeometry>) -> Self {
-        Self { geometry }
+    pub fn new() -> Self {
+        Self { geometry: None }
     }
 }
 
@@ -39,6 +39,6 @@ impl PartialObject for PartialSurface {
 
 impl Default for PartialSurface {
     fn default() -> Self {
-        Self::new(None)
+        Self::new()
     }
 }

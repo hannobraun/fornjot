@@ -13,8 +13,10 @@ pub struct PartialCycle {
 
 impl PartialCycle {
     /// Construct an instance of `PartialCycle`
-    pub fn new(half_edges: Vec<Partial<HalfEdge>>) -> Self {
-        Self { half_edges }
+    pub fn new() -> Self {
+        Self {
+            half_edges: Vec::new(),
+        }
     }
 
     /// Access the surface of the [`Cycle`]
@@ -50,6 +52,6 @@ impl PartialObject for PartialCycle {
 
 impl Default for PartialCycle {
     fn default() -> Self {
-        Self::new(Vec::new())
+        Self::new()
     }
 }

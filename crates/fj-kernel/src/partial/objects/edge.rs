@@ -1,3 +1,5 @@
+use std::array;
+
 use fj_interop::ext::ArrayExt;
 
 use crate::{
@@ -20,18 +22,13 @@ pub struct PartialHalfEdge {
 
 impl PartialHalfEdge {
     /// Construct an instance of `PartialHalfEdge`
-    pub fn new(
-        vertices: [Option<Partial<Vertex>>; 2],
-        global_form: Option<Partial<GlobalEdge>>,
-    ) -> Self {
+    pub fn new() -> Self {
         let curve = Partial::<Curve>::new();
 
-        let vertices = vertices.map(|vertex| {
-            vertex.unwrap_or_else(|| {
-                Partial::from_partial(PartialVertex {
-                    curve: curve.clone(),
-                    ..Default::default()
-                })
+        let vertices = array::from_fn(|_| {
+            Partial::from_partial(PartialVertex {
+                curve: curve.clone(),
+                ..Default::default()
             })
         });
 
@@ -43,11 +40,9 @@ impl PartialHalfEdge {
                 global_vertex
             });
 
-        let global_form = global_form.unwrap_or_else(|| {
-            Partial::from_partial(PartialGlobalEdge {
-                curve: global_curve,
-                vertices: global_vertices,
-            })
+        let global_form = Partial::from_partial(PartialGlobalEdge {
+            curve: global_curve,
+            vertices: global_vertices,
         });
 
         Self {
@@ -92,7 +87,7 @@ impl PartialObject for PartialHalfEdge {
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        Self::new([None, None], None)
+        Self::new()
     }
 }
 
@@ -108,14 +103,11 @@ pub struct PartialGlobalEdge {
 
 impl PartialGlobalEdge {
     /// Construct an instance of `PartialGlobalEdge`
-    pub fn new(
-        curve: Option<Partial<GlobalCurve>>,
-        vertices: [Option<Partial<GlobalVertex>>; 2],
-    ) -> Self {
-        let curve = curve.unwrap_or_default();
-        let vertices = vertices.map(Option::unwrap_or_default);
-
-        Self { curve, vertices }
+    pub fn new() -> Self {
+        Self {
+            curve: Partial::new(),
+            vertices: array::from_fn(|_| Partial::new()),
+        }
     }
 }
 
@@ -145,6 +137,6 @@ impl PartialObject for PartialGlobalEdge {
 
 impl Default for PartialGlobalEdge {
     fn default() -> Self {
-        Self::new(None, [None, None])
+        Self::new()
     }
 }

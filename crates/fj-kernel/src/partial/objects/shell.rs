@@ -13,8 +13,8 @@ pub struct PartialShell {
 
 impl PartialShell {
     /// Construct an instance of `PartialShell`
-    pub fn new(faces: Vec<Partial<Face>>) -> Self {
-        Self { faces }
+    pub fn new() -> Self {
+        Self { faces: Vec::new() }
     }
 }
 
@@ -39,6 +39,6 @@ impl PartialObject for PartialShell {
 
 impl Default for PartialShell {
     fn default() -> Self {
-        Self::new(Vec::new())
+        Self::new()
     }
 }

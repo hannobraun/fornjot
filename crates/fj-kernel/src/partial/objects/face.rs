@@ -23,17 +23,11 @@ pub struct PartialFace {
 
 impl PartialFace {
     /// Construct an instance of `PartialFace`
-    pub fn new(
-        exterior: Option<Partial<Cycle>>,
-        interiors: Vec<Partial<Cycle>>,
-        color: Option<Color>,
-    ) -> Self {
-        let exterior = exterior.unwrap_or_default();
-
+    pub fn new() -> Self {
         Self {
-            exterior,
-            interiors,
-            color,
+            exterior: Partial::new(),
+            interiors: Vec::new(),
+            color: None,
         }
     }
 }
@@ -64,6 +58,6 @@ impl PartialObject for PartialFace {
 
 impl Default for PartialFace {
     fn default() -> Self {
-        Self::new(None, Vec::new(), None)
+        Self::new()
     }
 }

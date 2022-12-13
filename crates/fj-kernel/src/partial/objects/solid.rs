@@ -13,8 +13,8 @@ pub struct PartialSolid {
 
 impl PartialSolid {
     /// Construct an instance of `PartialSolid`
-    pub fn new(shells: Vec<Partial<Shell>>) -> Self {
-        Self { shells }
+    pub fn new() -> Self {
+        Self { shells: Vec::new() }
     }
 }
 
@@ -38,6 +38,6 @@ impl PartialObject for PartialSolid {
 
 impl Default for PartialSolid {
     fn default() -> Self {
-        Self::new(Vec::new())
+        Self::new()
     }
 }

@@ -20,18 +20,11 @@ pub struct PartialCurve {
 
 impl PartialCurve {
     /// Construct an instance of `PartialCurve`
-    pub fn new(
-        path: Option<SurfacePath>,
-        surface: Option<Partial<Surface>>,
-        global_form: Option<Partial<GlobalCurve>>,
-    ) -> Self {
-        let surface = surface.unwrap_or_default();
-        let global_form = global_form.unwrap_or_default();
-
+    pub fn new() -> Self {
         Self {
-            path,
-            surface,
-            global_form,
+            path: None,
+            surface: Partial::default(),
+            global_form: Partial::default(),
         }
     }
 }
@@ -58,7 +51,7 @@ impl PartialObject for PartialCurve {
 
 impl Default for PartialCurve {
     fn default() -> Self {
-        Self::new(None, None, None)
+        Self::new()
     }
 }
 

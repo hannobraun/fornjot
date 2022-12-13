@@ -13,8 +13,8 @@ pub struct PartialSketch {
 
 impl PartialSketch {
     /// Construct an instance of `PartialSketch`
-    pub fn new(faces: Vec<Partial<Face>>) -> Self {
-        Self { faces }
+    pub fn new() -> Self {
+        Self { faces: Vec::new() }
     }
 }
 
@@ -39,6 +39,6 @@ impl PartialObject for PartialSketch {
 
 impl Default for PartialSketch {
     fn default() -> Self {
-        Self::new(Vec::new())
+        Self::new()
     }
 }
