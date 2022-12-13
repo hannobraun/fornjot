@@ -127,56 +127,28 @@ impl ShellBuilder {
                         let from = from.read();
                         from.surface_form.clone()
                     };
-                    let to_surface = PartialSurfaceVertex {
-                        position: Some(
-                            from_surface.read().position.unwrap()
-                                + [Z, edge_length],
-                        ),
-                        surface: surface.clone(),
-                        ..Default::default()
-                    };
+                    let to_position = from_surface.read().position.unwrap()
+                        + [Z, edge_length];
 
-                    let vertices = [
-                        PartialVertex {
-                            curve: Partial::from_partial(PartialCurve {
-                                surface: from_surface.read().surface.clone(),
-                                ..Default::default()
-                            }),
-                            surface_form: from_surface.clone(),
-                            ..Default::default()
-                        },
-                        PartialVertex {
-                            curve: Partial::from_partial(PartialCurve {
-                                surface: to_surface.surface.clone(),
-                                ..Default::default()
-                            }),
-                            surface_form: Partial::from_partial(to_surface),
-                            ..Default::default()
-                        },
-                    ]
-                    .map(Partial::<Vertex>::from_partial);
+                    let mut half_edge = PartialHalfEdge::default();
 
-                    let global_curve = {
-                        let [vertex, _] = &vertices;
-                        vertex.read().curve.read().global_form.clone()
-                    };
-                    let global_vertices =
-                        vertices.each_ref_ext().map(|vertex| {
-                            vertex
-                                .read()
-                                .surface_form
-                                .read()
-                                .global_form
-                                .clone()
-                        });
+                    half_edge.curve().write().surface = surface.clone();
 
-                    let mut half_edge = PartialHalfEdge {
-                        vertices,
-                        global_form: Partial::from_partial(PartialGlobalEdge {
-                            curve: global_curve,
-                            vertices: global_vertices,
-                        }),
-                    };
+                    {
+                        let [from, to] = &mut half_edge.vertices;
+                        from.write().surface_form = from_surface.clone();
+
+                        let mut to = to.write();
+                        let mut to_surface = to.surface_form.write();
+                        to_surface.position = Some(to_position);
+                        to_surface.surface = surface.clone();
+
+                        half_edge.global_form.write().vertices = [
+                            from_surface.read().global_form.clone(),
+                            to_surface.global_form.clone(),
+                        ];
+                    }
+
                     half_edge.update_as_line_segment();
 
                     Partial::from_partial(half_edge)
