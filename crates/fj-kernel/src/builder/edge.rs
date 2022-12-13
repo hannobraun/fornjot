@@ -87,13 +87,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let mut curve = self.curve();
         curve.write().update_as_line_from_points(points_surface);
+        self.global_form.write().curve = curve.read().global_form.clone();
 
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
             vertex.write().position = Some([position].into());
         }
-
-        self.global_form.write().curve = curve.read().global_form.clone();
     }
 }
 
