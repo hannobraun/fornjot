@@ -23,32 +23,7 @@ pub struct PartialHalfEdge {
 impl PartialHalfEdge {
     /// Construct an instance of `PartialHalfEdge`
     pub fn new() -> Self {
-        let curve = Partial::<Curve>::new();
-
-        let vertices = array::from_fn(|_| {
-            Partial::from_partial(PartialVertex {
-                curve: curve.clone(),
-                ..Default::default()
-            })
-        });
-
-        let global_curve = curve.read().global_form.clone();
-        let global_vertices =
-            vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
-                let surface_vertex = vertex.read().surface_form.clone();
-                let global_vertex = surface_vertex.read().global_form.clone();
-                global_vertex
-            });
-
-        let global_form = Partial::from_partial(PartialGlobalEdge {
-            curve: global_curve,
-            vertices: global_vertices,
-        });
-
-        Self {
-            vertices,
-            global_form,
-        }
+        Self::default()
     }
 
     /// Access the curve the partial edge is defined on
@@ -87,12 +62,37 @@ impl PartialObject for PartialHalfEdge {
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        Self::new()
+        let curve = Partial::<Curve>::new();
+
+        let vertices = array::from_fn(|_| {
+            Partial::from_partial(PartialVertex {
+                curve: curve.clone(),
+                ..Default::default()
+            })
+        });
+
+        let global_curve = curve.read().global_form.clone();
+        let global_vertices =
+            vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
+                let surface_vertex = vertex.read().surface_form.clone();
+                let global_vertex = surface_vertex.read().global_form.clone();
+                global_vertex
+            });
+
+        let global_form = Partial::from_partial(PartialGlobalEdge {
+            curve: global_curve,
+            vertices: global_vertices,
+        });
+
+        Self {
+            vertices,
+            global_form,
+        }
     }
 }
 
 /// A partial [`GlobalEdge`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
     /// The curve that defines the edge's geometry
     pub curve: Partial<GlobalCurve>,
@@ -104,10 +104,7 @@ pub struct PartialGlobalEdge {
 impl PartialGlobalEdge {
     /// Construct an instance of `PartialGlobalEdge`
     pub fn new() -> Self {
-        Self {
-            curve: Partial::new(),
-            vertices: array::from_fn(|_| Partial::new()),
-        }
+        Self::default()
     }
 }
 
@@ -132,11 +129,5 @@ impl PartialObject for PartialGlobalEdge {
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
 
         GlobalEdge::new(curve, vertices)
-    }
-}
-
-impl Default for PartialGlobalEdge {
-    fn default() -> Self {
-        Self::new()
     }
 }

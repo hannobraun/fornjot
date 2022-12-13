@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Shell`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialShell {
     /// The faces that make up the shell
     pub faces: Vec<Partial<Face>>,
@@ -14,7 +14,7 @@ pub struct PartialShell {
 impl PartialShell {
     /// Construct an instance of `PartialShell`
     pub fn new() -> Self {
-        Self { faces: Vec::new() }
+        Self::default()
     }
 }
 
@@ -34,11 +34,5 @@ impl PartialObject for PartialShell {
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let faces = self.faces.into_iter().map(|face| face.build(objects));
         Shell::new(faces)
-    }
-}
-
-impl Default for PartialShell {
-    fn default() -> Self {
-        Self::new()
     }
 }

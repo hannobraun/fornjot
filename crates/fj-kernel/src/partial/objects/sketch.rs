@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Sketch`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSketch {
     /// The faces that make up the sketch
     pub faces: Vec<Partial<Face>>,
@@ -14,7 +14,7 @@ pub struct PartialSketch {
 impl PartialSketch {
     /// Construct an instance of `PartialSketch`
     pub fn new() -> Self {
-        Self { faces: Vec::new() }
+        Self::default()
     }
 }
 
@@ -34,11 +34,5 @@ impl PartialObject for PartialSketch {
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let faces = self.faces.into_iter().map(|face| face.build(objects));
         Sketch::new(faces)
-    }
-}
-
-impl Default for PartialSketch {
-    fn default() -> Self {
-        Self::new()
     }
 }

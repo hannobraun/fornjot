@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Cycle`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
@@ -14,9 +14,7 @@ pub struct PartialCycle {
 impl PartialCycle {
     /// Construct an instance of `PartialCycle`
     pub fn new() -> Self {
-        Self {
-            half_edges: Vec::new(),
-        }
+        Self::default()
     }
 
     /// Access the surface of the [`Cycle`]
@@ -47,11 +45,5 @@ impl PartialObject for PartialCycle {
             .map(|half_edge| half_edge.build(objects));
 
         Cycle::new(half_edges)
-    }
-}
-
-impl Default for PartialCycle {
-    fn default() -> Self {
-        Self::new()
     }
 }

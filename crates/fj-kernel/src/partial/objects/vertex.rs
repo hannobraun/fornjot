@@ -23,22 +23,7 @@ pub struct PartialVertex {
 impl PartialVertex {
     /// Construct an instance of `PartialVertex`
     pub fn new() -> Self {
-        let surface = Partial::new();
-
-        let curve = Partial::from_partial(PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        });
-        let surface_form = Partial::from_partial(PartialSurfaceVertex {
-            surface,
-            ..Default::default()
-        });
-
-        Self {
-            position: None,
-            curve,
-            surface_form,
-        }
+        Self::default()
     }
 }
 
@@ -76,12 +61,27 @@ impl PartialObject for PartialVertex {
 
 impl Default for PartialVertex {
     fn default() -> Self {
-        Self::new()
+        let surface = Partial::new();
+
+        let curve = Partial::from_partial(PartialCurve {
+            surface: surface.clone(),
+            ..Default::default()
+        });
+        let surface_form = Partial::from_partial(PartialSurfaceVertex {
+            surface,
+            ..Default::default()
+        });
+
+        Self {
+            position: None,
+            curve,
+            surface_form,
+        }
     }
 }
 
 /// A partial [`SurfaceVertex`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
     /// The position of the vertex on the surface
     pub position: Option<Point<2>>,
@@ -96,11 +96,7 @@ pub struct PartialSurfaceVertex {
 impl PartialSurfaceVertex {
     /// Construct an instance of `PartialSurfaceVertex`
     pub fn new() -> Self {
-        Self {
-            position: None,
-            surface: Partial::new(),
-            global_form: Partial::new(),
-        }
+        Self::default()
     }
 }
 
@@ -139,14 +135,8 @@ impl PartialObject for PartialSurfaceVertex {
     }
 }
 
-impl Default for PartialSurfaceVertex {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 /// A partial [`GlobalVertex`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
@@ -155,7 +145,7 @@ pub struct PartialGlobalVertex {
 impl PartialGlobalVertex {
     /// Construct an instance of `PartialGlobalVertex`
     pub fn new() -> Self {
-        Self { position: None }
+        Self::default()
     }
 }
 
@@ -177,11 +167,5 @@ impl PartialObject for PartialGlobalVertex {
             .expect("Can't build `GlobalVertex` without position");
 
         GlobalVertex::new(position)
-    }
-}
-
-impl Default for PartialGlobalVertex {
-    fn default() -> Self {
-        Self::new()
     }
 }

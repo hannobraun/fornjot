@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Solid`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSolid {
     /// The shells that make up the solid
     pub shells: Vec<Partial<Shell>>,
@@ -14,7 +14,7 @@ pub struct PartialSolid {
 impl PartialSolid {
     /// Construct an instance of `PartialSolid`
     pub fn new() -> Self {
-        Self { shells: Vec::new() }
+        Self::default()
     }
 }
 
@@ -33,11 +33,5 @@ impl PartialObject for PartialSolid {
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let shells = self.shells.into_iter().map(|shell| shell.build(objects));
         Solid::new(shells)
-    }
-}
-
-impl Default for PartialSolid {
-    fn default() -> Self {
-        Self::new()
     }
 }

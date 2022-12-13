@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// A partial [`Surface`]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct PartialSurface {
     /// The surface's geometry
     pub geometry: Option<SurfaceGeometry>,
@@ -15,7 +15,7 @@ pub struct PartialSurface {
 impl PartialSurface {
     /// Construct an instance of `PartialSurface`
     pub fn new() -> Self {
-        Self { geometry: None }
+        Self::default()
     }
 }
 
@@ -34,11 +34,5 @@ impl PartialObject for PartialSurface {
             .expect("Can't build `Surface` without geometry");
 
         Surface::new(geometry)
-    }
-}
-
-impl Default for PartialSurface {
-    fn default() -> Self {
-        Self::new()
     }
 }
