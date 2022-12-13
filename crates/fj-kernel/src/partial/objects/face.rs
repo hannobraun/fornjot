@@ -21,13 +21,6 @@ pub struct PartialFace {
     pub color: Option<Color>,
 }
 
-impl PartialFace {
-    /// Construct an instance of `PartialFace`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialFace {
     type Full = Face;
 

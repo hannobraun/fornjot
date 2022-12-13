@@ -18,13 +18,6 @@ pub struct PartialCurve {
     pub global_form: Partial<GlobalCurve>,
 }
 
-impl PartialCurve {
-    /// Construct an instance of `PartialCurve`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialCurve {
     type Full = Curve;
 
@@ -48,13 +41,6 @@ impl PartialObject for PartialCurve {
 /// A partial [`GlobalCurve`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalCurve;
-
-impl PartialGlobalCurve {
-    /// Construct an instance of `PartialGlobalCurve`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
 
 impl PartialObject for PartialGlobalCurve {
     type Full = GlobalCurve;

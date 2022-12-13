@@ -11,13 +11,6 @@ pub struct PartialShell {
     pub faces: Vec<Partial<Face>>,
 }
 
-impl PartialShell {
-    /// Construct an instance of `PartialShell`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialShell {
     type Full = Shell;
 

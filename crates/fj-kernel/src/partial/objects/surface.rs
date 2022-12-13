@@ -12,13 +12,6 @@ pub struct PartialSurface {
     pub geometry: Option<SurfaceGeometry>,
 }
 
-impl PartialSurface {
-    /// Construct an instance of `PartialSurface`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialSurface {
     type Full = Surface;
 

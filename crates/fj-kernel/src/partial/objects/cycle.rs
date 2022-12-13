@@ -12,11 +12,6 @@ pub struct PartialCycle {
 }
 
 impl PartialCycle {
-    /// Construct an instance of `PartialCycle`
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Access the surface of the [`Cycle`]
     pub fn surface(&self) -> Option<Partial<Surface>> {
         self.half_edges

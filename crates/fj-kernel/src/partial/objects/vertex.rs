@@ -20,13 +20,6 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
-impl PartialVertex {
-    /// Construct an instance of `PartialVertex`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
@@ -93,13 +86,6 @@ pub struct PartialSurfaceVertex {
     pub global_form: Partial<GlobalVertex>,
 }
 
-impl PartialSurfaceVertex {
-    /// Construct an instance of `PartialSurfaceVertex`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
 impl PartialObject for PartialSurfaceVertex {
     type Full = SurfaceVertex;
 
@@ -140,13 +126,6 @@ impl PartialObject for PartialSurfaceVertex {
 pub struct PartialGlobalVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
-}
-
-impl PartialGlobalVertex {
-    /// Construct an instance of `PartialGlobalVertex`
-    pub fn new() -> Self {
-        Self::default()
-    }
 }
 
 impl PartialObject for PartialGlobalVertex {

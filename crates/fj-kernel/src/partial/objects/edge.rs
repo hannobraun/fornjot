@@ -21,11 +21,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Construct an instance of `PartialHalfEdge`
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Access the curve the partial edge is defined on
     pub fn curve(&self) -> Partial<Curve> {
         let [vertex, _] = &self.vertices;
@@ -99,13 +94,6 @@ pub struct PartialGlobalEdge {
 
     /// The vertices that bound the edge on the curve
     pub vertices: [Partial<GlobalVertex>; 2],
-}
-
-impl PartialGlobalEdge {
-    /// Construct an instance of `PartialGlobalEdge`
-    pub fn new() -> Self {
-        Self::default()
-    }
 }
 
 impl PartialObject for PartialGlobalEdge {
