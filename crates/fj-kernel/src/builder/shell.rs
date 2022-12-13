@@ -173,10 +173,10 @@ impl ShellBuilder {
                                 side_up_prev.read().vertices.clone();
                             let [to, _] = bottom.read().vertices.clone();
 
-                            let to = to.read().surface_form.clone();
+                            let to_surface = to.read().surface_form.clone();
                             let from = PartialSurfaceVertex {
                                 position: Some(
-                                    to.read().position.unwrap()
+                                    to_surface.read().position.unwrap()
                                         + [Z, edge_length],
                                 ),
                                 surface: surface.clone(),
@@ -212,11 +212,14 @@ impl ShellBuilder {
                                 PartialVertex {
                                     curve: Partial::from_partial(
                                         PartialCurve {
-                                            surface: to.read().surface.clone(),
+                                            surface: to_surface
+                                                .read()
+                                                .surface
+                                                .clone(),
                                             ..curve.clone()
                                         },
                                     ),
-                                    surface_form: to.clone(),
+                                    surface_form: to_surface.clone(),
                                     ..Default::default()
                                 },
                             ]
