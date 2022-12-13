@@ -23,7 +23,9 @@ impl PartialObject for PartialSurface {
     type Full = Surface;
 
     fn from_full(surface: &Self::Full, _: &mut FullToPartialCache) -> Self {
-        Self::new(Some(surface.geometry()))
+        Self {
+            geometry: Some(surface.geometry()),
+        }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {

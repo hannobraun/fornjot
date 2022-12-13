@@ -42,13 +42,14 @@ impl PartialObject for PartialFace {
     type Full = Face;
 
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            Some(Partial::from_full(face.exterior().clone(), cache)),
-            face.interiors()
+        Self {
+            exterior: Partial::from_full(face.exterior().clone(), cache),
+            interiors: face
+                .interiors()
                 .map(|cycle| Partial::from_full(cycle.clone(), cache))
                 .collect(),
-            Some(face.color()),
-        )
+            color: Some(face.color()),
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {

@@ -22,13 +22,13 @@ impl PartialObject for PartialShell {
     type Full = Shell;
 
     fn from_full(shell: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            shell
+        Self {
+            faces: shell
                 .faces()
                 .into_iter()
                 .map(|face| Partial::from_full(face.clone(), cache))
                 .collect(),
-        )
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {

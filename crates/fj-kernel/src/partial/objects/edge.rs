@@ -71,13 +71,16 @@ impl PartialObject for PartialHalfEdge {
         half_edge: &Self::Full,
         cache: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(
-            half_edge
+        Self {
+            vertices: half_edge
                 .vertices()
                 .clone()
-                .map(|vertex| Some(Partial::from_full(vertex, cache))),
-            Some(Partial::from_full(half_edge.global_form().clone(), cache)),
-        )
+                .map(|vertex| Partial::from_full(vertex, cache)),
+            global_form: Partial::from_full(
+                half_edge.global_form().clone(),
+                cache,
+            ),
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
@@ -124,13 +127,13 @@ impl PartialObject for PartialGlobalEdge {
         global_edge: &Self::Full,
         cache: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(
-            Some(Partial::from_full(global_edge.curve().clone(), cache)),
-            global_edge
+        Self {
+            curve: Partial::from_full(global_edge.curve().clone(), cache),
+            vertices: global_edge
                 .vertices()
                 .access_in_normalized_order()
-                .map(|vertex| Some(Partial::from_full(vertex, cache))),
-        )
+                .map(|vertex| Partial::from_full(vertex, cache)),
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {

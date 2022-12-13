@@ -22,12 +22,12 @@ impl PartialObject for PartialSolid {
     type Full = Solid;
 
     fn from_full(solid: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            solid
+        Self {
+            shells: solid
                 .shells()
                 .map(|shell| Partial::from_full(shell.clone(), cache))
                 .collect(),
-        )
+        }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {

@@ -56,11 +56,14 @@ impl PartialObject for PartialVertex {
     type Full = Vertex;
 
     fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self::new(
-            Some(vertex.position()),
-            Some(Partial::from_full(vertex.curve().clone(), cache)),
-            Some(Partial::from_full(vertex.surface_form().clone(), cache)),
-        )
+        Self {
+            position: Some(vertex.position()),
+            curve: Partial::from_full(vertex.curve().clone(), cache),
+            surface_form: Partial::from_full(
+                vertex.surface_form().clone(),
+                cache,
+            ),
+        }
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
@@ -125,14 +128,17 @@ impl PartialObject for PartialSurfaceVertex {
         surface_vertex: &Self::Full,
         cache: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(
-            Some(surface_vertex.position()),
-            Some(Partial::from_full(surface_vertex.surface().clone(), cache)),
-            Some(Partial::from_full(
+        Self {
+            position: Some(surface_vertex.position()),
+            surface: Partial::from_full(
+                surface_vertex.surface().clone(),
+                cache,
+            ),
+            global_form: Partial::from_full(
                 surface_vertex.global_form().clone(),
                 cache,
-            )),
-        )
+            ),
+        }
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
@@ -177,7 +183,9 @@ impl PartialObject for PartialGlobalVertex {
         global_vertex: &Self::Full,
         _: &mut FullToPartialCache,
     ) -> Self {
-        Self::new(Some(global_vertex.position()))
+        Self {
+            position: Some(global_vertex.position()),
+        }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
