@@ -274,8 +274,9 @@ impl ShellBuilder {
         };
 
         let top = {
-            let surface =
-                objects.surfaces.xy_plane().translate([Z, Z, h], objects);
+            let surface = Partial::from_full_entry_point(
+                objects.surfaces.xy_plane().translate([Z, Z, h], objects),
+            );
 
             let mut top_edges = top_edges;
             top_edges.reverse();
@@ -301,9 +302,8 @@ impl ShellBuilder {
 
                         Partial::from_partial(PartialSurfaceVertex {
                             position: Some(point.into()),
-                            surface: Partial::from_full_entry_point(
-                                surface.clone(),
-                            ),
+                            surface: surface.clone(),
+
                             global_form: global_vertex,
                         })
                     });
