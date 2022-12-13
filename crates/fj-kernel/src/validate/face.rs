@@ -126,7 +126,7 @@ mod tests {
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
             face.with_interior_polygon_from_points(
-                surface,
+                Partial::from_full_entry_point(surface),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
 
@@ -166,7 +166,7 @@ mod tests {
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
             face.with_interior_polygon_from_points(
-                surface,
+                Partial::from_full_entry_point(surface),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
             face.build(&mut services.objects)
