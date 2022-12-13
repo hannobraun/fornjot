@@ -28,11 +28,10 @@ impl PartialHalfEdge {
 
         let vertices = vertices.map(|vertex| {
             vertex.unwrap_or_else(|| {
-                Partial::from_partial(PartialVertex::new(
-                    None,
-                    Some(curve.clone()),
-                    None,
-                ))
+                Partial::from_partial(PartialVertex {
+                    curve: curve.clone(),
+                    ..Default::default()
+                })
             })
         });
 
