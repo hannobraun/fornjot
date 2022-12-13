@@ -108,7 +108,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::{PartialCycle, PartialFace, PartialObject},
+        partial::{Partial, PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -132,7 +132,9 @@ mod tests {
         let invalid = {
             let mut cycle = PartialCycle::default();
             cycle.with_poly_chain_from_points(
-                services.objects.surfaces.xz_plane(),
+                Partial::from_full_entry_point(
+                    services.objects.surfaces.xz_plane(),
+                ),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
             cycle.close_with_line_segment();

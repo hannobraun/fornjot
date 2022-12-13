@@ -410,7 +410,7 @@ mod tests {
         let object = {
             let mut cycle = PartialCycle::default();
             cycle.with_poly_chain_from_points(
-                surface,
+                Partial::from_full_entry_point(surface),
                 [[0., 0.], [1., 0.], [0., 1.]],
             );
             cycle.close_with_line_segment();

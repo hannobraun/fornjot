@@ -4,7 +4,6 @@ use fj_math::Point;
 use crate::{
     objects::{Surface, SurfaceVertex},
     partial::{Partial, PartialCycle, PartialHalfEdge, PartialSurfaceVertex},
-    storage::Handle,
 };
 
 use super::HalfEdgeBuilder;
@@ -20,7 +19,7 @@ pub trait CycleBuilder {
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain_from_points(
         &mut self,
-        surface: Handle<Surface>,
+        surface: Partial<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     );
 
@@ -86,13 +85,13 @@ impl CycleBuilder for PartialCycle {
 
     fn with_poly_chain_from_points(
         &mut self,
-        surface: Handle<Surface>,
+        surface: Partial<Surface>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         self.with_poly_chain(points.into_iter().map(|position| {
             PartialSurfaceVertex {
                 position: Some(position.into()),
-                surface: Partial::from_full_entry_point(surface.clone()),
+                surface: surface.clone(),
                 ..Default::default()
             }
         }));
