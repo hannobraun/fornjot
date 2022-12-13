@@ -36,11 +36,10 @@ impl PartialVertex {
             })
         });
         let surface_form = surface_form.unwrap_or_else(|| {
-            Partial::from_partial(PartialSurfaceVertex::new(
-                None,
-                Some(surface),
-                None,
-            ))
+            Partial::from_partial(PartialSurfaceVertex {
+                surface,
+                ..Default::default()
+            })
         });
 
         Self {
