@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::Surface,
+    objects::{GlobalEdge, Surface},
     partial::{Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -22,6 +22,12 @@ pub trait HalfEdgeBuilder {
 
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(&mut self);
+
+    /// Infer the global form of the half-edge
+    ///
+    /// Updates the global form referenced by this half-edge, and also returns
+    /// it.
+    fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -94,6 +100,17 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         {
             vertex.write().position = Some([position].into());
         }
+    }
+
+    fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
+        self.global_form.write().curve =
+            self.curve().read().global_form.clone();
+        self.global_form.write().vertices =
+            self.vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+        self.global_form.clone()
     }
 }
 
