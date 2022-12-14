@@ -1,47 +1,31 @@
-use std::collections::BTreeSet;
-
 use fj_math::Scalar;
 
 use crate::{
-    insert::Insert,
-    objects::{Objects, Shell, Solid},
+    objects::Objects,
+    partial::{Partial, PartialShell, PartialSolid},
     services::Service,
-    storage::Handle,
 };
 
-/// API for building a [`Solid`]
-///
-/// Also see [`Solid::builder`].
-pub struct SolidBuilder {
-    /// The shells that make up the [`Solid`]
-    pub shells: BTreeSet<Handle<Shell>>,
-}
+use super::ShellBuilder;
 
-impl SolidBuilder {
-    /// Build the [`Solid`] with the provided shells
-    pub fn with_shells(
-        mut self,
-        shells: impl IntoIterator<Item = Handle<Shell>>,
-    ) -> Self {
-        self.shells.extend(shells);
-        self
-    }
-
-    /// Create a cube from the length of its edges
-    pub fn with_cube_from_edge_length(
-        mut self,
+/// Builder API for [`PartialSolid`]
+pub trait SolidBuilder {
+    /// Add a cube with the given edge length to the solid
+    fn with_cube_from_edge_length(
+        &mut self,
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Self {
-        let shell = Shell::builder()
-            .with_cube_from_edge_length(edge_length, objects)
-            .build(objects);
-        self.shells.insert(shell);
-        self
-    }
+    );
+}
 
-    /// Build the [`Solid`]
-    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Solid> {
-        Solid::new(self.shells).insert(objects)
+impl SolidBuilder for PartialSolid {
+    fn with_cube_from_edge_length(
+        &mut self,
+        edge_length: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) {
+        let shell =
+            PartialShell::create_cube_from_edge_length(edge_length, objects);
+        self.shells.push(Partial::from_partial(shell));
     }
 }

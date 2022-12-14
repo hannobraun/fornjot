@@ -6,7 +6,7 @@ use fj_kernel::{
     insert::Insert,
     iter::ObjectIters,
     objects::{Objects, Sketch},
-    partial::{Partial, PartialFace, PartialObject},
+    partial::{Partial, PartialFace, PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::Aabb;
@@ -87,10 +87,10 @@ impl Shape for fj::Difference2d {
                 interiors,
                 color: Some(Color(self.color())),
             };
-            faces.push(face.build(objects).insert(objects));
+            faces.push(Partial::from_partial(face));
         }
 
-        let difference = Sketch::builder().with_faces(faces).build(objects);
+        let difference = PartialSketch { faces }.build(objects).insert(objects);
         difference.deref().clone()
     }
 

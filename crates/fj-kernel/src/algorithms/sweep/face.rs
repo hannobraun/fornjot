@@ -3,7 +3,9 @@ use fj_math::{Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     geometry::path::GlobalPath,
+    insert::Insert,
     objects::{Face, Objects, Shell},
+    partial::{Partial, PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -74,7 +76,8 @@ impl Sweep for Handle<Face> {
             }
         }
 
-        Shell::builder().with_faces(faces).build(objects)
+        let faces = faces.into_iter().map(Partial::from).collect();
+        PartialShell { faces }.build(objects).insert(objects)
     }
 }
 
@@ -84,10 +87,9 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        builder::{FaceBuilder, HalfEdgeBuilder},
+        builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
         insert::Insert,
-        objects::Sketch,
-        partial::{PartialFace, PartialHalfEdge, PartialObject},
+        partial::{PartialFace, PartialHalfEdge, PartialObject, PartialSketch},
         services::Services,
     };
 
@@ -103,13 +105,11 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let solid = Sketch::builder()
-            .with_polygon_from_points(
-                surface.clone(),
-                TRIANGLE,
-                &mut services.objects,
-            )
+        let mut sketch = PartialSketch::default();
+        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
+        let solid = sketch
             .build(&mut services.objects)
+            .insert(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
         let mut bottom = PartialFace::default();
@@ -156,13 +156,11 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let solid = Sketch::builder()
-            .with_polygon_from_points(
-                surface.clone(),
-                TRIANGLE,
-                &mut services.objects,
-            )
+        let mut sketch = PartialSketch::default();
+        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
+        let solid = sketch
             .build(&mut services.objects)
+            .insert(&mut services.objects)
             .sweep(DOWN, &mut services.objects);
 
         let mut bottom = PartialFace::default();

@@ -9,37 +9,25 @@ use crate::{
     builder::{
         FaceBuilder, HalfEdgeBuilder, SurfaceBuilder, SurfaceVertexBuilder,
     },
-    insert::Insert,
-    objects::{Face, FaceSet, HalfEdge, Objects, Shell},
+    objects::{HalfEdge, Objects},
     partial::{
-        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
+        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialShell,
         PartialSurface, PartialSurfaceVertex,
     },
     services::Service,
-    storage::Handle,
 };
 
-/// API for building a [`Shell`]
-///
-/// Also see [`Shell::builder`].
-pub struct ShellBuilder {
-    /// The faces that make up the [`Shell`]
-    pub faces: FaceSet,
+/// Builder API for [`PartialShell`]
+pub trait ShellBuilder {
+    /// Create a cube from the length of its edges
+    fn create_cube_from_edge_length(
+        edge_length: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) -> Self;
 }
 
-impl ShellBuilder {
-    /// Build the [`Shell`] with the provided faces
-    pub fn with_faces(
-        mut self,
-        faces: impl IntoIterator<Item = Handle<Face>>,
-    ) -> Self {
-        self.faces.extend(faces);
-        self
-    }
-
-    /// Create a cube from the length of its edges
-    pub fn with_cube_from_edge_length(
-        mut self,
+impl ShellBuilder for PartialShell {
+    fn create_cube_from_edge_length(
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
@@ -49,7 +37,7 @@ impl ShellBuilder {
         const Z: Scalar = Scalar::ZERO;
         let h = edge_length / 2.;
 
-        let bottom = {
+        let bottom_face = {
             let surface =
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
@@ -62,8 +50,8 @@ impl ShellBuilder {
             face
         };
 
-        let (sides, top_edges) = {
-            let surfaces = bottom
+        let (side_faces, top_edges) = {
+            let side_surfaces = bottom_face
                 .exterior
                 .read()
                 .half_edges
@@ -79,18 +67,17 @@ impl ShellBuilder {
                         });
                     let c = a + [Z, Z, edge_length];
 
-                    Partial::from_partial(PartialSurface::plane_from_points([
-                        a, b, c,
-                    ]))
+                    let surface = PartialSurface::plane_from_points([a, b, c]);
+                    Partial::from_partial(surface)
                 })
                 .collect::<Vec<_>>();
 
-            let bottoms = bottom
+            let bottom_edges = bottom_face
                 .exterior
                 .read()
                 .half_edges
                 .iter()
-                .zip(&surfaces)
+                .zip(&side_surfaces)
                 .map(|(half_edge, surface)| {
                     let global_edge = half_edge.read().global_form.clone();
 
@@ -119,10 +106,10 @@ impl ShellBuilder {
                 })
                 .collect::<Vec<_>>();
 
-            let sides_up = bottoms
+            let side_edges_up = bottom_edges
                 .clone()
                 .into_iter()
-                .zip(&surfaces)
+                .zip(&side_surfaces)
                 .map(|(bottom, surface): (Partial<HalfEdge>, _)| {
                     let from_surface = {
                         let [_, from] = &bottom.read().vertices;
@@ -153,15 +140,15 @@ impl ShellBuilder {
                 })
                 .collect::<Vec<_>>();
 
-            let sides_down = {
-                let mut sides_up_prev = sides_up.clone();
+            let side_edges_down = {
+                let mut sides_up_prev = side_edges_up.clone();
                 sides_up_prev.rotate_right(1);
 
-                bottoms
+                bottom_edges
                     .clone()
                     .into_iter()
                     .zip(sides_up_prev)
-                    .zip(&surfaces)
+                    .zip(&side_surfaces)
                     .map(
                         |((bottom, side_up_prev), surface): (
                             (_, Partial<HalfEdge>),
@@ -215,10 +202,10 @@ impl ShellBuilder {
                     .collect::<Vec<_>>()
             };
 
-            let tops = sides_up
+            let top_edges = side_edges_up
                 .clone()
                 .into_iter()
-                .zip(sides_down.clone())
+                .zip(side_edges_down.clone())
                 .map(|(side_up, side_down): (_, Partial<HalfEdge>)| {
                     let [_, from] = side_up.read().vertices.clone();
                     let [to, _] = side_down.read().vertices.clone();
@@ -248,11 +235,11 @@ impl ShellBuilder {
                 })
                 .collect::<Vec<_>>();
 
-            let sides = bottoms
+            let side_faces = bottom_edges
                 .into_iter()
-                .zip(sides_up)
-                .zip(tops.clone())
-                .zip(sides_down)
+                .zip(side_edges_up)
+                .zip(top_edges.clone())
+                .zip(side_edges_down)
                 .map(|(((bottom, side_up), top), side_down)| {
                     let mut cycle = PartialCycle::default();
                     cycle.half_edges.extend([bottom, side_up, top, side_down]);
@@ -264,10 +251,10 @@ impl ShellBuilder {
                 })
                 .collect::<Vec<_>>();
 
-            (sides, tops)
+            (side_faces, top_edges)
         };
 
-        let top = {
+        let top_face = {
             let surface = Partial::from(
                 objects.surfaces.xy_plane().translate([Z, Z, h], objects),
             );
@@ -340,19 +327,13 @@ impl ShellBuilder {
             }
         };
 
-        self.faces.extend(
-            [bottom]
+        PartialShell {
+            faces: [bottom_face]
                 .into_iter()
-                .chain(sides)
-                .chain([top])
-                .map(|face| face.build(objects).insert(objects)),
-        );
-
-        self
-    }
-
-    /// Build the [`Shell`]
-    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Shell> {
-        Shell::new(self.faces).insert(objects)
+                .chain(side_faces)
+                .chain([top_face])
+                .map(Partial::from_partial)
+                .collect(),
+        }
     }
 }

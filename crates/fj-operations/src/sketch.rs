@@ -7,6 +7,7 @@ use fj_kernel::{
     objects::{Objects, Sketch},
     partial::{
         Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
+        PartialSketch,
     },
     services::Service,
 };
@@ -46,12 +47,11 @@ impl Shape for fj::Sketch {
                     half_edges: vec![half_edge],
                 });
 
-                let face = PartialFace {
+                PartialFace {
                     exterior: cycle,
                     color: Some(Color(self.color())),
                     ..Default::default()
-                };
-                face.build(objects).insert(objects)
+                }
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
@@ -64,11 +64,15 @@ impl Shape for fj::Sketch {
                 face.with_exterior_polygon_from_points(surface, points);
                 face.color = Some(Color(self.color()));
 
-                face.build(objects).insert(objects)
+                face
             }
         };
 
-        let sketch = Sketch::builder().with_faces([face]).build(objects);
+        let sketch = PartialSketch {
+            faces: vec![Partial::from_partial(face)],
+        }
+        .build(objects)
+        .insert(objects);
         sketch.deref().clone()
     }
 

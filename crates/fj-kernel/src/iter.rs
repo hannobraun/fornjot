@@ -360,15 +360,15 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
-        insert::Insert,
-        objects::{
-            GlobalCurve, GlobalVertex, Objects, Shell, Sketch, Solid,
-            SurfaceVertex, Vertex,
+        builder::{
+            CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder,
+            ShellBuilder, SolidBuilder,
         },
+        insert::Insert,
+        objects::{GlobalCurve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::{
             Partial, PartialCurve, PartialCycle, PartialFace, PartialHalfEdge,
-            PartialObject,
+            PartialObject, PartialShell, PartialSketch, PartialSolid,
         },
         services::Services,
     };
@@ -529,9 +529,12 @@ mod tests {
     fn shell() {
         let mut services = Services::new();
 
-        let object = Shell::builder()
-            .with_cube_from_edge_length(1., &mut services.objects)
-            .build(&mut services.objects);
+        let object = PartialShell::create_cube_from_edge_length(
+            1.,
+            &mut services.objects,
+        )
+        .build(&mut services.objects)
+        .insert(&mut services.objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
@@ -556,12 +559,10 @@ mod tests {
             surface,
             [[0., 0.], [1., 0.], [0., 1.]],
         );
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let object = Sketch::builder()
-            .with_faces([face])
-            .build(&mut services.objects);
+        let object = PartialSketch {
+            faces: vec![Partial::from_partial(face)],
+        }
+        .build(&mut services.objects);
 
         assert_eq!(3, object.curve_iter().count());
         assert_eq!(1, object.cycle_iter().count());
@@ -580,9 +581,11 @@ mod tests {
     fn solid() {
         let mut services = Services::new();
 
-        let object = Solid::builder()
-            .with_cube_from_edge_length(1., &mut services.objects)
-            .build(&mut services.objects);
+        let object = {
+            let mut solid = PartialSolid::default();
+            solid.with_cube_from_edge_length(1., &mut services.objects);
+            solid.build(&mut services.objects)
+        };
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
