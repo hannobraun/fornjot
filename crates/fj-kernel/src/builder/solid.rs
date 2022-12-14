@@ -12,21 +12,20 @@ use super::ShellBuilder;
 pub trait SolidBuilder {
     /// Create a cube from the length of its edges
     fn with_cube_from_edge_length(
-        self,
+        &mut self,
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Self;
+    );
 }
 
 impl SolidBuilder for PartialSolid {
     fn with_cube_from_edge_length(
-        mut self,
+        &mut self,
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Self {
+    ) {
         let shell =
             PartialShell::create_cube_from_edge_length(edge_length, objects);
         self.shells.push(Partial::from_partial(shell));
-        self
     }
 }

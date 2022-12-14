@@ -581,9 +581,11 @@ mod tests {
     fn solid() {
         let mut services = Services::new();
 
-        let object = PartialSolid::default()
-            .with_cube_from_edge_length(1., &mut services.objects)
-            .build(&mut services.objects);
+        let object = {
+            let mut solid = PartialSolid::default();
+            solid.with_cube_from_edge_length(1., &mut services.objects);
+            solid.build(&mut services.objects)
+        };
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());
