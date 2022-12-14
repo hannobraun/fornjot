@@ -140,7 +140,7 @@ impl ShellBuilder for PartialShell {
                 })
                 .collect::<Vec<_>>();
 
-            let sides_down = {
+            let side_edges_down = {
                 let mut sides_up_prev = side_edges_up.clone();
                 sides_up_prev.rotate_right(1);
 
@@ -205,7 +205,7 @@ impl ShellBuilder for PartialShell {
             let tops = side_edges_up
                 .clone()
                 .into_iter()
-                .zip(sides_down.clone())
+                .zip(side_edges_down.clone())
                 .map(|(side_up, side_down): (_, Partial<HalfEdge>)| {
                     let [_, from] = side_up.read().vertices.clone();
                     let [to, _] = side_down.read().vertices.clone();
@@ -239,7 +239,7 @@ impl ShellBuilder for PartialShell {
                 .into_iter()
                 .zip(side_edges_up)
                 .zip(tops.clone())
-                .zip(sides_down)
+                .zip(side_edges_down)
                 .map(|(((bottom, side_up), top), side_down)| {
                     let mut cycle = PartialCycle::default();
                     cycle.half_edges.extend([bottom, side_up, top, side_down]);
