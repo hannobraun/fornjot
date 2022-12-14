@@ -37,7 +37,7 @@ impl ShellBuilder for PartialShell {
         const Z: Scalar = Scalar::ZERO;
         let h = edge_length / 2.;
 
-        let bottom = {
+        let bottom_face = {
             let surface =
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
@@ -51,7 +51,7 @@ impl ShellBuilder for PartialShell {
         };
 
         let (sides, top_edges) = {
-            let surfaces = bottom
+            let surfaces = bottom_face
                 .exterior
                 .read()
                 .half_edges
@@ -72,7 +72,7 @@ impl ShellBuilder for PartialShell {
                 })
                 .collect::<Vec<_>>();
 
-            let bottoms = bottom
+            let bottoms = bottom_face
                 .exterior
                 .read()
                 .half_edges
@@ -328,7 +328,7 @@ impl ShellBuilder for PartialShell {
         };
 
         PartialShell {
-            faces: [bottom]
+            faces: [bottom_face]
                 .into_iter()
                 .chain(sides)
                 .chain([top])
