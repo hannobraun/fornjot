@@ -51,7 +51,7 @@ impl ShellBuilder for PartialShell {
         };
 
         let (sides, top_edges) = {
-            let surfaces = bottom_face
+            let side_surfaces = bottom_face
                 .exterior
                 .read()
                 .half_edges
@@ -77,7 +77,7 @@ impl ShellBuilder for PartialShell {
                 .read()
                 .half_edges
                 .iter()
-                .zip(&surfaces)
+                .zip(&side_surfaces)
                 .map(|(half_edge, surface)| {
                     let global_edge = half_edge.read().global_form.clone();
 
@@ -109,7 +109,7 @@ impl ShellBuilder for PartialShell {
             let sides_up = bottoms
                 .clone()
                 .into_iter()
-                .zip(&surfaces)
+                .zip(&side_surfaces)
                 .map(|(bottom, surface): (Partial<HalfEdge>, _)| {
                     let from_surface = {
                         let [_, from] = &bottom.read().vertices;
@@ -148,7 +148,7 @@ impl ShellBuilder for PartialShell {
                     .clone()
                     .into_iter()
                     .zip(sides_up_prev)
-                    .zip(&surfaces)
+                    .zip(&side_surfaces)
                     .map(
                         |((bottom, side_up_prev), surface): (
                             (_, Partial<HalfEdge>),
