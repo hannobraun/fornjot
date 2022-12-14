@@ -26,6 +26,30 @@ impl PartialHalfEdge {
         let [vertex, _] = &self.vertices;
         vertex.read().curve.clone()
     }
+
+    /// Access a reference to the half-edge's back vertex
+    pub fn back(&self) -> &Partial<Vertex> {
+        let [back, _] = &self.vertices;
+        back
+    }
+
+    /// Access a reference to the half-edge's front vertex
+    pub fn front(&self) -> &Partial<Vertex> {
+        let [_, front] = &self.vertices;
+        front
+    }
+
+    /// Access a mutable reference to the half-edge's back vertex
+    pub fn back_mut(&mut self) -> &mut Partial<Vertex> {
+        let [back, _] = &mut self.vertices;
+        back
+    }
+
+    /// Access a mutable reference to the half-edge's front vertex
+    pub fn front_mut(&mut self) -> &mut Partial<Vertex> {
+        let [_, front] = &mut self.vertices;
+        front
+    }
 }
 
 impl PartialObject for PartialHalfEdge {
