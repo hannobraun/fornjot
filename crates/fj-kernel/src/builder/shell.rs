@@ -50,7 +50,7 @@ impl ShellBuilder for PartialShell {
             face
         };
 
-        let (sides, top_edges) = {
+        let (side_faces, top_edges) = {
             let side_surfaces = bottom_face
                 .exterior
                 .read()
@@ -330,7 +330,7 @@ impl ShellBuilder for PartialShell {
         PartialShell {
             faces: [bottom_face]
                 .into_iter()
-                .chain(sides)
+                .chain(side_faces)
                 .chain([top])
                 .map(Partial::from_partial)
                 .collect(),
