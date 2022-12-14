@@ -254,7 +254,7 @@ impl ShellBuilder for PartialShell {
             (side_faces, top_edges)
         };
 
-        let top = {
+        let top_face = {
             let surface = Partial::from(
                 objects.surfaces.xy_plane().translate([Z, Z, h], objects),
             );
@@ -331,7 +331,7 @@ impl ShellBuilder for PartialShell {
             faces: [bottom_face]
                 .into_iter()
                 .chain(side_faces)
-                .chain([top])
+                .chain([top_face])
                 .map(Partial::from_partial)
                 .collect(),
         }
