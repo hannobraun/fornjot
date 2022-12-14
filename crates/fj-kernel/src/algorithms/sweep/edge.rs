@@ -238,8 +238,6 @@ mod tests {
 
                     back.write().surface_form =
                         bottom.vertices[1].read().surface_form.clone();
-                    side_up.global_form.write().vertices[0] =
-                        back.read().surface_form.read().global_form.clone();
 
                     let mut front = front.write();
                     let mut front = front.surface_form.write();
@@ -247,6 +245,7 @@ mod tests {
                     front.surface = surface.clone();
                 }
 
+                side_up.infer_global_form();
                 side_up.update_as_line_segment();
 
                 side_up
@@ -265,10 +264,9 @@ mod tests {
 
                     front.write().surface_form =
                         side_up.vertices[1].read().surface_form.clone();
-                    top.global_form.write().vertices[1] =
-                        front.read().surface_form.read().global_form.clone();
                 }
 
+                top.infer_global_form();
                 top.update_as_line_segment();
 
                 Partial::from(
@@ -287,14 +285,10 @@ mod tests {
 
                 back.write().surface_form =
                     bottom.vertices[0].read().surface_form.clone();
-                side_down.global_form.write().vertices[0] =
-                    back.read().surface_form.read().global_form.clone();
-
                 front.write().surface_form =
                     top.vertices[1].read().surface_form.clone();
-                side_down.global_form.write().vertices[1] =
-                    front.read().surface_form.read().global_form.clone();
 
+                side_down.infer_global_form();
                 side_down.update_as_line_segment();
 
                 Partial::from(

@@ -58,9 +58,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             vertex.surface_form = surface_vertex.clone();
         }
 
-        let global_vertex = surface_vertex.read().global_form.clone();
-        self.global_form.write().vertices =
-            [global_vertex.clone(), global_vertex];
+        self.infer_global_form();
     }
 
     fn update_as_line_segment_from_points(
@@ -94,12 +92,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let mut curve = self.curve();
         curve.write().update_as_line_from_points(points_surface);
-        self.global_form.write().curve = curve.read().global_form.clone();
 
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
             vertex.write().position = Some([position].into());
         }
+
+        self.infer_global_form();
     }
 
     fn infer_global_form(&mut self) -> Partial<GlobalEdge> {

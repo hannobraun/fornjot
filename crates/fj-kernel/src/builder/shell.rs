@@ -138,19 +138,15 @@ impl ShellBuilder {
 
                     {
                         let [from, to] = &mut half_edge.vertices;
-                        from.write().surface_form = from_surface.clone();
+                        from.write().surface_form = from_surface;
 
                         let mut to = to.write();
                         let mut to_surface = to.surface_form.write();
                         to_surface.position = Some(to_position);
                         to_surface.surface = surface.clone();
-
-                        half_edge.global_form.write().vertices = [
-                            from_surface.read().global_form.clone(),
-                            to_surface.global_form.clone(),
-                        ];
                     }
 
+                    half_edge.infer_global_form();
                     half_edge.update_as_line_segment();
 
                     Partial::from_partial(half_edge)
@@ -205,16 +201,12 @@ impl ShellBuilder {
                                         + [Z, edge_length],
                                 );
                                 from_surface.surface = surface.clone();
-                                from_surface.global_form = from_global.clone();
+                                from_surface.global_form = from_global;
 
-                                to.write().surface_form = to_surface.clone();
-
-                                half_edge.global_form.write().vertices = [
-                                    from_global,
-                                    to_surface.read().global_form.clone(),
-                                ];
+                                to.write().surface_form = to_surface;
                             }
 
+                            half_edge.infer_global_form();
                             half_edge.update_as_line_segment();
 
                             Partial::from_partial(half_edge)
