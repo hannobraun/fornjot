@@ -10,6 +10,12 @@ use super::HalfEdgeBuilder;
 
 /// Builder API for [`PartialCycle`]
 pub trait CycleBuilder {
+    /// Create a cycle as a polygonal chain from the provided points
+    fn from_poly_chain(
+        surface: impl Into<Partial<Surface>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self;
+
     /// Update the partial cycle with a polygonal chain from the provided points
     fn with_poly_chain(
         &mut self,
@@ -30,6 +36,18 @@ pub trait CycleBuilder {
 }
 
 impl CycleBuilder for PartialCycle {
+    fn from_poly_chain(
+        surface: impl Into<Partial<Surface>>,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Self {
+        let mut cycle = PartialCycle::default();
+
+        cycle.with_poly_chain_from_points(surface, points);
+        cycle.close_with_line_segment();
+
+        cycle
+    }
+
     fn with_poly_chain(
         &mut self,
         vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
