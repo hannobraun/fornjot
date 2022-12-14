@@ -3,7 +3,6 @@ use fj_math::Point;
 use crate::{
     objects::Surface,
     partial::{Partial, PartialFace, PartialSketch},
-    storage::Handle,
 };
 
 use super::FaceBuilder;
@@ -13,7 +12,7 @@ pub trait SketchBuilder {
     /// Construct a polygon from a list of points
     fn with_polygon_from_points(
         self,
-        surface: Handle<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self;
 }
@@ -21,7 +20,7 @@ pub trait SketchBuilder {
 impl SketchBuilder for PartialSketch {
     fn with_polygon_from_points(
         mut self,
-        surface: Handle<Surface>,
+        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self {
         let mut face = PartialFace::default();
