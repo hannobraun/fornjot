@@ -1,51 +1,47 @@
-use std::collections::BTreeSet;
-
 use fj_math::Scalar;
 
 use crate::{
-    insert::Insert,
-    objects::{Objects, Shell, Solid},
-    partial::{PartialObject, PartialShell},
+    objects::{Objects, Shell},
+    partial::{Partial, PartialShell, PartialSolid},
     services::Service,
-    storage::Handle,
 };
 
 use super::ShellBuilder;
 
-/// API for building a [`Solid`]
-///
-/// Also see [`Solid::builder`].
-pub struct SolidBuilder {
-    /// The shells that make up the [`Solid`]
-    pub shells: BTreeSet<Handle<Shell>>,
+/// Builder API for [`PartialSolid`]
+pub trait SolidBuilder {
+    /// Build the [`Solid`] with the provided shells
+    fn with_shells(
+        self,
+        shells: impl IntoIterator<Item = impl Into<Partial<Shell>>>,
+    ) -> Self;
+
+    /// Create a cube from the length of its edges
+    fn with_cube_from_edge_length(
+        self,
+        edge_length: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) -> Self;
 }
 
-impl SolidBuilder {
-    /// Build the [`Solid`] with the provided shells
-    pub fn with_shells(
+impl SolidBuilder for PartialSolid {
+    fn with_shells(
         mut self,
-        shells: impl IntoIterator<Item = Handle<Shell>>,
+        shells: impl IntoIterator<Item = impl Into<Partial<Shell>>>,
     ) -> Self {
+        let shells = shells.into_iter().map(Into::into);
         self.shells.extend(shells);
         self
     }
 
-    /// Create a cube from the length of its edges
-    pub fn with_cube_from_edge_length(
+    fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
         let shell =
-            PartialShell::create_cube_from_edge_length(edge_length, objects)
-                .build(objects)
-                .insert(objects);
-        self.shells.insert(shell);
+            PartialShell::create_cube_from_edge_length(edge_length, objects);
+        self.shells.push(Partial::from_partial(shell));
         self
-    }
-
-    /// Build the [`Solid`]
-    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Solid> {
-        Solid::new(self.shells).insert(objects)
     }
 }

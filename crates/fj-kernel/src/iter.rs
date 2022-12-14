@@ -362,15 +362,13 @@ mod tests {
     use crate::{
         builder::{
             CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder,
-            ShellBuilder,
+            ShellBuilder, SolidBuilder,
         },
         insert::Insert,
-        objects::{
-            GlobalCurve, GlobalVertex, Objects, Solid, SurfaceVertex, Vertex,
-        },
+        objects::{GlobalCurve, GlobalVertex, Objects, SurfaceVertex, Vertex},
         partial::{
             Partial, PartialCurve, PartialCycle, PartialFace, PartialHalfEdge,
-            PartialObject, PartialShell, PartialSketch,
+            PartialObject, PartialShell, PartialSketch, PartialSolid,
         },
         services::Services,
     };
@@ -583,7 +581,7 @@ mod tests {
     fn solid() {
         let mut services = Services::new();
 
-        let object = Solid::builder()
+        let object = PartialSolid::default()
             .with_cube_from_edge_length(1., &mut services.objects)
             .build(&mut services.objects);
 

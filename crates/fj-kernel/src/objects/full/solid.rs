@@ -1,7 +1,6 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    builder::SolidBuilder,
     objects::{Face, Shell},
     storage::Handle,
 };
@@ -18,13 +17,6 @@ pub struct Solid {
 }
 
 impl Solid {
-    /// Build a `Solid` using [`SolidBuilder`]
-    pub fn builder() -> SolidBuilder {
-        SolidBuilder {
-            shells: BTreeSet::new(),
-        }
-    }
-
     /// Construct an empty instance of `Solid`
     pub fn new(shells: impl IntoIterator<Item = Handle<Shell>>) -> Self {
         Self {
