@@ -15,12 +15,6 @@ pub trait CycleBuilder {
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Self;
-
-    /// Update the partial cycle with a polygonal chain from the provided points
-    fn with_poly_chain(
-        &mut self,
-        vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
-    );
 }
 
 impl CycleBuilder for PartialCycle {
@@ -32,64 +26,15 @@ impl CycleBuilder for PartialCycle {
 
         let mut cycle = PartialCycle::default();
 
-        cycle.with_poly_chain(points.into_iter().map(|position| {
-            PartialSurfaceVertex {
+        let vertices =
+            points.into_iter().map(|position| PartialSurfaceVertex {
                 position: Some(position.into()),
                 surface: surface.clone(),
                 ..Default::default()
-            }
-        }));
-
-        let first = cycle.half_edges.first();
-        let last = cycle.half_edges.last();
-
-        let vertices = [first, last].map(|option| {
-            option.map(|half_edge| {
-                half_edge
-                    .read()
-                    .vertices
-                    .each_ref_ext()
-                    .map(|vertex| vertex.read().surface_form.clone())
-            })
-        });
-
-        let [Some([first, _]), Some([_, last])] = vertices else {
-            return cycle;
-        };
-
-        let mut half_edge = PartialHalfEdge::default();
-        half_edge.curve().write().surface =
-            cycle.surface().expect("Need surface to close cycle");
-
-        {
-            let global_vertices = &mut half_edge.global_form.write().vertices;
-
-            for ((vertex, surface_form), global_form) in half_edge
-                .vertices
-                .each_mut_ext()
-                .zip_ext([last, first])
-                .zip_ext(global_vertices.each_mut_ext())
-            {
-                *global_form = surface_form.read().global_form.clone();
-                vertex.write().surface_form = surface_form;
-            }
-        }
-
-        half_edge.update_as_line_segment();
-
-        cycle.half_edges.push(Partial::from_partial(half_edge));
-
-        cycle
-    }
-
-    fn with_poly_chain(
-        &mut self,
-        vertices: impl IntoIterator<Item = PartialSurfaceVertex>,
-    ) {
-        let vertices = vertices.into_iter();
+            });
 
         let mut previous: Option<Partial<SurfaceVertex>> =
-            self.half_edges.last().map(|half_edge| {
+            cycle.half_edges.last().map(|half_edge| {
                 let [_, last] = &half_edge.read().vertices;
                 let last = last.read();
                 last.surface_form.clone()
@@ -132,6 +77,47 @@ impl CycleBuilder for PartialCycle {
             previous = Some(vertex_next);
         }
 
-        self.half_edges.extend(half_edges);
+        cycle.half_edges.extend(half_edges);
+
+        let first = cycle.half_edges.first();
+        let last = cycle.half_edges.last();
+
+        let vertices = [first, last].map(|option| {
+            option.map(|half_edge| {
+                half_edge
+                    .read()
+                    .vertices
+                    .each_ref_ext()
+                    .map(|vertex| vertex.read().surface_form.clone())
+            })
+        });
+
+        let [Some([first, _]), Some([_, last])] = vertices else {
+            return cycle;
+        };
+
+        let mut half_edge = PartialHalfEdge::default();
+        half_edge.curve().write().surface =
+            cycle.surface().expect("Need surface to close cycle");
+
+        {
+            let global_vertices = &mut half_edge.global_form.write().vertices;
+
+            for ((vertex, surface_form), global_form) in half_edge
+                .vertices
+                .each_mut_ext()
+                .zip_ext([last, first])
+                .zip_ext(global_vertices.each_mut_ext())
+            {
+                *global_form = surface_form.read().global_form.clone();
+                vertex.write().surface_form = surface_form;
+            }
+        }
+
+        half_edge.update_as_line_segment();
+
+        cycle.half_edges.push(Partial::from_partial(half_edge));
+
+        cycle
     }
 }
