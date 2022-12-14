@@ -9,7 +9,7 @@ use crate::{
     builder::{
         FaceBuilder, HalfEdgeBuilder, SurfaceBuilder, SurfaceVertexBuilder,
     },
-    objects::{Face, HalfEdge, Objects},
+    objects::{HalfEdge, Objects},
     partial::{
         Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialShell,
         PartialSurface, PartialSurfaceVertex,
@@ -19,12 +19,6 @@ use crate::{
 
 /// Builder API for [`PartialShell`]
 pub trait ShellBuilder {
-    /// Build the [`Shell`] with the provided faces
-    fn with_faces(
-        self,
-        faces: impl IntoIterator<Item = impl Into<Partial<Face>>>,
-    ) -> Self;
-
     /// Create a cube from the length of its edges
     fn with_cube_from_edge_length(
         self,
@@ -34,14 +28,6 @@ pub trait ShellBuilder {
 }
 
 impl ShellBuilder for PartialShell {
-    fn with_faces(
-        mut self,
-        faces: impl IntoIterator<Item = impl Into<Partial<Face>>>,
-    ) -> Self {
-        self.faces.extend(faces.into_iter().map(Into::into));
-        self
-    }
-
     fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
