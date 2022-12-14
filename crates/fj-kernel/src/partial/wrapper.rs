@@ -174,7 +174,7 @@ impl<T: HasPartial> Inner<T> {
     fn write(&self) -> RwLockWriteGuard<InnerObject<T>> {
         self.0
             .try_write()
-            .expect("Tried to modify `Partial` that is already being modified")
+            .expect("Tried to modify `Partial` that is currently locked")
     }
 }
 
