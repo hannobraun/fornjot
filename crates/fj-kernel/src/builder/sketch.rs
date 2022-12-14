@@ -9,7 +9,7 @@ use super::FaceBuilder;
 
 /// Builder API for [`PartialSketch`]
 pub trait SketchBuilder {
-    /// Construct a polygon from a list of points
+    /// Add a polygon to the sketch, created from the provided points
     fn add_polygon_from_points(
         &mut self,
         surface: impl Into<Partial<Surface>>,
