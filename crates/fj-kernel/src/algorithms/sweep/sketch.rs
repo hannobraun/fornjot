@@ -1,10 +1,9 @@
 use fj_math::Vector;
 
 use crate::{
-    builder::SolidBuilder,
     insert::Insert,
     objects::{Objects, Sketch, Solid},
-    partial::{PartialObject, PartialSolid},
+    partial::{Partial, PartialObject, PartialSolid},
     services::Service,
     storage::Handle,
 };
@@ -28,9 +27,7 @@ impl Sweep for Handle<Sketch> {
             shells.push(shell);
         }
 
-        PartialSolid::default()
-            .with_shells(shells)
-            .build(objects)
-            .insert(objects)
+        let shells = shells.into_iter().map(Partial::from).collect();
+        PartialSolid { shells }.build(objects).insert(objects)
     }
 }
