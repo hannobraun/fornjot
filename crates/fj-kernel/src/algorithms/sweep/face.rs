@@ -103,7 +103,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut sketch = PartialSketch::default();
-        sketch.with_polygon_from_points(surface.clone(), TRIANGLE);
+        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
         let solid = sketch
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -154,7 +154,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut sketch = PartialSketch::default();
-        sketch.with_polygon_from_points(surface.clone(), TRIANGLE);
+        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
         let solid = sketch
             .build(&mut services.objects)
             .insert(&mut services.objects)
