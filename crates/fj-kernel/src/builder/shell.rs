@@ -235,7 +235,7 @@ impl ShellBuilder for PartialShell {
                 })
                 .collect::<Vec<_>>();
 
-            let sides = bottom_edges
+            let side_faces = bottom_edges
                 .into_iter()
                 .zip(side_edges_up)
                 .zip(top_edges.clone())
@@ -251,7 +251,7 @@ impl ShellBuilder for PartialShell {
                 })
                 .collect::<Vec<_>>();
 
-            (sides, top_edges)
+            (side_faces, top_edges)
         };
 
         let top = {
