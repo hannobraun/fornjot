@@ -76,7 +76,7 @@ impl<T: HasPartial + 'static> Partial<T> {
     /// # Panics
     ///
     /// Panics, if this method is called while the return value from a previous
-    /// call is still borrowed.
+    /// call to this method of [`Self::read`] is still borrowed.
     pub fn write(&mut self) -> impl DerefMut<Target = T::Partial> + '_ {
         let mut inner = self.inner.write();
 
@@ -91,7 +91,7 @@ impl<T: HasPartial + 'static> Partial<T> {
     ///
     /// # Panics
     ///
-    /// Panics, if a return value of [`Self::write`] is still borrowed.
+    /// Panics, if a call to [`Self::write`] would panic.
     pub fn build(self, objects: &mut Service<Objects>) -> Handle<T>
     where
         T: Insert,
