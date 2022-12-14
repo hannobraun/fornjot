@@ -1,5 +1,4 @@
 use crate::{
-    builder::ShellBuilder,
     objects::{Face, FaceSet},
     storage::Handle,
 };
@@ -16,13 +15,6 @@ pub struct Shell {
 }
 
 impl Shell {
-    /// Build a `Shell` using [`ShellBuilder`]
-    pub fn builder() -> ShellBuilder {
-        ShellBuilder {
-            faces: FaceSet::new(),
-        }
-    }
-
     /// Construct an empty instance of `Shell`
     pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
         Self {

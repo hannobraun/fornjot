@@ -5,9 +5,12 @@ use fj_math::Scalar;
 use crate::{
     insert::Insert,
     objects::{Objects, Shell, Solid},
+    partial::{PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
+
+use super::ShellBuilder;
 
 /// API for building a [`Solid`]
 ///
@@ -33,9 +36,10 @@ impl SolidBuilder {
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let shell = Shell::builder()
+        let shell = PartialShell::default()
             .with_cube_from_edge_length(edge_length, objects)
-            .build(objects);
+            .build(objects)
+            .insert(objects);
         self.shells.insert(shell);
         self
     }

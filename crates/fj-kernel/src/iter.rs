@@ -360,15 +360,17 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
+        builder::{
+            CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder,
+            ShellBuilder,
+        },
         insert::Insert,
         objects::{
-            GlobalCurve, GlobalVertex, Objects, Shell, Solid, SurfaceVertex,
-            Vertex,
+            GlobalCurve, GlobalVertex, Objects, Solid, SurfaceVertex, Vertex,
         },
         partial::{
             Partial, PartialCurve, PartialCycle, PartialFace, PartialHalfEdge,
-            PartialObject, PartialSketch,
+            PartialObject, PartialShell, PartialSketch,
         },
         services::Services,
     };
@@ -529,9 +531,10 @@ mod tests {
     fn shell() {
         let mut services = Services::new();
 
-        let object = Shell::builder()
+        let object = PartialShell::default()
             .with_cube_from_edge_length(1., &mut services.objects)
-            .build(&mut services.objects);
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         assert_eq!(24, object.curve_iter().count());
         assert_eq!(6, object.cycle_iter().count());

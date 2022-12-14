@@ -9,36 +9,40 @@ use crate::{
     builder::{
         FaceBuilder, HalfEdgeBuilder, SurfaceBuilder, SurfaceVertexBuilder,
     },
-    insert::Insert,
-    objects::{Face, FaceSet, HalfEdge, Objects, Shell},
+    objects::{Face, HalfEdge, Objects},
     partial::{
-        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
+        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialShell,
         PartialSurface, PartialSurfaceVertex,
     },
     services::Service,
-    storage::Handle,
 };
 
-/// API for building a [`Shell`]
-///
-/// Also see [`Shell::builder`].
-pub struct ShellBuilder {
-    /// The faces that make up the [`Shell`]
-    pub faces: FaceSet,
+/// Builder API for [`PartialShell`]
+pub trait ShellBuilder {
+    /// Build the [`Shell`] with the provided faces
+    fn with_faces(
+        self,
+        faces: impl IntoIterator<Item = impl Into<Partial<Face>>>,
+    ) -> Self;
+
+    /// Create a cube from the length of its edges
+    fn with_cube_from_edge_length(
+        self,
+        edge_length: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) -> Self;
 }
 
-impl ShellBuilder {
-    /// Build the [`Shell`] with the provided faces
-    pub fn with_faces(
+impl ShellBuilder for PartialShell {
+    fn with_faces(
         mut self,
-        faces: impl IntoIterator<Item = Handle<Face>>,
+        faces: impl IntoIterator<Item = impl Into<Partial<Face>>>,
     ) -> Self {
-        self.faces.extend(faces);
+        self.faces.extend(faces.into_iter().map(Into::into));
         self
     }
 
-    /// Create a cube from the length of its edges
-    pub fn with_cube_from_edge_length(
+    fn with_cube_from_edge_length(
         mut self,
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
@@ -345,14 +349,9 @@ impl ShellBuilder {
                 .into_iter()
                 .chain(sides)
                 .chain([top])
-                .map(|face| face.build(objects).insert(objects)),
+                .map(Partial::from_partial),
         );
 
         self
-    }
-
-    /// Build the [`Shell`]
-    pub fn build(self, objects: &mut Service<Objects>) -> Handle<Shell> {
-        Shell::new(self.faces).insert(objects)
     }
 }

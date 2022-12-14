@@ -2,8 +2,11 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    builder::ShellBuilder,
     geometry::path::GlobalPath,
+    insert::Insert,
     objects::{Face, Objects, Shell},
+    partial::{PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -74,7 +77,10 @@ impl Sweep for Handle<Face> {
             }
         }
 
-        Shell::builder().with_faces(faces).build(objects)
+        PartialShell::default()
+            .with_faces(faces)
+            .build(objects)
+            .insert(objects)
     }
 }
 
