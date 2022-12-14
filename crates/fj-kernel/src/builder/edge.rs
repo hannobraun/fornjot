@@ -90,8 +90,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = self.curve();
-        curve.write().update_as_line_from_points(points_surface);
+        self.curve()
+            .write()
+            .update_as_line_from_points(points_surface);
 
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
