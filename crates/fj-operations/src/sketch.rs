@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
+    builder::{FaceBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Objects, Sketch},
     partial::{
@@ -47,12 +47,11 @@ impl Shape for fj::Sketch {
                     half_edges: vec![half_edge],
                 });
 
-                let face = PartialFace {
+                PartialFace {
                     exterior: cycle,
                     color: Some(Color(self.color())),
                     ..Default::default()
-                };
-                face.build(objects).insert(objects)
+                }
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let points = poly_chain
@@ -65,14 +64,15 @@ impl Shape for fj::Sketch {
                 face.with_exterior_polygon_from_points(surface, points);
                 face.color = Some(Color(self.color()));
 
-                face.build(objects).insert(objects)
+                face
             }
         };
 
-        let sketch = PartialSketch::default()
-            .with_faces([face])
-            .build(objects)
-            .insert(objects);
+        let sketch = PartialSketch {
+            faces: vec![Partial::from_partial(face)],
+        }
+        .build(objects)
+        .insert(objects);
         sketch.deref().clone()
     }
 
