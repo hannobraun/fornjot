@@ -133,12 +133,10 @@ mod tests {
             face.build(&mut services.objects)
         };
         let invalid = {
-            let mut cycle = PartialCycle::default();
-            cycle.with_poly_chain_from_points(
+            let cycle = PartialCycle::from_poly_chain(
                 services.objects.surfaces.xz_plane(),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
-            cycle.close_with_line_segment();
             let cycle = cycle
                 .build(&mut services.objects)
                 .insert(&mut services.objects);

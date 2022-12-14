@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::Surface,
+    objects::{GlobalEdge, Surface},
     partial::{Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -22,6 +22,12 @@ pub trait HalfEdgeBuilder {
 
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(&mut self);
+
+    /// Infer the global form of the half-edge
+    ///
+    /// Updates the global form referenced by this half-edge, and also returns
+    /// it.
+    fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -52,9 +58,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             vertex.surface_form = surface_vertex.clone();
         }
 
-        let global_vertex = surface_vertex.read().global_form.clone();
-        self.global_form.write().vertices =
-            [global_vertex.clone(), global_vertex];
+        self.infer_global_form();
     }
 
     fn update_as_line_segment_from_points(
@@ -86,14 +90,27 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        let mut curve = self.curve();
-        curve.write().update_as_line_from_points(points_surface);
-        self.global_form.write().curve = curve.read().global_form.clone();
+        self.curve()
+            .write()
+            .update_as_line_from_points(points_surface);
 
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
             vertex.write().position = Some([position].into());
         }
+
+        self.infer_global_form();
+    }
+
+    fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
+        self.global_form.write().curve =
+            self.curve().read().global_form.clone();
+        self.global_form.write().vertices =
+            self.vertices.each_ref_ext().map(|vertex| {
+                vertex.read().surface_form.read().global_form.clone()
+            });
+
+        self.global_form.clone()
     }
 }
 
