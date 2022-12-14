@@ -168,7 +168,9 @@ impl<T: HasPartial> Inner<T> {
     }
 
     fn read(&self) -> RwLockReadGuard<InnerObject<T>> {
-        self.0.read()
+        self.0
+            .try_read()
+            .expect("Tried to read `Partial` that is currently being modified")
     }
 
     fn write(&self) -> RwLockWriteGuard<InnerObject<T>> {
