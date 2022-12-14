@@ -202,7 +202,7 @@ impl ShellBuilder for PartialShell {
                     .collect::<Vec<_>>()
             };
 
-            let tops = side_edges_up
+            let top_edges = side_edges_up
                 .clone()
                 .into_iter()
                 .zip(side_edges_down.clone())
@@ -238,7 +238,7 @@ impl ShellBuilder for PartialShell {
             let sides = bottom_edges
                 .into_iter()
                 .zip(side_edges_up)
-                .zip(tops.clone())
+                .zip(top_edges.clone())
                 .zip(side_edges_down)
                 .map(|(((bottom, side_up), top), side_down)| {
                     let mut cycle = PartialCycle::default();
@@ -251,7 +251,7 @@ impl ShellBuilder for PartialShell {
                 })
                 .collect::<Vec<_>>();
 
-            (sides, tops)
+            (sides, top_edges)
         };
 
         let top = {
