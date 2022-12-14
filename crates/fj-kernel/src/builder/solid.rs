@@ -36,10 +36,10 @@ impl SolidBuilder {
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
-        let shell = PartialShell::default()
-            .with_cube_from_edge_length(edge_length, objects)
-            .build(objects)
-            .insert(objects);
+        let shell =
+            PartialShell::create_cube_from_edge_length(edge_length, objects)
+                .build(objects)
+                .insert(objects);
         self.shells.insert(shell);
         self
     }

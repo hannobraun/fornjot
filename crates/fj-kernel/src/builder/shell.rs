@@ -20,16 +20,14 @@ use crate::{
 /// Builder API for [`PartialShell`]
 pub trait ShellBuilder {
     /// Create a cube from the length of its edges
-    fn with_cube_from_edge_length(
-        self,
+    fn create_cube_from_edge_length(
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self;
 }
 
 impl ShellBuilder for PartialShell {
-    fn with_cube_from_edge_length(
-        mut self,
+    fn create_cube_from_edge_length(
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Self {
@@ -330,14 +328,13 @@ impl ShellBuilder for PartialShell {
             }
         };
 
-        self.faces.extend(
-            [bottom]
+        PartialShell {
+            faces: [bottom]
                 .into_iter()
                 .chain(sides)
                 .chain([top])
-                .map(Partial::from_partial),
-        );
-
-        self
+                .map(Partial::from_partial)
+                .collect(),
+        }
     }
 }
