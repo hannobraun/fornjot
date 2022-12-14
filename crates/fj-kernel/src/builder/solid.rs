@@ -10,7 +10,7 @@ use super::ShellBuilder;
 
 /// Builder API for [`PartialSolid`]
 pub trait SolidBuilder {
-    /// Create a cube from the length of its edges
+    /// Add a cube with the given edge length to the solid
     fn with_cube_from_edge_length(
         &mut self,
         edge_length: impl Into<Scalar>,
