@@ -84,10 +84,9 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        builder::{FaceBuilder, HalfEdgeBuilder},
+        builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
         insert::Insert,
-        objects::Sketch,
-        partial::{PartialFace, PartialHalfEdge, PartialObject},
+        partial::{PartialFace, PartialHalfEdge, PartialObject, PartialSketch},
         services::Services,
     };
 
@@ -103,13 +102,14 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let solid = Sketch::builder()
+        let solid = PartialSketch::default()
             .with_polygon_from_points(
                 surface.clone(),
                 TRIANGLE,
                 &mut services.objects,
             )
             .build(&mut services.objects)
+            .insert(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
         let mut bottom = PartialFace::default();
@@ -156,13 +156,14 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let solid = Sketch::builder()
+        let solid = PartialSketch::default()
             .with_polygon_from_points(
                 surface.clone(),
                 TRIANGLE,
                 &mut services.objects,
             )
             .build(&mut services.objects)
+            .insert(&mut services.objects)
             .sweep(DOWN, &mut services.objects);
 
         let mut bottom = PartialFace::default();

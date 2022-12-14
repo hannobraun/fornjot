@@ -3,10 +3,11 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
+    builder::SketchBuilder,
     insert::Insert,
     iter::ObjectIters,
     objects::{Objects, Sketch},
-    partial::{Partial, PartialFace, PartialObject},
+    partial::{Partial, PartialFace, PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::Aabb;
@@ -90,7 +91,10 @@ impl Shape for fj::Difference2d {
             faces.push(face.build(objects).insert(objects));
         }
 
-        let difference = Sketch::builder().with_faces(faces).build(objects);
+        let difference = PartialSketch::default()
+            .with_faces(faces)
+            .build(objects)
+            .insert(objects);
         difference.deref().clone()
     }
 

@@ -1,5 +1,4 @@
 use crate::{
-    builder::SketchBuilder,
     objects::{Face, FaceSet},
     storage::Handle,
 };
@@ -16,13 +15,6 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    /// Build a `Sketch` using [`SketchBuilder`]
-    pub fn builder() -> SketchBuilder {
-        SketchBuilder {
-            faces: FaceSet::new(),
-        }
-    }
-
     /// Construct an empty instance of `Sketch`
     pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
         Self {

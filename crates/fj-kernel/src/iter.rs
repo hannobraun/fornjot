@@ -360,15 +360,18 @@ impl<T> Iterator for Iter<T> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder},
+        builder::{
+            CurveBuilder, CycleBuilder, FaceBuilder, HalfEdgeBuilder,
+            SketchBuilder,
+        },
         insert::Insert,
         objects::{
-            GlobalCurve, GlobalVertex, Objects, Shell, Sketch, Solid,
-            SurfaceVertex, Vertex,
+            GlobalCurve, GlobalVertex, Objects, Shell, Solid, SurfaceVertex,
+            Vertex,
         },
         partial::{
             Partial, PartialCurve, PartialCycle, PartialFace, PartialHalfEdge,
-            PartialObject,
+            PartialObject, PartialSketch,
         },
         services::Services,
     };
@@ -559,7 +562,7 @@ mod tests {
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let object = Sketch::builder()
+        let object = PartialSketch::default()
             .with_faces([face])
             .build(&mut services.objects);
 

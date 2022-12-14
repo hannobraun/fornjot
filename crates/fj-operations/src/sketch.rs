@@ -2,11 +2,12 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::{FaceBuilder, HalfEdgeBuilder},
+    builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
     insert::Insert,
     objects::{Objects, Sketch},
     partial::{
         Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
+        PartialSketch,
     },
     services::Service,
 };
@@ -68,7 +69,10 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = Sketch::builder().with_faces([face]).build(objects);
+        let sketch = PartialSketch::default()
+            .with_faces([face])
+            .build(objects)
+            .insert(objects);
         sketch.deref().clone()
     }
 
