@@ -11,22 +11,21 @@ use super::FaceBuilder;
 pub trait SketchBuilder {
     /// Construct a polygon from a list of points
     fn with_polygon_from_points(
-        self,
+        &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self;
+    );
 }
 
 impl SketchBuilder for PartialSketch {
     fn with_polygon_from_points(
-        mut self,
+        &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
+    ) {
         let mut face = PartialFace::default();
         face.with_exterior_polygon_from_points(surface, points);
 
         self.faces.extend([Partial::from_partial(face)]);
-        self
     }
 }
