@@ -125,10 +125,7 @@ mod tests {
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
-            face.with_interior_polygon_from_points(
-                surface,
-                [[1., 1.], [1., 2.], [2., 1.]],
-            );
+            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
 
             face.build(&mut services.objects)
         };
@@ -161,10 +158,7 @@ mod tests {
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
-            face.with_interior_polygon_from_points(
-                surface,
-                [[1., 1.], [1., 2.], [2., 1.]],
-            );
+            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
             face.build(&mut services.objects)
         };
         let invalid = {
