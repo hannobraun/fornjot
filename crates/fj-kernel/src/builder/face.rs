@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::Surface,
+    objects::{HalfEdge, Surface},
     partial::{Partial, PartialCycle, PartialFace},
 };
 
@@ -14,7 +14,7 @@ pub trait FaceBuilder {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    );
+    ) -> Vec<Partial<HalfEdge>>;
 
     /// Update the [`PartialFace`] with an interior polygon
     fn add_interior_polygon(
@@ -29,11 +29,13 @@ impl FaceBuilder for PartialFace {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) {
+    ) -> Vec<Partial<HalfEdge>> {
         let mut cycle = PartialCycle::default();
-        cycle.update_as_polygon(surface, points);
+        let half_edges = cycle.update_as_polygon(surface, points);
 
         self.exterior = Partial::from_partial(cycle);
+
+        half_edges
     }
 
     fn add_interior_polygon(
