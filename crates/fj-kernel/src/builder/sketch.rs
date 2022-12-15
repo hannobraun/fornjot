@@ -24,7 +24,7 @@ impl SketchBuilder for PartialSketch {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(surface, points);
+        face.update_exterior_as_polygon(surface, points);
 
         self.faces.extend([Partial::from_partial(face)]);
     }

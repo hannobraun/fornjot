@@ -121,19 +121,17 @@ mod tests {
 
         let valid = {
             let mut face = PartialFace::default();
-            face.with_exterior_polygon_from_points(
+            face.update_exterior_as_polygon(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
-            face.with_interior_polygon_from_points(
-                surface,
-                [[1., 1.], [1., 2.], [2., 1.]],
-            );
+            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
 
             face.build(&mut services.objects)
         };
         let invalid = {
-            let cycle = PartialCycle::from_poly_chain(
+            let mut cycle = PartialCycle::default();
+            cycle.update_as_polygon(
                 services.objects.surfaces.xz_plane(),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
@@ -157,14 +155,11 @@ mod tests {
 
         let valid = {
             let mut face = PartialFace::default();
-            face.with_exterior_polygon_from_points(
+            face.update_exterior_as_polygon(
                 surface.clone(),
                 [[0., 0.], [3., 0.], [0., 3.]],
             );
-            face.with_interior_polygon_from_points(
-                surface,
-                [[1., 1.], [1., 2.], [2., 1.]],
-            );
+            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
             face.build(&mut services.objects)
         };
         let invalid = {
