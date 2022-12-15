@@ -44,6 +44,6 @@ impl FaceBuilder for PartialFace {
         let mut cycle = PartialCycle::default();
         cycle.update_as_polygon(surface, points);
 
-        self.interiors = vec![Partial::from_partial(cycle)];
+        self.interiors.push(Partial::from_partial(cycle));
     }
 }
