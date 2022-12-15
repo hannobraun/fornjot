@@ -31,7 +31,7 @@ impl FaceBuilder for PartialFace {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         let mut cycle = PartialCycle::default();
-        cycle.from_poly_chain(surface, points);
+        cycle.update_as_polygon(surface, points);
 
         self.exterior = Partial::from_partial(cycle);
     }
@@ -42,7 +42,7 @@ impl FaceBuilder for PartialFace {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {
         let mut cycle = PartialCycle::default();
-        cycle.from_poly_chain(surface, points);
+        cycle.update_as_polygon(surface, points);
 
         self.interiors = vec![Partial::from_partial(cycle)];
     }

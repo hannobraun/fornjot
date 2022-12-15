@@ -409,7 +409,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let object = {
             let mut cycle = PartialCycle::default();
-            cycle.from_poly_chain(surface, [[0., 0.], [1., 0.], [0., 1.]]);
+            cycle.update_as_polygon(surface, [[0., 0.], [1., 0.], [0., 1.]]);
             cycle
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
