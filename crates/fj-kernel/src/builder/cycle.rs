@@ -14,7 +14,7 @@ pub trait CycleBuilder {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    );
+    ) -> Vec<Partial<HalfEdge>>;
 
     /// Add a new half-edge to the cycle
     ///
@@ -33,25 +33,34 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) {
+    ) -> Vec<Partial<HalfEdge>> {
         let surface = surface.into();
+
+        let mut half_edges = Vec::new();
 
         for point in points.into_iter().map(Into::into) {
             let mut half_edge = self.add_half_edge();
-            let mut half_edge = half_edge.write();
 
-            half_edge.curve().write().surface = surface.clone();
+            {
+                let mut half_edge = half_edge.write();
 
-            let mut back = half_edge.back_mut().write();
-            let mut back_surface = back.surface_form.write();
+                half_edge.curve().write().surface = surface.clone();
 
-            back_surface.position = Some(point);
-            back_surface.surface = surface.clone();
+                let mut back = half_edge.back_mut().write();
+                let mut back_surface = back.surface_form.write();
+
+                back_surface.position = Some(point);
+                back_surface.surface = surface.clone();
+            }
+
+            half_edges.push(half_edge);
         }
 
         for half_edge in &mut self.half_edges {
             half_edge.write().update_as_line_segment();
         }
+
+        half_edges
     }
 
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
