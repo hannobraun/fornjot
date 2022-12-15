@@ -98,7 +98,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(surface, [a, b, c, d]);
+        face.update_exterior_as_polygon(surface, [a, b, c, d]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -134,7 +134,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(surface.clone(), [a, b, c, d]);
+        face.update_exterior_as_polygon(surface.clone(), [a, b, c, d]);
         face.add_interior_polygon(surface.clone(), [e, f, g, h]);
         let face = face
             .build(&mut services.objects)
@@ -193,10 +193,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
-            surface.clone(),
-            [a, b, c, d, e],
-        );
+        face.update_exterior_as_polygon(surface.clone(), [a, b, c, d, e]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);

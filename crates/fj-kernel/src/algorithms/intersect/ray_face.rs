@@ -167,7 +167,7 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -187,7 +187,7 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -210,7 +210,7 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -230,7 +230,7 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -261,7 +261,7 @@ mod tests {
 
         let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -290,7 +290,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
@@ -312,7 +312,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.with_exterior_polygon_from_points(
+        face.update_exterior_as_polygon(
             surface,
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
