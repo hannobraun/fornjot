@@ -9,7 +9,7 @@ use crate::{
     builder::{
         FaceBuilder, HalfEdgeBuilder, SurfaceBuilder, SurfaceVertexBuilder,
     },
-    objects::{HalfEdge, Objects},
+    objects::{Face, HalfEdge, Objects},
     partial::{
         Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialShell,
         PartialSurface, PartialSurfaceVertex,
@@ -19,6 +19,12 @@ use crate::{
 
 /// Builder API for [`PartialShell`]
 pub trait ShellBuilder {
+    /// Add a face to the shell
+    ///
+    /// The face will not be connected to any other faces that the shell might
+    /// already have.
+    fn add_face(&mut self) -> Partial<Face>;
+
     /// Create a cube from the length of its edges
     fn create_cube_from_edge_length(
         edge_length: impl Into<Scalar>,
@@ -27,6 +33,12 @@ pub trait ShellBuilder {
 }
 
 impl ShellBuilder for PartialShell {
+    fn add_face(&mut self) -> Partial<Face> {
+        let face = Partial::default();
+        self.faces.push(face.clone());
+        face
+    }
+
     fn create_cube_from_edge_length(
         edge_length: impl Into<Scalar>,
         objects: &mut Service<Objects>,
