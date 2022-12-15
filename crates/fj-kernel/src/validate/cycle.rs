@@ -78,7 +78,8 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let cycle = PartialCycle::from_poly_chain(
+            let mut cycle = PartialCycle::default();
+            cycle.from_poly_chain(
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.], [0., 1.]],
             );

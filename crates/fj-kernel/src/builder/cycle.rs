@@ -10,10 +10,12 @@ use super::HalfEdgeBuilder;
 /// Builder API for [`PartialCycle`]
 pub trait CycleBuilder {
     /// Create a cycle as a polygonal chain from the provided points
+    #[allow(clippy::wrong_self_convention)]
     fn from_poly_chain(
+        &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self;
+    );
 
     /// Add a new half-edge to the cycle
     ///
@@ -29,15 +31,14 @@ pub trait CycleBuilder {
 
 impl CycleBuilder for PartialCycle {
     fn from_poly_chain(
+        &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Self {
+    ) {
         let surface = surface.into();
 
-        let mut cycle = PartialCycle::default();
-
         for point in points.into_iter().map(Into::into) {
-            let mut half_edge = cycle.add_half_edge();
+            let mut half_edge = self.add_half_edge();
             let mut half_edge = half_edge.write();
 
             half_edge.curve().write().surface = surface.clone();
@@ -49,11 +50,9 @@ impl CycleBuilder for PartialCycle {
             back_surface.surface = surface.clone();
         }
 
-        for half_edge in &mut cycle.half_edges {
+        for half_edge in &mut self.half_edges {
             half_edge.write().update_as_line_segment();
         }
-
-        cycle
     }
 
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
