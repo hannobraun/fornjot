@@ -53,10 +53,11 @@ impl CycleBuilder for PartialCycle {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
         let surface = surface.into();
+        let points = points.into_iter().map(Into::into);
 
         let mut half_edges = Vec::new();
 
-        for point in points.into_iter().map(Into::into) {
+        for point in points {
             let mut half_edge = self.add_half_edge();
 
             {
