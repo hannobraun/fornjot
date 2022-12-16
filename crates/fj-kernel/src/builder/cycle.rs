@@ -99,9 +99,9 @@ impl CycleBuilder for PartialCycle {
 
             let mut new_half_edge = new_half_edge.write();
 
-            new_half_edge.curve().write().surface = shared_surface;
             new_half_edge.front_mut().write().surface_form =
                 shared_surface_vertex;
+            new_half_edge.replace_surface(shared_surface);
             new_half_edge.infer_global_form();
         }
 
