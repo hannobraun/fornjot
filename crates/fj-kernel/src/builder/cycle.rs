@@ -31,6 +31,19 @@ pub trait CycleBuilder {
     /// If this is the first half-edge being added, it is connected to itself,
     /// meaning its front and back vertices are the same.
     fn add_half_edge(&mut self) -> Partial<HalfEdge>;
+
+    /// Add a new half-edge that starts at the provided point
+    ///
+    /// Opens the cycle between the last and first edge, updates the last edge
+    /// to go the provided point, and adds a new half-edge from the provided
+    /// point the the first edge.
+    ///
+    /// If the cycle doesn't have any edges yet, the new edge connects to
+    /// itself, starting and ending at the provided point.
+    fn add_half_edge_from_point_to_start(
+        &mut self,
+        point: impl Into<Point<2>>,
+    ) -> Partial<HalfEdge>;
 }
 
 impl CycleBuilder for PartialCycle {
@@ -116,5 +129,22 @@ impl CycleBuilder for PartialCycle {
 
         self.half_edges.push(new_half_edge.clone());
         new_half_edge
+    }
+
+    fn add_half_edge_from_point_to_start(
+        &mut self,
+        point: impl Into<Point<2>>,
+    ) -> Partial<HalfEdge> {
+        let mut half_edge = self.add_half_edge();
+
+        half_edge
+            .write()
+            .back_mut()
+            .write()
+            .surface_form
+            .write()
+            .position = Some(point.into());
+
+        half_edge
     }
 }
