@@ -87,7 +87,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` is straight-forward.
         let curve = {
-            let path = SurfacePath::line_from_points(points_surface);
+            let (path, _) = SurfacePath::line_from_points(points_surface);
 
             Curve::new(surface.clone(), path, edge_global.curve().clone())
                 .insert(objects)
