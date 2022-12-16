@@ -31,6 +31,9 @@ impl<const D: usize> Line<D> {
 
     /// Create a line from two points
     ///
+    /// Also returns the lines coordinates of the provided points on the new
+    /// line.
+    ///
     /// # Panics
     ///
     /// Panics, if the points are coincident.
