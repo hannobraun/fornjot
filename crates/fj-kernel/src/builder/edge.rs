@@ -6,10 +6,20 @@ use crate::{
     partial::{Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
-use super::CurveBuilder;
+use super::{CurveBuilder, VertexBuilder};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
+    /// Completely replace the surface in this half-edge's object graph
+    ///
+    /// Please note that this operation will write to both vertices that the
+    /// half-edge references. If any of them were created from full objects,
+    /// this will break the connection to those, meaning that building the
+    /// partial objects won't result in those full objects again. This will be
+    /// the case, even if those full objects already referenced the provided
+    /// surface.
+    fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>);
+
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
 
@@ -31,6 +41,14 @@ pub trait HalfEdgeBuilder {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
+    fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>) {
+        let surface = surface.into();
+
+        for vertex in &mut self.vertices {
+            vertex.write().replace_surface(surface.clone());
+        }
+    }
+
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
         let mut curve = self.curve();
         curve.write().update_as_circle_from_radius(radius);
