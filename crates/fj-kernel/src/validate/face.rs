@@ -131,7 +131,7 @@ mod tests {
         };
         let invalid = {
             let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon(
+            cycle.update_as_polygon_from_points(
                 services.objects.surfaces.xz_plane(),
                 [[1., 1.], [1., 2.], [2., 1.]],
             );
