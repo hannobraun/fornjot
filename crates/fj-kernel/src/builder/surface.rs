@@ -26,7 +26,7 @@ impl SurfaceBuilder for PartialSurface {
     fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Self {
         let [a, b, c] = points.map(Into::into);
 
-        let u = GlobalPath::line_from_points([a, b]);
+        let (u, _) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
         Self {
