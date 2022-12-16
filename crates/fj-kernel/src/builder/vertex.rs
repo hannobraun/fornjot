@@ -1,16 +1,33 @@
 use fj_math::Point;
 
-use crate::partial::{
-    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
+use crate::{
+    objects::Surface,
+    partial::{
+        Partial, PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
+    },
 };
 
 /// Builder API for [`PartialVertex`]
 pub trait VertexBuilder {
-    // No methods are currently defined. This trait serves as a placeholder, to
-    // make it clear where to add such methods, once necessary.
+    /// Completely replace the surface in this vertex' object graph
+    ///
+    /// Please note that this operation will write to every partial object that
+    /// the vertex references. If any of them were created from full objects,
+    /// this will break the connection to those, meaning that building the
+    /// partial objects won't result in those full objects again. This will be
+    /// the case, even if those full objects already referenced the provided
+    /// surface.
+    fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>);
 }
 
-impl VertexBuilder for PartialVertex {}
+impl VertexBuilder for PartialVertex {
+    fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>) {
+        let surface = surface.into();
+
+        self.curve.write().surface = surface.clone();
+        self.surface_form.write().surface = surface;
+    }
+}
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
