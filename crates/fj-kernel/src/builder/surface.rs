@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// Builder API for [`PartialSurface`]
-pub trait SurfaceBuilder {
+pub trait SurfaceBuilder: Sized {
     /// Build a surface from its two axes
     fn from_axes(u: GlobalPath, v: impl Into<Vector<3>>) -> Self;
 
