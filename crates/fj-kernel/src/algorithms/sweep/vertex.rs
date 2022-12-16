@@ -1,4 +1,4 @@
-use fj_math::{Line, Point, Scalar, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::path::SurfacePath,
@@ -87,14 +87,10 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         // Armed with those coordinates, creating the `Curve` of the output
         // `Edge` is straight-forward.
         let curve = {
-            let line = Line::from_points(points_surface);
+            let path = SurfacePath::line_from_points(points_surface);
 
-            Curve::new(
-                surface.clone(),
-                SurfacePath::Line(line),
-                edge_global.curve().clone(),
-            )
-            .insert(objects)
+            Curve::new(surface.clone(), path, edge_global.curve().clone())
+                .insert(objects)
         };
 
         let vertices_surface = {
