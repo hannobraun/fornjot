@@ -47,7 +47,7 @@ impl SurfacePath {
         Self::Line(Line::from_points(points))
     }
 
-    /// Convert a point on the path into global coordinates
+    /// Convert a point on the path into surface coordinates
     pub fn point_from_path_coords(
         &self,
         point: impl Into<Point<1>>,
