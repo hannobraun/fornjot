@@ -37,6 +37,7 @@ impl CurveBuilder for PartialCurve {
     }
 
     fn update_as_line_from_points(&mut self, points: [impl Into<Point<2>>; 2]) {
-        self.path = Some(SurfacePath::line_from_points(points));
+        let (path, _) = SurfacePath::line_from_points(points);
+        self.path = Some(path);
     }
 }

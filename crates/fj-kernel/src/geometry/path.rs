@@ -43,9 +43,13 @@ impl SurfacePath {
     }
 
     /// Construct a line from two points
-    pub fn line_from_points(points: [impl Into<Point<2>>; 2]) -> Self {
-        let (line, _) = Line::from_points(points);
-        Self::Line(line)
+    ///
+    /// Also returns the coordinates of the points on the path.
+    pub fn line_from_points(
+        points: [impl Into<Point<2>>; 2],
+    ) -> (Self, [Point<1>; 2]) {
+        let (line, coords) = Line::from_points(points);
+        (Self::Line(line), coords)
     }
 
     /// Convert a point on the path into surface coordinates
@@ -103,9 +107,13 @@ impl GlobalPath {
     }
 
     /// Construct a line from two points
-    pub fn line_from_points(points: [impl Into<Point<3>>; 2]) -> Self {
-        let (line, _) = Line::from_points(points);
-        Self::Line(line)
+    ///
+    /// Also returns the coordinates of the points on the path.
+    pub fn line_from_points(
+        points: [impl Into<Point<3>>; 2],
+    ) -> (Self, [Point<1>; 2]) {
+        let (line, coords) = Line::from_points(points);
+        (Self::Line(line), coords)
     }
 
     /// Access the origin of the path's coordinate system
