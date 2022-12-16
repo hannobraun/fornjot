@@ -16,6 +16,11 @@ pub trait CycleBuilder {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
+    /// Update cycle to be a polygon
+    ///
+    /// Will update each half-edge in the cycle to be a line segment.
+    fn update_as_polygon(&mut self);
+
     /// Add a new half-edge to the cycle
     ///
     /// Creates a half-edge and adds it to the cycle. The new half-edge is
@@ -56,11 +61,15 @@ impl CycleBuilder for PartialCycle {
             half_edges.push(half_edge);
         }
 
+        self.update_as_polygon();
+
+        half_edges
+    }
+
+    fn update_as_polygon(&mut self) {
         for half_edge in &mut self.half_edges {
             half_edge.write().update_as_line_segment();
         }
-
-        half_edges
     }
 
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
