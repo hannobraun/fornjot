@@ -34,10 +34,15 @@ impl<const D: usize> Line<D> {
     /// # Panics
     ///
     /// Panics, if the points are coincident.
-    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
+    pub fn from_points(
+        points: [impl Into<Point<D>>; 2],
+    ) -> (Self, [Point<1>; 2]) {
         let [a, b] = points.map(Into::into);
 
-        Self::from_origin_and_direction(a, b - a)
+        let line = Self::from_origin_and_direction(a, b - a);
+        let coords = [[0.], [1.]].map(Point::from);
+
+        (line, coords)
     }
 
     /// Create a line from two points that include line coordinates
@@ -175,11 +180,11 @@ mod tests {
 
     #[test]
     fn is_coincident_with() {
-        let line = Line::from_points([[0., 0.], [1., 0.]]);
+        let (line, _) = Line::from_points([[0., 0.], [1., 0.]]);
 
-        let a = Line::from_points([[0., 0.], [1., 0.]]);
-        let b = Line::from_points([[0., 0.], [-1., 0.]]);
-        let c = Line::from_points([[0., 1.], [1., 1.]]);
+        let (a, _) = Line::from_points([[0., 0.], [1., 0.]]);
+        let (b, _) = Line::from_points([[0., 0.], [-1., 0.]]);
+        let (c, _) = Line::from_points([[0., 1.], [1., 1.]]);
 
         assert!(line.is_coincident_with(&a));
         assert!(line.is_coincident_with(&b));
