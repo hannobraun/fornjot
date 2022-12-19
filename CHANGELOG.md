@@ -1,5 +1,54 @@
 # Fornjot - Changelog
 
+## v0.29.0 (2022-12-19)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fix crash when minimizing window on Windows ([#1447]; thank you, [@kazatsuyu]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Continue cleanup of object construction code ([#1445], [#1446], [#1448], [#1449], [#1450], [#1451], [#1452], [#1453], [#1456], [#1457])
+- Fix doc comment ([#1458])
+
+#### `fj-math`
+
+- Return line coordinates from `Line::from_points` ([#1455])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1437], [#1438], [#1440], [#1443], [#1444])
+
+[#1437]: https://github.com/hannobraun/Fornjot/pull/1437
+[#1438]: https://github.com/hannobraun/Fornjot/pull/1438
+[#1440]: https://github.com/hannobraun/Fornjot/pull/1440
+[#1443]: https://github.com/hannobraun/Fornjot/pull/1443
+[#1444]: https://github.com/hannobraun/Fornjot/pull/1444
+[#1445]: https://github.com/hannobraun/Fornjot/pull/1445
+[#1446]: https://github.com/hannobraun/Fornjot/pull/1446
+[#1447]: https://github.com/hannobraun/Fornjot/pull/1447
+[#1448]: https://github.com/hannobraun/Fornjot/pull/1448
+[#1449]: https://github.com/hannobraun/Fornjot/pull/1449
+[#1450]: https://github.com/hannobraun/Fornjot/pull/1450
+[#1451]: https://github.com/hannobraun/Fornjot/pull/1451
+[#1452]: https://github.com/hannobraun/Fornjot/pull/1452
+[#1453]: https://github.com/hannobraun/Fornjot/pull/1453
+[#1455]: https://github.com/hannobraun/Fornjot/pull/1455
+[#1456]: https://github.com/hannobraun/Fornjot/pull/1456
+[#1457]: https://github.com/hannobraun/Fornjot/pull/1457
+[#1458]: https://github.com/hannobraun/Fornjot/pull/1458
+
+[@kazatsuyu]: https://github.com/kazatsuyu
+
+
 ## v0.28.0 (2022-12-12)
 
 ### End-user improvements
