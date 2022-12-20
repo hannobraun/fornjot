@@ -43,12 +43,12 @@ impl Shape for fj::Sketch {
 
                     Partial::from_partial(half_edge)
                 };
-                let cycle = Partial::from_partial(PartialCycle {
+                let exterior = Partial::from_partial(PartialCycle {
                     half_edges: vec![half_edge],
                 });
 
                 PartialFace {
-                    exterior: cycle,
+                    exterior,
                     color: Some(Color(self.color())),
                     ..Default::default()
                 }
