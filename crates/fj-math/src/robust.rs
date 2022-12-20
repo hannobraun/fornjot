@@ -22,7 +22,6 @@
 
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::manual_swap)]
-#![allow(clippy::missing_safety_doc)]
 
 const SPLITTER: f64 = 134217729.0;
 const RESULTERRBOUND: f64 = 3.3306690738754706e-16;
@@ -31,12 +30,7 @@ const O3DERRBOUNDB: f64 = 3.330669073875473e-16;
 const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
-pub unsafe fn orient3d(
-    pa: [f64; 3],
-    pb: [f64; 3],
-    pc: [f64; 3],
-    pd: [f64; 3],
-) -> f64 {
+pub fn orient3d(pa: [f64; 3], pb: [f64; 3], pc: [f64; 3], pd: [f64; 3]) -> f64 {
     let adx: f64 = pa[0] - pd[0];
     let bdx: f64 = pb[0] - pd[0];
     let cdx: f64 = pc[0] - pd[0];
@@ -71,7 +65,7 @@ pub unsafe fn orient3d(
     orient3dadapt(pa, pb, pc, pd, permanent)
 }
 
-unsafe fn orient3dadapt(
+fn orient3dadapt(
     pa: [f64; 3],
     pb: [f64; 3],
     pc: [f64; 3],
