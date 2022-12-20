@@ -1712,7 +1712,7 @@ unsafe fn scale_expansion_zeroelim(
     hindex
 }
 
-unsafe fn fast_expansion_sum_zeroelim(
+fn fast_expansion_sum_zeroelim(
     elen: i32,
     e: &[f64],
     flen: i32,
