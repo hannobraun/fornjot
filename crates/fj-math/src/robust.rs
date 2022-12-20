@@ -355,7 +355,7 @@ unsafe fn orient3dadapt(
         cdet.as_mut_ptr(),
         fin1.as_mut_ptr(),
     );
-    det = estimate(finlength, fin1.as_slice());
+    det = estimate(&fin1[..finlength as usize]);
     errbound = O3DERRBOUNDB * permanent;
     if det >= errbound || -det >= errbound {
         return det;
@@ -1953,12 +1953,12 @@ unsafe fn fast_expansion_sum_zeroelim(
     hindex
 }
 
-fn estimate(elen: i32, e: &[f64]) -> f64 {
+fn estimate(e: &[f64]) -> f64 {
     let mut q: f64;
     let mut eindex: usize;
     q = e[0];
     eindex = 1;
-    while eindex < elen as usize {
+    while eindex < e.len() {
         q += e[eindex];
         eindex += 1;
     }
