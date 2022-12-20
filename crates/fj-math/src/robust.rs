@@ -162,7 +162,7 @@ fn orient3dadapt(
     let mut err3: f64;
     let mut _i: f64 = 0.;
     let mut _j: f64 = 0.;
-    let mut _k: f64 = 0.;
+    let mut k: f64;
     let mut z: f64;
     let adx: f64 = pa[0] - pd[0];
     let bdx: f64 = pb[0] - pd[0];
@@ -1020,15 +1020,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1056,15 +1056,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
@@ -1109,15 +1109,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1145,15 +1145,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
@@ -1199,15 +1199,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1235,15 +1235,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
@@ -1288,15 +1288,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1324,15 +1324,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
@@ -1378,15 +1378,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1414,15 +1414,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
@@ -1467,15 +1467,15 @@ fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             z = alo * blo - err3;
-            _k = _i + z;
-            bvirt = _k - _i;
-            avirt = _k - bvirt;
+            k = _i + z;
+            bvirt = k - _i;
+            avirt = k - bvirt;
             bround = z - bvirt;
             around = _i - avirt;
             u[1] = around + bround;
-            u3 = _j + _k;
+            u3 = _j + k;
             bvirt = u3 - _j;
-            u[2] = _k - bvirt;
+            u[2] = k - bvirt;
             u[3] = u3;
             finlength =
                 fast_expansion_sum_zeroelim(finlength, finnow, 4, &u, finother);
@@ -1503,15 +1503,15 @@ fn orient3dadapt(
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
                 z = alo * blo - err3;
-                _k = _i + z;
-                bvirt = _k - _i;
-                avirt = _k - bvirt;
+                k = _i + z;
+                bvirt = k - _i;
+                avirt = k - bvirt;
                 bround = z - bvirt;
                 around = _i - avirt;
                 u[1] = around + bround;
-                u3 = _j + _k;
+                u3 = _j + k;
                 bvirt = u3 - _j;
-                u[2] = _k - bvirt;
+                u[2] = k - bvirt;
                 u[3] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength, finnow, 4, &u, finother,
