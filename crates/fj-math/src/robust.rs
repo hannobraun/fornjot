@@ -1955,11 +1955,10 @@ unsafe fn fast_expansion_sum_zeroelim(
 
 fn estimate(e: &[f64]) -> f64 {
     let mut q = e[0];
-    let mut eindex: usize;
-    eindex = 1;
-    while eindex < e.len() {
-        q += e[eindex];
-        eindex += 1;
+
+    for e in &e[1..] {
+        q += e;
     }
+
     q
 }
