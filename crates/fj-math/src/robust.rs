@@ -21,6 +21,7 @@
 //! 4. Copy code from transpiled file here.
 
 #![allow(clippy::just_underscores_and_digits)]
+#![allow(clippy::manual_swap)]
 #![allow(clippy::missing_safety_doc)]
 
 const SPLITTER: f64 = 134217729.0;
@@ -86,9 +87,6 @@ unsafe fn orient3dadapt(
     let mut bdet: [f64; 8] = [0.; 8];
     let mut cdet: [f64; 8] = [0.; 8];
     let mut abdet: [f64; 16] = [0.; 16];
-    let mut finnow: *mut f64;
-    let mut finother: *mut f64;
-    let mut finswap: *mut f64;
     let mut fin1: [f64; 192] = [0.; 192];
     let mut fin2: [f64; 192] = [0.; 192];
     let mut finlength: i32;
@@ -433,8 +431,8 @@ unsafe fn orient3dadapt(
     if det >= errbound || -det >= errbound {
         return det;
     }
-    finnow = fin1.as_mut_ptr();
-    finother = fin2.as_mut_ptr();
+    let mut finnow = fin1.as_mut_ptr();
+    let mut finother = fin2.as_mut_ptr();
     if adxtail == 0.0f64 {
         if adytail == 0.0f64 {
             at_b[0] = 0.0f64;
@@ -982,7 +980,7 @@ unsafe fn orient3dadapt(
         w.as_mut_ptr(),
         finother,
     );
-    finswap = finnow;
+    let mut finswap = finnow;
     finnow = finother;
     finother = finswap;
     let catlen: i32 = fast_expansion_sum_zeroelim(
