@@ -322,8 +322,11 @@ impl ShellBuilder for PartialShell {
                 half_edges.push(Partial::from_partial(half_edge));
             }
 
+            let mut exterior = PartialCycle::default();
+            exterior.half_edges.extend(half_edges);
+
             PartialFace {
-                exterior: Partial::from_partial(PartialCycle { half_edges }),
+                exterior: Partial::from_partial(exterior),
                 ..Default::default()
             }
         };
