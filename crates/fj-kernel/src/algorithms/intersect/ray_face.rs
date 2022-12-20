@@ -34,19 +34,11 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
             let c = plane.origin() + plane.v();
             let d = ray.origin;
 
-            let [mut a, mut b, mut c, mut d] = [a, b, c, d]
+            let [a, b, c, d] = [a, b, c, d]
                 .map(|point| [point.x, point.y, point.z])
                 .map(|point| point.map(Scalar::into_f64));
 
-            if unsafe {
-                fj_math::robust::orient3d(
-                    a.as_mut_ptr(),
-                    b.as_mut_ptr(),
-                    c.as_mut_ptr(),
-                    d.as_mut_ptr(),
-                )
-            } == 0.
-            {
+            if unsafe { fj_math::robust::orient3d(a, b, c, d) } == 0. {
                 return Some(RayFaceIntersection::RayHitsFaceAndAreParallel);
             } else {
                 return None;

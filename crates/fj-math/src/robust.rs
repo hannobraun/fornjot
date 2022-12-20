@@ -32,20 +32,20 @@ const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
 pub unsafe fn orient3d(
-    pa: *const f64,
-    pb: *const f64,
-    pc: *const f64,
-    pd: *const f64,
+    pa: [f64; 3],
+    pb: [f64; 3],
+    pc: [f64; 3],
+    pd: [f64; 3],
 ) -> f64 {
-    let adx: f64 = *pa.offset(0) - *pd.offset(0);
-    let bdx: f64 = *pb.offset(0) - *pd.offset(0);
-    let cdx: f64 = *pc.offset(0) - *pd.offset(0);
-    let ady: f64 = *pa.offset(1) - *pd.offset(1);
-    let bdy: f64 = *pb.offset(1) - *pd.offset(1);
-    let cdy: f64 = *pc.offset(1) - *pd.offset(1);
-    let adz: f64 = *pa.offset(2) - *pd.offset(2);
-    let bdz: f64 = *pb.offset(2) - *pd.offset(2);
-    let cdz: f64 = *pc.offset(2) - *pd.offset(2);
+    let adx: f64 = pa[0] - pd[0];
+    let bdx: f64 = pb[0] - pd[0];
+    let cdx: f64 = pc[0] - pd[0];
+    let ady: f64 = pa[1] - pd[1];
+    let bdy: f64 = pb[1] - pd[1];
+    let cdy: f64 = pc[1] - pd[1];
+    let adz: f64 = pa[2] - pd[2];
+    let bdz: f64 = pb[2] - pd[2];
+    let cdz: f64 = pc[2] - pd[2];
     let bdxcdy: f64 = bdx * cdy;
     let cdxbdy: f64 = cdx * bdy;
     let cdxady: f64 = cdx * ady;
@@ -68,7 +68,13 @@ pub unsafe fn orient3d(
     if det > errbound || -det > errbound {
         return det;
     }
-    orient3dadapt(pa, pb, pc, pd, permanent)
+    orient3dadapt(
+        pa.as_ptr(),
+        pb.as_ptr(),
+        pc.as_ptr(),
+        pd.as_ptr(),
+        permanent,
+    )
 }
 
 unsafe fn orient3dadapt(
