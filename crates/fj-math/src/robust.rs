@@ -68,20 +68,14 @@ pub unsafe fn orient3d(
     if det > errbound || -det > errbound {
         return det;
     }
-    orient3dadapt(
-        pa.as_ptr(),
-        pb.as_ptr(),
-        pc.as_ptr(),
-        pd.as_ptr(),
-        permanent,
-    )
+    orient3dadapt(pa, pb, pc, pd, permanent)
 }
 
 unsafe fn orient3dadapt(
-    pa: *const f64,
-    pb: *const f64,
-    pc: *const f64,
-    pd: *const f64,
+    pa: [f64; 3],
+    pb: [f64; 3],
+    pc: [f64; 3],
+    pd: [f64; 3],
     permanent: f64,
 ) -> f64 {
     let mut det: f64;
@@ -177,15 +171,15 @@ unsafe fn orient3dadapt(
     let mut _j: f64 = 0.;
     let mut _k: f64 = 0.;
     let mut _0: f64 = 0.;
-    let adx: f64 = *pa.offset(0) - *pd.offset(0);
-    let bdx: f64 = *pb.offset(0) - *pd.offset(0);
-    let cdx: f64 = *pc.offset(0) - *pd.offset(0);
-    let ady: f64 = *pa.offset(1) - *pd.offset(1);
-    let bdy: f64 = *pb.offset(1) - *pd.offset(1);
-    let cdy: f64 = *pc.offset(1) - *pd.offset(1);
-    let adz: f64 = *pa.offset(2) - *pd.offset(2);
-    let bdz: f64 = *pb.offset(2) - *pd.offset(2);
-    let cdz: f64 = *pc.offset(2) - *pd.offset(2);
+    let adx: f64 = pa[0] - pd[0];
+    let bdx: f64 = pb[0] - pd[0];
+    let cdx: f64 = pc[0] - pd[0];
+    let ady: f64 = pa[1] - pd[1];
+    let bdy: f64 = pb[1] - pd[1];
+    let cdy: f64 = pc[1] - pd[1];
+    let adz: f64 = pa[2] - pd[2];
+    let bdz: f64 = pb[2] - pd[2];
+    let cdz: f64 = pc[2] - pd[2];
     let bdxcdy1: f64 = bdx * cdy;
     c = SPLITTER * bdx;
     abig = c - bdx;
@@ -351,50 +345,50 @@ unsafe fn orient3dadapt(
     if det >= errbound || -det >= errbound {
         return det;
     }
-    bvirt = *pa.offset(0) - adx;
+    bvirt = pa[0] - adx;
     avirt = adx + bvirt;
-    bround = bvirt - *pd.offset(0);
-    around = *pa.offset(0) - avirt;
+    bround = bvirt - pd[0];
+    around = pa[0] - avirt;
     let adxtail: f64 = around + bround;
-    bvirt = *pb.offset(0) - bdx;
+    bvirt = pb[0] - bdx;
     avirt = bdx + bvirt;
-    bround = bvirt - *pd.offset(0);
-    around = *pb.offset(0) - avirt;
+    bround = bvirt - pd[0];
+    around = pb[0] - avirt;
     let bdxtail: f64 = around + bround;
-    bvirt = *pc.offset(0) - cdx;
+    bvirt = pc[0] - cdx;
     avirt = cdx + bvirt;
-    bround = bvirt - *pd.offset(0);
-    around = *pc.offset(0) - avirt;
+    bround = bvirt - pd[0];
+    around = pc[0] - avirt;
     let cdxtail: f64 = around + bround;
-    bvirt = *pa.offset(1) - ady;
+    bvirt = pa[1] - ady;
     avirt = ady + bvirt;
-    bround = bvirt - *pd.offset(1);
-    around = *pa.offset(1) - avirt;
+    bround = bvirt - pd[1];
+    around = pa[1] - avirt;
     let adytail: f64 = around + bround;
-    bvirt = *pb.offset(1) - bdy;
+    bvirt = pb[1] - bdy;
     avirt = bdy + bvirt;
-    bround = bvirt - *pd.offset(1);
-    around = *pb.offset(1) - avirt;
+    bround = bvirt - pd[1];
+    around = pb[1] - avirt;
     let bdytail: f64 = around + bround;
-    bvirt = *pc.offset(1) - cdy;
+    bvirt = pc[1] - cdy;
     avirt = cdy + bvirt;
-    bround = bvirt - *pd.offset(1);
-    around = *pc.offset(1) - avirt;
+    bround = bvirt - pd[1];
+    around = pc[1] - avirt;
     let cdytail: f64 = around + bround;
-    bvirt = *pa.offset(2) - adz;
+    bvirt = pa[2] - adz;
     avirt = adz + bvirt;
-    bround = bvirt - *pd.offset(2);
-    around = *pa.offset(2) - avirt;
+    bround = bvirt - pd[2];
+    around = pa[2] - avirt;
     let adztail: f64 = around + bround;
-    bvirt = *pb.offset(2) - bdz;
+    bvirt = pb[2] - bdz;
     avirt = bdz + bvirt;
-    bround = bvirt - *pd.offset(2);
-    around = *pb.offset(2) - avirt;
+    bround = bvirt - pd[2];
+    around = pb[2] - avirt;
     let bdztail: f64 = around + bround;
-    bvirt = *pc.offset(2) - cdz;
+    bvirt = pc[2] - cdz;
     avirt = cdz + bvirt;
-    bround = bvirt - *pd.offset(2);
-    around = *pc.offset(2) - avirt;
+    bround = bvirt - pd[2];
+    around = pc[2] - avirt;
     let cdztail: f64 = around + bround;
     if adxtail == 0.0f64
         && bdxtail == 0.0f64
