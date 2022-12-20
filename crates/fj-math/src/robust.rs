@@ -20,7 +20,6 @@
 //! 3. Transpile C code to Rust: `c2rust transpile compile_commands.json`
 //! 4. Copy code from transpiled file here.
 
-#![allow(clippy::assign_op_pattern)]
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::missing_safety_doc)]
 #![allow(clippy::needless_late_init)]
@@ -1865,7 +1864,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     hindex = 0 as i32;
     if hh != 0 as i32 as f64 {
         let fresh12 = hindex;
-        hindex = hindex + 1;
+        hindex += 1;
         *h.offset(fresh12 as isize) = hh;
     }
     eindex = 1 as i32;
@@ -1888,7 +1887,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
         hh = around + bround;
         if hh != 0 as i32 as f64 {
             let fresh13 = hindex;
-            hindex = hindex + 1;
+            hindex += 1;
             *h.offset(fresh13 as isize) = hh;
         }
         q = product1 + sum;
@@ -1896,14 +1895,14 @@ unsafe extern "C" fn scale_expansion_zeroelim(
         hh = sum - bvirt;
         if hh != 0 as i32 as f64 {
             let fresh14 = hindex;
-            hindex = hindex + 1;
+            hindex += 1;
             *h.offset(fresh14 as isize) = hh;
         }
         eindex += 1;
     }
     if q != 0.0f64 || hindex == 0 as i32 {
         let fresh15 = hindex;
-        hindex = hindex + 1;
+        hindex += 1;
         *h.offset(fresh15 as isize) = q;
     }
     return hindex;
@@ -1959,7 +1958,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         q = q_new;
         if hh != 0.0f64 {
             let fresh4 = hindex;
-            hindex = hindex + 1;
+            hindex += 1;
             *h.offset(fresh4 as isize) = hh;
         }
         while eindex < elen && findex < flen {
@@ -1985,7 +1984,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
             q = q_new;
             if hh != 0.0f64 {
                 let fresh5 = hindex;
-                hindex = hindex + 1;
+                hindex += 1;
                 *h.offset(fresh5 as isize) = hh;
             }
         }
@@ -2002,7 +2001,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         q = q_new;
         if hh != 0.0f64 {
             let fresh6 = hindex;
-            hindex = hindex + 1;
+            hindex += 1;
             *h.offset(fresh6 as isize) = hh;
         }
     }
@@ -2018,13 +2017,13 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         q = q_new;
         if hh != 0.0f64 {
             let fresh7 = hindex;
-            hindex = hindex + 1;
+            hindex += 1;
             *h.offset(fresh7 as isize) = hh;
         }
     }
     if q != 0.0f64 || hindex == 0 as i32 {
         let fresh8 = hindex;
-        hindex = hindex + 1;
+        hindex += 1;
         *h.offset(fresh8 as isize) = q;
     }
     return hindex;
