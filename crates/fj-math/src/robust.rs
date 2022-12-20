@@ -22,7 +22,6 @@
 
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::missing_safety_doc)]
-#![allow(clippy::zero_ptr)]
 
 const SPLITTER: f64 = 134217729.0;
 const RESULTERRBOUND: f64 = 3.3306690738754706e-16;
