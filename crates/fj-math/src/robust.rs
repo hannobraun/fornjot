@@ -20,7 +20,6 @@
 //! 3. Transpile C code to Rust: `c2rust transpile compile_commands.json`
 //! 4. Copy code from transpiled file here.
 
-#![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
 #![allow(clippy::assign_op_pattern)]
@@ -30,11 +29,11 @@
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
-const splitter: f64 = 134217729.0;
-const resulterrbound: f64 = 3.3306690738754706e-16;
-const o3derrboundA: f64 = 7.771561172376103e-16;
-const o3derrboundB: f64 = 3.330669073875473e-16;
-const o3derrboundC: f64 = 3.2047474274603644e-31;
+const SPLITTER: f64 = 134217729.0;
+const RESULTERRBOUND: f64 = 3.3306690738754706e-16;
+const O3DERRBOUNDA: f64 = 7.771561172376103e-16;
+const O3DERRBOUNDB: f64 = 3.330669073875473e-16;
+const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
 pub unsafe extern "C" fn orient3d(
@@ -88,7 +87,7 @@ pub unsafe extern "C" fn orient3d(
         + ((if adxbdy >= 0.0f64 { adxbdy } else { -adxbdy })
             + (if bdxady >= 0.0f64 { bdxady } else { -bdxady }))
             * (if cdz >= 0.0f64 { cdz } else { -cdz });
-    errbound = o3derrboundA * permanent;
+    errbound = O3DERRBOUNDA * permanent;
     if det > errbound || -det > errbound {
         return det;
     }
@@ -248,11 +247,11 @@ unsafe extern "C" fn orient3dadapt(
     bdz = *pb.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
     cdz = *pc.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
     bdxcdy1 = bdx * cdy;
-    c = splitter * bdx;
+    c = SPLITTER * bdx;
     abig = c - bdx;
     ahi = c - abig;
     alo = bdx - ahi;
-    c = splitter * cdy;
+    c = SPLITTER * cdy;
     abig = c - cdy;
     bhi = c - abig;
     blo = cdy - bhi;
@@ -261,11 +260,11 @@ unsafe extern "C" fn orient3dadapt(
     err3 = err2 - ahi * blo;
     bdxcdy0 = alo * blo - err3;
     cdxbdy1 = cdx * bdy;
-    c = splitter * cdx;
+    c = SPLITTER * cdx;
     abig = c - cdx;
     ahi = c - abig;
     alo = cdx - ahi;
-    c = splitter * bdy;
+    c = SPLITTER * bdy;
     abig = c - bdy;
     bhi = c - abig;
     blo = bdy - bhi;
@@ -305,11 +304,11 @@ unsafe extern "C" fn orient3dadapt(
         adet.as_mut_ptr(),
     );
     cdxady1 = cdx * ady;
-    c = splitter * cdx;
+    c = SPLITTER * cdx;
     abig = c - cdx;
     ahi = c - abig;
     alo = cdx - ahi;
-    c = splitter * ady;
+    c = SPLITTER * ady;
     abig = c - ady;
     bhi = c - abig;
     blo = ady - bhi;
@@ -318,11 +317,11 @@ unsafe extern "C" fn orient3dadapt(
     err3 = err2 - ahi * blo;
     cdxady0 = alo * blo - err3;
     adxcdy1 = adx * cdy;
-    c = splitter * adx;
+    c = SPLITTER * adx;
     abig = c - adx;
     ahi = c - abig;
     alo = adx - ahi;
-    c = splitter * cdy;
+    c = SPLITTER * cdy;
     abig = c - cdy;
     bhi = c - abig;
     blo = cdy - bhi;
@@ -362,11 +361,11 @@ unsafe extern "C" fn orient3dadapt(
         bdet.as_mut_ptr(),
     );
     adxbdy1 = adx * bdy;
-    c = splitter * adx;
+    c = SPLITTER * adx;
     abig = c - adx;
     ahi = c - abig;
     alo = adx - ahi;
-    c = splitter * bdy;
+    c = SPLITTER * bdy;
     abig = c - bdy;
     bhi = c - abig;
     blo = bdy - bhi;
@@ -375,11 +374,11 @@ unsafe extern "C" fn orient3dadapt(
     err3 = err2 - ahi * blo;
     adxbdy0 = alo * blo - err3;
     bdxady1 = bdx * ady;
-    c = splitter * bdx;
+    c = SPLITTER * bdx;
     abig = c - bdx;
     ahi = c - abig;
     alo = bdx - ahi;
-    c = splitter * ady;
+    c = SPLITTER * ady;
     abig = c - ady;
     bhi = c - abig;
     blo = ady - bhi;
@@ -433,7 +432,7 @@ unsafe extern "C" fn orient3dadapt(
         fin1.as_mut_ptr(),
     );
     det = estimate(finlength, fin1.as_mut_ptr());
-    errbound = o3derrboundB * permanent;
+    errbound = O3DERRBOUNDB * permanent;
     if det >= errbound || -det >= errbound {
         return det;
     }
@@ -494,8 +493,8 @@ unsafe extern "C" fn orient3dadapt(
     {
         return det;
     }
-    errbound = o3derrboundC * permanent
-        + resulterrbound * (if det >= 0.0f64 { det } else { -det });
+    errbound = O3DERRBOUNDC * permanent
+        + RESULTERRBOUND * (if det >= 0.0f64 { det } else { -det });
     det += adz
         * (bdx * cdytail + cdy * bdxtail - (bdy * cdxtail + cdx * bdytail))
         + adztail * (bdx * cdy - bdy * cdx)
@@ -521,11 +520,11 @@ unsafe extern "C" fn orient3dadapt(
         } else {
             negate = -adytail;
             at_blarge = negate * bdx;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * bdx;
+            c = SPLITTER * bdx;
             abig = c - bdx;
             bhi = c - abig;
             blo = bdx - bhi;
@@ -536,11 +535,11 @@ unsafe extern "C" fn orient3dadapt(
             at_b[1 as i32 as usize] = at_blarge;
             at_blen = 2 as i32;
             at_clarge = adytail * cdx;
-            c = splitter * adytail;
+            c = SPLITTER * adytail;
             abig = c - adytail;
             ahi = c - abig;
             alo = adytail - ahi;
-            c = splitter * cdx;
+            c = SPLITTER * cdx;
             abig = c - cdx;
             bhi = c - abig;
             blo = cdx - bhi;
@@ -553,11 +552,11 @@ unsafe extern "C" fn orient3dadapt(
         }
     } else if adytail == 0.0f64 {
         at_blarge = adxtail * bdy;
-        c = splitter * adxtail;
+        c = SPLITTER * adxtail;
         abig = c - adxtail;
         ahi = c - abig;
         alo = adxtail - ahi;
-        c = splitter * bdy;
+        c = SPLITTER * bdy;
         abig = c - bdy;
         bhi = c - abig;
         blo = bdy - bhi;
@@ -569,11 +568,11 @@ unsafe extern "C" fn orient3dadapt(
         at_blen = 2 as i32;
         negate = -adxtail;
         at_clarge = negate * cdy;
-        c = splitter * negate;
+        c = SPLITTER * negate;
         abig = c - negate;
         ahi = c - abig;
         alo = negate - ahi;
-        c = splitter * cdy;
+        c = SPLITTER * cdy;
         abig = c - cdy;
         bhi = c - abig;
         blo = cdy - bhi;
@@ -585,11 +584,11 @@ unsafe extern "C" fn orient3dadapt(
         at_clen = 2 as i32;
     } else {
         adxt_bdy1 = adxtail * bdy;
-        c = splitter * adxtail;
+        c = SPLITTER * adxtail;
         abig = c - adxtail;
         ahi = c - abig;
         alo = adxtail - ahi;
-        c = splitter * bdy;
+        c = SPLITTER * bdy;
         abig = c - bdy;
         bhi = c - abig;
         blo = bdy - bhi;
@@ -598,11 +597,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         adxt_bdy0 = alo * blo - err3;
         adyt_bdx1 = adytail * bdx;
-        c = splitter * adytail;
+        c = SPLITTER * adytail;
         abig = c - adytail;
         ahi = c - abig;
         alo = adytail - ahi;
-        c = splitter * bdx;
+        c = SPLITTER * bdx;
         abig = c - bdx;
         bhi = c - abig;
         blo = bdx - bhi;
@@ -637,11 +636,11 @@ unsafe extern "C" fn orient3dadapt(
         at_b[3 as i32 as usize] = at_blarge;
         at_blen = 4 as i32;
         adyt_cdx1 = adytail * cdx;
-        c = splitter * adytail;
+        c = SPLITTER * adytail;
         abig = c - adytail;
         ahi = c - abig;
         alo = adytail - ahi;
-        c = splitter * cdx;
+        c = SPLITTER * cdx;
         abig = c - cdx;
         bhi = c - abig;
         blo = cdx - bhi;
@@ -650,11 +649,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         adyt_cdx0 = alo * blo - err3;
         adxt_cdy1 = adxtail * cdy;
-        c = splitter * adxtail;
+        c = SPLITTER * adxtail;
         abig = c - adxtail;
         ahi = c - abig;
         alo = adxtail - ahi;
-        c = splitter * cdy;
+        c = SPLITTER * cdy;
         abig = c - cdy;
         bhi = c - abig;
         blo = cdy - bhi;
@@ -698,11 +697,11 @@ unsafe extern "C" fn orient3dadapt(
         } else {
             negate = -bdytail;
             bt_clarge = negate * cdx;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * cdx;
+            c = SPLITTER * cdx;
             abig = c - cdx;
             bhi = c - abig;
             blo = cdx - bhi;
@@ -713,11 +712,11 @@ unsafe extern "C" fn orient3dadapt(
             bt_c[1 as i32 as usize] = bt_clarge;
             bt_clen = 2 as i32;
             bt_alarge = bdytail * adx;
-            c = splitter * bdytail;
+            c = SPLITTER * bdytail;
             abig = c - bdytail;
             ahi = c - abig;
             alo = bdytail - ahi;
-            c = splitter * adx;
+            c = SPLITTER * adx;
             abig = c - adx;
             bhi = c - abig;
             blo = adx - bhi;
@@ -730,11 +729,11 @@ unsafe extern "C" fn orient3dadapt(
         }
     } else if bdytail == 0.0f64 {
         bt_clarge = bdxtail * cdy;
-        c = splitter * bdxtail;
+        c = SPLITTER * bdxtail;
         abig = c - bdxtail;
         ahi = c - abig;
         alo = bdxtail - ahi;
-        c = splitter * cdy;
+        c = SPLITTER * cdy;
         abig = c - cdy;
         bhi = c - abig;
         blo = cdy - bhi;
@@ -746,11 +745,11 @@ unsafe extern "C" fn orient3dadapt(
         bt_clen = 2 as i32;
         negate = -bdxtail;
         bt_alarge = negate * ady;
-        c = splitter * negate;
+        c = SPLITTER * negate;
         abig = c - negate;
         ahi = c - abig;
         alo = negate - ahi;
-        c = splitter * ady;
+        c = SPLITTER * ady;
         abig = c - ady;
         bhi = c - abig;
         blo = ady - bhi;
@@ -762,11 +761,11 @@ unsafe extern "C" fn orient3dadapt(
         bt_alen = 2 as i32;
     } else {
         bdxt_cdy1 = bdxtail * cdy;
-        c = splitter * bdxtail;
+        c = SPLITTER * bdxtail;
         abig = c - bdxtail;
         ahi = c - abig;
         alo = bdxtail - ahi;
-        c = splitter * cdy;
+        c = SPLITTER * cdy;
         abig = c - cdy;
         bhi = c - abig;
         blo = cdy - bhi;
@@ -775,11 +774,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         bdxt_cdy0 = alo * blo - err3;
         bdyt_cdx1 = bdytail * cdx;
-        c = splitter * bdytail;
+        c = SPLITTER * bdytail;
         abig = c - bdytail;
         ahi = c - abig;
         alo = bdytail - ahi;
-        c = splitter * cdx;
+        c = SPLITTER * cdx;
         abig = c - cdx;
         bhi = c - abig;
         blo = cdx - bhi;
@@ -814,11 +813,11 @@ unsafe extern "C" fn orient3dadapt(
         bt_c[3 as i32 as usize] = bt_clarge;
         bt_clen = 4 as i32;
         bdyt_adx1 = bdytail * adx;
-        c = splitter * bdytail;
+        c = SPLITTER * bdytail;
         abig = c - bdytail;
         ahi = c - abig;
         alo = bdytail - ahi;
-        c = splitter * adx;
+        c = SPLITTER * adx;
         abig = c - adx;
         bhi = c - abig;
         blo = adx - bhi;
@@ -827,11 +826,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         bdyt_adx0 = alo * blo - err3;
         bdxt_ady1 = bdxtail * ady;
-        c = splitter * bdxtail;
+        c = SPLITTER * bdxtail;
         abig = c - bdxtail;
         ahi = c - abig;
         alo = bdxtail - ahi;
-        c = splitter * ady;
+        c = SPLITTER * ady;
         abig = c - ady;
         bhi = c - abig;
         blo = ady - bhi;
@@ -875,11 +874,11 @@ unsafe extern "C" fn orient3dadapt(
         } else {
             negate = -cdytail;
             ct_alarge = negate * adx;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * adx;
+            c = SPLITTER * adx;
             abig = c - adx;
             bhi = c - abig;
             blo = adx - bhi;
@@ -890,11 +889,11 @@ unsafe extern "C" fn orient3dadapt(
             ct_a[1 as i32 as usize] = ct_alarge;
             ct_alen = 2 as i32;
             ct_blarge = cdytail * bdx;
-            c = splitter * cdytail;
+            c = SPLITTER * cdytail;
             abig = c - cdytail;
             ahi = c - abig;
             alo = cdytail - ahi;
-            c = splitter * bdx;
+            c = SPLITTER * bdx;
             abig = c - bdx;
             bhi = c - abig;
             blo = bdx - bhi;
@@ -907,11 +906,11 @@ unsafe extern "C" fn orient3dadapt(
         }
     } else if cdytail == 0.0f64 {
         ct_alarge = cdxtail * ady;
-        c = splitter * cdxtail;
+        c = SPLITTER * cdxtail;
         abig = c - cdxtail;
         ahi = c - abig;
         alo = cdxtail - ahi;
-        c = splitter * ady;
+        c = SPLITTER * ady;
         abig = c - ady;
         bhi = c - abig;
         blo = ady - bhi;
@@ -923,11 +922,11 @@ unsafe extern "C" fn orient3dadapt(
         ct_alen = 2 as i32;
         negate = -cdxtail;
         ct_blarge = negate * bdy;
-        c = splitter * negate;
+        c = SPLITTER * negate;
         abig = c - negate;
         ahi = c - abig;
         alo = negate - ahi;
-        c = splitter * bdy;
+        c = SPLITTER * bdy;
         abig = c - bdy;
         bhi = c - abig;
         blo = bdy - bhi;
@@ -939,11 +938,11 @@ unsafe extern "C" fn orient3dadapt(
         ct_blen = 2 as i32;
     } else {
         cdxt_ady1 = cdxtail * ady;
-        c = splitter * cdxtail;
+        c = SPLITTER * cdxtail;
         abig = c - cdxtail;
         ahi = c - abig;
         alo = cdxtail - ahi;
-        c = splitter * ady;
+        c = SPLITTER * ady;
         abig = c - ady;
         bhi = c - abig;
         blo = ady - bhi;
@@ -952,11 +951,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         cdxt_ady0 = alo * blo - err3;
         cdyt_adx1 = cdytail * adx;
-        c = splitter * cdytail;
+        c = SPLITTER * cdytail;
         abig = c - cdytail;
         ahi = c - abig;
         alo = cdytail - ahi;
-        c = splitter * adx;
+        c = SPLITTER * adx;
         abig = c - adx;
         bhi = c - abig;
         blo = adx - bhi;
@@ -991,11 +990,11 @@ unsafe extern "C" fn orient3dadapt(
         ct_a[3 as i32 as usize] = ct_alarge;
         ct_alen = 4 as i32;
         cdyt_bdx1 = cdytail * bdx;
-        c = splitter * cdytail;
+        c = SPLITTER * cdytail;
         abig = c - cdytail;
         ahi = c - abig;
         alo = cdytail - ahi;
-        c = splitter * bdx;
+        c = SPLITTER * bdx;
         abig = c - bdx;
         bhi = c - abig;
         blo = bdx - bhi;
@@ -1004,11 +1003,11 @@ unsafe extern "C" fn orient3dadapt(
         err3 = err2 - ahi * blo;
         cdyt_bdx0 = alo * blo - err3;
         cdxt_bdy1 = cdxtail * bdy;
-        c = splitter * cdxtail;
+        c = SPLITTER * cdxtail;
         abig = c - cdxtail;
         ahi = c - abig;
         alo = cdxtail - ahi;
-        c = splitter * bdy;
+        c = SPLITTER * bdy;
         abig = c - bdy;
         bhi = c - abig;
         blo = bdy - bhi;
@@ -1157,11 +1156,11 @@ unsafe extern "C" fn orient3dadapt(
     if adxtail != 0.0f64 {
         if bdytail != 0.0f64 {
             adxt_bdyt1 = adxtail * bdytail;
-            c = splitter * adxtail;
+            c = SPLITTER * adxtail;
             abig = c - adxtail;
             ahi = c - abig;
             alo = adxtail - ahi;
-            c = splitter * bdytail;
+            c = SPLITTER * bdytail;
             abig = c - bdytail;
             bhi = c - abig;
             blo = bdytail - bhi;
@@ -1169,12 +1168,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             adxt_bdyt0 = alo * blo - err3;
-            c = splitter * cdz;
+            c = SPLITTER * cdz;
             abig = c - cdz;
             bhi = c - abig;
             blo = cdz - bhi;
             _i = adxt_bdyt0 * cdz;
-            c = splitter * adxt_bdyt0;
+            c = SPLITTER * adxt_bdyt0;
             abig = c - adxt_bdyt0;
             ahi = c - abig;
             alo = adxt_bdyt0 - ahi;
@@ -1183,7 +1182,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = adxt_bdyt1 * cdz;
-            c = splitter * adxt_bdyt1;
+            c = SPLITTER * adxt_bdyt1;
             abig = c - adxt_bdyt1;
             ahi = c - abig;
             alo = adxt_bdyt1 - ahi;
@@ -1212,12 +1211,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if cdztail != 0.0f64 {
-                c = splitter * cdztail;
+                c = SPLITTER * cdztail;
                 abig = c - cdztail;
                 bhi = c - abig;
                 blo = cdztail - bhi;
                 _i = adxt_bdyt0 * cdztail;
-                c = splitter * adxt_bdyt0;
+                c = SPLITTER * adxt_bdyt0;
                 abig = c - adxt_bdyt0;
                 ahi = c - abig;
                 alo = adxt_bdyt0 - ahi;
@@ -1226,7 +1225,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = adxt_bdyt1 * cdztail;
-                c = splitter * adxt_bdyt1;
+                c = SPLITTER * adxt_bdyt1;
                 abig = c - adxt_bdyt1;
                 ahi = c - abig;
                 alo = adxt_bdyt1 - ahi;
@@ -1259,11 +1258,11 @@ unsafe extern "C" fn orient3dadapt(
         if cdytail != 0.0f64 {
             negate = -adxtail;
             adxt_cdyt1 = negate * cdytail;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * cdytail;
+            c = SPLITTER * cdytail;
             abig = c - cdytail;
             bhi = c - abig;
             blo = cdytail - bhi;
@@ -1271,12 +1270,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             adxt_cdyt0 = alo * blo - err3;
-            c = splitter * bdz;
+            c = SPLITTER * bdz;
             abig = c - bdz;
             bhi = c - abig;
             blo = bdz - bhi;
             _i = adxt_cdyt0 * bdz;
-            c = splitter * adxt_cdyt0;
+            c = SPLITTER * adxt_cdyt0;
             abig = c - adxt_cdyt0;
             ahi = c - abig;
             alo = adxt_cdyt0 - ahi;
@@ -1285,7 +1284,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = adxt_cdyt1 * bdz;
-            c = splitter * adxt_cdyt1;
+            c = SPLITTER * adxt_cdyt1;
             abig = c - adxt_cdyt1;
             ahi = c - abig;
             alo = adxt_cdyt1 - ahi;
@@ -1314,12 +1313,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if bdztail != 0.0f64 {
-                c = splitter * bdztail;
+                c = SPLITTER * bdztail;
                 abig = c - bdztail;
                 bhi = c - abig;
                 blo = bdztail - bhi;
                 _i = adxt_cdyt0 * bdztail;
-                c = splitter * adxt_cdyt0;
+                c = SPLITTER * adxt_cdyt0;
                 abig = c - adxt_cdyt0;
                 ahi = c - abig;
                 alo = adxt_cdyt0 - ahi;
@@ -1328,7 +1327,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = adxt_cdyt1 * bdztail;
-                c = splitter * adxt_cdyt1;
+                c = SPLITTER * adxt_cdyt1;
                 abig = c - adxt_cdyt1;
                 ahi = c - abig;
                 alo = adxt_cdyt1 - ahi;
@@ -1362,11 +1361,11 @@ unsafe extern "C" fn orient3dadapt(
     if bdxtail != 0.0f64 {
         if cdytail != 0.0f64 {
             bdxt_cdyt1 = bdxtail * cdytail;
-            c = splitter * bdxtail;
+            c = SPLITTER * bdxtail;
             abig = c - bdxtail;
             ahi = c - abig;
             alo = bdxtail - ahi;
-            c = splitter * cdytail;
+            c = SPLITTER * cdytail;
             abig = c - cdytail;
             bhi = c - abig;
             blo = cdytail - bhi;
@@ -1374,12 +1373,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             bdxt_cdyt0 = alo * blo - err3;
-            c = splitter * adz;
+            c = SPLITTER * adz;
             abig = c - adz;
             bhi = c - abig;
             blo = adz - bhi;
             _i = bdxt_cdyt0 * adz;
-            c = splitter * bdxt_cdyt0;
+            c = SPLITTER * bdxt_cdyt0;
             abig = c - bdxt_cdyt0;
             ahi = c - abig;
             alo = bdxt_cdyt0 - ahi;
@@ -1388,7 +1387,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = bdxt_cdyt1 * adz;
-            c = splitter * bdxt_cdyt1;
+            c = SPLITTER * bdxt_cdyt1;
             abig = c - bdxt_cdyt1;
             ahi = c - abig;
             alo = bdxt_cdyt1 - ahi;
@@ -1417,12 +1416,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if adztail != 0.0f64 {
-                c = splitter * adztail;
+                c = SPLITTER * adztail;
                 abig = c - adztail;
                 bhi = c - abig;
                 blo = adztail - bhi;
                 _i = bdxt_cdyt0 * adztail;
-                c = splitter * bdxt_cdyt0;
+                c = SPLITTER * bdxt_cdyt0;
                 abig = c - bdxt_cdyt0;
                 ahi = c - abig;
                 alo = bdxt_cdyt0 - ahi;
@@ -1431,7 +1430,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = bdxt_cdyt1 * adztail;
-                c = splitter * bdxt_cdyt1;
+                c = SPLITTER * bdxt_cdyt1;
                 abig = c - bdxt_cdyt1;
                 ahi = c - abig;
                 alo = bdxt_cdyt1 - ahi;
@@ -1464,11 +1463,11 @@ unsafe extern "C" fn orient3dadapt(
         if adytail != 0.0f64 {
             negate = -bdxtail;
             bdxt_adyt1 = negate * adytail;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * adytail;
+            c = SPLITTER * adytail;
             abig = c - adytail;
             bhi = c - abig;
             blo = adytail - bhi;
@@ -1476,12 +1475,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             bdxt_adyt0 = alo * blo - err3;
-            c = splitter * cdz;
+            c = SPLITTER * cdz;
             abig = c - cdz;
             bhi = c - abig;
             blo = cdz - bhi;
             _i = bdxt_adyt0 * cdz;
-            c = splitter * bdxt_adyt0;
+            c = SPLITTER * bdxt_adyt0;
             abig = c - bdxt_adyt0;
             ahi = c - abig;
             alo = bdxt_adyt0 - ahi;
@@ -1490,7 +1489,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = bdxt_adyt1 * cdz;
-            c = splitter * bdxt_adyt1;
+            c = SPLITTER * bdxt_adyt1;
             abig = c - bdxt_adyt1;
             ahi = c - abig;
             alo = bdxt_adyt1 - ahi;
@@ -1519,12 +1518,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if cdztail != 0.0f64 {
-                c = splitter * cdztail;
+                c = SPLITTER * cdztail;
                 abig = c - cdztail;
                 bhi = c - abig;
                 blo = cdztail - bhi;
                 _i = bdxt_adyt0 * cdztail;
-                c = splitter * bdxt_adyt0;
+                c = SPLITTER * bdxt_adyt0;
                 abig = c - bdxt_adyt0;
                 ahi = c - abig;
                 alo = bdxt_adyt0 - ahi;
@@ -1533,7 +1532,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = bdxt_adyt1 * cdztail;
-                c = splitter * bdxt_adyt1;
+                c = SPLITTER * bdxt_adyt1;
                 abig = c - bdxt_adyt1;
                 ahi = c - abig;
                 alo = bdxt_adyt1 - ahi;
@@ -1567,11 +1566,11 @@ unsafe extern "C" fn orient3dadapt(
     if cdxtail != 0.0f64 {
         if adytail != 0.0f64 {
             cdxt_adyt1 = cdxtail * adytail;
-            c = splitter * cdxtail;
+            c = SPLITTER * cdxtail;
             abig = c - cdxtail;
             ahi = c - abig;
             alo = cdxtail - ahi;
-            c = splitter * adytail;
+            c = SPLITTER * adytail;
             abig = c - adytail;
             bhi = c - abig;
             blo = adytail - bhi;
@@ -1579,12 +1578,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             cdxt_adyt0 = alo * blo - err3;
-            c = splitter * bdz;
+            c = SPLITTER * bdz;
             abig = c - bdz;
             bhi = c - abig;
             blo = bdz - bhi;
             _i = cdxt_adyt0 * bdz;
-            c = splitter * cdxt_adyt0;
+            c = SPLITTER * cdxt_adyt0;
             abig = c - cdxt_adyt0;
             ahi = c - abig;
             alo = cdxt_adyt0 - ahi;
@@ -1593,7 +1592,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = cdxt_adyt1 * bdz;
-            c = splitter * cdxt_adyt1;
+            c = SPLITTER * cdxt_adyt1;
             abig = c - cdxt_adyt1;
             ahi = c - abig;
             alo = cdxt_adyt1 - ahi;
@@ -1622,12 +1621,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if bdztail != 0.0f64 {
-                c = splitter * bdztail;
+                c = SPLITTER * bdztail;
                 abig = c - bdztail;
                 bhi = c - abig;
                 blo = bdztail - bhi;
                 _i = cdxt_adyt0 * bdztail;
-                c = splitter * cdxt_adyt0;
+                c = SPLITTER * cdxt_adyt0;
                 abig = c - cdxt_adyt0;
                 ahi = c - abig;
                 alo = cdxt_adyt0 - ahi;
@@ -1636,7 +1635,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = cdxt_adyt1 * bdztail;
-                c = splitter * cdxt_adyt1;
+                c = SPLITTER * cdxt_adyt1;
                 abig = c - cdxt_adyt1;
                 ahi = c - abig;
                 alo = cdxt_adyt1 - ahi;
@@ -1669,11 +1668,11 @@ unsafe extern "C" fn orient3dadapt(
         if bdytail != 0.0f64 {
             negate = -cdxtail;
             cdxt_bdyt1 = negate * bdytail;
-            c = splitter * negate;
+            c = SPLITTER * negate;
             abig = c - negate;
             ahi = c - abig;
             alo = negate - ahi;
-            c = splitter * bdytail;
+            c = SPLITTER * bdytail;
             abig = c - bdytail;
             bhi = c - abig;
             blo = bdytail - bhi;
@@ -1681,12 +1680,12 @@ unsafe extern "C" fn orient3dadapt(
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
             cdxt_bdyt0 = alo * blo - err3;
-            c = splitter * adz;
+            c = SPLITTER * adz;
             abig = c - adz;
             bhi = c - abig;
             blo = adz - bhi;
             _i = cdxt_bdyt0 * adz;
-            c = splitter * cdxt_bdyt0;
+            c = SPLITTER * cdxt_bdyt0;
             abig = c - cdxt_bdyt0;
             ahi = c - abig;
             alo = cdxt_bdyt0 - ahi;
@@ -1695,7 +1694,7 @@ unsafe extern "C" fn orient3dadapt(
             err3 = err2 - ahi * blo;
             u[0 as i32 as usize] = alo * blo - err3;
             _j = cdxt_bdyt1 * adz;
-            c = splitter * cdxt_bdyt1;
+            c = SPLITTER * cdxt_bdyt1;
             abig = c - cdxt_bdyt1;
             ahi = c - abig;
             alo = cdxt_bdyt1 - ahi;
@@ -1724,12 +1723,12 @@ unsafe extern "C" fn orient3dadapt(
             finnow = finother;
             finother = finswap;
             if adztail != 0.0f64 {
-                c = splitter * adztail;
+                c = SPLITTER * adztail;
                 abig = c - adztail;
                 bhi = c - abig;
                 blo = adztail - bhi;
                 _i = cdxt_bdyt0 * adztail;
-                c = splitter * cdxt_bdyt0;
+                c = SPLITTER * cdxt_bdyt0;
                 abig = c - cdxt_bdyt0;
                 ahi = c - abig;
                 alo = cdxt_bdyt0 - ahi;
@@ -1738,7 +1737,7 @@ unsafe extern "C" fn orient3dadapt(
                 err3 = err2 - ahi * blo;
                 u[0 as i32 as usize] = alo * blo - err3;
                 _j = cdxt_bdyt1 * adztail;
-                c = splitter * cdxt_bdyt1;
+                c = SPLITTER * cdxt_bdyt1;
                 abig = c - cdxt_bdyt1;
                 ahi = c - abig;
                 alo = cdxt_bdyt1 - ahi;
@@ -1853,12 +1852,12 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     let mut err1: f64 = 0.;
     let mut err2: f64 = 0.;
     let mut err3: f64 = 0.;
-    c = splitter * b;
+    c = SPLITTER * b;
     abig = c - b;
     bhi = c - abig;
     blo = b - bhi;
     q = *e.offset(0 as i32 as isize) * b;
-    c = splitter * *e.offset(0 as i32 as isize);
+    c = SPLITTER * *e.offset(0 as i32 as isize);
     abig = c - *e.offset(0 as i32 as isize);
     ahi = c - abig;
     alo = *e.offset(0 as i32 as isize) - ahi;
@@ -1876,7 +1875,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     while eindex < elen {
         enow = *e.offset(eindex as isize);
         product1 = enow * b;
-        c = splitter * enow;
+        c = SPLITTER * enow;
         abig = c - enow;
         ahi = c - abig;
         alo = enow - ahi;
