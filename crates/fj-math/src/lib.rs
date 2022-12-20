@@ -35,6 +35,8 @@
 
 #![warn(missing_docs)]
 
+pub mod robust;
+
 mod aabb;
 mod circle;
 mod coordinates;
