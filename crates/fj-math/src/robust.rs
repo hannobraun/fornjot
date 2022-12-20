@@ -32,10 +32,10 @@ const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
 pub unsafe fn orient3d(
-    pa: *mut f64,
-    pb: *mut f64,
-    pc: *mut f64,
-    pd: *mut f64,
+    pa: *const f64,
+    pb: *const f64,
+    pc: *const f64,
+    pd: *const f64,
 ) -> f64 {
     let adx: f64 = *pa.offset(0) - *pd.offset(0);
     let bdx: f64 = *pb.offset(0) - *pd.offset(0);
@@ -72,10 +72,10 @@ pub unsafe fn orient3d(
 }
 
 unsafe fn orient3dadapt(
-    pa: *mut f64,
-    pb: *mut f64,
-    pc: *mut f64,
-    pd: *mut f64,
+    pa: *const f64,
+    pb: *const f64,
+    pc: *const f64,
+    pd: *const f64,
     permanent: f64,
 ) -> f64 {
     let mut det: f64;
