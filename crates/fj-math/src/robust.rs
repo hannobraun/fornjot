@@ -30,11 +30,11 @@
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
-static mut splitter: f64 = 134217729.0;
-static mut resulterrbound: f64 = 3.3306690738754706e-16;
-static mut o3derrboundA: f64 = 7.771561172376103e-16;
-static mut o3derrboundB: f64 = 3.330669073875473e-16;
-static mut o3derrboundC: f64 = 3.2047474274603644e-31;
+const splitter: f64 = 134217729.0;
+const resulterrbound: f64 = 3.3306690738754706e-16;
+const o3derrboundA: f64 = 7.771561172376103e-16;
+const o3derrboundB: f64 = 3.330669073875473e-16;
+const o3derrboundC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
 pub unsafe extern "C" fn orient3d(
