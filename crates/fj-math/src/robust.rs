@@ -22,7 +22,6 @@
 
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::missing_safety_doc)]
-#![allow(clippy::needless_return)]
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
@@ -79,7 +78,7 @@ pub unsafe extern "C" fn orient3d(
     if det > errbound || -det > errbound {
         return det;
     }
-    return orient3dadapt(pa, pb, pc, pd, permanent);
+    orient3dadapt(pa, pb, pc, pd, permanent)
 }
 
 unsafe extern "C" fn orient3dadapt(
@@ -1777,7 +1776,7 @@ unsafe extern "C" fn orient3dadapt(
         );
         finnow = finother;
     }
-    return *finnow.offset((finlength - 1 as i32) as isize);
+    *finnow.offset((finlength - 1 as i32) as isize)
 }
 
 unsafe extern "C" fn scale_expansion_zeroelim(
@@ -1862,7 +1861,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
         hindex += 1;
         *h.offset(fresh15 as isize) = q;
     }
-    return hindex;
+    hindex
 }
 
 unsafe extern "C" fn fast_expansion_sum_zeroelim(
@@ -1983,7 +1982,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         hindex += 1;
         *h.offset(fresh8 as isize) = q;
     }
-    return hindex;
+    hindex
 }
 
 unsafe extern "C" fn estimate(elen: i32, e: *mut f64) -> f64 {
@@ -1995,5 +1994,5 @@ unsafe extern "C" fn estimate(elen: i32, e: *mut f64) -> f64 {
         q += *e.offset(eindex as isize);
         eindex += 1;
     }
-    return q;
+    q
 }
