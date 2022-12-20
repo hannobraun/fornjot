@@ -20,7 +20,6 @@
 //! 3. Transpile C code to Rust: `c2rust transpile compile_commands.json`
 //! 4. Copy code from transpiled file here.
 
-#![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
@@ -1833,7 +1832,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     mut b: f64,
     mut h: *mut f64,
 ) -> i32 {
-    let mut Q: f64 = 0.;
+    let mut q: f64 = 0.;
     let mut sum: f64 = 0.;
     let mut hh: f64 = 0.;
     let mut product1: f64 = 0.;
@@ -1858,12 +1857,12 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     abig = c - b;
     bhi = c - abig;
     blo = b - bhi;
-    Q = *e.offset(0 as i32 as isize) * b;
+    q = *e.offset(0 as i32 as isize) * b;
     c = splitter * *e.offset(0 as i32 as isize);
     abig = c - *e.offset(0 as i32 as isize);
     ahi = c - abig;
     alo = *e.offset(0 as i32 as isize) - ahi;
-    err1 = Q - ahi * bhi;
+    err1 = q - ahi * bhi;
     err2 = err1 - alo * bhi;
     err3 = err2 - ahi * blo;
     hh = alo * blo - err3;
@@ -1885,19 +1884,19 @@ unsafe extern "C" fn scale_expansion_zeroelim(
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
         product0 = alo * blo - err3;
-        sum = Q + product0;
-        bvirt = sum - Q;
+        sum = q + product0;
+        bvirt = sum - q;
         avirt = sum - bvirt;
         bround = product0 - bvirt;
-        around = Q - avirt;
+        around = q - avirt;
         hh = around + bround;
         if hh != 0 as i32 as f64 {
             let fresh13 = hindex;
             hindex = hindex + 1;
             *h.offset(fresh13 as isize) = hh;
         }
-        Q = product1 + sum;
-        bvirt = Q - product1;
+        q = product1 + sum;
+        bvirt = q - product1;
         hh = sum - bvirt;
         if hh != 0 as i32 as f64 {
             let fresh14 = hindex;
@@ -1906,10 +1905,10 @@ unsafe extern "C" fn scale_expansion_zeroelim(
         }
         eindex += 1;
     }
-    if Q != 0.0f64 || hindex == 0 as i32 {
+    if q != 0.0f64 || hindex == 0 as i32 {
         let fresh15 = hindex;
         hindex = hindex + 1;
-        *h.offset(fresh15 as isize) = Q;
+        *h.offset(fresh15 as isize) = q;
     }
     return hindex;
 }
@@ -1921,8 +1920,8 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
     mut f: *mut f64,
     mut h: *mut f64,
 ) -> i32 {
-    let mut Q: f64 = 0.;
-    let mut Qnew: f64 = 0.;
+    let mut q: f64 = 0.;
+    let mut q_new: f64 = 0.;
     let mut hh: f64 = 0.;
     let mut bvirt: f64 = 0.;
     let mut avirt: f64 = 0.;
@@ -1938,30 +1937,30 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
     findex = 0 as i32;
     eindex = findex;
     if (fnow > enow) as i32 == (fnow > -enow) as i32 {
-        Q = enow;
+        q = enow;
         eindex += 1;
         enow = *e.offset(eindex as isize);
     } else {
-        Q = fnow;
+        q = fnow;
         findex += 1;
         fnow = *f.offset(findex as isize);
     }
     hindex = 0 as i32;
     if eindex < elen && findex < flen {
         if (fnow > enow) as i32 == (fnow > -enow) as i32 {
-            Qnew = enow + Q;
-            bvirt = Qnew - enow;
-            hh = Q - bvirt;
+            q_new = enow + q;
+            bvirt = q_new - enow;
+            hh = q - bvirt;
             eindex += 1;
             enow = *e.offset(eindex as isize);
         } else {
-            Qnew = fnow + Q;
-            bvirt = Qnew - fnow;
-            hh = Q - bvirt;
+            q_new = fnow + q;
+            bvirt = q_new - fnow;
+            hh = q - bvirt;
             findex += 1;
             fnow = *f.offset(findex as isize);
         }
-        Q = Qnew;
+        q = q_new;
         if hh != 0.0f64 {
             let fresh4 = hindex;
             hindex = hindex + 1;
@@ -1969,25 +1968,25 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         }
         while eindex < elen && findex < flen {
             if (fnow > enow) as i32 == (fnow > -enow) as i32 {
-                Qnew = Q + enow;
-                bvirt = Qnew - Q;
-                avirt = Qnew - bvirt;
+                q_new = q + enow;
+                bvirt = q_new - q;
+                avirt = q_new - bvirt;
                 bround = enow - bvirt;
-                around = Q - avirt;
+                around = q - avirt;
                 hh = around + bround;
                 eindex += 1;
                 enow = *e.offset(eindex as isize);
             } else {
-                Qnew = Q + fnow;
-                bvirt = Qnew - Q;
-                avirt = Qnew - bvirt;
+                q_new = q + fnow;
+                bvirt = q_new - q;
+                avirt = q_new - bvirt;
                 bround = fnow - bvirt;
-                around = Q - avirt;
+                around = q - avirt;
                 hh = around + bround;
                 findex += 1;
                 fnow = *f.offset(findex as isize);
             }
-            Q = Qnew;
+            q = q_new;
             if hh != 0.0f64 {
                 let fresh5 = hindex;
                 hindex = hindex + 1;
@@ -1996,15 +1995,15 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         }
     }
     while eindex < elen {
-        Qnew = Q + enow;
-        bvirt = Qnew - Q;
-        avirt = Qnew - bvirt;
+        q_new = q + enow;
+        bvirt = q_new - q;
+        avirt = q_new - bvirt;
         bround = enow - bvirt;
-        around = Q - avirt;
+        around = q - avirt;
         hh = around + bround;
         eindex += 1;
         enow = *e.offset(eindex as isize);
-        Q = Qnew;
+        q = q_new;
         if hh != 0.0f64 {
             let fresh6 = hindex;
             hindex = hindex + 1;
@@ -2012,37 +2011,37 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
         }
     }
     while findex < flen {
-        Qnew = Q + fnow;
-        bvirt = Qnew - Q;
-        avirt = Qnew - bvirt;
+        q_new = q + fnow;
+        bvirt = q_new - q;
+        avirt = q_new - bvirt;
         bround = fnow - bvirt;
-        around = Q - avirt;
+        around = q - avirt;
         hh = around + bround;
         findex += 1;
         fnow = *f.offset(findex as isize);
-        Q = Qnew;
+        q = q_new;
         if hh != 0.0f64 {
             let fresh7 = hindex;
             hindex = hindex + 1;
             *h.offset(fresh7 as isize) = hh;
         }
     }
-    if Q != 0.0f64 || hindex == 0 as i32 {
+    if q != 0.0f64 || hindex == 0 as i32 {
         let fresh8 = hindex;
         hindex = hindex + 1;
-        *h.offset(fresh8 as isize) = Q;
+        *h.offset(fresh8 as isize) = q;
     }
     return hindex;
 }
 
 unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
-    let mut Q: f64 = 0.;
+    let mut q: f64 = 0.;
     let mut eindex: i32 = 0;
-    Q = *e.offset(0 as i32 as isize);
+    q = *e.offset(0 as i32 as isize);
     eindex = 1 as i32;
     while eindex < elen {
-        Q += *e.offset(eindex as isize);
+        q += *e.offset(eindex as isize);
         eindex += 1;
     }
-    return Q;
+    return q;
 }
