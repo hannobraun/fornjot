@@ -22,6 +22,7 @@
 
 #![allow(missing_docs)]
 #![allow(non_snake_case)]
+#![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
 #![allow(clippy::assign_op_pattern)]
@@ -31,38 +32,22 @@
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
-#[no_mangle]
 static mut splitter: f64 = 0.;
-#[no_mangle]
 static mut epsilon: f64 = 0.;
-#[no_mangle]
 static mut resulterrbound: f64 = 0.;
-#[no_mangle]
 static mut ccwerrboundA: f64 = 0.;
-#[no_mangle]
 static mut ccwerrboundB: f64 = 0.;
-#[no_mangle]
 static mut ccwerrboundC: f64 = 0.;
-#[no_mangle]
 static mut o3derrboundA: f64 = 0.;
-#[no_mangle]
 static mut o3derrboundB: f64 = 0.;
-#[no_mangle]
 static mut o3derrboundC: f64 = 0.;
-#[no_mangle]
 static mut iccerrboundA: f64 = 0.;
-#[no_mangle]
 static mut iccerrboundB: f64 = 0.;
-#[no_mangle]
 static mut iccerrboundC: f64 = 0.;
-#[no_mangle]
 static mut isperrboundA: f64 = 0.;
-#[no_mangle]
 static mut isperrboundB: f64 = 0.;
-#[no_mangle]
 static mut isperrboundC: f64 = 0.;
 
-#[no_mangle]
 pub unsafe extern "C" fn exactinit() {
     let mut half: f64 = 0.;
     let mut check: f64 = 0.;
@@ -101,7 +86,6 @@ pub unsafe extern "C" fn exactinit() {
     isperrboundC = (71.0f64 + 1408.0f64 * epsilon) * epsilon * epsilon;
 }
 
-#[no_mangle]
 pub unsafe extern "C" fn orient3d(
     mut pa: *mut f64,
     mut pb: *mut f64,
@@ -160,7 +144,6 @@ pub unsafe extern "C" fn orient3d(
     return orient3dadapt(pa, pb, pc, pd, permanent);
 }
 
-#[no_mangle]
 unsafe extern "C" fn orient3dadapt(
     mut pa: *mut f64,
     mut pb: *mut f64,
@@ -1892,7 +1875,6 @@ unsafe extern "C" fn orient3dadapt(
     return *finnow.offset((finlength - 1 as i32) as isize);
 }
 
-#[no_mangle]
 unsafe extern "C" fn scale_expansion_zeroelim(
     mut elen: i32,
     mut e: *mut f64,
@@ -1980,7 +1962,6 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     return hindex;
 }
 
-#[no_mangle]
 unsafe extern "C" fn fast_expansion_sum_zeroelim(
     mut elen: i32,
     mut e: *mut f64,
@@ -2102,7 +2083,6 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
     return hindex;
 }
 
-#[no_mangle]
 unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
     let mut Q: f64 = 0.;
     let mut eindex: i32 = 0;
