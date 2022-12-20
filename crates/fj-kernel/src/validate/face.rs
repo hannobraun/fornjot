@@ -108,7 +108,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::{PartialCycle, PartialFace, PartialObject},
+        partial::{Partial, PartialCycle, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -121,20 +121,18 @@ mod tests {
 
         let valid = {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(
-                surface.clone(),
-                [[0., 0.], [3., 0.], [0., 3.]],
-            );
-            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
+            face.exterior.write().surface = Partial::from(surface);
+            face.update_exterior_as_polygon([[0., 0.], [3., 0.], [0., 3.]]);
+            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
 
             face.build(&mut services.objects)
         };
         let invalid = {
-            let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon_from_points(
-                services.objects.surfaces.xz_plane(),
-                [[1., 1.], [1., 2.], [2., 1.]],
-            );
+            let mut cycle = PartialCycle {
+                surface: Partial::from(services.objects.surfaces.xz_plane()),
+                ..Default::default()
+            };
+            cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
             let cycle = cycle
                 .build(&mut services.objects)
                 .insert(&mut services.objects);
@@ -155,11 +153,9 @@ mod tests {
 
         let valid = {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(
-                surface.clone(),
-                [[0., 0.], [3., 0.], [0., 3.]],
-            );
-            face.add_interior_polygon(surface, [[1., 1.], [1., 2.], [2., 1.]]);
+            face.exterior.write().surface = Partial::from(surface);
+            face.update_exterior_as_polygon([[0., 0.], [3., 0.], [0., 3.]]);
+            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
             face.build(&mut services.objects)
         };
         let invalid = {

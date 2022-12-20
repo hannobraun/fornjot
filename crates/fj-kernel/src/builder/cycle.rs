@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{HalfEdge, Surface},
+    objects::HalfEdge,
     partial::{Partial, PartialCycle},
 };
 
@@ -12,7 +12,6 @@ pub trait CycleBuilder {
     /// Create a cycle as a polygonal chain from the provided points
     fn update_as_polygon_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
@@ -49,17 +48,14 @@ pub trait CycleBuilder {
 impl CycleBuilder for PartialCycle {
     fn update_as_polygon_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
-        let surface = surface.into();
         let mut points = points.into_iter().map(Into::into);
 
         let mut half_edges = Vec::new();
 
         if let Some(point) = points.next() {
-            let mut half_edge = self.add_half_edge_from_point_to_start(point);
-            half_edge.write().replace_surface(surface);
+            let half_edge = self.add_half_edge_from_point_to_start(point);
             half_edges.push(half_edge);
         }
 
@@ -111,13 +107,12 @@ impl CycleBuilder for PartialCycle {
         {
             let shared_surface_vertex =
                 first_half_edge.read().back().read().surface_form.clone();
-            let shared_surface = shared_surface_vertex.read().surface.clone();
 
             let mut new_half_edge = new_half_edge.write();
 
             new_half_edge.front_mut().write().surface_form =
                 shared_surface_vertex;
-            new_half_edge.replace_surface(shared_surface);
+            new_half_edge.replace_surface(self.surface.clone());
             new_half_edge.infer_global_form();
         }
 

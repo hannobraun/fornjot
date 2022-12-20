@@ -161,10 +161,10 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from(services.objects.surfaces.xy_plane());
 
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
@@ -187,8 +187,9 @@ mod tests {
 
         let face = {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(surface.clone(), exterior);
-            face.add_interior_polygon(surface, interior);
+            face.exterior.write().surface = surface;
+            face.update_exterior_as_polygon(exterior);
+            face.add_interior_polygon(interior);
 
             face.build(&mut services.objects)
         };

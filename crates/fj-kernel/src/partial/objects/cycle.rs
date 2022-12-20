@@ -7,17 +7,11 @@ use crate::{
 /// A partial [`Cycle`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
+    /// The surface that the cycle is defined in
+    pub surface: Partial<Surface>,
+
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
-}
-
-impl PartialCycle {
-    /// Access the surface of the [`Cycle`]
-    pub fn surface(&self) -> Option<Partial<Surface>> {
-        self.half_edges
-            .first()
-            .map(|half_edge| half_edge.read().curve().read().surface.clone())
-    }
 }
 
 impl PartialObject for PartialCycle {
@@ -25,6 +19,7 @@ impl PartialObject for PartialCycle {
 
     fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
+            surface: Partial::from_full(cycle.surface().clone(), cache),
             half_edges: cycle
                 .half_edges()
                 .cloned()

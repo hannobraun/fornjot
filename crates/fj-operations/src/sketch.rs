@@ -43,12 +43,14 @@ impl Shape for fj::Sketch {
 
                     Partial::from_partial(half_edge)
                 };
-                let cycle = Partial::from_partial(PartialCycle {
-                    half_edges: vec![half_edge],
-                });
+                let exterior = {
+                    let mut cycle = PartialCycle::default();
+                    cycle.half_edges.push(half_edge);
+                    Partial::from_partial(cycle)
+                };
 
                 PartialFace {
-                    exterior: cycle,
+                    exterior,
                     color: Some(Color(self.color())),
                     ..Default::default()
                 }
@@ -61,7 +63,8 @@ impl Shape for fj::Sketch {
                     .map(Point::from);
 
                 let mut face = PartialFace::default();
-                face.update_exterior_as_polygon(surface, points);
+                face.exterior.write().surface = Partial::from(surface);
+                face.update_exterior_as_polygon(points);
                 face.color = Some(Color(self.color()));
 
                 face

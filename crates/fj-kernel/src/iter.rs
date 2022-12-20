@@ -408,11 +408,11 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
         let object = {
-            let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon_from_points(
-                surface,
-                [[0., 0.], [1., 0.], [0., 1.]],
-            );
+            let mut cycle = PartialCycle {
+                surface: surface.into(),
+                ..Default::default()
+            };
+            cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
             cycle
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
@@ -435,12 +435,10 @@ mod tests {
     fn face() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialFace::default();
-        object.update_exterior_as_polygon(
-            surface,
-            [[0., 0.], [1., 0.], [0., 1.]],
-        );
+        object.exterior.write().surface =
+            Partial::from(services.objects.surfaces.xy_plane());
+        object.update_exterior_as_polygon([[0., 0.], [1., 0.], [0., 1.]]);
         let object = object
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -554,12 +552,10 @@ mod tests {
     fn sketch() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.update_exterior_as_polygon(
-            surface,
-            [[0., 0.], [1., 0.], [0., 1.]],
-        );
+        face.exterior.write().surface =
+            Partial::from(services.objects.surfaces.xy_plane());
+        face.update_exterior_as_polygon([[0., 0.], [1., 0.], [0., 1.]]);
         let object = PartialSketch {
             faces: vec![Partial::from_partial(face)],
         }

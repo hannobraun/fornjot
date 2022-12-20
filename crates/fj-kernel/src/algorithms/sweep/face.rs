@@ -89,7 +89,9 @@ mod tests {
         algorithms::{reverse::Reverse, transform::TransformObject},
         builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
         insert::Insert,
-        partial::{PartialFace, PartialHalfEdge, PartialObject, PartialSketch},
+        partial::{
+            Partial, PartialFace, PartialHalfEdge, PartialObject, PartialSketch,
+        },
         services::Services,
     };
 
@@ -113,16 +115,16 @@ mod tests {
             .sweep(UP, &mut services.objects);
 
         let mut bottom = PartialFace::default();
-        bottom.update_exterior_as_polygon(surface.clone(), TRIANGLE);
+        bottom.exterior.write().surface = Partial::from(surface.clone());
+        bottom.update_exterior_as_polygon(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
-        top.update_exterior_as_polygon(
-            surface.translate(UP, &mut services.objects),
-            TRIANGLE,
-        );
+        top.exterior.write().surface =
+            Partial::from(surface.translate(UP, &mut services.objects));
+        top.update_exterior_as_polygon(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -164,16 +166,17 @@ mod tests {
             .sweep(DOWN, &mut services.objects);
 
         let mut bottom = PartialFace::default();
-        bottom.update_exterior_as_polygon(
+        bottom.exterior.write().surface = Partial::from(
             surface.clone().translate(DOWN, &mut services.objects),
-            TRIANGLE,
         );
+        bottom.update_exterior_as_polygon(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
-        top.update_exterior_as_polygon(surface, TRIANGLE);
+        top.exterior.write().surface = Partial::from(surface);
+        top.update_exterior_as_polygon(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);

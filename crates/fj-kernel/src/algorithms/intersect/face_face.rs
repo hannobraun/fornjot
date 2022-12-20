@@ -94,7 +94,8 @@ mod tests {
         ]
         .map(|surface| {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(surface, points);
+            face.exterior.write().surface = Partial::from(surface);
+            face.update_exterior_as_polygon(points);
 
             face.build(&mut services.objects)
         });
@@ -122,7 +123,8 @@ mod tests {
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(surface, points);
+            face.exterior.write().surface = Partial::from(surface);
+            face.update_exterior_as_polygon(points);
 
             face.build(&mut services.objects)
         });
