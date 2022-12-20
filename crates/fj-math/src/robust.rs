@@ -20,7 +20,6 @@
 //! 3. Transpile C code to Rust: `c2rust transpile compile_commands.json`
 //! 4. Copy code from transpiled file here.
 
-#![allow(missing_docs)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
@@ -38,6 +37,7 @@ static mut o3derrboundA: f64 = 7.771561172376103e-16;
 static mut o3derrboundB: f64 = 3.330669073875473e-16;
 static mut o3derrboundC: f64 = 3.2047474274603644e-31;
 
+/// Test a point's orientation against a plane
 pub unsafe extern "C" fn orient3d(
     mut pa: *mut f64,
     mut pb: *mut f64,
