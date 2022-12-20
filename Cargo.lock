@@ -1211,7 +1211,6 @@ version = "0.29.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
- "libc",
  "nalgebra",
  "num-traits",
  "parry2d-f64",
