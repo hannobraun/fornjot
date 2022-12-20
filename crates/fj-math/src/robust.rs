@@ -30,7 +30,7 @@ const O3DERRBOUNDB: f64 = 3.330669073875473e-16;
 const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
-pub unsafe extern "C" fn orient3d(
+pub unsafe fn orient3d(
     pa: *mut f64,
     pb: *mut f64,
     pc: *mut f64,
@@ -70,7 +70,7 @@ pub unsafe extern "C" fn orient3d(
     orient3dadapt(pa, pb, pc, pd, permanent)
 }
 
-unsafe extern "C" fn orient3dadapt(
+unsafe fn orient3dadapt(
     pa: *mut f64,
     pb: *mut f64,
     pc: *mut f64,
@@ -1747,7 +1747,7 @@ unsafe extern "C" fn orient3dadapt(
     *finnow.offset((finlength - 1) as isize)
 }
 
-unsafe extern "C" fn scale_expansion_zeroelim(
+unsafe fn scale_expansion_zeroelim(
     elen: i32,
     e: *mut f64,
     b: f64,
@@ -1832,7 +1832,7 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     hindex
 }
 
-unsafe extern "C" fn fast_expansion_sum_zeroelim(
+unsafe fn fast_expansion_sum_zeroelim(
     elen: i32,
     e: *mut f64,
     flen: i32,
@@ -1953,7 +1953,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
     hindex
 }
 
-unsafe extern "C" fn estimate(elen: i32, e: *mut f64) -> f64 {
+unsafe fn estimate(elen: i32, e: *mut f64) -> f64 {
     let mut q: f64;
     let mut eindex: i32;
     q = *e.offset(0);
