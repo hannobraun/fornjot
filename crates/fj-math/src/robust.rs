@@ -32,35 +32,35 @@
 #![allow(clippy::zero_ptr)]
 
 #[no_mangle]
-pub static mut splitter: f64 = 0.;
+static mut splitter: f64 = 0.;
 #[no_mangle]
-pub static mut epsilon: f64 = 0.;
+static mut epsilon: f64 = 0.;
 #[no_mangle]
-pub static mut resulterrbound: f64 = 0.;
+static mut resulterrbound: f64 = 0.;
 #[no_mangle]
-pub static mut ccwerrboundA: f64 = 0.;
+static mut ccwerrboundA: f64 = 0.;
 #[no_mangle]
-pub static mut ccwerrboundB: f64 = 0.;
+static mut ccwerrboundB: f64 = 0.;
 #[no_mangle]
-pub static mut ccwerrboundC: f64 = 0.;
+static mut ccwerrboundC: f64 = 0.;
 #[no_mangle]
-pub static mut o3derrboundA: f64 = 0.;
+static mut o3derrboundA: f64 = 0.;
 #[no_mangle]
-pub static mut o3derrboundB: f64 = 0.;
+static mut o3derrboundB: f64 = 0.;
 #[no_mangle]
-pub static mut o3derrboundC: f64 = 0.;
+static mut o3derrboundC: f64 = 0.;
 #[no_mangle]
-pub static mut iccerrboundA: f64 = 0.;
+static mut iccerrboundA: f64 = 0.;
 #[no_mangle]
-pub static mut iccerrboundB: f64 = 0.;
+static mut iccerrboundB: f64 = 0.;
 #[no_mangle]
-pub static mut iccerrboundC: f64 = 0.;
+static mut iccerrboundC: f64 = 0.;
 #[no_mangle]
-pub static mut isperrboundA: f64 = 0.;
+static mut isperrboundA: f64 = 0.;
 #[no_mangle]
-pub static mut isperrboundB: f64 = 0.;
+static mut isperrboundB: f64 = 0.;
 #[no_mangle]
-pub static mut isperrboundC: f64 = 0.;
+static mut isperrboundC: f64 = 0.;
 
 #[no_mangle]
 pub unsafe extern "C" fn exactinit() {
@@ -161,7 +161,7 @@ pub unsafe extern "C" fn orient3d(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn orient3dadapt(
+unsafe extern "C" fn orient3dadapt(
     mut pa: *mut f64,
     mut pb: *mut f64,
     mut pc: *mut f64,
@@ -1893,7 +1893,7 @@ pub unsafe extern "C" fn orient3dadapt(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn scale_expansion_zeroelim(
+unsafe extern "C" fn scale_expansion_zeroelim(
     mut elen: i32,
     mut e: *mut f64,
     mut b: f64,
@@ -1981,7 +1981,7 @@ pub unsafe extern "C" fn scale_expansion_zeroelim(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
+unsafe extern "C" fn fast_expansion_sum_zeroelim(
     mut elen: i32,
     mut e: *mut f64,
     mut flen: i32,
@@ -2103,7 +2103,7 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
+unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
     let mut Q: f64 = 0.;
     let mut eindex: i32 = 0;
     Q = *e.offset(0 as i32 as isize);
