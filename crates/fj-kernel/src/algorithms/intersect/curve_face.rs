@@ -161,10 +161,10 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = Partial::from(services.objects.surfaces.xy_plane());
 
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
+            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
