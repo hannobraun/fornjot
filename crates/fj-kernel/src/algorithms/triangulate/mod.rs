@@ -96,9 +96,11 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
-        face.update_exterior_as_polygon(surface, [a, b, c, d]);
+        face.update_exterior_as_polygon(
+            services.objects.surfaces.xy_plane(),
+            [a, b, c, d],
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);

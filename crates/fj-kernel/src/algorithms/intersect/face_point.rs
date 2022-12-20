@@ -147,10 +147,9 @@ mod tests {
     fn point_is_outside_face() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [1., 1.], [0., 2.]],
         );
         let face = face
@@ -166,10 +165,9 @@ mod tests {
     fn ray_hits_vertex_while_passing_outside() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [2., 1.], [0., 2.]],
         );
         let face = face
@@ -188,10 +186,9 @@ mod tests {
     fn ray_hits_vertex_at_cycle_seam() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[4., 2.], [0., 4.], [0., 0.]],
         );
         let face = face
@@ -210,10 +207,9 @@ mod tests {
     fn ray_hits_vertex_while_staying_inside() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
         );
         let face = face
@@ -232,10 +228,9 @@ mod tests {
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
         );
         let face = face
@@ -254,10 +249,9 @@ mod tests {
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
         );
         let face = face
@@ -276,10 +270,9 @@ mod tests {
     fn point_is_coincident_with_edge() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [2., 0.], [0., 1.]],
         );
         let face = face
@@ -307,10 +300,9 @@ mod tests {
     fn point_is_coincident_with_vertex() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let face = face

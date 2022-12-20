@@ -435,10 +435,9 @@ mod tests {
     fn face() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut object = PartialFace::default();
         object.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let object = object
@@ -554,10 +553,9 @@ mod tests {
     fn sketch() {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[0., 0.], [1., 0.], [0., 1.]],
         );
         let object = PartialSketch {

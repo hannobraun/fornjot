@@ -165,10 +165,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.yz_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -185,10 +184,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.yz_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -208,10 +206,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.yz_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -228,10 +225,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.yz_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -259,10 +255,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.yz_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.yz_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -288,10 +283,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
@@ -310,10 +304,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.update_exterior_as_polygon(
-            surface,
+            services.objects.surfaces.xy_plane(),
             [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
         );
         let face = face
