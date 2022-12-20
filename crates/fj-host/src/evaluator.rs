@@ -1,6 +1,8 @@
 use std::thread;
 
 use crossbeam_channel::{Receiver, SendError, Sender};
+use fj_interop::processed_shape::ProcessedShape;
+use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
 use crate::{Error, Evaluation, Model};
 
@@ -12,6 +14,7 @@ pub struct Evaluator {
 
 impl Evaluator {
     /// Create an `Evaluator` from a model
+    //pub fn new(event_tx: EventLoopProxy<ModelEvent>, model: Model) -> Self {
     pub fn from_model(model: Model) -> Self {
         let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
@@ -36,11 +39,13 @@ impl Evaluator {
                     }
                 };
 
+                /*
                 if let Err(SendError(_)) =
                     event_tx.send(ModelEvent::Evaluation(evaluation))
                 {
                     break;
                 };
+                */
             }
 
             // The channel is disconnected, which means this instance of
@@ -69,12 +74,21 @@ impl Evaluator {
 pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
+#[derive(Debug)]
 pub enum ModelEvent {
+    /// A new model is being watched
+    StartWatching,
+
     /// A change in the model has been detected
     ChangeDetected,
 
+    /// ..
+    Evaluated,
+
     /// The model has been evaluated
-    Evaluation(Evaluation),
+    //Evaluation(Evaluation),
+    //Evaluation(ProcessedShape),
+    ProcessedShape(ProcessedShape),
 
     /// An error
     Error(Error),

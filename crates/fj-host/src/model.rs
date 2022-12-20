@@ -11,6 +11,7 @@ use tracing::{debug, warn};
 use crate::{platform::HostPlatform, Parameters};
 
 /// Represents a Fornjot model
+#[derive(Clone)]
 pub struct Model {
     src_path: PathBuf,
     lib_path: PathBuf,
@@ -170,6 +171,7 @@ impl Model {
 /// The result of evaluating a model
 ///
 /// See [`Model::evaluate`].
+#[derive(Debug)]
 pub struct Evaluation {
     /// The shape
     pub shape: fj::Shape,

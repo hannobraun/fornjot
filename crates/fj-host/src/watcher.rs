@@ -1,8 +1,11 @@
 use std::{collections::HashSet, ffi::OsStr, path::Path, thread};
 
+use crossbeam_channel::Sender;
 use notify::Watcher as _;
 
-use crate::{evaluator::TriggerEvaluation, Error, Evaluator};
+use crate::{
+    evaluator::TriggerEvaluation, host::HostCommand, Error, Evaluator,
+};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -13,12 +16,13 @@ impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(
         watch_path: impl AsRef<Path>,
-        evaluator: &Evaluator,
+        //evaluator: &Evaluator,
+        host_tx: Sender<HostCommand>,
     ) -> Result<Self, Error> {
         let watch_path = watch_path.as_ref();
 
-        let watch_tx = evaluator.trigger();
-        let watch_tx_2 = evaluator.trigger();
+        //let watch_tx = evaluator.trigger();
+        //let watch_tx_2 = evaluator.trigger();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -59,8 +63,8 @@ impl Watcher {
                     // application is being shut down.
                     //
                     // Either way, not much we can do about it here.
-                    watch_tx
-                        .send(TriggerEvaluation)
+                    host_tx
+                        .send(HostCommand::TriggerEvaluation)
                         .expect("Channel is disconnected");
                 }
             },
@@ -68,6 +72,7 @@ impl Watcher {
 
         watcher.watch(watch_path, notify::RecursiveMode::Recursive)?;
 
+        /*
         // To prevent a race condition between the initial load and the start of
         // watching, we'll trigger the initial load here, after having started
         // watching.
@@ -82,6 +87,7 @@ impl Watcher {
                 .send(TriggerEvaluation)
                 .expect("Channel is disconnected");
         });
+        */
 
         Ok(Self {
             _watcher: Box::new(watcher),
