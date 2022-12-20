@@ -137,7 +137,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface = Partial::from(surface.clone());
         face.update_exterior_as_polygon([a, b, c, d]);
-        face.add_interior_polygon(surface.clone(), [e, f, g, h]);
+        face.add_interior_polygon([e, f, g, h]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
