@@ -32,41 +32,11 @@
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
-static mut splitter: f64 = 0.;
-static mut epsilon: f64 = 0.;
-static mut resulterrbound: f64 = 0.;
-static mut o3derrboundA: f64 = 0.;
-static mut o3derrboundB: f64 = 0.;
-static mut o3derrboundC: f64 = 0.;
-
-pub unsafe extern "C" fn exactinit() {
-    let mut half: f64 = 0.;
-    let mut check: f64 = 0.;
-    let mut lastcheck: f64 = 0.;
-    let mut every_other: i32 = 0;
-    every_other = 1 as i32;
-    half = 0.5f64;
-    epsilon = 1.0f64;
-    splitter = 1.0f64;
-    check = 1.0f64;
-    loop {
-        lastcheck = check;
-        epsilon *= half;
-        if every_other != 0 {
-            splitter *= 2.0f64;
-        }
-        every_other = (every_other == 0) as i32;
-        check = 1.0f64 + epsilon;
-        if !(check != 1.0f64 && check != lastcheck) {
-            break;
-        }
-    }
-    splitter += 1.0f64;
-    resulterrbound = (3.0f64 + 8.0f64 * epsilon) * epsilon;
-    o3derrboundA = (7.0f64 + 56.0f64 * epsilon) * epsilon;
-    o3derrboundB = (3.0f64 + 28.0f64 * epsilon) * epsilon;
-    o3derrboundC = (26.0f64 + 288.0f64 * epsilon) * epsilon * epsilon;
-}
+static mut splitter: f64 = 134217729.0;
+static mut resulterrbound: f64 = 3.3306690738754706e-16;
+static mut o3derrboundA: f64 = 7.771561172376103e-16;
+static mut o3derrboundB: f64 = 3.330669073875473e-16;
+static mut o3derrboundC: f64 = 3.2047474274603644e-31;
 
 pub unsafe extern "C" fn orient3d(
     mut pa: *mut f64,

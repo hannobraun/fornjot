@@ -38,7 +38,6 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
                 .map(|point| [point.x, point.y, point.z])
                 .map(|point| point.map(Scalar::into_f64));
 
-            unsafe { fj_math::robust::exactinit() }
             if unsafe {
                 fj_math::robust::orient3d(
                     a.as_mut_ptr(),
