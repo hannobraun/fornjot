@@ -1953,7 +1953,7 @@ unsafe fn fast_expansion_sum_zeroelim(
     hindex
 }
 
-unsafe fn estimate(elen: i32, e: &[f64]) -> f64 {
+fn estimate(elen: i32, e: &[f64]) -> f64 {
     let mut q: f64;
     let mut eindex: i32;
     q = e[0];
