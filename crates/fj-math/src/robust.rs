@@ -1591,7 +1591,7 @@ unsafe fn orient3dadapt(
     finnow[(finlength - 1) as usize]
 }
 
-unsafe fn scale_expansion_zeroelim(
+fn scale_expansion_zeroelim(
     elen: i32,
     e: &[f64],
     b: f64,
