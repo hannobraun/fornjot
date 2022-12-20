@@ -42,10 +42,13 @@ impl ShellBuilder for PartialShell {
                 objects.surfaces.xy_plane().translate([Z, Z, -h], objects);
 
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(
-                surface,
-                [[-h, -h], [h, -h], [h, h], [-h, h]],
-            );
+            face.exterior.write().surface = Partial::from(surface);
+            face.update_exterior_as_polygon([
+                [-h, -h],
+                [h, -h],
+                [h, h],
+                [-h, h],
+            ]);
 
             face
         };

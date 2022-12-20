@@ -187,7 +187,8 @@ mod tests {
 
         let face = {
             let mut face = PartialFace::default();
-            face.update_exterior_as_polygon(surface.clone(), exterior);
+            face.exterior.write().surface = surface.clone();
+            face.update_exterior_as_polygon(exterior);
             face.add_interior_polygon(surface, interior);
 
             face.build(&mut services.objects)

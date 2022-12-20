@@ -12,7 +12,6 @@ pub trait FaceBuilder {
     /// Update the [`PartialFace`] with an exterior polygon
     fn update_exterior_as_polygon(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
@@ -27,10 +26,8 @@ pub trait FaceBuilder {
 impl FaceBuilder for PartialFace {
     fn update_exterior_as_polygon(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
-        self.exterior.write().surface = surface.into();
         self.exterior.write().update_as_polygon_from_points(points)
     }
 
