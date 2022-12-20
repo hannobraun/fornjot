@@ -1832,9 +1832,9 @@ unsafe fn scale_expansion_zeroelim(
 
 unsafe fn fast_expansion_sum_zeroelim(
     elen: i32,
-    e: *mut f64,
+    e: *const f64,
     flen: i32,
-    f: *mut f64,
+    f: *const f64,
     h: *mut f64,
 ) -> i32 {
     let mut q: f64;
