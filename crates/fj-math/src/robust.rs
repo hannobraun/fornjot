@@ -28,6 +28,7 @@
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::missing_safety_doc)]
 #![allow(clippy::needless_return)]
+#![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
 
 #[no_mangle]
@@ -66,8 +67,8 @@ pub unsafe extern "C" fn exactinit() {
     let mut half: f64 = 0.;
     let mut check: f64 = 0.;
     let mut lastcheck: f64 = 0.;
-    let mut every_other: libc::c_int = 0;
-    every_other = 1 as libc::c_int;
+    let mut every_other: i32 = 0;
+    every_other = 1 as i32;
     half = 0.5f64;
     epsilon = 1.0f64;
     splitter = 1.0f64;
@@ -78,7 +79,7 @@ pub unsafe extern "C" fn exactinit() {
         if every_other != 0 {
             splitter *= 2.0f64;
         }
-        every_other = (every_other == 0) as libc::c_int;
+        every_other = (every_other == 0) as i32;
         check = 1.0f64 + epsilon;
         if !(check != 1.0f64 && check != lastcheck) {
             break;
@@ -125,24 +126,15 @@ pub unsafe extern "C" fn orient3d(
     let mut det: f64 = 0.;
     let mut permanent: f64 = 0.;
     let mut errbound: f64 = 0.;
-    adx = *pa.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    bdx = *pb.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    cdx = *pc.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    ady = *pa.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    bdy = *pb.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    cdy = *pc.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    adz = *pa.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
-    bdz = *pb.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
-    cdz = *pc.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
+    adx = *pa.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    bdx = *pb.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    cdx = *pc.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    ady = *pa.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    bdy = *pb.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    cdy = *pc.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    adz = *pa.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
+    bdz = *pb.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
+    cdz = *pc.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
     bdxcdy = bdx * cdy;
     cdxbdy = cdx * bdy;
     cdxady = cdx * ady;
@@ -208,17 +200,17 @@ pub unsafe extern "C" fn orient3dadapt(
     let mut adet: [f64; 8] = [0.; 8];
     let mut bdet: [f64; 8] = [0.; 8];
     let mut cdet: [f64; 8] = [0.; 8];
-    let mut alen: libc::c_int = 0;
-    let mut blen: libc::c_int = 0;
-    let mut clen: libc::c_int = 0;
+    let mut alen: i32 = 0;
+    let mut blen: i32 = 0;
+    let mut clen: i32 = 0;
     let mut abdet: [f64; 16] = [0.; 16];
-    let mut ablen: libc::c_int = 0;
+    let mut ablen: i32 = 0;
     let mut finnow: *mut f64 = 0 as *mut f64;
     let mut finother: *mut f64 = 0 as *mut f64;
     let mut finswap: *mut f64 = 0 as *mut f64;
     let mut fin1: [f64; 192] = [0.; 192];
     let mut fin2: [f64; 192] = [0.; 192];
-    let mut finlength: libc::c_int = 0;
+    let mut finlength: i32 = 0;
     let mut adxtail: f64 = 0.;
     let mut bdxtail: f64 = 0.;
     let mut cdxtail: f64 = 0.;
@@ -240,12 +232,12 @@ pub unsafe extern "C" fn orient3dadapt(
     let mut bt_a: [f64; 4] = [0.; 4];
     let mut ct_a: [f64; 4] = [0.; 4];
     let mut ct_b: [f64; 4] = [0.; 4];
-    let mut at_blen: libc::c_int = 0;
-    let mut at_clen: libc::c_int = 0;
-    let mut bt_clen: libc::c_int = 0;
-    let mut bt_alen: libc::c_int = 0;
-    let mut ct_alen: libc::c_int = 0;
-    let mut ct_blen: libc::c_int = 0;
+    let mut at_blen: i32 = 0;
+    let mut at_clen: i32 = 0;
+    let mut bt_clen: i32 = 0;
+    let mut bt_alen: i32 = 0;
+    let mut ct_alen: i32 = 0;
+    let mut ct_blen: i32 = 0;
     let mut bdxt_cdy1: f64 = 0.;
     let mut cdxt_bdy1: f64 = 0.;
     let mut cdxt_ady1: f64 = 0.;
@@ -273,9 +265,9 @@ pub unsafe extern "C" fn orient3dadapt(
     let mut bct: [f64; 8] = [0.; 8];
     let mut cat: [f64; 8] = [0.; 8];
     let mut abt: [f64; 8] = [0.; 8];
-    let mut bctlen: libc::c_int = 0;
-    let mut catlen: libc::c_int = 0;
-    let mut abtlen: libc::c_int = 0;
+    let mut bctlen: i32 = 0;
+    let mut catlen: i32 = 0;
+    let mut abtlen: i32 = 0;
     let mut bdxt_cdyt1: f64 = 0.;
     let mut cdxt_bdyt1: f64 = 0.;
     let mut cdxt_adyt1: f64 = 0.;
@@ -292,8 +284,8 @@ pub unsafe extern "C" fn orient3dadapt(
     let mut v: [f64; 12] = [0.; 12];
     let mut w: [f64; 16] = [0.; 16];
     let mut u3: f64 = 0.;
-    let mut vlength: libc::c_int = 0;
-    let mut wlength: libc::c_int = 0;
+    let mut vlength: i32 = 0;
+    let mut wlength: i32 = 0;
     let mut negate: f64 = 0.;
     let mut bvirt: f64 = 0.;
     let mut avirt: f64 = 0.;
@@ -312,24 +304,15 @@ pub unsafe extern "C" fn orient3dadapt(
     let mut _j: f64 = 0.;
     let mut _k: f64 = 0.;
     let mut _0: f64 = 0.;
-    adx = *pa.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    bdx = *pb.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    cdx = *pc.offset(0 as libc::c_int as isize)
-        - *pd.offset(0 as libc::c_int as isize);
-    ady = *pa.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    bdy = *pb.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    cdy = *pc.offset(1 as libc::c_int as isize)
-        - *pd.offset(1 as libc::c_int as isize);
-    adz = *pa.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
-    bdz = *pb.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
-    cdz = *pc.offset(2 as libc::c_int as isize)
-        - *pd.offset(2 as libc::c_int as isize);
+    adx = *pa.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    bdx = *pb.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    cdx = *pc.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
+    ady = *pa.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    bdy = *pb.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    cdy = *pc.offset(1 as i32 as isize) - *pd.offset(1 as i32 as isize);
+    adz = *pa.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
+    bdz = *pb.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
+    cdz = *pc.offset(2 as i32 as isize) - *pd.offset(2 as i32 as isize);
     bdxcdy1 = bdx * cdy;
     c = splitter * bdx;
     abig = c - bdx;
@@ -361,7 +344,7 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - cdxbdy0;
     around = bdxcdy0 - avirt;
-    bc[0 as libc::c_int as usize] = around + bround;
+    bc[0 as i32 as usize] = around + bround;
     _j = bdxcdy1 + _i;
     bvirt = _j - bdxcdy1;
     avirt = _j - bvirt;
@@ -373,16 +356,16 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - cdxbdy1;
     around = _0 - avirt;
-    bc[1 as libc::c_int as usize] = around + bround;
+    bc[1 as i32 as usize] = around + bround;
     bc3 = _j + _i;
     bvirt = bc3 - _j;
     avirt = bc3 - bvirt;
     bround = _i - bvirt;
     around = _j - avirt;
-    bc[2 as libc::c_int as usize] = around + bround;
-    bc[3 as libc::c_int as usize] = bc3;
+    bc[2 as i32 as usize] = around + bround;
+    bc[3 as i32 as usize] = bc3;
     alen = scale_expansion_zeroelim(
-        4 as libc::c_int,
+        4 as i32,
         bc.as_mut_ptr(),
         adz,
         adet.as_mut_ptr(),
@@ -418,7 +401,7 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - adxcdy0;
     around = cdxady0 - avirt;
-    ca[0 as libc::c_int as usize] = around + bround;
+    ca[0 as i32 as usize] = around + bround;
     _j = cdxady1 + _i;
     bvirt = _j - cdxady1;
     avirt = _j - bvirt;
@@ -430,16 +413,16 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - adxcdy1;
     around = _0 - avirt;
-    ca[1 as libc::c_int as usize] = around + bround;
+    ca[1 as i32 as usize] = around + bround;
     ca3 = _j + _i;
     bvirt = ca3 - _j;
     avirt = ca3 - bvirt;
     bround = _i - bvirt;
     around = _j - avirt;
-    ca[2 as libc::c_int as usize] = around + bround;
-    ca[3 as libc::c_int as usize] = ca3;
+    ca[2 as i32 as usize] = around + bround;
+    ca[3 as i32 as usize] = ca3;
     blen = scale_expansion_zeroelim(
-        4 as libc::c_int,
+        4 as i32,
         ca.as_mut_ptr(),
         bdz,
         bdet.as_mut_ptr(),
@@ -475,7 +458,7 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - bdxady0;
     around = adxbdy0 - avirt;
-    ab[0 as libc::c_int as usize] = around + bround;
+    ab[0 as i32 as usize] = around + bround;
     _j = adxbdy1 + _i;
     bvirt = _j - adxbdy1;
     avirt = _j - bvirt;
@@ -487,16 +470,16 @@ pub unsafe extern "C" fn orient3dadapt(
     avirt = _i + bvirt;
     bround = bvirt - bdxady1;
     around = _0 - avirt;
-    ab[1 as libc::c_int as usize] = around + bround;
+    ab[1 as i32 as usize] = around + bround;
     ab3 = _j + _i;
     bvirt = ab3 - _j;
     avirt = ab3 - bvirt;
     bround = _i - bvirt;
     around = _j - avirt;
-    ab[2 as libc::c_int as usize] = around + bround;
-    ab[3 as libc::c_int as usize] = ab3;
+    ab[2 as i32 as usize] = around + bround;
+    ab[3 as i32 as usize] = ab3;
     clen = scale_expansion_zeroelim(
-        4 as libc::c_int,
+        4 as i32,
         ab.as_mut_ptr(),
         cdz,
         cdet.as_mut_ptr(),
@@ -520,50 +503,50 @@ pub unsafe extern "C" fn orient3dadapt(
     if det >= errbound || -det >= errbound {
         return det;
     }
-    bvirt = *pa.offset(0 as libc::c_int as isize) - adx;
+    bvirt = *pa.offset(0 as i32 as isize) - adx;
     avirt = adx + bvirt;
-    bround = bvirt - *pd.offset(0 as libc::c_int as isize);
-    around = *pa.offset(0 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(0 as i32 as isize);
+    around = *pa.offset(0 as i32 as isize) - avirt;
     adxtail = around + bround;
-    bvirt = *pb.offset(0 as libc::c_int as isize) - bdx;
+    bvirt = *pb.offset(0 as i32 as isize) - bdx;
     avirt = bdx + bvirt;
-    bround = bvirt - *pd.offset(0 as libc::c_int as isize);
-    around = *pb.offset(0 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(0 as i32 as isize);
+    around = *pb.offset(0 as i32 as isize) - avirt;
     bdxtail = around + bround;
-    bvirt = *pc.offset(0 as libc::c_int as isize) - cdx;
+    bvirt = *pc.offset(0 as i32 as isize) - cdx;
     avirt = cdx + bvirt;
-    bround = bvirt - *pd.offset(0 as libc::c_int as isize);
-    around = *pc.offset(0 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(0 as i32 as isize);
+    around = *pc.offset(0 as i32 as isize) - avirt;
     cdxtail = around + bround;
-    bvirt = *pa.offset(1 as libc::c_int as isize) - ady;
+    bvirt = *pa.offset(1 as i32 as isize) - ady;
     avirt = ady + bvirt;
-    bround = bvirt - *pd.offset(1 as libc::c_int as isize);
-    around = *pa.offset(1 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(1 as i32 as isize);
+    around = *pa.offset(1 as i32 as isize) - avirt;
     adytail = around + bround;
-    bvirt = *pb.offset(1 as libc::c_int as isize) - bdy;
+    bvirt = *pb.offset(1 as i32 as isize) - bdy;
     avirt = bdy + bvirt;
-    bround = bvirt - *pd.offset(1 as libc::c_int as isize);
-    around = *pb.offset(1 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(1 as i32 as isize);
+    around = *pb.offset(1 as i32 as isize) - avirt;
     bdytail = around + bround;
-    bvirt = *pc.offset(1 as libc::c_int as isize) - cdy;
+    bvirt = *pc.offset(1 as i32 as isize) - cdy;
     avirt = cdy + bvirt;
-    bround = bvirt - *pd.offset(1 as libc::c_int as isize);
-    around = *pc.offset(1 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(1 as i32 as isize);
+    around = *pc.offset(1 as i32 as isize) - avirt;
     cdytail = around + bround;
-    bvirt = *pa.offset(2 as libc::c_int as isize) - adz;
+    bvirt = *pa.offset(2 as i32 as isize) - adz;
     avirt = adz + bvirt;
-    bround = bvirt - *pd.offset(2 as libc::c_int as isize);
-    around = *pa.offset(2 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(2 as i32 as isize);
+    around = *pa.offset(2 as i32 as isize) - avirt;
     adztail = around + bround;
-    bvirt = *pb.offset(2 as libc::c_int as isize) - bdz;
+    bvirt = *pb.offset(2 as i32 as isize) - bdz;
     avirt = bdz + bvirt;
-    bround = bvirt - *pd.offset(2 as libc::c_int as isize);
-    around = *pb.offset(2 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(2 as i32 as isize);
+    around = *pb.offset(2 as i32 as isize) - avirt;
     bdztail = around + bround;
-    bvirt = *pc.offset(2 as libc::c_int as isize) - cdz;
+    bvirt = *pc.offset(2 as i32 as isize) - cdz;
     avirt = cdz + bvirt;
-    bround = bvirt - *pd.offset(2 as libc::c_int as isize);
-    around = *pc.offset(2 as libc::c_int as isize) - avirt;
+    bround = bvirt - *pd.offset(2 as i32 as isize);
+    around = *pc.offset(2 as i32 as isize) - avirt;
     cdztail = around + bround;
     if adxtail == 0.0f64
         && bdxtail == 0.0f64
@@ -597,10 +580,10 @@ pub unsafe extern "C" fn orient3dadapt(
     finother = fin2.as_mut_ptr();
     if adxtail == 0.0f64 {
         if adytail == 0.0f64 {
-            at_b[0 as libc::c_int as usize] = 0.0f64;
-            at_blen = 1 as libc::c_int;
-            at_c[0 as libc::c_int as usize] = 0.0f64;
-            at_clen = 1 as libc::c_int;
+            at_b[0 as i32 as usize] = 0.0f64;
+            at_blen = 1 as i32;
+            at_c[0 as i32 as usize] = 0.0f64;
+            at_clen = 1 as i32;
         } else {
             negate = -adytail;
             at_blarge = negate * bdx;
@@ -615,9 +598,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = at_blarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            at_b[0 as libc::c_int as usize] = alo * blo - err3;
-            at_b[1 as libc::c_int as usize] = at_blarge;
-            at_blen = 2 as libc::c_int;
+            at_b[0 as i32 as usize] = alo * blo - err3;
+            at_b[1 as i32 as usize] = at_blarge;
+            at_blen = 2 as i32;
             at_clarge = adytail * cdx;
             c = splitter * adytail;
             abig = c - adytail;
@@ -630,9 +613,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = at_clarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            at_c[0 as libc::c_int as usize] = alo * blo - err3;
-            at_c[1 as libc::c_int as usize] = at_clarge;
-            at_clen = 2 as libc::c_int;
+            at_c[0 as i32 as usize] = alo * blo - err3;
+            at_c[1 as i32 as usize] = at_clarge;
+            at_clen = 2 as i32;
         }
     } else if adytail == 0.0f64 {
         at_blarge = adxtail * bdy;
@@ -647,9 +630,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = at_blarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        at_b[0 as libc::c_int as usize] = alo * blo - err3;
-        at_b[1 as libc::c_int as usize] = at_blarge;
-        at_blen = 2 as libc::c_int;
+        at_b[0 as i32 as usize] = alo * blo - err3;
+        at_b[1 as i32 as usize] = at_blarge;
+        at_blen = 2 as i32;
         negate = -adxtail;
         at_clarge = negate * cdy;
         c = splitter * negate;
@@ -663,9 +646,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = at_clarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        at_c[0 as libc::c_int as usize] = alo * blo - err3;
-        at_c[1 as libc::c_int as usize] = at_clarge;
-        at_clen = 2 as libc::c_int;
+        at_c[0 as i32 as usize] = alo * blo - err3;
+        at_c[1 as i32 as usize] = at_clarge;
+        at_clen = 2 as i32;
     } else {
         adxt_bdy1 = adxtail * bdy;
         c = splitter * adxtail;
@@ -698,7 +681,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - adyt_bdx0;
         around = adxt_bdy0 - avirt;
-        at_b[0 as libc::c_int as usize] = around + bround;
+        at_b[0 as i32 as usize] = around + bround;
         _j = adxt_bdy1 + _i;
         bvirt = _j - adxt_bdy1;
         avirt = _j - bvirt;
@@ -710,15 +693,15 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - adyt_bdx1;
         around = _0 - avirt;
-        at_b[1 as libc::c_int as usize] = around + bround;
+        at_b[1 as i32 as usize] = around + bround;
         at_blarge = _j + _i;
         bvirt = at_blarge - _j;
         avirt = at_blarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        at_b[2 as libc::c_int as usize] = around + bround;
-        at_b[3 as libc::c_int as usize] = at_blarge;
-        at_blen = 4 as libc::c_int;
+        at_b[2 as i32 as usize] = around + bround;
+        at_b[3 as i32 as usize] = at_blarge;
+        at_blen = 4 as i32;
         adyt_cdx1 = adytail * cdx;
         c = splitter * adytail;
         abig = c - adytail;
@@ -750,7 +733,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - adxt_cdy0;
         around = adyt_cdx0 - avirt;
-        at_c[0 as libc::c_int as usize] = around + bround;
+        at_c[0 as i32 as usize] = around + bround;
         _j = adyt_cdx1 + _i;
         bvirt = _j - adyt_cdx1;
         avirt = _j - bvirt;
@@ -762,22 +745,22 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - adxt_cdy1;
         around = _0 - avirt;
-        at_c[1 as libc::c_int as usize] = around + bround;
+        at_c[1 as i32 as usize] = around + bround;
         at_clarge = _j + _i;
         bvirt = at_clarge - _j;
         avirt = at_clarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        at_c[2 as libc::c_int as usize] = around + bround;
-        at_c[3 as libc::c_int as usize] = at_clarge;
-        at_clen = 4 as libc::c_int;
+        at_c[2 as i32 as usize] = around + bround;
+        at_c[3 as i32 as usize] = at_clarge;
+        at_clen = 4 as i32;
     }
     if bdxtail == 0.0f64 {
         if bdytail == 0.0f64 {
-            bt_c[0 as libc::c_int as usize] = 0.0f64;
-            bt_clen = 1 as libc::c_int;
-            bt_a[0 as libc::c_int as usize] = 0.0f64;
-            bt_alen = 1 as libc::c_int;
+            bt_c[0 as i32 as usize] = 0.0f64;
+            bt_clen = 1 as i32;
+            bt_a[0 as i32 as usize] = 0.0f64;
+            bt_alen = 1 as i32;
         } else {
             negate = -bdytail;
             bt_clarge = negate * cdx;
@@ -792,9 +775,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = bt_clarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            bt_c[0 as libc::c_int as usize] = alo * blo - err3;
-            bt_c[1 as libc::c_int as usize] = bt_clarge;
-            bt_clen = 2 as libc::c_int;
+            bt_c[0 as i32 as usize] = alo * blo - err3;
+            bt_c[1 as i32 as usize] = bt_clarge;
+            bt_clen = 2 as i32;
             bt_alarge = bdytail * adx;
             c = splitter * bdytail;
             abig = c - bdytail;
@@ -807,9 +790,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = bt_alarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            bt_a[0 as libc::c_int as usize] = alo * blo - err3;
-            bt_a[1 as libc::c_int as usize] = bt_alarge;
-            bt_alen = 2 as libc::c_int;
+            bt_a[0 as i32 as usize] = alo * blo - err3;
+            bt_a[1 as i32 as usize] = bt_alarge;
+            bt_alen = 2 as i32;
         }
     } else if bdytail == 0.0f64 {
         bt_clarge = bdxtail * cdy;
@@ -824,9 +807,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = bt_clarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        bt_c[0 as libc::c_int as usize] = alo * blo - err3;
-        bt_c[1 as libc::c_int as usize] = bt_clarge;
-        bt_clen = 2 as libc::c_int;
+        bt_c[0 as i32 as usize] = alo * blo - err3;
+        bt_c[1 as i32 as usize] = bt_clarge;
+        bt_clen = 2 as i32;
         negate = -bdxtail;
         bt_alarge = negate * ady;
         c = splitter * negate;
@@ -840,9 +823,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = bt_alarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        bt_a[0 as libc::c_int as usize] = alo * blo - err3;
-        bt_a[1 as libc::c_int as usize] = bt_alarge;
-        bt_alen = 2 as libc::c_int;
+        bt_a[0 as i32 as usize] = alo * blo - err3;
+        bt_a[1 as i32 as usize] = bt_alarge;
+        bt_alen = 2 as i32;
     } else {
         bdxt_cdy1 = bdxtail * cdy;
         c = splitter * bdxtail;
@@ -875,7 +858,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - bdyt_cdx0;
         around = bdxt_cdy0 - avirt;
-        bt_c[0 as libc::c_int as usize] = around + bround;
+        bt_c[0 as i32 as usize] = around + bround;
         _j = bdxt_cdy1 + _i;
         bvirt = _j - bdxt_cdy1;
         avirt = _j - bvirt;
@@ -887,15 +870,15 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - bdyt_cdx1;
         around = _0 - avirt;
-        bt_c[1 as libc::c_int as usize] = around + bround;
+        bt_c[1 as i32 as usize] = around + bround;
         bt_clarge = _j + _i;
         bvirt = bt_clarge - _j;
         avirt = bt_clarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        bt_c[2 as libc::c_int as usize] = around + bround;
-        bt_c[3 as libc::c_int as usize] = bt_clarge;
-        bt_clen = 4 as libc::c_int;
+        bt_c[2 as i32 as usize] = around + bround;
+        bt_c[3 as i32 as usize] = bt_clarge;
+        bt_clen = 4 as i32;
         bdyt_adx1 = bdytail * adx;
         c = splitter * bdytail;
         abig = c - bdytail;
@@ -927,7 +910,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - bdxt_ady0;
         around = bdyt_adx0 - avirt;
-        bt_a[0 as libc::c_int as usize] = around + bround;
+        bt_a[0 as i32 as usize] = around + bround;
         _j = bdyt_adx1 + _i;
         bvirt = _j - bdyt_adx1;
         avirt = _j - bvirt;
@@ -939,22 +922,22 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - bdxt_ady1;
         around = _0 - avirt;
-        bt_a[1 as libc::c_int as usize] = around + bround;
+        bt_a[1 as i32 as usize] = around + bround;
         bt_alarge = _j + _i;
         bvirt = bt_alarge - _j;
         avirt = bt_alarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        bt_a[2 as libc::c_int as usize] = around + bround;
-        bt_a[3 as libc::c_int as usize] = bt_alarge;
-        bt_alen = 4 as libc::c_int;
+        bt_a[2 as i32 as usize] = around + bround;
+        bt_a[3 as i32 as usize] = bt_alarge;
+        bt_alen = 4 as i32;
     }
     if cdxtail == 0.0f64 {
         if cdytail == 0.0f64 {
-            ct_a[0 as libc::c_int as usize] = 0.0f64;
-            ct_alen = 1 as libc::c_int;
-            ct_b[0 as libc::c_int as usize] = 0.0f64;
-            ct_blen = 1 as libc::c_int;
+            ct_a[0 as i32 as usize] = 0.0f64;
+            ct_alen = 1 as i32;
+            ct_b[0 as i32 as usize] = 0.0f64;
+            ct_blen = 1 as i32;
         } else {
             negate = -cdytail;
             ct_alarge = negate * adx;
@@ -969,9 +952,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = ct_alarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            ct_a[0 as libc::c_int as usize] = alo * blo - err3;
-            ct_a[1 as libc::c_int as usize] = ct_alarge;
-            ct_alen = 2 as libc::c_int;
+            ct_a[0 as i32 as usize] = alo * blo - err3;
+            ct_a[1 as i32 as usize] = ct_alarge;
+            ct_alen = 2 as i32;
             ct_blarge = cdytail * bdx;
             c = splitter * cdytail;
             abig = c - cdytail;
@@ -984,9 +967,9 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = ct_blarge - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            ct_b[0 as libc::c_int as usize] = alo * blo - err3;
-            ct_b[1 as libc::c_int as usize] = ct_blarge;
-            ct_blen = 2 as libc::c_int;
+            ct_b[0 as i32 as usize] = alo * blo - err3;
+            ct_b[1 as i32 as usize] = ct_blarge;
+            ct_blen = 2 as i32;
         }
     } else if cdytail == 0.0f64 {
         ct_alarge = cdxtail * ady;
@@ -1001,9 +984,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = ct_alarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        ct_a[0 as libc::c_int as usize] = alo * blo - err3;
-        ct_a[1 as libc::c_int as usize] = ct_alarge;
-        ct_alen = 2 as libc::c_int;
+        ct_a[0 as i32 as usize] = alo * blo - err3;
+        ct_a[1 as i32 as usize] = ct_alarge;
+        ct_alen = 2 as i32;
         negate = -cdxtail;
         ct_blarge = negate * bdy;
         c = splitter * negate;
@@ -1017,9 +1000,9 @@ pub unsafe extern "C" fn orient3dadapt(
         err1 = ct_blarge - ahi * bhi;
         err2 = err1 - alo * bhi;
         err3 = err2 - ahi * blo;
-        ct_b[0 as libc::c_int as usize] = alo * blo - err3;
-        ct_b[1 as libc::c_int as usize] = ct_blarge;
-        ct_blen = 2 as libc::c_int;
+        ct_b[0 as i32 as usize] = alo * blo - err3;
+        ct_b[1 as i32 as usize] = ct_blarge;
+        ct_blen = 2 as i32;
     } else {
         cdxt_ady1 = cdxtail * ady;
         c = splitter * cdxtail;
@@ -1052,7 +1035,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - cdyt_adx0;
         around = cdxt_ady0 - avirt;
-        ct_a[0 as libc::c_int as usize] = around + bround;
+        ct_a[0 as i32 as usize] = around + bround;
         _j = cdxt_ady1 + _i;
         bvirt = _j - cdxt_ady1;
         avirt = _j - bvirt;
@@ -1064,15 +1047,15 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - cdyt_adx1;
         around = _0 - avirt;
-        ct_a[1 as libc::c_int as usize] = around + bround;
+        ct_a[1 as i32 as usize] = around + bround;
         ct_alarge = _j + _i;
         bvirt = ct_alarge - _j;
         avirt = ct_alarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        ct_a[2 as libc::c_int as usize] = around + bround;
-        ct_a[3 as libc::c_int as usize] = ct_alarge;
-        ct_alen = 4 as libc::c_int;
+        ct_a[2 as i32 as usize] = around + bround;
+        ct_a[3 as i32 as usize] = ct_alarge;
+        ct_alen = 4 as i32;
         cdyt_bdx1 = cdytail * bdx;
         c = splitter * cdytail;
         abig = c - cdytail;
@@ -1104,7 +1087,7 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - cdxt_bdy0;
         around = cdyt_bdx0 - avirt;
-        ct_b[0 as libc::c_int as usize] = around + bround;
+        ct_b[0 as i32 as usize] = around + bround;
         _j = cdyt_bdx1 + _i;
         bvirt = _j - cdyt_bdx1;
         avirt = _j - bvirt;
@@ -1116,15 +1099,15 @@ pub unsafe extern "C" fn orient3dadapt(
         avirt = _i + bvirt;
         bround = bvirt - cdxt_bdy1;
         around = _0 - avirt;
-        ct_b[1 as libc::c_int as usize] = around + bround;
+        ct_b[1 as i32 as usize] = around + bround;
         ct_blarge = _j + _i;
         bvirt = ct_blarge - _j;
         avirt = ct_blarge - bvirt;
         bround = _i - bvirt;
         around = _j - avirt;
-        ct_b[2 as libc::c_int as usize] = around + bround;
-        ct_b[3 as libc::c_int as usize] = ct_blarge;
-        ct_blen = 4 as libc::c_int;
+        ct_b[2 as i32 as usize] = around + bround;
+        ct_b[3 as i32 as usize] = ct_blarge;
+        ct_blen = 4 as i32;
     }
     bctlen = fast_expansion_sum_zeroelim(
         bt_clen,
@@ -1185,7 +1168,7 @@ pub unsafe extern "C" fn orient3dadapt(
     finother = finswap;
     if adztail != 0.0f64 {
         vlength = scale_expansion_zeroelim(
-            4 as libc::c_int,
+            4 as i32,
             bc.as_mut_ptr(),
             adztail,
             v.as_mut_ptr(),
@@ -1203,7 +1186,7 @@ pub unsafe extern "C" fn orient3dadapt(
     }
     if bdztail != 0.0f64 {
         vlength = scale_expansion_zeroelim(
-            4 as libc::c_int,
+            4 as i32,
             ca.as_mut_ptr(),
             bdztail,
             v.as_mut_ptr(),
@@ -1221,7 +1204,7 @@ pub unsafe extern "C" fn orient3dadapt(
     }
     if cdztail != 0.0f64 {
         vlength = scale_expansion_zeroelim(
-            4 as libc::c_int,
+            4 as i32,
             ab.as_mut_ptr(),
             cdztail,
             v.as_mut_ptr(),
@@ -1264,7 +1247,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = adxt_bdyt1 * cdz;
             c = splitter * adxt_bdyt1;
             abig = c - adxt_bdyt1;
@@ -1279,15 +1262,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1307,7 +1290,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = adxt_bdyt1 * cdztail;
                 c = splitter * adxt_bdyt1;
                 abig = c - adxt_bdyt1;
@@ -1322,15 +1305,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1366,7 +1349,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = adxt_cdyt1 * bdz;
             c = splitter * adxt_cdyt1;
             abig = c - adxt_cdyt1;
@@ -1381,15 +1364,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1409,7 +1392,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = adxt_cdyt1 * bdztail;
                 c = splitter * adxt_cdyt1;
                 abig = c - adxt_cdyt1;
@@ -1424,15 +1407,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1469,7 +1452,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = bdxt_cdyt1 * adz;
             c = splitter * bdxt_cdyt1;
             abig = c - bdxt_cdyt1;
@@ -1484,15 +1467,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1512,7 +1495,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = bdxt_cdyt1 * adztail;
                 c = splitter * bdxt_cdyt1;
                 abig = c - bdxt_cdyt1;
@@ -1527,15 +1510,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1571,7 +1554,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = bdxt_adyt1 * cdz;
             c = splitter * bdxt_adyt1;
             abig = c - bdxt_adyt1;
@@ -1586,15 +1569,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1614,7 +1597,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = bdxt_adyt1 * cdztail;
                 c = splitter * bdxt_adyt1;
                 abig = c - bdxt_adyt1;
@@ -1629,15 +1612,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1674,7 +1657,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = cdxt_adyt1 * bdz;
             c = splitter * cdxt_adyt1;
             abig = c - cdxt_adyt1;
@@ -1689,15 +1672,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1717,7 +1700,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = cdxt_adyt1 * bdztail;
                 c = splitter * cdxt_adyt1;
                 abig = c - cdxt_adyt1;
@@ -1732,15 +1715,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1776,7 +1759,7 @@ pub unsafe extern "C" fn orient3dadapt(
             err1 = _i - ahi * bhi;
             err2 = err1 - alo * bhi;
             err3 = err2 - ahi * blo;
-            u[0 as libc::c_int as usize] = alo * blo - err3;
+            u[0 as i32 as usize] = alo * blo - err3;
             _j = cdxt_bdyt1 * adz;
             c = splitter * cdxt_bdyt1;
             abig = c - cdxt_bdyt1;
@@ -1791,15 +1774,15 @@ pub unsafe extern "C" fn orient3dadapt(
             avirt = _k - bvirt;
             bround = _0 - bvirt;
             around = _i - avirt;
-            u[1 as libc::c_int as usize] = around + bround;
+            u[1 as i32 as usize] = around + bround;
             u3 = _j + _k;
             bvirt = u3 - _j;
-            u[2 as libc::c_int as usize] = _k - bvirt;
-            u[3 as libc::c_int as usize] = u3;
+            u[2 as i32 as usize] = _k - bvirt;
+            u[3 as i32 as usize] = u3;
             finlength = fast_expansion_sum_zeroelim(
                 finlength,
                 finnow,
-                4 as libc::c_int,
+                4 as i32,
                 u.as_mut_ptr(),
                 finother,
             );
@@ -1819,7 +1802,7 @@ pub unsafe extern "C" fn orient3dadapt(
                 err1 = _i - ahi * bhi;
                 err2 = err1 - alo * bhi;
                 err3 = err2 - ahi * blo;
-                u[0 as libc::c_int as usize] = alo * blo - err3;
+                u[0 as i32 as usize] = alo * blo - err3;
                 _j = cdxt_bdyt1 * adztail;
                 c = splitter * cdxt_bdyt1;
                 abig = c - cdxt_bdyt1;
@@ -1834,15 +1817,15 @@ pub unsafe extern "C" fn orient3dadapt(
                 avirt = _k - bvirt;
                 bround = _0 - bvirt;
                 around = _i - avirt;
-                u[1 as libc::c_int as usize] = around + bround;
+                u[1 as i32 as usize] = around + bround;
                 u3 = _j + _k;
                 bvirt = u3 - _j;
-                u[2 as libc::c_int as usize] = _k - bvirt;
-                u[3 as libc::c_int as usize] = u3;
+                u[2 as i32 as usize] = _k - bvirt;
+                u[3 as i32 as usize] = u3;
                 finlength = fast_expansion_sum_zeroelim(
                     finlength,
                     finnow,
-                    4 as libc::c_int,
+                    4 as i32,
                     u.as_mut_ptr(),
                     finother,
                 );
@@ -1906,23 +1889,23 @@ pub unsafe extern "C" fn orient3dadapt(
         finnow = finother;
         finother = finswap;
     }
-    return *finnow.offset((finlength - 1 as libc::c_int) as isize);
+    return *finnow.offset((finlength - 1 as i32) as isize);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn scale_expansion_zeroelim(
-    mut elen: libc::c_int,
+    mut elen: i32,
     mut e: *mut f64,
     mut b: f64,
     mut h: *mut f64,
-) -> libc::c_int {
+) -> i32 {
     let mut Q: f64 = 0.;
     let mut sum: f64 = 0.;
     let mut hh: f64 = 0.;
     let mut product1: f64 = 0.;
     let mut product0: f64 = 0.;
-    let mut eindex: libc::c_int = 0;
-    let mut hindex: libc::c_int = 0;
+    let mut eindex: i32 = 0;
+    let mut hindex: i32 = 0;
     let mut enow: f64 = 0.;
     let mut bvirt: f64 = 0.;
     let mut avirt: f64 = 0.;
@@ -1941,22 +1924,22 @@ pub unsafe extern "C" fn scale_expansion_zeroelim(
     abig = c - b;
     bhi = c - abig;
     blo = b - bhi;
-    Q = *e.offset(0 as libc::c_int as isize) * b;
-    c = splitter * *e.offset(0 as libc::c_int as isize);
-    abig = c - *e.offset(0 as libc::c_int as isize);
+    Q = *e.offset(0 as i32 as isize) * b;
+    c = splitter * *e.offset(0 as i32 as isize);
+    abig = c - *e.offset(0 as i32 as isize);
     ahi = c - abig;
-    alo = *e.offset(0 as libc::c_int as isize) - ahi;
+    alo = *e.offset(0 as i32 as isize) - ahi;
     err1 = Q - ahi * bhi;
     err2 = err1 - alo * bhi;
     err3 = err2 - ahi * blo;
     hh = alo * blo - err3;
-    hindex = 0 as libc::c_int;
-    if hh != 0 as libc::c_int as f64 {
+    hindex = 0 as i32;
+    if hh != 0 as i32 as f64 {
         let fresh12 = hindex;
         hindex = hindex + 1;
         *h.offset(fresh12 as isize) = hh;
     }
-    eindex = 1 as libc::c_int;
+    eindex = 1 as i32;
     while eindex < elen {
         enow = *e.offset(eindex as isize);
         product1 = enow * b;
@@ -1974,7 +1957,7 @@ pub unsafe extern "C" fn scale_expansion_zeroelim(
         bround = product0 - bvirt;
         around = Q - avirt;
         hh = around + bround;
-        if hh != 0 as libc::c_int as f64 {
+        if hh != 0 as i32 as f64 {
             let fresh13 = hindex;
             hindex = hindex + 1;
             *h.offset(fresh13 as isize) = hh;
@@ -1982,14 +1965,14 @@ pub unsafe extern "C" fn scale_expansion_zeroelim(
         Q = product1 + sum;
         bvirt = Q - product1;
         hh = sum - bvirt;
-        if hh != 0 as libc::c_int as f64 {
+        if hh != 0 as i32 as f64 {
             let fresh14 = hindex;
             hindex = hindex + 1;
             *h.offset(fresh14 as isize) = hh;
         }
         eindex += 1;
     }
-    if Q != 0.0f64 || hindex == 0 as libc::c_int {
+    if Q != 0.0f64 || hindex == 0 as i32 {
         let fresh15 = hindex;
         hindex = hindex + 1;
         *h.offset(fresh15 as isize) = Q;
@@ -1999,12 +1982,12 @@ pub unsafe extern "C" fn scale_expansion_zeroelim(
 
 #[no_mangle]
 pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
-    mut elen: libc::c_int,
+    mut elen: i32,
     mut e: *mut f64,
-    mut flen: libc::c_int,
+    mut flen: i32,
     mut f: *mut f64,
     mut h: *mut f64,
-) -> libc::c_int {
+) -> i32 {
     let mut Q: f64 = 0.;
     let mut Qnew: f64 = 0.;
     let mut hh: f64 = 0.;
@@ -2012,16 +1995,16 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
     let mut avirt: f64 = 0.;
     let mut bround: f64 = 0.;
     let mut around: f64 = 0.;
-    let mut eindex: libc::c_int = 0;
-    let mut findex: libc::c_int = 0;
-    let mut hindex: libc::c_int = 0;
+    let mut eindex: i32 = 0;
+    let mut findex: i32 = 0;
+    let mut hindex: i32 = 0;
     let mut enow: f64 = 0.;
     let mut fnow: f64 = 0.;
-    enow = *e.offset(0 as libc::c_int as isize);
-    fnow = *f.offset(0 as libc::c_int as isize);
-    findex = 0 as libc::c_int;
+    enow = *e.offset(0 as i32 as isize);
+    fnow = *f.offset(0 as i32 as isize);
+    findex = 0 as i32;
     eindex = findex;
-    if (fnow > enow) as libc::c_int == (fnow > -enow) as libc::c_int {
+    if (fnow > enow) as i32 == (fnow > -enow) as i32 {
         Q = enow;
         eindex += 1;
         enow = *e.offset(eindex as isize);
@@ -2030,9 +2013,9 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
         findex += 1;
         fnow = *f.offset(findex as isize);
     }
-    hindex = 0 as libc::c_int;
+    hindex = 0 as i32;
     if eindex < elen && findex < flen {
-        if (fnow > enow) as libc::c_int == (fnow > -enow) as libc::c_int {
+        if (fnow > enow) as i32 == (fnow > -enow) as i32 {
             Qnew = enow + Q;
             bvirt = Qnew - enow;
             hh = Q - bvirt;
@@ -2052,7 +2035,7 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
             *h.offset(fresh4 as isize) = hh;
         }
         while eindex < elen && findex < flen {
-            if (fnow > enow) as libc::c_int == (fnow > -enow) as libc::c_int {
+            if (fnow > enow) as i32 == (fnow > -enow) as i32 {
                 Qnew = Q + enow;
                 bvirt = Qnew - Q;
                 avirt = Qnew - bvirt;
@@ -2111,7 +2094,7 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
             *h.offset(fresh7 as isize) = hh;
         }
     }
-    if Q != 0.0f64 || hindex == 0 as libc::c_int {
+    if Q != 0.0f64 || hindex == 0 as i32 {
         let fresh8 = hindex;
         hindex = hindex + 1;
         *h.offset(fresh8 as isize) = Q;
@@ -2120,14 +2103,11 @@ pub unsafe extern "C" fn fast_expansion_sum_zeroelim(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn estimate(
-    mut elen: libc::c_int,
-    mut e: *mut f64,
-) -> f64 {
+pub unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
     let mut Q: f64 = 0.;
-    let mut eindex: libc::c_int = 0;
-    Q = *e.offset(0 as libc::c_int as isize);
-    eindex = 1 as libc::c_int;
+    let mut eindex: i32 = 0;
+    Q = *e.offset(0 as i32 as isize);
+    eindex = 1 as i32;
     while eindex < elen {
         Q += *e.offset(eindex as isize);
         eindex += 1;
