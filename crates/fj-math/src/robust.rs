@@ -343,14 +343,14 @@ unsafe fn orient3dadapt(
         alen,
         &adet,
         blen,
-        bdet.as_mut_ptr(),
+        &bdet,
         abdet.as_mut_ptr(),
     );
     finlength = fast_expansion_sum_zeroelim(
         ablen,
         &abdet,
         clen,
-        cdet.as_mut_ptr(),
+        &cdet,
         fin1.as_mut_ptr(),
     );
     det = estimate(&fin1[..finlength as usize]);
@@ -968,7 +968,7 @@ unsafe fn orient3dadapt(
         bt_clen,
         &bt_c,
         ct_blen,
-        ct_b.as_mut_ptr(),
+        &ct_b,
         bct.as_mut_ptr(),
     );
     wlength =
@@ -977,7 +977,7 @@ unsafe fn orient3dadapt(
         finlength,
         finnow,
         wlength,
-        w.as_mut_ptr(),
+        &w,
         finother.as_mut_ptr(),
     );
     let mut finswap = finnow;
@@ -987,7 +987,7 @@ unsafe fn orient3dadapt(
         ct_alen,
         &ct_a,
         at_clen,
-        at_c.as_mut_ptr(),
+        &at_c,
         cat.as_mut_ptr(),
     );
     wlength =
@@ -996,7 +996,7 @@ unsafe fn orient3dadapt(
         finlength,
         finnow,
         wlength,
-        w.as_mut_ptr(),
+        &w,
         finother.as_mut_ptr(),
     );
     finswap = finnow;
@@ -1006,7 +1006,7 @@ unsafe fn orient3dadapt(
         at_blen,
         &at_b,
         bt_alen,
-        bt_a.as_mut_ptr(),
+        &bt_a,
         abt.as_mut_ptr(),
     );
     wlength =
@@ -1015,7 +1015,7 @@ unsafe fn orient3dadapt(
         finlength,
         finnow,
         wlength,
-        w.as_mut_ptr(),
+        &w,
         finother.as_mut_ptr(),
     );
     finswap = finnow;
@@ -1032,7 +1032,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             vlength,
-            v.as_mut_ptr(),
+            &v,
             finother.as_mut_ptr(),
         );
         finswap = finnow;
@@ -1050,7 +1050,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             vlength,
-            v.as_mut_ptr(),
+            &v,
             finother.as_mut_ptr(),
         );
         finswap = finnow;
@@ -1068,7 +1068,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             vlength,
-            v.as_mut_ptr(),
+            &v,
             finother.as_mut_ptr(),
         );
         finswap = finnow;
@@ -1126,7 +1126,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1169,7 +1169,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1228,7 +1228,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1271,7 +1271,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1331,7 +1331,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1374,7 +1374,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1433,7 +1433,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1476,7 +1476,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1536,7 +1536,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1579,7 +1579,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1638,7 +1638,7 @@ unsafe fn orient3dadapt(
                 finlength,
                 finnow,
                 4,
-                u.as_mut_ptr(),
+                &u,
                 finother.as_mut_ptr(),
             );
             finswap = finnow;
@@ -1681,7 +1681,7 @@ unsafe fn orient3dadapt(
                     finlength,
                     finnow,
                     4,
-                    u.as_mut_ptr(),
+                    &u,
                     finother.as_mut_ptr(),
                 );
                 finswap = finnow;
@@ -1701,7 +1701,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             wlength,
-            w.as_mut_ptr(),
+            &w,
             finother.as_mut_ptr(),
         );
         finswap = finnow;
@@ -1719,7 +1719,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             wlength,
-            w.as_mut_ptr(),
+            &w,
             finother.as_mut_ptr(),
         );
         finswap = finnow;
@@ -1737,7 +1737,7 @@ unsafe fn orient3dadapt(
             finlength,
             finnow,
             wlength,
-            w.as_mut_ptr(),
+            &w,
             finother.as_mut_ptr(),
         );
         finnow = finother;
@@ -1834,7 +1834,7 @@ unsafe fn fast_expansion_sum_zeroelim(
     elen: i32,
     e: &[f64],
     flen: i32,
-    f: *const f64,
+    f: &[f64],
     h: *mut f64,
 ) -> i32 {
     let mut q: f64;
@@ -1850,7 +1850,7 @@ unsafe fn fast_expansion_sum_zeroelim(
     let mut enow: f64;
     let mut fnow: f64;
     enow = e[0];
-    fnow = *f.offset(0);
+    fnow = f[0];
     findex = 0;
     eindex = findex;
     if (fnow > enow) as i32 == (fnow > -enow) as i32 {
@@ -1860,7 +1860,7 @@ unsafe fn fast_expansion_sum_zeroelim(
     } else {
         q = fnow;
         findex += 1;
-        fnow = *f.offset(findex as isize);
+        fnow = f[findex as usize];
     }
     hindex = 0;
     if eindex < elen && findex < flen {
@@ -1875,7 +1875,7 @@ unsafe fn fast_expansion_sum_zeroelim(
             bvirt = q_new - fnow;
             hh = q - bvirt;
             findex += 1;
-            fnow = *f.offset(findex as isize);
+            fnow = f[findex as usize];
         }
         q = q_new;
         if hh != 0.0f64 {
@@ -1901,7 +1901,7 @@ unsafe fn fast_expansion_sum_zeroelim(
                 around = q - avirt;
                 hh = around + bround;
                 findex += 1;
-                fnow = *f.offset(findex as isize);
+                fnow = f[findex as usize];
             }
             q = q_new;
             if hh != 0.0f64 {
@@ -1935,7 +1935,7 @@ unsafe fn fast_expansion_sum_zeroelim(
         around = q - avirt;
         hh = around + bround;
         findex += 1;
-        fnow = *f.offset(findex as isize);
+        fnow = f[findex as usize];
         q = q_new;
         if hh != 0.0f64 {
             let fresh7 = hindex;
