@@ -20,10 +20,10 @@
 //! 3. Transpile C code to Rust: `c2rust transpile compile_commands.json`
 //! 4. Copy code from transpiled file here.
 
-#![allow(unused_mut)]
 #![allow(clippy::assign_op_pattern)]
 #![allow(clippy::just_underscores_and_digits)]
 #![allow(clippy::missing_safety_doc)]
+#![allow(clippy::needless_late_init)]
 #![allow(clippy::needless_return)]
 #![allow(clippy::unnecessary_cast)]
 #![allow(clippy::zero_ptr)]
@@ -36,29 +36,29 @@ const O3DERRBOUNDC: f64 = 3.2047474274603644e-31;
 
 /// Test a point's orientation against a plane
 pub unsafe extern "C" fn orient3d(
-    mut pa: *mut f64,
-    mut pb: *mut f64,
-    mut pc: *mut f64,
-    mut pd: *mut f64,
+    pa: *mut f64,
+    pb: *mut f64,
+    pc: *mut f64,
+    pd: *mut f64,
 ) -> f64 {
-    let mut adx: f64;
-    let mut bdx: f64;
-    let mut cdx: f64;
-    let mut ady: f64;
-    let mut bdy: f64;
-    let mut cdy: f64;
-    let mut adz: f64;
-    let mut bdz: f64;
-    let mut cdz: f64;
-    let mut bdxcdy: f64;
-    let mut cdxbdy: f64;
-    let mut cdxady: f64;
-    let mut adxcdy: f64;
-    let mut adxbdy: f64;
-    let mut bdxady: f64;
-    let mut det: f64;
-    let mut permanent: f64;
-    let mut errbound: f64;
+    let adx: f64;
+    let bdx: f64;
+    let cdx: f64;
+    let ady: f64;
+    let bdy: f64;
+    let cdy: f64;
+    let adz: f64;
+    let bdz: f64;
+    let cdz: f64;
+    let bdxcdy: f64;
+    let cdxbdy: f64;
+    let cdxady: f64;
+    let adxcdy: f64;
+    let adxbdy: f64;
+    let bdxady: f64;
+    let det: f64;
+    let permanent: f64;
+    let errbound: f64;
     adx = *pa.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
     bdx = *pb.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
     cdx = *pc.offset(0 as i32 as isize) - *pd.offset(0 as i32 as isize);
@@ -94,124 +94,124 @@ pub unsafe extern "C" fn orient3d(
 }
 
 unsafe extern "C" fn orient3dadapt(
-    mut pa: *mut f64,
-    mut pb: *mut f64,
-    mut pc: *mut f64,
-    mut pd: *mut f64,
-    mut permanent: f64,
+    pa: *mut f64,
+    pb: *mut f64,
+    pc: *mut f64,
+    pd: *mut f64,
+    permanent: f64,
 ) -> f64 {
-    let mut adx: f64;
-    let mut bdx: f64;
-    let mut cdx: f64;
-    let mut ady: f64;
-    let mut bdy: f64;
-    let mut cdy: f64;
-    let mut adz: f64;
-    let mut bdz: f64;
-    let mut cdz: f64;
+    let adx: f64;
+    let bdx: f64;
+    let cdx: f64;
+    let ady: f64;
+    let bdy: f64;
+    let cdy: f64;
+    let adz: f64;
+    let bdz: f64;
+    let cdz: f64;
     let mut det: f64;
     let mut errbound: f64;
-    let mut bdxcdy1: f64;
-    let mut cdxbdy1: f64;
-    let mut cdxady1: f64;
-    let mut adxcdy1: f64;
-    let mut adxbdy1: f64;
-    let mut bdxady1: f64;
-    let mut bdxcdy0: f64;
-    let mut cdxbdy0: f64;
-    let mut cdxady0: f64;
-    let mut adxcdy0: f64;
-    let mut adxbdy0: f64;
-    let mut bdxady0: f64;
+    let bdxcdy1: f64;
+    let cdxbdy1: f64;
+    let cdxady1: f64;
+    let adxcdy1: f64;
+    let adxbdy1: f64;
+    let bdxady1: f64;
+    let bdxcdy0: f64;
+    let cdxbdy0: f64;
+    let cdxady0: f64;
+    let adxcdy0: f64;
+    let adxbdy0: f64;
+    let bdxady0: f64;
     let mut bc: [f64; 4] = [0.; 4];
     let mut ca: [f64; 4] = [0.; 4];
     let mut ab: [f64; 4] = [0.; 4];
-    let mut bc3: f64;
-    let mut ca3: f64;
-    let mut ab3: f64;
+    let bc3: f64;
+    let ca3: f64;
+    let ab3: f64;
     let mut adet: [f64; 8] = [0.; 8];
     let mut bdet: [f64; 8] = [0.; 8];
     let mut cdet: [f64; 8] = [0.; 8];
-    let mut alen: i32;
-    let mut blen: i32;
-    let mut clen: i32;
+    let alen: i32;
+    let blen: i32;
+    let clen: i32;
     let mut abdet: [f64; 16] = [0.; 16];
-    let mut ablen: i32;
+    let ablen: i32;
     let mut finnow: *mut f64;
     let mut finother: *mut f64;
     let mut finswap: *mut f64;
     let mut fin1: [f64; 192] = [0.; 192];
     let mut fin2: [f64; 192] = [0.; 192];
     let mut finlength: i32;
-    let mut adxtail: f64;
-    let mut bdxtail: f64;
-    let mut cdxtail: f64;
-    let mut adytail: f64;
-    let mut bdytail: f64;
-    let mut cdytail: f64;
-    let mut adztail: f64;
-    let mut bdztail: f64;
-    let mut cdztail: f64;
-    let mut at_blarge: f64;
-    let mut at_clarge: f64;
-    let mut bt_clarge: f64;
-    let mut bt_alarge: f64;
-    let mut ct_alarge: f64;
-    let mut ct_blarge: f64;
+    let adxtail: f64;
+    let bdxtail: f64;
+    let cdxtail: f64;
+    let adytail: f64;
+    let bdytail: f64;
+    let cdytail: f64;
+    let adztail: f64;
+    let bdztail: f64;
+    let cdztail: f64;
+    let at_blarge: f64;
+    let at_clarge: f64;
+    let bt_clarge: f64;
+    let bt_alarge: f64;
+    let ct_alarge: f64;
+    let ct_blarge: f64;
     let mut at_b: [f64; 4] = [0.; 4];
     let mut at_c: [f64; 4] = [0.; 4];
     let mut bt_c: [f64; 4] = [0.; 4];
     let mut bt_a: [f64; 4] = [0.; 4];
     let mut ct_a: [f64; 4] = [0.; 4];
     let mut ct_b: [f64; 4] = [0.; 4];
-    let mut at_blen: i32;
-    let mut at_clen: i32;
-    let mut bt_clen: i32;
-    let mut bt_alen: i32;
-    let mut ct_alen: i32;
-    let mut ct_blen: i32;
-    let mut bdxt_cdy1: f64;
-    let mut cdxt_bdy1: f64;
-    let mut cdxt_ady1: f64;
-    let mut adxt_cdy1: f64;
-    let mut adxt_bdy1: f64;
-    let mut bdxt_ady1: f64;
-    let mut bdxt_cdy0: f64;
-    let mut cdxt_bdy0: f64;
-    let mut cdxt_ady0: f64;
-    let mut adxt_cdy0: f64;
-    let mut adxt_bdy0: f64;
-    let mut bdxt_ady0: f64;
-    let mut bdyt_cdx1: f64;
-    let mut cdyt_bdx1: f64;
-    let mut cdyt_adx1: f64;
-    let mut adyt_cdx1: f64;
-    let mut adyt_bdx1: f64;
-    let mut bdyt_adx1: f64;
-    let mut bdyt_cdx0: f64;
-    let mut cdyt_bdx0: f64;
-    let mut cdyt_adx0: f64;
-    let mut adyt_cdx0: f64;
-    let mut adyt_bdx0: f64;
-    let mut bdyt_adx0: f64;
+    let at_blen: i32;
+    let at_clen: i32;
+    let bt_clen: i32;
+    let bt_alen: i32;
+    let ct_alen: i32;
+    let ct_blen: i32;
+    let bdxt_cdy1: f64;
+    let cdxt_bdy1: f64;
+    let cdxt_ady1: f64;
+    let adxt_cdy1: f64;
+    let adxt_bdy1: f64;
+    let bdxt_ady1: f64;
+    let bdxt_cdy0: f64;
+    let cdxt_bdy0: f64;
+    let cdxt_ady0: f64;
+    let adxt_cdy0: f64;
+    let adxt_bdy0: f64;
+    let bdxt_ady0: f64;
+    let bdyt_cdx1: f64;
+    let cdyt_bdx1: f64;
+    let cdyt_adx1: f64;
+    let adyt_cdx1: f64;
+    let adyt_bdx1: f64;
+    let bdyt_adx1: f64;
+    let bdyt_cdx0: f64;
+    let cdyt_bdx0: f64;
+    let cdyt_adx0: f64;
+    let adyt_cdx0: f64;
+    let adyt_bdx0: f64;
+    let bdyt_adx0: f64;
     let mut bct: [f64; 8] = [0.; 8];
     let mut cat: [f64; 8] = [0.; 8];
     let mut abt: [f64; 8] = [0.; 8];
-    let mut bctlen: i32;
-    let mut catlen: i32;
-    let mut abtlen: i32;
-    let mut bdxt_cdyt1: f64;
-    let mut cdxt_bdyt1: f64;
-    let mut cdxt_adyt1: f64;
-    let mut adxt_cdyt1: f64;
-    let mut adxt_bdyt1: f64;
-    let mut bdxt_adyt1: f64;
-    let mut bdxt_cdyt0: f64;
-    let mut cdxt_bdyt0: f64;
-    let mut cdxt_adyt0: f64;
-    let mut adxt_cdyt0: f64;
-    let mut adxt_bdyt0: f64;
-    let mut bdxt_adyt0: f64;
+    let bctlen: i32;
+    let catlen: i32;
+    let abtlen: i32;
+    let bdxt_cdyt1: f64;
+    let cdxt_bdyt1: f64;
+    let cdxt_adyt1: f64;
+    let adxt_cdyt1: f64;
+    let adxt_bdyt1: f64;
+    let bdxt_adyt1: f64;
+    let bdxt_cdyt0: f64;
+    let cdxt_bdyt0: f64;
+    let cdxt_adyt0: f64;
+    let adxt_cdyt0: f64;
+    let adxt_bdyt0: f64;
+    let bdxt_adyt0: f64;
     let mut u: [f64; 4] = [0.; 4];
     let mut v: [f64; 12] = [0.; 12];
     let mut w: [f64; 16] = [0.; 16];
@@ -1823,10 +1823,10 @@ unsafe extern "C" fn orient3dadapt(
 }
 
 unsafe extern "C" fn scale_expansion_zeroelim(
-    mut elen: i32,
-    mut e: *mut f64,
-    mut b: f64,
-    mut h: *mut f64,
+    elen: i32,
+    e: *mut f64,
+    b: f64,
+    h: *mut f64,
 ) -> i32 {
     let mut q: f64;
     let mut sum: f64;
@@ -1844,8 +1844,8 @@ unsafe extern "C" fn scale_expansion_zeroelim(
     let mut abig: f64;
     let mut ahi: f64;
     let mut alo: f64;
-    let mut bhi: f64;
-    let mut blo: f64;
+    let bhi: f64;
+    let blo: f64;
     let mut err1: f64;
     let mut err2: f64;
     let mut err3: f64;
@@ -1910,11 +1910,11 @@ unsafe extern "C" fn scale_expansion_zeroelim(
 }
 
 unsafe extern "C" fn fast_expansion_sum_zeroelim(
-    mut elen: i32,
-    mut e: *mut f64,
-    mut flen: i32,
-    mut f: *mut f64,
-    mut h: *mut f64,
+    elen: i32,
+    e: *mut f64,
+    flen: i32,
+    f: *mut f64,
+    h: *mut f64,
 ) -> i32 {
     let mut q: f64;
     let mut q_new: f64;
@@ -2030,7 +2030,7 @@ unsafe extern "C" fn fast_expansion_sum_zeroelim(
     return hindex;
 }
 
-unsafe extern "C" fn estimate(mut elen: i32, mut e: *mut f64) -> f64 {
+unsafe extern "C" fn estimate(elen: i32, e: *mut f64) -> f64 {
     let mut q: f64;
     let mut eindex: i32;
     q = *e.offset(0 as i32 as isize);
