@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{HalfEdge, Surface},
+    objects::HalfEdge,
     partial::{Partial, PartialCycle},
 };
 
@@ -12,7 +12,6 @@ pub trait CycleBuilder {
     /// Create a cycle as a polygonal chain from the provided points
     fn update_as_polygon_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
@@ -49,12 +48,9 @@ pub trait CycleBuilder {
 impl CycleBuilder for PartialCycle {
     fn update_as_polygon_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
         let mut points = points.into_iter().map(Into::into);
-
-        self.surface = surface.into();
 
         let mut half_edges = Vec::new();
 
