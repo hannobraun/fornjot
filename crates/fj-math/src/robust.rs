@@ -35,18 +35,9 @@
 static mut splitter: f64 = 0.;
 static mut epsilon: f64 = 0.;
 static mut resulterrbound: f64 = 0.;
-static mut ccwerrboundA: f64 = 0.;
-static mut ccwerrboundB: f64 = 0.;
-static mut ccwerrboundC: f64 = 0.;
 static mut o3derrboundA: f64 = 0.;
 static mut o3derrboundB: f64 = 0.;
 static mut o3derrboundC: f64 = 0.;
-static mut iccerrboundA: f64 = 0.;
-static mut iccerrboundB: f64 = 0.;
-static mut iccerrboundC: f64 = 0.;
-static mut isperrboundA: f64 = 0.;
-static mut isperrboundB: f64 = 0.;
-static mut isperrboundC: f64 = 0.;
 
 pub unsafe extern "C" fn exactinit() {
     let mut half: f64 = 0.;
@@ -72,18 +63,9 @@ pub unsafe extern "C" fn exactinit() {
     }
     splitter += 1.0f64;
     resulterrbound = (3.0f64 + 8.0f64 * epsilon) * epsilon;
-    ccwerrboundA = (3.0f64 + 16.0f64 * epsilon) * epsilon;
-    ccwerrboundB = (2.0f64 + 12.0f64 * epsilon) * epsilon;
-    ccwerrboundC = (9.0f64 + 64.0f64 * epsilon) * epsilon * epsilon;
     o3derrboundA = (7.0f64 + 56.0f64 * epsilon) * epsilon;
     o3derrboundB = (3.0f64 + 28.0f64 * epsilon) * epsilon;
     o3derrboundC = (26.0f64 + 288.0f64 * epsilon) * epsilon * epsilon;
-    iccerrboundA = (10.0f64 + 96.0f64 * epsilon) * epsilon;
-    iccerrboundB = (4.0f64 + 48.0f64 * epsilon) * epsilon;
-    iccerrboundC = (44.0f64 + 576.0f64 * epsilon) * epsilon * epsilon;
-    isperrboundA = (16.0f64 + 224.0f64 * epsilon) * epsilon;
-    isperrboundB = (5.0f64 + 72.0f64 * epsilon) * epsilon;
-    isperrboundC = (71.0f64 + 1408.0f64 * epsilon) * epsilon * epsilon;
 }
 
 pub unsafe extern "C" fn orient3d(
