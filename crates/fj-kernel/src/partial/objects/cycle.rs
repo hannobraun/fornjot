@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Cycle, HalfEdge, Objects, Surface},
+    objects::{Cycle, HalfEdge, Objects},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
@@ -9,15 +9,6 @@ use crate::{
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
-}
-
-impl PartialCycle {
-    /// Access the surface of the [`Cycle`]
-    pub fn surface(&self) -> Option<Partial<Surface>> {
-        self.half_edges
-            .first()
-            .map(|half_edge| half_edge.read().curve().read().surface.clone())
-    }
 }
 
 impl PartialObject for PartialCycle {
