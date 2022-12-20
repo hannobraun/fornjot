@@ -231,7 +231,7 @@ unsafe fn orient3dadapt(
     around = _j - avirt;
     bc[2] = around + bround;
     bc[3] = bc3;
-    let alen: i32 = scale_expansion_zeroelim(4, &bc, adz, adet.as_mut_ptr());
+    let alen: i32 = scale_expansion_zeroelim(4, &bc, adz, &mut adet);
     let cdxady1: f64 = cdx * ady;
     c = SPLITTER * cdx;
     abig = c - cdx;
@@ -283,7 +283,7 @@ unsafe fn orient3dadapt(
     around = _j - avirt;
     ca[2] = around + bround;
     ca[3] = ca3;
-    let blen: i32 = scale_expansion_zeroelim(4, &ca, bdz, bdet.as_mut_ptr());
+    let blen: i32 = scale_expansion_zeroelim(4, &ca, bdz, &mut bdet);
     let adxbdy1: f64 = adx * bdy;
     c = SPLITTER * adx;
     abig = c - adx;
@@ -335,7 +335,7 @@ unsafe fn orient3dadapt(
     around = _j - avirt;
     ab[2] = around + bround;
     ab[3] = ab3;
-    let clen: i32 = scale_expansion_zeroelim(4, &ab, cdz, cdet.as_mut_ptr());
+    let clen: i32 = scale_expansion_zeroelim(4, &ab, cdz, &mut cdet);
     let ablen: i32 =
         fast_expansion_sum_zeroelim(alen, &adet, blen, &bdet, &mut abdet);
     finlength =
@@ -953,7 +953,7 @@ unsafe fn orient3dadapt(
     }
     let bctlen: i32 =
         fast_expansion_sum_zeroelim(bt_clen, &bt_c, ct_blen, &ct_b, &mut bct);
-    wlength = scale_expansion_zeroelim(bctlen, &bct, adz, w.as_mut_ptr());
+    wlength = scale_expansion_zeroelim(bctlen, &bct, adz, &mut w);
     finlength =
         fast_expansion_sum_zeroelim(finlength, finnow, wlength, &w, finother);
     let mut finswap = finnow;
@@ -961,7 +961,7 @@ unsafe fn orient3dadapt(
     finother = finswap;
     let catlen: i32 =
         fast_expansion_sum_zeroelim(ct_alen, &ct_a, at_clen, &at_c, &mut cat);
-    wlength = scale_expansion_zeroelim(catlen, &cat, bdz, w.as_mut_ptr());
+    wlength = scale_expansion_zeroelim(catlen, &cat, bdz, &mut w);
     finlength =
         fast_expansion_sum_zeroelim(finlength, finnow, wlength, &w, finother);
     finswap = finnow;
@@ -969,14 +969,14 @@ unsafe fn orient3dadapt(
     finother = finswap;
     let abtlen: i32 =
         fast_expansion_sum_zeroelim(at_blen, &at_b, bt_alen, &bt_a, &mut abt);
-    wlength = scale_expansion_zeroelim(abtlen, &abt, cdz, w.as_mut_ptr());
+    wlength = scale_expansion_zeroelim(abtlen, &abt, cdz, &mut w);
     finlength =
         fast_expansion_sum_zeroelim(finlength, finnow, wlength, &w, finother);
     finswap = finnow;
     finnow = finother;
     finother = finswap;
     if adztail != 0.0f64 {
-        vlength = scale_expansion_zeroelim(4, &bc, adztail, v.as_mut_ptr());
+        vlength = scale_expansion_zeroelim(4, &bc, adztail, &mut v);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, vlength, &v, finother,
         );
@@ -985,7 +985,7 @@ unsafe fn orient3dadapt(
         finother = finswap;
     }
     if bdztail != 0.0f64 {
-        vlength = scale_expansion_zeroelim(4, &ca, bdztail, v.as_mut_ptr());
+        vlength = scale_expansion_zeroelim(4, &ca, bdztail, &mut v);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, vlength, &v, finother,
         );
@@ -994,7 +994,7 @@ unsafe fn orient3dadapt(
         finother = finswap;
     }
     if cdztail != 0.0f64 {
-        vlength = scale_expansion_zeroelim(4, &ab, cdztail, v.as_mut_ptr());
+        vlength = scale_expansion_zeroelim(4, &ab, cdztail, &mut v);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, vlength, &v, finother,
         );
@@ -1564,8 +1564,7 @@ unsafe fn orient3dadapt(
         }
     }
     if adztail != 0.0f64 {
-        wlength =
-            scale_expansion_zeroelim(bctlen, &bct, adztail, w.as_mut_ptr());
+        wlength = scale_expansion_zeroelim(bctlen, &bct, adztail, &mut w);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, wlength, &w, finother,
         );
@@ -1574,8 +1573,7 @@ unsafe fn orient3dadapt(
         finother = finswap;
     }
     if bdztail != 0.0f64 {
-        wlength =
-            scale_expansion_zeroelim(catlen, &cat, bdztail, w.as_mut_ptr());
+        wlength = scale_expansion_zeroelim(catlen, &cat, bdztail, &mut w);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, wlength, &w, finother,
         );
@@ -1584,8 +1582,7 @@ unsafe fn orient3dadapt(
         finother = finswap;
     }
     if cdztail != 0.0f64 {
-        wlength =
-            scale_expansion_zeroelim(abtlen, &abt, cdztail, w.as_mut_ptr());
+        wlength = scale_expansion_zeroelim(abtlen, &abt, cdztail, &mut w);
         finlength = fast_expansion_sum_zeroelim(
             finlength, finnow, wlength, &w, finother,
         );
@@ -1598,7 +1595,7 @@ unsafe fn scale_expansion_zeroelim(
     elen: i32,
     e: &[f64],
     b: f64,
-    h: *mut f64,
+    h: &mut [f64],
 ) -> i32 {
     let mut q: f64;
     let mut sum: f64;
@@ -1636,7 +1633,7 @@ unsafe fn scale_expansion_zeroelim(
     if hh != 0 as f64 {
         let fresh12 = hindex;
         hindex += 1;
-        *h.offset(fresh12 as isize) = hh;
+        h[fresh12 as usize] = hh;
     }
     eindex = 1;
     while eindex < elen {
@@ -1659,7 +1656,7 @@ unsafe fn scale_expansion_zeroelim(
         if hh != 0 as f64 {
             let fresh13 = hindex;
             hindex += 1;
-            *h.offset(fresh13 as isize) = hh;
+            h[fresh13 as usize] = hh;
         }
         q = product1 + sum;
         bvirt = q - product1;
@@ -1667,14 +1664,14 @@ unsafe fn scale_expansion_zeroelim(
         if hh != 0 as f64 {
             let fresh14 = hindex;
             hindex += 1;
-            *h.offset(fresh14 as isize) = hh;
+            h[fresh14 as usize] = hh;
         }
         eindex += 1;
     }
     if q != 0.0f64 || hindex == 0 {
         let fresh15 = hindex;
         hindex += 1;
-        *h.offset(fresh15 as isize) = q;
+        h[fresh15 as usize] = q;
     }
     hindex
 }
