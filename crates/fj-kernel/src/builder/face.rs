@@ -30,15 +30,8 @@ impl FaceBuilder for PartialFace {
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
-        let mut cycle = PartialCycle {
-            surface: surface.into(),
-            ..Default::default()
-        };
-        let half_edges = cycle.update_as_polygon_from_points(points);
-
-        self.exterior = Partial::from_partial(cycle);
-
-        half_edges
+        self.exterior.write().surface = surface.into();
+        self.exterior.write().update_as_polygon_from_points(points)
     }
 
     fn add_interior_polygon(
