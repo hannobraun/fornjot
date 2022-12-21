@@ -10,19 +10,33 @@ use std::process::Command;
 use anyhow::anyhow;
 
 fn main() -> anyhow::Result<()> {
-    let targets = [Target {
-        triple: "wasm32-unknown-unknown",
-        crates: &[
-            "fj",
-            "fj-export",
-            "fj-interop",
-            "fj-kernel",
-            "fj-math",
-            "fj-operations",
-            "fj-proc",
-            "fj-viewer",
-        ],
-    }];
+    let targets = [
+        Target {
+            triple: "aarch64-linux-android",
+            crates: &[
+                "fj",
+                "fj-export",
+                "fj-interop",
+                "fj-kernel",
+                "fj-math",
+                "fj-operations",
+                "fj-proc",
+            ],
+        },
+        Target {
+            triple: "wasm32-unknown-unknown",
+            crates: &[
+                "fj",
+                "fj-export",
+                "fj-interop",
+                "fj-kernel",
+                "fj-math",
+                "fj-operations",
+                "fj-proc",
+                "fj-viewer",
+            ],
+        },
+    ];
 
     for target in targets {
         for crate_ in target.crates {
