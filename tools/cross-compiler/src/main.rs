@@ -10,7 +10,9 @@ use std::process::Command;
 use anyhow::anyhow;
 
 fn main() -> anyhow::Result<()> {
-    let targets = ["wasm32-unknown-unknown"];
+    let targets = [Target {
+        triple: "wasm32-unknown-unknown",
+    }];
     let crates = [
         "fj",
         "fj-export",
@@ -28,7 +30,7 @@ fn main() -> anyhow::Result<()> {
             command
                 .arg("build")
                 .arg("--all-features")
-                .args(["--target", target])
+                .args(["--target", target.triple])
                 .args(["-p", crate_])
                 .env("RUSTFLAGS", "-D warnings");
 
@@ -42,4 +44,9 @@ fn main() -> anyhow::Result<()> {
     }
 
     Ok(())
+}
+
+struct Target {
+    /// The target triple
+    triple: &'static str,
 }
