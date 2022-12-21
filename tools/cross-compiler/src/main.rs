@@ -12,20 +12,20 @@ use anyhow::anyhow;
 fn main() -> anyhow::Result<()> {
     let targets = [Target {
         triple: "wasm32-unknown-unknown",
+        crates: &[
+            "fj",
+            "fj-export",
+            "fj-interop",
+            "fj-kernel",
+            "fj-math",
+            "fj-operations",
+            "fj-proc",
+            "fj-viewer",
+        ],
     }];
-    let crates = [
-        "fj",
-        "fj-export",
-        "fj-interop",
-        "fj-kernel",
-        "fj-math",
-        "fj-operations",
-        "fj-proc",
-        "fj-viewer",
-    ];
 
     for target in targets {
-        for crate_ in crates {
+        for crate_ in target.crates {
             let mut command = Command::new("cargo");
             command
                 .arg("build")
@@ -49,4 +49,7 @@ fn main() -> anyhow::Result<()> {
 struct Target {
     /// The target triple
     triple: &'static str,
+
+    /// The crates that are supported on this target
+    crates: &'static [&'static str],
 }
