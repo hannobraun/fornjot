@@ -1,7 +1,7 @@
 //! Cross-compiler for the Fornjot build
 //!
 //! This tools cross-compiles the Fornjot crates that support that to the
-//! targets they support. This is less resource-intense then using a `matrix` in
+//! targets they support. This is less resource-intense than using a `matrix` in
 //! GitHub Actions (which would start one build job per crate and target), and
 //! allows for the cross-compilation code to be re-used in `justfile`.
 
