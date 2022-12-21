@@ -12,6 +12,18 @@ use anyhow::anyhow;
 fn main() -> anyhow::Result<()> {
     let targets = [
         Target {
+            triple: "aarch64-apple-ios",
+            crates: &[
+                "fj",
+                "fj-export",
+                "fj-interop",
+                "fj-kernel",
+                "fj-math",
+                "fj-operations",
+                "fj-proc",
+            ],
+        },
+        Target {
             triple: "aarch64-linux-android",
             crates: &[
                 "fj",
