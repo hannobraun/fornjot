@@ -1,5 +1,5 @@
 use fj_host::{HostHandle, Model, ModelEvent, Parameters};
-use fj_operations::shape_processor::{self, ShapeProcessor};
+use fj_operations::shape_processor;
 use fj_viewer::{
     GuiState, InputEvent, NormalizedScreenPosition, Screen, ScreenSize,
     StatusReport, Viewer,

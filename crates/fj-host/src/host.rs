@@ -2,9 +2,9 @@ use std::thread;
 
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use fj_operations::shape_processor::ShapeProcessor;
-use winit::event_loop::EventLoopProxy;
+use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
-use crate::{Error, Evaluator, Model, ModelEvent, Watcher};
+use crate::{Error, /*Evaluator,*/ Model, ModelEvent, Watcher};
 
 /*
 /// A Fornjot model host
@@ -41,7 +41,7 @@ impl Host {
 /// A Fornjot model host
 pub struct ModelWatcher {
     //evaluator: Evaluator,
-    model: Model,
+    //model: Model,
     _watcher: Watcher,
 }
 
@@ -60,7 +60,7 @@ impl ModelWatcher {
         let watcher = Watcher::watch_model(watch_path, host_tx)?;
 
         Ok(Self {
-            model,
+            //model,
             _watcher: watcher,
         })
     }
@@ -98,7 +98,7 @@ impl Host {
             Ok(evaluation) => evaluation,
 
             Err(err) => {
-                if let Err(EventLoopClosed) =
+                if let Err(EventLoopClosed(..)) =
                     self.event_loop_proxy.send_event(ModelEvent::Error(err))
                 {
                     panic!();
@@ -107,11 +107,13 @@ impl Host {
             }
         };
 
-        self.event_loop_proxy.send_event(ModelEvent::Evaluated).unwrap();
+        self.event_loop_proxy
+            .send_event(ModelEvent::Evaluated)
+            .unwrap();
 
         let shape = self.shape_processor.process(&evaluation.shape).unwrap();
 
-        if let Err(EventLoopClosed) = self
+        if let Err(EventLoopClosed(..)) = self
             .event_loop_proxy
             .send_event(ModelEvent::ProcessedShape(shape))
         {
@@ -125,7 +127,7 @@ impl Host {
         let command_tx_2 = self.command_tx.clone();
 
         thread::spawn(move || {
-            let mut model_watcher: Option<ModelWatcher> = None;
+            let mut _model_watcher: Option<ModelWatcher> = None;
             let mut t_model: Option<Model> = None;
 
             loop {
@@ -133,28 +135,28 @@ impl Host {
                     match command {
                         HostCommand::LoadModel(ref model) => {
                             tracing::warn!("LoadModel");
-                            if let Err(EventLoopClosed) = self
+                            if let Err(EventLoopClosed(..)) = self
                                 .event_loop_proxy
                                 .send_event(ModelEvent::StartWatching)
                             {
                                 break;
                             }
 
-                            model_watcher = Some(
+                            _model_watcher = Some(
                                 ModelWatcher::from_model(
                                     self.command_tx.clone(),
-                                    model.clone() ,
+                                    model.clone(),
                                 )
                                 .unwrap(),
                             );
 
-                            self.evaluate_model(&model);
+                            self.evaluate_model(model);
 
                             t_model = Some(model.clone());
                         }
                         HostCommand::TriggerEvaluation => {
                             tracing::warn!("TriggerEvaluation");
-                            if let Err(EventLoopClosed) = self
+                            if let Err(EventLoopClosed(..)) = self
                                 .event_loop_proxy
                                 .send_event(ModelEvent::ChangeDetected)
                             {
@@ -162,7 +164,7 @@ impl Host {
                             }
 
                             if let Some(model) = &t_model {
-                                self.evaluate_model(&model);
+                                self.evaluate_model(model);
                             }
                         }
                     }

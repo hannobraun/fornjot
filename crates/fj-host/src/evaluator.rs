@@ -2,9 +2,8 @@ use std::thread;
 
 use crossbeam_channel::{Receiver, SendError, Sender};
 use fj_interop::processed_shape::ProcessedShape;
-use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
-use crate::{Error, Evaluation, Model};
+use crate::{Error, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
@@ -27,7 +26,7 @@ impl Evaluator {
                     break;
                 }
 
-                let evaluation = match model.evaluate() {
+                let _evaluation = match model.evaluate() {
                     Ok(evaluation) => evaluation,
                     Err(err) => {
                         if let Err(SendError(_)) =

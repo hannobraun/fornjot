@@ -1,11 +1,9 @@
-use std::{collections::HashSet, ffi::OsStr, path::Path, thread};
+use std::{collections::HashSet, ffi::OsStr, path::Path};
 
 use crossbeam_channel::Sender;
 use notify::Watcher as _;
 
-use crate::{
-    evaluator::TriggerEvaluation, host::HostCommand, Error, Evaluator,
-};
+use crate::{host::HostCommand, Error};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
