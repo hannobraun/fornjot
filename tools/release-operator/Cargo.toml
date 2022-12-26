@@ -24,7 +24,7 @@ version = "0.11.13"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.0.27"
+version = "4.0.32"
 features = ["std", "derive", "env"]
 default_features = false
 
