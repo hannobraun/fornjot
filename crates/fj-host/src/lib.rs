@@ -17,6 +17,7 @@
 
 mod evaluator;
 mod host;
+mod host_handle;
 mod model;
 mod parameters;
 mod platform;
@@ -24,7 +25,8 @@ mod watcher;
 
 pub use self::{
     evaluator::{Evaluator, ModelEvent},
-    host::{Host, HostHandle},
+    host::Host,
+    host_handle::{HostCommand, HostHandle},
     model::{Error, Evaluation, Model},
     parameters::Parameters,
     watcher::Watcher,

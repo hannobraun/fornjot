@@ -4,7 +4,7 @@ use crossbeam_channel::{unbounded, Receiver, Sender};
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
-use crate::{Error, Model, ModelEvent, Watcher};
+use crate::{Error, HostCommand, HostHandle, Model, ModelEvent, Watcher};
 
 struct ModelWatcher {
     _watcher: Watcher,
@@ -18,13 +18,11 @@ impl ModelWatcher {
         let watch_path = model.watch_path();
         let watcher = Watcher::watch_model(watch_path, host_tx)?;
 
-        Ok(Self {
-            _watcher: watcher,
-        })
+        Ok(Self { _watcher: watcher })
     }
 }
 
-/// A Fornjot model host
+/// A Fornjot model host that runs in the background
 pub struct Host {
     event_loop_proxy: EventLoopProxy<ModelEvent>,
     shape_processor: ShapeProcessor,
@@ -33,7 +31,7 @@ pub struct Host {
 }
 
 impl Host {
-    /// ..
+    /// 
     pub fn new(
         shape_processor: ShapeProcessor,
         proxy: EventLoopProxy<ModelEvent>,
@@ -77,10 +75,7 @@ impl Host {
 
     /// ..
     pub fn spawn(self) -> HostHandle {
-        let host_handle = HostHandle {
-            command_tx: self.command_tx.clone(),
-            model_loaded: false,
-        };
+        let host_handle = HostHandle::new(self.command_tx.clone());
 
         thread::spawn(move || {
             let mut _model_watcher: Option<ModelWatcher> = None;
@@ -129,34 +124,5 @@ impl Host {
         });
 
         host_handle
-    }
-}
-
-/// Commands that can be sent to a host
-pub enum HostCommand {
-    LoadModel(Model),
-    TriggerEvaluation,
-}
-
-/// A handle to send commands to a host
-pub struct HostHandle {
-    command_tx: Sender<HostCommand>,
-    model_loaded: bool,
-}
-
-impl HostHandle {
-    /// Send a model to the host for evluation.
-    pub fn load_model(&mut self, model: Model) -> Result<(), Error> {
-        self.command_tx
-            .try_send(HostCommand::LoadModel(model))
-            .map_err(|_| Error::HostChannel)?;
-        self.model_loaded = true;
-
-        Ok(())
-    }
-
-    /// Whether a model has been successfully sent to the host
-    pub fn is_model_loaded(&self) -> bool {
-        self.model_loaded
     }
 }
