@@ -17,13 +17,10 @@ use crate::window::Window;
 
 pub struct EventLoopHandler {
     pub invert_zoom: bool,
-    //pub shape_processor: ShapeProcessor,
     pub window: Window,
     pub viewer: Viewer,
     pub egui_winit_state: egui_winit::State,
-    //pub host: Option<Host>,
     pub host_handle: HostHandle,
-    //pub model_available: bool,
     pub status: StatusReport,
     pub held_mouse_button: Option<MouseButton>,
 
@@ -42,50 +39,6 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
-        /*
-        if let Some(host) = &self.host {
-            loop {
-                let events = host.events();
-                let event = events
-                    .try_recv()
-                    .map_err(|err| {
-                        assert!(
-                            !err.is_disconnected(),
-                            "Expected channel to never disconnect"
-                        );
-                    })
-                    .ok();
-
-                let Some(event) = event else {
-                    break
-                };
-
-                match event {
-                    ModelEvent::ChangeDetected => {
-                        self.status.update_status(
-                            "Change in model detected. Evaluating model...",
-                        );
-                    }
-                    ModelEvent::Evaluation(evaluation) => {
-                        self.status.update_status(
-                            "Model evaluated. Processing model...",
-                        );
-
-                        let shape =
-                            self.shape_processor.process(&evaluation.shape)?;
-                        self.viewer.handle_shape_update(shape);
-
-                        self.status.update_status("Model processed.");
-                    }
-
-                    ModelEvent::Error(err) => {
-                        return Err(err.into());
-                    }
-                }
-            }
-        }
-        */
-
         if let Event::WindowEvent { event, .. } = &event {
             let egui_winit::EventResponse {
                 consumed,
@@ -126,23 +79,12 @@ impl EventLoopHandler {
                         "Change in model detected. Evaluating model...",
                     );
                 }
-                //ModelEvent::Evaluation(evaluation) => {
-                //ModelEvent::Evaluation(shape) => {
                 ModelEvent::Evaluated => {
                     self.status
                         .update_status("Model evaluated. Processing model...");
                 }
                 ModelEvent::ProcessedShape(shape) => {
-                    //self.status
-                    //    .update_status("Model evaluated. Processing model...");
-
-                    /*
-                    let shape =
-                        self.shape_processor.process(&evaluation.shape)?;
-
-                    */
                     self.viewer.handle_shape_update(shape);
-
                     self.status.update_status("Model processed.");
                 }
 
@@ -232,7 +174,7 @@ impl EventLoopHandler {
 
                     let gui_state = GuiState {
                         status: &self.status,
-                        model_available: self.host_handle.is_model_available(), //self.host.is_some(),
+                        model_available: self.host_handle.is_model_loaded(), //self.host.is_some(),
                     };
                     let new_model_path = self.viewer.draw(
                         pixels_per_point,
@@ -240,30 +182,14 @@ impl EventLoopHandler {
                         gui_state,
                     );
                     if let Some(model_path) = new_model_path {
-                        let model = Model::new(model_path, Parameters::empty())
-                            .unwrap();
-                        self.host_handle.load_model(model);
-                        //self.host.model_available = true;
-                        //let new_host = Host::from_model(model)?;
-                        //self.host = Some(new_host);
+                        let model =
+                            Model::new(model_path, Parameters::empty())?;
+                        self.host_handle.load_model(model)?;
                     }
                 }
             }
             _ => {}
         }
-
-        /*
-        let input_event = input_event(
-            &event,
-            &self.window,
-            &self.held_mouse_button,
-            &mut self.viewer.cursor,
-            self.invert_zoom,
-        );
-        if let Some(input_event) = input_event {
-            self.viewer.handle_input_event(input_event);
-        }
-        */
 
         Ok(())
     }

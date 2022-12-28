@@ -36,18 +36,14 @@ pub fn run(
     let mut host_handle = host.spawn();
 
     if let Some(model) = model {
-        host_handle.load_model(model);
+        host_handle.load_model(model)?;
     }
-
-    //let host = model.map(Host::from_model).transpose()?;
 
     let mut handler = EventLoopHandler {
         invert_zoom,
-        //shape_processor,
         window,
         viewer,
         egui_winit_state,
-        //host,
         host_handle,
         status: StatusReport::new(),
         held_mouse_button: None,

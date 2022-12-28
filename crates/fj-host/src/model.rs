@@ -301,6 +301,10 @@ pub enum Error {
     #[error("I/O error while loading model")]
     Io(#[from] io::Error),
 
+    /// The host channel returned an unexpected error
+    #[error("Unexpected error in host channel")]
+    HostChannel,
+
     /// Initializing a model failed.
     #[error("Unable to initialize the model")]
     InitializeModel(#[source] fj::models::Error),

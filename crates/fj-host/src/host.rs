@@ -4,75 +4,32 @@ use crossbeam_channel::{unbounded, Receiver, Sender};
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
-use crate::{Error, /*Evaluator,*/ Model, ModelEvent, Watcher};
+use crate::{Error, Model, ModelEvent, Watcher};
 
-/*
-/// A Fornjot model host
-pub struct Host {
-    evaluator: Evaluator,
-    _watcher: Watcher,
-}
-
-impl Host {
-    /// Create a new instance of `Host`
-    ///
-    /// This is only useful, if you want to continuously watch the model for
-    /// changes. If you don't, just keep using `Model`.
-    pub fn from_model(model: Model) -> Result<Self, Error> {
-        let watch_path = model.watch_path();
-        let evaluator = Evaluator::from_model(model);
-        let watcher = Watcher::watch_model(watch_path, &evaluator)?;
-
-        Ok(Self {
-            evaluator,
-            _watcher: watcher,
-        })
-    }
-
-    /*
-    /// Access a channel with evaluation events
-    pub fn events(&self) -> Receiver<ModelEvent> {
-        self.evaluator.events()
-    }
-    */
-}
-*/
-
-/// A Fornjot model host
-pub struct ModelWatcher {
-    //evaluator: Evaluator,
-    //model: Model,
+struct ModelWatcher {
     _watcher: Watcher,
 }
 
 impl ModelWatcher {
-    /// Create a new instance of `Host`
-    ///
-    /// This is only useful, if you want to continuously watch the model for
-    /// changes. If you don't, just keep using `Model`.
-    pub fn from_model(
+    fn from_model(
         host_tx: Sender<HostCommand>,
         model: Model,
     ) -> Result<Self, Error> {
         let watch_path = model.watch_path();
-        //let evaluator = Evaluator::from_model(model);
-        //let watcher = Watcher::watch_model(watch_path, &evaluator)?;
         let watcher = Watcher::watch_model(watch_path, host_tx)?;
 
         Ok(Self {
-            //model,
             _watcher: watcher,
         })
     }
 }
 
-/// ..
+/// A Fornjot model host
 pub struct Host {
     event_loop_proxy: EventLoopProxy<ModelEvent>,
     shape_processor: ShapeProcessor,
     command_tx: Sender<HostCommand>,
     command_rx: Receiver<HostCommand>,
-    //model_watcher: Option<ModelWatcher>,
 }
 
 impl Host {
@@ -87,13 +44,10 @@ impl Host {
             shape_processor,
             command_tx,
             command_rx,
-            //model_watcher: None,
         }
     }
 
     fn evaluate_model(&self, model: &Model) {
-        //if let Some(model_watcher) = &self.model_watcher {
-        //let evaluation = match model_watcher
         let evaluation = match model.evaluate() {
             Ok(evaluation) => evaluation,
 
@@ -119,12 +73,14 @@ impl Host {
         {
             panic!();
         }
-        //};
     }
 
     /// ..
     pub fn spawn(self) -> HostHandle {
-        let command_tx_2 = self.command_tx.clone();
+        let host_handle = HostHandle {
+            command_tx: self.command_tx.clone(),
+            model_loaded: false,
+        };
 
         thread::spawn(move || {
             let mut _model_watcher: Option<ModelWatcher> = None;
@@ -172,33 +128,35 @@ impl Host {
             }
         });
 
-        HostHandle {
-            command_tx: command_tx_2,
-            model_available: false,
-        }
+        host_handle
     }
 }
 
+/// Commands that can be sent to a host
 pub enum HostCommand {
     LoadModel(Model),
     TriggerEvaluation,
 }
 
-/// ..
+/// A handle to send commands to a host
 pub struct HostHandle {
     command_tx: Sender<HostCommand>,
-    model_available: bool,
+    model_loaded: bool,
 }
 
 impl HostHandle {
-    /// ..
-    pub fn load_model(&mut self, model: Model) {
-        self.model_available = true;
-        self.command_tx.send(HostCommand::LoadModel(model)).unwrap();
+    /// Send a model to the host for evluation.
+    pub fn load_model(&mut self, model: Model) -> Result<(), Error> {
+        self.command_tx
+            .try_send(HostCommand::LoadModel(model))
+            .map_err(|_| Error::HostChannel)?;
+        self.model_loaded = true;
+
+        Ok(())
     }
 
-    /// ..
-    pub fn is_model_available(&self) -> bool {
-        self.model_available
+    /// Whether a model has been successfully sent to the host
+    pub fn is_model_loaded(&self) -> bool {
+        self.model_loaded
     }
 }
