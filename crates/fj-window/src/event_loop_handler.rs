@@ -39,6 +39,9 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
+        // Trigger a panic if the host thead has panicked.
+        self.host_handle.propagate_panic();
+
         if let Event::WindowEvent { event, .. } = &event {
             let egui_winit::EventResponse {
                 consumed,
