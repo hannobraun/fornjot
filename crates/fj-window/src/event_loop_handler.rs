@@ -187,7 +187,7 @@ impl EventLoopHandler {
                     if let Some(model_path) = new_model_path {
                         let model =
                             Model::new(model_path, Parameters::empty())?;
-                        self.host_handle.load_model(model)?;
+                        self.host_handle.load_model(model);
                     }
                 }
             }

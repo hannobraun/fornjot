@@ -2,7 +2,7 @@ use std::thread::JoinHandle;
 
 use crossbeam_channel::Sender;
 
-use crate::{Error, Model};
+use crate::Model;
 
 /// A handle for sending commands to a spawned host
 pub struct HostHandle {
@@ -12,7 +12,7 @@ pub struct HostHandle {
 }
 
 impl HostHandle {
-    /// Create a `HostHandle` with a channel to send commands to.
+    /// Create a `HostHandle` with a send channel and the host thread handle.
     pub fn new(
         command_tx: Sender<HostCommand>,
         host_thread: JoinHandle<()>,
@@ -25,13 +25,11 @@ impl HostHandle {
     }
 
     /// Send a model to the host for evluation.
-    pub fn load_model(&mut self, model: Model) -> Result<(), Error> {
+    pub fn load_model(&mut self, model: Model) {
         self.command_tx
             .try_send(HostCommand::LoadModel(model))
-            .map_err(|_| Error::HostChannel)?;
+            .expect("Host channel disconnected unexpectedly");
         self.model_loaded = true;
-
-        Ok(())
     }
 
     /// Whether a model has been sent to a host for watching and evaluation

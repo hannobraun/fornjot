@@ -36,7 +36,7 @@ pub fn run(
     let mut host_handle = host.spawn();
 
     if let Some(model) = model {
-        host_handle.load_model(model)?;
+        host_handle.load_model(model);
     }
 
     let mut handler = EventLoopHandler {
