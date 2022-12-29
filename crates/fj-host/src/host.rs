@@ -1,4 +1,4 @@
-use std::thread;
+use std::{path::PathBuf, thread};
 
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use fj_operations::shape_processor::ShapeProcessor;
@@ -13,9 +13,8 @@ struct ModelWatcher {
 impl ModelWatcher {
     fn from_model(
         host_tx: Sender<HostCommand>,
-        model: Model,
+        watch_path: PathBuf,
     ) -> Result<Self, Error> {
-        let watch_path = model.watch_path();
         let watcher = Watcher::watch_model(watch_path, host_tx)?;
 
         Ok(Self { _watcher: watcher })
@@ -31,7 +30,7 @@ pub struct Host {
 }
 
 impl Host {
-    /// 
+    ///
     pub fn new(
         shape_processor: ShapeProcessor,
         proxy: EventLoopProxy<ModelEvent>,
@@ -75,54 +74,57 @@ impl Host {
 
     /// ..
     pub fn spawn(self) -> HostHandle {
-        let host_handle = HostHandle::new(self.command_tx.clone());
+        let command_tx = self.command_tx.clone();
 
-        thread::spawn(move || {
-            let mut _model_watcher: Option<ModelWatcher> = None;
-            let mut t_model: Option<Model> = None;
+        let host_thread = thread::Builder::new()
+            .name("host".to_string())
+            .spawn(move || {
+                let mut _model_watcher: Option<ModelWatcher> = None;
+                let mut watched_model: Option<Model> = None;
 
-            loop {
-                while let Ok(command) = self.command_rx.recv() {
-                    match command {
-                        HostCommand::LoadModel(ref model) => {
-                            tracing::warn!("LoadModel");
-                            if let Err(EventLoopClosed(..)) = self
-                                .event_loop_proxy
-                                .send_event(ModelEvent::StartWatching)
-                            {
-                                break;
+                loop {
+                    while let Ok(command) = self.command_rx.recv() {
+                        match command {
+                            //HostCommand::LoadModel(ref model) => {
+                            HostCommand::LoadModel(model) => {
+                                tracing::warn!("LoadModel");
+                                if let Err(EventLoopClosed(..)) = self
+                                    .event_loop_proxy
+                                    .send_event(ModelEvent::StartWatching)
+                                {
+                                    break;
+                                }
+
+                                _model_watcher = Some(
+                                    ModelWatcher::from_model(
+                                        self.command_tx.clone(),
+                                        model.watch_path(),
+                                    )
+                                    .unwrap(),
+                                );
+
+                                self.evaluate_model(&model);
+
+                                watched_model = Some(model);
                             }
+                            HostCommand::TriggerEvaluation => {
+                                tracing::warn!("TriggerEvaluation");
+                                if let Err(EventLoopClosed(..)) = self
+                                    .event_loop_proxy
+                                    .send_event(ModelEvent::ChangeDetected)
+                                {
+                                    break;
+                                }
 
-                            _model_watcher = Some(
-                                ModelWatcher::from_model(
-                                    self.command_tx.clone(),
-                                    model.clone(),
-                                )
-                                .unwrap(),
-                            );
-
-                            self.evaluate_model(model);
-
-                            t_model = Some(model.clone());
-                        }
-                        HostCommand::TriggerEvaluation => {
-                            tracing::warn!("TriggerEvaluation");
-                            if let Err(EventLoopClosed(..)) = self
-                                .event_loop_proxy
-                                .send_event(ModelEvent::ChangeDetected)
-                            {
-                                break;
-                            }
-
-                            if let Some(model) = &t_model {
-                                self.evaluate_model(model);
+                                if let Some(model) = &watched_model {
+                                    self.evaluate_model(model);
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            }).expect("Cannot create OS thread for host");
 
-        host_handle
+        HostHandle::new(command_tx, host_thread)
     }
 }

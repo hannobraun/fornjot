@@ -11,7 +11,6 @@ use tracing::{debug, warn};
 use crate::{platform::HostPlatform, Parameters};
 
 /// Represents a Fornjot model
-#[derive(Clone)]
 pub struct Model {
     src_path: PathBuf,
     lib_path: PathBuf,
