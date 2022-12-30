@@ -1180,6 +1180,7 @@ dependencies = [
  "notify",
  "thiserror",
  "tracing",
+ "winit",
 ]
 
 [[package]]

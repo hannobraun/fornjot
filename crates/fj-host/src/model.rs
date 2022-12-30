@@ -170,6 +170,7 @@ impl Model {
 /// The result of evaluating a model
 ///
 /// See [`Model::evaluate`].
+#[derive(Debug)]
 pub struct Evaluation {
     /// The shape
     pub shape: fj::Shape,

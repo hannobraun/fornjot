@@ -2,19 +2,25 @@ use std::thread;
 
 use crossbeam_channel::{Receiver, SendError, Sender};
 use fj_operations::shape_processor::ShapeProcessor;
+use winit::event_loop::EventLoopProxy;
 
 use crate::{Error, Evaluation, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
     shape_processor: ShapeProcessor,
+    event_loop_proxy: EventLoopProxy<ModelEvent>,
     trigger_tx: Sender<TriggerEvaluation>,
     event_rx: Receiver<ModelEvent>,
 }
 
 impl Evaluator {
     /// Create an `Evaluator` from a model
-    pub fn new(model: Model, shape_processor: ShapeProcessor) -> Self {
+    pub fn new(
+        model: Model,
+        shape_processor: ShapeProcessor,
+        event_loop_proxy: EventLoopProxy<ModelEvent>,
+    ) -> Self {
         let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
@@ -52,6 +58,7 @@ impl Evaluator {
 
         Self {
             shape_processor,
+            event_loop_proxy,
             trigger_tx,
             event_rx,
         }
@@ -72,6 +79,7 @@ impl Evaluator {
 pub struct TriggerEvaluation;
 
 /// An event emitted by [`Evaluator`]
+#[derive(Debug)]
 pub enum ModelEvent {
     /// A change in the model has been detected
     ChangeDetected,

@@ -10,7 +10,7 @@ use winit::{
         ElementState, Event, KeyboardInput, MouseButton, MouseScrollDelta,
         VirtualKeyCode, WindowEvent,
     },
-    event_loop::ControlFlow,
+    event_loop::{ControlFlow, EventLoopProxy},
 };
 
 use crate::window::Window;
@@ -18,6 +18,7 @@ use crate::window::Window;
 pub struct EventLoopHandler {
     pub invert_zoom: bool,
     pub shape_processor: ShapeProcessor,
+    pub event_loop_proxy: EventLoopProxy<ModelEvent>,
     pub window: Window,
     pub viewer: Viewer,
     pub egui_winit_state: egui_winit::State,
@@ -37,7 +38,7 @@ impl EventLoopHandler {
     #[allow(clippy::result_large_err)]
     pub fn handle_event(
         &mut self,
-        event: Event<()>,
+        event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
         if let Some(host) = &self.host {
@@ -193,8 +194,11 @@ impl EventLoopHandler {
                     if let Some(model_path) = new_model_path {
                         let model = Model::new(model_path, Parameters::empty())
                             .unwrap();
-                        let new_host =
-                            Host::new(model, self.shape_processor.clone())?;
+                        let new_host = Host::new(
+                            model,
+                            self.shape_processor.clone(),
+                            self.event_loop_proxy.clone(),
+                        )?;
                         self.host = Some(new_host);
                     }
                 }
