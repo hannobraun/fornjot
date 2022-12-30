@@ -32,7 +32,9 @@ pub fn run(
 
     let egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let host = model.map(Host::from_model).transpose()?;
+    let host = model
+        .map(|model| Host::new(model, shape_processor.clone()))
+        .transpose()?;
 
     let mut handler = EventLoopHandler {
         invert_zoom,

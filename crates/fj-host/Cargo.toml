@@ -15,6 +15,7 @@ categories.workspace = true
 cargo_metadata = "0.15.2"
 crossbeam-channel = "0.5.6"
 fj.workspace = true
+fj-operations.workspace = true
 libloading = "0.7.4"
 notify = "5.0.0"
 thiserror = "1.0.35"

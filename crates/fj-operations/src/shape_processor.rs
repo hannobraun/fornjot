@@ -14,6 +14,7 @@ use fj_math::Scalar;
 use crate::Shape as _;
 
 /// Processes an [`fj::Shape`] into a [`ProcessedShape`]
+#[derive(Clone)]
 pub struct ShapeProcessor {
     /// The tolerance value used for creating the triangle mesh
     pub tolerance: Option<Tolerance>,

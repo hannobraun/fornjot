@@ -1,18 +1,20 @@
 use std::thread;
 
 use crossbeam_channel::{Receiver, SendError, Sender};
+use fj_operations::shape_processor::ShapeProcessor;
 
 use crate::{Error, Evaluation, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
+    shape_processor: ShapeProcessor,
     trigger_tx: Sender<TriggerEvaluation>,
     event_rx: Receiver<ModelEvent>,
 }
 
 impl Evaluator {
     /// Create an `Evaluator` from a model
-    pub fn from_model(model: Model) -> Self {
+    pub fn new(model: Model, shape_processor: ShapeProcessor) -> Self {
         let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
@@ -49,6 +51,7 @@ impl Evaluator {
         });
 
         Self {
+            shape_processor,
             trigger_tx,
             event_rx,
         }
