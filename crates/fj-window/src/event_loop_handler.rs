@@ -41,48 +41,6 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
-        if let Some(host) = &self.host {
-            loop {
-                let events = host.events();
-                let event = events
-                    .try_recv()
-                    .map_err(|err| {
-                        assert!(
-                            !err.is_disconnected(),
-                            "Expected channel to never disconnect"
-                        );
-                    })
-                    .ok();
-
-                let Some(event) = event else {
-                    break
-                };
-
-                match event {
-                    ModelEvent::ChangeDetected => {
-                        self.status.update_status(
-                            "Change in model detected. Evaluating model...",
-                        );
-                    }
-                    ModelEvent::Evaluation(evaluation) => {
-                        self.status.update_status(
-                            "Model evaluated. Processing model...",
-                        );
-
-                        let shape =
-                            self.shape_processor.process(&evaluation.shape)?;
-                        self.viewer.handle_shape_update(shape);
-
-                        self.status.update_status("Model processed.");
-                    }
-
-                    ModelEvent::Error(err) => {
-                        return Err(err.into());
-                    }
-                }
-            }
-        }
-
         if let Event::WindowEvent { event, .. } = &event {
             let egui_winit::EventResponse {
                 consumed,
@@ -100,8 +58,42 @@ impl EventLoopHandler {
             }
         }
 
+        let input_event = input_event(
+            &event,
+            &self.window,
+            &self.held_mouse_button,
+            &mut self.viewer.cursor,
+            self.invert_zoom,
+        );
+        if let Some(input_event) = input_event {
+            self.viewer.handle_input_event(input_event);
+        }
+
         // fj-window events
         match event {
+            Event::UserEvent(event) => match event {
+                ModelEvent::StartWatching => {
+                    self.status
+                        .update_status("New model loaded. Evaluating model...");
+                }
+                ModelEvent::ChangeDetected => {
+                    self.status.update_status(
+                        "Change in model detected. Evaluating model...",
+                    );
+                }
+                ModelEvent::Evaluated => {
+                    self.status
+                        .update_status("Model evaluated. Processing model...");
+                }
+                ModelEvent::ProcessedShape(shape) => {
+                    self.viewer.handle_shape_update(shape);
+                    self.status.update_status("Model processed.");
+                }
+
+                ModelEvent::Error(err) => {
+                    return Err(err.into());
+                }
+            },
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
                 ..
@@ -204,17 +196,6 @@ impl EventLoopHandler {
                 }
             }
             _ => {}
-        }
-
-        let input_event = input_event(
-            &event,
-            &self.window,
-            &self.held_mouse_button,
-            &mut self.viewer.cursor,
-            self.invert_zoom,
-        );
-        if let Some(input_event) = input_event {
-            self.viewer.handle_input_event(input_event);
         }
 
         Ok(())

@@ -1,17 +1,15 @@
 use std::thread;
 
-use crossbeam_channel::{Receiver, SendError, Sender};
+use crossbeam_channel::Sender;
+use fj_interop::processed_shape::ProcessedShape;
 use fj_operations::shape_processor::ShapeProcessor;
-use winit::event_loop::EventLoopProxy;
+use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
-use crate::{Error, Evaluation, Model};
+use crate::{Error, Model};
 
 /// Evaluates a model in a background thread
 pub struct Evaluator {
-    shape_processor: ShapeProcessor,
-    event_loop_proxy: EventLoopProxy<ModelEvent>,
     trigger_tx: Sender<TriggerEvaluation>,
-    event_rx: Receiver<ModelEvent>,
 }
 
 impl Evaluator {
@@ -21,34 +19,24 @@ impl Evaluator {
         shape_processor: ShapeProcessor,
         event_loop_proxy: EventLoopProxy<ModelEvent>,
     ) -> Self {
-        let (event_tx, event_rx) = crossbeam_channel::bounded(0);
         let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
         thread::spawn(move || {
+            if let Err(EventLoopClosed(..)) =
+                event_loop_proxy.send_event(ModelEvent::StartWatching)
+            {
+                return;
+            }
+            evaluate_model(&model, &shape_processor, &event_loop_proxy);
+
             while matches!(trigger_rx.recv(), Ok(TriggerEvaluation)) {
-                if let Err(SendError(_)) =
-                    event_tx.send(ModelEvent::ChangeDetected)
+                if let Err(EventLoopClosed(..)) =
+                    event_loop_proxy.send_event(ModelEvent::ChangeDetected)
                 {
-                    break;
+                    return;
                 }
 
-                let evaluation = match model.evaluate() {
-                    Ok(evaluation) => evaluation,
-                    Err(err) => {
-                        if let Err(SendError(_)) =
-                            event_tx.send(ModelEvent::Error(err))
-                        {
-                            break;
-                        }
-                        continue;
-                    }
-                };
-
-                if let Err(SendError(_)) =
-                    event_tx.send(ModelEvent::Evaluation(evaluation))
-                {
-                    break;
-                };
+                evaluate_model(&model, &shape_processor, &event_loop_proxy);
             }
 
             // The channel is disconnected, which means this instance of
@@ -57,10 +45,7 @@ impl Evaluator {
         });
 
         Self {
-            shape_processor,
-            event_loop_proxy,
             trigger_tx,
-            event_rx,
         }
     }
 
@@ -68,10 +53,34 @@ impl Evaluator {
     pub fn trigger(&self) -> Sender<TriggerEvaluation> {
         self.trigger_tx.clone()
     }
+}
 
-    /// Access a channel for receiving status updates
-    pub fn events(&self) -> Receiver<ModelEvent> {
-        self.event_rx.clone()
+pub fn evaluate_model(
+    model: &Model,
+    shape_processor: &ShapeProcessor,
+    event_loop_proxy: &EventLoopProxy<ModelEvent>,
+) {
+    let evaluation = match model.evaluate() {
+        Ok(evaluation) => evaluation,
+
+        Err(err) => {
+            if let Err(EventLoopClosed(..)) =
+                event_loop_proxy.send_event(ModelEvent::Error(err))
+            {
+                panic!();
+            }
+            return;
+        }
+    };
+
+    event_loop_proxy.send_event(ModelEvent::Evaluated).unwrap();
+
+    let shape = shape_processor.process(&evaluation.shape).unwrap();
+
+    if let Err(EventLoopClosed(..)) =
+        event_loop_proxy.send_event(ModelEvent::ProcessedShape(shape))
+    {
+        panic!();
     }
 }
 
@@ -81,11 +90,17 @@ pub struct TriggerEvaluation;
 /// An event emitted by [`Evaluator`]
 #[derive(Debug)]
 pub enum ModelEvent {
+    /// A new model is being watched
+    StartWatching,
+
     /// A change in the model has been detected
     ChangeDetected,
 
     /// The model has been evaluated
-    Evaluation(Evaluation),
+    Evaluated,
+
+    /// The model has been processed into a `Shape`
+    ProcessedShape(ProcessedShape),
 
     /// An error
     Error(Error),
