@@ -1,4 +1,4 @@
-use std::thread;
+use std::thread::{self, JoinHandle};
 
 use crossbeam_channel::Sender;
 use fj_interop::processed_shape::ProcessedShape;
@@ -7,21 +7,17 @@ use winit::event_loop::{EventLoopClosed, EventLoopProxy};
 
 use crate::{Error, Model};
 
-/// Evaluates a model in a background thread
-pub struct Evaluator {
-    trigger_tx: Sender<TriggerEvaluation>,
-}
+/// Start a background thread for evaluating a model
+pub fn spawn_evaluator(
+    model: Model,
+    shape_processor: ShapeProcessor,
+    event_loop_proxy: EventLoopProxy<ModelEvent>,
+) -> (JoinHandle<()>, Sender<TriggerEvaluation>) {
+    let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
 
-impl Evaluator {
-    /// Create an `Evaluator` from a model
-    pub fn new(
-        model: Model,
-        shape_processor: ShapeProcessor,
-        event_loop_proxy: EventLoopProxy<ModelEvent>,
-    ) -> Self {
-        let (trigger_tx, trigger_rx) = crossbeam_channel::bounded(0);
-
-        thread::spawn(move || {
+    let join_handle = thread::Builder::new()
+        .name("evaluator".to_string())
+        .spawn(move || {
             if let Err(EventLoopClosed(..)) =
                 event_loop_proxy.send_event(ModelEvent::StartWatching)
             {
@@ -35,53 +31,38 @@ impl Evaluator {
                 {
                     return;
                 }
-
                 evaluate_model(&model, &shape_processor, &event_loop_proxy);
             }
+        })
+        .expect("Cannot create thread in evaluator");
 
-            // The channel is disconnected, which means this instance of
-            // `Evaluator`, as well as all `Sender`s created from it, have been
-            // dropped. We're done.
-        });
-
-        Self {
-            trigger_tx,
-        }
-    }
-
-    /// Access a channel for triggering evaluations
-    pub fn trigger(&self) -> Sender<TriggerEvaluation> {
-        self.trigger_tx.clone()
-    }
+    (join_handle, trigger_tx)
 }
 
-pub fn evaluate_model(
+fn evaluate_model(
     model: &Model,
     shape_processor: &ShapeProcessor,
     event_loop_proxy: &EventLoopProxy<ModelEvent>,
 ) {
     let evaluation = match model.evaluate() {
         Ok(evaluation) => evaluation,
-
         Err(err) => {
-            if let Err(EventLoopClosed(..)) =
-                event_loop_proxy.send_event(ModelEvent::Error(err))
-            {
-                panic!();
-            }
+            event_loop_proxy
+                .send_event(ModelEvent::Error(err))
+                .expect("Event loop proxy closed");
             return;
         }
     };
 
-    event_loop_proxy.send_event(ModelEvent::Evaluated).unwrap();
+    event_loop_proxy
+        .send_event(ModelEvent::Evaluated)
+        .expect("Event loop proxy closed");
 
     let shape = shape_processor.process(&evaluation.shape).unwrap();
 
-    if let Err(EventLoopClosed(..)) =
-        event_loop_proxy.send_event(ModelEvent::ProcessedShape(shape))
-    {
-        panic!();
-    }
+    event_loop_proxy
+        .send_event(ModelEvent::ProcessedShape(shape))
+        .expect("Event loop proxy closed");
 }
 
 /// Command received by [`Evaluator`] through its channel

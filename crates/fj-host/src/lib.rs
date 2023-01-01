@@ -23,7 +23,7 @@ mod platform;
 mod watcher;
 
 pub use self::{
-    evaluator::{Evaluator, ModelEvent},
+    evaluator::{spawn_evaluator, ModelEvent},
     host::Host,
     model::{Error, Evaluation, Model},
     parameters::Parameters,

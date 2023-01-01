@@ -41,6 +41,10 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
+        if let Some(host) = &mut self.host {
+            host.propagate_panic();
+        }
+
         if let Event::WindowEvent { event, .. } = &event {
             let egui_winit::EventResponse {
                 consumed,

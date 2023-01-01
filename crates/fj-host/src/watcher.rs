@@ -1,8 +1,9 @@
 use std::{collections::HashSet, ffi::OsStr, path::Path};
 
+use crossbeam_channel::Sender;
 use notify::Watcher as _;
 
-use crate::{evaluator::TriggerEvaluation, Error, Evaluator};
+use crate::{evaluator::TriggerEvaluation, Error};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
@@ -13,11 +14,9 @@ impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(
         watch_path: impl AsRef<Path>,
-        evaluator: &Evaluator,
+        trigger_tx: Sender<TriggerEvaluation>,
     ) -> Result<Self, Error> {
         let watch_path = watch_path.as_ref();
-
-        let watch_tx = evaluator.trigger();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -58,7 +57,7 @@ impl Watcher {
                     // application is being shut down.
                     //
                     // Either way, not much we can do about it here.
-                    watch_tx
+                    trigger_tx
                         .send(TriggerEvaluation)
                         .expect("Channel is disconnected");
                 }
