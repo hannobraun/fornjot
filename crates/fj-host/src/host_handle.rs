@@ -2,12 +2,12 @@ use std::thread::JoinHandle;
 
 use crossbeam_channel::Sender;
 
-use crate::Model;
+use crate::{EventLoopClosed, Model};
 
 /// A handle for sending commands to a spawned host
 pub struct HostHandle {
     command_tx: Sender<HostCommand>,
-    host_thread: Option<JoinHandle<()>>,
+    host_thread: Option<JoinHandle<Result<(), EventLoopClosed>>>,
     model_loaded: bool,
 }
 
@@ -15,7 +15,7 @@ impl HostHandle {
     /// Create a `HostHandle` with a send channel and the host thread handle.
     pub fn new(
         command_tx: Sender<HostCommand>,
-        host_thread: JoinHandle<()>,
+        host_thread: JoinHandle<Result<(), EventLoopClosed>>,
     ) -> Self {
         Self {
             command_tx,
@@ -48,7 +48,7 @@ impl HostHandle {
             if host_thread.is_finished() {
                 let host_thread = self.host_thread.take().unwrap();
                 match host_thread.join() {
-                    Ok(()) => {
+                    Ok(_) => {
                         unreachable!(
                             "Host thread cannot exit until host handle disconnects"
                         )

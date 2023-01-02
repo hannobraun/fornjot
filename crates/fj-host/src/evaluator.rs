@@ -1,10 +1,11 @@
-use std::thread;
+//use std::thread;
 
-use crossbeam_channel::{Receiver, SendError, Sender};
+//use crossbeam_channel::{Receiver, SendError, Sender};
 use fj_interop::processed_shape::ProcessedShape;
 
-use crate::{Error, Model};
+use crate::Error; // Model};
 
+/*
 /// Evaluates a model in a background thread
 pub struct Evaluator {
     trigger_tx: Sender<TriggerEvaluation>,
@@ -71,6 +72,7 @@ impl Evaluator {
 
 /// Command received by [`Evaluator`] through its channel
 pub struct TriggerEvaluation;
+*/
 
 /// An event emitted by [`Evaluator`]
 #[derive(Debug)]
@@ -85,8 +87,6 @@ pub enum ModelEvent {
     Evaluated,
 
     /// The model has been evaluated
-    //Evaluation(Evaluation),
-    //Evaluation(ProcessedShape),
     ProcessedShape(ProcessedShape),
 
     /// An error

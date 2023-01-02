@@ -1,3 +1,5 @@
+#![allow(clippy::result_large_err)]
+
 use std::{
     io,
     path::{Path, PathBuf},
@@ -6,6 +8,7 @@ use std::{
 };
 
 use fj::{abi, version::Version};
+use fj_operations::shape_processor;
 use tracing::{debug, warn};
 
 use crate::{platform::HostPlatform, Parameters};
@@ -254,6 +257,7 @@ fn ambiguous_path_error(
 }
 
 /// An error that can occur when loading or reloading a model
+#[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// Error loading model library
@@ -312,6 +316,11 @@ pub enum Error {
     /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
     Shape(#[source] fj::models::Error),
+
+    /// An error was returned from
+    /// [`fj_operations::shape_processor::ShapeProcessor::process()`].
+    #[error("Shape processing error")]
+    ShapeProcessor(#[from] shape_processor::Error),
 
     /// Error while watching the model code for changes
     #[error("Error watching model for changes")]

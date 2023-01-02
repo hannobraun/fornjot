@@ -24,8 +24,8 @@ mod platform;
 mod watcher;
 
 pub use self::{
-    evaluator::{Evaluator, ModelEvent},
-    host::Host,
+    evaluator::ModelEvent,
+    host::{EventLoopClosed, Host},
     host_handle::{HostCommand, HostHandle},
     model::{Error, Evaluation, Model},
     parameters::Parameters,
