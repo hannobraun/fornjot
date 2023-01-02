@@ -42,21 +42,25 @@ impl Host {
         let host_thread = thread::Builder::new()
             .name("host".to_string())
             .spawn(move || -> Result<(), EventLoopClosed> {
-                let mut _watcher: Option<Watcher> = None;
                 let mut model: Option<Model> = None;
+                let mut _watcher: Option<Watcher> = None;
 
                 while let Ok(command) = self.command_rx.recv() {
                     match command {
                         HostCommand::LoadModel(new_model) => {
                             self.send_event(ModelEvent::StartWatching)?;
 
-                            _watcher = Some(
-                                Watcher::watch_model(
-                                    new_model.watch_path(),
-                                    self.command_tx.clone(),
-                                )
-                                .unwrap(),
-                            );
+                            match Watcher::watch_model(
+                                new_model.watch_path(),
+                                self.command_tx.clone(),
+                            ) {
+                                Ok(watcher) => _watcher = Some(watcher),
+
+                                Err(err) => {
+                                    self.send_event(ModelEvent::Error(err))?;
+                                    continue;
+                                }
+                            }
 
                             self.evaluate_model(&new_model)?;
 
