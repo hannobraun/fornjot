@@ -37,7 +37,16 @@ impl HostHandle {
         self.model_loaded
     }
 
-    /// Panic if the host thread has panicked.
+    /// Check if the host thread has exited with a panic. This method runs at
+    /// each tick of the event loop. Without an explicit check, an operation
+    /// will appear to hang forever (e.g. processing a model).  An error
+    /// will be printed to the terminal, but the gui will not notice until
+    /// a new `HostCommand` is issued on the disconnected channel.
+    ///
+    /// # Panics
+    ///
+    /// This method panics on purpose so the main thread can exit on an
+    /// unrecoverable error.
     pub fn propagate_panic(&mut self) {
         if self.host_thread.is_none() {
             unreachable!("Constructor requires host thread")

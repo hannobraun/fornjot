@@ -8,8 +8,8 @@ use crate::{HostCommand, HostHandle, Model, ModelEvent, Watcher};
 
 // Use a zero-sized error type to silence `#[warn(clippy::result_large_err)]`.
 // The only error from `EventLoopProxy::send_event` is `EventLoopClosed<T>`,
-// so don't need the actual value, just to know that there was an error.
-/// Error type for sending on a channel to a closed event loop
+// so we don't need the actual value. We just need to know there was an error.
+/// Error type for sending on a channel with a closed event loop
 pub struct EventLoopClosed;
 
 /// A Fornjot model host that runs in the background
@@ -21,7 +21,7 @@ pub struct Host {
 }
 
 impl Host {
-    ///
+    /// Create a new `Host` that will process models for an event loop.
     pub fn new(
         shape_processor: ShapeProcessor,
         event_loop_proxy: EventLoopProxy<ModelEvent>,
@@ -35,7 +35,7 @@ impl Host {
         }
     }
 
-    /// Run a background thread to watch for updates and evaluate a model.
+    /// Run a background thread to watch for updates and process a model.
     pub fn spawn(mut self) -> HostHandle {
         let command_tx = self.command_tx.clone();
 
@@ -48,29 +48,30 @@ impl Host {
                 while let Ok(command) = self.command_rx.recv() {
                     match command {
                         HostCommand::LoadModel(new_model) => {
-                            self.send_event(ModelEvent::StartWatching)?;
-
+                            // There's a race condition if a prior watcher sends
+                            // `TriggerEvaluation` right before this new watcher
+                            // is created.
                             match Watcher::watch_model(
                                 new_model.watch_path(),
                                 self.command_tx.clone(),
                             ) {
-                                Ok(watcher) => _watcher = Some(watcher),
+                                Ok(watcher) => {
+                                    _watcher = Some(watcher);
+                                    self.send_event(ModelEvent::StartWatching)?;
+                                }
 
                                 Err(err) => {
                                     self.send_event(ModelEvent::Error(err))?;
                                     continue;
                                 }
                             }
-
-                            self.evaluate_model(&new_model)?;
-
+                            self.process_model(&new_model)?;
                             model = Some(new_model);
                         }
                         HostCommand::TriggerEvaluation => {
                             self.send_event(ModelEvent::ChangeDetected)?;
-
                             if let Some(model) = &model {
-                                self.evaluate_model(model)?;
+                                self.process_model(model)?;
                             }
                         }
                     }
@@ -83,7 +84,8 @@ impl Host {
         HostHandle::new(command_tx, host_thread)
     }
 
-    fn evaluate_model(&mut self, model: &Model) -> Result<(), EventLoopClosed> {
+    // Evaluate and process a model.
+    fn process_model(&mut self, model: &Model) -> Result<(), EventLoopClosed> {
         let evaluation = match model.evaluate() {
             Ok(evaluation) => evaluation,
 

@@ -5,6 +5,11 @@ use fj_interop::processed_shape::ProcessedShape;
 
 use crate::Error; // Model};
 
+// -----------------
+// This file becomes unnecessary because all the processing happens directly
+// in `host.rs`.
+// -----------------
+
 /*
 /// Evaluates a model in a background thread
 pub struct Evaluator {
