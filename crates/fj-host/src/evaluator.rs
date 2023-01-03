@@ -79,7 +79,7 @@ impl Evaluator {
 pub struct TriggerEvaluation;
 */
 
-/// An event emitted by [`Evaluator`]
+/// An event emitted by the host thread
 #[derive(Debug)]
 pub enum ModelEvent {
     /// A new model is being watched
@@ -88,10 +88,10 @@ pub enum ModelEvent {
     /// A change in the model has been detected
     ChangeDetected,
 
-    /// ..
+    /// The model has been evaluated
     Evaluated,
 
-    /// The model has been evaluated
+    /// The model has been processed
     ProcessedShape(ProcessedShape),
 
     /// An error
