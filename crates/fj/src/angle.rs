@@ -7,16 +7,14 @@ const GON_RAD: f64 = PI / 200.;
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Angle {
-    // The value of the angle in radians
+    /// The value of the angle in radians
     rad: f64,
 }
 
 impl Angle {
     /// Create a new angle specified in radians
     pub fn from_rad(rad: f64) -> Self {
-        Self {
-            rad: Self::wrap(rad),
-        }
+        Self { rad }
     }
     /// Create a new angle specified in degrees
     pub fn from_deg(deg: f64) -> Self {
@@ -47,6 +45,13 @@ impl Angle {
         self.rad / GON_RAD
     }
 
+    /// Returns this angle normalized to the range [0, 2pi) radians
+    pub fn normalized(&self) -> Self {
+        Self {
+            rad: Self::wrap(self.rad),
+        }
+    }
+
     // ensures that the angle is always 0 <= a < 2*pi
     fn wrap(rad: f64) -> f64 {
         let modulo = rad % TAU;
@@ -55,11 +60,6 @@ impl Angle {
         } else {
             modulo
         }
-    }
-
-    // ensures that the angle is always 0 <= a < 2*pi
-    fn wrap_assign(&mut self) {
-        self.rad = Self::wrap(self.rad);
     }
 }
 
@@ -73,7 +73,6 @@ impl std::ops::Add for Angle {
 impl std::ops::AddAssign for Angle {
     fn add_assign(&mut self, rhs: Self) {
         self.rad += rhs.rad;
-        self.wrap_assign();
     }
 }
 
@@ -87,7 +86,6 @@ impl std::ops::Sub for Angle {
 impl std::ops::SubAssign for Angle {
     fn sub_assign(&mut self, rhs: Self) {
         self.rad -= rhs.rad;
-        self.wrap_assign();
     }
 }
 
@@ -108,7 +106,6 @@ impl std::ops::Mul<Angle> for f64 {
 impl std::ops::MulAssign<f64> for Angle {
     fn mul_assign(&mut self, rhs: f64) {
         self.rad *= rhs;
-        self.wrap_assign();
     }
 }
 
@@ -122,7 +119,6 @@ impl std::ops::Div<f64> for Angle {
 impl std::ops::DivAssign<f64> for Angle {
     fn div_assign(&mut self, rhs: f64) {
         self.rad /= rhs;
-        self.wrap_assign();
     }
 }
 
