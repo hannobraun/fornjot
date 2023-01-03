@@ -5,7 +5,7 @@ use std::{collections::HashSet, ffi::OsStr, path::Path};
 use crossbeam_channel::Sender;
 use notify::Watcher as _;
 
-use crate::{HostCommand, Error};
+use crate::{Error, HostCommand};
 
 /// Watches a model for changes, reloading it continually
 pub struct Watcher {
