@@ -1,5 +1,43 @@
 # Fornjot - Changelog
 
+## v0.30.0 (2023-01-02)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+None this time!
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Simplify `CycleBuilder` and `FaceBuilder` ([#1467])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1459], [#1460], [#1461], [#1462], [#1463], [#1465], [#1470])
+- Upgrade to Rust 1.66.0 ([#1466])
+- Replace `robust-predicates` ([#1468])
+- Cross-compile to Android and iOS ([#1469])
+
+[#1459]: https://github.com/hannobraun/Fornjot/pull/1459
+[#1460]: https://github.com/hannobraun/Fornjot/pull/1460
+[#1461]: https://github.com/hannobraun/Fornjot/pull/1461
+[#1462]: https://github.com/hannobraun/Fornjot/pull/1462
+[#1463]: https://github.com/hannobraun/Fornjot/pull/1463
+[#1465]: https://github.com/hannobraun/Fornjot/pull/1465
+[#1466]: https://github.com/hannobraun/Fornjot/pull/1466
+[#1467]: https://github.com/hannobraun/Fornjot/pull/1467
+[#1468]: https://github.com/hannobraun/Fornjot/pull/1468
+[#1469]: https://github.com/hannobraun/Fornjot/pull/1469
+[#1470]: https://github.com/hannobraun/Fornjot/pull/1470
+
+
 ## v0.29.0 (2022-12-19)
 
 ### End-user improvements
