@@ -65,10 +65,10 @@ fn evaluate_model(
         .expect("Event loop proxy closed");
 }
 
-/// Command received by [`Evaluator`] through its channel
+/// Command received by an evaluator thread through its channel
 pub struct TriggerEvaluation;
 
-/// An event emitted by [`Evaluator`]
+/// An event emitted by an evaluator thread
 #[derive(Debug)]
 pub enum ModelEvent {
     /// A new model is being watched
