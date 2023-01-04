@@ -138,7 +138,6 @@ mod tests {
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
         builder::FaceBuilder,
         insert::Insert,
-        iter::ObjectIters,
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
@@ -292,7 +291,8 @@ mod tests {
         let intersection = (&face, &point).intersect();
 
         let edge = face
-            .half_edge_iter()
+            .exterior()
+            .half_edges()
             .find(|edge| {
                 let [a, b] = edge.vertices();
                 a.global_form().position() == Point::from([0., 0., 0.])
@@ -321,7 +321,9 @@ mod tests {
         let intersection = (&face, &point).intersect();
 
         let vertex = face
-            .vertex_iter()
+            .exterior()
+            .half_edges()
+            .flat_map(|half_edge| half_edge.vertices())
             .find(|vertex| {
                 vertex.global_form().position() == Point::from([1., 0., 0.])
             })
