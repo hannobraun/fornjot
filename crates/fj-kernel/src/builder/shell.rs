@@ -82,8 +82,9 @@ impl ShellBuilder for PartialShell {
                         });
                     let c = a + [Z, Z, edge_length];
 
-                    let (surface, _) =
-                        PartialSurface::plane_from_points([a, b, c]);
+                    let mut surface = PartialSurface::default();
+                    surface.plane_from_points([a, b, c]);
+
                     Partial::from_partial(surface)
                 })
                 .collect::<Vec<_>>();
