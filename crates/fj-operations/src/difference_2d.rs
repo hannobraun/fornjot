@@ -4,7 +4,6 @@ use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
     insert::Insert,
-    iter::ObjectIters,
     objects::{Objects, Sketch},
     partial::{Partial, PartialFace, PartialObject, PartialSketch},
     services::Service,
@@ -34,12 +33,12 @@ impl Shape for fj::Difference2d {
             .each_ref_ext()
             .map(|shape| shape.compute_brep(objects, debug_info));
 
-        if let Some(face) = a.face_iter().next() {
+        if let Some(face) = a.faces().into_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
 
             let surface = face.surface();
 
-            for face in a.face_iter() {
+            for face in a.faces() {
                 assert_eq!(
                     surface,
                     face.surface(),
@@ -53,7 +52,7 @@ impl Shape for fj::Difference2d {
                 }
             }
 
-            for face in b.face_iter() {
+            for face in b.faces() {
                 assert_eq!(
                     surface,
                     face.surface(),
