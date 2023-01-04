@@ -16,13 +16,9 @@ impl Watcher {
     /// Watch the provided model for changes
     pub fn watch_model(
         watch_path: impl AsRef<Path>,
-        //evaluator: &Evaluator,
         host_tx: Sender<HostCommand>,
     ) -> Result<Self, Error> {
         let watch_path = watch_path.as_ref();
-
-        //let watch_tx = evaluator.trigger();
-        //let watch_tx_2 = evaluator.trigger();
 
         let mut watcher = notify::recommended_watcher(
             move |event: notify::Result<notify::Event>| {
@@ -71,23 +67,6 @@ impl Watcher {
         )?;
 
         watcher.watch(watch_path, notify::RecursiveMode::Recursive)?;
-
-        /*
-        // To prevent a race condition between the initial load and the start of
-        // watching, we'll trigger the initial load here, after having started
-        // watching.
-        //
-        // This happens in a separate thread, because the channel is bounded and
-        // has no buffer.
-        //
-        // Will panic, if the receiving end has panicked. Not much we can do
-        // about that, if it happened.
-        thread::spawn(move || {
-            watch_tx_2
-                .send(TriggerEvaluation)
-                .expect("Channel is disconnected");
-        });
-        */
 
         Ok(Self {
             _watcher: Box::new(watcher),

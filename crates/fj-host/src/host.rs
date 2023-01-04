@@ -1,6 +1,6 @@
 use std::thread;
 
-use crossbeam_channel::{unbounded, Receiver, Sender};
+use crossbeam_channel::{self, Receiver, Sender};
 use fj_interop::processed_shape::ProcessedShape;
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::EventLoopProxy;
@@ -27,7 +27,7 @@ impl Host {
         shape_processor: ShapeProcessor,
         event_loop_proxy: EventLoopProxy<ModelEvent>,
     ) -> Self {
-        let (command_tx, command_rx) = unbounded();
+        let (command_tx, command_rx) = crossbeam_channel::unbounded();
         Self {
             shape_processor,
             event_loop_proxy,

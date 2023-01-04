@@ -24,7 +24,7 @@ impl HostHandle {
         }
     }
 
-    /// Send a model to the host for evluation.
+    /// Send a model to the host for evaluation.
     pub fn load_model(&mut self, model: Model) {
         self.command_tx
             .try_send(HostCommand::LoadModel(model))
