@@ -28,7 +28,7 @@ impl Approx for &HalfEdge {
 
         let first = ApproxPoint::new(
             a.surface_form().position(),
-            a.global_form().position(),
+            a.surface_form().global_form().position(),
         );
         let curve_approx =
             (self.curve(), range).approx_with_cache(tolerance, cache);

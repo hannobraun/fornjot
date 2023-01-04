@@ -72,7 +72,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         let surface_vertex = SurfaceVertex::new(
                             point_surface,
                             surface.clone(),
-                            vertex.global_form().clone(),
+                            vertex.surface_form().global_form().clone(),
                         )
                         .insert(objects);
 
