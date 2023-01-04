@@ -49,11 +49,6 @@ impl Vertex {
     pub fn surface_form(&self) -> &Handle<SurfaceVertex> {
         &self.surface_form
     }
-
-    /// Access the global form of this vertex
-    pub fn global_form(&self) -> &Handle<GlobalVertex> {
-        self.surface_form.global_form()
-    }
 }
 
 /// A vertex, defined in surface (2D) coordinates
