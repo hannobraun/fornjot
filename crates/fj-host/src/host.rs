@@ -1,10 +1,11 @@
 use std::thread;
 
 use crossbeam_channel::{unbounded, Receiver, Sender};
+use fj_interop::processed_shape::ProcessedShape;
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::EventLoopProxy;
 
-use crate::{HostCommand, HostHandle, Model, ModelEvent, Watcher};
+use crate::{Error, HostCommand, HostHandle, Model, Watcher};
 
 // Use a zero-sized error type to silence `#[warn(clippy::result_large_err)]`.
 // The only error from `EventLoopProxy::send_event` is `EventLoopClosed<T>`,
@@ -116,4 +117,23 @@ impl Host {
 
         Ok(())
     }
+}
+
+/// An event emitted by the host thread
+#[derive(Debug)]
+pub enum ModelEvent {
+    /// A new model is being watched
+    StartWatching,
+
+    /// A change in the model has been detected
+    ChangeDetected,
+
+    /// The model has been evaluated
+    Evaluated,
+
+    /// The model has been processed
+    ProcessedShape(ProcessedShape),
+
+    /// An error
+    Error(Error),
 }

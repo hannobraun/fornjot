@@ -15,7 +15,6 @@
 
 #![warn(missing_docs)]
 
-mod evaluator;
 mod host;
 mod host_handle;
 mod model;
@@ -24,8 +23,7 @@ mod platform;
 mod watcher;
 
 pub use self::{
-    evaluator::ModelEvent,
-    host::{EventLoopClosed, Host},
+    host::{EventLoopClosed, Host, ModelEvent},
     host_handle::{HostCommand, HostHandle},
     model::{Error, Evaluation, Model},
     parameters::Parameters,
