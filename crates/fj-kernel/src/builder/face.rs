@@ -5,7 +5,7 @@ use crate::{
     partial::{Partial, PartialCycle, PartialFace},
 };
 
-use super::CycleBuilder;
+use super::{CycleBuilder, SurfaceBuilder};
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
@@ -14,6 +14,21 @@ pub trait FaceBuilder {
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
+
+    /// Update the [`PartialFace`] with an exterior triangle, from 3D points
+    ///
+    /// Uses the three points to infer a plane that is used as the surface.
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is probably just temporary, and will be generalized into a
+    /// "update as polygon from global points" method sooner or later. For now,
+    /// I didn't want to deal with the question of how to infer the surface, and
+    /// how to handle points that don't fit that surface.
+    fn update_exterior_as_triangle_from_global_points(
+        &mut self,
+        points: [impl Into<Point<3>>; 3],
+    ) -> [Partial<HalfEdge>; 3];
 
     /// Update the [`PartialFace`] with an interior polygon
     fn add_interior_polygon(
@@ -28,6 +43,28 @@ impl FaceBuilder for PartialFace {
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
         self.exterior.write().update_as_polygon_from_points(points)
+    }
+
+    fn update_exterior_as_triangle_from_global_points(
+        &mut self,
+        points_global: [impl Into<Point<3>>; 3],
+    ) -> [Partial<HalfEdge>; 3] {
+        let points_surface = self
+            .exterior
+            .write()
+            .surface
+            .write()
+            .update_as_plane_from_points(points_global);
+        let mut edges = self.update_exterior_as_polygon(points_surface);
+
+        // None of the following should panic, as we just created a polygon from
+        // three points, so we should have exactly three edges.
+        let c = edges.pop().unwrap();
+        let b = edges.pop().unwrap();
+        let a = edges.pop().unwrap();
+        assert!(edges.pop().is_none());
+
+        [a, b, c]
     }
 
     fn add_interior_polygon(
