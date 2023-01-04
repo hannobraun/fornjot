@@ -83,7 +83,7 @@ impl ShellBuilder for PartialShell {
                     let c = a + [Z, Z, edge_length];
 
                     let mut surface = PartialSurface::default();
-                    surface.plane_from_points([a, b, c]);
+                    surface.update_as_plane_from_points([a, b, c]);
 
                     Partial::from_partial(surface)
                 })

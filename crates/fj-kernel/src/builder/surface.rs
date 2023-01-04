@@ -11,7 +11,7 @@ pub trait SurfaceBuilder: Sized {
     fn from_axes(u: GlobalPath, v: impl Into<Vector<3>>) -> Self;
 
     /// Construct a plane from 3 points
-    fn plane_from_points(
+    fn update_as_plane_from_points(
         &mut self,
         points: [impl Into<Point<3>>; 3],
     ) -> [Point<2>; 3];
@@ -26,7 +26,7 @@ impl SurfaceBuilder for PartialSurface {
         }
     }
 
-    fn plane_from_points(
+    fn update_as_plane_from_points(
         &mut self,
         points: [impl Into<Point<3>>; 3],
     ) -> [Point<2>; 3] {
