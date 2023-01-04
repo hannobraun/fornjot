@@ -177,7 +177,7 @@ impl EventLoopHandler {
 
                     let gui_state = GuiState {
                         status: &self.status,
-                        model_available: self.host_handle.is_model_loaded(), //self.host.is_some(),
+                        model_available: self.host_handle.is_model_loaded(),
                     };
                     let new_model_path = self.viewer.draw(
                         pixels_per_point,
