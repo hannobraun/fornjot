@@ -5,7 +5,7 @@ use crate::{
     partial::{Partial, PartialCycle, PartialFace},
 };
 
-use super::{CycleBuilder, SurfaceBuilder};
+use super::CycleBuilder;
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
@@ -49,22 +49,9 @@ impl FaceBuilder for PartialFace {
         &mut self,
         points_global: [impl Into<Point<3>>; 3],
     ) -> [Partial<HalfEdge>; 3] {
-        let points_surface = self
-            .exterior
+        self.exterior
             .write()
-            .surface
-            .write()
-            .update_as_plane_from_points(points_global);
-        let mut edges = self.update_exterior_as_polygon(points_surface);
-
-        // None of the following should panic, as we just created a polygon from
-        // three points, so we should have exactly three edges.
-        let c = edges.pop().unwrap();
-        let b = edges.pop().unwrap();
-        let a = edges.pop().unwrap();
-        assert!(edges.pop().is_none());
-
-        [a, b, c]
+            .update_as_triangle_from_global_points(points_global)
     }
 
     fn add_interior_polygon(

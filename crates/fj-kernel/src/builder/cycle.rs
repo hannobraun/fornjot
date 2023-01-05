@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    builder::SurfaceBuilder,
     objects::HalfEdge,
     partial::{Partial, PartialCycle},
 };
@@ -43,6 +44,21 @@ pub trait CycleBuilder {
     ///
     /// Will update each half-edge in the cycle to be a line segment.
     fn update_as_polygon(&mut self);
+
+    /// Update cycle as a triangle, from global (3D) points
+    ///
+    /// Uses the three points to infer a plane that is used as the surface.
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is probably just temporary, and will be generalized into a
+    /// "update as polygon from global points" method sooner or later. For now,
+    /// I didn't want to deal with the question of how to infer the surface, and
+    /// how to handle points that don't fit that surface.
+    fn update_as_triangle_from_global_points(
+        &mut self,
+        points: [impl Into<Point<3>>; 3],
+    ) -> [Partial<HalfEdge>; 3];
 }
 
 impl CycleBuilder for PartialCycle {
@@ -128,5 +144,25 @@ impl CycleBuilder for PartialCycle {
         for half_edge in &mut self.half_edges {
             half_edge.write().update_as_line_segment();
         }
+    }
+
+    fn update_as_triangle_from_global_points(
+        &mut self,
+        points_global: [impl Into<Point<3>>; 3],
+    ) -> [Partial<HalfEdge>; 3] {
+        let points_surface = self
+            .surface
+            .write()
+            .update_as_plane_from_points(points_global);
+        let mut edges = self.update_as_polygon_from_points(points_surface);
+
+        // None of the following should panic, as we just created a polygon from
+        // three points, so we should have exactly three edges.
+        let c = edges.pop().unwrap();
+        let b = edges.pop().unwrap();
+        let a = edges.pop().unwrap();
+        assert!(edges.pop().is_none());
+
+        [a, b, c]
     }
 }
