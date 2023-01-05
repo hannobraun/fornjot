@@ -9,17 +9,6 @@ use super::HalfEdgeBuilder;
 
 /// Builder API for [`PartialCycle`]
 pub trait CycleBuilder {
-    /// Create a cycle as a polygonal chain from the provided points
-    fn update_as_polygon_from_points(
-        &mut self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Vec<Partial<HalfEdge>>;
-
-    /// Update cycle to be a polygon
-    ///
-    /// Will update each half-edge in the cycle to be a line segment.
-    fn update_as_polygon(&mut self);
-
     /// Add a new half-edge to the cycle
     ///
     /// Creates a half-edge and adds it to the cycle. The new half-edge is
@@ -43,31 +32,20 @@ pub trait CycleBuilder {
         &mut self,
         point: impl Into<Point<2>>,
     ) -> Partial<HalfEdge>;
-}
 
-impl CycleBuilder for PartialCycle {
+    /// Create a cycle as a polygonal chain from the provided points
     fn update_as_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Vec<Partial<HalfEdge>> {
-        let mut half_edges = Vec::new();
+    ) -> Vec<Partial<HalfEdge>>;
 
-        for point in points {
-            let half_edge = self.add_half_edge_from_point_to_start(point);
-            half_edges.push(half_edge);
-        }
+    /// Update cycle to be a polygon
+    ///
+    /// Will update each half-edge in the cycle to be a line segment.
+    fn update_as_polygon(&mut self);
+}
 
-        self.update_as_polygon();
-
-        half_edges
-    }
-
-    fn update_as_polygon(&mut self) {
-        for half_edge in &mut self.half_edges {
-            half_edge.write().update_as_line_segment();
-        }
-    }
-
+impl CycleBuilder for PartialCycle {
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
         let mut new_half_edge = Partial::<HalfEdge>::new();
 
@@ -128,5 +106,27 @@ impl CycleBuilder for PartialCycle {
             .position = Some(point.into());
 
         half_edge
+    }
+
+    fn update_as_polygon_from_points(
+        &mut self,
+        points: impl IntoIterator<Item = impl Into<Point<2>>>,
+    ) -> Vec<Partial<HalfEdge>> {
+        let mut half_edges = Vec::new();
+
+        for point in points {
+            let half_edge = self.add_half_edge_from_point_to_start(point);
+            half_edges.push(half_edge);
+        }
+
+        self.update_as_polygon();
+
+        half_edges
+    }
+
+    fn update_as_polygon(&mut self) {
+        for half_edge in &mut self.half_edges {
+            half_edge.write().update_as_line_segment();
+        }
     }
 }
