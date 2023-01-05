@@ -31,7 +31,7 @@ pub trait FaceBuilder {
     ) -> [Partial<HalfEdge>; 3];
 
     /// Add an interior polygon, from the provided points
-    fn add_interior_polygon(
+    fn add_interior_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     );
@@ -54,7 +54,7 @@ impl FaceBuilder for PartialFace {
             .update_as_triangle_from_global_points(points_global)
     }
 
-    fn add_interior_polygon(
+    fn add_interior_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) {

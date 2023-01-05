@@ -127,7 +127,11 @@ mod tests {
                 [3., 0.],
                 [0., 3.],
             ]);
-            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
+            face.add_interior_polygon_from_points([
+                [1., 1.],
+                [1., 2.],
+                [2., 1.],
+            ]);
 
             face.build(&mut services.objects)
         };
@@ -163,7 +167,11 @@ mod tests {
                 [3., 0.],
                 [0., 3.],
             ]);
-            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
+            face.add_interior_polygon_from_points([
+                [1., 1.],
+                [1., 2.],
+                [2., 1.],
+            ]);
             face.build(&mut services.objects)
         };
         let invalid = {
