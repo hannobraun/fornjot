@@ -219,36 +219,6 @@ impl Crate {
             break;
         }
 
-        let delay = Duration::from_secs(10);
-        let start_time = Instant::now();
-        let timeout = Duration::from_secs(600);
-
-        log::info!(
-            "{self} should appear as {ours} on the registry, waiting... [{delay:?}|{timeout:?}]"
-        );
-
-        loop {
-            if Instant::now() - start_time > timeout {
-                return Err(anyhow!("{self} did not appear as {ours} on the registry within {timeout:?}"));
-            }
-
-            let theirs = self.get_upstream_version()?;
-
-            match theirs.cmp(&ours) {
-                std::cmp::Ordering::Less => (),
-                std::cmp::Ordering::Equal => {
-                    log::info!("{self} appeared as {ours} on the registry");
-                    break;
-                }
-                std::cmp::Ordering::Greater => {
-                    return Err(anyhow!("{self} appeared as {theirs} on the registry which is newer than the current release ({ours})"))
-                },
-            }
-
-            log::info!("{self} waiting for {ours}...");
-            std::thread::sleep(delay);
-        }
-
         Ok(())
     }
 }
