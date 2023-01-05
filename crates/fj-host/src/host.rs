@@ -49,9 +49,12 @@ impl Host {
                 while let Ok(command) = self.command_rx.recv() {
                     match command {
                         HostCommand::LoadModel(new_model) => {
-                            // There's a race condition if a prior watcher sends
-                            // `TriggerEvaluation` right before this new watcher
-                            // is created.
+                            // Right now, `fj-app` will only load a new model
+                            // once. The gui does not have a feature to load a
+                            // new model after the initial load. If that were
+                            // to change, there would be a race condition here
+                            // if the prior watcher sent `TriggerEvaluation`
+                            // before it and the model were replaced.
                             match Watcher::watch_model(
                                 new_model.watch_path(),
                                 self.command_tx.clone(),
