@@ -20,7 +20,7 @@ pub async fn create_release_announcement(
     let now = Utc::now();
 
     let year = now.year();
-    let week = now.iso_week().week();
+    let week = format!("{:02}", now.iso_week().week());
     let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
@@ -42,9 +42,9 @@ pub async fn create_release_announcement(
         .await?
         .as_markdown(min_dollars, for_readme)?;
 
-    let mut file = create_file(year, week).await?;
+    let mut file = create_file(year, &week).await?;
     generate_announcement(
-        week,
+        &week,
         date,
         version.to_string(),
         sponsors,
@@ -56,7 +56,7 @@ pub async fn create_release_announcement(
     Ok(())
 }
 
-async fn create_file(year: i32, week: u32) -> anyhow::Result<File> {
+async fn create_file(year: i32, week: &str) -> anyhow::Result<File> {
     let dir =
         PathBuf::from(format!("content/blog/weekly-release/{year}-w{week}"));
     let file = dir.join("index.md");
@@ -72,7 +72,7 @@ async fn create_file(year: i32, week: u32) -> anyhow::Result<File> {
 }
 
 async fn generate_announcement(
-    week: u32,
+    week: &str,
     date: String,
     version: String,
     sponsors: String,
