@@ -55,7 +55,7 @@ impl ShellBuilder for PartialShell {
 
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon([
+            face.update_exterior_as_polygon_from_points([
                 [-h, -h],
                 [h, -h],
                 [h, h],

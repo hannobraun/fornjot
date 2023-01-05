@@ -10,7 +10,7 @@ use super::CycleBuilder;
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
     /// Update the [`PartialFace`] with an exterior polygon
-    fn update_exterior_as_polygon(
+    fn update_exterior_as_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
@@ -38,7 +38,7 @@ pub trait FaceBuilder {
 }
 
 impl FaceBuilder for PartialFace {
-    fn update_exterior_as_polygon(
+    fn update_exterior_as_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>> {
