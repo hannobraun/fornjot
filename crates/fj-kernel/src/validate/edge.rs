@@ -145,10 +145,9 @@ impl HalfEdgeValidationError {
         let global_vertices_from_vertices = {
             let (global_vertices_from_vertices, _) =
                 VerticesInNormalizedOrder::new(
-                    half_edge
-                        .vertices()
-                        .each_ref_ext()
-                        .map(|vertex| vertex.global_form().clone()),
+                    half_edge.vertices().each_ref_ext().map(|vertex| {
+                        vertex.surface_form().global_form().clone()
+                    }),
                 );
 
             global_vertices_from_vertices.access_in_normalized_order()

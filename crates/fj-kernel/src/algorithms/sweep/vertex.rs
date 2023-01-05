@@ -61,6 +61,7 @@ impl Sweep for (Handle<Vertex>, Handle<Surface>) {
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
         let (edge_global, vertices_global) = vertex
+            .surface_form()
             .global_form()
             .clone()
             .sweep_with_cache(path, cache, objects);

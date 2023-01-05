@@ -255,8 +255,8 @@ mod tests {
             .half_edges()
             .find(|edge| {
                 let [a, b] = edge.vertices();
-                a.global_form().position() == Point::from([1., 0., 1.])
-                    && b.global_form().position() == Point::from([1., 0., -1.])
+                a.surface_form().position() == Point::from([-1., 1.])
+                    && b.surface_form().position() == Point::from([-1., -1.])
             })
             .unwrap();
         assert_eq!(
@@ -290,7 +290,7 @@ mod tests {
             .half_edges()
             .flat_map(|half_edge| half_edge.vertices())
             .find(|vertex| {
-                vertex.global_form().position() == Point::from([1., 0., 0.])
+                vertex.surface_form().position() == Point::from([-1., -1.])
             })
             .unwrap();
         assert_eq!(
