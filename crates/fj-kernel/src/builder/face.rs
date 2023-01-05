@@ -9,13 +9,13 @@ use super::CycleBuilder;
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
-    /// Update the [`PartialFace`] with an exterior polygon
+    /// Update the face exterior as a polygon from the provided points
     fn update_exterior_as_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
-    /// Update the [`PartialFace`] with an exterior triangle, from 3D points
+    /// Update the face exterior as a triangle, from 3D points
     ///
     /// Uses the three points to infer a plane that is used as the surface.
     ///
@@ -30,7 +30,7 @@ pub trait FaceBuilder {
         points: [impl Into<Point<3>>; 3],
     ) -> [Partial<HalfEdge>; 3];
 
-    /// Update the [`PartialFace`] with an interior polygon
+    /// Add an interior polygon, from the provided points
     fn add_interior_polygon(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
