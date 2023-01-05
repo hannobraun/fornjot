@@ -33,13 +33,13 @@ pub trait CycleBuilder {
         point: impl Into<Point<2>>,
     ) -> Partial<HalfEdge>;
 
-    /// Create a cycle as a polygonal chain from the provided points
+    /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points(
         &mut self,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
     ) -> Vec<Partial<HalfEdge>>;
 
-    /// Update cycle to be a polygon
+    /// Update cycle as a polygon
     ///
     /// Will update each half-edge in the cycle to be a line segment.
     fn update_as_polygon(&mut self);
