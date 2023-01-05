@@ -7,9 +7,11 @@ use crate::{
 
 /// A vertex
 ///
-/// `Vertex` is defined in terms of a 1-dimensional position on a curve. If you
-/// need the 3D position of a vertex, you can use [`Vertex::global_form`], to
-/// get access of the global form of a vertex ([`GlobalVertex`]).
+/// `Vertex` is defined in terms of a 1-dimensional position on a curve. Each
+/// `Vertex` has an associated [`SurfaceVertex`], which defines the 2D position
+/// on the surface, and a [`GlobalVertex`] which defines the global 3D position.
+///
+/// Both can be accessed through [`Vertex::surface_form`].
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     position: Point<1>,
