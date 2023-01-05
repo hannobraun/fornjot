@@ -61,6 +61,10 @@ async fn create_file(year: i32, week: &str) -> anyhow::Result<File> {
         PathBuf::from(format!("content/blog/weekly-release/{year}-w{week}"));
     let file = dir.join("index.md");
 
+    // VS Code (and probably other editors/IDEs) renders the path in the output
+    // as a clickable link, so the user can open the file easily.
+    println!("Generating release announcement at {}", file.display());
+
     fs::create_dir_all(&dir).await.with_context(|| {
         format!("Failed to create directory `{}`", dir.display())
     })?;
