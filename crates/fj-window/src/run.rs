@@ -34,11 +34,10 @@ pub fn run(
 
     let egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let host = Host::new(shape_processor, event_loop.create_proxy());
-    let mut host_handle = host.spawn();
+    let mut host = Host::new(shape_processor, event_loop.create_proxy());
 
     if let Some(model) = model {
-        host_handle.load_model(model);
+        host.load_model(model);
     }
 
     let mut handler = EventLoopHandler {
@@ -46,7 +45,7 @@ pub fn run(
         window,
         viewer,
         egui_winit_state,
-        host_handle,
+        host,
         status: StatusReport::new(),
         held_mouse_button: None,
         new_size: None,

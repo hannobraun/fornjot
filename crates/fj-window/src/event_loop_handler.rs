@@ -1,4 +1,4 @@
-use fj_host::{HostHandle, Model, ModelEvent, Parameters};
+use fj_host::{Host, Model, ModelEvent, Parameters};
 use fj_operations::shape_processor;
 use fj_viewer::{
     GuiState, InputEvent, NormalizedScreenPosition, Screen, ScreenSize,
@@ -20,7 +20,7 @@ pub struct EventLoopHandler {
     pub window: Window,
     pub viewer: Viewer,
     pub egui_winit_state: egui_winit::State,
-    pub host_handle: HostHandle,
+    pub host: Host,
     pub status: StatusReport,
     pub held_mouse_button: Option<MouseButton>,
 
@@ -40,7 +40,7 @@ impl EventLoopHandler {
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
         // Trigger a panic if the host thead has panicked.
-        self.host_handle.propagate_panic();
+        self.host.propagate_panic();
 
         if let Event::WindowEvent { event, .. } = &event {
             let egui_winit::EventResponse {
@@ -177,7 +177,7 @@ impl EventLoopHandler {
 
                     let gui_state = GuiState {
                         status: &self.status,
-                        model_available: self.host_handle.is_model_loaded(),
+                        model_available: self.host.is_model_loaded(),
                     };
                     let new_model_path = self.viewer.draw(
                         pixels_per_point,
@@ -187,7 +187,7 @@ impl EventLoopHandler {
                     if let Some(model_path) = new_model_path {
                         let model =
                             Model::new(model_path, Parameters::empty())?;
-                        self.host_handle.load_model(model);
+                        self.host.load_model(model);
                     }
                 }
             }

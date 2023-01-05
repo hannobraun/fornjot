@@ -1,22 +1,28 @@
 use std::thread::JoinHandle;
 
 use crossbeam_channel::Sender;
+use fj_operations::shape_processor::ShapeProcessor;
+use winit::event_loop::EventLoopProxy;
 
-use crate::{EventLoopClosed, Model};
+use crate::{EventLoopClosed, HostThread, Model, ModelEvent};
 
-/// A handle for sending commands to a spawned host
-pub struct HostHandle {
+/// A host for watching models and responding to model updates
+pub struct Host {
     command_tx: Sender<HostCommand>,
     host_thread: Option<JoinHandle<Result<(), EventLoopClosed>>>,
     model_loaded: bool,
 }
 
-impl HostHandle {
-    /// Create a `HostHandle` with a send channel and the host thread handle.
+impl Host {
+    /// Create a host with a shape processor and a send channel to the event
+    /// loop.
     pub fn new(
-        command_tx: Sender<HostCommand>,
-        host_thread: JoinHandle<Result<(), EventLoopClosed>>,
+        shape_processor: ShapeProcessor,
+        event_loop_proxy: EventLoopProxy<ModelEvent>,
     ) -> Self {
+        let (command_tx, host_thread) =
+            HostThread::spawn(shape_processor, event_loop_proxy);
+
         Self {
             command_tx,
             host_thread: Some(host_thread),
@@ -24,7 +30,7 @@ impl HostHandle {
         }
     }
 
-    /// Send a model to the host for evaluation.
+    /// Send a model to the host for evaluation and processing.
     pub fn load_model(&mut self, model: Model) {
         self.command_tx
             .try_send(HostCommand::LoadModel(model))
@@ -32,7 +38,7 @@ impl HostHandle {
         self.model_loaded = true;
     }
 
-    /// Whether a model has been sent to a host for watching and evaluation
+    /// Whether a model has been sent to the host yet
     pub fn is_model_loaded(&self) -> bool {
         self.model_loaded
     }

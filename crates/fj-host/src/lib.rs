@@ -22,9 +22,11 @@ mod parameters;
 mod platform;
 mod watcher;
 
+pub(crate) use self::host::{EventLoopClosed, HostThread};
+
 pub use self::{
-    host::{EventLoopClosed, Host, ModelEvent},
-    host_handle::{HostCommand, HostHandle},
+    host::ModelEvent,
+    host_handle::{Host, HostCommand},
     model::{Error, Evaluation, Model},
     parameters::Parameters,
     watcher::Watcher,

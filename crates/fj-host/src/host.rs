@@ -1,46 +1,47 @@
-use std::thread;
+use std::thread::{self, JoinHandle};
 
 use crossbeam_channel::{self, Receiver, Sender};
 use fj_interop::processed_shape::ProcessedShape;
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::EventLoopProxy;
 
-use crate::{Error, HostCommand, HostHandle, Model, Watcher};
+use crate::{Error, HostCommand, Model, Watcher};
 
 // Use a zero-sized error type to silence `#[warn(clippy::result_large_err)]`.
 // The only error from `EventLoopProxy::send_event` is `EventLoopClosed<T>`,
 // so we don't need the actual value. We just need to know there was an error.
-/// Error type for sending on a channel with a closed event loop
-pub struct EventLoopClosed;
+pub(crate) struct EventLoopClosed;
 
-/// A Fornjot model host that runs in the background
-pub struct Host {
+pub(crate) struct HostThread {
     shape_processor: ShapeProcessor,
     event_loop_proxy: EventLoopProxy<ModelEvent>,
     command_tx: Sender<HostCommand>,
     command_rx: Receiver<HostCommand>,
 }
 
-impl Host {
-    /// Create a new `Host` that will process models for an event loop.
-    pub fn new(
+impl HostThread {
+    // Spawn a background thread that will process models for an event loop.
+    pub(crate) fn spawn(
         shape_processor: ShapeProcessor,
         event_loop_proxy: EventLoopProxy<ModelEvent>,
-    ) -> Self {
+    ) -> (Sender<HostCommand>, JoinHandle<Result<(), EventLoopClosed>>) {
         let (command_tx, command_rx) = crossbeam_channel::unbounded();
-        Self {
+        let command_tx_2 = command_tx.clone();
+
+        let host_thread = Self {
             shape_processor,
             event_loop_proxy,
             command_tx,
             command_rx,
-        }
+        };
+
+        let join_handle = host_thread.spawn_thread();
+
+        (command_tx_2, join_handle)
     }
 
-    /// Run a background thread to watch for updates and process a model.
-    pub fn spawn(mut self) -> HostHandle {
-        let command_tx = self.command_tx.clone();
-
-        let host_thread = thread::Builder::new()
+    fn spawn_thread(mut self) -> JoinHandle<Result<(), EventLoopClosed>> {
+        thread::Builder::new()
             .name("host".to_string())
             .spawn(move || -> Result<(), EventLoopClosed> {
                 let mut model: Option<Model> = None;
@@ -83,9 +84,7 @@ impl Host {
 
                 Ok(())
             })
-            .expect("Cannot create OS thread for host");
-
-        HostHandle::new(command_tx, host_thread)
+            .expect("Cannot create OS thread for host")
     }
 
     // Evaluate and process a model.
