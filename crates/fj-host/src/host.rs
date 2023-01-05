@@ -1,141 +1,88 @@
-use std::thread::{self, JoinHandle};
+use std::thread::JoinHandle;
 
-use crossbeam_channel::{self, Receiver, Sender};
-use fj_interop::processed_shape::ProcessedShape;
+use crossbeam_channel::Sender;
 use fj_operations::shape_processor::ShapeProcessor;
 use winit::event_loop::EventLoopProxy;
 
-use crate::{Error, HostCommand, Model, Watcher};
+use crate::{EventLoopClosed, HostThread, Model, ModelEvent};
 
-// Use a zero-sized error type to silence `#[warn(clippy::result_large_err)]`.
-// The only error from `EventLoopProxy::send_event` is `EventLoopClosed<T>`,
-// so we don't need the actual value. We just need to know there was an error.
-pub(crate) struct EventLoopClosed;
-
-pub(crate) struct HostThread {
-    shape_processor: ShapeProcessor,
-    event_loop_proxy: EventLoopProxy<ModelEvent>,
+/// A host for watching models and responding to model updates
+pub struct Host {
     command_tx: Sender<HostCommand>,
-    command_rx: Receiver<HostCommand>,
+    host_thread: Option<JoinHandle<Result<(), EventLoopClosed>>>,
+    model_loaded: bool,
 }
 
-impl HostThread {
-    // Spawn a background thread that will process models for an event loop.
-    pub(crate) fn spawn(
+impl Host {
+    /// Create a host with a shape processor and a send channel to the event
+    /// loop.
+    pub fn new(
         shape_processor: ShapeProcessor,
         event_loop_proxy: EventLoopProxy<ModelEvent>,
-    ) -> (Sender<HostCommand>, JoinHandle<Result<(), EventLoopClosed>>) {
-        let (command_tx, command_rx) = crossbeam_channel::unbounded();
-        let command_tx_2 = command_tx.clone();
+    ) -> Self {
+        let (command_tx, host_thread) =
+            HostThread::spawn(shape_processor, event_loop_proxy);
 
-        let host_thread = Self {
-            shape_processor,
-            event_loop_proxy,
+        Self {
             command_tx,
-            command_rx,
-        };
-
-        let join_handle = host_thread.spawn_thread();
-
-        (command_tx_2, join_handle)
+            host_thread: Some(host_thread),
+            model_loaded: false,
+        }
     }
 
-    fn spawn_thread(mut self) -> JoinHandle<Result<(), EventLoopClosed>> {
-        thread::Builder::new()
-            .name("host".to_string())
-            .spawn(move || -> Result<(), EventLoopClosed> {
-                let mut model: Option<Model> = None;
-                let mut _watcher: Option<Watcher> = None;
+    /// Send a model to the host for evaluation and processing.
+    pub fn load_model(&mut self, model: Model) {
+        self.command_tx
+            .try_send(HostCommand::LoadModel(model))
+            .expect("Host channel disconnected unexpectedly");
+        self.model_loaded = true;
+    }
 
-                while let Ok(command) = self.command_rx.recv() {
-                    match command {
-                        HostCommand::LoadModel(new_model) => {
-                            // Right now, `fj-app` will only load a new model
-                            // once. The gui does not have a feature to load a
-                            // new model after the initial load. If that were
-                            // to change, there would be a race condition here
-                            // if the prior watcher sent `TriggerEvaluation`
-                            // before it and the model were replaced.
-                            match Watcher::watch_model(
-                                new_model.watch_path(),
-                                self.command_tx.clone(),
-                            ) {
-                                Ok(watcher) => {
-                                    _watcher = Some(watcher);
-                                    self.send_event(ModelEvent::StartWatching)?;
-                                }
+    /// Whether a model has been sent to the host yet
+    pub fn is_model_loaded(&self) -> bool {
+        self.model_loaded
+    }
 
-                                Err(err) => {
-                                    self.send_event(ModelEvent::Error(err))?;
-                                    continue;
-                                }
-                            }
-                            self.process_model(&new_model)?;
-                            model = Some(new_model);
-                        }
-                        HostCommand::TriggerEvaluation => {
-                            self.send_event(ModelEvent::ChangeDetected)?;
-                            if let Some(model) = &model {
-                                self.process_model(model)?;
-                            }
-                        }
+    /// Check if the host thread has exited with a panic. This method runs at
+    /// each tick of the event loop. Without an explicit check, an operation
+    /// will appear to hang forever (e.g. processing a model).  An error
+    /// will be printed to the terminal, but the gui will not notice until
+    /// a new `HostCommand` is issued on the disconnected channel.
+    ///
+    /// # Panics
+    ///
+    /// This method panics on purpose so the main thread can exit on an
+    /// unrecoverable error.
+    pub fn propagate_panic(&mut self) {
+        if self.host_thread.is_none() {
+            unreachable!("Constructor requires host thread")
+        }
+        if let Some(host_thread) = &self.host_thread {
+            // The host thread should not finish while this handle holds the
+            // `command_tx` channel open, so an exit means the thread panicked.
+            if host_thread.is_finished() {
+                let host_thread = self.host_thread.take().unwrap();
+                match host_thread.join() {
+                    Ok(_) => {
+                        unreachable!(
+                            "Host thread cannot exit until host handle disconnects"
+                        )
+                    }
+                    // The error value has already been reported by the panic
+                    // in the host thread, so just ignore it here.
+                    Err(_) => {
+                        panic!("Host thread panicked")
                     }
                 }
-
-                Ok(())
-            })
-            .expect("Cannot create OS thread for host")
-    }
-
-    // Evaluate and process a model.
-    fn process_model(&mut self, model: &Model) -> Result<(), EventLoopClosed> {
-        let evaluation = match model.evaluate() {
-            Ok(evaluation) => evaluation,
-
-            Err(err) => {
-                self.send_event(ModelEvent::Error(err))?;
-                return Ok(());
-            }
-        };
-
-        self.send_event(ModelEvent::Evaluated)?;
-
-        match self.shape_processor.process(&evaluation.shape) {
-            Ok(shape) => self.send_event(ModelEvent::ProcessedShape(shape))?,
-
-            Err(err) => {
-                self.send_event(ModelEvent::Error(err.into()))?;
             }
         }
-
-        Ok(())
-    }
-
-    // Send a message to the event loop.
-    fn send_event(&mut self, event: ModelEvent) -> Result<(), EventLoopClosed> {
-        self.event_loop_proxy
-            .send_event(event)
-            .map_err(|_| EventLoopClosed)?;
-
-        Ok(())
     }
 }
 
-/// An event emitted by the host thread
-#[derive(Debug)]
-pub enum ModelEvent {
-    /// A new model is being watched
-    StartWatching,
-
-    /// A change in the model has been detected
-    ChangeDetected,
-
-    /// The model has been evaluated
-    Evaluated,
-
-    /// The model has been processed
-    ProcessedShape(ProcessedShape),
-
-    /// An error
-    Error(Error),
+/// Commands that can be sent to a host
+pub enum HostCommand {
+    /// Load a model to be evaluated and processed
+    LoadModel(Model),
+    /// Used by a `Watcher` to trigger evaluation when a model is edited
+    TriggerEvaluation,
 }
