@@ -116,7 +116,7 @@ mod tests {
 
         let mut bottom = PartialFace::default();
         bottom.exterior.write().surface = Partial::from(surface.clone());
-        bottom.update_exterior_as_polygon(TRIANGLE);
+        bottom.update_exterior_as_polygon_from_points(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -124,7 +124,7 @@ mod tests {
         let mut top = PartialFace::default();
         top.exterior.write().surface =
             Partial::from(surface.translate(UP, &mut services.objects));
-        top.update_exterior_as_polygon(TRIANGLE);
+        top.update_exterior_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -169,14 +169,14 @@ mod tests {
         bottom.exterior.write().surface = Partial::from(
             surface.clone().translate(DOWN, &mut services.objects),
         );
-        bottom.update_exterior_as_polygon(TRIANGLE);
+        bottom.update_exterior_as_polygon_from_points(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
         top.exterior.write().surface = Partial::from(surface);
-        top.update_exterior_as_polygon(TRIANGLE);
+        top.update_exterior_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);

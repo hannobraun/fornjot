@@ -122,8 +122,16 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon([[0., 0.], [3., 0.], [0., 3.]]);
-            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
+            face.update_exterior_as_polygon_from_points([
+                [0., 0.],
+                [3., 0.],
+                [0., 3.],
+            ]);
+            face.add_interior_polygon_from_points([
+                [1., 1.],
+                [1., 2.],
+                [2., 1.],
+            ]);
 
             face.build(&mut services.objects)
         };
@@ -154,8 +162,16 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon([[0., 0.], [3., 0.], [0., 3.]]);
-            face.add_interior_polygon([[1., 1.], [1., 2.], [2., 1.]]);
+            face.update_exterior_as_polygon_from_points([
+                [0., 0.],
+                [3., 0.],
+                [0., 3.],
+            ]);
+            face.add_interior_polygon_from_points([
+                [1., 1.],
+                [1., 2.],
+                [2., 1.],
+            ]);
             face.build(&mut services.objects)
         };
         let invalid = {
