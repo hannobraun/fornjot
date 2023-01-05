@@ -4,8 +4,8 @@ use fj::{syntax::*, Angle};
 
 #[fj::model]
 pub fn model() -> fj::Shape {
-    let a = star(4, 1., [0, 255, 0, 200]);
-    let b = star(5, -1., [255, 0, 0, 255])
+    let a = star(4, 1., [0, 255, 0, 200], Some(-30.));
+    let b = star(5, -1., [255, 0, 0, 255], None)
         .rotate([1., 1., 1.], Angle::from_deg(45.))
         .translate([3., 3., 1.]);
     let c = spacer().translate([6., 6., 1.]);
@@ -15,7 +15,12 @@ pub fn model() -> fj::Shape {
     group.into()
 }
 
-fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape {
+fn star(
+    num_points: u64,
+    height: f64,
+    color: [u8; 4],
+    arm_angle: Option<f64>,
+) -> fj::Shape {
     let r1 = 1.;
     let r2 = 2.;
 
@@ -39,12 +44,33 @@ fn star(num_points: u64, height: f64, color: [u8; 4]) -> fj::Shape {
         let x = cos * radius;
         let y = sin * radius;
 
-        outer.push([x, y]);
-        inner.push([x / 2., y / 2.]);
+        if let Some(angle) = arm_angle {
+            outer.push(fj::SketchSegment {
+                endpoint: [x, y],
+                route: fj::SketchSegmentRoute::Arc {
+                    angle: fj::Angle::from_deg(angle),
+                },
+            });
+            inner.push(fj::SketchSegment {
+                endpoint: [x / 2., y / 2.],
+                route: fj::SketchSegmentRoute::Arc {
+                    angle: fj::Angle::from_deg(-angle),
+                },
+            });
+        } else {
+            outer.push(fj::SketchSegment {
+                endpoint: [x, y],
+                route: fj::SketchSegmentRoute::Direct,
+            });
+            inner.push(fj::SketchSegment {
+                endpoint: [x / 2., y / 2.],
+                route: fj::SketchSegmentRoute::Direct,
+            });
+        }
     }
 
-    let outer = fj::Sketch::from_points(outer).with_color(color);
-    let inner = fj::Sketch::from_points(inner);
+    let outer = fj::Sketch::from_segments(outer).with_color(color);
+    let inner = fj::Sketch::from_segments(inner);
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 

@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::{FaceBuilder, HalfEdgeBuilder},
+    builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Objects, Sketch},
     partial::{
@@ -56,18 +56,57 @@ impl Shape for fj::Sketch {
                 }
             }
             fj::Chain::PolyChain(poly_chain) => {
-                let points = poly_chain
-                    .to_segments()
-                    .into_iter()
-                    .map(|fj::SketchSegment::LineTo { point }| point)
-                    .map(Point::from);
+                let segments = poly_chain.to_segments();
+                assert!(
+                    !segments.is_empty(),
+                    "Attempted to compute a Brep from an empty sketch"
+                );
 
-                let mut face = PartialFace::default();
-                face.exterior.write().surface = Partial::from(surface);
-                face.update_exterior_as_polygon_from_points(points);
-                face.color = Some(Color(self.color()));
+                let exterior = {
+                    let mut cycle = PartialCycle {
+                        surface: Partial::from(surface),
+                        ..Default::default()
+                    };
+                    let mut line_segments = vec![];
+                    let mut arcs = vec![];
+                    poly_chain.to_segments().into_iter().for_each(
+                        |fj::SketchSegment { endpoint, route }| {
+                            let endpoint = Point::from(endpoint);
+                            match route {
+                                fj::SketchSegmentRoute::Direct => {
+                                    line_segments.push(
+                                        cycle
+                                            .add_half_edge_from_point_to_start(
+                                                endpoint,
+                                            ),
+                                    );
+                                }
+                                fj::SketchSegmentRoute::Arc { angle } => {
+                                    arcs.push((
+                                        cycle
+                                            .add_half_edge_from_point_to_start(
+                                                endpoint,
+                                            ),
+                                        angle,
+                                    ));
+                                }
+                            }
+                        },
+                    );
+                    line_segments.into_iter().for_each(|mut half_edge| {
+                        half_edge.write().update_as_line_segment()
+                    });
+                    arcs.into_iter().for_each(|(mut half_edge, angle)| {
+                        half_edge.write().update_as_arc(angle.rad())
+                    });
+                    Partial::from_partial(cycle)
+                };
 
-                face
+                PartialFace {
+                    exterior,
+                    color: Some(Color(self.color())),
+                    ..Default::default()
+                }
             }
         };
 
@@ -85,14 +124,36 @@ impl Shape for fj::Sketch {
                 min: Point::from([-circle.radius(), -circle.radius(), 0.0]),
                 max: Point::from([circle.radius(), circle.radius(), 0.0]),
             },
-            fj::Chain::PolyChain(poly_chain) => Aabb::<3>::from_points(
-                poly_chain
-                    .to_segments()
-                    .into_iter()
-                    .map(|fj::SketchSegment::LineTo { point }| point)
-                    .map(Point::from)
-                    .map(Point::to_xyz),
-            ),
+            fj::Chain::PolyChain(poly_chain) => {
+                let segments = poly_chain.to_segments();
+                assert!(
+                    !segments.is_empty(),
+                    "Attempted to compute a bounding box from an empty sketch"
+                );
+
+                let mut points = vec![];
+
+                let mut start_point = segments[segments.len() - 1].endpoint;
+                segments.iter().for_each(|segment| {
+                    match segment.route {
+                        fj::SketchSegmentRoute::Direct => (),
+                        fj::SketchSegmentRoute::Arc { angle } => {
+                            use std::f64::consts::PI;
+                            let arc_circle_data = fj_math::ArcCircleData::from_endpoints_and_angle(start_point, segment.endpoint, fj_math::Scalar::from_f64(angle.rad()));
+                            for circle_minmax_angle in [0., PI/2., PI, 3.*PI/2.] {
+                                let mm_angle = fj_math::Scalar::from_f64(circle_minmax_angle);
+                                if arc_circle_data.start_angle < mm_angle && mm_angle < arc_circle_data.end_angle {
+                                    points.push(arc_circle_data.center + [arc_circle_data.radius * circle_minmax_angle.cos(), arc_circle_data.radius * circle_minmax_angle.sin()]);
+                                }
+                            }
+                        },
+                    }
+                    points.push(Point::from(segment.endpoint));
+                    start_point = segment.endpoint;
+                });
+
+                Aabb::<3>::from_points(points.into_iter().map(Point::to_xyz))
+            }
         }
     }
 }

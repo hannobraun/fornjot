@@ -23,6 +23,10 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
 
+    /// Update partial half-edge to be an arc, spanning the given angle in
+    /// radians
+    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>);
+
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
@@ -74,6 +78,56 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let mut vertex = vertex.write();
             vertex.position = Some(point_curve);
             vertex.surface_form = surface_vertex.clone();
+        }
+
+        self.infer_global_form();
+    }
+
+    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>) {
+        let angle_rad = angle_rad.into();
+        if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
+            panic!("arc angle must be in the range (-360, 360)");
+        }
+        let points_surface = self.vertices.each_ref_ext().map(|vertex| {
+            vertex
+                .read()
+                .surface_form
+                .read()
+                .position
+                .expect("Can't infer arc without surface position")
+        });
+
+        let arc_circle_data = fj_math::ArcCircleData::from_endpoints_and_angle(
+            points_surface[0],
+            points_surface[1],
+            angle_rad,
+        );
+
+        let mut curve = self.curve();
+        curve.write().update_as_circle_from_center_and_radius(
+            arc_circle_data.center,
+            arc_circle_data.radius,
+        );
+
+        let path = curve
+            .read()
+            .path
+            .expect("Expected path that was just created");
+
+        let [a_curve, b_curve] = if arc_circle_data.flipped_construction {
+            [arc_circle_data.end_angle, arc_circle_data.start_angle]
+        } else {
+            [arc_circle_data.start_angle, arc_circle_data.end_angle]
+        }
+        .map(|coord| Point::from([coord]));
+
+        for (vertex, point_curve) in
+            self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])
+        {
+            let mut vertex = vertex.write();
+            vertex.position = Some(point_curve);
+            vertex.surface_form.write().position =
+                Some(path.point_from_path_coords(point_curve));
         }
 
         self.infer_global_form();

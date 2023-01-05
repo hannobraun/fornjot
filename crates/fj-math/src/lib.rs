@@ -52,7 +52,7 @@ mod vector;
 
 pub use self::{
     aabb::Aabb,
-    circle::Circle,
+    circle::{ArcCircleData, Circle},
     coordinates::{Uv, Xyz, T},
     line::Line,
     plane::Plane,

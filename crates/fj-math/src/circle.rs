@@ -167,6 +167,75 @@ impl<const D: usize> approx::AbsDiffEq for Circle<D> {
     }
 }
 
+/// Calculated geometry that is useful when dealing with an arc
+pub struct ArcCircleData {
+    /// Start point of the arc
+    pub start: Point<2>,
+    /// End point of the arc
+    pub end: Point<2>,
+    /// Center of the circle the arc is constructed on
+    pub center: Point<2>,
+    /// Radius of the circle the arc is constructed on
+    pub radius: Scalar,
+    /// Angle of `start` relative to `center`, in radians
+    ///
+    /// Guaranteed to be less than `end_angle`.
+    pub start_angle: Scalar,
+    /// Angle of `end` relative to `center`, in radians
+    ///
+    /// Guaranteed to be greater than `end_angle`.
+    pub end_angle: Scalar,
+    /// True if `start` and `end` were switched to ensure `end_angle` > `start_angle`
+    pub flipped_construction: bool,
+}
+
+impl ArcCircleData {
+    /// Constructs an [`ArcCircleData`] from two endpoints and the associated angle.
+    pub fn from_endpoints_and_angle(
+        p0: impl Into<Point<2>>,
+        p1: impl Into<Point<2>>,
+        angle: Scalar,
+    ) -> Self {
+        use num_traits::Float;
+
+        let (p0, p1) = (p0.into(), p1.into());
+
+        let flipped_construction = angle <= Scalar::ZERO;
+        let angle_rad = angle.abs();
+
+        let [p0, p1] = if flipped_construction {
+            [p1, p0]
+        } else {
+            [p0, p1]
+        };
+        let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
+        // https://math.stackexchange.com/questions/27535/how-to-find-center-of-an-arc-given-start-point-end-point-radius-and-arc-direc
+        // distance between endpoints
+        let d = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
+        // radius
+        let r = d / (2. * (angle_rad.into_f64() / 2.).sin());
+        // distance from center to midpoint between endpoints
+        let h = (r.powi(2) - (d.powi(2) / 4.)).sqrt();
+        // (u, v) is the unit normal in the direction of p1 - p0
+        let u = (x1 - x0) / d;
+        let v = (y1 - y0) / d;
+        // (cx, cy) is the center of the circle
+        let cx = ((x0 + x1) / 2.) - h * v;
+        let cy = ((y0 + y1) / 2.) + h * u;
+        let start_angle = (y0 - cy).atan2(x0 - cx);
+        let end_angle = (y1 - cy).atan2(x1 - cx);
+        Self {
+            start: p0,
+            end: p1,
+            center: Point::from([cx, cy]),
+            radius: r,
+            start_angle,
+            end_angle,
+            flipped_construction,
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::f64::consts::{FRAC_PI_2, PI};
