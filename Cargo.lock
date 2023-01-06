@@ -1181,10 +1181,13 @@ dependencies = [
  "cargo_metadata",
  "crossbeam-channel",
  "fj",
+ "fj-interop",
+ "fj-operations",
  "libloading",
  "notify",
  "thiserror",
  "tracing",
+ "winit",
 ]
 
 [[package]]

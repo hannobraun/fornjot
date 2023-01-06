@@ -15,16 +15,18 @@
 
 #![warn(missing_docs)]
 
-mod evaluator;
 mod host;
+mod host_thread;
 mod model;
 mod parameters;
 mod platform;
 mod watcher;
 
+pub(crate) use self::host_thread::{EventLoopClosed, HostThread};
+
 pub use self::{
-    evaluator::{Evaluator, ModelEvent},
-    host::Host,
+    host::{Host, HostCommand},
+    host_thread::ModelEvent,
     model::{Error, Evaluation, Model},
     parameters::Parameters,
     watcher::Watcher,

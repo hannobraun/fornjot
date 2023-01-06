@@ -3,17 +3,19 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
+#![allow(clippy::result_large_err)]
+
 use std::{
     error,
     fmt::{self, Write},
 };
 
-use fj_host::{Host, Model};
+use fj_host::{Host, Model, ModelEvent};
 use fj_operations::shape_processor::ShapeProcessor;
 use fj_viewer::{RendererInitError, StatusReport, Viewer};
 use futures::executor::block_on;
 use tracing::trace;
-use winit::event_loop::EventLoop;
+use winit::event_loop::EventLoopBuilder;
 
 use crate::{
     event_loop_handler::{self, EventLoopHandler},
@@ -26,17 +28,20 @@ pub fn run(
     shape_processor: ShapeProcessor,
     invert_zoom: bool,
 ) -> Result<(), Error> {
-    let event_loop = EventLoop::new();
+    let event_loop = EventLoopBuilder::<ModelEvent>::with_user_event().build();
     let window = Window::new(&event_loop)?;
     let viewer = block_on(Viewer::new(&window))?;
 
     let egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let host = model.map(Host::from_model).transpose()?;
+    let mut host = Host::new(shape_processor, event_loop.create_proxy());
+
+    if let Some(model) = model {
+        host.load_model(model);
+    }
 
     let mut handler = EventLoopHandler {
         invert_zoom,
-        shape_processor,
         window,
         viewer,
         egui_winit_state,
