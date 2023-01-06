@@ -230,7 +230,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edge_curve_mismatch() {
+    fn half_edge_curve_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -254,12 +254,14 @@ mod tests {
             HalfEdge::new(vertices, valid.global_form().clone())
         };
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn half_edge_global_curve_mismatch() {
+    fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -278,12 +280,14 @@ mod tests {
             tmp.build(&mut services.objects)
         });
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn half_edge_global_vertex_mismatch() {
+    fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -308,12 +312,14 @@ mod tests {
             tmp.build(&mut services.objects)
         });
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn half_edge_vertices_are_coincident() {
+    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -343,7 +349,9 @@ mod tests {
             valid.global_form().clone(),
         );
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 }
