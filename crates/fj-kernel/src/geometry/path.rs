@@ -45,9 +45,7 @@ impl SurfacePath {
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
     ) -> Self {
-        let radius = radius.into();
-
-        Self::Circle(Circle::from_center_and_radius(center.into(), radius))
+        Self::Circle(Circle::from_center_and_radius(center, radius))
     }
 
     /// Construct a line from two points
