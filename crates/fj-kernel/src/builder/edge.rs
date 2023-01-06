@@ -101,27 +101,26 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer arc without surface position")
         });
 
-        let arc_circle_data = fj_math::ArcCircleData::from_endpoints_and_angle(
+        let arc = fj_math::Arc::from_endpoints_and_angle(
             points_surface[0],
             points_surface[1],
             angle_rad,
         );
 
         let mut curve = self.curve();
-        curve.write().update_as_circle_from_center_and_radius(
-            arc_circle_data.center,
-            arc_circle_data.radius,
-        );
+        curve
+            .write()
+            .update_as_circle_from_center_and_radius(arc.center, arc.radius);
 
         let path = curve
             .read()
             .path
             .expect("Expected path that was just created");
 
-        let [a_curve, b_curve] = if arc_circle_data.flipped_construction {
-            [arc_circle_data.end_angle, arc_circle_data.start_angle]
+        let [a_curve, b_curve] = if arc.flipped_construction {
+            [arc.end_angle, arc.start_angle]
         } else {
-            [arc_circle_data.start_angle, arc_circle_data.end_angle]
+            [arc.start_angle, arc.end_angle]
         }
         .map(|coord| Point::from([coord]));
 

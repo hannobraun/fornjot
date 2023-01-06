@@ -139,14 +139,32 @@ impl Shape for fj::Sketch {
                         fj::SketchSegmentRoute::Direct => (),
                         fj::SketchSegmentRoute::Arc { angle } => {
                             use std::f64::consts::PI;
-                            let arc_circle_data = fj_math::ArcCircleData::from_endpoints_and_angle(start_point, segment.endpoint, fj_math::Scalar::from_f64(angle.rad()));
-                            for circle_minmax_angle in [0., PI/2., PI, 3.*PI/2.] {
-                                let mm_angle = fj_math::Scalar::from_f64(circle_minmax_angle);
-                                if arc_circle_data.start_angle < mm_angle && mm_angle < arc_circle_data.end_angle {
-                                    points.push(arc_circle_data.center + [arc_circle_data.radius * circle_minmax_angle.cos(), arc_circle_data.radius * circle_minmax_angle.sin()]);
+                            let arc = fj_math::Arc::from_endpoints_and_angle(
+                                start_point,
+                                segment.endpoint,
+                                fj_math::Scalar::from_f64(angle.rad()),
+                            );
+                            for circle_minmax_angle in
+                                [0., PI / 2., PI, 3. * PI / 2.]
+                            {
+                                let mm_angle = fj_math::Scalar::from_f64(
+                                    circle_minmax_angle,
+                                );
+                                if arc.start_angle < mm_angle
+                                    && mm_angle < arc.end_angle
+                                {
+                                    points.push(
+                                        arc.center
+                                            + [
+                                                arc.radius
+                                                    * circle_minmax_angle.cos(),
+                                                arc.radius
+                                                    * circle_minmax_angle.sin(),
+                                            ],
+                                    );
                                 }
                             }
-                        },
+                        }
                     }
                     points.push(Point::from(segment.endpoint));
                     start_point = segment.endpoint;

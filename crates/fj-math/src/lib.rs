@@ -38,6 +38,7 @@
 pub mod robust;
 
 mod aabb;
+mod arc;
 mod circle;
 mod coordinates;
 mod line;
@@ -52,7 +53,8 @@ mod vector;
 
 pub use self::{
     aabb::Aabb,
-    circle::{ArcCircleData, Circle},
+    arc::Arc,
+    circle::Circle,
     coordinates::{Uv, Xyz, T},
     line::Line,
     plane::Plane,
