@@ -95,7 +95,7 @@ pub enum HalfEdgeValidationError {
 
     /// [`HalfEdge`]'s vertices are coincident
     #[error(
-        "Vertices on curve are coincident\n\
+        "Vertices of `HalfEdge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
         - Position of front vertex: {front_position:?}"
     )]
