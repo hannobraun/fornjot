@@ -25,6 +25,10 @@ pub trait HalfEdgeBuilder {
 
     /// Update partial half-edge to be an arc, spanning the given angle in
     /// radians
+    ///
+    /// # Panics
+    ///
+    /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
     fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>);
 
     /// Update partial half-edge to be a line segment, from the given points
@@ -86,7 +90,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
-            panic!("arc angle must be in the range (-360, 360)");
+            panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
