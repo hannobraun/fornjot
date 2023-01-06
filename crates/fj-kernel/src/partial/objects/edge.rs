@@ -82,7 +82,6 @@ impl PartialObject for PartialHalfEdge {
 impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = Partial::<Curve>::new();
-
         let vertices = array::from_fn(|_| {
             Partial::from_partial(PartialVertex {
                 curve: curve.clone(),
