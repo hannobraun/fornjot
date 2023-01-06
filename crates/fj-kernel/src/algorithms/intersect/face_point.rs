@@ -116,7 +116,6 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
 }
 
 /// The intersection between a face and a point
-#[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum FacePointIntersection {
     /// The point is inside of the face
