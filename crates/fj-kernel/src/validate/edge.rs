@@ -51,7 +51,8 @@ pub enum HalfEdgeValidationError {
     #[error(
         "`HalfEdge` vertices are not defined on the same `Curve`\n\
         - `Curve` of back vertex: {back_curve:#?}\n\
-        - `Curve` of front vertex: {front_curve:#?}"
+        - `Curve` of front vertex: {front_curve:#?}\n\
+        - `HalfEdge`: {half_edge:#?}"
     )]
     CurveMismatch {
         /// The curve of the [`HalfEdge`]'s back vertex
@@ -59,6 +60,9 @@ pub enum HalfEdgeValidationError {
 
         /// The curve of the [`HalfEdge`]'s front vertex
         front_curve: Handle<Curve>,
+
+        /// The half-edge
+        half_edge: HalfEdge,
     },
 
     /// [`HalfEdge`]'s [`GlobalCurve`]s do not match
@@ -66,7 +70,8 @@ pub enum HalfEdgeValidationError {
         "Global form of `HalfEdge`'s `Curve` does not match `GlobalCurve` of \n\
         the `HalfEdge`'s `GlobalEdge`\n\
         - `GlobalCurve` from `Curve`: {global_curve_from_curve:#?}\n\
-        - `GlobalCurve` from `GlobalEdge`: {global_curve_from_global_form:#?}",
+        - `GlobalCurve` from `GlobalEdge`: {global_curve_from_global_form:#?}\n\
+        - `HalfEdge`: {half_edge:#?}",
     )]
     GlobalCurveMismatch {
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s [`Curve`]
@@ -74,6 +79,9 @@ pub enum HalfEdgeValidationError {
 
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
         global_curve_from_global_form: Handle<GlobalCurve>,
+
+        /// The half-edge
+        half_edge: HalfEdge,
     },
 
     /// [`HalfEdge`]'s [`GlobalVertex`] objects do not match
@@ -83,7 +91,8 @@ pub enum HalfEdgeValidationError {
         - `GlobalVertex` objects from `Vertex` objects: \
             {global_vertices_from_vertices:#?}\n\
         - `GlobalVertex` objects from `GlobalEdge`: \
-            {global_vertices_from_global_form:#?}"
+            {global_vertices_from_global_form:#?}\n\
+        - `HalfEdge`: {half_edge:#?}"
     )]
     GlobalVertexMismatch {
         /// The [`GlobalVertex`] from the [`HalfEdge`]'s vertices
@@ -91,13 +100,17 @@ pub enum HalfEdgeValidationError {
 
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
         global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
+
+        /// The half-edge
+        half_edge: HalfEdge,
     },
 
     /// [`HalfEdge`]'s vertices are coincident
     #[error(
         "Vertices of `HalfEdge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
-        - Position of front vertex: {front_position:?}"
+        - Position of front vertex: {front_position:?}\n\
+        - `HalfEdge`: {half_edge:#?}"
     )]
     VerticesAreCoincident {
         /// The position of the back vertex
@@ -108,6 +121,9 @@ pub enum HalfEdgeValidationError {
 
         /// The distance between the two vertices
         distance: Scalar,
+
+        /// The half-edge
+        half_edge: HalfEdge,
     },
 }
 
@@ -120,6 +136,7 @@ impl HalfEdgeValidationError {
             return Err(Self::CurveMismatch {
                 back_curve: back_curve.clone(),
                 front_curve: front_curve.clone(),
+                half_edge: half_edge.clone(),
             });
         }
 
@@ -135,6 +152,7 @@ impl HalfEdgeValidationError {
                 global_curve_from_curve: global_curve_from_curve.clone(),
                 global_curve_from_global_form: global_curve_from_global_form
                     .clone(),
+                half_edge: half_edge.clone(),
             });
         }
 
@@ -168,6 +186,7 @@ impl HalfEdgeValidationError {
             return Err(Self::GlobalVertexMismatch {
                 global_vertices_from_vertices,
                 global_vertices_from_global_form,
+                half_edge: half_edge.clone(),
             });
         }
 
@@ -188,6 +207,7 @@ impl HalfEdgeValidationError {
                 back_position,
                 front_position,
                 distance,
+                half_edge: half_edge.clone(),
             });
         }
 
