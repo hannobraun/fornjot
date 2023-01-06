@@ -192,7 +192,7 @@ mod tests {
     };
 
     #[test]
-    fn vertex_surface_mismatch() {
+    fn vertex_surface_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
@@ -220,12 +220,14 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn vertex_position_mismatch() {
+    fn vertex_position_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -255,12 +257,14 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn surface_vertex_position_mismatch() {
+    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = PartialSurfaceVertex {
@@ -275,7 +279,9 @@ mod tests {
             GlobalVertex::new([1., 0., 0.]).insert(&mut services.objects),
         );
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 }

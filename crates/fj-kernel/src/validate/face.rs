@@ -114,7 +114,7 @@ mod tests {
     };
 
     #[test]
-    fn face_surface_mismatch() {
+    fn face_surface_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
@@ -149,12 +149,14 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 
     #[test]
-    fn face_invalid_interior_winding() {
+    fn face_invalid_interior_winding() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
@@ -184,7 +186,9 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        assert!(valid.validate().is_ok());
+        valid.validate()?;
         assert!(invalid.validate().is_err());
+
+        Ok(())
     }
 }

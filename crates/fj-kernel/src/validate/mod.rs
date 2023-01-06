@@ -73,7 +73,6 @@ impl Default for ValidationConfig {
 }
 
 /// An error that can occur during a validation
-#[allow(clippy::large_enum_variant)]
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
     /// `Cycle` validation error
