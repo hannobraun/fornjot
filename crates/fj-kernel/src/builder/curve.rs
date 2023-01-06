@@ -13,6 +13,13 @@ pub trait CurveBuilder {
     /// Update partial curve to be a circle, from the provided radius
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
 
+    /// Update partial curve to be a circle, from the provided radius
+    fn update_as_circle_from_center_and_radius(
+        &mut self,
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+    );
+
     /// Update partial curve to be a line, from the provided points
     fn update_as_line_from_points(&mut self, points: [impl Into<Point<2>>; 2]);
 }
@@ -34,6 +41,15 @@ impl CurveBuilder for PartialCurve {
 
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
         self.path = Some(SurfacePath::circle_from_radius(radius));
+    }
+
+    fn update_as_circle_from_center_and_radius(
+        &mut self,
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+    ) {
+        self.path =
+            Some(SurfacePath::circle_from_center_and_radius(center, radius));
     }
 
     fn update_as_line_from_points(&mut self, points: [impl Into<Point<2>>; 2]) {

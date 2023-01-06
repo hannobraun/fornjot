@@ -1,4 +1,4 @@
-use crate::{abi::ffi_safe, Shape};
+use crate::{abi::ffi_safe, Angle, Shape};
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug, PartialEq)]
@@ -101,7 +101,15 @@ pub struct Sketch {
 }
 
 impl Sketch {
-    /// Create a sketch from a bunch of points
+    /// Create a sketch made of sketch segments
+    pub fn from_segments(segments: Vec<SketchSegment>) -> Self {
+        Self {
+            chain: Chain::PolyChain(PolyChain::from_segments(segments)),
+            color: [255, 0, 0, 255],
+        }
+    }
+
+    /// Create a sketch made of straight lines from a bunch of points
     pub fn from_points(points: Vec<[f64; 2]>) -> Self {
         Self {
             chain: Chain::PolyChain(PolyChain::from_points(points)),
@@ -188,13 +196,23 @@ pub struct PolyChain {
 }
 
 impl PolyChain {
+    /// Construct an instance from a list of segments
+    pub fn from_segments(segments: Vec<SketchSegment>) -> Self {
+        Self {
+            segments: segments.into(),
+        }
+    }
+
     /// Construct an instance from a list of points
     pub fn from_points(points: Vec<[f64; 2]>) -> Self {
-        let points = points
+        let segments = points
             .into_iter()
-            .map(|point| SketchSegment::LineTo { point })
+            .map(|endpoint| SketchSegment {
+                endpoint,
+                route: SketchSegmentRoute::Direct,
+            })
             .collect();
-        Self { segments: points }
+        Self::from_segments(segments)
     }
 
     /// Return the points that define the polygonal chain
@@ -209,10 +227,23 @@ impl PolyChain {
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[repr(C)]
-pub enum SketchSegment {
-    /// A line to a point
-    LineTo {
-        /// The destination point of the line
-        point: [f64; 2],
+pub struct SketchSegment {
+    /// The destination point of the segment
+    pub endpoint: [f64; 2],
+    /// The path taken by the segment to get to the endpoint
+    pub route: SketchSegmentRoute,
+}
+
+/// Possible paths that a [`SketchSegment`] can take to the next endpoint
+#[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[repr(C)]
+pub enum SketchSegmentRoute {
+    /// A straight line to the endpoint
+    Direct,
+    /// An arc to the endpoint with a given angle
+    Arc {
+        /// The angle of the arc
+        angle: Angle,
     },
 }

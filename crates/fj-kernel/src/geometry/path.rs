@@ -37,9 +37,15 @@ pub enum SurfacePath {
 impl SurfacePath {
     /// Build a circle from the given radius
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
-        let radius = radius.into();
+        Self::circle_from_center_and_radius(Point::origin(), radius)
+    }
 
-        Self::Circle(Circle::from_center_and_radius(Point::origin(), radius))
+    /// Build a circle from the given radius
+    pub fn circle_from_center_and_radius(
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+    ) -> Self {
+        Self::Circle(Circle::from_center_and_radius(center, radius))
     }
 
     /// Construct a line from two points
