@@ -59,12 +59,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
         let mut curve = self.curve();
-        curve.write().update_as_circle_from_radius(radius);
-
-        let path = curve
-            .read()
-            .path
-            .expect("Expected path that was just created");
+        let path = curve.write().update_as_circle_from_radius(radius);
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -108,14 +103,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         );
 
         let mut curve = self.curve();
-        curve
+        let path = curve
             .write()
             .update_as_circle_from_center_and_radius(arc.center, arc.radius);
-
-        let path = curve
-            .read()
-            .path
-            .expect("Expected path that was just created");
 
         let [a_curve, b_curve] = if arc.flipped_construction {
             [arc.end_angle, arc.start_angle]
