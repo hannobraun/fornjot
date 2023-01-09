@@ -122,7 +122,7 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon_from_points([
+            face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
                 [3., 0.],
                 [0., 3.],
@@ -164,7 +164,7 @@ mod tests {
         let valid = {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon_from_points([
+            face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
                 [3., 0.],
                 [0., 3.],

@@ -150,7 +150,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, FaceBuilder},
+        builder::{CurveBuilder, CycleBuilder, FaceBuilder},
         partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
     };
@@ -188,7 +188,9 @@ mod tests {
         let face = {
             let mut face = PartialFace::default();
             face.exterior.write().surface = surface;
-            face.update_exterior_as_polygon_from_points(exterior);
+            face.exterior
+                .write()
+                .update_as_polygon_from_points(exterior);
             face.add_interior_polygon_from_points(interior);
 
             face.build(&mut services.objects)

@@ -87,7 +87,7 @@ mod tests {
 
     use crate::{
         algorithms::{reverse::Reverse, transform::TransformObject},
-        builder::{FaceBuilder, HalfEdgeBuilder, SketchBuilder},
+        builder::{CycleBuilder, HalfEdgeBuilder, SketchBuilder},
         insert::Insert,
         partial::{
             Partial, PartialFace, PartialHalfEdge, PartialObject, PartialSketch,
@@ -116,7 +116,10 @@ mod tests {
 
         let mut bottom = PartialFace::default();
         bottom.exterior.write().surface = Partial::from(surface.clone());
-        bottom.update_exterior_as_polygon_from_points(TRIANGLE);
+        bottom
+            .exterior
+            .write()
+            .update_as_polygon_from_points(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -124,7 +127,7 @@ mod tests {
         let mut top = PartialFace::default();
         top.exterior.write().surface =
             Partial::from(surface.translate(UP, &mut services.objects));
-        top.update_exterior_as_polygon_from_points(TRIANGLE);
+        top.exterior.write().update_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -169,14 +172,17 @@ mod tests {
         bottom.exterior.write().surface = Partial::from(
             surface.clone().translate(DOWN, &mut services.objects),
         );
-        bottom.update_exterior_as_polygon_from_points(TRIANGLE);
+        bottom
+            .exterior
+            .write()
+            .update_as_polygon_from_points(TRIANGLE);
         let bottom = bottom
             .build(&mut services.objects)
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
         top.exterior.write().surface = Partial::from(surface);
-        top.update_exterior_as_polygon_from_points(TRIANGLE);
+        top.exterior.write().update_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
             .insert(&mut services.objects);

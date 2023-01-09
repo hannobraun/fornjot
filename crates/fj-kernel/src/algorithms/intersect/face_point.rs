@@ -135,7 +135,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::{face_point::FacePointIntersection, Intersect},
-        builder::FaceBuilder,
+        builder::CycleBuilder,
         insert::Insert,
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
@@ -148,7 +148,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [1., 1.],
             [0., 2.],
@@ -169,7 +169,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [2., 1.],
             [0., 2.],
@@ -193,7 +193,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [4., 2.],
             [0., 4.],
             [0., 0.],
@@ -217,7 +217,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [2., 1.],
             [3., 0.],
@@ -242,7 +242,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [2., 1.],
             [3., 1.],
@@ -267,7 +267,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [2., 1.],
             [3., 1.],
@@ -293,7 +293,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [2., 0.],
             [0., 1.],
@@ -327,7 +327,7 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([
+        face.exterior.write().update_as_polygon_from_points([
             [0., 0.],
             [1., 0.],
             [0., 1.],
