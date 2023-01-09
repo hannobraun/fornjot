@@ -24,6 +24,7 @@ impl FaceBuilder for PartialFace {
         };
         cycle.update_as_polygon_from_points(points);
 
-        self.interiors.push(Partial::from_partial(cycle));
+        let cycle = Partial::from_partial(cycle);
+        self.interiors.push(cycle);
     }
 }
