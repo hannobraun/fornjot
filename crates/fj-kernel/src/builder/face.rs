@@ -9,9 +9,6 @@ use super::CycleBuilder;
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
-    /// Update the face exterior as a polygon
-    fn update_exterior_as_polygon(&mut self);
-
     /// Update the face exterior as a triangle, from 3D points
     ///
     /// Uses the three points to infer a plane that is used as the surface.
@@ -35,10 +32,6 @@ pub trait FaceBuilder {
 }
 
 impl FaceBuilder for PartialFace {
-    fn update_exterior_as_polygon(&mut self) {
-        self.exterior.write().update_as_polygon()
-    }
-
     fn update_exterior_as_triangle_from_global_points(
         &mut self,
         points_global: [impl Into<Point<3>>; 3],
