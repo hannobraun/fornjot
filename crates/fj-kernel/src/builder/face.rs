@@ -11,14 +11,11 @@ pub trait FaceBuilder {
 
 impl FaceBuilder for PartialFace {
     fn add_interior(&mut self) -> Partial<Cycle> {
-        let cycle = PartialCycle {
+        let cycle = Partial::from_partial(PartialCycle {
             surface: self.exterior.read().surface.clone(),
             ..Default::default()
-        };
-
-        let cycle = Partial::from_partial(cycle);
+        });
         self.interiors.push(cycle.clone());
-
         cycle
     }
 }
