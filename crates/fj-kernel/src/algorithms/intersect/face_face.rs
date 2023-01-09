@@ -69,7 +69,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        builder::{CurveBuilder, FaceBuilder},
+        builder::{CurveBuilder, CycleBuilder},
         insert::Insert,
         partial::{Partial, PartialCurve, PartialFace, PartialObject},
         services::Services,
@@ -95,7 +95,7 @@ mod tests {
         .map(|surface| {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon_from_points(points);
+            face.exterior.write().update_as_polygon_from_points(points);
 
             face.build(&mut services.objects)
         });
@@ -124,7 +124,7 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             let mut face = PartialFace::default();
             face.exterior.write().surface = Partial::from(surface);
-            face.update_exterior_as_polygon_from_points(points);
+            face.exterior.write().update_as_polygon_from_points(points);
 
             face.build(&mut services.objects)
         });

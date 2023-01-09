@@ -5,7 +5,7 @@ use crate::{
     partial::{Partial, PartialFace, PartialSketch},
 };
 
-use super::FaceBuilder;
+use super::CycleBuilder;
 
 /// Builder API for [`PartialSketch`]
 pub trait SketchBuilder {
@@ -25,7 +25,7 @@ impl SketchBuilder for PartialSketch {
     ) {
         let mut face = PartialFace::default();
         face.exterior.write().surface = surface.into();
-        face.update_exterior_as_polygon_from_points(points);
+        face.exterior.write().update_as_polygon_from_points(points);
 
         self.faces.extend([Partial::from_partial(face)]);
     }

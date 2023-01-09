@@ -77,7 +77,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::FaceBuilder,
+        builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
         partial::{Partial, PartialFace, PartialObject},
@@ -99,7 +99,9 @@ mod tests {
         let mut face = PartialFace::default();
         face.exterior.write().surface =
             Partial::from(services.objects.surfaces.xy_plane());
-        face.update_exterior_as_polygon_from_points([a, b, c, d]);
+        face.exterior
+            .write()
+            .update_as_polygon_from_points([a, b, c, d]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -136,8 +138,12 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.exterior.write().surface = Partial::from(surface.clone());
-        face.update_exterior_as_polygon_from_points([a, b, c, d]);
-        face.add_interior_polygon_from_points([e, f, g, h]);
+        face.exterior
+            .write()
+            .update_as_polygon_from_points([a, b, c, d]);
+        face.add_interior()
+            .write()
+            .update_as_polygon_from_points([e, f, g, h]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -196,7 +202,9 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace::default();
         face.exterior.write().surface = Partial::from(surface.clone());
-        face.update_exterior_as_polygon_from_points([a, b, c, d, e]);
+        face.exterior
+            .write()
+            .update_as_polygon_from_points([a, b, c, d, e]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
