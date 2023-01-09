@@ -5,7 +5,7 @@ use crate::{
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
-    /// Add an interior polygon, from the provided points
+    /// Add an interior cycle
     fn add_interior(&mut self) -> Partial<Cycle>;
 }
 
