@@ -141,7 +141,9 @@ mod tests {
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d]);
-        face.add_interior_polygon_from_points([e, f, g, h]);
+        face.add_interior()
+            .write()
+            .update_as_polygon_from_points([e, f, g, h]);
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);

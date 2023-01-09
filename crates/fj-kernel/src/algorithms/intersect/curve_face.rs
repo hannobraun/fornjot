@@ -191,7 +191,9 @@ mod tests {
             face.exterior
                 .write()
                 .update_as_polygon_from_points(exterior);
-            face.add_interior_polygon_from_points(interior);
+            face.add_interior()
+                .write()
+                .update_as_polygon_from_points(interior);
 
             face.build(&mut services.objects)
         };
