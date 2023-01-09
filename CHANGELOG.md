@@ -1,5 +1,54 @@
 # Fornjot - Changelog
 
+## v0.31.0 (2023-01-09)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fix model updates freezing GUI; improve loading messages ([#1476]; thank you, [@zthompson47]!)
+- Don't wrap `Angle` by default ([#1478]; thank you, [@antonok-edm]!)
+- Support arcs in sketches ([#1484]; thank you, [@antonok-edm]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Expand and clean up builder API ([#1479], [#1483], [#1485], [#1489])
+- Remove `fj_kernel::iter` ([#1480])
+- Remove `Vertex::global_form` ([#1481])
+- Improve some validation error messages and validation test output ([#1486])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1472], [#1473], [#1474], [#1475], [#1487])
+- Expand and clean up release automation ([#1482])
+
+[#1472]: https://github.com/hannobraun/Fornjot/pull/1472
+[#1473]: https://github.com/hannobraun/Fornjot/pull/1473
+[#1474]: https://github.com/hannobraun/Fornjot/pull/1474
+[#1475]: https://github.com/hannobraun/Fornjot/pull/1475
+[#1476]: https://github.com/hannobraun/Fornjot/pull/1476
+[#1478]: https://github.com/hannobraun/Fornjot/pull/1478
+[#1479]: https://github.com/hannobraun/Fornjot/pull/1479
+[#1480]: https://github.com/hannobraun/Fornjot/pull/1480
+[#1481]: https://github.com/hannobraun/Fornjot/pull/1481
+[#1482]: https://github.com/hannobraun/Fornjot/pull/1482
+[#1483]: https://github.com/hannobraun/Fornjot/pull/1483
+[#1484]: https://github.com/hannobraun/Fornjot/pull/1484
+[#1485]: https://github.com/hannobraun/Fornjot/pull/1485
+[#1486]: https://github.com/hannobraun/Fornjot/pull/1486
+[#1487]: https://github.com/hannobraun/Fornjot/pull/1487
+[#1489]: https://github.com/hannobraun/Fornjot/pull/1489
+
+[@zthompson47]: https://github.com/zthompson47
+[@antonok-edm]: https://github.com/antonok-edm
+
+
 ## v0.30.0 (2023-01-02)
 
 ### End-user improvements
