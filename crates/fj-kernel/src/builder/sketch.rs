@@ -27,6 +27,7 @@ impl SketchBuilder for PartialSketch {
         face.exterior.write().surface = surface.into();
         face.exterior.write().update_as_polygon_from_points(points);
 
-        self.faces.extend([Partial::from_partial(face)]);
+        let face = Partial::from_partial(face);
+        self.faces.extend([face]);
     }
 }
