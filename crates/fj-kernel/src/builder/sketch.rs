@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::Surface,
+    objects::{Face, Surface},
     partial::{Partial, PartialFace, PartialSketch},
 };
 
@@ -14,7 +14,7 @@ pub trait SketchBuilder {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    );
+    ) -> Partial<Face>;
 }
 
 impl SketchBuilder for PartialSketch {
@@ -22,12 +22,14 @@ impl SketchBuilder for PartialSketch {
         &mut self,
         surface: impl Into<Partial<Surface>>,
         points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) {
+    ) -> Partial<Face> {
         let mut face = PartialFace::default();
         face.exterior.write().surface = surface.into();
         face.exterior.write().update_as_polygon_from_points(points);
 
         let face = Partial::from_partial(face);
-        self.faces.extend([face]);
+        self.faces.extend([face.clone()]);
+
+        face
     }
 }
