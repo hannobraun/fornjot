@@ -4,5 +4,5 @@
     "rust-analyzer.diagnostics.disabled": [
         "mismatched-arg-count"
     ],
-    "rust-analyzer.checkOnSave.command": "clippy"
+    "rust-analyzer.check.command": "clippy"
 }
