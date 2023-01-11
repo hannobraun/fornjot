@@ -107,8 +107,19 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut sketch = PartialSketch::default();
-        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
+        let sketch = {
+            let mut sketch = PartialSketch::default();
+
+            let mut face = sketch.add_face();
+            face.write().exterior.write().surface =
+                Partial::from(surface.clone());
+            face.write()
+                .exterior
+                .write()
+                .update_as_polygon_from_points(TRIANGLE);
+
+            sketch
+        };
         let solid = sketch
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -161,8 +172,19 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut sketch = PartialSketch::default();
-        sketch.add_polygon_from_points(surface.clone(), TRIANGLE);
+        let sketch = {
+            let mut sketch = PartialSketch::default();
+
+            let mut face = sketch.add_face();
+            face.write().exterior.write().surface =
+                Partial::from(surface.clone());
+            face.write()
+                .exterior
+                .write()
+                .update_as_polygon_from_points(TRIANGLE);
+
+            sketch
+        };
         let solid = sketch
             .build(&mut services.objects)
             .insert(&mut services.objects)
