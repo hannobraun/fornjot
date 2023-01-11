@@ -65,13 +65,30 @@ impl<T> ObjectArgument<T> for Vec<T> {
     }
 }
 
-impl<T, const N: usize> ObjectArgument<T> for [T; N] {
-    type SameSize<R> = [R; N];
+macro_rules! impl_object_argument_for_arrays {
+    ($($len:expr;)*) => {
+        $(
+            impl<T> ObjectArgument<T> for [T; $len] {
+                type SameSize<R> = [R; $len];
 
-    fn map<F, R>(self, f: F) -> Self::SameSize<R>
-    where
-        F: FnMut(T) -> R,
-    {
-        self.map(f)
-    }
+                fn map<F, R>(self, f: F) -> Self::SameSize<R>
+                where
+                    F: FnMut(T) -> R,
+                {
+                    self.map(f)
+                }
+            }
+        )*
+    };
 }
+
+impl_object_argument_for_arrays!(
+    0;
+    1;
+    2;
+    3;
+    4;
+    5;
+    6;
+    7;
+);
