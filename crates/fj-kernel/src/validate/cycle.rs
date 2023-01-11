@@ -12,11 +12,17 @@ impl Validate for Cycle {
         &self,
         _: &ValidationConfig,
     ) -> Result<(), ValidationError> {
-        CycleValidationError::check_half_edge_connections(self)?;
+        let mut errors = Vec::new();
+
+        CycleValidationError::check_half_edge_connections(self, &mut errors);
 
         // We don't need to check that all half-edges are defined in the same
         // surface. We already check that they are connected by identical
         // surface vertices, so that would be redundant.
+
+        if let Some(error) = errors.into_iter().next() {
+            return Err(error);
+        }
 
         Ok(())
     }
@@ -41,7 +47,10 @@ pub enum CycleValidationError {
 }
 
 impl CycleValidationError {
-    fn check_half_edge_connections(cycle: &Cycle) -> Result<(), Self> {
+    fn check_half_edge_connections(
+        cycle: &Cycle,
+        errors: &mut Vec<ValidationError>,
+    ) {
         for (a, b) in cycle.half_edges().circular_tuple_windows() {
             let [_, prev] = a.vertices();
             let [next, _] = b.vertices();
@@ -50,14 +59,15 @@ impl CycleValidationError {
             let next = next.surface_form();
 
             if prev.id() != next.id() {
-                return Err(Self::HalfEdgeConnection {
-                    prev: prev.clone(),
-                    next: next.clone(),
-                });
+                errors.push(
+                    Self::HalfEdgeConnection {
+                        prev: prev.clone(),
+                        next: next.clone(),
+                    }
+                    .into(),
+                );
             }
         }
-
-        Ok(())
     }
 }
 
