@@ -42,6 +42,9 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     /// is generic.
     type SameSize<R>;
 
+    /// A return value that has one more element thatn the argument
+    type SizePlusOne<R>;
+
     /// Create a return value by mapping the implementing type
     fn map<F, R>(self, f: F) -> Self::SameSize<R>
     where
@@ -50,6 +53,7 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
 
 impl<T> ObjectArgument<T> for Vec<T> {
     type SameSize<R> = Vec<R>;
+    type SizePlusOne<R> = Vec<R>;
 
     fn map<F, R>(self, mut f: F) -> Self::SameSize<R>
     where
@@ -66,10 +70,11 @@ impl<T> ObjectArgument<T> for Vec<T> {
 }
 
 macro_rules! impl_object_argument_for_arrays {
-    ($($len:expr;)*) => {
+    ($($len:expr, $len_plus_one:expr;)*) => {
         $(
             impl<T> ObjectArgument<T> for [T; $len] {
                 type SameSize<R> = [R; $len];
+                type SizePlusOne<R> = [R; $len_plus_one];
 
                 fn map<F, R>(self, f: F) -> Self::SameSize<R>
                 where
@@ -83,12 +88,12 @@ macro_rules! impl_object_argument_for_arrays {
 }
 
 impl_object_argument_for_arrays!(
-    0;
-    1;
-    2;
-    3;
-    4;
-    5;
-    6;
-    7;
+    0, 1;
+    1, 2;
+    2, 3;
+    3, 4;
+    4, 5;
+    5, 6;
+    6, 7;
+    7, 8;
 );
