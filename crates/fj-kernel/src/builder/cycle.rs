@@ -6,7 +6,7 @@ use crate::{
     partial::{Partial, PartialCycle},
 };
 
-use super::HalfEdgeBuilder;
+use super::{HalfEdgeBuilder, ObjectArgument};
 
 /// Builder API for [`PartialCycle`]
 pub trait CycleBuilder {
@@ -35,10 +35,13 @@ pub trait CycleBuilder {
     ) -> Partial<HalfEdge>;
 
     /// Update cycle as a polygon from the provided points
-    fn update_as_polygon_from_points(
+    fn update_as_polygon_from_points<O, P>(
         &mut self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Vec<Partial<HalfEdge>>;
+        points: O,
+    ) -> O::ReturnValue<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<P>,
+        P: Into<Point<2>>;
 
     /// Update cycle as a polygon
     ///
@@ -124,19 +127,17 @@ impl CycleBuilder for PartialCycle {
         half_edge
     }
 
-    fn update_as_polygon_from_points(
+    fn update_as_polygon_from_points<O, P>(
         &mut self,
-        points: impl IntoIterator<Item = impl Into<Point<2>>>,
-    ) -> Vec<Partial<HalfEdge>> {
-        let mut half_edges = Vec::new();
-
-        for point in points {
-            let half_edge = self.add_half_edge_from_point_to_start(point);
-            half_edges.push(half_edge);
-        }
-
+        points: O,
+    ) -> O::ReturnValue<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<P>,
+        P: Into<Point<2>>,
+    {
+        let half_edges =
+            points.map(|point| self.add_half_edge_from_point_to_start(point));
         self.update_as_polygon();
-
         half_edges
     }
 
@@ -154,7 +155,8 @@ impl CycleBuilder for PartialCycle {
             .surface
             .write()
             .update_as_plane_from_points(points_global);
-        let mut edges = self.update_as_polygon_from_points(points_surface);
+        let mut edges =
+            self.update_as_polygon_from_points(points_surface.to_vec());
 
         // None of the following should panic, as we just created a polygon from
         // three points, so we should have exactly three edges.
