@@ -30,7 +30,14 @@ impl Validate for SurfaceVertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), ValidationError> {
-        SurfaceVertexValidationError::check_position(self, config)?;
+        let mut errors = Vec::new();
+
+        SurfaceVertexValidationError::check_position(self, config, &mut errors);
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
+
         Ok(())
     }
 }
@@ -160,7 +167,8 @@ impl SurfaceVertexValidationError {
     fn check_position(
         surface_vertex: &SurfaceVertex,
         config: &ValidationConfig,
-    ) -> Result<(), Self> {
+        errors: &mut Vec<ValidationError>,
+    ) {
         let surface_position_as_global = surface_vertex
             .surface()
             .geometry()
@@ -170,15 +178,16 @@ impl SurfaceVertexValidationError {
         let distance = surface_position_as_global.distance_to(&global_position);
 
         if distance > config.identical_max_distance {
-            return Err(Self::PositionMismatch {
-                surface_vertex: surface_vertex.clone(),
-                global_vertex: surface_vertex.global_form().clone_object(),
-                surface_position_as_global,
-                distance,
-            });
+            errors.push(
+                Self::PositionMismatch {
+                    surface_vertex: surface_vertex.clone(),
+                    global_vertex: surface_vertex.global_form().clone_object(),
+                    surface_position_as_global,
+                    distance,
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 }
 
