@@ -12,8 +12,15 @@ impl Validate for Face {
         &self,
         _: &ValidationConfig,
     ) -> Result<(), ValidationError> {
-        FaceValidationError::check_surface_identity(self)?;
-        FaceValidationError::check_interior_winding(self)?;
+        let mut errors = Vec::new();
+
+        FaceValidationError::check_surface_identity(self, &mut errors);
+        FaceValidationError::check_interior_winding(self, &mut errors);
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
+
         Ok(())
     }
 }
@@ -59,38 +66,40 @@ pub enum FaceValidationError {
 }
 
 impl FaceValidationError {
-    fn check_surface_identity(face: &Face) -> Result<(), Self> {
+    fn check_surface_identity(face: &Face, errors: &mut Vec<ValidationError>) {
         let surface = face.surface();
 
         for interior in face.interiors() {
             if surface.id() != interior.surface().id() {
-                return Err(Self::SurfaceMismatch {
-                    surface: surface.clone(),
-                    interior: interior.clone(),
-                    face: face.clone(),
-                });
+                errors.push(
+                    Self::SurfaceMismatch {
+                        surface: surface.clone(),
+                        interior: interior.clone(),
+                        face: face.clone(),
+                    }
+                    .into(),
+                );
             }
         }
-
-        Ok(())
     }
 
-    fn check_interior_winding(face: &Face) -> Result<(), Self> {
+    fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
         let exterior_winding = face.exterior().winding();
 
         for interior in face.interiors() {
             let interior_winding = interior.winding();
 
             if exterior_winding == interior_winding {
-                return Err(Self::InvalidInteriorWinding {
-                    exterior_winding,
-                    interior_winding,
-                    face: face.clone(),
-                });
+                errors.push(
+                    Self::InvalidInteriorWinding {
+                        exterior_winding,
+                        interior_winding,
+                        face: face.clone(),
+                    }
+                    .into(),
+                );
             }
         }
-
-        Ok(())
     }
 }
 
