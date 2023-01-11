@@ -23,6 +23,19 @@ pub trait FaceBuilder {
     where
         O: ObjectArgument<Partial<HalfEdge>>;
 
+    /// Connect the face to another face at the provided half-edges
+    ///
+    /// Assumes that the provided half-edges, once translated into local
+    /// equivalents of this face, form a cycle.
+    ///
+    /// Returns the local equivalents of the provided half-edges.
+    fn connect_to_closed_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SameSize<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>;
+
     /// Add an interior cycle
     fn add_interior(&mut self) -> Partial<Cycle>;
 }
@@ -48,6 +61,20 @@ impl FaceBuilder for PartialFace {
             let mut this = half_edges.pop_front().expect(
                 "Pushed correct number of half-edges; should be able to pop",
             );
+            this.write().update_from_other_edge(&other);
+            this
+        })
+    }
+
+    fn connect_to_closed_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SameSize<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>,
+    {
+        edges.map(|other| {
+            let mut this = self.exterior.write().add_half_edge();
             this.write().update_from_other_edge(&other);
             this
         })
