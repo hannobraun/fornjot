@@ -11,6 +11,8 @@ mod solid;
 mod surface;
 mod vertex;
 
+use std::array;
+
 pub use self::{
     curve::CurveBuilder,
     cycle::CycleBuilder,
@@ -49,6 +51,11 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     fn map<F, R>(self, f: F) -> Self::SameSize<R>
     where
         F: FnMut(T) -> R;
+
+    /// Create a return value with one more element
+    fn map_plus_one<F, R>(self, item: R, f: F) -> Self::SizePlusOne<R>
+    where
+        F: FnMut(T) -> R;
 }
 
 impl<T> ObjectArgument<T> for Vec<T> {
@@ -67,6 +74,15 @@ impl<T> ObjectArgument<T> for Vec<T> {
 
         ret
     }
+
+    fn map_plus_one<F, R>(self, item: R, f: F) -> Self::SizePlusOne<R>
+    where
+        F: FnMut(T) -> R,
+    {
+        let mut ret = self.map(f);
+        ret.push(item);
+        ret
+    }
 }
 
 macro_rules! impl_object_argument_for_arrays {
@@ -81,6 +97,21 @@ macro_rules! impl_object_argument_for_arrays {
                     F: FnMut(T) -> R,
                 {
                     self.map(f)
+                }
+
+                fn map_plus_one<F, R>(self, item: R, mut f: F)
+                    -> Self::SizePlusOne<R>
+                where
+                    F: FnMut(T) -> R,
+                {
+                    let mut tmp = array::from_fn(|_| None);
+                    for (i, item) in self.into_iter().enumerate() {
+                        tmp[i] = Some(f(item));
+                    }
+
+                    tmp[tmp.len() - 1] = Some(item);
+
+                    tmp.map(Option::unwrap)
                 }
             }
         )*
