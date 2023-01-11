@@ -5,7 +5,7 @@ use crate::{
 
 /// Builder API for [`PartialSketch`]
 pub trait SketchBuilder {
-    /// Add a polygon to the sketch, created from the provided points
+    /// Add a face to the sketch
     fn add_face(&mut self) -> Partial<Face>;
 }
 
