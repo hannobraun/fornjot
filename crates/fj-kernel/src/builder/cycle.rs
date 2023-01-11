@@ -155,16 +155,6 @@ impl CycleBuilder for PartialCycle {
             .surface
             .write()
             .update_as_plane_from_points(points_global);
-        let mut edges =
-            self.update_as_polygon_from_points(points_surface.to_vec());
-
-        // None of the following should panic, as we just created a polygon from
-        // three points, so we should have exactly three edges.
-        let c = edges.pop().unwrap();
-        let b = edges.pop().unwrap();
-        let a = edges.pop().unwrap();
-        assert!(edges.pop().is_none());
-
-        [a, b, c]
+        self.update_as_polygon_from_points(points_surface)
     }
 }
