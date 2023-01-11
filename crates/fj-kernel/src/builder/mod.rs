@@ -40,18 +40,18 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     /// The return value has the same length as the implementing type, but it is
     /// not necessarily of the same type. For this reason, this associated type
     /// is generic.
-    type ReturnValue<R>;
+    type SameSize<R>;
 
     /// Create a return value by mapping the implementing type
-    fn map<F, R>(self, f: F) -> Self::ReturnValue<R>
+    fn map<F, R>(self, f: F) -> Self::SameSize<R>
     where
         F: FnMut(T) -> R;
 }
 
 impl<T> ObjectArgument<T> for Vec<T> {
-    type ReturnValue<R> = Vec<R>;
+    type SameSize<R> = Vec<R>;
 
-    fn map<F, R>(self, mut f: F) -> Self::ReturnValue<R>
+    fn map<F, R>(self, mut f: F) -> Self::SameSize<R>
     where
         F: FnMut(T) -> R,
     {
@@ -66,9 +66,9 @@ impl<T> ObjectArgument<T> for Vec<T> {
 }
 
 impl<T, const N: usize> ObjectArgument<T> for [T; N] {
-    type ReturnValue<R> = [R; N];
+    type SameSize<R> = [R; N];
 
-    fn map<F, R>(self, f: F) -> Self::ReturnValue<R>
+    fn map<F, R>(self, f: F) -> Self::SameSize<R>
     where
         F: FnMut(T) -> R,
     {

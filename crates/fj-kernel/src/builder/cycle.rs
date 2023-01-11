@@ -38,7 +38,7 @@ pub trait CycleBuilder {
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
-    ) -> O::ReturnValue<Partial<HalfEdge>>
+    ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Into<Point<2>>;
@@ -130,7 +130,7 @@ impl CycleBuilder for PartialCycle {
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
-    ) -> O::ReturnValue<Partial<HalfEdge>>
+    ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Into<Point<2>>,
