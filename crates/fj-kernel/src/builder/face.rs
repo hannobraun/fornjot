@@ -1,11 +1,13 @@
 use std::collections::VecDeque;
 
+use fj_interop::ext::ArrayExt;
+
 use crate::{
-    objects::{Cycle, HalfEdge},
+    objects::{Cycle, HalfEdge, Surface},
     partial::{Partial, PartialCycle, PartialFace},
 };
 
-use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument};
+use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument, SurfaceBuilder};
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
@@ -38,6 +40,18 @@ pub trait FaceBuilder {
 
     /// Add an interior cycle
     fn add_interior(&mut self) -> Partial<Cycle>;
+
+    /// Update the face's surface as a plane
+    ///
+    /// The plane geometry is inferred from three of the face's vertices. Also
+    /// infers any undefined `SurfaceVertex` positions.
+    ///
+    /// # Panics
+    ///
+    /// Assumes that the face exterior has exactly three vertices to use. Panics
+    /// otherwise. This is a temporary limitation, not a fundamental one. It
+    /// could be overcome with some more work.
+    fn update_surface_as_plane(&mut self) -> Partial<Surface>;
 }
 
 impl FaceBuilder for PartialFace {
@@ -87,5 +101,46 @@ impl FaceBuilder for PartialFace {
         });
         self.interiors.push(cycle.clone());
         cycle
+    }
+
+    fn update_surface_as_plane(&mut self) -> Partial<Surface> {
+        let mut exterior = self.exterior.write();
+        let mut vertices = {
+            exterior.half_edges.iter().map(|half_edge| {
+                half_edge.read().back().read().surface_form.clone()
+            })
+        };
+
+        let vertices = {
+            let array = [
+                vertices.next().expect("Expected exactly three vertices"),
+                vertices.next().expect("Expected exactly three vertices"),
+                vertices.next().expect("Expected exactly three vertices"),
+            ];
+
+            assert!(
+                vertices.next().is_none(),
+                "Expected exactly three vertices"
+            );
+
+            array
+        };
+        let points = vertices.each_ref_ext().map(|vertex| {
+            vertex
+                .read()
+                .global_form
+                .read()
+                .position
+                .expect("Need global position to infer plane")
+        });
+
+        let points_surface =
+            exterior.surface.write().update_as_plane_from_points(points);
+
+        for (mut surface_vertex, point) in vertices.zip_ext(points_surface) {
+            surface_vertex.write().position = Some(point);
+        }
+
+        exterior.surface.clone()
     }
 }
