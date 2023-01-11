@@ -85,6 +85,10 @@ impl<T> ObjectArgument<T> for Vec<T> {
     }
 }
 
+// This macro implements `ObjectArgument` for a number of array types. This
+// should just be a single implementation, but while const generic expressions
+// are still unstable, this is unfortunately not possible:
+// <https://github.com/rust-lang/rust/issues/76560>
 macro_rules! impl_object_argument_for_arrays {
     ($($len:expr, $len_plus_one:expr;)*) => {
         $(
