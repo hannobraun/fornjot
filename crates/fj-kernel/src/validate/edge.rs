@@ -16,14 +16,27 @@ impl Validate for HalfEdge {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), ValidationError> {
-        HalfEdgeValidationError::check_curve_identity(self)?;
-        HalfEdgeValidationError::check_global_curve_identity(self)?;
-        HalfEdgeValidationError::check_global_vertex_identity(self)?;
-        HalfEdgeValidationError::check_vertex_positions(self, config)?;
+        let mut errors = Vec::new();
+
+        HalfEdgeValidationError::check_curve_identity(self, &mut errors);
+        HalfEdgeValidationError::check_global_curve_identity(self, &mut errors);
+        HalfEdgeValidationError::check_global_vertex_identity(
+            self,
+            &mut errors,
+        );
+        HalfEdgeValidationError::check_vertex_positions(
+            self,
+            config,
+            &mut errors,
+        );
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
         // and the validation of those vertices checks the surfaces.
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
 
         Ok(())
     }
@@ -122,38 +135,49 @@ pub enum HalfEdgeValidationError {
 }
 
 impl HalfEdgeValidationError {
-    fn check_curve_identity(half_edge: &HalfEdge) -> Result<(), Self> {
+    fn check_curve_identity(
+        half_edge: &HalfEdge,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let back_curve = half_edge.back().curve();
         let front_curve = half_edge.front().curve();
 
         if back_curve.id() != front_curve.id() {
-            return Err(Self::CurveMismatch {
-                back_curve: back_curve.clone(),
-                front_curve: front_curve.clone(),
-                half_edge: half_edge.clone(),
-            });
+            errors.push(
+                Self::CurveMismatch {
+                    back_curve: back_curve.clone(),
+                    front_curve: front_curve.clone(),
+                    half_edge: half_edge.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 
-    fn check_global_curve_identity(half_edge: &HalfEdge) -> Result<(), Self> {
+    fn check_global_curve_identity(
+        half_edge: &HalfEdge,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let global_curve_from_curve = half_edge.curve().global_form();
         let global_curve_from_global_form = half_edge.global_form().curve();
 
         if global_curve_from_curve.id() != global_curve_from_global_form.id() {
-            return Err(Self::GlobalCurveMismatch {
-                global_curve_from_curve: global_curve_from_curve.clone(),
-                global_curve_from_global_form: global_curve_from_global_form
-                    .clone(),
-                half_edge: half_edge.clone(),
-            });
+            errors.push(
+                Self::GlobalCurveMismatch {
+                    global_curve_from_curve: global_curve_from_curve.clone(),
+                    global_curve_from_global_form:
+                        global_curve_from_global_form.clone(),
+                    half_edge: half_edge.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 
-    fn check_global_vertex_identity(half_edge: &HalfEdge) -> Result<(), Self> {
+    fn check_global_vertex_identity(
+        half_edge: &HalfEdge,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let global_vertices_from_vertices = {
             let (global_vertices_from_vertices, _) =
                 VerticesInNormalizedOrder::new(
@@ -177,35 +201,38 @@ impl HalfEdgeValidationError {
             .map(|global_vertex| global_vertex.id());
 
         if ids_from_vertices != ids_from_global_form {
-            return Err(Self::GlobalVertexMismatch {
-                global_vertices_from_vertices,
-                global_vertices_from_global_form,
-                half_edge: half_edge.clone(),
-            });
+            errors.push(
+                Self::GlobalVertexMismatch {
+                    global_vertices_from_vertices,
+                    global_vertices_from_global_form,
+                    half_edge: half_edge.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 
     fn check_vertex_positions(
         half_edge: &HalfEdge,
         config: &ValidationConfig,
-    ) -> Result<(), Self> {
+        errors: &mut Vec<ValidationError>,
+    ) {
         let back_position = half_edge.back().position();
         let front_position = half_edge.front().position();
 
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {
-            return Err(Self::VerticesAreCoincident {
-                back_position,
-                front_position,
-                distance,
-                half_edge: half_edge.clone(),
-            });
+            errors.push(
+                Self::VerticesAreCoincident {
+                    back_position,
+                    front_position,
+                    distance,
+                    half_edge: half_edge.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 }
 
