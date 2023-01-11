@@ -12,8 +12,15 @@ impl Validate for Vertex {
         &self,
         config: &ValidationConfig,
     ) -> Result<(), ValidationError> {
-        VertexValidationError::check_surface_identity(self)?;
-        VertexValidationError::check_position(self, config)?;
+        let mut errors = Vec::new();
+
+        VertexValidationError::check_surface_identity(self, &mut errors);
+        VertexValidationError::check_position(self, config, &mut errors);
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
+
         Ok(())
     }
 }
@@ -78,24 +85,29 @@ pub enum VertexValidationError {
 }
 
 impl VertexValidationError {
-    fn check_surface_identity(vertex: &Vertex) -> Result<(), Self> {
+    fn check_surface_identity(
+        vertex: &Vertex,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let curve_surface = vertex.curve().surface();
         let surface_form_surface = vertex.surface_form().surface();
 
         if curve_surface.id() != surface_form_surface.id() {
-            return Err(Self::SurfaceMismatch {
-                curve_surface: curve_surface.clone(),
-                surface_form_surface: surface_form_surface.clone(),
-            });
+            errors.push(
+                Self::SurfaceMismatch {
+                    curve_surface: curve_surface.clone(),
+                    surface_form_surface: surface_form_surface.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 
     fn check_position(
         vertex: &Vertex,
         config: &ValidationConfig,
-    ) -> Result<(), Self> {
+        errors: &mut Vec<ValidationError>,
+    ) {
         let curve_position_as_surface = vertex
             .curve()
             .path()
@@ -105,15 +117,16 @@ impl VertexValidationError {
         let distance = curve_position_as_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
-            return Err(Self::PositionMismatch {
-                vertex: vertex.clone(),
-                surface_vertex: vertex.surface_form().clone_object(),
-                curve_position_as_surface,
-                distance,
-            });
+            errors.push(
+                Self::PositionMismatch {
+                    vertex: vertex.clone(),
+                    surface_vertex: vertex.surface_form().clone_object(),
+                    curve_position_as_surface,
+                    distance,
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 }
 
