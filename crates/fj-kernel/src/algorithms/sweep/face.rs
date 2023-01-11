@@ -110,7 +110,9 @@ mod tests {
         let sketch = {
             let mut sketch = PartialSketch::default();
 
-            let mut face = sketch.add_face(surface.clone());
+            let mut face = sketch.add_face();
+            face.write().exterior.write().surface =
+                Partial::from(surface.clone());
             face.write()
                 .exterior
                 .write()
@@ -173,7 +175,9 @@ mod tests {
         let sketch = {
             let mut sketch = PartialSketch::default();
 
-            let mut face = sketch.add_face(surface.clone());
+            let mut face = sketch.add_face();
+            face.write().exterior.write().surface =
+                Partial::from(surface.clone());
             face.write()
                 .exterior
                 .write()
