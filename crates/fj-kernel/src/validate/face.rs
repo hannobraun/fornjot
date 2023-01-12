@@ -5,15 +5,13 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Face {
-    type Error = FaceValidationError;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         FaceValidationError::check_surface_identity(self)?;
         FaceValidationError::check_interior_winding(self)?;
         Ok(())

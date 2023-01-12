@@ -5,15 +5,13 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Cycle {
-    type Error = CycleValidationError;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         CycleValidationError::check_half_edge_connections(self)?;
 
         // We don't need to check that all half-edges are defined in the same

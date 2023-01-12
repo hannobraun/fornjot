@@ -1,5 +1,3 @@
-use std::convert::Infallible;
-
 use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
@@ -11,15 +9,13 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for HalfEdge {
-    type Error = HalfEdgeValidationError;
-
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         HalfEdgeValidationError::check_curve_identity(self)?;
         HalfEdgeValidationError::check_global_curve_identity(self)?;
         HalfEdgeValidationError::check_global_vertex_identity(self)?;
@@ -34,12 +30,10 @@ impl Validate for HalfEdge {
 }
 
 impl Validate for GlobalEdge {
-    type Error = Infallible;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }

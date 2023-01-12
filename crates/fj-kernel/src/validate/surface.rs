@@ -1,16 +1,12 @@
-use std::convert::Infallible;
-
 use crate::objects::Surface;
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Surface {
-    type Error = Infallible;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }

@@ -1,5 +1,3 @@
-use std::convert::Infallible;
-
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -7,15 +5,13 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Vertex {
-    type Error = VertexValidationError;
-
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         VertexValidationError::check_surface_identity(self)?;
         VertexValidationError::check_position(self, config)?;
         Ok(())
@@ -23,24 +19,20 @@ impl Validate for Vertex {
 }
 
 impl Validate for SurfaceVertex {
-    type Error = SurfaceVertexValidationError;
-
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         SurfaceVertexValidationError::check_position(self, config)?;
         Ok(())
     }
 }
 
 impl Validate for GlobalVertex {
-    type Error = Infallible;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
+    ) -> Result<(), ValidationError> {
         Ok(())
     }
 }
