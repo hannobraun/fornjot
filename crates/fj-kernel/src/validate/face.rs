@@ -151,8 +151,8 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -188,8 +188,8 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }

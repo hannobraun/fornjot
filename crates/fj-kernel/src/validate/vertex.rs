@@ -234,8 +234,8 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -271,8 +271,8 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -293,8 +293,8 @@ mod tests {
             GlobalVertex::new([1., 0., 0.]).insert(&mut services.objects),
         );
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }

@@ -275,8 +275,8 @@ mod tests {
             HalfEdge::new(vertices, valid.global_form().clone())
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -301,8 +301,8 @@ mod tests {
             tmp.build(&mut services.objects)
         });
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -333,8 +333,8 @@ mod tests {
             tmp.build(&mut services.objects)
         });
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -370,8 +370,8 @@ mod tests {
             valid.global_form().clone(),
         );
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }

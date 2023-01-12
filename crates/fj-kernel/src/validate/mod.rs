@@ -25,6 +25,11 @@ use fj_math::Scalar;
 ///
 /// This trait is used automatically when inserting an object into a store.
 pub trait Validate: Sized {
+    /// Validate the object using default config and return on first error
+    fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
+        self.validate()
+    }
+
     /// Validate the object using default configuration
     fn validate(&self) -> Result<(), ValidationError> {
         self.validate_with_config(&ValidationConfig::default())
