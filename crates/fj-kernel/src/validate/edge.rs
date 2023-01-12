@@ -15,30 +15,16 @@ impl Validate for HalfEdge {
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        let mut errors = Vec::new();
-
-        HalfEdgeValidationError::check_curve_identity(self, &mut errors);
-        HalfEdgeValidationError::check_global_curve_identity(self, &mut errors);
-        HalfEdgeValidationError::check_global_vertex_identity(
-            self,
-            &mut errors,
-        );
-        HalfEdgeValidationError::check_vertex_positions(
-            self,
-            config,
-            &mut errors,
-        );
+        errors: &mut Vec<ValidationError>,
+    ) {
+        HalfEdgeValidationError::check_curve_identity(self, errors);
+        HalfEdgeValidationError::check_global_curve_identity(self, errors);
+        HalfEdgeValidationError::check_global_vertex_identity(self, errors);
+        HalfEdgeValidationError::check_vertex_positions(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
         // and the validation of those vertices checks the surfaces.
-
-        if let Some(err) = errors.into_iter().next() {
-            return Err(err);
-        }
-
-        Ok(())
     }
 }
 
@@ -46,8 +32,8 @@ impl Validate for GlobalEdge {
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        Ok(())
+        _: &mut Vec<ValidationError>,
+    ) {
     }
 }
 

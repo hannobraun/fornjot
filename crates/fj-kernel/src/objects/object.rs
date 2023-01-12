@@ -69,11 +69,7 @@ macro_rules! object {
             pub fn validate(&self, errors: &mut Vec<ValidationError>) {
                 match self {
                     $(
-                        Self::$ty((_, object)) => {
-                            if let Err(err) = object.validate() {
-                                errors.push(err.into());
-                            }
-                        }
+                        Self::$ty((_, object)) => object.validate(errors),
                     )*
                 }
             }

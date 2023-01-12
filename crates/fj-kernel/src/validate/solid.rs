@@ -6,7 +6,7 @@ impl Validate for Solid {
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        Ok(())
+        _: &mut Vec<ValidationError>,
+    ) {
     }
 }

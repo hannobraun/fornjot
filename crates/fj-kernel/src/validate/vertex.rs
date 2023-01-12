@@ -11,17 +11,10 @@ impl Validate for Vertex {
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        let mut errors = Vec::new();
-
-        VertexValidationError::check_surface_identity(self, &mut errors);
-        VertexValidationError::check_position(self, config, &mut errors);
-
-        if let Some(err) = errors.into_iter().next() {
-            return Err(err);
-        }
-
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        VertexValidationError::check_surface_identity(self, errors);
+        VertexValidationError::check_position(self, config, errors);
     }
 }
 
@@ -29,16 +22,9 @@ impl Validate for SurfaceVertex {
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        let mut errors = Vec::new();
-
-        SurfaceVertexValidationError::check_position(self, config, &mut errors);
-
-        if let Some(err) = errors.into_iter().next() {
-            return Err(err);
-        }
-
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        SurfaceVertexValidationError::check_position(self, config, errors);
     }
 }
 
@@ -46,8 +32,8 @@ impl Validate for GlobalVertex {
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        Ok(())
+        _: &mut Vec<ValidationError>,
+    ) {
     }
 }
 

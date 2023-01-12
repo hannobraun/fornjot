@@ -27,19 +27,27 @@ use fj_math::Scalar;
 pub trait Validate: Sized {
     /// Validate the object using default config and return on first error
     fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
-        self.validate()
+        let mut errors = Vec::new();
+        self.validate(&mut errors);
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
+
+        Ok(())
     }
 
     /// Validate the object using default configuration
-    fn validate(&self) -> Result<(), ValidationError> {
-        self.validate_with_config(&ValidationConfig::default())
+    fn validate(&self, errors: &mut Vec<ValidationError>) {
+        self.validate_with_config(&ValidationConfig::default(), errors)
     }
 
     /// Validate the object
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), ValidationError>;
+        errors: &mut Vec<ValidationError>,
+    );
 }
 
 /// Configuration required for the validation process

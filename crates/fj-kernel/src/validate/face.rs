@@ -11,17 +11,10 @@ impl Validate for Face {
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), ValidationError> {
-        let mut errors = Vec::new();
-
-        FaceValidationError::check_surface_identity(self, &mut errors);
-        FaceValidationError::check_interior_winding(self, &mut errors);
-
-        if let Some(err) = errors.into_iter().next() {
-            return Err(err);
-        }
-
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        FaceValidationError::check_surface_identity(self, errors);
+        FaceValidationError::check_interior_winding(self, errors);
     }
 }
 
