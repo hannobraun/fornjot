@@ -5,22 +5,19 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Cycle {
-    type Error = CycleValidationError;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        CycleValidationError::check_half_edge_connections(self)?;
+        errors: &mut Vec<ValidationError>,
+    ) {
+        CycleValidationError::check_half_edge_connections(self, errors);
 
         // We don't need to check that all half-edges are defined in the same
         // surface. We already check that they are connected by identical
         // surface vertices, so that would be redundant.
-
-        Ok(())
     }
 }
 
@@ -43,7 +40,10 @@ pub enum CycleValidationError {
 }
 
 impl CycleValidationError {
-    fn check_half_edge_connections(cycle: &Cycle) -> Result<(), Self> {
+    fn check_half_edge_connections(
+        cycle: &Cycle,
+        errors: &mut Vec<ValidationError>,
+    ) {
         for (a, b) in cycle.half_edges().circular_tuple_windows() {
             let [_, prev] = a.vertices();
             let [next, _] = b.vertices();
@@ -52,14 +52,15 @@ impl CycleValidationError {
             let next = next.surface_form();
 
             if prev.id() != next.id() {
-                return Err(Self::HalfEdgeConnection {
-                    prev: prev.clone(),
-                    next: next.clone(),
-                });
+                errors.push(
+                    Self::HalfEdgeConnection {
+                        prev: prev.clone(),
+                        next: next.clone(),
+                    }
+                    .into(),
+                );
             }
         }
-
-        Ok(())
     }
 }
 
@@ -109,8 +110,8 @@ mod tests {
             Cycle::new(half_edges)
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }

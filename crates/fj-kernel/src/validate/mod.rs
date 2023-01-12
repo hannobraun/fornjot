@@ -25,19 +25,29 @@ use fj_math::Scalar;
 ///
 /// This trait is used automatically when inserting an object into a store.
 pub trait Validate: Sized {
-    /// The error that validation of the implementing type can result in
-    type Error: Into<ValidationError>;
+    /// Validate the object using default config and return on first error
+    fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
+        let mut errors = Vec::new();
+        self.validate(&mut errors);
+
+        if let Some(err) = errors.into_iter().next() {
+            return Err(err);
+        }
+
+        Ok(())
+    }
 
     /// Validate the object using default configuration
-    fn validate(&self) -> Result<(), Self::Error> {
-        self.validate_with_config(&ValidationConfig::default())
+    fn validate(&self, errors: &mut Vec<ValidationError>) {
+        self.validate_with_config(&ValidationConfig::default(), errors)
     }
 
     /// Validate the object
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error>;
+        errors: &mut Vec<ValidationError>,
+    );
 }
 
 /// Configuration required for the validation process

@@ -5,18 +5,16 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Face {
-    type Error = FaceValidationError;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        FaceValidationError::check_surface_identity(self)?;
-        FaceValidationError::check_interior_winding(self)?;
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        FaceValidationError::check_surface_identity(self, errors);
+        FaceValidationError::check_interior_winding(self, errors);
     }
 }
 
@@ -61,43 +59,40 @@ pub enum FaceValidationError {
 }
 
 impl FaceValidationError {
-    fn check_surface_identity(face: &Face) -> Result<(), Self> {
+    fn check_surface_identity(face: &Face, errors: &mut Vec<ValidationError>) {
         let surface = face.surface();
 
         for interior in face.interiors() {
             if surface.id() != interior.surface().id() {
-                return Err(Self::SurfaceMismatch {
-                    surface: surface.clone(),
-                    interior: interior.clone(),
-                    face: face.clone(),
-                });
+                errors.push(
+                    Self::SurfaceMismatch {
+                        surface: surface.clone(),
+                        interior: interior.clone(),
+                        face: face.clone(),
+                    }
+                    .into(),
+                );
             }
         }
-
-        Ok(())
     }
 
-    fn check_interior_winding(face: &Face) -> Result<(), Self> {
+    fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
         let exterior_winding = face.exterior().winding();
 
         for interior in face.interiors() {
             let interior_winding = interior.winding();
 
             if exterior_winding == interior_winding {
-                return Err(Self::InvalidInteriorWinding {
-                    exterior_winding,
-                    interior_winding,
-                    face: face.clone(),
-                });
+                errors.push(
+                    Self::InvalidInteriorWinding {
+                        exterior_winding,
+                        interior_winding,
+                        face: face.clone(),
+                    }
+                    .into(),
+                );
             }
-            assert_ne!(
-                exterior_winding,
-                interior.winding(),
-                "Interior cycles must have opposite winding of exterior cycle"
-            );
         }
-
-        Ok(())
     }
 }
 
@@ -149,8 +144,8 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -186,8 +181,8 @@ mod tests {
             Face::new(valid.exterior().clone(), interiors, valid.color())
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }

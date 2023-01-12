@@ -66,14 +66,12 @@ macro_rules! object {
             }
 
             /// Validate the object
-            pub fn validate(&self) -> Result<(), ValidationError> {
+            pub fn validate(&self, errors: &mut Vec<ValidationError>) {
                 match self {
                     $(
-                        Self::$ty((_, object)) => object.validate()?,
+                        Self::$ty((_, object)) => object.validate(errors),
                     )*
                 }
-
-                Ok(())
             }
         }
 

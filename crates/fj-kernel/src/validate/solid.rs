@@ -1,16 +1,12 @@
-use std::convert::Infallible;
-
 use crate::objects::Solid;
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Solid {
-    type Error = Infallible;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        Ok(())
+        _: &mut Vec<ValidationError>,
+    ) {
     }
 }

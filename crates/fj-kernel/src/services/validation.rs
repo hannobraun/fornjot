@@ -37,9 +37,12 @@ impl State for Validation {
     type Event = ValidationFailed;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        if let Err(err) = command.object.validate() {
+        let mut errors = Vec::new();
+        command.object.validate(&mut errors);
+
+        for err in errors {
             events.push(ValidationFailed {
-                object: command.object.into(),
+                object: command.object.clone().into(),
                 err,
             });
         }

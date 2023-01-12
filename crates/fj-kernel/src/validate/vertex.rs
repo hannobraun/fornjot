@@ -1,5 +1,3 @@
-use std::convert::Infallible;
-
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -7,41 +5,35 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Validate, ValidationConfig};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Vertex {
-    type Error = VertexValidationError;
-
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        VertexValidationError::check_surface_identity(self)?;
-        VertexValidationError::check_position(self, config)?;
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        VertexValidationError::check_surface_identity(self, errors);
+        VertexValidationError::check_position(self, config, errors);
     }
 }
 
 impl Validate for SurfaceVertex {
-    type Error = SurfaceVertexValidationError;
-
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        SurfaceVertexValidationError::check_position(self, config)?;
-        Ok(())
+        errors: &mut Vec<ValidationError>,
+    ) {
+        SurfaceVertexValidationError::check_position(self, config, errors);
     }
 }
 
 impl Validate for GlobalVertex {
-    type Error = Infallible;
-
     fn validate_with_config(
         &self,
         _: &ValidationConfig,
-    ) -> Result<(), Self::Error> {
-        Ok(())
+        _: &mut Vec<ValidationError>,
+    ) {
     }
 }
 
@@ -86,24 +78,29 @@ pub enum VertexValidationError {
 }
 
 impl VertexValidationError {
-    fn check_surface_identity(vertex: &Vertex) -> Result<(), Self> {
+    fn check_surface_identity(
+        vertex: &Vertex,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let curve_surface = vertex.curve().surface();
         let surface_form_surface = vertex.surface_form().surface();
 
         if curve_surface.id() != surface_form_surface.id() {
-            return Err(Self::SurfaceMismatch {
-                curve_surface: curve_surface.clone(),
-                surface_form_surface: surface_form_surface.clone(),
-            });
+            errors.push(
+                Self::SurfaceMismatch {
+                    curve_surface: curve_surface.clone(),
+                    surface_form_surface: surface_form_surface.clone(),
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 
     fn check_position(
         vertex: &Vertex,
         config: &ValidationConfig,
-    ) -> Result<(), Self> {
+        errors: &mut Vec<ValidationError>,
+    ) {
         let curve_position_as_surface = vertex
             .curve()
             .path()
@@ -113,15 +110,16 @@ impl VertexValidationError {
         let distance = curve_position_as_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
-            return Err(Self::PositionMismatch {
-                vertex: vertex.clone(),
-                surface_vertex: vertex.surface_form().clone_object(),
-                curve_position_as_surface,
-                distance,
-            });
+            errors.push(
+                Self::PositionMismatch {
+                    vertex: vertex.clone(),
+                    surface_vertex: vertex.surface_form().clone_object(),
+                    curve_position_as_surface,
+                    distance,
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 }
 
@@ -155,7 +153,8 @@ impl SurfaceVertexValidationError {
     fn check_position(
         surface_vertex: &SurfaceVertex,
         config: &ValidationConfig,
-    ) -> Result<(), Self> {
+        errors: &mut Vec<ValidationError>,
+    ) {
         let surface_position_as_global = surface_vertex
             .surface()
             .geometry()
@@ -165,15 +164,16 @@ impl SurfaceVertexValidationError {
         let distance = surface_position_as_global.distance_to(&global_position);
 
         if distance > config.identical_max_distance {
-            return Err(Self::PositionMismatch {
-                surface_vertex: surface_vertex.clone(),
-                global_vertex: surface_vertex.global_form().clone_object(),
-                surface_position_as_global,
-                distance,
-            });
+            errors.push(
+                Self::PositionMismatch {
+                    surface_vertex: surface_vertex.clone(),
+                    global_vertex: surface_vertex.global_form().clone_object(),
+                    surface_position_as_global,
+                    distance,
+                }
+                .into(),
+            );
         }
-
-        Ok(())
     }
 }
 
@@ -220,8 +220,8 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -257,8 +257,8 @@ mod tests {
             Vertex::new(valid.position(), valid.curve().clone(), surface_form)
         };
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
@@ -279,8 +279,8 @@ mod tests {
             GlobalVertex::new([1., 0., 0.]).insert(&mut services.objects),
         );
 
-        valid.validate()?;
-        assert!(invalid.validate().is_err());
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
 
         Ok(())
     }
