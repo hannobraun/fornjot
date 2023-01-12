@@ -34,6 +34,7 @@ pub struct Gui {
     context: egui::Context,
     renderer: egui_wgpu::Renderer,
     options: Options,
+    egui_output: Option<egui::FullOutput>,
 }
 
 impl Gui {
@@ -71,6 +72,7 @@ impl Gui {
             context,
             renderer,
             options: Options::default(),
+            egui_output: None,
         }
     }
 
@@ -270,6 +272,15 @@ impl Gui {
                 });
         }
 
+        // Even though the output is not used here, `end_frame` must be called
+        // at the end of this function. If we don't, and we get into a situation
+        // where `update` is called, but `prepare_draw` isn't for a while, the
+        // context will keep accumulating output.
+        //
+        // That might end up being too much output to handle. This can lead to
+        // a crash, because a index/vertex buffer gets too full.
+        self.egui_output = Some(self.context.end_frame());
+
         new_model_path
     }
 
@@ -280,7 +291,9 @@ impl Gui {
         encoder: &mut wgpu::CommandEncoder,
         screen_descriptor: &egui_wgpu::renderer::ScreenDescriptor,
     ) -> Vec<egui::ClippedPrimitive> {
-        let egui_output = self.context.end_frame();
+        let Some(egui_output) = self.egui_output.take() else {
+            return Vec::new()
+        };
         let clipped_primitives = self.context.tessellate(egui_output.shapes);
 
         for (id, image_delta) in &egui_output.textures_delta.set {

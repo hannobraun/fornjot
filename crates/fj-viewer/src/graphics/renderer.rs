@@ -251,7 +251,7 @@ impl Renderer {
             Ok(surface_texture) => surface_texture,
             Err(wgpu::SurfaceError::Timeout) => {
                 // I'm seeing this all the time now (as in, multiple times per
-                // microsecond), which `PresentMode::AutoVsync`. Not sure what's
+                // microsecond), with `PresentMode::AutoVsync`. Not sure what's
                 // going on, but for now, it works to just ignore it.
                 //
                 // Issues for reference:
