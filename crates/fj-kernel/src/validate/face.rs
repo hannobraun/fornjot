@@ -88,11 +88,6 @@ impl FaceValidationError {
                     face: face.clone(),
                 });
             }
-            assert_ne!(
-                exterior_winding,
-                interior.winding(),
-                "Interior cycles must have opposite winding of exterior cycle"
-            );
         }
 
         Ok(())
