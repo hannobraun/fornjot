@@ -11,6 +11,8 @@ mod solid;
 mod surface;
 mod vertex;
 
+use std::array;
+
 pub use self::{
     curve::CurveBuilder,
     cycle::CycleBuilder,
@@ -40,18 +42,34 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     /// The return value has the same length as the implementing type, but it is
     /// not necessarily of the same type. For this reason, this associated type
     /// is generic.
-    type ReturnValue<R>;
+    type SameSize<R>;
+
+    /// A return value that has one more element thatn the argument
+    type SizePlusOne<R>;
+
+    /// Return the number of objects
+    fn num_objects(&self) -> usize;
 
     /// Create a return value by mapping the implementing type
-    fn map<F, R>(self, f: F) -> Self::ReturnValue<R>
+    fn map<F, R>(self, f: F) -> Self::SameSize<R>
+    where
+        F: FnMut(T) -> R;
+
+    /// Create a return value with one more element
+    fn map_plus_one<F, R>(self, item: R, f: F) -> Self::SizePlusOne<R>
     where
         F: FnMut(T) -> R;
 }
 
 impl<T> ObjectArgument<T> for Vec<T> {
-    type ReturnValue<R> = Vec<R>;
+    type SameSize<R> = Vec<R>;
+    type SizePlusOne<R> = Vec<R>;
 
-    fn map<F, R>(self, mut f: F) -> Self::ReturnValue<R>
+    fn num_objects(&self) -> usize {
+        self.len()
+    }
+
+    fn map<F, R>(self, mut f: F) -> Self::SameSize<R>
     where
         F: FnMut(T) -> R,
     {
@@ -63,15 +81,65 @@ impl<T> ObjectArgument<T> for Vec<T> {
 
         ret
     }
-}
 
-impl<T, const N: usize> ObjectArgument<T> for [T; N] {
-    type ReturnValue<R> = [R; N];
-
-    fn map<F, R>(self, f: F) -> Self::ReturnValue<R>
+    fn map_plus_one<F, R>(self, item: R, f: F) -> Self::SizePlusOne<R>
     where
         F: FnMut(T) -> R,
     {
-        self.map(f)
+        let mut ret = self.map(f);
+        ret.push(item);
+        ret
     }
 }
+
+// This macro implements `ObjectArgument` for a number of array types. This
+// should just be a single implementation, but while const generic expressions
+// are still unstable, this is unfortunately not possible:
+// <https://github.com/rust-lang/rust/issues/76560>
+macro_rules! impl_object_argument_for_arrays {
+    ($($len:expr, $len_plus_one:expr;)*) => {
+        $(
+            impl<T> ObjectArgument<T> for [T; $len] {
+                type SameSize<R> = [R; $len];
+                type SizePlusOne<R> = [R; $len_plus_one];
+
+                fn num_objects(&self) -> usize {
+                    self.len()
+                }
+
+                fn map<F, R>(self, f: F) -> Self::SameSize<R>
+                where
+                    F: FnMut(T) -> R,
+                {
+                    self.map(f)
+                }
+
+                fn map_plus_one<F, R>(self, item: R, mut f: F)
+                    -> Self::SizePlusOne<R>
+                where
+                    F: FnMut(T) -> R,
+                {
+                    let mut tmp = array::from_fn(|_| None);
+                    for (i, item) in self.into_iter().enumerate() {
+                        tmp[i] = Some(f(item));
+                    }
+
+                    tmp[tmp.len() - 1] = Some(item);
+
+                    tmp.map(Option::unwrap)
+                }
+            }
+        )*
+    };
+}
+
+impl_object_argument_for_arrays!(
+    0, 1;
+    1, 2;
+    2, 3;
+    3, 4;
+    4, 5;
+    5, 6;
+    6, 7;
+    7, 8;
+);
