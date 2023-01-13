@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -32,6 +33,19 @@ pub trait CycleBuilder {
     fn add_half_edge_from_point_to_start(
         &mut self,
         point: impl Into<Point<2>>,
+    ) -> Partial<HalfEdge>;
+
+    /// Add a new half-edge that starts at the provided point
+    ///
+    /// Opens the cycle between the last and first edge, updates the last edge
+    /// to go the provided point, and adds a new half-edge from the provided
+    /// point the the first edge.
+    ///
+    /// If the cycle doesn't have any edges yet, the new edge connects to
+    /// itself, starting and ending at the provided point.
+    fn add_half_edge_from_global_point_to_start(
+        &mut self,
+        point: impl Into<Point<3>>,
     ) -> Partial<HalfEdge>;
 
     /// Update cycle as a polygon from the provided points
@@ -127,6 +141,25 @@ impl CycleBuilder for PartialCycle {
         half_edge
     }
 
+    fn add_half_edge_from_global_point_to_start(
+        &mut self,
+        point: impl Into<Point<3>>,
+    ) -> Partial<HalfEdge> {
+        let mut half_edge = self.add_half_edge();
+
+        half_edge
+            .write()
+            .back_mut()
+            .write()
+            .surface_form
+            .write()
+            .global_form
+            .write()
+            .position = Some(point.into());
+
+        half_edge
+    }
+
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
@@ -151,10 +184,28 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         points_global: [impl Into<Point<3>>; 3],
     ) -> [Partial<HalfEdge>; 3] {
+        let points_global = points_global.map(Into::into);
+
         let points_surface = self
             .surface
             .write()
             .update_as_plane_from_points(points_global);
-        self.update_as_polygon_from_points(points_surface)
+
+        let half_edges = self.update_as_polygon_from_points(points_surface);
+
+        for (mut half_edge, point) in half_edges.clone().zip_ext(points_global)
+        {
+            half_edge
+                .write()
+                .back_mut()
+                .write()
+                .surface_form
+                .write()
+                .global_form
+                .write()
+                .position = Some(point);
+        }
+
+        half_edges
     }
 }

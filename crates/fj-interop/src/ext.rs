@@ -51,6 +51,32 @@ impl<T> ArrayExt<T, 2> for [T; 2] {
     }
 }
 
+impl<T> ArrayExt<T, 3> for [T; 3] {
+    fn each_ref_ext(&self) -> [&T; 3] {
+        let [a, b, c] = self;
+        [a, b, c]
+    }
+
+    fn each_mut_ext(&mut self) -> [&mut T; 3] {
+        let [a, b, c] = self;
+        [a, b, c]
+    }
+
+    fn try_map_ext<F, U, E>(self, f: F) -> Result<[U; 3], E>
+    where
+        F: FnMut(T) -> Result<U, E>,
+    {
+        let [a, b, c] = self.map(f);
+        Ok([a?, b?, c?])
+    }
+
+    fn zip_ext<U>(self, rhs: [U; 3]) -> [(T, U); 3] {
+        let [a, b, c] = self;
+        let [q, r, s] = rhs;
+        [(a, q), (b, r), (c, s)]
+    }
+}
+
 impl<T> ArrayExt<T, 4> for [T; 4] {
     fn each_ref_ext(&self) -> [&T; 4] {
         let [a, b, c, d] = self;

@@ -60,7 +60,7 @@ impl CurveBuilder for PartialCurve {
         radius: impl Into<Scalar>,
     ) -> SurfacePath {
         let path = SurfacePath::circle_from_radius(radius);
-        self.path = Some(path);
+        self.path = Some(path.into());
         path
     }
 
@@ -70,7 +70,7 @@ impl CurveBuilder for PartialCurve {
         radius: impl Into<Scalar>,
     ) -> SurfacePath {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
-        self.path = Some(path);
+        self.path = Some(path.into());
         path
     }
 
@@ -79,7 +79,7 @@ impl CurveBuilder for PartialCurve {
         points: [impl Into<Point<2>>; 2],
     ) -> SurfacePath {
         let (path, _) = SurfacePath::line_from_points(points);
-        self.path = Some(path);
+        self.path = Some(path.into());
         path
     }
 }
