@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -183,10 +184,28 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         points_global: [impl Into<Point<3>>; 3],
     ) -> [Partial<HalfEdge>; 3] {
+        let points_global = points_global.map(Into::into);
+
         let points_surface = self
             .surface
             .write()
             .update_as_plane_from_points(points_global);
-        self.update_as_polygon_from_points(points_surface)
+
+        let half_edges = self.update_as_polygon_from_points(points_surface);
+
+        for (mut half_edge, point) in half_edges.clone().zip_ext(points_global)
+        {
+            half_edge
+                .write()
+                .back_mut()
+                .write()
+                .surface_form
+                .write()
+                .global_form
+                .write()
+                .position = Some(point);
+        }
+
+        half_edges
     }
 }
