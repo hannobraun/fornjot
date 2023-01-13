@@ -33,7 +33,6 @@ pub struct EventLoopHandler {
 }
 
 impl EventLoopHandler {
-    #[allow(clippy::result_large_err)]
     pub fn handle_event(
         &mut self,
         event: Event<ModelEvent>,

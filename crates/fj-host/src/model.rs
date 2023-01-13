@@ -1,5 +1,3 @@
-#![allow(clippy::result_large_err)]
-
 use std::{
     io,
     path::{Path, PathBuf},
@@ -257,7 +255,6 @@ fn ambiguous_path_error(
 }
 
 /// An error that can occur when loading or reloading a model
-#[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// Error loading model library

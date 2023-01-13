@@ -1,5 +1,3 @@
-#![allow(clippy::result_large_err)]
-
 use std::{collections::HashSet, ffi::OsStr, path::Path};
 
 use crossbeam_channel::Sender;

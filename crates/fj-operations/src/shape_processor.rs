@@ -56,7 +56,6 @@ impl ShapeProcessor {
 }
 
 /// A shape processing error
-#[allow(clippy::large_enum_variant)]
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// Error converting to shape
