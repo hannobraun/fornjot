@@ -2,10 +2,10 @@ use std::collections::VecDeque;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    partial::{MaybeSurfacePath, Partial, PartialCycle, PartialFace},
+    partial::{Partial, PartialCycle, PartialFace},
 };
 
-use super::{CycleBuilder, ObjectArgument};
+use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument};
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
@@ -48,40 +48,7 @@ impl FaceBuilder for PartialFace {
             let mut this = half_edges.pop_front().expect(
                 "Pushed correct number of half-edges; should be able to pop",
             );
-
-            let global_curve = other.read().curve().read().global_form.clone();
-            this.write().curve().write().global_form = global_curve.clone();
-            this.write().global_form.write().curve = global_curve;
-
-            this.write().curve().write().path = other
-                .read()
-                .curve()
-                .read()
-                .path
-                .as_ref()
-                .map(MaybeSurfacePath::to_undefined);
-
-            for (this, other) in this
-                .write()
-                .vertices
-                .iter_mut()
-                .zip(other.read().vertices.iter().rev())
-            {
-                this.write().position = other.read().position;
-                this.write()
-                    .surface_form
-                    .write()
-                    .global_form
-                    .write()
-                    .position = other
-                    .read()
-                    .surface_form
-                    .read()
-                    .global_form
-                    .read()
-                    .position;
-            }
-
+            this.write().update_from_other_edge(&other);
             this
         })
     }

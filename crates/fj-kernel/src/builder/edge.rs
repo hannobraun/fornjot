@@ -2,8 +2,8 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{GlobalEdge, Surface},
-    partial::{Partial, PartialGlobalEdge, PartialHalfEdge},
+    objects::{GlobalEdge, HalfEdge, Surface},
+    partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
 use super::{CurveBuilder, VertexBuilder};
@@ -46,6 +46,12 @@ pub trait HalfEdgeBuilder {
     /// Updates the global form referenced by this half-edge, and also returns
     /// it.
     fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
+
+    /// Update this edge from another
+    ///
+    /// Infers as much information about this edge from the other, under the
+    /// assumption that the other edge is on a different surface.
+    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>);
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -176,6 +182,35 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             });
 
         self.global_form.clone()
+    }
+
+    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>) {
+        let global_curve = other.read().curve().read().global_form.clone();
+        self.curve().write().global_form = global_curve.clone();
+        self.global_form.write().curve = global_curve;
+
+        self.curve().write().path = other
+            .read()
+            .curve()
+            .read()
+            .path
+            .as_ref()
+            .map(MaybeSurfacePath::to_undefined);
+
+        for (this, other) in self
+            .vertices
+            .iter_mut()
+            .zip(other.read().vertices.iter().rev())
+        {
+            this.write().position = other.read().position;
+            this.write()
+                .surface_form
+                .write()
+                .global_form
+                .write()
+                .position =
+                other.read().surface_form.read().global_form.read().position;
+        }
     }
 }
 
