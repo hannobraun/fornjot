@@ -47,6 +47,9 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     /// A return value that has one more element thatn the argument
     type SizePlusOne<R>;
 
+    /// Return the number of objects
+    fn num_objects(&self) -> usize;
+
     /// Create a return value by mapping the implementing type
     fn map<F, R>(self, f: F) -> Self::SameSize<R>
     where
@@ -61,6 +64,10 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
 impl<T> ObjectArgument<T> for Vec<T> {
     type SameSize<R> = Vec<R>;
     type SizePlusOne<R> = Vec<R>;
+
+    fn num_objects(&self) -> usize {
+        self.len()
+    }
 
     fn map<F, R>(self, mut f: F) -> Self::SameSize<R>
     where
@@ -95,6 +102,10 @@ macro_rules! impl_object_argument_for_arrays {
             impl<T> ObjectArgument<T> for [T; $len] {
                 type SameSize<R> = [R; $len];
                 type SizePlusOne<R> = [R; $len_plus_one];
+
+                fn num_objects(&self) -> usize {
+                    self.len()
+                }
 
                 fn map<F, R>(self, f: F) -> Self::SameSize<R>
                 where
