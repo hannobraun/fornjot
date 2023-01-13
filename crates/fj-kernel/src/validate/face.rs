@@ -65,11 +65,11 @@ impl FaceValidationError {
         for interior in face.interiors() {
             if surface.id() != interior.surface().id() {
                 errors.push(
-                    Self::SurfaceMismatch {
+                    Box::new(Self::SurfaceMismatch {
                         surface: surface.clone(),
                         interior: interior.clone(),
                         face: face.clone(),
-                    }
+                    })
                     .into(),
                 );
             }
@@ -84,11 +84,11 @@ impl FaceValidationError {
 
             if exterior_winding == interior_winding {
                 errors.push(
-                    Self::InvalidInteriorWinding {
+                    Box::new(Self::InvalidInteriorWinding {
                         exterior_winding,
                         interior_winding,
                         face: face.clone(),
-                    }
+                    })
                     .into(),
                 );
             }

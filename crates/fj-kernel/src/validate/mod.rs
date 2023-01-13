@@ -91,19 +91,19 @@ pub enum ValidationError {
 
     /// `Face` validation error
     #[error(transparent)]
-    Face(#[from] FaceValidationError),
+    Face(#[from] Box<FaceValidationError>),
 
     /// `HalfEdge` validation error
     #[error(transparent)]
-    HalfEdge(#[from] HalfEdgeValidationError),
+    HalfEdge(#[from] Box<HalfEdgeValidationError>),
 
     /// `SurfaceVertex` validation error
     #[error(transparent)]
-    SurfaceVertex(#[from] SurfaceVertexValidationError),
+    SurfaceVertex(#[from] Box<SurfaceVertexValidationError>),
 
     /// `Vertex` validation error
     #[error(transparent)]
-    Vertex(#[from] VertexValidationError),
+    Vertex(#[from] Box<VertexValidationError>),
 }
 
 impl From<Infallible> for ValidationError {

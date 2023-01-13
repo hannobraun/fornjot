@@ -87,10 +87,10 @@ impl VertexValidationError {
 
         if curve_surface.id() != surface_form_surface.id() {
             errors.push(
-                Self::SurfaceMismatch {
+                Box::new(Self::SurfaceMismatch {
                     curve_surface: curve_surface.clone(),
                     surface_form_surface: surface_form_surface.clone(),
-                }
+                })
                 .into(),
             );
         }
@@ -111,12 +111,12 @@ impl VertexValidationError {
 
         if distance > config.identical_max_distance {
             errors.push(
-                Self::PositionMismatch {
+                Box::new(Self::PositionMismatch {
                     vertex: vertex.clone(),
                     surface_vertex: vertex.surface_form().clone_object(),
                     curve_position_as_surface,
                     distance,
-                }
+                })
                 .into(),
             );
         }
@@ -165,12 +165,12 @@ impl SurfaceVertexValidationError {
 
         if distance > config.identical_max_distance {
             errors.push(
-                Self::PositionMismatch {
+                Box::new(Self::PositionMismatch {
                     surface_vertex: surface_vertex.clone(),
                     global_vertex: surface_vertex.global_form().clone_object(),
                     surface_position_as_global,
                     distance,
-                }
+                })
                 .into(),
             );
         }

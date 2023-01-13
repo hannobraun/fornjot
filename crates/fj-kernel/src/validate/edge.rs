@@ -130,11 +130,11 @@ impl HalfEdgeValidationError {
 
         if back_curve.id() != front_curve.id() {
             errors.push(
-                Self::CurveMismatch {
+                Box::new(Self::CurveMismatch {
                     back_curve: back_curve.clone(),
                     front_curve: front_curve.clone(),
                     half_edge: half_edge.clone(),
-                }
+                })
                 .into(),
             );
         }
@@ -149,12 +149,12 @@ impl HalfEdgeValidationError {
 
         if global_curve_from_curve.id() != global_curve_from_global_form.id() {
             errors.push(
-                Self::GlobalCurveMismatch {
+                Box::new(Self::GlobalCurveMismatch {
                     global_curve_from_curve: global_curve_from_curve.clone(),
                     global_curve_from_global_form:
                         global_curve_from_global_form.clone(),
                     half_edge: half_edge.clone(),
-                }
+                })
                 .into(),
             );
         }
@@ -188,11 +188,11 @@ impl HalfEdgeValidationError {
 
         if ids_from_vertices != ids_from_global_form {
             errors.push(
-                Self::GlobalVertexMismatch {
+                Box::new(Self::GlobalVertexMismatch {
                     global_vertices_from_vertices,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
-                }
+                })
                 .into(),
             );
         }
@@ -210,12 +210,12 @@ impl HalfEdgeValidationError {
 
         if distance < config.distinct_min_distance {
             errors.push(
-                Self::VerticesAreCoincident {
+                Box::new(Self::VerticesAreCoincident {
                     back_position,
                     front_position,
                     distance,
                     half_edge: half_edge.clone(),
-                }
+                })
                 .into(),
             );
         }

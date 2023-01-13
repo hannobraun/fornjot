@@ -3,8 +3,6 @@
 //! Provides the functionality to create a window and perform basic viewing
 //! with programmed models.
 
-#![allow(clippy::result_large_err)]
-
 use std::{
     error,
     fmt::{self, Write},
