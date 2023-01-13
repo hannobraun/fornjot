@@ -9,7 +9,7 @@ use crate::{
 #[derive(Clone, Debug, Default)]
 pub struct PartialCurve {
     /// The path that defines the curve
-    pub path: Option<SurfacePath>,
+    pub path: Option<MaybeSurfacePath>,
 
     /// The surface the curve is defined in
     pub surface: Partial<Surface>,
@@ -23,18 +23,63 @@ impl PartialObject for PartialCurve {
 
     fn from_full(curve: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
-            path: Some(curve.path()),
+            path: Some(curve.path().into()),
             surface: Partial::from_full(curve.surface().clone(), cache),
             global_form: Partial::from_full(curve.global_form().clone(), cache),
         }
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let path = self.path.expect("Need path to build curve");
+        let path = match self.path.expect("Need path to build curve") {
+            MaybeSurfacePath::Defined(path) => path,
+            undefined => {
+                panic!(
+                    "Trying to build curve with undefined path: {undefined:?}"
+                )
+            }
+        };
         let surface = self.surface.build(objects);
         let global_form = self.global_form.build(objects);
 
         Curve::new(surface, path, global_form)
+    }
+}
+
+/// The definition of a surface path within [`PartialCurve`]
+///
+/// Can be a fully defined [`SurfacePath`], or just the type of path might be
+/// known.
+#[derive(Clone, Debug)]
+pub enum MaybeSurfacePath {
+    /// The surface path is fully defined
+    Defined(SurfacePath),
+
+    /// The surface path is undefined, but we know it is a circle
+    UndefinedCircle,
+
+    /// The surface path is undefined, but we know it is a line
+    UndefinedLine,
+}
+
+impl MaybeSurfacePath {
+    /// Convert into an undefined variant
+    ///
+    /// If `self` is defined, it is converted into the applicable undefined
+    /// variant. If it is undefined, a copy is returned.
+    pub fn to_undefined(&self) -> Self {
+        match self {
+            Self::Defined(path) => match path {
+                SurfacePath::Circle(_) => Self::UndefinedCircle,
+                SurfacePath::Line(_) => Self::UndefinedLine,
+            },
+            undefined => undefined.clone(),
+        }
+    }
+}
+
+impl From<SurfacePath> for MaybeSurfacePath {
+    fn from(path: SurfacePath) -> Self {
+        Self::Defined(path)
     }
 }
 
