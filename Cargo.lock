@@ -2167,9 +2167,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra"
-version = "0.31.4"
+version = "0.32.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20bd243ab3dbb395b39ee730402d2e5405e448c75133ec49cc977762c4cba3d1"
+checksum = "f6515c882ebfddccaa73ead7320ca28036c4bc84c9bcca3cc0cbba8efe89223a"
 dependencies = [
  "approx 0.5.1",
  "matrixmultiply",
@@ -2183,9 +2183,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra-macros"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01fcc0b8149b4632adc89ac3b7b31a12fb6099a0317a4eb2ebff574ef7de7218"
+checksum = "d232c68884c0c99810a5a4d333ef7e47689cfd0edc85efc9e54e1e6bf5212766"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2663,9 +2663,9 @@ dependencies = [
 
 [[package]]
 name = "parry2d-f64"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce8a800704f7b7ea6eb43286841f832a99f073ef06cc531e9c893944c8e8d17b"
+checksum = "70f96abf23f15f0bb4d998a96bcdc58915519a2de8828a809f1ea57b431c4d1f"
 dependencies = [
  "approx 0.5.1",
  "arrayvec 0.7.2",
@@ -2684,9 +2684,9 @@ dependencies = [
 
 [[package]]
 name = "parry3d-f64"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47af2b31fba872e27eb89b9979aa7e0821f251e0c489f182942b28a29193494f"
+checksum = "303ff0ccf06cd4c251f839fd03e0607a2c27f33dda1c3ebbf2d4f8538f6b55a6"
 dependencies = [
  "approx 0.5.1",
  "arrayvec 0.7.2",
@@ -3397,9 +3397,9 @@ dependencies = [
 
 [[package]]
 name = "simba"
-version = "0.7.3"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f3fd720c48c53cace224ae62bef1bbff363a70c68c4802a78b5cc6159618176"
+checksum = "50582927ed6f77e4ac020c057f37a268fc6aebc29225050365aacbb9deeeddc4"
 dependencies = [
  "approx 0.5.1",
  "num-complex",
