@@ -105,11 +105,9 @@ impl FaceBuilder for PartialFace {
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
         let mut exterior = self.exterior.write();
-        let mut vertices = {
-            exterior.half_edges.iter().map(|half_edge| {
-                half_edge.read().back().read().surface_form.clone()
-            })
-        };
+        let mut vertices = exterior.half_edges.iter().map(|half_edge| {
+            half_edge.read().back().read().surface_form.clone()
+        });
 
         let vertices = {
             let array = [
