@@ -58,7 +58,7 @@ pub enum VertexValidationError {
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
         - `Vertex`: {vertex:#?}\n\
-        - `Vertex` position as surface: {curve_position_as_surface:?}\n\
+        - `Vertex` position as surface: {curve_position_on_surface:?}\n\
         - Distance between the positions: {distance}"
     )]
     PositionMismatch {
@@ -66,7 +66,7 @@ pub enum VertexValidationError {
         vertex: Vertex,
 
         /// The curve position converted into a surface position
-        curve_position_as_surface: Point<2>,
+        curve_position_on_surface: Point<2>,
 
         /// The distance between the positions
         distance: Scalar,
@@ -97,19 +97,19 @@ impl VertexValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let curve_position_as_surface = vertex
+        let curve_position_on_surface = vertex
             .curve()
             .path()
             .point_from_path_coords(vertex.position());
         let surface_position = vertex.surface_form().position();
 
-        let distance = curve_position_as_surface.distance_to(&surface_position);
+        let distance = curve_position_on_surface.distance_to(&surface_position);
 
         if distance > config.identical_max_distance {
             errors.push(
                 Box::new(Self::PositionMismatch {
                     vertex: vertex.clone(),
-                    curve_position_as_surface,
+                    curve_position_on_surface,
                     distance,
                 })
                 .into(),
