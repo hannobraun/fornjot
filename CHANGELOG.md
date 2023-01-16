@@ -1,5 +1,49 @@
 # Fornjot - Changelog
 
+## v0.32.0 (2023-01-16)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fix app crashing, if it is minimized too long ([#1504])
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Improve builder API ([#1495], [#1501], [#1502], [#1509], [#1510])
+- Don't stop on first validation error ([#1505])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1490], [#1491], [#1492], [#1494])
+- Fix rust-analyzer configuration in VS Code ([#1497])
+- Upgrade to Rust 1.66.1 ([#1500])
+- Box large error variants ([#1506]; thank you, [@zthompson47]!)
+
+[#1490]: https://github.com/hannobraun/Fornjot/pull/1490
+[#1491]: https://github.com/hannobraun/Fornjot/pull/1491
+[#1492]: https://github.com/hannobraun/Fornjot/pull/1492
+[#1494]: https://github.com/hannobraun/Fornjot/pull/1494
+[#1495]: https://github.com/hannobraun/Fornjot/pull/1495
+[#1497]: https://github.com/hannobraun/Fornjot/pull/1497
+[#1500]: https://github.com/hannobraun/Fornjot/pull/1500
+[#1501]: https://github.com/hannobraun/Fornjot/pull/1501
+[#1502]: https://github.com/hannobraun/Fornjot/pull/1502
+[#1504]: https://github.com/hannobraun/Fornjot/pull/1504
+[#1505]: https://github.com/hannobraun/Fornjot/pull/1505
+[#1506]: https://github.com/hannobraun/Fornjot/pull/1506
+[#1509]: https://github.com/hannobraun/Fornjot/pull/1509
+[#1510]: https://github.com/hannobraun/Fornjot/pull/1510
+
+[@zthompson47]: https://github.com/zthompson47
+
+
 ## v0.31.0 (2023-01-09)
 
 ### End-user improvements
