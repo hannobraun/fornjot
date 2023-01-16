@@ -1220,7 +1220,7 @@ version = "0.32.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
- "nalgebra",
+ "nalgebra 0.31.4",
  "num-traits",
  "parry2d-f64",
  "parry3d-f64",
@@ -2177,7 +2177,22 @@ dependencies = [
  "num-complex",
  "num-rational",
  "num-traits",
- "simba",
+ "simba 0.7.3",
+ "typenum",
+]
+
+[[package]]
+name = "nalgebra"
+version = "0.32.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6515c882ebfddccaa73ead7320ca28036c4bc84c9bcca3cc0cbba8efe89223a"
+dependencies = [
+ "approx 0.5.1",
+ "matrixmultiply",
+ "num-complex",
+ "num-rational",
+ "num-traits",
+ "simba 0.8.0",
  "typenum",
 ]
 
@@ -2663,20 +2678,20 @@ dependencies = [
 
 [[package]]
 name = "parry2d-f64"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce8a800704f7b7ea6eb43286841f832a99f073ef06cc531e9c893944c8e8d17b"
+checksum = "70f96abf23f15f0bb4d998a96bcdc58915519a2de8828a809f1ea57b431c4d1f"
 dependencies = [
  "approx 0.5.1",
  "arrayvec 0.7.2",
  "bitflags",
  "downcast-rs",
  "either",
- "nalgebra",
+ "nalgebra 0.32.1",
  "num-derive",
  "num-traits",
  "rustc-hash",
- "simba",
+ "simba 0.8.0",
  "slab",
  "smallvec",
  "spade",
@@ -2693,11 +2708,11 @@ dependencies = [
  "bitflags",
  "downcast-rs",
  "either",
- "nalgebra",
+ "nalgebra 0.31.4",
  "num-derive",
  "num-traits",
  "rustc-hash",
- "simba",
+ "simba 0.7.3",
  "slab",
  "smallvec",
  "spade",
@@ -3400,6 +3415,19 @@ name = "simba"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2f3fd720c48c53cace224ae62bef1bbff363a70c68c4802a78b5cc6159618176"
+dependencies = [
+ "approx 0.5.1",
+ "num-complex",
+ "num-traits",
+ "paste",
+ "wide",
+]
+
+[[package]]
+name = "simba"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "50582927ed6f77e4ac020c057f37a268fc6aebc29225050365aacbb9deeeddc4"
 dependencies = [
  "approx 0.5.1",
  "num-complex",
