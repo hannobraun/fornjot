@@ -58,7 +58,7 @@ pub enum VertexValidationError {
     #[error(
         "`Vertex` position doesn't match position of its surface form\n\
         - `Vertex`: {vertex:#?}\n\
-        - `Vertex` position as surface: {curve_position_on_surface:?}\n\
+        - `Vertex` position on surface: {curve_position_on_surface:?}\n\
         - Distance between the positions: {distance}"
     )]
     PositionMismatch {
