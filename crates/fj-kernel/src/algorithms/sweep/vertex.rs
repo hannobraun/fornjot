@@ -153,6 +153,7 @@ impl Sweep for Handle<GlobalVertex> {
 
 #[cfg(test)]
 mod tests {
+    use fj_math::Point;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -160,8 +161,8 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         partial::{
-            Partial, PartialCurve, PartialHalfEdge, PartialObject,
-            PartialSurfaceVertex, PartialVertex,
+            Partial, PartialCurve, PartialGlobalVertex, PartialHalfEdge,
+            PartialObject, PartialSurfaceVertex, PartialVertex,
         },
         services::Services,
     };
@@ -183,8 +184,11 @@ mod tests {
             position: Some([0.].into()),
             curve: Partial::from(curve),
             surface_form: Partial::from_partial(PartialSurfaceVertex {
+                position: Some(Point::from([0., 0.])),
                 surface: Partial::from(surface.clone()),
-                ..Default::default()
+                global_form: Partial::from_partial(PartialGlobalVertex {
+                    position: Some(Point::from([0., 0., 0.])),
+                }),
             }),
         }
         .build(&mut services.objects);

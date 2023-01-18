@@ -88,10 +88,14 @@ impl SurfaceVertexValidationError {
 
 #[cfg(test)]
 mod tests {
+    use fj_math::Point;
+
     use crate::{
         insert::Insert,
         objects::{GlobalVertex, SurfaceVertex},
-        partial::{Partial, PartialObject, PartialSurfaceVertex},
+        partial::{
+            Partial, PartialGlobalVertex, PartialObject, PartialSurfaceVertex,
+        },
         services::Services,
         validate::Validate,
     };
@@ -103,7 +107,9 @@ mod tests {
         let valid = PartialSurfaceVertex {
             position: Some([0., 0.].into()),
             surface: Partial::from(services.objects.surfaces.xy_plane()),
-            ..Default::default()
+            global_form: Partial::from_partial(PartialGlobalVertex {
+                position: Some(Point::from([0., 0., 0.])),
+            }),
         }
         .build(&mut services.objects);
         let invalid = SurfaceVertex::new(
