@@ -112,7 +112,6 @@ impl Sweep for (Vertex, Handle<Surface>) {
                 curve.clone(),
                 surface_form,
             )
-            .insert(objects)
         });
 
         // And finally, creating the output `Edge` is just a matter of

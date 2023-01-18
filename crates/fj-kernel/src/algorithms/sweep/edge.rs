@@ -81,7 +81,6 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                             curve.clone(),
                             surface_vertex,
                         )
-                        .insert(objects)
                     })
             };
 
@@ -89,8 +88,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         };
 
         let side_edges = bottom_edge.vertices().clone().map(|vertex| {
-            (vertex.clone_object(), surface.clone())
-                .sweep_with_cache(path, cache, objects)
+            (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
         });
 
         let top_edge = {
@@ -139,7 +137,6 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .collect::<[_; 2]>()
                 .map(|(vertex, surface_form)| {
                     Vertex::new(vertex.position(), curve.clone(), surface_form)
-                        .insert(objects)
                 });
 
             HalfEdge::new(vertices, global).insert(objects)

@@ -294,7 +294,7 @@ impl HalfEdgeValidationError {
             if distance > config.identical_max_distance {
                 errors.push(
                     Box::new(Self::VertexPositionMismatch {
-                        vertex: vertex.clone_object(),
+                        vertex: vertex.clone(),
                         curve_position_on_surface,
                         distance,
                     })
@@ -314,8 +314,8 @@ mod tests {
         insert::Insert,
         objects::{GlobalCurve, HalfEdge},
         partial::{
-            Partial, PartialHalfEdge, PartialObject, PartialSurfaceVertex,
-            PartialVertex,
+            FullToPartialCache, Partial, PartialHalfEdge, PartialObject,
+            PartialSurfaceVertex, PartialVertex,
         },
         services::Services,
         validate::Validate,
@@ -336,9 +336,12 @@ mod tests {
         };
         let invalid = {
             let mut vertices = valid.vertices().clone();
-            let mut vertex = Partial::from(vertices[1].clone());
+            let mut vertex = PartialVertex::from_full(
+                &vertices[1],
+                &mut FullToPartialCache::default(),
+            );
             // Arranging for an equal but not identical curve here.
-            vertex.write().curve = Partial::from_partial(
+            vertex.curve = Partial::from_partial(
                 Partial::from(valid.curve().clone()).read().clone(),
             );
             vertices[1] = vertex.build(&mut services.objects);
@@ -425,8 +428,11 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.vertices().clone().map(|vertex| {
-                let mut vertex = Partial::from(vertex);
-                vertex.write().surface_form.write().surface =
+                let mut vertex = PartialVertex::from_full(
+                    &vertex,
+                    &mut FullToPartialCache::default(),
+                );
+                vertex.surface_form.write().surface =
                     Partial::from(services.objects.surfaces.xz_plane());
 
                 vertex.build(&mut services.objects)
@@ -456,7 +462,10 @@ mod tests {
         };
         let invalid = HalfEdge::new(
             valid.vertices().clone().map(|vertex| {
-                let vertex = Partial::from(vertex).read().clone();
+                let vertex = PartialVertex::from_full(
+                    &vertex,
+                    &mut FullToPartialCache::default(),
+                );
                 let surface = vertex.surface_form.read().surface.clone();
                 PartialVertex {
                     position: Some([0.].into()),
@@ -467,7 +476,6 @@ mod tests {
                     ..vertex
                 }
                 .build(&mut services.objects)
-                .insert(&mut services.objects)
             }),
             valid.global_form().clone(),
         );
@@ -493,8 +501,11 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.vertices().clone().map(|vertex| {
-                let mut vertex = Partial::from(vertex);
-                vertex.write().position = Some(Point::from([2.]));
+                let mut vertex = PartialVertex::from_full(
+                    &vertex,
+                    &mut FullToPartialCache::default(),
+                );
+                vertex.position = Some(Point::from([2.]));
 
                 vertex.build(&mut services.objects)
             });

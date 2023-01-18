@@ -292,7 +292,7 @@ mod tests {
                 vertex.surface_form().position() == Point::from([-1., -1.])
             })
             .unwrap()
-            .clone_object();
+            .clone();
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex))
