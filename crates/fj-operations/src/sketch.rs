@@ -35,8 +35,7 @@ impl Shape for fj::Sketch {
                     half_edge.curve().write().surface = surface.clone();
 
                     for vertex in &mut half_edge.vertices {
-                        vertex.write().surface_form.write().surface =
-                            surface.clone();
+                        vertex.surface_form.write().surface = surface.clone();
                     }
 
                     half_edge.update_as_circle_from_radius(circle.radius());

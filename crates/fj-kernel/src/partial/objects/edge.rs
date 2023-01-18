@@ -3,8 +3,9 @@ use std::array;
 use fj_interop::ext::ArrayExt;
 
 use crate::{
+    insert::Insert,
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
     },
     partial::{FullToPartialCache, Partial, PartialObject, PartialVertex},
     services::Service,
@@ -14,7 +15,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The vertices that bound the half-edge on the curve
-    pub vertices: [Partial<Vertex>; 2],
+    pub vertices: [PartialVertex; 2],
 
     /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
@@ -24,29 +25,29 @@ impl PartialHalfEdge {
     /// Access the curve the partial edge is defined on
     pub fn curve(&self) -> Partial<Curve> {
         let [vertex, _] = &self.vertices;
-        vertex.read().curve.clone()
+        vertex.curve.clone()
     }
 
     /// Access a reference to the half-edge's back vertex
-    pub fn back(&self) -> &Partial<Vertex> {
+    pub fn back(&self) -> &PartialVertex {
         let [back, _] = &self.vertices;
         back
     }
 
     /// Access a reference to the half-edge's front vertex
-    pub fn front(&self) -> &Partial<Vertex> {
+    pub fn front(&self) -> &PartialVertex {
         let [_, front] = &self.vertices;
         front
     }
 
     /// Access a mutable reference to the half-edge's back vertex
-    pub fn back_mut(&mut self) -> &mut Partial<Vertex> {
+    pub fn back_mut(&mut self) -> &mut PartialVertex {
         let [back, _] = &mut self.vertices;
         back
     }
 
     /// Access a mutable reference to the half-edge's front vertex
-    pub fn front_mut(&mut self) -> &mut Partial<Vertex> {
+    pub fn front_mut(&mut self) -> &mut PartialVertex {
         let [_, front] = &mut self.vertices;
         front
     }
@@ -63,7 +64,7 @@ impl PartialObject for PartialHalfEdge {
             vertices: half_edge
                 .vertices()
                 .clone()
-                .map(|vertex| Partial::from_full(vertex, cache)),
+                .map(|vertex| PartialVertex::from_full(&vertex, cache)),
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
                 cache,
@@ -72,7 +73,9 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let vertices = self.vertices.map(|vertex| vertex.build(objects));
+        let vertices = self
+            .vertices
+            .map(|vertex| vertex.build(objects).insert(objects));
         let global_form = self.global_form.build(objects);
 
         HalfEdge::new(vertices, global_form)
@@ -82,17 +85,15 @@ impl PartialObject for PartialHalfEdge {
 impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = Partial::<Curve>::new();
-        let vertices = array::from_fn(|_| {
-            Partial::from_partial(PartialVertex {
-                curve: curve.clone(),
-                ..Default::default()
-            })
+        let vertices = array::from_fn(|_| PartialVertex {
+            curve: curve.clone(),
+            ..Default::default()
         });
 
         let global_curve = curve.read().global_form.clone();
         let global_vertices =
-            vertices.each_ref_ext().map(|vertex: &Partial<Vertex>| {
-                let surface_vertex = vertex.read().surface_form.clone();
+            vertices.each_ref_ext().map(|vertex: &PartialVertex| {
+                let surface_vertex = vertex.surface_form.clone();
                 let global_vertex = surface_vertex.read().global_form.clone();
                 global_vertex
             });
