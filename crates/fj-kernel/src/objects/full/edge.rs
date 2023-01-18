@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -35,11 +35,6 @@ impl HalfEdge {
     /// Access the vertices that bound the half-edge on the curve
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
-    }
-
-    /// Access the surface that the half-edge's curve is defined in
-    pub fn surface(&self) -> &Handle<Surface> {
-        self.curve().surface()
     }
 
     /// Access the global form of the half-edge
