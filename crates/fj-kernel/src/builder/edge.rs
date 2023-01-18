@@ -59,7 +59,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let surface = surface.into();
 
         for vertex in &mut self.vertices {
-            vertex.write().replace_surface(surface.clone());
+            vertex.replace_surface(surface.clone());
         }
     }
 
@@ -72,7 +72,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let mut surface_vertex = {
             let [vertex, _] = &mut self.vertices;
-            vertex.write().surface_form.clone()
+            vertex.surface_form.clone()
         };
         surface_vertex.write().position =
             Some(path.point_from_path_coords(a_curve));
@@ -80,7 +80,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point_curve) in
             self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            let mut vertex = vertex.write();
+            let mut vertex = vertex;
             vertex.position = Some(point_curve);
             vertex.surface_form = surface_vertex.clone();
         }
@@ -95,7 +95,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         }
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
-                .read()
                 .surface_form
                 .read()
                 .position
@@ -123,7 +122,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point_curve) in
             self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            let mut vertex = vertex.write();
             vertex.position = Some(point_curve);
             vertex.surface_form.write().position =
                 Some(path.point_from_path_coords(point_curve));
@@ -140,7 +138,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let surface = surface.into();
 
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
-            let mut vertex = vertex.write();
             vertex.curve.write().surface = surface.clone();
 
             let mut surface_form = vertex.surface_form.write();
@@ -154,7 +151,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_line_segment(&mut self) {
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
-                .read()
                 .surface_form
                 .read()
                 .position
@@ -167,7 +163,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
         {
-            vertex.write().position = Some([position].into());
+            vertex.position = Some([position].into());
         }
 
         self.infer_global_form();
@@ -176,10 +172,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
         self.global_form.write().curve =
             self.curve().read().global_form.clone();
-        self.global_form.write().vertices =
-            self.vertices.each_ref_ext().map(|vertex| {
-                vertex.read().surface_form.read().global_form.clone()
-            });
+        self.global_form.write().vertices = self
+            .vertices
+            .each_ref_ext()
+            .map(|vertex| vertex.surface_form.read().global_form.clone());
 
         self.global_form.clone()
     }
@@ -202,13 +198,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .iter_mut()
             .zip(other.read().vertices.iter().rev())
         {
-            this.write()
-                .surface_form
-                .write()
-                .global_form
-                .write()
-                .position =
-                other.read().surface_form.read().global_form.read().position;
+            this.surface_form.write().global_form.write().position =
+                other.surface_form.read().global_form.read().position;
         }
     }
 }

@@ -125,7 +125,7 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex(Handle<Vertex>),
+    PointIsOnVertex(Vertex),
 }
 
 #[cfg(test)]
@@ -346,10 +346,11 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([1., 0.])
             })
-            .unwrap();
+            .unwrap()
+            .clone();
         assert_eq!(
             intersection,
-            Some(FacePointIntersection::PointIsOnVertex(vertex.clone()))
+            Some(FacePointIntersection::PointIsOnVertex(vertex))
         );
     }
 }

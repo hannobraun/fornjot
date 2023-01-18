@@ -98,9 +98,9 @@ mod tests {
                 let first_half_edge = half_edges.first_mut().unwrap();
                 let [first_vertex, _] = &mut first_half_edge.write().vertices;
                 let surface_vertex = Partial::from_partial(
-                    first_vertex.read().surface_form.read().clone(),
+                    first_vertex.surface_form.read().clone(),
                 );
-                first_vertex.write().surface_form = surface_vertex;
+                first_vertex.surface_form = surface_vertex;
             }
 
             let half_edges = half_edges

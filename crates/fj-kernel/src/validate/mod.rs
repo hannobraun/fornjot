@@ -11,10 +11,8 @@ mod surface;
 mod vertex;
 
 pub use self::{
-    cycle::CycleValidationError,
-    edge::HalfEdgeValidationError,
-    face::FaceValidationError,
-    vertex::{SurfaceVertexValidationError, VertexValidationError},
+    cycle::CycleValidationError, edge::HalfEdgeValidationError,
+    face::FaceValidationError, vertex::SurfaceVertexValidationError,
 };
 
 use std::convert::Infallible;
@@ -100,10 +98,6 @@ pub enum ValidationError {
     /// `SurfaceVertex` validation error
     #[error(transparent)]
     SurfaceVertex(#[from] Box<SurfaceVertexValidationError>),
-
-    /// `Vertex` validation error
-    #[error(transparent)]
-    Vertex(#[from] Box<VertexValidationError>),
 }
 
 impl From<Infallible> for ValidationError {

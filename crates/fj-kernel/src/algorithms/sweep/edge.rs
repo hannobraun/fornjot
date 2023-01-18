@@ -81,7 +81,6 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                             curve.clone(),
                             surface_vertex,
                         )
-                        .insert(objects)
                     })
             };
 
@@ -138,7 +137,6 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .collect::<[_; 2]>()
                 .map(|(vertex, surface_form)| {
                     Vertex::new(vertex.position(), curve.clone(), surface_form)
-                        .insert(objects)
                 });
 
             HalfEdge::new(vertices, global).insert(objects)
@@ -236,10 +234,8 @@ mod tests {
                 {
                     let [back, front] = &mut side_up.vertices;
 
-                    back.write().surface_form =
-                        bottom.vertices[1].read().surface_form.clone();
+                    back.surface_form = bottom.vertices[1].surface_form.clone();
 
-                    let mut front = front.write();
                     let mut front = front.surface_form.write();
                     front.position = Some([1., 1.].into());
                     front.surface = surface.clone();
@@ -257,13 +253,12 @@ mod tests {
                 {
                     let [back, front] = &mut top.vertices;
 
-                    let mut back = back.write();
                     let mut back = back.surface_form.write();
                     back.position = Some([0., 1.].into());
                     back.surface = surface.clone();
 
-                    front.write().surface_form =
-                        side_up.vertices[1].read().surface_form.clone();
+                    front.surface_form =
+                        side_up.vertices[1].surface_form.clone();
                 }
 
                 top.infer_global_form();
@@ -283,10 +278,8 @@ mod tests {
 
                 let [back, front] = &mut side_down.vertices;
 
-                back.write().surface_form =
-                    bottom.vertices[0].read().surface_form.clone();
-                front.write().surface_form =
-                    top.vertices[1].read().surface_form.clone();
+                back.surface_form = bottom.vertices[0].surface_form.clone();
+                front.surface_form = top.vertices[1].surface_form.clone();
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();

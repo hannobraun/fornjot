@@ -1,20 +1,15 @@
 use fj_math::{Point, Scalar};
 
-use crate::{
-    objects::{GlobalVertex, Surface, SurfaceVertex, Vertex},
-    storage::Handle,
-};
+use crate::objects::{GlobalVertex, SurfaceVertex, Vertex};
 
 use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Vertex {
     fn validate_with_config(
         &self,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
+        _: &ValidationConfig,
+        _: &mut Vec<ValidationError>,
     ) {
-        VertexValidationError::check_surface_identity(self, errors);
-        VertexValidationError::check_position(self, config, errors);
     }
 }
 
@@ -34,87 +29,6 @@ impl Validate for GlobalVertex {
         _: &ValidationConfig,
         _: &mut Vec<ValidationError>,
     ) {
-    }
-}
-
-/// [`Vertex`] validation failed
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum VertexValidationError {
-    /// Mismatch between the surface's of the curve and surface form
-    #[error(
-        "Surface form of vertex must be defined on same surface as curve\n\
-        - `Surface` of curve: {curve_surface:#?}\n\
-        - `Surface` of surface form: {surface_form_surface:#?}"
-    )]
-    SurfaceMismatch {
-        /// The surface of the vertex' curve
-        curve_surface: Handle<Surface>,
-
-        /// The surface of the vertex' surface form
-        surface_form_surface: Handle<Surface>,
-    },
-
-    /// Mismatch between position of the vertex and position of its surface form
-    #[error(
-        "`Vertex` position doesn't match position of its surface form\n\
-        - `Vertex`: {vertex:#?}\n\
-        - `Vertex` position on surface: {curve_position_on_surface:?}\n\
-        - Distance between the positions: {distance}"
-    )]
-    PositionMismatch {
-        /// The vertex
-        vertex: Vertex,
-
-        /// The curve position converted into a surface position
-        curve_position_on_surface: Point<2>,
-
-        /// The distance between the positions
-        distance: Scalar,
-    },
-}
-
-impl VertexValidationError {
-    fn check_surface_identity(
-        vertex: &Vertex,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let curve_surface = vertex.curve().surface();
-        let surface_form_surface = vertex.surface_form().surface();
-
-        if curve_surface.id() != surface_form_surface.id() {
-            errors.push(
-                Box::new(Self::SurfaceMismatch {
-                    curve_surface: curve_surface.clone(),
-                    surface_form_surface: surface_form_surface.clone(),
-                })
-                .into(),
-            );
-        }
-    }
-
-    fn check_position(
-        vertex: &Vertex,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let curve_position_on_surface = vertex
-            .curve()
-            .path()
-            .point_from_path_coords(vertex.position());
-        let surface_position = vertex.surface_form().position();
-
-        let distance = curve_position_on_surface.distance_to(&surface_position);
-
-        if distance > config.identical_max_distance {
-            errors.push(
-                Box::new(Self::PositionMismatch {
-                    vertex: vertex.clone(),
-                    curve_position_on_surface,
-                    distance,
-                })
-                .into(),
-            );
-        }
     }
 }
 
@@ -175,88 +89,12 @@ impl SurfaceVertexValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CurveBuilder,
         insert::Insert,
-        objects::{GlobalVertex, SurfaceVertex, Vertex},
-        partial::{
-            Partial, PartialCurve, PartialObject, PartialSurfaceVertex,
-            PartialVertex,
-        },
+        objects::{GlobalVertex, SurfaceVertex},
+        partial::{Partial, PartialObject, PartialSurfaceVertex},
         services::Services,
         validate::Validate,
     };
-
-    #[test]
-    fn vertex_surface_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
-        curve.update_as_u_axis();
-
-        let valid = PartialVertex {
-            position: Some([0.].into()),
-            curve: Partial::from_partial(curve),
-            surface_form: Partial::from_partial(PartialSurfaceVertex {
-                surface,
-                ..Default::default()
-            }),
-        }
-        .build(&mut services.objects);
-        let invalid = {
-            let mut surface_form = Partial::from(valid.surface_form().clone());
-            surface_form.write().surface =
-                Partial::from(services.objects.surfaces.xz_plane());
-            let surface_form = surface_form.build(&mut services.objects);
-
-            Vertex::new(valid.position(), valid.curve().clone(), surface_form)
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
-
-    #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let surface = Partial::from(services.objects.surfaces.xy_plane());
-            let mut curve = PartialCurve {
-                surface: surface.clone(),
-                ..Default::default()
-            };
-            curve.update_as_u_axis();
-
-            PartialVertex {
-                position: Some([0.].into()),
-                curve: Partial::from_partial(curve),
-                surface_form: Partial::from_partial(PartialSurfaceVertex {
-                    surface,
-                    ..Default::default()
-                }),
-            }
-            .build(&mut services.objects)
-        };
-        let invalid = {
-            let mut surface_form = Partial::from(valid.surface_form().clone());
-            surface_form.write().position = Some([1., 0.].into());
-            surface_form.write().global_form = Partial::new();
-            let surface_form = surface_form.build(&mut services.objects);
-
-            Vertex::new(valid.position(), valid.curve().clone(), surface_form)
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
 
     #[test]
     fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
