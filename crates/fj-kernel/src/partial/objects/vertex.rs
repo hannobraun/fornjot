@@ -1,8 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
-    partial::{FullToPartialCache, Partial, PartialCurve, PartialObject},
+    objects::{GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -11,9 +11,6 @@ use crate::{
 pub struct PartialVertex {
     /// The position of the vertex on the curve
     pub position: Option<Point<1>>,
-
-    /// The curve that the vertex is defined in
-    pub curve: Partial<Curve>,
 
     /// The surface form of the vertex
     pub surface_form: Partial<SurfaceVertex>,
@@ -25,7 +22,6 @@ impl PartialObject for PartialVertex {
     fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             position: Some(vertex.position()),
-            curve: Partial::from_full(vertex.curve().clone(), cache),
             surface_form: Partial::from_full(
                 vertex.surface_form().clone(),
                 cache,
@@ -37,10 +33,9 @@ impl PartialObject for PartialVertex {
         let position = self
             .position
             .expect("Can't build `Vertex` without position");
-        let curve = self.curve.build(objects);
         let surface_form = self.surface_form.build(objects);
 
-        Vertex::new(position, curve, surface_form)
+        Vertex::new(position, surface_form)
     }
 }
 
@@ -48,10 +43,6 @@ impl Default for PartialVertex {
     fn default() -> Self {
         let surface = Partial::new();
 
-        let curve = Partial::from_partial(PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        });
         let surface_form = Partial::from_partial(PartialSurfaceVertex {
             surface,
             ..Default::default()
@@ -59,7 +50,6 @@ impl Default for PartialVertex {
 
         Self {
             position: None,
-            curve,
             surface_form,
         }
     }

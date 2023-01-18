@@ -3,8 +3,8 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        Vertex, VerticesInNormalizedOrder,
+        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface, Vertex,
+        VerticesInNormalizedOrder,
     },
     storage::Handle,
 };
@@ -17,7 +17,6 @@ impl Validate for HalfEdge {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        HalfEdgeValidationError::check_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_surface_identity(self, errors);
@@ -42,24 +41,6 @@ impl Validate for GlobalEdge {
 /// [`HalfEdge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum HalfEdgeValidationError {
-    /// [`HalfEdge`] vertices are not defined on the same `Curve`
-    #[error(
-        "`HalfEdge` vertices are not defined on the same `Curve`\n\
-        - `Curve` of back vertex: {back_curve:#?}\n\
-        - `Curve` of front vertex: {front_curve:#?}\n\
-        - `HalfEdge`: {half_edge:#?}"
-    )]
-    CurveMismatch {
-        /// The curve of the [`HalfEdge`]'s back vertex
-        back_curve: Handle<Curve>,
-
-        /// The curve of the [`HalfEdge`]'s front vertex
-        front_curve: Handle<Curve>,
-
-        /// The half-edge
-        half_edge: HalfEdge,
-    },
-
     /// [`HalfEdge`]'s [`GlobalCurve`]s do not match
     #[error(
         "Global form of `HalfEdge`'s `Curve` does not match `GlobalCurve` of \n\
@@ -69,7 +50,7 @@ pub enum HalfEdgeValidationError {
         - `HalfEdge`: {half_edge:#?}",
     )]
     GlobalCurveMismatch {
-        /// The [`GlobalCurve`] from the [`HalfEdge`]'s [`Curve`]
+        /// The [`GlobalCurve`] from the [`HalfEdge`]'s `Curve`
         global_curve_from_curve: Handle<GlobalCurve>,
 
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
@@ -155,25 +136,6 @@ pub enum HalfEdgeValidationError {
 }
 
 impl HalfEdgeValidationError {
-    fn check_curve_identity(
-        half_edge: &HalfEdge,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let back_curve = half_edge.back().curve();
-        let front_curve = half_edge.front().curve();
-
-        if back_curve.id() != front_curve.id() {
-            errors.push(
-                Box::new(Self::CurveMismatch {
-                    back_curve: back_curve.clone(),
-                    front_curve: front_curve.clone(),
-                    half_edge: half_edge.clone(),
-                })
-                .into(),
-            );
-        }
-    }
-
     fn check_global_curve_identity(
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
@@ -321,44 +283,6 @@ mod tests {
         services::Services,
         validate::Validate,
     };
-
-    #[test]
-    fn half_edge_curve_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-        let invalid = {
-            let mut vertices = valid.vertices().clone();
-            let mut vertex = PartialVertex::from_full(
-                &vertices[1],
-                &mut FullToPartialCache::default(),
-            );
-            // Arranging for an equal but not identical curve here.
-            vertex.curve = Partial::from_partial(
-                Partial::from(valid.curve().clone()).read().clone(),
-            );
-            vertices[1] = vertex.build(&mut services.objects);
-
-            HalfEdge::new(
-                valid.curve().clone(),
-                vertices,
-                valid.global_form().clone(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
 
     #[test]
     fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {

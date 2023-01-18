@@ -1,9 +1,6 @@
 use fj_math::Point;
 
-use crate::{
-    objects::{Curve, Surface},
-    storage::Handle,
-};
+use crate::{objects::Surface, storage::Handle};
 
 /// A vertex
 ///
@@ -15,7 +12,6 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Vertex {
     position: Point<1>,
-    curve: Handle<Curve>,
     surface_form: Handle<SurfaceVertex>,
 }
 
@@ -23,14 +19,12 @@ impl Vertex {
     /// Construct an instance of `Vertex`
     pub fn new(
         position: impl Into<Point<1>>,
-        curve: Handle<Curve>,
         surface_form: Handle<SurfaceVertex>,
     ) -> Self {
         let position = position.into();
 
         Self {
             position,
-            curve,
             surface_form,
         }
     }
@@ -38,11 +32,6 @@ impl Vertex {
     /// Access the position of the vertex on the curve
     pub fn position(&self) -> Point<1> {
         self.position
-    }
-
-    /// Access the curve that the vertex is defined in
-    pub fn curve(&self) -> &Handle<Curve> {
-        &self.curve
     }
 
     /// Access the surface form of this vertex

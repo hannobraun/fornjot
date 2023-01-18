@@ -23,8 +23,6 @@ pub trait VertexBuilder {
 impl VertexBuilder for PartialVertex {
     fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>) {
         let surface = surface.into();
-
-        self.curve.write().surface = surface.clone();
         self.surface_form.write().surface = surface;
     }
 }
