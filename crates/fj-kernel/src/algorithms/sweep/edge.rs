@@ -76,15 +76,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         )
                         .insert(objects);
 
-                        Vertex::new(
-                            vertex.position(),
-                            curve.clone(),
-                            surface_vertex,
-                        )
+                        Vertex::new(vertex.position(), surface_vertex)
                     })
             };
 
-            HalfEdge::new(vertices, edge.global_form().clone()).insert(objects)
+            HalfEdge::new(curve, vertices, edge.global_form().clone())
+                .insert(objects)
         };
 
         let side_edges = bottom_edge.vertices().clone().map(|vertex| {
@@ -136,10 +133,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .zip(surface_vertices)
                 .collect::<[_; 2]>()
                 .map(|(vertex, surface_form)| {
-                    Vertex::new(vertex.position(), curve.clone(), surface_form)
+                    Vertex::new(vertex.position(), surface_form)
                 });
 
-            HalfEdge::new(vertices, global).insert(objects)
+            HalfEdge::new(curve, vertices, global).insert(objects)
         };
 
         let cycle = {
@@ -229,7 +226,7 @@ mod tests {
             };
             let side_up = {
                 let mut side_up = PartialHalfEdge::default();
-                side_up.curve().write().surface = surface.clone();
+                side_up.curve.write().surface = surface.clone();
 
                 {
                     let [back, front] = &mut side_up.vertices;
@@ -248,7 +245,7 @@ mod tests {
             };
             let top = {
                 let mut top = PartialHalfEdge::default();
-                top.curve().write().surface = surface.clone();
+                top.curve.write().surface = surface.clone();
 
                 {
                     let [back, front] = &mut top.vertices;
@@ -274,7 +271,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge::default();
-                side_down.curve().write().surface = surface;
+                side_down.curve.write().surface = surface;
 
                 let [back, front] = &mut side_down.vertices;
 

@@ -151,7 +151,7 @@ impl FaceBuilder for PartialFace {
         for half_edge in &mut self.exterior.write().half_edges {
             let mut half_edge = half_edge.write();
 
-            let mut curve = half_edge.curve();
+            let mut curve = half_edge.curve.clone();
             let mut curve = curve.write();
 
             if let Some(path) = &mut curve.path {

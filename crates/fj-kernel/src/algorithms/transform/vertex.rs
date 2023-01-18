@@ -18,16 +18,12 @@ impl TransformObject for Vertex {
         // coordinates and thus transforming the curve takes care of it.
         let position = self.position();
 
-        let curve = self
-            .curve()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let surface_form = self
             .surface_form()
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(position, curve, surface_form)
+        Self::new(position, surface_form)
     }
 }
 

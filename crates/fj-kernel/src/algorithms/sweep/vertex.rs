@@ -107,16 +107,12 @@ impl Sweep for (Vertex, Handle<Surface>) {
 
         // And now the vertices. Again, nothing wild here.
         let vertices = vertices_surface.map(|surface_form| {
-            Vertex::new(
-                [surface_form.position().v],
-                curve.clone(),
-                surface_form,
-            )
+            Vertex::new([surface_form.position().v], surface_form)
         });
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(vertices, edge_global).insert(objects)
+        HalfEdge::new(curve, vertices, edge_global).insert(objects)
     }
 }
 
@@ -153,6 +149,7 @@ impl Sweep for Handle<GlobalVertex> {
 
 #[cfg(test)]
 mod tests {
+    use fj_math::Point;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -160,8 +157,8 @@ mod tests {
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
         partial::{
-            Partial, PartialCurve, PartialHalfEdge, PartialObject,
-            PartialSurfaceVertex, PartialVertex,
+            Partial, PartialCurve, PartialGlobalVertex, PartialHalfEdge,
+            PartialObject, PartialSurfaceVertex, PartialVertex,
         },
         services::Services,
     };
@@ -176,15 +173,14 @@ mod tests {
             ..Default::default()
         };
         curve.update_as_u_axis();
-        let curve = curve
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
         let vertex = PartialVertex {
             position: Some([0.].into()),
-            curve: Partial::from(curve),
             surface_form: Partial::from_partial(PartialSurfaceVertex {
+                position: Some(Point::from([0., 0.])),
                 surface: Partial::from(surface.clone()),
-                ..Default::default()
+                global_form: Partial::from_partial(PartialGlobalVertex {
+                    position: Some(Point::from([0., 0., 0.])),
+                }),
             }),
         }
         .build(&mut services.objects);
