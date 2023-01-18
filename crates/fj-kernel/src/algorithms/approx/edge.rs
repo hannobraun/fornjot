@@ -30,8 +30,9 @@ impl Approx for &HalfEdge {
             .map(|vertex| vertex.position());
         let range = RangeOnPath { boundary };
 
-        let [a, _] = self.surface_vertices();
-        let first = ApproxPoint::new(a.position(), a.global_form().position());
+        let [first, _] = self.surface_vertices();
+        let first =
+            ApproxPoint::new(first.position(), first.global_form().position());
         let curve_approx =
             (self.curve(), range).approx_with_cache(tolerance, cache);
 
