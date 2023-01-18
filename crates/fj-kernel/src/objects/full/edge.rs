@@ -1,7 +1,9 @@
 use std::fmt;
 
+use fj_interop::ext::ArrayExt;
+
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, Vertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -35,6 +37,13 @@ impl HalfEdge {
     /// Access the vertices that bound the half-edge on the curve
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
+    }
+
+    /// Access the surface vertices that bound the half-edge
+    pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
+        self.vertices
+            .each_ref_ext()
+            .map(|vertex| vertex.surface_form())
     }
 
     /// Access the global form of the half-edge
