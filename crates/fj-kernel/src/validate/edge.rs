@@ -346,7 +346,11 @@ mod tests {
             );
             vertices[1] = vertex.build(&mut services.objects);
 
-            HalfEdge::new(vertices, valid.global_form().clone())
+            HalfEdge::new(
+                valid.curve().clone(),
+                vertices,
+                valid.global_form().clone(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -368,12 +372,13 @@ mod tests {
 
             half_edge.build(&mut services.objects)
         };
-        let invalid = HalfEdge::new(valid.vertices().clone(), {
-            let mut tmp = Partial::from(valid.global_form().clone());
-            tmp.write().curve =
-                Partial::from(GlobalCurve.insert(&mut services.objects));
-            tmp.build(&mut services.objects)
-        });
+        let invalid =
+            HalfEdge::new(valid.curve().clone(), valid.vertices().clone(), {
+                let mut tmp = Partial::from(valid.global_form().clone());
+                tmp.write().curve =
+                    Partial::from(GlobalCurve.insert(&mut services.objects));
+                tmp.build(&mut services.objects)
+            });
 
         valid.validate_and_return_first_error()?;
         assert!(invalid.validate_and_return_first_error().is_err());
@@ -394,18 +399,21 @@ mod tests {
 
             half_edge.build(&mut services.objects)
         };
-        let invalid = HalfEdge::new(valid.vertices().clone(), {
-            let mut tmp = Partial::from(valid.global_form().clone());
-            tmp.write().vertices = valid
-                .global_form()
-                .vertices()
-                .access_in_normalized_order()
-                // Creating equal but not identical vertices here.
-                .map(|vertex| {
-                    Partial::from_partial(Partial::from(vertex).read().clone())
-                });
-            tmp.build(&mut services.objects)
-        });
+        let invalid =
+            HalfEdge::new(valid.curve().clone(), valid.vertices().clone(), {
+                let mut tmp = Partial::from(valid.global_form().clone());
+                tmp.write().vertices = valid
+                    .global_form()
+                    .vertices()
+                    .access_in_normalized_order()
+                    // Creating equal but not identical vertices here.
+                    .map(|vertex| {
+                        Partial::from_partial(
+                            Partial::from(vertex).read().clone(),
+                        )
+                    });
+                tmp.build(&mut services.objects)
+            });
 
         valid.validate_and_return_first_error()?;
         assert!(invalid.validate_and_return_first_error().is_err());
@@ -438,7 +446,11 @@ mod tests {
                 vertex.build(&mut services.objects)
             });
 
-            HalfEdge::new(vertices, valid.global_form().clone())
+            HalfEdge::new(
+                valid.curve().clone(),
+                vertices,
+                valid.global_form().clone(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -461,6 +473,7 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = HalfEdge::new(
+            valid.curve().clone(),
             valid.vertices().clone().map(|vertex| {
                 let vertex = PartialVertex::from_full(
                     &vertex,
@@ -510,7 +523,11 @@ mod tests {
                 vertex.build(&mut services.objects)
             });
 
-            HalfEdge::new(vertices, valid.global_form().clone())
+            HalfEdge::new(
+                valid.curve().clone(),
+                vertices,
+                valid.global_form().clone(),
+            )
         };
 
         valid.validate_and_return_first_error()?;

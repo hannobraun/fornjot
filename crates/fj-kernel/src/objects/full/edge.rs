@@ -8,14 +8,20 @@ use crate::{
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
+    curve: Handle<Curve>,
     vertices: [Vertex; 2],
     global_form: Handle<GlobalEdge>,
 }
 
 impl HalfEdge {
     /// Create an instance of `HalfEdge`
-    pub fn new(vertices: [Vertex; 2], global_form: Handle<GlobalEdge>) -> Self {
+    pub fn new(
+        curve: Handle<Curve>,
+        vertices: [Vertex; 2],
+        global_form: Handle<GlobalEdge>,
+    ) -> Self {
         Self {
+            curve,
             vertices,
             global_form,
         }

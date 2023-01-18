@@ -72,10 +72,11 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let curve = self.curve().build(objects);
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(vertices, global_form)
+        HalfEdge::new(curve, vertices, global_form)
     }
 }
 
