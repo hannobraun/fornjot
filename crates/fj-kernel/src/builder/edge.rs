@@ -202,7 +202,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .iter_mut()
             .zip(other.read().vertices.iter().rev())
         {
-            this.write().position = other.read().position;
             this.write()
                 .surface_form
                 .write()

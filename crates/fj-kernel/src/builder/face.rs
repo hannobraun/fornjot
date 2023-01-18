@@ -3,8 +3,9 @@ use std::collections::VecDeque;
 use fj_interop::ext::ArrayExt;
 
 use crate::{
+    geometry::path::SurfacePath,
     objects::{Cycle, HalfEdge, Surface},
-    partial::{Partial, PartialCycle, PartialFace},
+    partial::{MaybeSurfacePath, Partial, PartialCycle, PartialFace},
 };
 
 use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument, SurfaceBuilder};
@@ -52,6 +53,9 @@ pub trait FaceBuilder {
     /// otherwise. This is a temporary limitation, not a fundamental one. It
     /// could be overcome with some more work.
     fn update_surface_as_plane(&mut self) -> Partial<Surface>;
+
+    /// Infer any undefined curves in the face
+    fn infer_curves(&mut self);
 }
 
 impl FaceBuilder for PartialFace {
@@ -105,11 +109,9 @@ impl FaceBuilder for PartialFace {
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
         let mut exterior = self.exterior.write();
-        let mut vertices = {
-            exterior.half_edges.iter().map(|half_edge| {
-                half_edge.read().back().read().surface_form.clone()
-            })
-        };
+        let mut vertices = exterior.half_edges.iter().map(|half_edge| {
+            half_edge.read().back().read().surface_form.clone()
+        });
 
         let vertices = {
             let array = [
@@ -142,5 +144,49 @@ impl FaceBuilder for PartialFace {
         }
 
         exterior.surface.clone()
+    }
+
+    fn infer_curves(&mut self) {
+        for half_edge in &mut self.exterior.write().half_edges {
+            let mut half_edge = half_edge.write();
+
+            let mut curve = half_edge.curve();
+            let mut curve = curve.write();
+
+            if let Some(path) = &mut curve.path {
+                match path {
+                    MaybeSurfacePath::Defined(_) => {
+                        // Path is already defined. Nothing to infer.
+                    }
+                    MaybeSurfacePath::UndefinedCircle => todo!(
+                        "Inferring undefined circles is not supported yet"
+                    ),
+                    MaybeSurfacePath::UndefinedLine => {
+                        let points_surface =
+                            half_edge.vertices.each_ref_ext().map(|vertex| {
+                                vertex
+                                    .read()
+                                    .surface_form
+                                    .read()
+                                    .position
+                                    .expect(
+                                    "Can't infer curve without surface points",
+                                )
+                            });
+                        let (line, points_curve) =
+                            SurfacePath::line_from_points(points_surface);
+
+                        *path = MaybeSurfacePath::Defined(line);
+                        for (vertex, point) in half_edge
+                            .vertices
+                            .each_mut_ext()
+                            .zip_ext(points_curve)
+                        {
+                            vertex.write().position = Some(point);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
