@@ -32,10 +32,6 @@ impl Validate for GlobalVertex {
     }
 }
 
-/// [`Vertex`] validation failed
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum VertexValidationError {}
-
 /// [`SurfaceVertex`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SurfaceVertexValidationError {
