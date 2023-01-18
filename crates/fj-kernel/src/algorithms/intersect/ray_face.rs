@@ -291,10 +291,11 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([-1., -1.])
             })
-            .unwrap();
+            .unwrap()
+            .clone();
         assert_eq!(
             (&ray, &face).intersect(),
-            Some(RayFaceIntersection::RayHitsVertex(vertex.clone()))
+            Some(RayFaceIntersection::RayHitsVertex(vertex))
         );
     }
 
