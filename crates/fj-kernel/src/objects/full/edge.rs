@@ -37,18 +37,6 @@ impl HalfEdge {
         &self.vertices
     }
 
-    /// Access the vertex at the back of the half-edge
-    pub fn back(&self) -> &Vertex {
-        let [back, _] = self.vertices();
-        back
-    }
-
-    /// Access the vertex at the front of the half-edge
-    pub fn front(&self) -> &Vertex {
-        let [_, front] = self.vertices();
-        front
-    }
-
     /// Access the surface that the half-edge's curve is defined in
     pub fn surface(&self) -> &Handle<Surface> {
         self.curve().surface()
