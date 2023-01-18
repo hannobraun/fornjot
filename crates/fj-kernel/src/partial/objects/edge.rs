@@ -13,6 +13,9 @@ use crate::{
 /// A partial [`HalfEdge`]
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
+    /// The curve that the half-edge is defined in
+    pub curve: Partial<Curve>,
+
     /// The vertices that bound the half-edge on the curve
     pub vertices: [PartialVertex; 2],
 
@@ -60,6 +63,7 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
+            curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .vertices()
                 .clone()
@@ -102,6 +106,7 @@ impl Default for PartialHalfEdge {
         });
 
         Self {
+            curve,
             vertices,
             global_form,
         }
