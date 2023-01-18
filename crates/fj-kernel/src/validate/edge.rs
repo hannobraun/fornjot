@@ -307,6 +307,7 @@ impl HalfEdgeValidationError {
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
@@ -315,7 +316,7 @@ mod tests {
         objects::{GlobalCurve, HalfEdge},
         partial::{
             FullToPartialCache, Partial, PartialHalfEdge, PartialObject,
-            PartialSurfaceVertex, PartialVertex,
+            PartialVertex,
         },
         services::Services,
         validate::Validate,
@@ -472,26 +473,23 @@ mod tests {
 
             half_edge.build(&mut services.objects)
         };
-        let invalid = HalfEdge::new(
-            valid.curve().clone(),
-            valid.vertices().clone().map(|vertex| {
-                let vertex = PartialVertex::from_full(
-                    &vertex,
+        let invalid = {
+            let vertices = valid.vertices().each_ref_ext().map(|vertex| {
+                let mut vertex = PartialVertex::from_full(
+                    vertex,
                     &mut FullToPartialCache::default(),
                 );
-                let surface = vertex.surface_form.read().surface.clone();
-                PartialVertex {
-                    position: Some([0.].into()),
-                    surface_form: Partial::from_partial(PartialSurfaceVertex {
-                        surface,
-                        ..Default::default()
-                    }),
-                    ..vertex
-                }
-                .build(&mut services.objects)
-            }),
-            valid.global_form().clone(),
-        );
+                vertex.position = Some(Point::from([0.]));
+
+                vertex.build(&mut services.objects)
+            });
+
+            HalfEdge::new(
+                valid.curve().clone(),
+                vertices,
+                valid.global_form().clone(),
+            )
+        };
 
         valid.validate_and_return_first_error()?;
         assert!(invalid.validate_and_return_first_error().is_err());
