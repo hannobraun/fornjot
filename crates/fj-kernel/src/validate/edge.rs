@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        VerticesInNormalizedOrder,
+        Vertex, VerticesInNormalizedOrder,
     },
     storage::Handle,
 };
@@ -22,6 +22,7 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_surface_identity(self, errors);
         HalfEdgeValidationError::check_vertex_positions(self, config, errors);
+        HalfEdgeValidationError::check_position(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
@@ -132,6 +133,24 @@ pub enum HalfEdgeValidationError {
 
         /// The half-edge
         half_edge: HalfEdge,
+    },
+
+    /// Mismatch between position of the vertex and position of its surface form
+    #[error(
+        "`Vertex` position doesn't match position of its surface form\n\
+        - `Vertex`: {vertex:#?}\n\
+        - `Vertex` position on surface: {curve_position_on_surface:?}\n\
+        - Distance between the positions: {distance}"
+    )]
+    VertexPositionMismatch {
+        /// The vertex
+        vertex: Vertex,
+
+        /// The curve position converted into a surface position
+        curve_position_on_surface: Point<2>,
+
+        /// The distance between the positions
+        distance: Scalar,
     },
 }
 
@@ -256,10 +275,40 @@ impl HalfEdgeValidationError {
             );
         }
     }
+
+    fn check_position(
+        half_edge: &HalfEdge,
+        config: &ValidationConfig,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        for vertex in half_edge.vertices() {
+            let curve_position_on_surface = vertex
+                .curve()
+                .path()
+                .point_from_path_coords(vertex.position());
+            let surface_position = vertex.surface_form().position();
+
+            let distance =
+                curve_position_on_surface.distance_to(&surface_position);
+
+            if distance > config.identical_max_distance {
+                errors.push(
+                    Box::new(Self::VertexPositionMismatch {
+                        vertex: vertex.clone_object(),
+                        curve_position_on_surface,
+                        distance,
+                    })
+                    .into(),
+                );
+            }
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use fj_math::Point;
+
     use crate::{
         builder::HalfEdgeBuilder,
         insert::Insert,
@@ -422,6 +471,36 @@ mod tests {
             }),
             valid.global_form().clone(),
         );
+
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn vertex_position_mismatch() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let valid = {
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                services.objects.surfaces.xy_plane(),
+                [[0., 0.], [1., 0.]],
+            );
+
+            half_edge.build(&mut services.objects)
+        };
+        let invalid = {
+            let vertices = valid.vertices().clone().map(|vertex| {
+                let mut vertex = Partial::from(vertex);
+                vertex.write().position = Some(Point::from([2.]));
+
+                vertex.build(&mut services.objects)
+            });
+
+            HalfEdge::new(vertices, valid.global_form().clone())
+        };
 
         valid.validate_and_return_first_error()?;
         assert!(invalid.validate_and_return_first_error().is_err());
