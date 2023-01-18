@@ -282,7 +282,7 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         for vertex in half_edge.vertices() {
-            let curve_position_on_surface = vertex
+            let curve_position_on_surface = half_edge
                 .curve()
                 .path()
                 .point_from_path_coords(vertex.position());
