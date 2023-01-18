@@ -64,8 +64,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
-        let mut curve = self.curve();
-        let path = curve.write().update_as_circle_from_radius(radius);
+        let path = self.curve.write().update_as_circle_from_radius(radius);
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -107,8 +106,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             angle_rad,
         );
 
-        let mut curve = self.curve();
-        let path = curve
+        let path = self
+            .curve
             .write()
             .update_as_circle_from_center_and_radius(arc.center, arc.radius);
 
@@ -157,7 +156,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        self.curve()
+        self.curve
             .write()
             .update_as_line_from_points(points_surface);
 
@@ -170,8 +169,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
-        self.global_form.write().curve =
-            self.curve().read().global_form.clone();
+        self.global_form.write().curve = self.curve.read().global_form.clone();
         self.global_form.write().vertices = self
             .vertices
             .each_ref_ext()
@@ -181,13 +179,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>) {
-        let global_curve = other.read().curve().read().global_form.clone();
-        self.curve().write().global_form = global_curve.clone();
+        let global_curve = other.read().curve.read().global_form.clone();
+        self.curve.write().global_form = global_curve.clone();
         self.global_form.write().curve = global_curve;
 
-        self.curve().write().path = other
+        self.curve.write().path = other
             .read()
-            .curve()
+            .curve
             .read()
             .path
             .as_ref()

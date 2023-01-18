@@ -24,12 +24,6 @@ pub struct PartialHalfEdge {
 }
 
 impl PartialHalfEdge {
-    /// Access the curve the partial edge is defined on
-    pub fn curve(&self) -> Partial<Curve> {
-        let [vertex, _] = &self.vertices;
-        vertex.curve.clone()
-    }
-
     /// Access a reference to the half-edge's back vertex
     pub fn back(&self) -> &PartialVertex {
         let [back, _] = &self.vertices;
@@ -76,7 +70,7 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let curve = self.curve().build(objects);
+        let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
         let global_form = self.global_form.build(objects);
 

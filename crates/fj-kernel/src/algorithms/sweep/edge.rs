@@ -230,7 +230,7 @@ mod tests {
             };
             let side_up = {
                 let mut side_up = PartialHalfEdge::default();
-                side_up.curve().write().surface = surface.clone();
+                side_up.curve.write().surface = surface.clone();
 
                 {
                     let [back, front] = &mut side_up.vertices;
@@ -249,7 +249,7 @@ mod tests {
             };
             let top = {
                 let mut top = PartialHalfEdge::default();
-                top.curve().write().surface = surface.clone();
+                top.curve.write().surface = surface.clone();
 
                 {
                     let [back, front] = &mut top.vertices;
@@ -275,7 +275,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge::default();
-                side_down.curve().write().surface = surface;
+                side_down.curve.write().surface = surface;
 
                 let [back, front] = &mut side_down.vertices;
 
