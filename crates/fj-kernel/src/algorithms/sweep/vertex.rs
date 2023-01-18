@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<Vertex>, Handle<Surface>) {
+impl Sweep for (Vertex, Handle<Surface>) {
     type Swept = Handle<HalfEdge>;
 
     fn sweep_with_cache(
@@ -188,8 +188,7 @@ mod tests {
                 ..Default::default()
             }),
         }
-        .build(&mut services.objects)
-        .insert(&mut services.objects);
+        .build(&mut services.objects);
 
         let half_edge = (vertex, surface.clone())
             .sweep([0., 0., 1.], &mut services.objects);
