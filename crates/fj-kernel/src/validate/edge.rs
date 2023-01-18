@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
         VerticesInNormalizedOrder,
     },
     storage::Handle,
@@ -20,6 +20,7 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
+        HalfEdgeValidationError::check_surface_identity(self, errors);
         HalfEdgeValidationError::check_vertex_positions(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
@@ -96,6 +97,20 @@ pub enum HalfEdgeValidationError {
 
         /// The half-edge
         half_edge: HalfEdge,
+    },
+
+    /// Mismatch between the surface's of the curve and surface form
+    #[error(
+        "Surface form of vertex must be defined on same surface as curve\n\
+        - `Surface` of curve: {curve_surface:#?}\n\
+        - `Surface` of surface form: {surface_form_surface:#?}"
+    )]
+    SurfaceMismatch {
+        /// The surface of the vertex' curve
+        curve_surface: Handle<Surface>,
+
+        /// The surface of the vertex' surface form
+        surface_form_surface: Handle<Surface>,
     },
 
     /// [`HalfEdge`]'s vertices are coincident
@@ -195,6 +210,27 @@ impl HalfEdgeValidationError {
                 })
                 .into(),
             );
+        }
+    }
+
+    fn check_surface_identity(
+        half_edge: &HalfEdge,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        let curve_surface = half_edge.curve().surface();
+
+        for vertex in half_edge.vertices() {
+            let surface_form_surface = vertex.surface_form().surface();
+
+            if curve_surface.id() != surface_form_surface.id() {
+                errors.push(
+                    Box::new(Self::SurfaceMismatch {
+                        curve_surface: curve_surface.clone(),
+                        surface_form_surface: surface_form_surface.clone(),
+                    })
+                    .into(),
+                );
+            }
         }
     }
 
@@ -318,6 +354,37 @@ mod tests {
                 });
             tmp.build(&mut services.objects)
         });
+
+        valid.validate_and_return_first_error()?;
+        assert!(invalid.validate_and_return_first_error().is_err());
+
+        Ok(())
+    }
+
+    #[test]
+    fn vertex_surface_mismatch() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let valid = {
+            let mut half_edge = PartialHalfEdge::default();
+            half_edge.update_as_line_segment_from_points(
+                services.objects.surfaces.xy_plane(),
+                [[0., 0.], [1., 0.]],
+            );
+
+            half_edge.build(&mut services.objects)
+        };
+        let invalid = {
+            let vertices = valid.vertices().clone().map(|vertex| {
+                let mut vertex = Partial::from(vertex);
+                vertex.write().surface_form.write().surface =
+                    Partial::from(services.objects.surfaces.xz_plane());
+
+                vertex.build(&mut services.objects)
+            });
+
+            HalfEdge::new(vertices, valid.global_form().clone())
+        };
 
         valid.validate_and_return_first_error()?;
         assert!(invalid.validate_and_return_first_error().is_err());
