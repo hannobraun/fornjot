@@ -29,8 +29,7 @@ impl HalfEdge {
 
     /// Access the curve that defines the half-edge's geometry
     pub fn curve(&self) -> &Handle<Curve> {
-        let [vertex, _] = self.vertices();
-        vertex.curve()
+        &self.curve
     }
 
     /// Access the vertices that bound the half-edge on the curve
