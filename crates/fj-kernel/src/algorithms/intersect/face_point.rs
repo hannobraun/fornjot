@@ -48,13 +48,13 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = half_edge.vertices()[0].clone();
+                        let vertex = half_edge.vertices()[0].clone_object();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = half_edge.vertices()[1].clone();
+                        let vertex = half_edge.vertices()[1].clone_object();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -125,7 +125,7 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex(Handle<Vertex>),
+    PointIsOnVertex(Vertex),
 }
 
 #[cfg(test)]
@@ -347,7 +347,7 @@ mod tests {
                 vertex.surface_form().position() == Point::from([1., 0.])
             })
             .unwrap()
-            .clone();
+            .clone_object();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex))

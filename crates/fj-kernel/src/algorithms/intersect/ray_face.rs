@@ -136,7 +136,7 @@ pub enum RayFaceIntersection {
     RayHitsEdge(Handle<HalfEdge>),
 
     /// The ray hits a vertex
-    RayHitsVertex(Handle<Vertex>),
+    RayHitsVertex(Vertex),
 }
 
 #[cfg(test)]
@@ -292,7 +292,7 @@ mod tests {
                 vertex.surface_form().position() == Point::from([-1., -1.])
             })
             .unwrap()
-            .clone();
+            .clone_object();
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex))
