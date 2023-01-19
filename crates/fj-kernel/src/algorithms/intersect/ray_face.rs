@@ -253,9 +253,9 @@ mod tests {
             .exterior()
             .half_edges()
             .find(|edge| {
-                let [a, b] = edge.vertices();
-                a.surface_form().position() == Point::from([-1., 1.])
-                    && b.surface_form().position() == Point::from([-1., -1.])
+                let [a, b] = edge.surface_vertices();
+                a.position() == Point::from([-1., 1.])
+                    && b.position() == Point::from([-1., -1.])
             })
             .unwrap();
         assert_eq!(

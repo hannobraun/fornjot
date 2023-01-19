@@ -163,9 +163,10 @@ impl HalfEdgeValidationError {
         let global_vertices_from_vertices = {
             let (global_vertices_from_vertices, _) =
                 VerticesInNormalizedOrder::new(
-                    half_edge.vertices().each_ref_ext().map(|vertex| {
-                        vertex.surface_form().global_form().clone()
-                    }),
+                    half_edge
+                        .surface_vertices()
+                        .each_ref_ext()
+                        .map(|vertex| vertex.global_form().clone()),
                 );
 
             global_vertices_from_vertices.access_in_normalized_order()
@@ -200,8 +201,8 @@ impl HalfEdgeValidationError {
     ) {
         let curve_surface = half_edge.curve().surface();
 
-        for vertex in half_edge.vertices() {
-            let surface_form_surface = vertex.surface_form().surface();
+        for vertex in half_edge.surface_vertices() {
+            let surface_form_surface = vertex.surface();
 
             if curve_surface.id() != surface_form_surface.id() {
                 errors.push(
