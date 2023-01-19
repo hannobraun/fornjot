@@ -67,8 +67,8 @@ impl Cycle {
                 .next()
                 .expect("Invalid cycle: expected at least one half-edge");
 
-            let [a, b] = first.vertices();
-            let edge_direction_positive = a.position() < b.position();
+            let [a, b] = first.boundary();
+            let edge_direction_positive = a < b;
 
             let circle = match first.curve().path() {
                 SurfacePath::Circle(circle) => circle,

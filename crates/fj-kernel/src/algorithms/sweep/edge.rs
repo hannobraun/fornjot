@@ -36,11 +36,10 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         // is not defined in the right surface. Let's create a new bottom edge,
         // by swapping the surface of the original.
         let bottom_edge = {
-            let vertices = edge.vertices();
+            let vertices = edge.boundary();
 
-            let points_curve_and_surface = vertices.clone().map(|vertex| {
-                (vertex.position(), [vertex.position().t, Scalar::ZERO])
-            });
+            let points_curve_and_surface =
+                vertices.map(|vertex| (vertex, [vertex.t, Scalar::ZERO]));
 
             let curve = {
                 // Please note that creating a line here is correct, even if the
@@ -89,7 +88,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         });
 
         let top_edge = {
-            let bottom_vertices = bottom_edge.vertices();
+            let bottom_vertices = bottom_edge.boundary();
 
             let surface_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
@@ -97,9 +96,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             });
 
             let points_curve_and_surface =
-                bottom_vertices.clone().map(|vertex| {
-                    (vertex.position(), [vertex.position().t, Scalar::ONE])
-                });
+                bottom_vertices.map(|vertex| (vertex, [vertex.t, Scalar::ONE]));
 
             let curve = {
                 let global = bottom_edge
@@ -128,12 +125,11 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             .insert(objects);
 
             let vertices = bottom_vertices
-                .each_ref_ext()
                 .into_iter_fixed()
                 .zip(surface_vertices)
                 .collect::<[_; 2]>()
                 .map(|(vertex, surface_form)| {
-                    Vertex::new(vertex.position(), surface_form)
+                    Vertex::new(vertex, surface_form)
                 });
 
             HalfEdge::new(curve, vertices, global).insert(objects)

@@ -5,8 +5,6 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
-use fj_interop::ext::ArrayExt;
-
 use crate::objects::HalfEdge;
 
 use super::{
@@ -24,10 +22,7 @@ impl Approx for &HalfEdge {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let boundary = self
-            .vertices()
-            .each_ref_ext()
-            .map(|vertex| vertex.position());
+        let boundary = self.boundary();
         let range = RangeOnPath { boundary };
 
         let [first, _] = self.surface_vertices();

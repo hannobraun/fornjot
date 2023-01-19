@@ -221,11 +221,7 @@ impl HalfEdgeValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let [back_position, front_position] = half_edge
-            .vertices()
-            .each_ref_ext()
-            .map(|vertex| vertex.position());
-
+        let [back_position, front_position] = half_edge.boundary();
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {

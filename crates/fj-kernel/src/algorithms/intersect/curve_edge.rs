@@ -45,8 +45,8 @@ impl CurveEdgeIntersection {
                 }
             };
 
-            let edge_vertices = half_edge.vertices().clone().map(|vertex| {
-                edge_curve_as_line.point_from_line_coords(vertex.position())
+            let edge_vertices = half_edge.boundary().map(|vertex| {
+                edge_curve_as_line.point_from_line_coords(vertex)
             });
 
             Segment::from_points(edge_vertices)

@@ -1,6 +1,7 @@
 use std::fmt;
 
 use fj_interop::ext::ArrayExt;
+use fj_math::Point;
 
 use crate::{
     objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
@@ -34,6 +35,11 @@ impl HalfEdge {
         &self.curve
     }
 
+    /// Access the boundary points of the half-edge on the curve
+    pub fn boundary(&self) -> [Point<1>; 2] {
+        self.vertices.each_ref_ext().map(|vertex| vertex.position())
+    }
+
     /// Access the vertices that bound the half-edge on the curve
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
@@ -54,7 +60,7 @@ impl HalfEdge {
 
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
+        let [a, b] = self.boundary();
         write!(f, "edge from {a:?} to {b:?}")?;
         write!(f, " on {:?}", self.curve().global_form())?;
 
