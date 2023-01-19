@@ -36,11 +36,9 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         // is not defined in the right surface. Let's create a new bottom edge,
         // by swapping the surface of the original.
         let bottom_edge = {
-            let vertices = edge.vertices();
-
-            let points_curve_and_surface = vertices.clone().map(|vertex| {
-                (vertex.position(), [vertex.position().t, Scalar::ZERO])
-            });
+            let points_curve_and_surface = edge
+                .boundary()
+                .map(|point| (point, [point.t, Scalar::ZERO]));
 
             let curve = {
                 // Please note that creating a line here is correct, even if the
@@ -63,7 +61,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                vertices
+                edge.vertices()
                     .each_ref_ext()
                     .into_iter_fixed()
                     .zip(points_surface)
@@ -89,17 +87,14 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         });
 
         let top_edge = {
-            let bottom_vertices = bottom_edge.vertices();
-
             let surface_vertices = side_edges.clone().map(|edge| {
                 let [_, vertex] = edge.vertices();
                 vertex.surface_form().clone()
             });
 
-            let points_curve_and_surface =
-                bottom_vertices.clone().map(|vertex| {
-                    (vertex.position(), [vertex.position().t, Scalar::ONE])
-                });
+            let points_curve_and_surface = bottom_edge
+                .boundary()
+                .map(|point| (point, [point.t, Scalar::ONE]));
 
             let curve = {
                 let global = bottom_edge
@@ -127,14 +122,12 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             )
             .insert(objects);
 
-            let vertices = bottom_vertices
-                .each_ref_ext()
+            let vertices = bottom_edge
+                .boundary()
                 .into_iter_fixed()
                 .zip(surface_vertices)
                 .collect::<[_; 2]>()
-                .map(|(vertex, surface_form)| {
-                    Vertex::new(vertex.position(), surface_form)
-                });
+                .map(|(point, surface_form)| Vertex::new(point, surface_form));
 
             HalfEdge::new(curve, vertices, global).insert(objects)
         };

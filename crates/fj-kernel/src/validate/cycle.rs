@@ -45,11 +45,8 @@ impl CycleValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         for (a, b) in cycle.half_edges().circular_tuple_windows() {
-            let [_, prev] = a.vertices();
-            let [next, _] = b.vertices();
-
-            let prev = prev.surface_form();
-            let next = next.surface_form();
+            let [_, prev] = a.surface_vertices();
+            let [next, _] = b.surface_vertices();
 
             if prev.id() != next.id() {
                 errors.push(

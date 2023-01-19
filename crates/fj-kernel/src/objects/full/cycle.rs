@@ -39,7 +39,7 @@ impl Cycle {
     /// Access the surface that the cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
         if let Some(half_edge) = self.half_edges.first() {
-            return half_edge.surface();
+            return half_edge.curve().surface();
         }
 
         unreachable!(
@@ -67,8 +67,8 @@ impl Cycle {
                 .next()
                 .expect("Invalid cycle: expected at least one half-edge");
 
-            let [a, b] = first.vertices();
-            let edge_direction_positive = a.position() < b.position();
+            let [a, b] = first.boundary();
+            let edge_direction_positive = a < b;
 
             let circle = match first.curve().path() {
                 SurfacePath::Circle(circle) => circle,
@@ -93,8 +93,8 @@ impl Cycle {
 
         for [a, b] in self.half_edges.as_slice().array_windows_ext() {
             let [a, b] = [a, b].map(|half_edge| {
-                let [vertex, _] = half_edge.vertices();
-                vertex.surface_form().position()
+                let [surface_vertex, _] = half_edge.surface_vertices();
+                surface_vertex.position()
             });
 
             sum += (b.u - a.u) * (b.v + a.v);

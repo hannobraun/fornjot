@@ -1,7 +1,10 @@
 use std::fmt;
 
+use fj_interop::ext::ArrayExt;
+use fj_math::Point;
+
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, Surface, Vertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -32,26 +35,21 @@ impl HalfEdge {
         &self.curve
     }
 
+    /// Access the boundary points of the half-edge on the curve
+    pub fn boundary(&self) -> [Point<1>; 2] {
+        self.vertices.each_ref_ext().map(|vertex| vertex.position())
+    }
+
     /// Access the vertices that bound the half-edge on the curve
     pub fn vertices(&self) -> &[Vertex; 2] {
         &self.vertices
     }
 
-    /// Access the vertex at the back of the half-edge
-    pub fn back(&self) -> &Vertex {
-        let [back, _] = self.vertices();
-        back
-    }
-
-    /// Access the vertex at the front of the half-edge
-    pub fn front(&self) -> &Vertex {
-        let [_, front] = self.vertices();
-        front
-    }
-
-    /// Access the surface that the half-edge's curve is defined in
-    pub fn surface(&self) -> &Handle<Surface> {
-        self.curve().surface()
+    /// Access the surface vertices that bound the half-edge
+    pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
+        self.vertices
+            .each_ref_ext()
+            .map(|vertex| vertex.surface_form())
     }
 
     /// Access the global form of the half-edge
@@ -62,7 +60,7 @@ impl HalfEdge {
 
 impl fmt::Display for HalfEdge {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.vertices().clone().map(|vertex| vertex.position());
+        let [a, b] = self.boundary();
         write!(f, "edge from {a:?} to {b:?}")?;
         write!(f, " on {:?}", self.curve().global_form())?;
 

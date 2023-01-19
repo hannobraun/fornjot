@@ -24,10 +24,9 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
             }
         };
 
-        let points = edge.vertices().clone().map(|vertex| {
-            let point = vertex.position();
-            line.point_from_line_coords(point)
-        });
+        let points = edge
+            .boundary()
+            .map(|point| line.point_from_line_coords(point));
         let segment = Segment::from_points(points);
 
         (ray, &segment).intersect()

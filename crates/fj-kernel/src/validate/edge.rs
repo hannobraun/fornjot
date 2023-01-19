@@ -163,9 +163,9 @@ impl HalfEdgeValidationError {
         let global_vertices_from_vertices = {
             let (global_vertices_from_vertices, _) =
                 VerticesInNormalizedOrder::new(
-                    half_edge.vertices().each_ref_ext().map(|vertex| {
-                        vertex.surface_form().global_form().clone()
-                    }),
+                    half_edge.surface_vertices().each_ref_ext().map(
+                        |surface_vertex| surface_vertex.global_form().clone(),
+                    ),
                 );
 
             global_vertices_from_vertices.access_in_normalized_order()
@@ -200,8 +200,8 @@ impl HalfEdgeValidationError {
     ) {
         let curve_surface = half_edge.curve().surface();
 
-        for vertex in half_edge.vertices() {
-            let surface_form_surface = vertex.surface_form().surface();
+        for surface_vertex in half_edge.surface_vertices() {
+            let surface_form_surface = surface_vertex.surface();
 
             if curve_surface.id() != surface_form_surface.id() {
                 errors.push(
@@ -220,9 +220,7 @@ impl HalfEdgeValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let back_position = half_edge.back().position();
-        let front_position = half_edge.front().position();
-
+        let [back_position, front_position] = half_edge.boundary();
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {

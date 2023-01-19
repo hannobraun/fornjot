@@ -22,14 +22,12 @@ impl Approx for &HalfEdge {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let [a, b] = self.vertices();
-        let boundary = [a, b].map(|vertex| vertex.position());
+        let boundary = self.boundary();
         let range = RangeOnPath { boundary };
 
-        let first = ApproxPoint::new(
-            a.surface_form().position(),
-            a.surface_form().global_form().position(),
-        );
+        let [first, _] = self.surface_vertices();
+        let first =
+            ApproxPoint::new(first.position(), first.global_form().position());
         let curve_approx =
             (self.curve(), range).approx_with_cache(tolerance, cache);
 
