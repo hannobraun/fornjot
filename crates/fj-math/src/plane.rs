@@ -1,7 +1,7 @@
 use crate::{Line, Point, Scalar, Vector};
 
 /// A plane
-#[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Plane {
     origin: Point<3>,
@@ -12,10 +12,14 @@ pub struct Plane {
 impl Plane {
     /// Create a `Plane` from a parametric description
     pub fn from_parametric(
-        origin: Point<3>,
-        u: Vector<3>,
-        v: Vector<3>,
+        origin: impl Into<Point<3>>,
+        u: impl Into<Vector<3>>,
+        v: impl Into<Vector<3>>,
     ) -> Self {
+        let origin = origin.into();
+        let u = u.into();
+        let v = v.into();
+
         Self { origin, u, v }
     }
 
@@ -62,10 +66,12 @@ impl Plane {
     }
 
     /// Project a vector into the plane
-    pub fn project_vector(&self, vector: &Vector<3>) -> Vector<2> {
+    pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Vector<2> {
+        let vector = vector.into();
+
         Vector::from([
-            self.u().scalar_projection_onto(vector),
-            self.v().scalar_projection_onto(vector),
+            vector.scalar_projection_onto(&self.u()),
+            vector.scalar_projection_onto(&self.v()),
         ])
     }
 
@@ -81,11 +87,25 @@ impl Plane {
             ]),
         };
 
-        let line_direction_in_plane = self.project_vector(&line.direction());
+        let line_direction_in_plane = self.project_vector(line.direction());
 
         Line::from_origin_and_direction(
             line_origin_in_plane,
             line_direction_in_plane,
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{Plane, Vector};
+
+    #[test]
+    fn project_vector() {
+        let plane =
+            Plane::from_parametric([0., 0., 0.], [1., 0., 0.], [0., 1., 0.]);
+
+        assert_eq!(plane.project_vector([1., 0., 1.]), Vector::from([1., 0.]));
+        assert_eq!(plane.project_vector([0., 1., 1.]), Vector::from([0., 1.]));
     }
 }

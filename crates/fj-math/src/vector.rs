@@ -100,7 +100,7 @@ impl<const D: usize> Vector<D> {
         self.to_na().dot(&other.to_na()).into()
     }
 
-    /// Compute the scalar project of this vector onto another
+    /// Compute the scalar projection of this vector onto another
     pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
         if other.magnitude() == Scalar::ZERO {
             return Scalar::ZERO;
