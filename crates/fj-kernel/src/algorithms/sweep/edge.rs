@@ -38,7 +38,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         let bottom_edge = {
             let points_curve_and_surface = edge
                 .boundary()
-                .map(|vertex| (vertex, [vertex.t, Scalar::ZERO]));
+                .map(|point| (point, [point.t, Scalar::ZERO]));
 
             let curve = {
                 // Please note that creating a line here is correct, even if the
@@ -94,7 +94,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
             let points_curve_and_surface = bottom_edge
                 .boundary()
-                .map(|vertex| (vertex, [vertex.t, Scalar::ONE]));
+                .map(|point| (point, [point.t, Scalar::ONE]));
 
             let curve = {
                 let global = bottom_edge
@@ -127,9 +127,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .into_iter_fixed()
                 .zip(surface_vertices)
                 .collect::<[_; 2]>()
-                .map(|(vertex, surface_form)| {
-                    Vertex::new(vertex, surface_form)
-                });
+                .map(|(point, surface_form)| Vertex::new(point, surface_form));
 
             HalfEdge::new(curve, vertices, global).insert(objects)
         };
