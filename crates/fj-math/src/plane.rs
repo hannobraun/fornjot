@@ -70,8 +70,8 @@ impl Plane {
         let vector = vector.into();
 
         Vector::from([
-            self.u().scalar_projection_onto(&vector),
-            self.v().scalar_projection_onto(&vector),
+            vector.scalar_projection_onto(&self.u()),
+            vector.scalar_projection_onto(&self.v()),
         ])
     }
 
@@ -93,5 +93,19 @@ impl Plane {
             line_origin_in_plane,
             line_direction_in_plane,
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{Plane, Vector};
+
+    #[test]
+    fn project_vector() {
+        let plane =
+            Plane::from_parametric([0., 0., 0.], [1., 0., 0.], [0., 1., 0.]);
+
+        assert_eq!(plane.project_vector([1., 0., 1.]), Vector::from([1., 0.]));
+        assert_eq!(plane.project_vector([0., 1., 1.]), Vector::from([0., 1.]));
     }
 }
