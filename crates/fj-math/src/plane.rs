@@ -66,10 +66,12 @@ impl Plane {
     }
 
     /// Project a vector into the plane
-    pub fn project_vector(&self, vector: &Vector<3>) -> Vector<2> {
+    pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Vector<2> {
+        let vector = vector.into();
+
         Vector::from([
-            self.u().scalar_projection_onto(vector),
-            self.v().scalar_projection_onto(vector),
+            self.u().scalar_projection_onto(&vector),
+            self.v().scalar_projection_onto(&vector),
         ])
     }
 
@@ -85,7 +87,7 @@ impl Plane {
             ]),
         };
 
-        let line_direction_in_plane = self.project_vector(&line.direction());
+        let line_direction_in_plane = self.project_vector(line.direction());
 
         Line::from_origin_and_direction(
             line_origin_in_plane,
