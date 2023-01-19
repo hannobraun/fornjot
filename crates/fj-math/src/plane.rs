@@ -12,10 +12,14 @@ pub struct Plane {
 impl Plane {
     /// Create a `Plane` from a parametric description
     pub fn from_parametric(
-        origin: Point<3>,
-        u: Vector<3>,
-        v: Vector<3>,
+        origin: impl Into<Point<3>>,
+        u: impl Into<Vector<3>>,
+        v: impl Into<Vector<3>>,
     ) -> Self {
+        let origin = origin.into();
+        let u = u.into();
+        let v = v.into();
+
         Self { origin, u, v }
     }
 
