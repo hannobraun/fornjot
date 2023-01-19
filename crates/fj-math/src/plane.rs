@@ -1,7 +1,7 @@
 use crate::{Line, Point, Scalar, Vector};
 
 /// A plane
-#[derive(Clone, Copy, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Plane {
     origin: Point<3>,
