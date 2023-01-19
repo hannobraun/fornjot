@@ -63,7 +63,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                vertices
+                edge.vertices()
                     .each_ref_ext()
                     .into_iter_fixed()
                     .zip(points_surface)
