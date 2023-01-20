@@ -26,32 +26,6 @@ pub struct PartialHalfEdge {
     pub global_form: Partial<GlobalEdge>,
 }
 
-impl PartialHalfEdge {
-    /// Access a reference to the half-edge's back vertex
-    pub fn back(&self) -> &PartialVertex {
-        let [back, _] = &self.vertices;
-        back
-    }
-
-    /// Access a reference to the half-edge's front vertex
-    pub fn front(&self) -> &PartialVertex {
-        let [_, front] = &self.vertices;
-        front
-    }
-
-    /// Access a mutable reference to the half-edge's back vertex
-    pub fn back_mut(&mut self) -> &mut PartialVertex {
-        let [back, _] = &mut self.vertices;
-        back
-    }
-
-    /// Access a mutable reference to the half-edge's front vertex
-    pub fn front_mut(&mut self) -> &mut PartialVertex {
-        let [_, front] = &mut self.vertices;
-        front
-    }
-}
-
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
