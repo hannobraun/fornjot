@@ -294,10 +294,11 @@ mod tests {
         };
         let invalid = {
             let global_form = {
-                let mut tmp = Partial::from(valid.global_form().clone());
-                tmp.write().curve =
+                let mut global_edge =
+                    Partial::from(valid.global_form().clone());
+                global_edge.write().curve =
                     Partial::from(GlobalCurve.insert(&mut services.objects));
-                tmp.build(&mut services.objects)
+                global_edge.build(&mut services.objects)
             };
 
             HalfEdge::new(valid.curve().clone(), valid.vertices(), global_form)
@@ -324,8 +325,9 @@ mod tests {
         };
         let invalid = {
             let global_form = {
-                let mut tmp = Partial::from(valid.global_form().clone());
-                tmp.write().vertices = valid
+                let mut global_edge =
+                    Partial::from(valid.global_form().clone());
+                global_edge.write().vertices = valid
                     .global_form()
                     .vertices()
                     .access_in_normalized_order()
@@ -335,7 +337,7 @@ mod tests {
                             Partial::from(vertex).read().clone(),
                         )
                     });
-                tmp.build(&mut services.objects)
+                global_edge.build(&mut services.objects)
             };
 
             HalfEdge::new(valid.curve().clone(), valid.vertices(), global_form)
