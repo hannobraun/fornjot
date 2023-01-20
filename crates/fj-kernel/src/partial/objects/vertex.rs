@@ -6,7 +6,12 @@ use crate::{
     services::Service,
 };
 
-/// A partial [`Vertex`]
+/// A partial vertex
+///
+/// # Implementation Note
+///
+/// This type is a hold-over from when there was still a `Vertex` object. It
+/// will be remove too, at some point.
 #[derive(Clone, Debug)]
 pub struct PartialVertex {
     /// The position of the vertex on the curve
