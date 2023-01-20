@@ -373,12 +373,12 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices())
                 .map(|(point, surface_vertex)| {
-                    let mut surface_form =
+                    let mut surface_vertex =
                         Partial::from(surface_vertex.clone());
-                    surface_form.write().surface =
+                    surface_vertex.write().surface =
                         Partial::from(services.objects.surfaces.xz_plane());
 
-                    (point, surface_form.build(&mut services.objects))
+                    (point, surface_vertex.build(&mut services.objects))
                 });
 
             HalfEdge::new(

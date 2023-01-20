@@ -106,8 +106,8 @@ impl Sweep for (Vertex, Handle<Surface>) {
         };
 
         // And now the vertices. Again, nothing wild here.
-        let boundary = vertices_surface.map(|surface_form| {
-            (Point::from([surface_form.position().v]), surface_form)
+        let boundary = vertices_surface.map(|surface_vertex| {
+            (Point::from([surface_vertex.position().v]), surface_vertex)
         });
 
         // And finally, creating the output `Edge` is just a matter of
