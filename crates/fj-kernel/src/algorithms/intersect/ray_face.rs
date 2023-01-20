@@ -5,7 +5,7 @@ use fj_math::{Plane, Point, Scalar};
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
     geometry::path::GlobalPath,
-    objects::{Face, HalfEdge, Vertex},
+    objects::{Face, HalfEdge, SurfaceVertex},
     storage::Handle,
 };
 
@@ -115,7 +115,10 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
                 RayFaceIntersection::RayHitsEdge(edge)
             }
             FacePointIntersection::PointIsOnVertex(vertex) => {
-                RayFaceIntersection::RayHitsVertex(vertex)
+                RayFaceIntersection::RayHitsVertex((
+                    vertex.position(),
+                    vertex.surface_form().clone(),
+                ))
             }
         };
 
@@ -136,7 +139,7 @@ pub enum RayFaceIntersection {
     RayHitsEdge(Handle<HalfEdge>),
 
     /// The ray hits a vertex
-    RayHitsVertex(Vertex),
+    RayHitsVertex((Point<1>, Handle<SurfaceVertex>)),
 }
 
 #[cfg(test)]
@@ -291,6 +294,7 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([-1., -1.])
             })
+            .map(|vertex| (vertex.position(), vertex.surface_form().clone()))
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
