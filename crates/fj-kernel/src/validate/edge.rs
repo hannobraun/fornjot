@@ -273,11 +273,8 @@ mod tests {
     use crate::{
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{GlobalCurve, HalfEdge},
-        partial::{
-            FullToPartialCache, Partial, PartialHalfEdge, PartialObject,
-            PartialVertex,
-        },
+        objects::{GlobalCurve, HalfEdge, Vertex},
+        partial::{Partial, PartialHalfEdge, PartialObject},
         services::Services,
         validate::Validate,
     };
@@ -355,14 +352,15 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.vertices().map(|vertex| {
-                let mut vertex = PartialVertex::from_full(
-                    &vertex,
-                    &mut FullToPartialCache::default(),
-                );
-                vertex.surface_form.write().surface =
+                let mut surface_form =
+                    Partial::from(vertex.surface_form().clone());
+                surface_form.write().surface =
                     Partial::from(services.objects.surfaces.xz_plane());
 
-                vertex.build(&mut services.objects)
+                Vertex::new(
+                    vertex.position(),
+                    surface_form.build(&mut services.objects),
+                )
             });
 
             HalfEdge::new(
@@ -393,13 +391,7 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.vertices().each_ref_ext().map(|vertex| {
-                let mut vertex = PartialVertex::from_full(
-                    vertex,
-                    &mut FullToPartialCache::default(),
-                );
-                vertex.position = Some(Point::from([0.]));
-
-                vertex.build(&mut services.objects)
+                Vertex::new(Point::from([0.]), vertex.surface_form().clone())
             });
 
             HalfEdge::new(
@@ -430,13 +422,7 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.vertices().map(|vertex| {
-                let mut vertex = PartialVertex::from_full(
-                    &vertex,
-                    &mut FullToPartialCache::default(),
-                );
-                vertex.position = Some(Point::from([2.]));
-
-                vertex.build(&mut services.objects)
+                Vertex::new(Point::from([2.]), vertex.surface_form().clone())
             });
 
             HalfEdge::new(

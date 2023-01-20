@@ -156,9 +156,10 @@ mod tests {
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
+        objects::Vertex,
         partial::{
             Partial, PartialCurve, PartialGlobalVertex, PartialHalfEdge,
-            PartialObject, PartialSurfaceVertex, PartialVertex,
+            PartialObject, PartialSurfaceVertex,
         },
         services::Services,
     };
@@ -181,13 +182,10 @@ mod tests {
                 global_form: Partial::from_partial(PartialGlobalVertex {
                     position: Some(Point::from([0., 0., 0.])),
                 }),
-            });
+            })
+            .build(&mut services.objects);
 
-            PartialVertex {
-                position: Some([0.].into()),
-                surface_form,
-            }
-            .build(&mut services.objects)
+            Vertex::new(Point::from([0.]), surface_form)
         };
 
         let half_edge = (vertex, surface.clone())
