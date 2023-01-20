@@ -87,7 +87,7 @@ pub use self::{
         sketch::Sketch,
         solid::Solid,
         surface::Surface,
-        vertex::{GlobalVertex, SurfaceVertex, Vertex},
+        vertex::{GlobalVertex, SurfaceVertex},
     },
     object::{Bare, BehindHandle, Form, Object, WithHandle},
     stores::{Objects, Surfaces},

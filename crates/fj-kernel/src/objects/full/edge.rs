@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -12,7 +12,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Handle<Curve>,
-    vertices: [Vertex; 2],
+    boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
     global_form: Handle<GlobalEdge>,
 }
 
@@ -20,12 +20,12 @@ impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         curve: Handle<Curve>,
-        vertices: [Vertex; 2],
+        boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             curve,
-            vertices,
+            boundary,
             global_form,
         }
     }
@@ -37,19 +37,14 @@ impl HalfEdge {
 
     /// Access the boundary points of the half-edge on the curve
     pub fn boundary(&self) -> [Point<1>; 2] {
-        self.vertices.each_ref_ext().map(|vertex| vertex.position())
-    }
-
-    /// Access the vertices that bound the half-edge on the curve
-    pub fn vertices(&self) -> &[Vertex; 2] {
-        &self.vertices
+        self.boundary.each_ref_ext().map(|&(point, _)| point)
     }
 
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        self.vertices
+        self.boundary
             .each_ref_ext()
-            .map(|vertex| vertex.surface_form())
+            .map(|(_, surface_form)| surface_form)
     }
 
     /// Access the global form of the half-edge

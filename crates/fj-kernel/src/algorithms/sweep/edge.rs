@@ -8,7 +8,6 @@ use crate::{
     insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
-        Vertex,
     },
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
@@ -57,39 +56,43 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .insert(objects)
             };
 
-            let vertices = {
+            let boundary = {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
-                edge.vertices()
-                    .each_ref_ext()
+                edge.boundary()
+                    .zip_ext(edge.surface_vertices())
                     .into_iter_fixed()
                     .zip(points_surface)
                     .collect::<[_; 2]>()
-                    .map(|(vertex, point_surface)| {
+                    .map(|((point, surface_vertex), point_surface)| {
                         let surface_vertex = SurfaceVertex::new(
                             point_surface,
                             surface.clone(),
-                            vertex.surface_form().global_form().clone(),
+                            surface_vertex.global_form().clone(),
                         )
                         .insert(objects);
 
-                        Vertex::new(vertex.position(), surface_vertex)
+                        (point, surface_vertex)
                     })
             };
 
-            HalfEdge::new(curve, vertices, edge.global_form().clone())
+            HalfEdge::new(curve, boundary, edge.global_form().clone())
                 .insert(objects)
         };
 
-        let side_edges = bottom_edge.vertices().clone().map(|vertex| {
-            (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
-        });
+        let side_edges = bottom_edge
+            .boundary()
+            .zip_ext(bottom_edge.surface_vertices())
+            .map(|(point, surface_vertex)| {
+                (point, surface_vertex.clone(), surface.clone())
+                    .sweep_with_cache(path, cache, objects)
+            });
 
         let top_edge = {
             let surface_vertices = side_edges.clone().map(|edge| {
-                let [_, vertex] = edge.vertices();
-                vertex.surface_form().clone()
+                let [_, surface_vertex] = edge.surface_vertices();
+                surface_vertex.clone()
             });
 
             let points_curve_and_surface = bottom_edge
@@ -122,14 +125,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             )
             .insert(objects);
 
-            let vertices = bottom_edge
+            let boundary = bottom_edge
                 .boundary()
                 .into_iter_fixed()
                 .zip(surface_vertices)
-                .collect::<[_; 2]>()
-                .map(|(point, surface_form)| Vertex::new(point, surface_form));
+                .collect::<[_; 2]>();
 
-            HalfEdge::new(curve, vertices, global).insert(objects)
+            HalfEdge::new(curve, boundary, global).insert(objects)
         };
 
         let cycle = {
@@ -144,15 +146,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             while i < edges.len() {
                 let j = (i + 1) % edges.len();
 
-                let [_, prev_last] = edges[i].vertices();
-                let [next_first, _] = edges[j].vertices();
+                let [_, prev_last] = edges[i].surface_vertices();
+                let [next_first, _] = edges[j].surface_vertices();
 
                 // Need to compare surface forms here, as the global forms might
                 // be coincident when sweeping circles, despite the vertices
                 // being different!
-                if prev_last.surface_form().id()
-                    != next_first.surface_form().id()
-                {
+                if prev_last.id() != next_first.id() {
                     edges[j] = edges[j].clone().reverse(objects);
                 }
 

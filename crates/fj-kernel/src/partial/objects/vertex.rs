@@ -1,12 +1,17 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
+    objects::{GlobalVertex, Objects, Surface, SurfaceVertex},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
-/// A partial [`Vertex`]
+/// A partial vertex
+///
+/// # Implementation Note
+///
+/// This type is a hold-over from when there was still a `Vertex` object. It
+/// will be remove too, at some point.
 #[derive(Clone, Debug)]
 pub struct PartialVertex {
     /// The position of the vertex on the curve
@@ -14,29 +19,6 @@ pub struct PartialVertex {
 
     /// The surface form of the vertex
     pub surface_form: Partial<SurfaceVertex>,
-}
-
-impl PartialObject for PartialVertex {
-    type Full = Vertex;
-
-    fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
-        Self {
-            position: Some(vertex.position()),
-            surface_form: Partial::from_full(
-                vertex.surface_form().clone(),
-                cache,
-            ),
-        }
-    }
-
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let position = self
-            .position
-            .expect("Can't build `Vertex` without position");
-        let surface_form = self.surface_form.build(objects);
-
-        Vertex::new(position, surface_form)
-    }
 }
 
 impl Default for PartialVertex {

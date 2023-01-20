@@ -5,7 +5,7 @@ use crate::{
     insert::Insert,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, SurfaceVertex, Vertex,
+        Surface, SurfaceVertex,
     },
     services::Service,
     storage::Handle,
@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Vertex, Handle<Surface>) {
+impl Sweep for (Point<1>, Handle<SurfaceVertex>, Handle<Surface>) {
     type Swept = Handle<HalfEdge>;
 
     fn sweep_with_cache(
@@ -22,7 +22,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        let (vertex, surface) = self;
+        let (point, surface_vertex, surface) = self;
         let path = path.into();
 
         // The result of sweeping a `Vertex` is an `Edge`. Seems
@@ -60,8 +60,7 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // With that out of the way, let's start by creating the `GlobalEdge`,
         // as that is the most straight-forward part of this operations, and
         // we're going to need it soon anyway.
-        let (edge_global, vertices_global) = vertex
-            .surface_form()
+        let (edge_global, vertices_global) = surface_vertex
             .global_form()
             .clone()
             .sweep_with_cache(path, cache, objects);
@@ -81,8 +80,8 @@ impl Sweep for (Vertex, Handle<Surface>) {
         // straight-forward: The start of the edge is at zero, the end is at
         // one.
         let points_surface = [
-            Point::from([vertex.position().t, Scalar::ZERO]),
-            Point::from([vertex.position().t, Scalar::ONE]),
+            Point::from([point.t, Scalar::ZERO]),
+            Point::from([point.t, Scalar::ONE]),
         ];
 
         // Armed with those coordinates, creating the `Curve` of the output
@@ -99,20 +98,20 @@ impl Sweep for (Vertex, Handle<Surface>) {
             let [_, global_form] = vertices_global;
 
             [
-                vertex.surface_form().clone(),
+                surface_vertex,
                 SurfaceVertex::new(position, surface, global_form)
                     .insert(objects),
             ]
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.map(|surface_form| {
-            Vertex::new([surface_form.position().v], surface_form)
+        let boundary = vertices_surface.map(|surface_vertex| {
+            (Point::from([surface_vertex.position().v]), surface_vertex)
         });
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(curve, vertices, edge_global).insert(objects)
+        HalfEdge::new(curve, boundary, edge_global).insert(objects)
     }
 }
 
@@ -158,7 +157,7 @@ mod tests {
         insert::Insert,
         partial::{
             Partial, PartialCurve, PartialGlobalVertex, PartialHalfEdge,
-            PartialObject, PartialSurfaceVertex, PartialVertex,
+            PartialObject, PartialSurfaceVertex,
         },
         services::Services,
     };
@@ -168,24 +167,26 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
-            ..Default::default()
-        };
-        curve.update_as_u_axis();
-        let vertex = PartialVertex {
-            position: Some([0.].into()),
-            surface_form: Partial::from_partial(PartialSurfaceVertex {
+        let (position, surface_vertex) = {
+            let mut curve = PartialCurve {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
+            curve.update_as_u_axis();
+
+            let surface_form = Partial::from_partial(PartialSurfaceVertex {
                 position: Some(Point::from([0., 0.])),
                 surface: Partial::from(surface.clone()),
                 global_form: Partial::from_partial(PartialGlobalVertex {
                     position: Some(Point::from([0., 0., 0.])),
                 }),
-            }),
-        }
-        .build(&mut services.objects);
+            })
+            .build(&mut services.objects);
 
-        let half_edge = (vertex, surface.clone())
+            (Point::from([0.]), surface_form)
+        };
+
+        let half_edge = (position, surface_vertex, surface.clone())
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_half_edge = {

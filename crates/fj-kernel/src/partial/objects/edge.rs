@@ -59,9 +59,15 @@ impl PartialObject for PartialHalfEdge {
         Self {
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
-                .vertices()
-                .clone()
-                .map(|vertex| PartialVertex::from_full(&vertex, cache)),
+                .boundary()
+                .zip_ext(half_edge.surface_vertices())
+                .map(|(position, surface_vertex)| PartialVertex {
+                    position: Some(position),
+                    surface_form: Partial::from_full(
+                        surface_vertex.clone(),
+                        cache,
+                    ),
+                }),
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
                 cache,
@@ -103,7 +109,12 @@ impl PartialObject for PartialHalfEdge {
                     Some(position_global);
             }
 
-            vertex.build(objects)
+            let position = vertex
+                .position
+                .expect("Can't build `Vertex` without position");
+            let surface_form = vertex.surface_form.build(objects);
+
+            (position, surface_form)
         });
         let global_form = self.global_form.build(objects);
 

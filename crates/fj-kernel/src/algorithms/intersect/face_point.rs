@@ -1,9 +1,10 @@
 //! Intersection between faces and points in 2D
 
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, HalfEdge, Vertex},
+    objects::{Face, HalfEdge, SurfaceVertex},
     storage::Handle,
 };
 
@@ -48,13 +49,17 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = half_edge.vertices()[0].clone();
+                        let [vertex, _] = half_edge.boundary().zip_ext(
+                            half_edge.surface_vertices().map(Clone::clone)
+                        );
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = half_edge.vertices()[1].clone();
+                        let [_, vertex] = half_edge.boundary().zip_ext(
+                            half_edge.surface_vertices().map(Clone::clone)
+                        );
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -125,11 +130,12 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex(Vertex),
+    PointIsOnVertex((Point<1>, Handle<SurfaceVertex>)),
 }
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
     use pretty_assertions::assert_eq;
 
@@ -342,12 +348,15 @@ mod tests {
         let vertex = face
             .exterior()
             .half_edges()
-            .flat_map(|half_edge| half_edge.vertices())
-            .find(|vertex| {
-                vertex.surface_form().position() == Point::from([1., 0.])
+            .flat_map(|half_edge| {
+                half_edge
+                    .boundary()
+                    .zip_ext(half_edge.surface_vertices().map(Clone::clone))
             })
-            .unwrap()
-            .clone();
+            .find(|(_, surface_vertex)| {
+                surface_vertex.position() == Point::from([1., 0.])
+            })
+            .unwrap();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex))
