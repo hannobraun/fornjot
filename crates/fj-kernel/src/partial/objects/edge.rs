@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
+        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects, Vertex,
     },
     partial::{FullToPartialCache, Partial, PartialObject, PartialVertex},
     services::Service,
@@ -102,7 +102,12 @@ impl PartialObject for PartialHalfEdge {
                     Some(position_global);
             }
 
-            vertex.build(objects)
+            let position = vertex
+                .position
+                .expect("Can't build `Vertex` without position");
+            let surface_form = vertex.surface_form.build(objects);
+
+            Vertex::new(position, surface_form)
         });
         let global_form = self.global_form.build(objects);
 

@@ -27,16 +27,6 @@ impl PartialVertex {
             ),
         }
     }
-
-    /// Build a full vertex from the partial one
-    pub fn build(self, objects: &mut Service<Objects>) -> Vertex {
-        let position = self
-            .position
-            .expect("Can't build `Vertex` without position");
-        let surface_form = self.surface_form.build(objects);
-
-        Vertex::new(position, surface_form)
-    }
 }
 
 impl Default for PartialVertex {
