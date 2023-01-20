@@ -175,15 +175,17 @@ mod tests {
             };
             curve.update_as_u_axis();
 
+            let surface_form = Partial::from_partial(PartialSurfaceVertex {
+                position: Some(Point::from([0., 0.])),
+                surface: Partial::from(surface.clone()),
+                global_form: Partial::from_partial(PartialGlobalVertex {
+                    position: Some(Point::from([0., 0., 0.])),
+                }),
+            });
+
             PartialVertex {
                 position: Some([0.].into()),
-                surface_form: Partial::from_partial(PartialSurfaceVertex {
-                    position: Some(Point::from([0., 0.])),
-                    surface: Partial::from(surface.clone()),
-                    global_form: Partial::from_partial(PartialGlobalVertex {
-                        position: Some(Point::from([0., 0., 0.])),
-                    }),
-                }),
+                surface_form,
             }
             .build(&mut services.objects)
         };
