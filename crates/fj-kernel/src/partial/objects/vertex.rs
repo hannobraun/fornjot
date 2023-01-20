@@ -21,22 +21,6 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
-impl Default for PartialVertex {
-    fn default() -> Self {
-        let surface = Partial::new();
-
-        let surface_form = Partial::from_partial(PartialSurfaceVertex {
-            surface,
-            ..Default::default()
-        });
-
-        Self {
-            position: None,
-            surface_form,
-        }
-    }
-}
-
 /// A partial [`SurfaceVertex`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
