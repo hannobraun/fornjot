@@ -225,9 +225,9 @@ mod tests {
                     let [back, front] = side_up
                         .vertices
                         .each_mut_ext()
-                        .map(|vertex| &mut vertex.surface_form);
+                        .map(|(_, surface_vertex)| surface_vertex);
 
-                    *back = bottom.vertices[1].surface_form.clone();
+                    *back = bottom.vertices[1].1.clone();
 
                     let mut front = front.write();
                     front.position = Some([1., 1.].into());
@@ -247,13 +247,13 @@ mod tests {
                     let [back, front] = top
                         .vertices
                         .each_mut_ext()
-                        .map(|vertex| &mut vertex.surface_form);
+                        .map(|(_, surface_vertex)| surface_vertex);
 
                     let mut back = back.write();
                     back.position = Some([0., 1.].into());
                     back.surface = surface.clone();
 
-                    *front = side_up.vertices[1].surface_form.clone();
+                    *front = side_up.vertices[1].1.clone();
                 }
 
                 top.infer_global_form();
@@ -274,10 +274,10 @@ mod tests {
                 let [back, front] = side_down
                     .vertices
                     .each_mut_ext()
-                    .map(|vertex| &mut vertex.surface_form);
+                    .map(|(_, surface_vertex)| surface_vertex);
 
-                *back = bottom.vertices[0].surface_form.clone();
-                *front = top.vertices[1].surface_form.clone();
+                *back = bottom.vertices[0].1.clone();
+                *front = top.vertices[1].1.clone();
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();
