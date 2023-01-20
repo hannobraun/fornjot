@@ -3,8 +3,8 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{
-        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface, Vertex,
-        VerticesInNormalizedOrder,
+        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
+        SurfaceVertex, VerticesInNormalizedOrder,
     },
     storage::Handle,
 };
@@ -118,14 +118,18 @@ pub enum HalfEdgeValidationError {
 
     /// Mismatch between position of the vertex and position of its surface form
     #[error(
-        "`Vertex` position doesn't match position of its surface form\n\
-        - `Vertex`: {vertex:#?}\n\
-        - `Vertex` position on surface: {curve_position_on_surface:?}\n\
+        "Position on curve doesn't match surface vertex position\n\
+        - Position on curve: {position_on_curve:#?}\n\
+        - Surface vertex: {surface_vertex:#?}\n\
+        - Curve position converted to surface: {curve_position_on_surface:?}\n\
         - Distance between the positions: {distance}"
     )]
     VertexPositionMismatch {
-        /// The vertex
-        vertex: Vertex,
+        /// The position on the curve
+        position_on_curve: Point<1>,
+
+        /// The surface vertex
+        surface_vertex: Handle<SurfaceVertex>,
 
         /// The curve position converted into a surface position
         curve_position_on_surface: Point<2>,
@@ -254,7 +258,8 @@ impl HalfEdgeValidationError {
             if distance > config.identical_max_distance {
                 errors.push(
                     Box::new(Self::VertexPositionMismatch {
-                        vertex: vertex.clone(),
+                        position_on_curve: vertex.position(),
+                        surface_vertex: vertex.surface_form().clone(),
                         curve_position_on_surface,
                         distance,
                     })
