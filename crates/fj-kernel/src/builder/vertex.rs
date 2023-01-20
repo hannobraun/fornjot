@@ -1,13 +1,6 @@
 use fj_math::Point;
 
-use crate::partial::{
-    PartialGlobalVertex, PartialSurfaceVertex, PartialVertex,
-};
-
-/// Builder API for [`PartialVertex`]
-pub trait VertexBuilder {}
-
-impl VertexBuilder for PartialVertex {}
+use crate::partial::{PartialGlobalVertex, PartialSurfaceVertex};
 
 /// Builder API for [`PartialSurfaceVertex`]
 pub trait SurfaceVertexBuilder {
