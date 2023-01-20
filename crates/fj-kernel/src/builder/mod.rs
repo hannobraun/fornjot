@@ -22,7 +22,7 @@ pub use self::{
     sketch::SketchBuilder,
     solid::SolidBuilder,
     surface::SurfaceBuilder,
-    vertex::{GlobalVertexBuilder, SurfaceVertexBuilder, VertexBuilder},
+    vertex::{GlobalVertexBuilder, SurfaceVertexBuilder},
 };
 
 /// Pass objects to a builder method
@@ -44,7 +44,7 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     /// is generic.
     type SameSize<R>;
 
-    /// A return value that has one more element thatn the argument
+    /// A return value that has one more element than the argument
     type SizePlusOne<R>;
 
     /// Return the number of objects

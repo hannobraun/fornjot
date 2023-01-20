@@ -6,37 +6,6 @@ use crate::{
     services::Service,
 };
 
-/// A partial vertex
-///
-/// # Implementation Note
-///
-/// This type is a hold-over from when there was still a `Vertex` object. It
-/// will be remove too, at some point.
-#[derive(Clone, Debug)]
-pub struct PartialVertex {
-    /// The position of the vertex on the curve
-    pub position: Option<Point<1>>,
-
-    /// The surface form of the vertex
-    pub surface_form: Partial<SurfaceVertex>,
-}
-
-impl Default for PartialVertex {
-    fn default() -> Self {
-        let surface = Partial::new();
-
-        let surface_form = Partial::from_partial(PartialSurfaceVertex {
-            surface,
-            ..Default::default()
-        });
-
-        Self {
-            position: None,
-            surface_form,
-        }
-    }
-}
-
 /// A partial [`SurfaceVertex`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {

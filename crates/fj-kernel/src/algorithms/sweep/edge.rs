@@ -173,7 +173,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::mesh::Color;
+    use fj_interop::{ext::ArrayExt, mesh::Color};
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -222,11 +222,14 @@ mod tests {
                 side_up.curve.write().surface = surface.clone();
 
                 {
-                    let [back, front] = &mut side_up.vertices;
+                    let [back, front] = side_up
+                        .vertices
+                        .each_mut_ext()
+                        .map(|(_, surface_vertex)| surface_vertex);
 
-                    back.surface_form = bottom.vertices[1].surface_form.clone();
+                    *back = bottom.vertices[1].1.clone();
 
-                    let mut front = front.surface_form.write();
+                    let mut front = front.write();
                     front.position = Some([1., 1.].into());
                     front.surface = surface.clone();
                 }
@@ -241,14 +244,16 @@ mod tests {
                 top.curve.write().surface = surface.clone();
 
                 {
-                    let [back, front] = &mut top.vertices;
+                    let [back, front] = top
+                        .vertices
+                        .each_mut_ext()
+                        .map(|(_, surface_vertex)| surface_vertex);
 
-                    let mut back = back.surface_form.write();
+                    let mut back = back.write();
                     back.position = Some([0., 1.].into());
                     back.surface = surface.clone();
 
-                    front.surface_form =
-                        side_up.vertices[1].surface_form.clone();
+                    *front = side_up.vertices[1].1.clone();
                 }
 
                 top.infer_global_form();
@@ -266,10 +271,13 @@ mod tests {
                 let mut side_down = PartialHalfEdge::default();
                 side_down.curve.write().surface = surface;
 
-                let [back, front] = &mut side_down.vertices;
+                let [back, front] = side_down
+                    .vertices
+                    .each_mut_ext()
+                    .map(|(_, surface_vertex)| surface_vertex);
 
-                back.surface_form = bottom.vertices[0].surface_form.clone();
-                front.surface_form = top.vertices[1].surface_form.clone();
+                *back = bottom.vertices[0].1.clone();
+                *front = top.vertices[1].1.clone();
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();

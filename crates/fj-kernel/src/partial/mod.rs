@@ -24,7 +24,7 @@ pub use self::{
         sketch::PartialSketch,
         solid::PartialSolid,
         surface::PartialSurface,
-        vertex::{PartialGlobalVertex, PartialSurfaceVertex, PartialVertex},
+        vertex::{PartialGlobalVertex, PartialSurfaceVertex},
     },
     traits::{HasPartial, PartialObject},
     wrapper::{FullToPartialCache, Partial},

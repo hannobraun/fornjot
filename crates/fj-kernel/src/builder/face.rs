@@ -109,10 +109,10 @@ impl FaceBuilder for PartialFace {
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
         let mut exterior = self.exterior.write();
-        let mut vertices = exterior
-            .half_edges
-            .iter()
-            .map(|half_edge| half_edge.read().back().surface_form.clone());
+        let mut vertices = exterior.half_edges.iter().map(|half_edge| {
+            let [vertex, _] = &half_edge.read().vertices;
+            vertex.1.clone()
+        });
 
         let vertices = {
             let array = [
@@ -165,7 +165,7 @@ impl FaceBuilder for PartialFace {
                     MaybeSurfacePath::UndefinedLine => {
                         let points_surface =
                             half_edge.vertices.each_ref_ext().map(|vertex| {
-                                vertex.surface_form.read().position.expect(
+                                vertex.1.read().position.expect(
                                     "Can't infer curve without surface points",
                                 )
                             });
@@ -178,7 +178,7 @@ impl FaceBuilder for PartialFace {
                             .each_mut_ext()
                             .zip_ext(points_curve)
                         {
-                            vertex.position = Some(point);
+                            vertex.0 = Some(point);
                         }
                     }
                 }
