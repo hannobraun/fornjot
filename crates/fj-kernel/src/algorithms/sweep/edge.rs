@@ -91,8 +91,8 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
         let top_edge = {
             let surface_vertices = side_edges.clone().map(|edge| {
-                let [_, vertex] = edge.surface_vertices();
-                vertex.clone()
+                let [_, surface_vertex] = edge.surface_vertices();
+                surface_vertex.clone()
             });
 
             let points_curve_and_surface = bottom_edge
