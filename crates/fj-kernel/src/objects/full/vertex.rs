@@ -2,44 +2,6 @@ use fj_math::Point;
 
 use crate::{objects::Surface, storage::Handle};
 
-/// A vertex
-///
-/// `Vertex` is defined in terms of a 1-dimensional position on a curve. Each
-/// `Vertex` has an associated [`SurfaceVertex`], which defines the 2D position
-/// on the surface, and a [`GlobalVertex`] which defines the global 3D position.
-///
-/// Both can be accessed through [`Vertex::surface_form`].
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex {
-    position: Point<1>,
-    surface_form: Handle<SurfaceVertex>,
-}
-
-impl Vertex {
-    /// Construct an instance of `Vertex`
-    pub fn new(
-        position: impl Into<Point<1>>,
-        surface_form: Handle<SurfaceVertex>,
-    ) -> Self {
-        let position = position.into();
-
-        Self {
-            position,
-            surface_form,
-        }
-    }
-
-    /// Access the position of the vertex on the curve
-    pub fn position(&self) -> Point<1> {
-        self.position
-    }
-
-    /// Access the surface form of this vertex
-    pub fn surface_form(&self) -> &Handle<SurfaceVertex> {
-        &self.surface_form
-    }
-}
-
 /// A vertex, defined in surface (2D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
