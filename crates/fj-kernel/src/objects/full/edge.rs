@@ -41,8 +41,8 @@ impl HalfEdge {
     }
 
     /// Access the vertices that bound the half-edge on the curve
-    pub fn vertices(&self) -> &[Vertex; 2] {
-        &self.vertices
+    pub fn vertices(&self) -> [Vertex; 2] {
+        self.vertices.clone()
     }
 
     /// Access the surface vertices that bound the half-edge

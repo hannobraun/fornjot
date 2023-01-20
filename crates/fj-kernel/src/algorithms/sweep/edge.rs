@@ -82,7 +82,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .insert(objects)
         };
 
-        let side_edges = bottom_edge.vertices().clone().map(|vertex| {
+        let side_edges = bottom_edge.vertices().map(|vertex| {
             (vertex, surface.clone()).sweep_with_cache(path, cache, objects)
         });
 

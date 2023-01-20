@@ -10,7 +10,7 @@ use super::Reverse;
 impl Reverse for Handle<HalfEdge> {
     fn reverse(self, objects: &mut Service<Objects>) -> Self {
         let vertices = {
-            let [a, b] = self.vertices().clone();
+            let [a, b] = self.vertices();
             [b, a]
         };
 

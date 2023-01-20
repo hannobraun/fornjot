@@ -291,8 +291,7 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([-1., -1.])
             })
-            .unwrap()
-            .clone();
+            .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex))

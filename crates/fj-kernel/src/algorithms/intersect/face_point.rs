@@ -346,8 +346,7 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([1., 0.])
             })
-            .unwrap()
-            .clone();
+            .unwrap();
         assert_eq!(
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex))

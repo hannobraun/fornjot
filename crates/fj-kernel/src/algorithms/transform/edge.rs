@@ -18,7 +18,7 @@ impl TransformObject for HalfEdge {
             .curve()
             .clone()
             .transform_with_cache(transform, objects, cache);
-        let vertices = self.vertices().clone().map(|vertex| {
+        let vertices = self.vertices().map(|vertex| {
             vertex.transform_with_cache(transform, objects, cache)
         });
         let global_form = self

@@ -60,7 +60,6 @@ impl PartialObject for PartialHalfEdge {
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .vertices()
-                .clone()
                 .map(|vertex| PartialVertex::from_full(&vertex, cache)),
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
