@@ -12,7 +12,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Handle<Curve>,
-    vertices: [(Point<1>, Handle<SurfaceVertex>); 2],
+    boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
     global_form: Handle<GlobalEdge>,
 }
 
@@ -23,12 +23,12 @@ impl HalfEdge {
         vertices: [Vertex; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        let vertices = vertices
+        let boundary = vertices
             .map(|vertex| (vertex.position(), vertex.surface_form().clone()));
 
         Self {
             curve,
-            vertices,
+            boundary,
             global_form,
         }
     }
@@ -40,19 +40,19 @@ impl HalfEdge {
 
     /// Access the boundary points of the half-edge on the curve
     pub fn boundary(&self) -> [Point<1>; 2] {
-        self.vertices.each_ref_ext().map(|&(point, _)| point)
+        self.boundary.each_ref_ext().map(|&(point, _)| point)
     }
 
     /// Access the vertices that bound the half-edge on the curve
     pub fn vertices(&self) -> [Vertex; 2] {
-        self.vertices.each_ref_ext().map(|(point, surface_vertex)| {
+        self.boundary.each_ref_ext().map(|(point, surface_vertex)| {
             Vertex::new(*point, surface_vertex.clone())
         })
     }
 
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        self.vertices
+        self.boundary
             .each_ref_ext()
             .map(|(_, surface_form)| surface_form)
     }
