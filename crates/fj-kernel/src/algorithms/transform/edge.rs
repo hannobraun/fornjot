@@ -19,7 +19,7 @@ impl TransformObject for HalfEdge {
             .curve()
             .clone()
             .transform_with_cache(transform, objects, cache);
-        let vertices = self.boundary().zip_ext(self.surface_vertices()).map(
+        let boundary = self.boundary().zip_ext(self.surface_vertices()).map(
             |(point, surface_vertex)| {
                 let surface_vertex = surface_vertex
                     .clone()
@@ -32,7 +32,7 @@ impl TransformObject for HalfEdge {
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(curve, vertices, global_form)
+        Self::new(curve, boundary, global_form)
     }
 }
 

@@ -56,7 +56,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .insert(objects)
             };
 
-            let vertices = {
+            let boundary = {
                 let points_surface = points_curve_and_surface
                     .map(|(_, point_surface)| point_surface);
 
@@ -77,7 +77,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                     })
             };
 
-            HalfEdge::new(curve, vertices, edge.global_form().clone())
+            HalfEdge::new(curve, boundary, edge.global_form().clone())
                 .insert(objects)
         };
 
@@ -121,13 +121,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             )
             .insert(objects);
 
-            let vertices = bottom_edge
+            let boundary = bottom_edge
                 .boundary()
                 .into_iter_fixed()
                 .zip(surface_vertices)
                 .collect::<[_; 2]>();
 
-            HalfEdge::new(curve, vertices, global).insert(objects)
+            HalfEdge::new(curve, boundary, global).insert(objects)
         };
 
         let cycle = {

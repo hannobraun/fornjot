@@ -106,13 +106,13 @@ impl Sweep for (Vertex, Handle<Surface>) {
         };
 
         // And now the vertices. Again, nothing wild here.
-        let vertices = vertices_surface.map(|surface_form| {
+        let boundary = vertices_surface.map(|surface_form| {
             (Point::from([surface_form.position().v]), surface_form)
         });
 
         // And finally, creating the output `Edge` is just a matter of
         // assembling the pieces we've already created.
-        HalfEdge::new(curve, vertices, edge_global).insert(objects)
+        HalfEdge::new(curve, boundary, edge_global).insert(objects)
     }
 }
 
