@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{GlobalVertex, Objects, Surface, SurfaceVertex, Vertex},
+    objects::{GlobalVertex, Objects, Surface, SurfaceVertex},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
@@ -14,19 +14,6 @@ pub struct PartialVertex {
 
     /// The surface form of the vertex
     pub surface_form: Partial<SurfaceVertex>,
-}
-
-impl PartialVertex {
-    /// Construct a partial vertex from a full one
-    pub fn from_full(vertex: &Vertex, cache: &mut FullToPartialCache) -> Self {
-        Self {
-            position: Some(vertex.position()),
-            surface_form: Partial::from_full(
-                vertex.surface_form().clone(),
-                cache,
-            ),
-        }
-    }
 }
 
 impl Default for PartialVertex {
