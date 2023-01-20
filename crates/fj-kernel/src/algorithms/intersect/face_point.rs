@@ -1,9 +1,10 @@
 //! Intersection between faces and points in 2D
 
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, HalfEdge, Vertex},
+    objects::{Face, HalfEdge, SurfaceVertex},
     storage::Handle,
 };
 
@@ -48,13 +49,17 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let [vertex, _] = half_edge.vertices();
+                        let [vertex, _] = half_edge.boundary().zip_ext(
+                            half_edge.surface_vertices().map(Clone::clone)
+                        );
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let [_, vertex] = half_edge.vertices();
+                        let [_, vertex] = half_edge.boundary().zip_ext(
+                            half_edge.surface_vertices().map(Clone::clone)
+                        );
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -125,7 +130,7 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex(Vertex),
+    PointIsOnVertex((Point<1>, Handle<SurfaceVertex>)),
 }
 
 #[cfg(test)]
@@ -346,6 +351,7 @@ mod tests {
             .find(|vertex| {
                 vertex.surface_form().position() == Point::from([1., 0.])
             })
+            .map(|vertex| (vertex.position(), vertex.surface_form().clone()))
             .unwrap();
         assert_eq!(
             intersection,

@@ -115,10 +115,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
                 RayFaceIntersection::RayHitsEdge(edge)
             }
             FacePointIntersection::PointIsOnVertex(vertex) => {
-                RayFaceIntersection::RayHitsVertex((
-                    vertex.position(),
-                    vertex.surface_form().clone(),
-                ))
+                RayFaceIntersection::RayHitsVertex(vertex)
             }
         };
 
