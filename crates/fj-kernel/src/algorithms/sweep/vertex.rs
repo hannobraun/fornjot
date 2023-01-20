@@ -168,22 +168,25 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
-            ..Default::default()
-        };
-        curve.update_as_u_axis();
-        let vertex = PartialVertex {
-            position: Some([0.].into()),
-            surface_form: Partial::from_partial(PartialSurfaceVertex {
-                position: Some(Point::from([0., 0.])),
+        let vertex = {
+            let mut curve = PartialCurve {
                 surface: Partial::from(surface.clone()),
-                global_form: Partial::from_partial(PartialGlobalVertex {
-                    position: Some(Point::from([0., 0., 0.])),
+                ..Default::default()
+            };
+            curve.update_as_u_axis();
+
+            PartialVertex {
+                position: Some([0.].into()),
+                surface_form: Partial::from_partial(PartialSurfaceVertex {
+                    position: Some(Point::from([0., 0.])),
+                    surface: Partial::from(surface.clone()),
+                    global_form: Partial::from_partial(PartialGlobalVertex {
+                        position: Some(Point::from([0., 0., 0.])),
+                    }),
                 }),
-            }),
-        }
-        .build(&mut services.objects);
+            }
+            .build(&mut services.objects)
+        };
 
         let half_edge = (vertex, surface.clone())
             .sweep([0., 0., 1.], &mut services.objects);
