@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Transform;
 
 use crate::{
-    objects::{GlobalEdge, HalfEdge, Objects, Vertex},
+    objects::{GlobalEdge, HalfEdge, Objects},
     services::Service,
 };
 
@@ -24,7 +24,7 @@ impl TransformObject for HalfEdge {
                 let surface_vertex = surface_vertex
                     .clone()
                     .transform_with_cache(transform, objects, cache);
-                Vertex::new(point, surface_vertex)
+                (point, surface_vertex)
             },
         );
         let global_form = self

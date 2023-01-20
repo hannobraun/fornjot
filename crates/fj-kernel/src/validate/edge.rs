@@ -273,7 +273,7 @@ mod tests {
     use crate::{
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{GlobalCurve, HalfEdge, Vertex},
+        objects::{GlobalCurve, HalfEdge},
         partial::{Partial, PartialHalfEdge, PartialObject},
         services::Services,
         validate::Validate,
@@ -302,10 +302,7 @@ mod tests {
             };
             let vertices = valid
                 .boundary()
-                .zip_ext(valid.surface_vertices().map(Clone::clone))
-                .map(|(point, surface_vertex)| {
-                    Vertex::new(point, surface_vertex)
-                });
+                .zip_ext(valid.surface_vertices().map(Clone::clone));
 
             HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
@@ -347,10 +344,7 @@ mod tests {
             };
             let vertices = valid
                 .boundary()
-                .zip_ext(valid.surface_vertices().map(Clone::clone))
-                .map(|(point, surface_vertex)| {
-                    Vertex::new(point, surface_vertex)
-                });
+                .zip_ext(valid.surface_vertices().map(Clone::clone));
 
             HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
@@ -384,10 +378,7 @@ mod tests {
                     surface_form.write().surface =
                         Partial::from(services.objects.surfaces.xz_plane());
 
-                    Vertex::new(
-                        point,
-                        surface_form.build(&mut services.objects),
-                    )
+                    (point, surface_form.build(&mut services.objects))
                 });
 
             HalfEdge::new(
@@ -418,7 +409,7 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.surface_vertices().map(|surface_vertex| {
-                Vertex::new(Point::from([0.]), surface_vertex.clone())
+                (Point::from([0.]), surface_vertex.clone())
             });
 
             HalfEdge::new(
@@ -449,7 +440,7 @@ mod tests {
         };
         let invalid = {
             let vertices = valid.surface_vertices().map(|surface_vertex| {
-                Vertex::new(Point::from([2.]), surface_vertex.clone())
+                (Point::from([2.]), surface_vertex.clone())
             });
 
             HalfEdge::new(

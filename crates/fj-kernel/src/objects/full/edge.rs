@@ -20,12 +20,9 @@ impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         curve: Handle<Curve>,
-        vertices: [Vertex; 2],
+        boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        let boundary = vertices
-            .map(|vertex| (vertex.position(), vertex.surface_form().clone()));
-
         Self {
             curve,
             boundary,

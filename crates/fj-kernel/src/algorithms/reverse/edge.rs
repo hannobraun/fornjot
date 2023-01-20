@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 
 use crate::{
     insert::Insert,
-    objects::{HalfEdge, Objects, Vertex},
+    objects::{HalfEdge, Objects},
     services::Service,
     storage::Handle,
 };
@@ -14,10 +14,7 @@ impl Reverse for Handle<HalfEdge> {
         let vertices = {
             let [a, b] = self
                 .boundary()
-                .zip_ext(self.surface_vertices().map(Clone::clone))
-                .map(|(point, surface_vertex)| {
-                    Vertex::new(point, surface_vertex)
-                });
+                .zip_ext(self.surface_vertices().map(Clone::clone));
             [b, a]
         };
 

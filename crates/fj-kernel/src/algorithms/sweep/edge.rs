@@ -8,7 +8,6 @@ use crate::{
     insert::Insert,
     objects::{
         Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
-        Vertex,
     },
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
@@ -74,7 +73,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                         )
                         .insert(objects);
 
-                        Vertex::new(vertex.position(), surface_vertex)
+                        (vertex.position(), surface_vertex)
                     })
             };
 
@@ -126,8 +125,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .boundary()
                 .into_iter_fixed()
                 .zip(surface_vertices)
-                .collect::<[_; 2]>()
-                .map(|(point, surface_form)| Vertex::new(point, surface_form));
+                .collect::<[_; 2]>();
 
             HalfEdge::new(curve, vertices, global).insert(objects)
         };
