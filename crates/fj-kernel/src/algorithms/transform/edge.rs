@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::Transform;
 
 use crate::{
@@ -18,15 +19,14 @@ impl TransformObject for HalfEdge {
             .curve()
             .clone()
             .transform_with_cache(transform, objects, cache);
-        let vertices = self.vertices().map(|vertex| {
-            let point = vertex.position();
-            let surface_form = vertex
-                .surface_form()
-                .clone()
-                .transform_with_cache(transform, objects, cache);
-
-            Vertex::new(point, surface_form)
-        });
+        let vertices = self.boundary().zip_ext(self.surface_vertices()).map(
+            |(point, surface_vertex)| {
+                let surface_vertex = surface_vertex
+                    .clone()
+                    .transform_with_cache(transform, objects, cache);
+                Vertex::new(point, surface_vertex)
+            },
+        );
         let global_form = self
             .global_form()
             .clone()

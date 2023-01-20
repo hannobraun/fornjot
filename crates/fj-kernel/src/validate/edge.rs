@@ -300,8 +300,14 @@ mod tests {
                     Partial::from(GlobalCurve.insert(&mut services.objects));
                 global_edge.build(&mut services.objects)
             };
+            let vertices = valid
+                .boundary()
+                .zip_ext(valid.surface_vertices().map(Clone::clone))
+                .map(|(point, surface_vertex)| {
+                    Vertex::new(point, surface_vertex)
+                });
 
-            HalfEdge::new(valid.curve().clone(), valid.vertices(), global_form)
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -339,8 +345,14 @@ mod tests {
                     });
                 global_edge.build(&mut services.objects)
             };
+            let vertices = valid
+                .boundary()
+                .zip_ext(valid.surface_vertices().map(Clone::clone))
+                .map(|(point, surface_vertex)| {
+                    Vertex::new(point, surface_vertex)
+                });
 
-            HalfEdge::new(valid.curve().clone(), valid.vertices(), global_form)
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -363,17 +375,20 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = {
-            let vertices = valid.vertices().map(|vertex| {
-                let mut surface_form =
-                    Partial::from(vertex.surface_form().clone());
-                surface_form.write().surface =
-                    Partial::from(services.objects.surfaces.xz_plane());
+            let vertices = valid
+                .boundary()
+                .zip_ext(valid.surface_vertices())
+                .map(|(point, surface_vertex)| {
+                    let mut surface_form =
+                        Partial::from(surface_vertex.clone());
+                    surface_form.write().surface =
+                        Partial::from(services.objects.surfaces.xz_plane());
 
-                Vertex::new(
-                    vertex.position(),
-                    surface_form.build(&mut services.objects),
-                )
-            });
+                    Vertex::new(
+                        point,
+                        surface_form.build(&mut services.objects),
+                    )
+                });
 
             HalfEdge::new(
                 valid.curve().clone(),
@@ -402,8 +417,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = {
-            let vertices = valid.vertices().each_ref_ext().map(|vertex| {
-                Vertex::new(Point::from([0.]), vertex.surface_form().clone())
+            let vertices = valid.surface_vertices().map(|surface_vertex| {
+                Vertex::new(Point::from([0.]), surface_vertex.clone())
             });
 
             HalfEdge::new(
@@ -433,8 +448,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = {
-            let vertices = valid.vertices().map(|vertex| {
-                Vertex::new(Point::from([2.]), vertex.surface_form().clone())
+            let vertices = valid.surface_vertices().map(|surface_vertex| {
+                Vertex::new(Point::from([2.]), surface_vertex.clone())
             });
 
             HalfEdge::new(
