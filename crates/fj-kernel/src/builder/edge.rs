@@ -6,7 +6,7 @@ use crate::{
     partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
-use super::{CurveBuilder, VertexBuilder};
+use super::CurveBuilder;
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
@@ -61,7 +61,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.curve.write().surface = surface.clone();
 
         for vertex in &mut self.vertices {
-            vertex.replace_surface(surface.clone());
+            vertex.surface_form.write().surface = surface.clone();
         }
     }
 
