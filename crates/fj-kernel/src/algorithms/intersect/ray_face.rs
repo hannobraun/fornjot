@@ -141,6 +141,7 @@ pub enum RayFaceIntersection {
 
 #[cfg(test)]
 mod tests {
+    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
@@ -287,11 +288,14 @@ mod tests {
         let vertex = face
             .exterior()
             .half_edges()
-            .flat_map(|half_edge| half_edge.vertices())
-            .find(|vertex| {
-                vertex.surface_form().position() == Point::from([-1., -1.])
+            .flat_map(|half_edge| {
+                half_edge
+                    .boundary()
+                    .zip_ext(half_edge.surface_vertices().map(Clone::clone))
             })
-            .map(|vertex| (vertex.position(), vertex.surface_form().clone()))
+            .find(|(_, surface_vertex)| {
+                surface_vertex.position() == Point::from([-1., -1.])
+            })
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
