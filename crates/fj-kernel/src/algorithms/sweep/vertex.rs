@@ -155,7 +155,6 @@ mod tests {
         algorithms::sweep::Sweep,
         builder::{CurveBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::Vertex,
         partial::{
             Partial, PartialCurve, PartialGlobalVertex, PartialHalfEdge,
             PartialObject, PartialSurfaceVertex,
@@ -168,7 +167,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let vertex = {
+        let (position, surface_vertex) = {
             let mut curve = PartialCurve {
                 surface: Partial::from(surface.clone()),
                 ..Default::default()
@@ -184,14 +183,10 @@ mod tests {
             })
             .build(&mut services.objects);
 
-            Vertex::new(Point::from([0.]), surface_form)
+            (Point::from([0.]), surface_form)
         };
 
-        let half_edge = (
-            vertex.position(),
-            vertex.surface_form().clone(),
-            surface.clone(),
-        )
+        let half_edge = (position, surface_vertex, surface.clone())
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_half_edge = {
