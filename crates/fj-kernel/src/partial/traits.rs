@@ -45,5 +45,4 @@ impl_trait!(
     Solid, PartialSolid;
     Surface, PartialSurface;
     SurfaceVertex, PartialSurfaceVertex;
-    Vertex, PartialVertex;
 );

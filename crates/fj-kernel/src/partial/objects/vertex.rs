@@ -16,10 +16,9 @@ pub struct PartialVertex {
     pub surface_form: Partial<SurfaceVertex>,
 }
 
-impl PartialObject for PartialVertex {
-    type Full = Vertex;
-
-    fn from_full(vertex: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+impl PartialVertex {
+    /// Construct a partial vertex from a full one
+    pub fn from_full(vertex: &Vertex, cache: &mut FullToPartialCache) -> Self {
         Self {
             position: Some(vertex.position()),
             surface_form: Partial::from_full(
@@ -29,7 +28,8 @@ impl PartialObject for PartialVertex {
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+    /// Build a full vertex from the partial one
+    pub fn build(self, objects: &mut Service<Objects>) -> Vertex {
         let position = self
             .position
             .expect("Can't build `Vertex` without position");
