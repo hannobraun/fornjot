@@ -245,12 +245,14 @@ impl HalfEdgeValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        for vertex in half_edge.vertices() {
+        for (position_on_curve, surface_vertex) in
+            half_edge.boundary().zip_ext(half_edge.surface_vertices())
+        {
             let curve_position_on_surface = half_edge
                 .curve()
                 .path()
-                .point_from_path_coords(vertex.position());
-            let surface_position = vertex.surface_form().position();
+                .point_from_path_coords(position_on_curve);
+            let surface_position = surface_vertex.position();
 
             let distance =
                 curve_position_on_surface.distance_to(&surface_position);
@@ -258,8 +260,8 @@ impl HalfEdgeValidationError {
             if distance > config.identical_max_distance {
                 errors.push(
                     Box::new(Self::VertexPositionMismatch {
-                        position_on_curve: vertex.position(),
-                        surface_vertex: vertex.surface_form().clone(),
+                        position_on_curve,
+                        surface_vertex: surface_vertex.clone(),
                         curve_position_on_surface,
                         distance,
                     })

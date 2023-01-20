@@ -81,19 +81,18 @@ impl Sweep for (Handle<HalfEdge>, Color) {
                 .insert(objects)
         };
 
-        let side_edges = bottom_edge.vertices().map(|vertex| {
-            (
-                vertex.position(),
-                vertex.surface_form().clone(),
-                surface.clone(),
-            )
-                .sweep_with_cache(path, cache, objects)
-        });
+        let side_edges = bottom_edge
+            .boundary()
+            .zip_ext(bottom_edge.surface_vertices())
+            .map(|(point, surface_vertex)| {
+                (point, surface_vertex.clone(), surface.clone())
+                    .sweep_with_cache(path, cache, objects)
+            });
 
         let top_edge = {
             let surface_vertices = side_edges.clone().map(|edge| {
-                let [_, vertex] = edge.vertices();
-                vertex.surface_form().clone()
+                let [_, vertex] = edge.surface_vertices();
+                vertex.clone()
             });
 
             let points_curve_and_surface = bottom_edge
@@ -147,15 +146,13 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             while i < edges.len() {
                 let j = (i + 1) % edges.len();
 
-                let [_, prev_last] = edges[i].vertices();
-                let [next_first, _] = edges[j].vertices();
+                let [_, prev_last] = edges[i].surface_vertices();
+                let [next_first, _] = edges[j].surface_vertices();
 
                 // Need to compare surface forms here, as the global forms might
                 // be coincident when sweeping circles, despite the vertices
                 // being different!
-                if prev_last.surface_form().id()
-                    != next_first.surface_form().id()
-                {
+                if prev_last.id() != next_first.id() {
                     edges[j] = edges[j].clone().reverse(objects);
                 }
 

@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex, Vertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -38,13 +38,6 @@ impl HalfEdge {
     /// Access the boundary points of the half-edge on the curve
     pub fn boundary(&self) -> [Point<1>; 2] {
         self.boundary.each_ref_ext().map(|&(point, _)| point)
-    }
-
-    /// Access the vertices that bound the half-edge on the curve
-    pub fn vertices(&self) -> [Vertex; 2] {
-        self.boundary.each_ref_ext().map(|(point, surface_vertex)| {
-            Vertex::new(*point, surface_vertex.clone())
-        })
     }
 
     /// Access the surface vertices that bound the half-edge
