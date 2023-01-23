@@ -1,5 +1,45 @@
 # Fornjot - Changelog
 
+## v0.33.0 (2023-01-23)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+None this week, busy working on the kernel!
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Improve validation error message ([#1518])
+- Add `FaceBuilder::infer_curves` ([#1520])
+- Simplify object graph around `HalfEdge` ([#1521], [#1522], [#1524], [#1526], [#1527])
+
+#### `fj-math`
+
+- Fix `Plane::project_vector` ([#1523])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1512], [#1517])
+
+[#1512]: https://github.com/hannobraun/Fornjot/pull/1512
+[#1517]: https://github.com/hannobraun/Fornjot/pull/1517
+[#1518]: https://github.com/hannobraun/Fornjot/pull/1518
+[#1520]: https://github.com/hannobraun/Fornjot/pull/1520
+[#1521]: https://github.com/hannobraun/Fornjot/pull/1521
+[#1522]: https://github.com/hannobraun/Fornjot/pull/1522
+[#1523]: https://github.com/hannobraun/Fornjot/pull/1523
+[#1524]: https://github.com/hannobraun/Fornjot/pull/1524
+[#1526]: https://github.com/hannobraun/Fornjot/pull/1526
+[#1527]: https://github.com/hannobraun/Fornjot/pull/1527
+
+
 ## v0.32.0 (2023-01-16)
 
 ### End-user improvements
