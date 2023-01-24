@@ -1,6 +1,5 @@
 //! Intersection between faces and points in 2D
 
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -49,17 +48,15 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let [vertex, _] = half_edge.boundary().zip_ext(
-                            half_edge.surface_vertices().map(Clone::clone)
-                        );
+                        let [vertex, _] =
+                            half_edge.surface_vertices().map(Clone::clone);
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let [_, vertex] = half_edge.boundary().zip_ext(
-                            half_edge.surface_vertices().map(Clone::clone)
-                        );
+                        let [_, vertex] =
+                            half_edge.surface_vertices().map(Clone::clone);
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -130,12 +127,11 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex((Point<1>, Handle<SurfaceVertex>)),
+    PointIsOnVertex(Handle<SurfaceVertex>),
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
     use pretty_assertions::assert_eq;
 
@@ -349,11 +345,9 @@ mod tests {
             .exterior()
             .half_edges()
             .flat_map(|half_edge| {
-                half_edge
-                    .boundary()
-                    .zip_ext(half_edge.surface_vertices().map(Clone::clone))
+                half_edge.surface_vertices().map(Clone::clone)
             })
-            .find(|(_, surface_vertex)| {
+            .find(|surface_vertex| {
                 surface_vertex.position() == Point::from([1., 0.])
             })
             .unwrap();
