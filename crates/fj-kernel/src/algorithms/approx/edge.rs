@@ -25,9 +25,10 @@ impl Approx for &HalfEdge {
         let boundary = self.boundary();
         let range = RangeOnPath { boundary };
 
-        let [first, _] = self.surface_vertices();
-        let first =
-            ApproxPoint::new(first.position(), first.global_form().position());
+        let first = ApproxPoint::new(
+            self.start_vertex().position(),
+            self.start_vertex().global_form().position(),
+        );
         let curve_approx =
             (self.curve(), range).approx_with_cache(tolerance, cache);
 

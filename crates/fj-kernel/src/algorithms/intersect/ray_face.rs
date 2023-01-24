@@ -136,12 +136,11 @@ pub enum RayFaceIntersection {
     RayHitsEdge(Handle<HalfEdge>),
 
     /// The ray hits a vertex
-    RayHitsVertex((Point<1>, Handle<SurfaceVertex>)),
+    RayHitsVertex(Handle<SurfaceVertex>),
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
@@ -254,9 +253,8 @@ mod tests {
             .exterior()
             .half_edges()
             .find(|edge| {
-                let [a, b] = edge.surface_vertices();
-                a.position() == Point::from([-1., 1.])
-                    && b.position() == Point::from([-1., -1.])
+                let vertex = edge.start_vertex();
+                vertex.position() == Point::from([-1., 1.])
             })
             .unwrap();
         assert_eq!(
@@ -288,12 +286,8 @@ mod tests {
         let vertex = face
             .exterior()
             .half_edges()
-            .flat_map(|half_edge| {
-                half_edge
-                    .boundary()
-                    .zip_ext(half_edge.surface_vertices().map(Clone::clone))
-            })
-            .find(|(_, surface_vertex)| {
+            .map(|half_edge| half_edge.start_vertex().clone())
+            .find(|surface_vertex| {
                 surface_vertex.position() == Point::from([-1., -1.])
             })
             .unwrap();
