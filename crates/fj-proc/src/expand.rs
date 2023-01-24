@@ -64,9 +64,9 @@ impl ToTokens for Metadata {
         let Self { name, arguments } = self;
 
         tokens.extend(quote! {
-            fn metadata(&self) -> fj::models::ModelMetadata {
-                fj::models::ModelMetadata::new(#name)
-                #( .with_argument(#arguments) )*
+            fn metadata(&self) -> std::result::Result<fj::models::ModelMetadata, Box<dyn std::error::Error + Send + Sync +'static>> {
+                Ok(fj::models::ModelMetadata::new(#name)
+                #( .with_argument(#arguments) )*)
             }
         });
     }

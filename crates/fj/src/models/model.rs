@@ -9,7 +9,7 @@ pub trait Model: Send + Sync {
     fn shape(&self, ctx: &dyn Context) -> Result<Shape, Error>;
 
     /// Get metadata for the model.
-    fn metadata(&self) -> ModelMetadata;
+    fn metadata(&self) -> Result<ModelMetadata, Error>;
 }
 
 #[cfg(test)]

@@ -1,14 +1,14 @@
 use std::{os::raw::c_void, panic::AssertUnwindSafe};
 
 use crate::{
-    abi::{Context, ModelMetadata, ShapeResult},
+    abi::{Context, ModelMetadataResult, ShapeResult},
     models::Error,
 };
 
 #[repr(C)]
 pub struct Model {
     ptr: *mut c_void,
-    metadata: unsafe extern "C" fn(*mut c_void) -> ModelMetadata,
+    metadata: unsafe extern "C" fn(*mut c_void) -> ModelMetadataResult,
     shape: unsafe extern "C" fn(*mut c_void, Context<'_>) -> ShapeResult,
     free: unsafe extern "C" fn(*mut c_void),
 }
@@ -30,23 +30,35 @@ impl crate::models::Model for Model {
         }
     }
 
-    fn metadata(&self) -> crate::models::ModelMetadata {
+    fn metadata(&self) -> Result<crate::models::ModelMetadata, Error> {
         let Self { ptr, metadata, .. } = *self;
 
-        unsafe { metadata(ptr).into() }
+        let result = unsafe { metadata(ptr) };
+
+        match result {
+            super::ffi_safe::Result::Ok(meta) => Ok(meta.into()),
+            super::ffi_safe::Result::Err(err) => Err(err.into()),
+        }
     }
 }
 
 impl From<Box<dyn crate::models::Model>> for Model {
     fn from(m: Box<dyn crate::models::Model>) -> Self {
-        unsafe extern "C" fn metadata(user_data: *mut c_void) -> ModelMetadata {
+        unsafe extern "C" fn metadata(
+            user_data: *mut c_void,
+        ) -> ModelMetadataResult {
             let model = &*(user_data as *mut Box<dyn crate::models::Model>);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 model.metadata()
             })) {
-                Ok(meta) => meta.into(),
-                Err(payload) => crate::abi::on_panic(payload),
+                Ok(Ok(meta)) => ModelMetadataResult::Ok(meta.into()),
+                Ok(Err(err)) => ModelMetadataResult::Err(err.into()),
+                Err(payload) => {
+                    ModelMetadataResult::Err(crate::abi::ffi_safe::BoxedError {
+                        msg: crate::abi::on_panic(payload),
+                    })
+                }
             }
         }
 
@@ -61,7 +73,11 @@ impl From<Box<dyn crate::models::Model>> for Model {
             })) {
                 Ok(Ok(shape)) => ShapeResult::Ok(shape),
                 Ok(Err(err)) => ShapeResult::Err(err.into()),
-                Err(payload) => crate::abi::on_panic(payload),
+                Err(payload) => {
+                    ShapeResult::Err(crate::abi::ffi_safe::BoxedError {
+                        msg: crate::abi::on_panic(payload),
+                    })
+                }
             }
         }
 
