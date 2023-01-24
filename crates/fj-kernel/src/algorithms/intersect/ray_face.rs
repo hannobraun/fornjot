@@ -114,7 +114,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
             FacePointIntersection::PointIsOnEdge(edge) => {
                 RayFaceIntersection::RayHitsEdge(edge)
             }
-            FacePointIntersection::PointIsOnVertex(vertex) => {
+            FacePointIntersection::PointIsOnVertex((_, vertex)) => {
                 RayFaceIntersection::RayHitsVertex(vertex)
             }
         };
@@ -136,12 +136,11 @@ pub enum RayFaceIntersection {
     RayHitsEdge(Handle<HalfEdge>),
 
     /// The ray hits a vertex
-    RayHitsVertex((Point<1>, Handle<SurfaceVertex>)),
+    RayHitsVertex(Handle<SurfaceVertex>),
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
@@ -289,11 +288,9 @@ mod tests {
             .exterior()
             .half_edges()
             .flat_map(|half_edge| {
-                half_edge
-                    .boundary()
-                    .zip_ext(half_edge.surface_vertices().map(Clone::clone))
+                half_edge.surface_vertices().map(Clone::clone)
             })
-            .find(|(_, surface_vertex)| {
+            .find(|surface_vertex| {
                 surface_vertex.position() == Point::from([-1., -1.])
             })
             .unwrap();
