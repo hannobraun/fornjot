@@ -93,7 +93,7 @@ impl Cycle {
 
         for [a, b] in self.half_edges.as_slice().array_windows_ext() {
             let [a, b] = [a, b].map(|half_edge| {
-                let [surface_vertex, _] = half_edge.surface_vertices();
+                let surface_vertex = half_edge.start_vertex();
                 surface_vertex.position()
             });
 

@@ -311,7 +311,7 @@ mod tests {
             .exterior()
             .half_edges()
             .find(|edge| {
-                let [vertex, _] = edge.surface_vertices();
+                let vertex = edge.start_vertex();
                 vertex.position() == Point::from([0., 0.])
             })
             .unwrap();
@@ -343,9 +343,7 @@ mod tests {
         let vertex = face
             .exterior()
             .half_edges()
-            .flat_map(|half_edge| {
-                half_edge.surface_vertices().map(Clone::clone)
-            })
+            .map(|half_edge| half_edge.start_vertex().clone())
             .find(|surface_vertex| {
                 surface_vertex.position() == Point::from([1., 0.])
             })
