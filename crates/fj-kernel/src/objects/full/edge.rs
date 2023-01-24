@@ -40,6 +40,13 @@ impl HalfEdge {
         self.boundary.each_ref_ext().map(|&(point, _)| point)
     }
 
+    /// Access the vertex from where this half-edge starts
+    pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
+        let [vertex, _] =
+            self.boundary.each_ref_ext().map(|(_, vertex)| vertex);
+        vertex
+    }
+
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
         self.boundary
