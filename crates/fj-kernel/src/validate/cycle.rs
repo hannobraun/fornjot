@@ -49,7 +49,7 @@ pub enum CycleValidationError {
         - Curve position converted to surface: {curve_position_on_surface:?}\n\
         - Distance between the positions: {distance}"
     )]
-    VertexPositionMismatch {
+    HalfEdgeBoundaryMismatch {
         /// The position on the curve
         position_on_curve: Point<1>,
 
@@ -105,7 +105,7 @@ impl CycleValidationError {
 
                 if distance > config.identical_max_distance {
                     errors.push(
-                        Self::VertexPositionMismatch {
+                        Self::HalfEdgeBoundaryMismatch {
                             position_on_curve,
                             surface_vertex: surface_vertex.clone(),
                             curve_position_on_surface,
