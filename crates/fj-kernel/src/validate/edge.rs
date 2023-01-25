@@ -1,11 +1,7 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{
-        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        VerticesInNormalizedOrder,
-    },
+    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface},
     storage::Handle,
 };
 
@@ -63,15 +59,14 @@ pub enum HalfEdgeValidationError {
     #[error(
         "Global forms of `HalfEdge` vertices do not match vertices of \n\
         `HalfEdge`'s global form\n\
-        - `GlobalVertex` objects from `Vertex` objects: \
-            {global_vertices_from_vertices:#?}\n\
+        - `GlobalVertex` from start vertex: {global_vertex_from_half_edge:#?}\n\
         - `GlobalVertex` objects from `GlobalEdge`: \
             {global_vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
     GlobalVertexMismatch {
-        /// The [`GlobalVertex`] from the [`HalfEdge`]'s vertices
-        global_vertices_from_vertices: [Handle<GlobalVertex>; 2],
+        /// The [`GlobalVertex`] from the [`HalfEdge`]'s start vertex
+        global_vertex_from_half_edge: Handle<GlobalVertex>,
 
         /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
         global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
@@ -141,32 +136,23 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let global_vertices_from_vertices = {
-            let (global_vertices_from_vertices, _) =
-                VerticesInNormalizedOrder::new(
-                    half_edge.surface_vertices().each_ref_ext().map(
-                        |surface_vertex| surface_vertex.global_form().clone(),
-                    ),
-                );
-
-            global_vertices_from_vertices.access_in_normalized_order()
-        };
+        let global_vertex_from_half_edge =
+            half_edge.start_vertex().global_form().clone();
         let global_vertices_from_global_form = half_edge
             .global_form()
             .vertices()
             .access_in_normalized_order();
 
-        let ids_from_vertices = global_vertices_from_vertices
-            .each_ref_ext()
-            .map(|global_vertex| global_vertex.id());
-        let ids_from_global_form = global_vertices_from_global_form
-            .each_ref_ext()
-            .map(|global_vertex| global_vertex.id());
+        let matching_global_vertex = global_vertices_from_global_form
+            .iter()
+            .find(|global_vertex| {
+                global_vertex.id() == global_vertex_from_half_edge.id()
+            });
 
-        if ids_from_vertices != ids_from_global_form {
+        if matching_global_vertex.is_none() {
             errors.push(
                 Box::new(Self::GlobalVertexMismatch {
-                    global_vertices_from_vertices,
+                    global_vertex_from_half_edge,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
                 })
@@ -180,19 +166,16 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let curve_surface = half_edge.curve().surface();
+        let surface_form_surface = half_edge.start_vertex().surface();
 
-        for surface_vertex in half_edge.surface_vertices() {
-            let surface_form_surface = surface_vertex.surface();
-
-            if curve_surface.id() != surface_form_surface.id() {
-                errors.push(
-                    Box::new(Self::SurfaceMismatch {
-                        curve_surface: curve_surface.clone(),
-                        surface_form_surface: surface_form_surface.clone(),
-                    })
-                    .into(),
-                );
-            }
+        if curve_surface.id() != surface_form_surface.id() {
+            errors.push(
+                Box::new(Self::SurfaceMismatch {
+                    curve_surface: curve_surface.clone(),
+                    surface_form_surface: surface_form_surface.clone(),
+                })
+                .into(),
+            );
         }
     }
 
