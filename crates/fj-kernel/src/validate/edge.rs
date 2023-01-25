@@ -68,7 +68,7 @@ pub enum HalfEdgeValidationError {
         /// The [`GlobalVertex`] from the [`HalfEdge`]'s start vertex
         global_vertex_from_half_edge: Handle<GlobalVertex>,
 
-        /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
+        /// The [`GlobalVertex`] instances from the [`HalfEdge`]'s global form
         global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
 
         /// The half-edge
