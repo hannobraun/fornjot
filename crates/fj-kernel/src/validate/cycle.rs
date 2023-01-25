@@ -90,10 +90,13 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        for half_edge in cycle.half_edges() {
-            for (position_on_curve, surface_vertex) in
-                half_edge.boundary().zip_ext(half_edge.surface_vertices())
-            {
+        for (half_edge, next) in
+            cycle.half_edges().circular_tuple_windows::<(_, _)>()
+        {
+            let boundary_and_vertices = half_edge
+                .boundary()
+                .zip_ext([half_edge.start_vertex(), next.start_vertex()]);
+            for (position_on_curve, surface_vertex) in boundary_and_vertices {
                 let curve_position_on_surface = half_edge
                     .curve()
                     .path()
