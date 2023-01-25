@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{
         GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, VerticesInNormalizedOrder,
+        VerticesInNormalizedOrder,
     },
     storage::Handle,
 };
@@ -21,7 +21,6 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_surface_identity(self, errors);
         HalfEdgeValidationError::check_vertex_positions(self, config, errors);
-        HalfEdgeValidationError::check_position(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
@@ -114,28 +113,6 @@ pub enum HalfEdgeValidationError {
 
         /// The half-edge
         half_edge: HalfEdge,
-    },
-
-    /// Mismatch between position of the vertex and position of its surface form
-    #[error(
-        "Position on curve doesn't match surface vertex position\n\
-        - Position on curve: {position_on_curve:#?}\n\
-        - Surface vertex: {surface_vertex:#?}\n\
-        - Curve position converted to surface: {curve_position_on_surface:?}\n\
-        - Distance between the positions: {distance}"
-    )]
-    VertexPositionMismatch {
-        /// The position on the curve
-        position_on_curve: Point<1>,
-
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
-
-        /// The curve position converted into a surface position
-        curve_position_on_surface: Point<2>,
-
-        /// The distance between the positions
-        distance: Scalar,
     },
 }
 
@@ -237,37 +214,6 @@ impl HalfEdgeValidationError {
                 })
                 .into(),
             );
-        }
-    }
-
-    fn check_position(
-        half_edge: &HalfEdge,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for (position_on_curve, surface_vertex) in
-            half_edge.boundary().zip_ext(half_edge.surface_vertices())
-        {
-            let curve_position_on_surface = half_edge
-                .curve()
-                .path()
-                .point_from_path_coords(position_on_curve);
-            let surface_position = surface_vertex.position();
-
-            let distance =
-                curve_position_on_surface.distance_to(&surface_position);
-
-            if distance > config.identical_max_distance {
-                errors.push(
-                    Box::new(Self::VertexPositionMismatch {
-                        position_on_curve,
-                        surface_vertex: surface_vertex.clone(),
-                        curve_position_on_surface,
-                        distance,
-                    })
-                    .into(),
-                );
-            }
         }
     }
 }
@@ -417,37 +363,6 @@ mod tests {
         let invalid = {
             let vertices = valid.surface_vertices().map(|surface_vertex| {
                 (Point::from([0.]), surface_vertex.clone())
-            });
-
-            HalfEdge::new(
-                valid.curve().clone(),
-                vertices,
-                valid.global_form().clone(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
-
-    #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-        let invalid = {
-            let vertices = valid.surface_vertices().map(|surface_vertex| {
-                (Point::from([2.]), surface_vertex.clone())
             });
 
             HalfEdge::new(
