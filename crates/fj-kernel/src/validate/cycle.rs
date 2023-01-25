@@ -41,7 +41,7 @@ pub enum CycleValidationError {
         next: Handle<SurfaceVertex>,
     },
 
-    /// Mismatch between position of the vertex and position of its surface form
+    /// Mismatch between half-edge boundary and surface vertex position
     #[error(
         "Half-edge boundary on curve doesn't match surface vertex position\n\
         - Position on curve: {position_on_curve:#?}\n\
