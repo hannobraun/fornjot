@@ -1,6 +1,7 @@
 //! Intersection between faces and points in 2D
 
 use fj_math::Point;
+use itertools::Itertools;
 
 use crate::{
     objects::{Face, HalfEdge, SurfaceVertex},
@@ -33,7 +34,9 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                 .cloned()
                 .and_then(|edge| (&ray, &edge).intersect());
 
-            for half_edge in cycle.half_edges() {
+            for (half_edge, next_half_edge) in
+                cycle.half_edges().circular_tuple_windows::<(_, _)>()
+            {
                 let hit = (&ray, half_edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
@@ -48,15 +51,13 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let [vertex, _] =
-                            half_edge.surface_vertices().map(Clone::clone);
+                        let vertex = half_edge.start_vertex().clone();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let [_, vertex] =
-                            half_edge.surface_vertices().map(Clone::clone);
+                        let vertex = next_half_edge.start_vertex().clone();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );

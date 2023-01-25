@@ -1,11 +1,7 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{
-        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface,
-        SurfaceVertex, VerticesInNormalizedOrder,
-    },
+    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface},
     storage::Handle,
 };
 
@@ -21,7 +17,6 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_surface_identity(self, errors);
         HalfEdgeValidationError::check_vertex_positions(self, config, errors);
-        HalfEdgeValidationError::check_position(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
@@ -64,17 +59,16 @@ pub enum HalfEdgeValidationError {
     #[error(
         "Global forms of `HalfEdge` vertices do not match vertices of \n\
         `HalfEdge`'s global form\n\
-        - `GlobalVertex` objects from `Vertex` objects: \
-            {global_vertices_from_vertices:#?}\n\
+        - `GlobalVertex` from start vertex: {global_vertex_from_half_edge:#?}\n\
         - `GlobalVertex` objects from `GlobalEdge`: \
             {global_vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
     GlobalVertexMismatch {
-        /// The [`GlobalVertex`] from the [`HalfEdge`]'s vertices
-        global_vertices_from_vertices: [Handle<GlobalVertex>; 2],
+        /// The [`GlobalVertex`] from the [`HalfEdge`]'s start vertex
+        global_vertex_from_half_edge: Handle<GlobalVertex>,
 
-        /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
+        /// The [`GlobalVertex`] instances from the [`HalfEdge`]'s global form
         global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
 
         /// The half-edge
@@ -115,28 +109,6 @@ pub enum HalfEdgeValidationError {
         /// The half-edge
         half_edge: HalfEdge,
     },
-
-    /// Mismatch between position of the vertex and position of its surface form
-    #[error(
-        "Position on curve doesn't match surface vertex position\n\
-        - Position on curve: {position_on_curve:#?}\n\
-        - Surface vertex: {surface_vertex:#?}\n\
-        - Curve position converted to surface: {curve_position_on_surface:?}\n\
-        - Distance between the positions: {distance}"
-    )]
-    VertexPositionMismatch {
-        /// The position on the curve
-        position_on_curve: Point<1>,
-
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
-
-        /// The curve position converted into a surface position
-        curve_position_on_surface: Point<2>,
-
-        /// The distance between the positions
-        distance: Scalar,
-    },
 }
 
 impl HalfEdgeValidationError {
@@ -164,32 +136,23 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let global_vertices_from_vertices = {
-            let (global_vertices_from_vertices, _) =
-                VerticesInNormalizedOrder::new(
-                    half_edge.surface_vertices().each_ref_ext().map(
-                        |surface_vertex| surface_vertex.global_form().clone(),
-                    ),
-                );
-
-            global_vertices_from_vertices.access_in_normalized_order()
-        };
+        let global_vertex_from_half_edge =
+            half_edge.start_vertex().global_form().clone();
         let global_vertices_from_global_form = half_edge
             .global_form()
             .vertices()
             .access_in_normalized_order();
 
-        let ids_from_vertices = global_vertices_from_vertices
-            .each_ref_ext()
-            .map(|global_vertex| global_vertex.id());
-        let ids_from_global_form = global_vertices_from_global_form
-            .each_ref_ext()
-            .map(|global_vertex| global_vertex.id());
+        let matching_global_vertex = global_vertices_from_global_form
+            .iter()
+            .find(|global_vertex| {
+                global_vertex.id() == global_vertex_from_half_edge.id()
+            });
 
-        if ids_from_vertices != ids_from_global_form {
+        if matching_global_vertex.is_none() {
             errors.push(
                 Box::new(Self::GlobalVertexMismatch {
-                    global_vertices_from_vertices,
+                    global_vertex_from_half_edge,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
                 })
@@ -203,19 +166,16 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let curve_surface = half_edge.curve().surface();
+        let surface_form_surface = half_edge.start_vertex().surface();
 
-        for surface_vertex in half_edge.surface_vertices() {
-            let surface_form_surface = surface_vertex.surface();
-
-            if curve_surface.id() != surface_form_surface.id() {
-                errors.push(
-                    Box::new(Self::SurfaceMismatch {
-                        curve_surface: curve_surface.clone(),
-                        surface_form_surface: surface_form_surface.clone(),
-                    })
-                    .into(),
-                );
-            }
+        if curve_surface.id() != surface_form_surface.id() {
+            errors.push(
+                Box::new(Self::SurfaceMismatch {
+                    curve_surface: curve_surface.clone(),
+                    surface_form_surface: surface_form_surface.clone(),
+                })
+                .into(),
+            );
         }
     }
 
@@ -237,37 +197,6 @@ impl HalfEdgeValidationError {
                 })
                 .into(),
             );
-        }
-    }
-
-    fn check_position(
-        half_edge: &HalfEdge,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for (position_on_curve, surface_vertex) in
-            half_edge.boundary().zip_ext(half_edge.surface_vertices())
-        {
-            let curve_position_on_surface = half_edge
-                .curve()
-                .path()
-                .point_from_path_coords(position_on_curve);
-            let surface_position = surface_vertex.position();
-
-            let distance =
-                curve_position_on_surface.distance_to(&surface_position);
-
-            if distance > config.identical_max_distance {
-                errors.push(
-                    Box::new(Self::VertexPositionMismatch {
-                        position_on_curve,
-                        surface_vertex: surface_vertex.clone(),
-                        curve_position_on_surface,
-                        distance,
-                    })
-                    .into(),
-                );
-            }
         }
     }
 }
@@ -417,37 +346,6 @@ mod tests {
         let invalid = {
             let vertices = valid.surface_vertices().map(|surface_vertex| {
                 (Point::from([0.]), surface_vertex.clone())
-            });
-
-            HalfEdge::new(
-                valid.curve().clone(),
-                vertices,
-                valid.global_form().clone(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
-
-    #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-        let invalid = {
-            let vertices = valid.surface_vertices().map(|surface_vertex| {
-                (Point::from([2.]), surface_vertex.clone())
             });
 
             HalfEdge::new(
