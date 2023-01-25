@@ -16,7 +16,7 @@ impl Validate for Cycle {
         errors: &mut Vec<ValidationError>,
     ) {
         CycleValidationError::check_half_edge_connections(self, errors);
-        CycleValidationError::check_position(self, config, errors);
+        CycleValidationError::check_half_edge_boundaries(self, config, errors);
 
         // We don't need to check that all half-edges are defined in the same
         // surface. We already check that they are connected by identical
@@ -85,7 +85,7 @@ impl CycleValidationError {
         }
     }
 
-    fn check_position(
+    fn check_half_edge_boundaries(
         cycle: &Cycle,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
