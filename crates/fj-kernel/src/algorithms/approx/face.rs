@@ -46,8 +46,8 @@ impl Approx for &FaceSet {
                     if p.global_form != point.global_form
                         && distance < min_distance
                     {
-                        let a = p;
-                        let b = point;
+                        let a = point;
+                        let b = p;
 
                         panic!(
                             "Invalid approximation: \
