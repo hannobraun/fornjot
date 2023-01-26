@@ -39,15 +39,14 @@ impl Approx for &FaceSet {
             let approx: &FaceApprox = approx;
 
             for point in &approx.points() {
-                for p in &all_points {
+                for b in &all_points {
                     let distance =
-                        (p.global_form - point.global_form).magnitude();
+                        (b.global_form - point.global_form).magnitude();
 
-                    if p.global_form != point.global_form
+                    if b.global_form != point.global_form
                         && distance < min_distance
                     {
                         let a = point;
-                        let b = p;
 
                         panic!(
                             "Invalid approximation: \
