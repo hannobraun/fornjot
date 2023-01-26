@@ -109,17 +109,17 @@ impl CycleValidationError {
                     .curve()
                     .path()
                     .point_from_path_coords(position_on_curve);
-                let surface_position = surface_vertex.position();
+                let surface_position_from_vertex = surface_vertex.position();
 
-                let distance =
-                    curve_position_on_surface.distance_to(&surface_position);
+                let distance = curve_position_on_surface
+                    .distance_to(&surface_position_from_vertex);
 
                 if distance > config.identical_max_distance {
                     errors.push(
                         Self::HalfEdgeBoundaryMismatch {
                             position_on_curve,
                             curve_position_on_surface,
-                            surface_position_from_vertex: surface_position,
+                            surface_position_from_vertex,
                             distance,
                             surface_vertex: surface_vertex.clone(),
                             half_edge: half_edge.clone(),
