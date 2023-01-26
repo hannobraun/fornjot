@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, SurfaceVertex},
+    objects::{Cycle, HalfEdge, SurfaceVertex},
     storage::Handle,
 };
 
@@ -46,8 +46,10 @@ pub enum CycleValidationError {
         "Half-edge boundary on curve doesn't match surface vertex position\n\
         - Position on curve: {position_on_curve:?}\n\
         - Curve position converted to surface: {curve_position_on_surface:?}\n\
+        - Surface position from vertex: {surface_position_from_vertex:?}\n\
         - Distance between the positions: {distance}\n\
-        - Surface vertex: {surface_vertex:#?}"
+        - Surface vertex: {surface_vertex:#?}\n\
+        - Half-edge: {half_edge:#?}"
     )]
     HalfEdgeBoundaryMismatch {
         /// The position on the curve
@@ -56,11 +58,17 @@ pub enum CycleValidationError {
         /// The curve position converted into a surface position
         curve_position_on_surface: Point<2>,
 
+        /// The surface position from the vertex
+        surface_position_from_vertex: Point<2>,
+
         /// The distance between the positions
         distance: Scalar,
 
         /// The surface vertex
         surface_vertex: Handle<SurfaceVertex>,
+
+        /// The half-edge
+        half_edge: Handle<HalfEdge>,
     },
 }
 
@@ -111,8 +119,10 @@ impl CycleValidationError {
                         Self::HalfEdgeBoundaryMismatch {
                             position_on_curve,
                             curve_position_on_surface,
+                            surface_position_from_vertex: surface_position,
                             distance,
                             surface_vertex: surface_vertex.clone(),
+                            half_edge: half_edge.clone(),
                         }
                         .into(),
                     );
