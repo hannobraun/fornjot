@@ -182,6 +182,30 @@ mod tests {
     use super::Line;
 
     #[test]
+    fn from_points_with_line_coords() {
+        let line = Line::from_points_with_line_coords([
+            ([0.], [0., 0.]),
+            ([1.], [1., 0.]),
+        ]);
+        assert_eq!(line.origin(), Point::from([0., 0.]));
+        assert_eq!(line.direction(), Vector::from([1., 0.]));
+
+        let line = Line::from_points_with_line_coords([
+            ([1.], [0., 1.]),
+            ([0.], [1., 1.]),
+        ]);
+        assert_eq!(line.origin(), Point::from([1., 1.]));
+        assert_eq!(line.direction(), Vector::from([-1., 0.]));
+
+        let line = Line::from_points_with_line_coords([
+            ([-1.], [0., 2.]),
+            ([0.], [1., 2.]),
+        ]);
+        assert_eq!(line.origin(), Point::from([1., 2.]));
+        assert_eq!(line.direction(), Vector::from([1., 0.]));
+    }
+
+    #[test]
     fn is_coincident_with() {
         let (line, _) = Line::from_points([[0., 0.], [1., 0.]]);
 

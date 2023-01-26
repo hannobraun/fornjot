@@ -150,6 +150,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn update_as_line_segment(&mut self) {
+        let boundary = self.vertices.each_ref_ext().map(|vertex| vertex.0);
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
                 .1
@@ -158,13 +159,23 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer line segment without surface position")
         });
 
-        self.curve
-            .write()
-            .update_as_line_from_points(points_surface);
+        if let [Some(start), Some(end)] = boundary {
+            let boundary = [start, end];
+            self.curve
+                .write()
+                .update_as_line_from_points_with_line_coords(
+                    boundary.zip_ext(points_surface),
+                );
+        } else {
+            self.curve
+                .write()
+                .update_as_line_from_points(points_surface);
 
-        for (vertex, position) in self.vertices.each_mut_ext().zip_ext([0., 1.])
-        {
-            vertex.0 = Some([position].into());
+            for (vertex, position) in
+                self.vertices.each_mut_ext().zip_ext([0., 1.])
+            {
+                vertex.0 = Some([position].into());
+            }
         }
 
         self.infer_global_form();

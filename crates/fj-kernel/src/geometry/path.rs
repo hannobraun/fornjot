@@ -58,6 +58,13 @@ impl SurfacePath {
         (Self::Line(line), coords)
     }
 
+    /// Create a line from two points that include line coordinates
+    pub fn from_points_with_line_coords(
+        points: [(impl Into<Point<1>>, impl Into<Point<2>>); 2],
+    ) -> Self {
+        Self::Line(Line::from_points_with_line_coords(points))
+    }
+
     /// Convert a point on the path into surface coordinates
     pub fn point_from_path_coords(
         &self,
