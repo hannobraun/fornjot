@@ -5,7 +5,7 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
-use crate::objects::HalfEdge;
+use crate::{objects::HalfEdge, storage::Handle};
 
 use super::{
     curve::{CurveApprox, CurveCache},
@@ -13,7 +13,7 @@ use super::{
     Approx, ApproxPoint, Tolerance,
 };
 
-impl Approx for &HalfEdge {
+impl Approx for &Handle<HalfEdge> {
     type Approximation = HalfEdgeApprox;
     type Cache = CurveCache;
 
@@ -28,7 +28,8 @@ impl Approx for &HalfEdge {
         let first = ApproxPoint::new(
             self.start_vertex().position(),
             self.start_vertex().global_form().position(),
-        );
+        )
+        .with_source((self.clone(), self.boundary()[0]));
         let curve_approx =
             (self.curve(), range).approx_with_cache(tolerance, cache);
 
