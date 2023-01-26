@@ -38,16 +38,12 @@ impl Approx for &FaceSet {
         for approx in &approx {
             let approx: &FaceApprox = approx;
 
-            for point in &approx.points() {
+            for a in &approx.points() {
                 for b in &all_points {
-                    let distance =
-                        (b.global_form - point.global_form).magnitude();
+                    let distance = (b.global_form - a.global_form).magnitude();
 
-                    if b.global_form != point.global_form
-                        && distance < min_distance
+                    if b.global_form != a.global_form && distance < min_distance
                     {
-                        let a = point;
-
                         panic!(
                             "Invalid approximation: \
                             Distinct points are too close \
@@ -59,7 +55,7 @@ impl Approx for &FaceSet {
                     }
                 }
 
-                all_points.insert(point.clone());
+                all_points.insert(a.clone());
             }
         }
 
