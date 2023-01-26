@@ -38,7 +38,7 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
-        // Trigger a panic if the host thead has panicked.
+        // Trigger a panic if the host thread has panicked.
         self.host.propagate_panic();
 
         if let Event::WindowEvent { event, .. } = &event {
