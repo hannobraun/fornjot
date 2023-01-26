@@ -38,7 +38,7 @@ impl EventLoopHandler {
         event: Event<ModelEvent>,
         control_flow: &mut ControlFlow,
     ) -> Result<(), Error> {
-        // Trigger a panic if the host thead has panicked.
+        // Trigger a panic if the host thread has panicked.
         self.host.propagate_panic();
 
         if let Event::WindowEvent { event, .. } = &event {
@@ -91,7 +91,7 @@ impl EventLoopHandler {
                 }
 
                 ModelEvent::Error(err) => {
-                    return Err(err.into());
+                    return Err(Box::new(err).into());
                 }
             },
             Event::WindowEvent {
@@ -184,8 +184,8 @@ impl EventLoopHandler {
                         gui_state,
                     );
                     if let Some(model_path) = new_model_path {
-                        let model =
-                            Model::new(model_path, Parameters::empty())?;
+                        let model = Model::new(model_path, Parameters::empty())
+                            .map_err(Box::new)?;
                         self.host.load_model(model);
                     }
                 }
@@ -262,10 +262,10 @@ fn input_event<T>(
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Host error")]
-    Host(#[from] fj_host::Error),
+    Host(#[from] Box<fj_host::Error>),
 
     #[error("Shape processing error")]
-    ShapeProcessor(#[from] shape_processor::Error),
+    ShapeProcessor(#[from] Box<shape_processor::Error>),
 }
 
 /// Affects the speed of zoom movement given a scroll wheel input in lines.
