@@ -84,19 +84,19 @@ impl Default for ValidationConfig {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
     /// `Cycle` validation error
-    #[error(transparent)]
+    #[error("`Cycle` validation error:\n{0}")]
     Cycle(#[from] CycleValidationError),
 
     /// `Face` validation error
-    #[error(transparent)]
+    #[error("`Face` validation error:\n{0}")]
     Face(#[from] Box<FaceValidationError>),
 
     /// `HalfEdge` validation error
-    #[error(transparent)]
+    #[error("`HalfEdge` validation error:\n{0}")]
     HalfEdge(#[from] Box<HalfEdgeValidationError>),
 
     /// `SurfaceVertex` validation error
-    #[error(transparent)]
+    #[error("`SurfaceVertex` validation error:\n{0}")]
     SurfaceVertex(#[from] Box<SurfaceVertexValidationError>),
 }
 

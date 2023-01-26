@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, SurfaceVertex},
+    objects::{Cycle, HalfEdge, SurfaceVertex},
     storage::Handle,
 };
 
@@ -44,23 +44,31 @@ pub enum CycleValidationError {
     /// Mismatch between half-edge boundary and surface vertex position
     #[error(
         "Half-edge boundary on curve doesn't match surface vertex position\n\
-        - Position on curve: {position_on_curve:#?}\n\
-        - Surface vertex: {surface_vertex:#?}\n\
+        - Position on curve: {position_on_curve:?}\n\
         - Curve position converted to surface: {curve_position_on_surface:?}\n\
-        - Distance between the positions: {distance}"
+        - Surface position from vertex: {surface_position_from_vertex:?}\n\
+        - Distance between the positions: {distance}\n\
+        - Surface vertex: {surface_vertex:#?}\n\
+        - Half-edge: {half_edge:#?}"
     )]
     HalfEdgeBoundaryMismatch {
         /// The position on the curve
         position_on_curve: Point<1>,
 
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
-
         /// The curve position converted into a surface position
         curve_position_on_surface: Point<2>,
 
+        /// The surface position from the vertex
+        surface_position_from_vertex: Point<2>,
+
         /// The distance between the positions
         distance: Scalar,
+
+        /// The surface vertex
+        surface_vertex: Handle<SurfaceVertex>,
+
+        /// The half-edge
+        half_edge: Handle<HalfEdge>,
     },
 }
 
@@ -101,18 +109,20 @@ impl CycleValidationError {
                     .curve()
                     .path()
                     .point_from_path_coords(position_on_curve);
-                let surface_position = surface_vertex.position();
+                let surface_position_from_vertex = surface_vertex.position();
 
-                let distance =
-                    curve_position_on_surface.distance_to(&surface_position);
+                let distance = curve_position_on_surface
+                    .distance_to(&surface_position_from_vertex);
 
                 if distance > config.identical_max_distance {
                     errors.push(
                         Self::HalfEdgeBoundaryMismatch {
                             position_on_curve,
-                            surface_vertex: surface_vertex.clone(),
                             curve_position_on_surface,
+                            surface_position_from_vertex,
                             distance,
+                            surface_vertex: surface_vertex.clone(),
+                            half_edge: half_edge.clone(),
                         }
                         .into(),
                     );
