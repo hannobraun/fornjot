@@ -44,7 +44,7 @@ pub enum CycleValidationError {
     /// Mismatch between half-edge boundary and surface vertex position
     #[error(
         "Half-edge boundary on curve doesn't match surface vertex position\n\
-        - Position on curve: {position_on_curve:#?}\n\
+        - Position on curve: {position_on_curve:?}\n\
         - Curve position converted to surface: {curve_position_on_surface:?}\n\
         - Distance between the positions: {distance}\n\
         - Surface vertex: {surface_vertex:#?}"
