@@ -33,11 +33,8 @@ fn main() -> anyhow::Result<()> {
 
         // Presumably we're using the library in the way it's intended, so this
         // might be sound?
-        unsafe {
-            validate_model(export_file_path_str).with_context(|| {
-                format!("Could not validate model `{model}`")
-            })?;
-        }
+        unsafe { validate_model(export_file_path_str) }
+            .with_context(|| format!("Could not validate model `{model}`"))?;
     }
 
     Ok(())
