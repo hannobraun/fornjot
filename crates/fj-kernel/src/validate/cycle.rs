@@ -45,22 +45,22 @@ pub enum CycleValidationError {
     #[error(
         "Half-edge boundary on curve doesn't match surface vertex position\n\
         - Position on curve: {position_on_curve:#?}\n\
-        - Surface vertex: {surface_vertex:#?}\n\
         - Curve position converted to surface: {curve_position_on_surface:?}\n\
-        - Distance between the positions: {distance}"
+        - Distance between the positions: {distance}\n\
+        - Surface vertex: {surface_vertex:#?}"
     )]
     HalfEdgeBoundaryMismatch {
         /// The position on the curve
         position_on_curve: Point<1>,
-
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
 
         /// The curve position converted into a surface position
         curve_position_on_surface: Point<2>,
 
         /// The distance between the positions
         distance: Scalar,
+
+        /// The surface vertex
+        surface_vertex: Handle<SurfaceVertex>,
     },
 }
 
@@ -110,9 +110,9 @@ impl CycleValidationError {
                     errors.push(
                         Self::HalfEdgeBoundaryMismatch {
                             position_on_curve,
-                            surface_vertex: surface_vertex.clone(),
                             curve_position_on_surface,
                             distance,
+                            surface_vertex: surface_vertex.clone(),
                         }
                         .into(),
                     );
