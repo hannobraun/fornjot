@@ -17,7 +17,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for (Handle<HalfEdge>, Color) {
-    type Swept = Handle<Face>;
+    type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
         self,
@@ -137,7 +137,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         let cycle = {
             let a = bottom_edge;
             let [d, b] = side_edges;
-            let c = top_edge;
+            let c = top_edge.clone();
 
             let mut edges = [a, b, c, d];
 
@@ -167,7 +167,9 @@ impl Sweep for (Handle<HalfEdge>, Color) {
             color: Some(color),
             ..Default::default()
         };
-        face.build(objects).insert(objects)
+        let face = face.build(objects).insert(objects);
+
+        (face, top_edge)
     }
 }
 
@@ -202,7 +204,7 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let face = (half_edge, Color::default())
+        let (face, _) = (half_edge, Color::default())
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {

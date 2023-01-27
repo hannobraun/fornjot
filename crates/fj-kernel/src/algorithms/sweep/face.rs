@@ -65,7 +65,7 @@ impl Sweep for Handle<Face> {
             let cycle = cycle.reverse(objects);
 
             for half_edge in cycle.half_edges().cloned() {
-                let face = (half_edge, self.color())
+                let (face, _) = (half_edge, self.color())
                     .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
@@ -155,7 +155,9 @@ mod tests {
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
-            (half_edge, Color::default()).sweep(UP, &mut services.objects)
+            let (face, _) =
+                (half_edge, Color::default()).sweep(UP, &mut services.objects);
+            face
         });
 
         assert!(side_faces
@@ -222,7 +224,9 @@ mod tests {
                     .insert(&mut services.objects)
                     .reverse(&mut services.objects)
             };
-            (half_edge, Color::default()).sweep(DOWN, &mut services.objects)
+            let (face, _) = (half_edge, Color::default())
+                .sweep(DOWN, &mut services.objects);
+            face
         });
 
         assert!(side_faces
