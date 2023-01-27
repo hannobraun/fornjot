@@ -24,6 +24,7 @@ impl Sponsors {
                                         tier {
                                             monthlyPriceInDollars
                                         }
+                                        isOneTimePayment
                                     }
                                 }
                                 ... on Organization {
@@ -33,6 +34,7 @@ impl Sponsors {
                                         tier {
                                             monthlyPriceInDollars
                                         }
+                                        isOneTimePayment
                                     }
                                 }
                             }
@@ -48,7 +50,14 @@ impl Sponsors {
             .sponsors
             .nodes
             .into_iter()
-            .map(|node| {
+            .filter_map(|node| {
+                if node
+                    .sponsorship_for_viewer_as_sponsorable
+                    .is_one_time_payment
+                {
+                    return None;
+                }
+
                 let login = node.login;
                 let since =
                     node.sponsorship_for_viewer_as_sponsorable.created_at;
@@ -57,11 +66,11 @@ impl Sponsors {
                     .tier
                     .monthly_price_in_dollars;
 
-                Sponsor {
+                Some(Sponsor {
                     login,
                     since,
                     dollars,
-                }
+                })
             })
             .collect::<Vec<_>>();
 
@@ -173,6 +182,9 @@ pub struct QueryResultSponsorable {
     pub created_at: DateTime<Utc>,
 
     pub tier: QueryResultSponsorableTier,
+
+    #[serde(rename = "isOneTimePayment")]
+    pub is_one_time_payment: bool,
 }
 
 #[derive(Debug, serde::Deserialize)]
