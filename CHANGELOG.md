@@ -1,5 +1,53 @@
 # Fornjot - Changelog
 
+## v0.34.0 (2023-01-30)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+*None this week. Busy working on the kernel!*
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Continue simplifying object graph around `HalfEdge` ([#1535], [#1536])
+- Add more debug information to approximation ([#1537])
+- Improve validation error messages ([#1540])
+- Respect existing boundary when updating `HalfEdge` as line segment ([#1541])
+
+#### `fj-window`
+
+- Box event loop error variants ([#1539])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1528], [#1529], [#1530], [#1531], [#1533])
+- Minimize scope of `unsafe` block ([#1538])
+- Update release automation ([#1542])
+- Upgrade to Rust 1.67.0 ([#1543])
+
+[#1528]: https://github.com/hannobraun/Fornjot/pull/1528
+[#1529]: https://github.com/hannobraun/Fornjot/pull/1529
+[#1530]: https://github.com/hannobraun/Fornjot/pull/1530
+[#1531]: https://github.com/hannobraun/Fornjot/pull/1531
+[#1533]: https://github.com/hannobraun/Fornjot/pull/1533
+[#1535]: https://github.com/hannobraun/Fornjot/pull/1535
+[#1536]: https://github.com/hannobraun/Fornjot/pull/1536
+[#1537]: https://github.com/hannobraun/Fornjot/pull/1537
+[#1538]: https://github.com/hannobraun/Fornjot/pull/1538
+[#1539]: https://github.com/hannobraun/Fornjot/pull/1539
+[#1540]: https://github.com/hannobraun/Fornjot/pull/1540
+[#1541]: https://github.com/hannobraun/Fornjot/pull/1541
+[#1542]: https://github.com/hannobraun/Fornjot/pull/1542
+[#1543]: https://github.com/hannobraun/Fornjot/pull/1543
+
+
 ## v0.33.0 (2023-01-23)
 
 ### End-user improvements
