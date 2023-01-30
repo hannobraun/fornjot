@@ -29,7 +29,7 @@ default_features = false
 features = ["xdg-portal"]
 
 [dependencies.wgpu]
-version = "0.14.2"
+version = "0.15.0"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
