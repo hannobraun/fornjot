@@ -128,19 +128,22 @@ impl FaceBuilder for PartialFace {
 
             array
         };
-        let points_global = vertices.each_ref_ext().map(|vertex| {
-            vertex
-                .read()
-                .global_form
-                .read()
-                .position
-                .expect("Need global position to infer plane")
-        });
 
-        let points_surface = exterior
-            .surface
-            .write()
-            .update_as_plane_from_points(points_global);
+        let points_surface = {
+            let points_global = vertices.each_ref_ext().map(|vertex| {
+                vertex
+                    .read()
+                    .global_form
+                    .read()
+                    .position
+                    .expect("Need global position to infer plane")
+            });
+
+            exterior
+                .surface
+                .write()
+                .update_as_plane_from_points(points_global)
+        };
 
         for (mut surface_vertex, point) in vertices.zip_ext(points_surface) {
             surface_vertex.write().position = Some(point);
