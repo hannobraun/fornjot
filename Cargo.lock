@@ -2746,6 +2746,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "74605f360ce573babfe43964cbe520294dcb081afbf8c108fc6e23036b4da2df"
 
 [[package]]
+name = "quick-xml"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ffc053f057dd768a56f62cd7e434c42c831d296968997e9ac1f76ea7c2d14c41"
+dependencies = [
+ "memchr",
+ "serde",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3454,10 +3464,12 @@ dependencies = [
 
 [[package]]
 name = "threemf"
-version = "0.3.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03094907eeaa5743f1630c4fafdd9c68dbfb8d25c819786674298d46b4604ecc"
+checksum = "bf108acc769867300099b3c5334f3dd9bf8c420522a7b7a5938ba0142643808e"
 dependencies = [
+ "quick-xml",
+ "serde",
  "thiserror",
  "zip",
 ]

@@ -15,5 +15,5 @@ categories.workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 thiserror = "1.0.35"
-threemf = "0.3.1"
+threemf = "0.4.0"
 stl = "0.2.1"

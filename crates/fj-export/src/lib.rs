@@ -43,26 +43,33 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
 }
 
 fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
-    let vertices = mesh.vertices().map(Into::into).collect();
+    let vertices = mesh
+        .vertices()
+        .map(|point| threemf::model::Vertex {
+            x: point.x.into_f64(),
+            y: point.y.into_f64(),
+            z: point.z.into_f64(),
+        })
+        .collect();
 
     let indices: Vec<_> = mesh.indices().collect();
     let triangles = indices
         .chunks(3)
-        .map(|triangle| {
-            [
-                triangle[0] as usize,
-                triangle[1] as usize,
-                triangle[2] as usize,
-            ]
+        .map(|triangle| threemf::model::Triangle {
+            v1: triangle[0] as usize,
+            v2: triangle[1] as usize,
+            v3: triangle[2] as usize,
         })
         .collect();
 
-    let mesh = threemf::TriangleMesh {
-        vertices,
-        triangles,
+    let mesh = threemf::Mesh {
+        vertices: threemf::model::Vertices { vertex: vertices },
+        triangles: threemf::model::Triangles {
+            triangle: triangles,
+        },
     };
 
-    threemf::write(path, &mesh)?;
+    threemf::write(path, mesh)?;
 
     Ok(())
 }
