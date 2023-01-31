@@ -129,7 +129,7 @@ impl FaceBuilder for PartialFace {
             array
         };
 
-        let points_surface = {
+        let (points_surface, _) = {
             let points_global = vertices.each_ref_ext().map(|vertex| {
                 vertex
                     .read()

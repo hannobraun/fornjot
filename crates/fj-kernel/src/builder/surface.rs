@@ -14,7 +14,7 @@ pub trait SurfaceBuilder: Sized {
     fn update_as_plane_from_points(
         &mut self,
         points: [impl Into<Point<3>>; 3],
-    ) -> [Point<2>; 3];
+    ) -> ([Point<2>; 3], SurfaceGeometry);
 }
 
 impl SurfaceBuilder for PartialSurface {
@@ -29,16 +29,19 @@ impl SurfaceBuilder for PartialSurface {
     fn update_as_plane_from_points(
         &mut self,
         points: [impl Into<Point<3>>; 3],
-    ) -> [Point<2>; 3] {
+    ) -> ([Point<2>; 3], SurfaceGeometry) {
         let [a, b, c] = points.map(Into::into);
 
         let (u, u_coords) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
-        self.geometry = Some(SurfaceGeometry { u, v });
+        let geometry = SurfaceGeometry { u, v };
+        self.geometry = Some(geometry);
 
         let [a, b] = u_coords.map(|point| point.t);
-        [[a, Scalar::ZERO], [b, Scalar::ZERO], [a, Scalar::ONE]]
-            .map(Point::from)
+        let points = [[a, Scalar::ZERO], [b, Scalar::ZERO], [a, Scalar::ONE]]
+            .map(Point::from);
+
+        (points, geometry)
     }
 }
