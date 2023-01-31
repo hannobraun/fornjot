@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::{array, collections::VecDeque};
 
 use fj_interop::ext::ArrayExt;
 
@@ -122,11 +122,9 @@ impl FaceBuilder for PartialFace {
         });
 
         let vertices = {
-            let array = [
-                vertices.next().expect("Expected exactly three vertices"),
-                vertices.next().expect("Expected exactly three vertices"),
-                vertices.next().expect("Expected exactly three vertices"),
-            ];
+            let array = array::from_fn(|_| {
+                vertices.next().expect("Expected exactly three vertices")
+            });
 
             assert!(
                 vertices.next().is_none(),
