@@ -111,7 +111,14 @@ impl FaceBuilder for PartialFace {
         let mut exterior = self.exterior.write();
         let mut vertices = exterior.half_edges.iter().map(|half_edge| {
             let [(_, surface_vertex), _] = &half_edge.read().vertices;
-            surface_vertex.clone()
+            let global_position = surface_vertex
+                .read()
+                .global_form
+                .read()
+                .position
+                .expect("Need global position to infer plane");
+
+            (surface_vertex.clone(), global_position)
         });
 
         let vertices = {
@@ -130,14 +137,8 @@ impl FaceBuilder for PartialFace {
         };
 
         let (points_surface, _) = {
-            let points_global = vertices.each_ref_ext().map(|vertex| {
-                vertex
-                    .read()
-                    .global_form
-                    .read()
-                    .position
-                    .expect("Need global position to infer plane")
-            });
+            let points_global =
+                vertices.each_ref_ext().map(|(_, point)| *point);
 
             exterior
                 .surface
@@ -145,7 +146,8 @@ impl FaceBuilder for PartialFace {
                 .update_as_plane_from_points(points_global)
         };
 
-        for (mut surface_vertex, point) in vertices.zip_ext(points_surface) {
+        for ((mut surface_vertex, _), point) in vertices.zip_ext(points_surface)
+        {
             surface_vertex.write().position = Some(point);
         }
 
