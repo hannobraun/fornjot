@@ -237,18 +237,20 @@ impl Gui {
             ui.add_space(16.0);
         });
 
-        egui::Window::new("Status").min_width(400.0).min_height(200.0).collapsible(true).resizable(true).show(&self.context, |ui| {
-            egui::ScrollArea::both().show(ui, |ui| {
-                ui.add(egui::Label::new(
-                        egui::RichText::new(format!(
-                                "Status:{}",
-                        state.status.status()
+        egui::Window::new("Status")
+            .min_width(400.0)
+            .min_height(200.0)
+            .collapsible(true)
+            .resizable(true)
+            .show(&self.context, |ui| {
+                egui::ScrollArea::both().show(ui, |ui| {
+                    ui.add(egui::Label::new(
+                        egui::RichText::new(state.status.status())
+                            .monospace()
+                            .color(egui::Color32::WHITE),
                     ))
-                    .monospace()
-                    .color(egui::Color32::WHITE),
-                ))
+                });
             });
-        });
 
         let mut new_model_path = None;
 
