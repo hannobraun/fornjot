@@ -135,13 +135,13 @@ impl FaceBuilder for PartialFace {
         };
 
         let (points_surface, _) = {
-            let points_global =
+            let first_three_points_global =
                 first_three_vertices.each_ref_ext().map(|(_, point)| *point);
 
             exterior
                 .surface
                 .write()
-                .update_as_plane_from_points(points_global)
+                .update_as_plane_from_points(first_three_points_global)
         };
 
         for ((mut surface_vertex, _), point) in
