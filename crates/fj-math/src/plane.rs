@@ -84,16 +84,7 @@ impl Plane {
 
     /// Project a line into the plane
     pub fn project_line(&self, line: &Line<3>) -> Line<2> {
-        let line_origin_relative_to_plane = line.origin() - self.origin();
-        let line_origin_in_plane = Point {
-            coords: Vector::from([
-                self.u()
-                    .scalar_projection_onto(&line_origin_relative_to_plane),
-                self.v()
-                    .scalar_projection_onto(&line_origin_relative_to_plane),
-            ]),
-        };
-
+        let line_origin_in_plane = self.project_point(line.origin());
         let line_direction_in_plane = self.project_vector(line.direction());
 
         Line::from_origin_and_direction(
