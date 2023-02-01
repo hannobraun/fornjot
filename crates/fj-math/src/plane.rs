@@ -65,6 +65,13 @@ impl Plane {
         self.normal().dot(vector) == Scalar::ZERO
     }
 
+    /// Project a point into the plane
+    pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
+        let origin_to_point = point.into() - self.origin();
+        let coords = self.project_vector(origin_to_point);
+        Point { coords }
+    }
+
     /// Project a vector into the plane
     pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Vector<2> {
         let vector = vector.into();
@@ -98,7 +105,16 @@ impl Plane {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Plane, Vector};
+    use crate::{Plane, Point, Vector};
+
+    #[test]
+    fn project_point() {
+        let plane =
+            Plane::from_parametric([1., 1., 1.], [1., 0., 0.], [0., 1., 0.]);
+
+        assert_eq!(plane.project_point([2., 1., 2.]), Point::from([1., 0.]));
+        assert_eq!(plane.project_point([1., 2., 2.]), Point::from([0., 1.]));
+    }
 
     #[test]
     fn project_vector() {
