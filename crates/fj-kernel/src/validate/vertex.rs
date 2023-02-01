@@ -29,23 +29,28 @@ pub enum SurfaceVertexValidationError {
     /// Mismatch between position and position of global form
     #[error(
         "`SurfaceVertex` position doesn't match position of its global form\n\
-        - `SurfaceVertex`: {surface_vertex:#?}\n\
-        - `GlobalVertex`: {global_vertex:#?}\n\
-        - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
-        - Distance between the positions: {distance}"
+        - Surface position: {surface_position:?}\n\
+        - Surface position converted to global position: \
+            {surface_position_as_global:?}\n\
+        - Global position: {global_position:?}\n\
+        - Distance between the positions: {distance}\n\
+        - `SurfaceVertex`: {surface_vertex:#?}"
     )]
     PositionMismatch {
-        /// The surface vertex
-        surface_vertex: SurfaceVertex,
-
-        /// The mismatched global vertex
-        global_vertex: GlobalVertex,
+        /// The position of the surface vertex
+        surface_position: Point<2>,
 
         /// The surface position converted into a global position
         surface_position_as_global: Point<3>,
 
+        /// The position of the global vertex
+        global_position: Point<3>,
+
         /// The distance between the positions
         distance: Scalar,
+
+        /// The surface vertex
+        surface_vertex: SurfaceVertex,
     },
 }
 
@@ -66,10 +71,11 @@ impl SurfaceVertexValidationError {
         if distance > config.identical_max_distance {
             errors.push(
                 Box::new(Self::PositionMismatch {
-                    surface_vertex: surface_vertex.clone(),
-                    global_vertex: surface_vertex.global_form().clone_object(),
+                    surface_position: surface_vertex.position(),
                     surface_position_as_global,
+                    global_position,
                     distance,
+                    surface_vertex: surface_vertex.clone(),
                 })
                 .into(),
             );
