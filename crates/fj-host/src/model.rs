@@ -86,6 +86,8 @@ impl Model {
             .1
             .trim();
 
+        let mut warnings = None;
+
         // So, strictly speaking this is all unsound:
         // - `Library::new` requires us to abide by the arbitrary requirements
         //   of any library initialization or termination routines.
@@ -140,7 +142,8 @@ impl Model {
                         .into_owned();
                 let model = version_full_model;
 
-                warn!("{}", Error::VersionMismatch { host, model });
+                warnings =
+                    Some(format!("{}", Error::VersionMismatch { host, model }));
             }
 
             let init: libloading::Symbol<abi::InitFunction> = lib
@@ -164,6 +167,7 @@ impl Model {
         Ok(Evaluation {
             shape,
             compile_time: seconds_taken.into(),
+            warning: warnings,
         })
     }
 }
@@ -178,6 +182,9 @@ pub struct Evaluation {
 
     /// The time it took to compile the shape, from the Cargo output
     pub compile_time: String,
+
+    /// Warnings
+    pub warning: Option<String>,
 }
 
 pub struct Host<'a> {

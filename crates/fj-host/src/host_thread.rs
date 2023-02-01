@@ -100,6 +100,11 @@ impl HostThread {
 
         self.send_event(ModelEvent::Evaluated)?;
 
+        // TODO Following the steps exactly causes this awkwardness not all warnings are version mismatches, maybe create a Warning enum
+        if let Some(warn) = evaluation.warning {
+            self.send_event(ModelEvent::VersionMismatch(warn))?;
+        }
+
         match self.shape_processor.process(&evaluation.shape) {
             Ok(shape) => self.send_event(ModelEvent::ProcessedShape(shape))?,
 
@@ -135,6 +140,9 @@ pub enum ModelEvent {
 
     /// The model has been processed
     ProcessedShape(ProcessedShape),
+
+    /// The model was compiled against a different fj version
+    VersionMismatch(String),
 
     /// An error
     Error(Error),
