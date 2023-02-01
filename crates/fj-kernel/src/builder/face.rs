@@ -131,22 +131,18 @@ impl FaceBuilder for PartialFace {
                 "Expected exactly three vertices"
             );
 
-            first_three_vertices
-        };
-
-        let (points_surface, _) = {
             let first_three_points_global =
                 first_three_vertices.each_ref_ext().map(|(_, point)| *point);
 
-            exterior
+            let (first_three_points_surface, _) = exterior
                 .surface
                 .write()
-                .update_as_plane_from_points(first_three_points_global)
+                .update_as_plane_from_points(first_three_points_global);
+
+            first_three_vertices.zip_ext(first_three_points_surface)
         };
 
-        for ((mut surface_vertex, _), point) in
-            first_three_vertices.zip_ext(points_surface)
-        {
+        for ((mut surface_vertex, _), point) in first_three_vertices {
             surface_vertex.write().position = Some(point);
         }
 
