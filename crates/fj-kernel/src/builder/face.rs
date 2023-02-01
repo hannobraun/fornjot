@@ -12,7 +12,7 @@ use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument, SurfaceBuilder};
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
-    /// Connect the face to another face at the provided half-edges
+    /// Connect the face to other faces at the provided half-edges
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this face, will not form a cycle.
@@ -26,7 +26,7 @@ pub trait FaceBuilder {
     where
         O: ObjectArgument<Partial<HalfEdge>>;
 
-    /// Connect the face to another face at the provided half-edges
+    /// Connect the face to other faces at the provided half-edges
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this face, form a cycle.
