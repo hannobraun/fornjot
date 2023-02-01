@@ -122,7 +122,7 @@ impl FaceBuilder for PartialFace {
         });
 
         let first_three_vertices = {
-            let array = array::from_fn(|_| {
+            let first_three_vertices = array::from_fn(|_| {
                 vertices.next().expect("Expected exactly three vertices")
             });
 
@@ -131,7 +131,7 @@ impl FaceBuilder for PartialFace {
                 "Expected exactly three vertices"
             );
 
-            array
+            first_three_vertices
         };
 
         let (points_surface, _) = {
