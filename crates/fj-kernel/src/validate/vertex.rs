@@ -29,10 +29,10 @@ pub enum SurfaceVertexValidationError {
     /// Mismatch between position and position of global form
     #[error(
         "`SurfaceVertex` position doesn't match position of its global form\n\
-    - `SurfaceVertex`: {surface_vertex:#?}\n\
-    - `GlobalVertex`: {global_vertex:#?}\n\
-    - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
-    - Distance between the positions: {distance}"
+        - `SurfaceVertex`: {surface_vertex:#?}\n\
+        - `GlobalVertex`: {global_vertex:#?}\n\
+        - `SurfaceVertex` position as global: {surface_position_as_global:?}\n\
+        - Distance between the positions: {distance}"
     )]
     PositionMismatch {
         /// The surface vertex
