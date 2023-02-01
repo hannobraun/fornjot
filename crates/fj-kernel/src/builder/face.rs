@@ -109,42 +109,52 @@ impl FaceBuilder for PartialFace {
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
         let mut exterior = self.exterior.write();
-        let mut vertices = exterior.half_edges.iter().map(|half_edge| {
-            let [(_, surface_vertex), _] = &half_edge.read().vertices;
-            let global_position = surface_vertex
-                .read()
-                .global_form
-                .read()
-                .position
-                .expect("Need global position to infer plane");
+        let mut vertices = exterior
+            .half_edges
+            .iter()
+            .map(|half_edge| {
+                let [(_, surface_vertex), _] = &half_edge.read().vertices;
+                let global_position = surface_vertex
+                    .read()
+                    .global_form
+                    .read()
+                    .position
+                    .expect("Need global position to infer plane");
 
-            (surface_vertex.clone(), global_position)
-        });
+                (surface_vertex.clone(), global_position)
+            })
+            .collect::<VecDeque<_>>();
 
-        let first_three_vertices = {
+        let (first_three_vertices, surface) = {
             let first_three_vertices = array::from_fn(|_| {
-                vertices.next().expect("Expected exactly three vertices")
+                vertices
+                    .pop_front()
+                    .expect("Expected at least three vertices")
             });
-
-            assert!(
-                vertices.next().is_none(),
-                "Expected exactly three vertices"
-            );
 
             let first_three_points_global =
                 first_three_vertices.each_ref_ext().map(|(_, point)| *point);
 
-            let (first_three_points_surface, _) = exterior
+            let (first_three_points_surface, surface) = exterior
                 .surface
                 .write()
                 .update_as_plane_from_points(first_three_points_global);
 
-            first_three_vertices
+            let first_three_vertices = first_three_vertices
                 .zip_ext(first_three_points_surface)
-                .map(|((vertex, _), point_global)| (vertex, point_global))
-        };
+                .map(|((vertex, _), point_global)| (vertex, point_global));
 
-        for (mut surface_vertex, point) in first_three_vertices {
+            (first_three_vertices, surface)
+        };
+        let rest_of_vertices =
+            vertices.into_iter().map(|(vertex, point_global)| {
+                let point_surface = surface.project_global_point(point_global);
+                (vertex, point_surface)
+            });
+
+        for (mut surface_vertex, point) in
+            first_three_vertices.into_iter().chain(rest_of_vertices)
+        {
             surface_vertex.write().position = Some(point);
         }
 
