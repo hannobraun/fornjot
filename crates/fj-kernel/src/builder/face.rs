@@ -139,10 +139,12 @@ impl FaceBuilder for PartialFace {
                 .write()
                 .update_as_plane_from_points(first_three_points_global);
 
-            first_three_vertices.zip_ext(first_three_points_surface)
+            first_three_vertices
+                .zip_ext(first_three_points_surface)
+                .map(|((vertex, _), point_global)| (vertex, point_global))
         };
 
-        for ((mut surface_vertex, _), point) in first_three_vertices {
+        for (mut surface_vertex, point) in first_three_vertices {
             surface_vertex.write().position = Some(point);
         }
 
