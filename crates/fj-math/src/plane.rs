@@ -103,7 +103,7 @@ mod tests {
     #[test]
     fn project_vector() {
         let plane =
-            Plane::from_parametric([0., 0., 0.], [1., 0., 0.], [0., 1., 0.]);
+            Plane::from_parametric([1., 1., 1.], [1., 0., 0.], [0., 1., 0.]);
 
         assert_eq!(plane.project_vector([1., 0., 1.]), Vector::from([1., 0.]));
         assert_eq!(plane.project_vector([0., 1., 1.]), Vector::from([0., 1.]));
