@@ -181,7 +181,16 @@ impl CurveCache {
         handle: Handle<GlobalCurve>,
         range: RangeOnPath,
     ) -> Option<GlobalCurveApprox> {
-        self.inner.get(&(handle.id(), range)).cloned()
+        if let Some(approx) = self.inner.get(&(handle.id(), range)) {
+            return Some(approx.clone());
+        }
+        if let Some(approx) = self.inner.get(&(handle.id(), range.reverse())) {
+            // If we have a cache entry for the reverse range, we need to use
+            // that too!
+            return Some(approx.clone().reverse());
+        }
+
+        None
     }
 }
 
@@ -190,6 +199,14 @@ impl CurveCache {
 pub struct GlobalCurveApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<1>>,
+}
+
+impl GlobalCurveApprox {
+    /// Reverse the order of the approximation
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
 }
 
 #[cfg(test)]
