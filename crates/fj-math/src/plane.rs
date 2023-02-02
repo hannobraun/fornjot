@@ -65,28 +65,43 @@ impl Plane {
         self.normal().dot(vector) == Scalar::ZERO
     }
 
+    /// Project a point into the plane
+    pub fn project_point(&self, point: impl Into<Point<3>>) -> Point<2> {
+        let origin_to_point = point.into() - self.origin();
+        let coords = self.project_vector(origin_to_point);
+        Point { coords }
+    }
+
     /// Project a vector into the plane
     pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Vector<2> {
-        let vector = vector.into();
+        // The vector we want to project can be expressed as a linear
+        // combination of `self.u()`, `self.v()`, and `self.normal()`:
+        // `v = a*u + b*v + c*n`
+        //
+        // All we need to do is to solve this equation. `a` and `b` are the
+        // components of the projected vector. `c` is the distance of the points
+        // that the original and projected vectors point to.
+        //
+        // To solve the equation, let's change it into the standard `Mx = b`
+        // form, then we can let nalgebra do the actual solving.
+        let m =
+            nalgebra::Matrix::<_, _, nalgebra::Const<3>, _>::from_columns(&[
+                self.u().to_na(),
+                self.v().to_na(),
+                self.normal().to_na(),
+            ]);
+        let b = vector.into();
+        let x = m
+            .lu()
+            .solve(&b.to_na())
+            .expect("Expected matrix to be invertible");
 
-        Vector::from([
-            vector.scalar_projection_onto(&self.u()),
-            vector.scalar_projection_onto(&self.v()),
-        ])
+        Vector::from([x.x, x.y])
     }
 
     /// Project a line into the plane
     pub fn project_line(&self, line: &Line<3>) -> Line<2> {
-        let line_origin_relative_to_plane = line.origin() - self.origin();
-        let line_origin_in_plane = Point {
-            coords: Vector::from([
-                self.u()
-                    .scalar_projection_onto(&line_origin_relative_to_plane),
-                self.v()
-                    .scalar_projection_onto(&line_origin_relative_to_plane),
-            ]),
-        };
-
+        let line_origin_in_plane = self.project_point(line.origin());
         let line_direction_in_plane = self.project_vector(line.direction());
 
         Line::from_origin_and_direction(
@@ -98,14 +113,27 @@ impl Plane {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Plane, Vector};
+    use crate::{Plane, Point, Vector};
+
+    #[test]
+    fn project_point() {
+        let plane =
+            Plane::from_parametric([1., 1., 1.], [1., 0., 0.], [0., 1., 0.]);
+
+        assert_eq!(plane.project_point([2., 1., 2.]), Point::from([1., 0.]));
+        assert_eq!(plane.project_point([1., 2., 2.]), Point::from([0., 1.]));
+    }
 
     #[test]
     fn project_vector() {
         let plane =
-            Plane::from_parametric([0., 0., 0.], [1., 0., 0.], [0., 1., 0.]);
+            Plane::from_parametric([1., 1., 1.], [1., 0., 0.], [0., 1., 0.]);
 
         assert_eq!(plane.project_vector([1., 0., 1.]), Vector::from([1., 0.]));
         assert_eq!(plane.project_vector([0., 1., 1.]), Vector::from([0., 1.]));
+
+        let plane =
+            Plane::from_parametric([1., 1., 1.], [1., 0., 0.], [1., 1., 0.]);
+        assert_eq!(plane.project_vector([0., 1., 0.]), Vector::from([-1., 1.]));
     }
 }
