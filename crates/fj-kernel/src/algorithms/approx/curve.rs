@@ -192,6 +192,14 @@ pub struct GlobalCurveApprox {
     pub points: Vec<ApproxPoint<1>>,
 }
 
+impl GlobalCurveApprox {
+    /// Reverse the order of the approximation
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::f64::consts::TAU;
