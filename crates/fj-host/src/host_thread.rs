@@ -100,6 +100,10 @@ impl HostThread {
 
         self.send_event(ModelEvent::Evaluated)?;
 
+        if let Some(warn) = evaluation.warning {
+            self.send_event(ModelEvent::Warning(warn))?;
+        }
+
         match self.shape_processor.process(&evaluation.shape) {
             Ok(shape) => self.send_event(ModelEvent::ProcessedShape(shape))?,
 
@@ -135,6 +139,9 @@ pub enum ModelEvent {
 
     /// The model has been processed
     ProcessedShape(ProcessedShape),
+
+    /// A warning
+    Warning(String),
 
     /// An error
     Error(Error),

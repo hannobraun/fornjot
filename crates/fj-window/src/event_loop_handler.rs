@@ -93,6 +93,9 @@ impl EventLoopHandler {
                 ModelEvent::Error(err) => {
                     return Err(Box::new(err).into());
                 }
+                ModelEvent::Warning(warning) => {
+                    self.status.update_status(&warning);
+                }
             },
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
