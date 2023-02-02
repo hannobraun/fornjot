@@ -93,9 +93,9 @@ impl EventLoopHandler {
                 ModelEvent::Error(err) => {
                     return Err(Box::new(err).into());
                 }
-                ModelEvent::VersionMismatch(v) => self.status.update_status(
-                    format!("Model version mismatch: {v}").as_str(),
-                ),
+                ModelEvent::Warning(warning) => {
+                    self.status.update_status(&warning);
+                }
             },
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
