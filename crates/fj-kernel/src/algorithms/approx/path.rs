@@ -83,6 +83,14 @@ pub struct RangeOnPath {
     pub boundary: [Point<1>; 2],
 }
 
+impl RangeOnPath {
+    /// Reverse the direction of the range
+    pub fn reverse(self) -> Self {
+        let [a, b] = self.boundary;
+        Self { boundary: [b, a] }
+    }
+}
+
 impl<T> From<[T; 2]> for RangeOnPath
 where
     T: Into<Point<1>>,
