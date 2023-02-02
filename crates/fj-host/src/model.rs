@@ -7,7 +7,7 @@ use std::{
 
 use fj::{abi, version::Version};
 use fj_operations::shape_processor;
-use tracing::{debug, warn};
+use tracing::debug;
 
 use crate::{platform::HostPlatform, Parameters};
 
