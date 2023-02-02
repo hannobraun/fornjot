@@ -182,7 +182,7 @@ impl CycleBuilder for PartialCycle {
     ) -> [Partial<HalfEdge>; 3] {
         let points_global = points_global.map(Into::into);
 
-        let points_surface = self
+        let (points_surface, _) = self
             .surface
             .write()
             .update_as_plane_from_points(points_global);
