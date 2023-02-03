@@ -125,7 +125,7 @@ impl FaceBuilder for PartialFace {
             })
             .collect::<VecDeque<_>>();
 
-        let (first_three_vertices, surface) = {
+        let (significant_vertices, surface) = {
             let first_three_vertices = array::from_fn(|_| {
                 vertices
                     .pop_front()
@@ -153,7 +153,7 @@ impl FaceBuilder for PartialFace {
             });
 
         for (mut surface_vertex, point) in
-            first_three_vertices.into_iter().chain(rest_of_vertices)
+            significant_vertices.into_iter().chain(rest_of_vertices)
         {
             surface_vertex.write().position = Some(point);
         }
