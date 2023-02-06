@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.68"
+anyhow = "1.0.69"
 chrono = "0.4.23"
 map-macro = "0.2.5"
 octocrab = "0.18.1"

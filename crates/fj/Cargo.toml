@@ -12,7 +12,7 @@ categories.workspace = true
 
 
 [build-dependencies]
-anyhow = "1.0.68"
+anyhow = "1.0.69"
 
 
 [dependencies]
