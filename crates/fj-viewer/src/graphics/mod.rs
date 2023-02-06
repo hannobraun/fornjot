@@ -3,9 +3,12 @@
 mod draw_config;
 mod drawables;
 mod geometries;
+mod model;
+mod navigation_cube;
 mod pipelines;
 mod renderer;
 mod shaders;
+mod texture;
 mod transform;
 mod uniforms;
 mod vertices;
