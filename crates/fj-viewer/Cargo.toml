@@ -14,6 +14,7 @@ categories.workspace = true
 anyhow = "1.0.68"
 bytemuck = "1.13.0"
 chrono = "0.4.23"
+cgmath = "0.18"
 crossbeam-channel = "0.5.6"
 egui = "0.20.1"
 egui-wgpu = "0.20.0"

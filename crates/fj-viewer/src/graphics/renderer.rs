@@ -339,8 +339,11 @@ impl Renderer {
             gui.draw(&mut render_pass, &clipped_primitives, &screen_descriptor);
         }
 
-        self.navigation_cube_renderer
-            .draw(&color_view, &mut encoder);
+        self.navigation_cube_renderer.draw(
+            &color_view,
+            &mut encoder,
+            &self.queue,
+        );
 
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));

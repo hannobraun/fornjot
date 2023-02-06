@@ -1,3 +1,6 @@
+use cgmath::{Quaternion, Rotation3, Vector3};
+use wgpu::util::DeviceExt;
+
 use super::{
     model::{self, load_model, DrawModel, Model},
     texture,
@@ -7,6 +10,9 @@ use super::{
 pub struct NavigationCubeRenderer {
     cube_model: Model,
     render_pipeline: wgpu::RenderPipeline,
+    rotation: f32,
+    model_matrix_bind_group: wgpu::BindGroup,
+    model_matrix_buffer: wgpu::Buffer,
 }
 
 impl NavigationCubeRenderer {
@@ -42,6 +48,40 @@ impl NavigationCubeRenderer {
                 label: Some("texture_bind_group_layout"),
             });
 
+        let rotation = 0.0;
+        let model_matrix = Self::get_model_matrix(rotation);
+
+        let model_matrix_buffer =
+            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("Model Matrix Buffer"),
+                contents: bytemuck::cast_slice(&[model_matrix]),
+                usage: wgpu::BufferUsages::UNIFORM
+                    | wgpu::BufferUsages::COPY_DST,
+            });
+        let model_matrix_bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                entries: &[wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                }],
+                label: Some("model_matrix_group_layout"),
+            });
+        let model_matrix_bind_group =
+            device.create_bind_group(&wgpu::BindGroupDescriptor {
+                layout: &model_matrix_bind_group_layout,
+                entries: &[wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: model_matrix_buffer.as_entire_binding(),
+                }],
+                label: Some("model_matrix_bind_group"),
+            });
+
         let shader =
             device.create_shader_module(wgpu::ShaderModuleDescriptor {
                 label: Some("Shadow Display Shader"),
@@ -53,7 +93,10 @@ impl NavigationCubeRenderer {
         let render_pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: Some("Render Pipeline Layout"),
-                bind_group_layouts: &[&texture_bind_group_layout],
+                bind_group_layouts: &[
+                    &texture_bind_group_layout,
+                    &model_matrix_bind_group_layout,
+                ],
                 push_constant_ranges: &[],
             });
 
@@ -107,14 +150,26 @@ impl NavigationCubeRenderer {
         Self {
             cube_model,
             render_pipeline,
+            rotation,
+            model_matrix_bind_group,
+            model_matrix_buffer,
         }
     }
 
     pub fn draw(
-        &self,
+        &mut self,
         view: &wgpu::TextureView,
         encoder: &mut wgpu::CommandEncoder,
+        queue: &wgpu::Queue,
     ) {
+        self.rotation += 0.5;
+        let model_matrix = Self::get_model_matrix(self.rotation);
+        queue.write_buffer(
+            &self.model_matrix_buffer,
+            0,
+            bytemuck::cast_slice(&[model_matrix]),
+        );
+
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("Depth Visual Render Pass"),
@@ -129,6 +184,13 @@ impl NavigationCubeRenderer {
                 depth_stencil_attachment: None,
             });
         render_pass.set_pipeline(&self.render_pipeline);
+        render_pass.set_bind_group(1, &self.model_matrix_bind_group, &[]);
         render_pass.draw_model(&self.cube_model);
+    }
+
+    fn get_model_matrix(rotation: f32) -> [[f32; 4]; 4] {
+        // TODO: scale and translate
+        let rotation = Quaternion::from_angle_z(cgmath::Deg(rotation));
+        cgmath::Matrix4::from(rotation).into()
     }
 }
