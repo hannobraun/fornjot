@@ -1,4 +1,4 @@
-use cgmath::{Quaternion, Rotation3, Vector3};
+use cgmath::{Quaternion, Rotation3, SquareMatrix, Vector3};
 use wgpu::util::DeviceExt;
 
 use super::{
@@ -191,16 +191,22 @@ impl NavigationCubeRenderer {
     }
 
     fn get_model_matrix(rotation: f32, aspect_ratio: &f64) -> [[f32; 4]; 4] {
-        let rotation = Quaternion::from_angle_y(cgmath::Deg(rotation));
+        let rotation = Quaternion::from_angle_y(cgmath::Deg(rotation))
+            * Quaternion::from_angle_x(cgmath::Deg(rotation));
 
-        let scale = cgmath::Matrix4::from_nonuniform_scale(
-            0.2,
-            (0.2 * aspect_ratio) as f32,
-            0.2,
-        );
+        let scale =
+            cgmath::Matrix4::from_nonuniform_scale(0.2, (0.2) as f32, 0.2);
+
+        let mut ortho = cgmath::Matrix4::identity();
+        ortho.x.x = 2.0 / (2.0 * *aspect_ratio as f32);
+        ortho.x.w = 0.0;
+        ortho.y.y = 1.0;
+        ortho.y.w = 0.0;
+        ortho.z.z = 0.5;
+        ortho.z.w = 0.0;
 
         let translation =
-            cgmath::Matrix4::from_translation((0.8, 0.8, 0.0).into());
-        (translation * cgmath::Matrix4::from(rotation) * scale).into()
+            cgmath::Matrix4::from_translation((0.8, 0.7, 0.5).into());
+        (translation * ortho * (cgmath::Matrix4::from(rotation) * scale)).into()
     }
 }
