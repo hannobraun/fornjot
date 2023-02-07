@@ -210,7 +210,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                         // available. We need to use that to interpret what the
                         // other edge's curve path means for our curve path.
                         match surface.u {
-                            GlobalPath::Circle(_) => {
+                            GlobalPath::Circle(circle) => {
                                 // The other surface is curved. We're entering
                                 // some dodgy territory here, as only some edge
                                 // cases can be represented using our current
@@ -251,7 +251,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                                         // I hope that I'll come up with a
                                         // better curve/surface representation
                                         // before this becomes a problem.
-                                        Some(MaybeSurfacePath::UndefinedCircle)
+                                        Some(
+                                            MaybeSurfacePath::UndefinedCircle {
+                                                radius: circle.radius(),
+                                            },
+                                        )
                                     }
                                     _ => {
                                         // The other edge is a line segment in a

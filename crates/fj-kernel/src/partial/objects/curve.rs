@@ -1,3 +1,5 @@
+use fj_math::Scalar;
+
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
@@ -55,7 +57,10 @@ pub enum MaybeSurfacePath {
     Defined(SurfacePath),
 
     /// The surface path is undefined, but we know it is a circle
-    UndefinedCircle,
+    UndefinedCircle {
+        /// The radius of the undefined circle
+        radius: Scalar,
+    },
 
     /// The surface path is undefined, but we know it is a line
     UndefinedLine,

@@ -173,7 +173,7 @@ impl FaceBuilder for PartialFace {
                     MaybeSurfacePath::Defined(_) => {
                         // Path is already defined. Nothing to infer.
                     }
-                    MaybeSurfacePath::UndefinedCircle => todo!(
+                    MaybeSurfacePath::UndefinedCircle { .. } => todo!(
                         "Inferring undefined circles is not supported yet"
                     ),
                     MaybeSurfacePath::UndefinedLine => {
