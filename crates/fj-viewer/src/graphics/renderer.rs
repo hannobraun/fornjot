@@ -186,8 +186,12 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let navigation_cube_renderer =
-            NavigationCubeRenderer::new(&device, &queue, &surface_config);
+        let navigation_cube_renderer = NavigationCubeRenderer::new(
+            &device,
+            &queue,
+            &surface_config,
+            800.0 / 600.0,
+        );
 
         Ok(Self {
             surface,
@@ -343,6 +347,7 @@ impl Renderer {
             &color_view,
             &mut encoder,
             &self.queue,
+            &aspect_ratio,
         );
 
         let command_buffer = encoder.finish();

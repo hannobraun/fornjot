@@ -20,6 +20,7 @@ impl NavigationCubeRenderer {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         config: &wgpu::SurfaceConfiguration,
+        aspect_ratio: f64,
     ) -> Self {
         let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -49,7 +50,7 @@ impl NavigationCubeRenderer {
             });
 
         let rotation = 0.0;
-        let model_matrix = Self::get_model_matrix(rotation);
+        let model_matrix = Self::get_model_matrix(rotation, &aspect_ratio);
 
         let model_matrix_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -161,9 +162,10 @@ impl NavigationCubeRenderer {
         view: &wgpu::TextureView,
         encoder: &mut wgpu::CommandEncoder,
         queue: &wgpu::Queue,
+        aspect_ratio: &f64,
     ) {
         self.rotation += 0.5;
-        let model_matrix = Self::get_model_matrix(self.rotation);
+        let model_matrix = Self::get_model_matrix(self.rotation, aspect_ratio);
         queue.write_buffer(
             &self.model_matrix_buffer,
             0,
@@ -188,11 +190,15 @@ impl NavigationCubeRenderer {
         render_pass.draw_model(&self.cube_model);
     }
 
-    fn get_model_matrix(rotation: f32) -> [[f32; 4]; 4] {
-        // TODO: scale and translate
+    fn get_model_matrix(rotation: f32, aspect_ratio: &f64) -> [[f32; 4]; 4] {
         let rotation = Quaternion::from_angle_y(cgmath::Deg(rotation));
 
-        let scale = cgmath::Matrix4::from_scale(0.2);
+        let scale = cgmath::Matrix4::from_nonuniform_scale(
+            0.2,
+            (0.2 * aspect_ratio) as f32,
+            0.2,
+        );
+
         let translation =
             cgmath::Matrix4::from_translation((0.8, 0.8, 0.0).into());
         (translation * cgmath::Matrix4::from(rotation) * scale).into()
