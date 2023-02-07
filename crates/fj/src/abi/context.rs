@@ -5,8 +5,13 @@ use crate::abi::ffi_safe::StringSlice;
 #[repr(C)]
 pub struct Context<'a> {
     user_data: *const c_void,
-    get_argument:
-        unsafe extern "C" fn(*const c_void, StringSlice) -> StringSlice,
+    get_argument: unsafe extern "C" fn(
+        *const c_void,
+        StringSlice,
+    ) -> crate::abi::ffi_safe::Result<
+        StringSlice,
+        crate::abi::ffi_safe::String,
+    >,
     _lifetime: PhantomData<&'a ()>,
 }
 
@@ -15,15 +20,24 @@ impl<'a> From<&'a &dyn crate::models::Context> for Context<'a> {
         unsafe extern "C" fn get_argument(
             user_data: *const c_void,
             name: StringSlice,
-        ) -> StringSlice {
+        ) -> crate::abi::ffi_safe::Result<
+            StringSlice,
+            crate::abi::ffi_safe::String,
+        > {
             let ctx = &*(user_data as *const &dyn crate::models::Context);
 
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 ctx.get_argument(&name)
             })) {
-                Ok(Some(arg)) => StringSlice::from_str(arg),
-                Ok(None) => StringSlice::from_str(""),
-                Err(payload) => crate::abi::on_panic(payload),
+                Ok(Some(arg)) => {
+                    crate::abi::ffi_safe::Result::Ok(StringSlice::from_str(arg))
+                }
+                Ok(None) => {
+                    crate::abi::ffi_safe::Result::Ok(StringSlice::from_str(""))
+                }
+                Err(payload) => crate::abi::ffi_safe::Result::Err(
+                    crate::abi::on_panic(payload),
+                ),
             }
         }
 
@@ -47,9 +61,17 @@ impl crate::models::Context for Context<'_> {
 
             let name = StringSlice::from_str(name);
 
-            match get_argument(user_data, name).into_str() {
-                "" => None,
-                other => Some(other),
+            match name.trim().is_empty() {
+                true => None,
+                false => match get_argument(user_data, name) {
+                    super::ffi_safe::Result::Ok(other) => {
+                        match other.is_empty() {
+                            true => None,
+                            false => Some(other.into_str()),
+                        }
+                    }
+                    super::ffi_safe::Result::Err(_) => None,
+                },
             }
         }
     }
