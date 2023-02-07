@@ -190,7 +190,8 @@ impl NavigationCubeRenderer {
 
     fn get_model_matrix(rotation: f32) -> [[f32; 4]; 4] {
         // TODO: scale and translate
-        let rotation = Quaternion::from_angle_z(cgmath::Deg(rotation));
+        let rotation = Quaternion::from_angle_y(cgmath::Deg(rotation));
+
         let scale = cgmath::Matrix4::from_scale(0.2);
         let translation =
             cgmath::Matrix4::from_translation((0.8, 0.8, 0.0).into());

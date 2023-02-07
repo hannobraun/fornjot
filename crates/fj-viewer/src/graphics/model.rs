@@ -121,7 +121,7 @@ pub fn load_model(
                     ],
                     tex_coords: [
                         m.mesh.texcoords[i * 2],
-                        m.mesh.texcoords[i * 2 + 1],
+                        1.0 - m.mesh.texcoords[i * 2 + 1],
                     ],
                 })
                 .collect::<Vec<_>>();
