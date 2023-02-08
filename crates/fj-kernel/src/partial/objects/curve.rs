@@ -1,3 +1,5 @@
+use fj_math::Scalar;
+
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects, Surface},
@@ -55,26 +57,13 @@ pub enum MaybeSurfacePath {
     Defined(SurfacePath),
 
     /// The surface path is undefined, but we know it is a circle
-    UndefinedCircle,
+    UndefinedCircle {
+        /// The radius of the undefined circle
+        radius: Scalar,
+    },
 
     /// The surface path is undefined, but we know it is a line
     UndefinedLine,
-}
-
-impl MaybeSurfacePath {
-    /// Convert into an undefined variant
-    ///
-    /// If `self` is defined, it is converted into the applicable undefined
-    /// variant. If it is undefined, a copy is returned.
-    pub fn to_undefined(&self) -> Self {
-        match self {
-            Self::Defined(path) => match path {
-                SurfacePath::Circle(_) => Self::UndefinedCircle,
-                SurfacePath::Line(_) => Self::UndefinedLine,
-            },
-            undefined => undefined.clone(),
-        }
-    }
 }
 
 impl From<SurfacePath> for MaybeSurfacePath {
