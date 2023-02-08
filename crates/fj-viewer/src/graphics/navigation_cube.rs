@@ -1,4 +1,6 @@
-use cgmath::{Quaternion, Rotation3, SquareMatrix, Vector3};
+use bytemuck::bytes_of;
+use fj_math::Transform;
+use nalgebra::{self, Matrix4, Translation};
 use wgpu::util::DeviceExt;
 
 use super::{
@@ -10,10 +12,12 @@ use super::{
 pub struct NavigationCubeRenderer {
     cube_model: Model,
     render_pipeline: wgpu::RenderPipeline,
-    rotation: f32,
     model_matrix_bind_group: wgpu::BindGroup,
     model_matrix_buffer: wgpu::Buffer,
 }
+
+const SCALE_FACTOR: f64 = 0.15;
+const CUBE_TRANSLATION: [f64; 3] = [0.8, 0.7, 0.4];
 
 impl NavigationCubeRenderer {
     pub fn new(
@@ -49,8 +53,8 @@ impl NavigationCubeRenderer {
                 label: Some("texture_bind_group_layout"),
             });
 
-        let rotation = 0.0;
-        let model_matrix = Self::get_model_matrix(rotation, &aspect_ratio);
+        let model_matrix =
+            Self::get_model_matrix(Transform::identity(), aspect_ratio);
 
         let model_matrix_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -151,7 +155,6 @@ impl NavigationCubeRenderer {
         Self {
             cube_model,
             render_pipeline,
-            rotation,
             model_matrix_bind_group,
             model_matrix_buffer,
         }
@@ -162,10 +165,10 @@ impl NavigationCubeRenderer {
         view: &wgpu::TextureView,
         encoder: &mut wgpu::CommandEncoder,
         queue: &wgpu::Queue,
-        aspect_ratio: &f64,
+        aspect_ratio: f64,
+        rotation: Transform,
     ) {
-        self.rotation += 0.5;
-        let model_matrix = Self::get_model_matrix(self.rotation, aspect_ratio);
+        let model_matrix = Self::get_model_matrix(rotation, aspect_ratio);
         queue.write_buffer(
             &self.model_matrix_buffer,
             0,
@@ -190,23 +193,31 @@ impl NavigationCubeRenderer {
         render_pass.draw_model(&self.cube_model);
     }
 
-    fn get_model_matrix(rotation: f32, aspect_ratio: &f64) -> [[f32; 4]; 4] {
-        let rotation = Quaternion::from_angle_y(cgmath::Deg(rotation))
-            * Quaternion::from_angle_x(cgmath::Deg(rotation));
+    fn get_model_matrix(rotation: Transform, aspect_ratio: f64) -> [f32; 16] {
+        let scale = Transform::scale(SCALE_FACTOR);
 
-        let scale =
-            cgmath::Matrix4::from_nonuniform_scale(0.2, (0.2) as f32, 0.2);
+        let mut model_matrix = Transform::identity();
+        model_matrix = model_matrix * rotation;
+        model_matrix = model_matrix * scale;
 
-        let mut ortho = cgmath::Matrix4::identity();
-        ortho.x.x = 2.0 / (2.0 * *aspect_ratio as f32);
-        ortho.x.w = 0.0;
-        ortho.y.y = 1.0;
-        ortho.y.w = 0.0;
-        ortho.z.z = 0.5;
-        ortho.z.w = 0.0;
+        let ortho = nalgebra::Orthographic3::new(
+            -aspect_ratio,
+            aspect_ratio,
+            -1.0,
+            1.0,
+            2.0,
+            -2.0,
+        );
 
-        let translation =
-            cgmath::Matrix4::from_translation((0.8, 0.7, 0.5).into());
-        (translation * ortho * (cgmath::Matrix4::from(rotation) * scale)).into()
+        let translation = Transform::translation(CUBE_TRANSLATION).get_inner();
+
+        let mut mat = [0.; 16];
+        mat.copy_from_slice(
+            (translation.matrix()
+                * ortho.to_projective().matrix()
+                * model_matrix.get_inner().matrix())
+            .as_slice(),
+        );
+        mat.map(|x| x as f32)
     }
 }

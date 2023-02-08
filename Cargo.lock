@@ -1296,6 +1296,7 @@ dependencies = [
  "fj-math",
  "getrandom",
  "image",
+ "nalgebra",
  "raw-window-handle 0.5.0",
  "rfd",
  "thiserror",

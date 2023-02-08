@@ -40,6 +40,13 @@ impl Transform {
         ))
     }
 
+    /// Construct a scaling
+    pub fn scale(scaling_factor: f64) -> Self {
+        Self(nalgebra::Transform::from_matrix_unchecked(
+            nalgebra::OMatrix::new_scaling(scaling_factor),
+        ))
+    }
+
     /// Transform the given point
     pub fn transform_point(&self, point: &Point<3>) -> Point<3> {
         Point::from(self.0.transform_point(&point.to_na()))
@@ -117,6 +124,11 @@ impl Transform {
         );
 
         array.map(Scalar::from)
+    }
+
+    /// Return the inner nalgebra transform
+    pub fn get_inner(&self) -> nalgebra::Transform<f64, nalgebra::TAffine, 3> {
+        self.0
     }
 
     /// Transform the given axis-aligned bounding box

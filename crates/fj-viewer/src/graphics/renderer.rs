@@ -347,7 +347,8 @@ impl Renderer {
             &color_view,
             &mut encoder,
             &self.queue,
-            &aspect_ratio,
+            aspect_ratio,
+            camera.rotation,
         );
 
         let command_buffer = encoder.finish();
