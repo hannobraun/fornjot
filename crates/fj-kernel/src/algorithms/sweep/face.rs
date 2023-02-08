@@ -47,7 +47,7 @@ impl Sweep for Handle<Face> {
                 self.clone().reverse(objects)
             }
         };
-        faces.push(bottom_face);
+        faces.push(bottom_face.clone());
 
         let top_face = {
             let mut face = self.clone().translate(path, objects);
@@ -61,12 +61,8 @@ impl Sweep for Handle<Face> {
         faces.push(top_face);
 
         // Generate side faces
-        for cycle in self.all_cycles().cloned() {
-            let cycle = if is_negative_sweep {
-                cycle.reverse(objects)
-            } else {
-                cycle
-            };
+        for cycle in bottom_face.all_cycles().cloned() {
+            let cycle = cycle.reverse(objects);
 
             for half_edge in cycle.half_edges().cloned() {
                 let face = (half_edge, self.color())
