@@ -126,7 +126,7 @@ impl Transform {
         array.map(Scalar::from)
     }
 
-    /// Return the inner nalgebra transform
+    /// Return a copy of the inner nalgebra transform
     pub fn get_inner(&self) -> nalgebra::Transform<f64, nalgebra::TAffine, 3> {
         self.0
     }
