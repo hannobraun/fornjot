@@ -128,13 +128,13 @@ pub fn load_model(
 
             let vertex_buffer =
                 device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some(&format!("{:?} Vertex Buffer", file_name)),
+                    label: Some(&format!("{file_name:?} Vertex Buffer")),
                     contents: bytemuck::cast_slice(&vertices),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
             let index_buffer =
                 device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: Some(&format!("{:?} Index Buffer", file_name)),
+                    label: Some(&format!("{file_name:?} Index Buffer")),
                     contents: bytemuck::cast_slice(&m.mesh.indices),
                     usage: wgpu::BufferUsages::INDEX,
                 });
