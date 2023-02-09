@@ -14,7 +14,6 @@ categories.workspace = true
 anyhow = "1.0.68"
 bytemuck = "1.13.0"
 chrono = "0.4.23"
-cgmath = "0.18"
 crossbeam-channel = "0.5.6"
 egui = "0.20.1"
 egui-wgpu = "0.20.0"
@@ -22,7 +21,6 @@ fj-interop.workspace = true
 fj-math.workspace = true
 nalgebra = "0.32.1"
 tobj = "3.2.4"
-
 raw-window-handle = "0.5.0"
 thiserror = "1.0.35"
 tracing = "0.1.37"

@@ -1,12 +1,7 @@
-use bytemuck::bytes_of;
 use fj_math::Transform;
-use nalgebra::{self, Matrix4, Translation};
 use wgpu::util::DeviceExt;
 
-use super::{
-    model::{self, load_model, DrawModel, Model},
-    texture,
-};
+use super::model::{self, load_model, DrawModel, Model};
 
 #[derive(Debug)]
 pub struct NavigationCubeRenderer {
@@ -110,7 +105,7 @@ impl NavigationCubeRenderer {
                 label: Some("Navigation Cube Renderer"),
                 layout: Some(&render_pipeline_layout),
                 vertex: wgpu::VertexState {
-                    module: &&shader,
+                    module: &shader,
                     entry_point: "vertex",
                     buffers: &[model::ModelVertex::desc()],
                 },
@@ -149,7 +144,7 @@ impl NavigationCubeRenderer {
             });
 
         let cube_model =
-            load_model("cube.obj", &device, &queue, &texture_bind_group_layout)
+            load_model("cube.obj", device, queue, &texture_bind_group_layout)
                 .unwrap();
 
         Self {
@@ -179,7 +174,7 @@ impl NavigationCubeRenderer {
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("Depth Visual Render Pass"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
+                    view,
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Load,
