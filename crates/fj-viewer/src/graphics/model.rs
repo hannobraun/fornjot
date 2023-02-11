@@ -1,8 +1,9 @@
-use std::ops::Range;
+use std::{io, ops::Range};
 
+use tobj::LoadError;
 use wgpu::util::DeviceExt;
 
-use super::texture;
+use super::texture::{self, LoadTextureError};
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
@@ -55,12 +56,24 @@ pub struct Mesh {
     pub material: usize,
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum LoadModelError {
+    #[error("Object loading error")]
+    ObjLoad(#[from] LoadError),
+
+    #[error("Load texture error")]
+    Texture(#[from] LoadTextureError),
+
+    #[error("Load reading object file error")]
+    ReadFile(#[from] io::Error),
+}
+
 pub fn load_model(
     file_name: &str,
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
-) -> anyhow::Result<Model> {
+) -> Result<Model, LoadModelError> {
     let (models, obj_materials) = tobj::load_obj(
         std::path::Path::new("assets/navigation_cube").join(file_name),
         &tobj::LoadOptions {

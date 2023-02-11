@@ -11,7 +11,6 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-anyhow = "1.0.68"
 bytemuck = "1.13.0"
 chrono = "0.4.23"
 crossbeam-channel = "0.5.6"

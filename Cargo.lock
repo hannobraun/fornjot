@@ -1266,7 +1266,6 @@ dependencies = [
 name = "fj-viewer"
 version = "0.36.0"
 dependencies = [
- "anyhow",
  "bytemuck",
  "chrono",
  "crossbeam-channel",

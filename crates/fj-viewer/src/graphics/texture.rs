@@ -1,5 +1,4 @@
-use anyhow::*;
-use image::GenericImageView;
+use image::{GenericImageView, ImageError};
 use std::num::NonZeroU32;
 
 #[derive(Debug)]
@@ -9,15 +8,21 @@ pub struct Texture {
     pub sampler: wgpu::Sampler,
 }
 
+#[derive(Debug, thiserror::Error)]
+pub enum LoadTextureError {
+    #[error("Image processing error")]
+    ImageError(#[from] ImageError),
+}
+
 impl Texture {
     pub fn from_bytes(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         bytes: &[u8],
         label: &str,
-    ) -> Result<Self> {
+    ) -> Result<Self, LoadTextureError> {
         let img = image::load_from_memory(bytes)?;
-        Self::from_image(device, queue, &img, Some(label))
+        Ok(Self::from_image(device, queue, &img, Some(label)))
     }
 
     pub fn from_image(
@@ -25,7 +30,7 @@ impl Texture {
         queue: &wgpu::Queue,
         img: &image::DynamicImage,
         label: Option<&str>,
-    ) -> Result<Self> {
+    ) -> Self {
         let dimensions = img.dimensions();
         let rgba = img.to_rgba8();
 
@@ -72,10 +77,10 @@ impl Texture {
             ..Default::default()
         });
 
-        Ok(Self {
+        Self {
             texture,
             view,
             sampler,
-        })
+        }
     }
 }
