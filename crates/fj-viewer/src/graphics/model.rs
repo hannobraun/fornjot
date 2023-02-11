@@ -1,9 +1,10 @@
-use std::{io, ops::Range};
+use std::ops::Range;
 
 use tobj::LoadError;
 use wgpu::util::DeviceExt;
 
 use super::texture::{self, LoadTextureError};
+use crate::assets::Assets;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
@@ -63,9 +64,6 @@ pub enum LoadModelError {
 
     #[error("Load texture error")]
     Texture(#[from] LoadTextureError),
-
-    #[error("Load reading object file error")]
-    ReadFile(#[from] io::Error),
 }
 
 pub fn load_model(
@@ -74,25 +72,35 @@ pub fn load_model(
     queue: &wgpu::Queue,
     layout: &wgpu::BindGroupLayout,
 ) -> Result<Model, LoadModelError> {
-    let (models, obj_materials) = tobj::load_obj(
-        std::path::Path::new("assets/navigation_cube").join(file_name),
+    let assets = Assets::get_instance();
+
+    let (models, obj_materials) = tobj::load_obj_buf(
+        &mut assets.get_asset(file_name),
         &tobj::LoadOptions {
             triangulate: true,
             single_index: true,
             ..Default::default()
         },
+        |p| {
+            tobj::load_mtl_buf(
+                &mut assets.get_asset(
+                    p.file_name()
+                        .unwrap()
+                        .to_str()
+                        .expect("OsStr could not be converted to a str"),
+                ),
+            )
+        },
     )?;
 
     let mut materials = Vec::new();
     for m in obj_materials? {
-        let texture_data = std::fs::read(
-            std::path::Path::new("assets/navigation_cube")
-                .join(m.diffuse_texture),
-        )?;
+        let texture_data: &[u8] = assets.get_asset(m.diffuse_texture.as_str());
+
         let diffuse_texture = texture::Texture::from_bytes(
             device,
             queue,
-            &texture_data,
+            texture_data,
             file_name,
         )?;
 
