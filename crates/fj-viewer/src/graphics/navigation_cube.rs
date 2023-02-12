@@ -7,8 +7,8 @@ use super::model::{self, load_model, DrawModel, Model};
 pub struct NavigationCubeRenderer {
     cube_model: Model,
     render_pipeline: wgpu::RenderPipeline,
-    model_matrix_bind_group: wgpu::BindGroup,
-    model_matrix_buffer: wgpu::Buffer,
+    mvp_matrix_bind_group: wgpu::BindGroup,
+    mvp_matrix_buffer: wgpu::Buffer,
 }
 
 const SCALE_FACTOR: f64 = 0.13;
@@ -48,17 +48,17 @@ impl NavigationCubeRenderer {
                 label: Some("texture_bind_group_layout"),
             });
 
-        let model_matrix =
-            Self::get_model_matrix(Transform::identity(), aspect_ratio);
+        let mvp_matrix =
+            Self::get_mvp_matrix(Transform::identity(), aspect_ratio);
 
-        let model_matrix_buffer =
+        let mvp_matrix_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: Some("Model Matrix Buffer"),
-                contents: bytemuck::cast_slice(&[model_matrix]),
+                contents: bytemuck::cast_slice(&[mvp_matrix]),
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
-        let model_matrix_bind_group_layout =
+        let mvp_matrix_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 entries: &[wgpu::BindGroupLayoutEntry {
                     binding: 0,
@@ -70,16 +70,16 @@ impl NavigationCubeRenderer {
                     },
                     count: None,
                 }],
-                label: Some("model_matrix_group_layout"),
+                label: Some("mvp_matrix_group_layout"),
             });
-        let model_matrix_bind_group =
+        let mvp_matrix_bind_group =
             device.create_bind_group(&wgpu::BindGroupDescriptor {
-                layout: &model_matrix_bind_group_layout,
+                layout: &mvp_matrix_bind_group_layout,
                 entries: &[wgpu::BindGroupEntry {
                     binding: 0,
-                    resource: model_matrix_buffer.as_entire_binding(),
+                    resource: mvp_matrix_buffer.as_entire_binding(),
                 }],
-                label: Some("model_matrix_bind_group"),
+                label: Some("mvp_matrix_bind_group"),
             });
 
         let shader =
@@ -95,7 +95,7 @@ impl NavigationCubeRenderer {
                 label: Some("Render Pipeline Layout"),
                 bind_group_layouts: &[
                     &texture_bind_group_layout,
-                    &model_matrix_bind_group_layout,
+                    &mvp_matrix_bind_group_layout,
                 ],
                 push_constant_ranges: &[],
             });
@@ -150,8 +150,8 @@ impl NavigationCubeRenderer {
         Self {
             cube_model,
             render_pipeline,
-            model_matrix_bind_group,
-            model_matrix_buffer,
+            mvp_matrix_bind_group,
+            mvp_matrix_buffer,
         }
     }
 
@@ -163,11 +163,11 @@ impl NavigationCubeRenderer {
         aspect_ratio: f64,
         rotation: Transform,
     ) {
-        let model_matrix = Self::get_model_matrix(rotation, aspect_ratio);
+        let mvp_matrix = Self::get_mvp_matrix(rotation, aspect_ratio);
         queue.write_buffer(
-            &self.model_matrix_buffer,
+            &self.mvp_matrix_buffer,
             0,
-            bytemuck::cast_slice(&[model_matrix]),
+            bytemuck::cast_slice(&[mvp_matrix]),
         );
 
         let mut render_pass =
@@ -184,11 +184,11 @@ impl NavigationCubeRenderer {
                 depth_stencil_attachment: None,
             });
         render_pass.set_pipeline(&self.render_pipeline);
-        render_pass.set_bind_group(1, &self.model_matrix_bind_group, &[]);
+        render_pass.set_bind_group(1, &self.mvp_matrix_bind_group, &[]);
         render_pass.draw_model(&self.cube_model);
     }
 
-    fn get_model_matrix(rotation: Transform, aspect_ratio: f64) -> [f32; 16] {
+    fn get_mvp_matrix(rotation: Transform, aspect_ratio: f64) -> [f32; 16] {
         let scale = Transform::scale(SCALE_FACTOR);
         let world_translation = Transform::translation([0.0, 0.0, -1.0]);
 

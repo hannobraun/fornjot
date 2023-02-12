@@ -1,7 +1,7 @@
 // Vertex shader
 
 @group(1) @binding(0)
-var<uniform> model_matrix: mat4x4<f32>;
+var<uniform> mvp_matrix: mat4x4<f32>;
 
 struct VertexInput {
     @location(0) position: vec3<f32>,
@@ -19,7 +19,7 @@ fn vertex(
 ) -> VertexOutput {
     var out: VertexOutput;
     out.tex_coords = model.tex_coords;
-    out.clip_position = model_matrix * vec4<f32>(model.position, 1.0);
+    out.clip_position = mvp_matrix * vec4<f32>(model.position, 1.0);
     return out;
 }
 
