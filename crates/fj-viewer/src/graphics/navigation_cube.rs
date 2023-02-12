@@ -11,8 +11,8 @@ pub struct NavigationCubeRenderer {
     model_matrix_buffer: wgpu::Buffer,
 }
 
-const SCALE_FACTOR: f64 = 0.15;
-const CUBE_TRANSLATION: [f64; 3] = [0.8, 0.7, 0.4];
+const SCALE_FACTOR: f64 = 0.13;
+const CUBE_TRANSLATION: [f64; 3] = [0.8, 0.7, 0.0];
 
 impl NavigationCubeRenderer {
     pub fn new(
@@ -190,29 +190,31 @@ impl NavigationCubeRenderer {
 
     fn get_model_matrix(rotation: Transform, aspect_ratio: f64) -> [f32; 16] {
         let scale = Transform::scale(SCALE_FACTOR);
+        let world_translation = Transform::translation([0.0, 0.0, -1.0]);
 
         let mut model_matrix = Transform::identity();
+        model_matrix = model_matrix * world_translation;
         model_matrix = model_matrix * rotation;
         model_matrix = model_matrix * scale;
 
-        let ortho = nalgebra::Orthographic3::new(
-            -aspect_ratio,
-            aspect_ratio,
-            -1.0,
-            1.0,
-            2.0,
-            -2.0,
+        let perspective =
+            nalgebra::Perspective3::new(aspect_ratio, 30.0, 0.1, 2.0);
+
+        let view_matrix = nalgebra::Matrix4::look_at_lh(
+            &nalgebra::Point3::new(0.0, 0.0, 0.0),
+            &nalgebra::Point3::new(0.0, 0.0, 1.0),
+            &nalgebra::Vector3::new(0.0, -1.0, 0.0),
         );
 
-        let translation = Transform::translation(CUBE_TRANSLATION).get_inner();
+        let screen_translation = Transform::translation(CUBE_TRANSLATION);
+
+        let matrix = screen_translation.get_inner().matrix()
+            * *perspective.to_projective().matrix()
+            * view_matrix
+            * model_matrix.get_inner().matrix();
 
         let mut mat = [0.; 16];
-        mat.copy_from_slice(
-            (translation.matrix()
-                * ortho.to_projective().matrix()
-                * model_matrix.get_inner().matrix())
-            .as_slice(),
-        );
+        mat.copy_from_slice(matrix.as_slice());
         mat.map(|x| x as f32)
     }
 }
