@@ -1,4 +1,4 @@
-use std::{io, mem::size_of};
+use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
 use tracing::debug;
@@ -41,10 +41,13 @@ pub struct Renderer {
 impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
-        let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::PRIMARY,
+            ..Default::default()
+        });
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(screen.window()) };
+        let surface = unsafe { instance.create_surface(screen.window()) }?;
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -94,7 +97,8 @@ impl Renderer {
             .await?;
 
         let color_format = 'color_format: {
-            let supported_formats = surface.get_supported_formats(&adapter);
+            let capabilities = surface.get_capabilities(&adapter);
+            let supported_formats = capabilities.formats;
 
             // We don't really care which color format we use, as long as we
             // find one that's supported. `egui_wgpu` prints a warning though,
@@ -136,6 +140,7 @@ impl Renderer {
             //
             // @hannobraun
             alpha_mode: wgpu::CompositeAlphaMode::Auto,
+            view_formats: vec![],
         };
         surface.configure(&device, &surface_config);
 
@@ -372,6 +377,7 @@ impl Renderer {
             dimension: wgpu::TextureDimension::D2,
             format: surface_config.format,
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+            view_formats: &[],
         });
         texture.create_view(&wgpu::TextureViewDescriptor::default())
     }
@@ -392,6 +398,7 @@ impl Renderer {
             dimension: wgpu::TextureDimension::D2,
             format: DEPTH_FORMAT,
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+            view_formats: &[],
         });
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
@@ -409,6 +416,10 @@ pub enum RendererInitError {
     /// General IO error
     #[error("I/O error: {0}")]
     Io(#[from] io::Error),
+
+    /// Surface creating error
+    #[error("Error creating surface: {0}")]
+    CreateSurface(#[from] wgpu::CreateSurfaceError),
 
     /// Graphics accelerator acquisition error
     #[error("Error request adapter")]

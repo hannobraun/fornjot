@@ -33,7 +33,7 @@ fn vertex(in: VertexInput) -> VertexOutput {
     return out;
 }
 
-let pi: f32 = 3.14159265359;
+const pi: f32 = 3.14159265359;
 
 @fragment
 fn frag_model(in: VertexOutput) -> FragmentOutput {
