@@ -14,6 +14,7 @@
 
 #![warn(missing_docs)]
 
+mod assets;
 mod camera;
 mod graphics;
 mod gui;

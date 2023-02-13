@@ -13,8 +13,9 @@ use crate::{
 
 use super::{
     draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
-    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
+    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
+    transform::Transform, uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
+    SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
@@ -34,6 +35,8 @@ pub struct Renderer {
 
     geometries: Geometries,
     pipelines: Pipelines,
+
+    navigation_cube_renderer: NavigationCubeRenderer,
 }
 
 impl Renderer {
@@ -183,6 +186,13 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
+        let navigation_cube_renderer = NavigationCubeRenderer::new(
+            &device,
+            &queue,
+            &surface_config,
+            800.0 / 600.0,
+        );
+
         Ok(Self {
             surface,
             features,
@@ -198,6 +208,8 @@ impl Renderer {
 
             geometries,
             pipelines,
+
+            navigation_cube_renderer,
         })
     }
 
@@ -330,6 +342,14 @@ impl Renderer {
 
             gui.draw(&mut render_pass, &clipped_primitives, &screen_descriptor);
         }
+
+        self.navigation_cube_renderer.draw(
+            &color_view,
+            &mut encoder,
+            &self.queue,
+            aspect_ratio,
+            camera.rotation,
+        );
 
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
