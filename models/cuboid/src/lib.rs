@@ -10,7 +10,7 @@ pub fn model(
         [ x / 2., -y / 2.],
         [ x / 2.,  y / 2.],
         [-x / 2.,  y / 2.],
-    ]).with_color([100,255,0,200]);
+    ]).unwrap().with_color([100,255,0,200]);
 
     let cuboid = fj::Sweep::from_path(rectangle.into(), [0., 0., z]);
 
