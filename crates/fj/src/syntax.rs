@@ -69,7 +69,7 @@ where
     T: AsRef<[[f64; 2]]>,
 {
     fn sketch(&self) -> crate::Sketch {
-        crate::Sketch::from_points(self.as_ref().to_vec())
+        crate::Sketch::from_points(self.as_ref().to_vec()).unwrap()
     }
 }
 
