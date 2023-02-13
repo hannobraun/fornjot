@@ -338,7 +338,7 @@ impl Deref for StringSlice {
 #[derive(Debug)]
 #[repr(C)]
 pub struct BoxedError {
-    msg: String,
+    pub(crate) msg: String,
 }
 
 impl Display for BoxedError {

@@ -4,41 +4,14 @@ use fj_interop::ext::ArrayExt;
 
 use crate::{
     geometry::path::SurfacePath,
-    objects::{Cycle, HalfEdge, Surface},
+    objects::{Cycle, Surface},
     partial::{MaybeSurfacePath, Partial, PartialCycle, PartialFace},
 };
 
-use super::{CycleBuilder, HalfEdgeBuilder, ObjectArgument, SurfaceBuilder};
+use super::SurfaceBuilder;
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
-    /// Connect the face to other faces at the provided half-edges
-    ///
-    /// Assumes that the provided half-edges, once translated into local
-    /// equivalents of this face, will not form a cycle.
-    ///
-    /// Returns the local equivalents of the provided half-edges and, as the
-    /// last entry, an additional half-edge that closes the cycle.
-    fn connect_to_open_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SizePlusOne<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>;
-
-    /// Connect the face to other faces at the provided half-edges
-    ///
-    /// Assumes that the provided half-edges, once translated into local
-    /// equivalents of this face, form a cycle.
-    ///
-    /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_closed_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SameSize<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>;
-
     /// Add an interior cycle
     fn add_interior(&mut self) -> Partial<Cycle>;
 
@@ -59,45 +32,6 @@ pub trait FaceBuilder {
 }
 
 impl FaceBuilder for PartialFace {
-    fn connect_to_open_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SizePlusOne<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>,
-    {
-        // We need to create the additional half-edge last, but at the same time
-        // need to provide it to the `map_plus_one` method first. Really no
-        // choice but to create them all in one go, as we do here.
-        let mut half_edges = VecDeque::new();
-        for _ in 0..edges.num_objects() {
-            half_edges.push_back(self.exterior.write().add_half_edge());
-        }
-        let additional_half_edge = self.exterior.write().add_half_edge();
-
-        edges.map_plus_one(additional_half_edge, |other| {
-            let mut this = half_edges.pop_front().expect(
-                "Pushed correct number of half-edges; should be able to pop",
-            );
-            this.write().update_from_other_edge(&other);
-            this
-        })
-    }
-
-    fn connect_to_closed_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SameSize<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>,
-    {
-        edges.map(|other| {
-            let mut this = self.exterior.write().add_half_edge();
-            this.write().update_from_other_edge(&other);
-            this
-        })
-    }
-
     fn add_interior(&mut self) -> Partial<Cycle> {
         let cycle = Partial::from_partial(PartialCycle {
             surface: self.exterior.read().surface.clone(),
@@ -125,7 +59,7 @@ impl FaceBuilder for PartialFace {
             })
             .collect::<VecDeque<_>>();
 
-        let (first_three_vertices, surface) = {
+        let (significant_vertices, surface) = {
             let first_three_vertices = array::from_fn(|_| {
                 vertices
                     .pop_front()
@@ -153,7 +87,7 @@ impl FaceBuilder for PartialFace {
             });
 
         for (mut surface_vertex, point) in
-            first_three_vertices.into_iter().chain(rest_of_vertices)
+            significant_vertices.into_iter().chain(rest_of_vertices)
         {
             surface_vertex.write().position = Some(point);
         }
@@ -173,7 +107,7 @@ impl FaceBuilder for PartialFace {
                     MaybeSurfacePath::Defined(_) => {
                         // Path is already defined. Nothing to infer.
                     }
-                    MaybeSurfacePath::UndefinedCircle => todo!(
+                    MaybeSurfacePath::UndefinedCircle { .. } => todo!(
                         "Inferring undefined circles is not supported yet"
                     ),
                     MaybeSurfacePath::UndefinedLine => {

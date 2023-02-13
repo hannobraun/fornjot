@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
@@ -76,6 +78,33 @@ pub trait CycleBuilder {
         &mut self,
         points: [impl Into<Point<3>>; 3],
     ) -> [Partial<HalfEdge>; 3];
+
+    /// Connect the cycle to the provided half-edges
+    ///
+    /// Assumes that the provided half-edges, once translated into local
+    /// equivalents of this cycle, will not form a cycle themselves.
+    ///
+    /// Returns the local equivalents of the provided half-edges and, as the
+    /// last entry, an additional half-edge that closes the cycle.
+    fn connect_to_open_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SizePlusOne<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>;
+
+    /// Connect the cycles to the provided half-edges
+    ///
+    /// Assumes that the provided half-edges, once translated into local
+    /// equivalents of this cycle, form a cycle themselves.
+    ///
+    /// Returns the local equivalents of the provided half-edges.
+    fn connect_to_closed_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SameSize<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>;
 }
 
 impl CycleBuilder for PartialCycle {
@@ -196,5 +225,44 @@ impl CycleBuilder for PartialCycle {
         }
 
         half_edges
+    }
+
+    fn connect_to_open_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SizePlusOne<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>,
+    {
+        // We need to create the additional half-edge last, but at the same time
+        // need to provide it to the `map_plus_one` method first. Really no
+        // choice but to create them all in one go, as we do here.
+        let mut half_edges = VecDeque::new();
+        for _ in 0..edges.num_objects() {
+            half_edges.push_back(self.add_half_edge());
+        }
+        let additional_half_edge = self.add_half_edge();
+
+        edges.map_plus_one(additional_half_edge, |other| {
+            let mut this = half_edges.pop_front().expect(
+                "Pushed correct number of half-edges; should be able to pop",
+            );
+            this.write().update_from_other_edge(&other);
+            this
+        })
+    }
+
+    fn connect_to_closed_edges<O>(
+        &mut self,
+        edges: O,
+    ) -> O::SameSize<Partial<HalfEdge>>
+    where
+        O: ObjectArgument<Partial<HalfEdge>>,
+    {
+        edges.map(|other| {
+            let mut this = self.add_half_edge();
+            this.write().update_from_other_edge(&other);
+            this
+        })
     }
 }

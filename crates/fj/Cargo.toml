@@ -12,7 +12,7 @@ categories.workspace = true
 
 
 [build-dependencies]
-anyhow = "1.0.68"
+anyhow = "1.0.69"
 
 
 [dependencies]
@@ -24,4 +24,4 @@ features = ["derive"]
 optional = true
 
 [dev-dependencies]
-serde_json = "1.0.89"
+serde_json = "1.0.93"
