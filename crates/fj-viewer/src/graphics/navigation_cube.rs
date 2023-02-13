@@ -1,7 +1,10 @@
 use fj_math::Transform;
 use wgpu::util::DeviceExt;
 
-use super::model::{self, load_model, DrawModel, Model};
+use super::{
+    model::{self, load_model, DrawModel, Model},
+    transform,
+};
 
 #[derive(Debug)]
 pub struct NavigationCubeRenderer {
@@ -19,7 +22,6 @@ impl NavigationCubeRenderer {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         config: &wgpu::SurfaceConfiguration,
-        aspect_ratio: f64,
     ) -> Self {
         let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -48,13 +50,12 @@ impl NavigationCubeRenderer {
                 label: Some("texture_bind_group_layout"),
             });
 
-        let mvp_matrix =
-            Self::get_mvp_matrix(Transform::identity(), aspect_ratio);
-
         let mvp_matrix_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: Some("Model Matrix Buffer"),
-                contents: bytemuck::cast_slice(&[mvp_matrix]),
+                contents: bytemuck::cast_slice(&[
+                    transform::Transform::identity(),
+                ]),
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
             });
