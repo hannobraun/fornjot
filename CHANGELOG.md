@@ -1,5 +1,42 @@
 # Fornjot - Changelog
 
+## v0.36.0 (2023-02-13)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Don't abort application, if model code panics ([#1534]; thank you, [@mxdamien]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Make various fixes and small updates in builder API ([#1572])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1560], [#1561], [#1562], [#1563], [#1564], [#1566], [#1567])
+- Upgrade to Rust 1.67.1 ([#1574])
+
+[#1534]: https://github.com/hannobraun/Fornjot/pull/1534
+[#1560]: https://github.com/hannobraun/Fornjot/pull/1560
+[#1561]: https://github.com/hannobraun/Fornjot/pull/1561
+[#1562]: https://github.com/hannobraun/Fornjot/pull/1562
+[#1563]: https://github.com/hannobraun/Fornjot/pull/1563
+[#1564]: https://github.com/hannobraun/Fornjot/pull/1564
+[#1566]: https://github.com/hannobraun/Fornjot/pull/1566
+[#1567]: https://github.com/hannobraun/Fornjot/pull/1567
+[#1572]: https://github.com/hannobraun/Fornjot/pull/1572
+[#1574]: https://github.com/hannobraun/Fornjot/pull/1574
+
+[@mxdamien]: https://github.com/mxdamien
+
+
 ## v0.35.0 (2023-02-06)
 
 ### End-user improvements
