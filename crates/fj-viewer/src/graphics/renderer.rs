@@ -186,12 +186,8 @@ impl Renderer {
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
-        let navigation_cube_renderer = NavigationCubeRenderer::new(
-            &device,
-            &queue,
-            &surface_config,
-            800.0 / 600.0,
-        );
+        let navigation_cube_renderer =
+            NavigationCubeRenderer::new(&device, &queue, &surface_config);
 
         Ok(Self {
             surface,
