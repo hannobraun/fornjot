@@ -23,7 +23,6 @@ tobj = "3.2.4"
 raw-window-handle = "0.5.0"
 thiserror = "1.0.35"
 tracing = "0.1.37"
-wgpu_glyph = "0.18.0"
 
 [dependencies.image]
 version = "0.24"
