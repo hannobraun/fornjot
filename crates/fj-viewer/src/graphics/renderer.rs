@@ -3,7 +3,6 @@ use std::{io, mem::size_of};
 use thiserror::Error;
 use tracing::debug;
 use wgpu::util::DeviceExt as _;
-use wgpu_glyph::ab_glyph::InvalidFont;
 
 use crate::{
     camera::Camera,
@@ -420,12 +419,6 @@ pub enum RendererInitError {
     /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
     #[error("Error requesting device: {0}")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
-
-    /// Error loading font
-    ///
-    /// See: [ab_glyph::InvalidFont](https://docs.rs/ab_glyph/latest/ab_glyph/struct.InvalidFont.html)
-    #[error("Error loading font: {0}")]
-    InvalidFont(#[from] InvalidFont),
 }
 
 /// Graphics rendering error
