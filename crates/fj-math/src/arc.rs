@@ -56,7 +56,6 @@ impl Arc {
             (Scalar::ONE, Scalar::ZERO)
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
-        // distance from center to midpoint between endpoints
         let distance_center_to_midpoint =
             (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
         // (u, v) is the unit normal in the direction of p1 - p0
