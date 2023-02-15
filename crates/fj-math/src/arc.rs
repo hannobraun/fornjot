@@ -53,7 +53,6 @@ impl Arc {
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
         // distance between endpoints
         let d = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
-        // radius
         let radius = d / (2. * (angle_rad.into_f64() / 2.).sin());
         // distance from center to midpoint between endpoints
         let h = (radius.powi(2) - (d.powi(2) / 4.)).sqrt();
