@@ -123,11 +123,17 @@ mod tests {
         );
     }
 
-    fn check_arc_calculation(center: [f64; 2], radius: f64, a0: f64, a1: f64) {
+    fn check_arc_calculation(
+        center: impl Into<Point<2>>,
+        radius: f64,
+        a0: f64,
+        a1: f64,
+    ) {
+        let center = center.into();
         let angle = a1 - a0;
 
-        let p0 = [center[0] + radius * a0.cos(), center[1] + radius * a0.sin()];
-        let p1 = [center[0] + radius * a1.cos(), center[1] + radius * a1.sin()];
+        let p0 = [center.u + radius * a0.cos(), center.v + radius * a0.sin()];
+        let p1 = [center.u + radius * a1.cos(), center.v + radius * a1.sin()];
 
         let arc = Arc::from_endpoints_and_angle(p0, p1, Scalar::from(angle));
 
@@ -137,7 +143,7 @@ mod tests {
         dbg!(arc.start_angle);
         dbg!(arc.end_angle);
         dbg!(arc.flipped_construction);
-        assert_abs_diff_eq!(arc.center, Point::from(center), epsilon = epsilon);
+        assert_abs_diff_eq!(arc.center, center, epsilon = epsilon);
         assert_abs_diff_eq!(
             arc.radius,
             Scalar::from(radius),
