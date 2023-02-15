@@ -27,14 +27,14 @@ impl Arc {
     pub fn from_endpoints_and_angle(
         p0: impl Into<Point<2>>,
         p1: impl Into<Point<2>>,
-        angle: Scalar,
+        angle_rad: Scalar,
     ) -> Self {
         use num_traits::Float;
 
         let (p0, p1) = (p0.into(), p1.into());
 
-        let flipped_construction = angle <= Scalar::ZERO;
-        let angle_rad = angle.abs();
+        let flipped_construction = angle_rad <= Scalar::ZERO;
+        let angle_rad = angle_rad.abs();
 
         let [p0, p1] = if flipped_construction {
             [p1, p0]
