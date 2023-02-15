@@ -2,12 +2,6 @@ use crate::{Point, Scalar};
 
 /// Calculated geometry that is useful when dealing with an arc
 pub struct Arc {
-    /// Start point of the arc
-    pub start: Point<2>,
-
-    /// End point of the arc
-    pub end: Point<2>,
-
     /// Center of the circle the arc is constructed on
     pub center: Point<2>,
 
@@ -70,8 +64,6 @@ impl Arc {
         let start_angle = (y0 - cy).atan2(x0 - cx);
         let end_angle = (y1 - cy).atan2(x1 - cx) + end_angle_offset;
         Self {
-            start: p0,
-            end: p1,
             center: Point::from([cx, cy]),
             radius: r,
             start_angle,
