@@ -115,6 +115,7 @@ impl<const D: usize> Line<D> {
     /// Create a new instance that is reversed
     #[must_use]
     pub fn reverse(mut self) -> Self {
+        self.origin += self.direction;
         self.direction = -self.direction;
         self
     }

@@ -181,7 +181,7 @@ impl Gui {
                         && self.options.show_debug_text_example
                     {
                         let hover_pos =
-                            ui.input().pointer.hover_pos().unwrap_or_default();
+                            ui.input(|input| input.pointer.hover_pos().unwrap_or_default());
                         ui.painter().debug_text(
                             hover_pos,
                             egui::Align2::LEFT_TOP,
