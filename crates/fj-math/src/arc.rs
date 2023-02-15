@@ -52,7 +52,6 @@ impl Arc {
             (Scalar::ONE, Scalar::ZERO)
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
-        // distance between endpoints
         let distance_between_endpoints = (p1 - p0).magnitude();
         let radius = distance_between_endpoints
             / (2. * (angle_rad.into_f64() / 2.).sin());
