@@ -323,6 +323,15 @@ where
     }
 }
 
+impl<S, const D: usize> ops::MulAssign<S> for Vector<D>
+where
+    S: Into<Scalar>,
+{
+    fn mul_assign(&mut self, rhs: S) {
+        *self = *self * rhs;
+    }
+}
+
 impl<S, const D: usize> ops::Div<S> for Vector<D>
 where
     S: Into<Scalar>,

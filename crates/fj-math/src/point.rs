@@ -164,6 +164,15 @@ where
     }
 }
 
+impl<V, const D: usize> ops::AddAssign<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    fn add_assign(&mut self, rhs: V) {
+        *self = *self + rhs;
+    }
+}
+
 impl<V, const D: usize> ops::Sub<V> for Point<D>
 where
     V: Into<Vector<D>>,
