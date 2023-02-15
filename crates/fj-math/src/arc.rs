@@ -38,6 +38,8 @@ impl Arc {
         // https://math.stackexchange.com/a/87374
 
         let distance_between_endpoints = (p1 - p0).magnitude();
+        let radius = distance_between_endpoints
+            / (2. * (angle_rad.abs().into_f64() / 2.).sin());
 
         let flipped_construction = angle_rad <= Scalar::ZERO;
         let angle_rad = angle_rad.abs();
@@ -54,8 +56,6 @@ impl Arc {
             (Scalar::ONE, Scalar::ZERO)
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
-        let radius = distance_between_endpoints
-            / (2. * (angle_rad.into_f64() / 2.).sin());
         // distance from center to midpoint between endpoints
         let h =
             (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
