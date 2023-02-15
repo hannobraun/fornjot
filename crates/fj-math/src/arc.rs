@@ -57,7 +57,6 @@ impl Arc {
         } else {
             (Scalar::ONE, Scalar::ZERO)
         };
-        let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
         let unit_vector_p0_to_p1 =
             (p1 - p0) / distance_between_endpoints * uv_factor;
         let unit_vector_midpoint_to_center =
@@ -66,8 +65,14 @@ impl Arc {
             coords: (p0.coords + p1.coords) / 2.
                 + unit_vector_midpoint_to_center * distance_center_to_midpoint,
         };
-        let start_angle = (y0 - center.v).atan2(x0 - center.u);
-        let end_angle = (y1 - center.v).atan2(x1 - center.u) + end_angle_offset;
+        let start_angle = {
+            let center_to_start = p0 - center;
+            center_to_start.v.atan2(center_to_start.u)
+        };
+        let end_angle = {
+            let center_to_end = p1 - center;
+            center_to_end.v.atan2(center_to_end.u) + end_angle_offset
+        };
         Self {
             center,
             radius,
