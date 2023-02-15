@@ -54,9 +54,9 @@ impl Arc {
         // distance between endpoints
         let d = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
         // radius
-        let r = d / (2. * (angle_rad.into_f64() / 2.).sin());
+        let radius = d / (2. * (angle_rad.into_f64() / 2.).sin());
         // distance from center to midpoint between endpoints
-        let h = (r.powi(2) - (d.powi(2) / 4.)).sqrt();
+        let h = (radius.powi(2) - (d.powi(2) / 4.)).sqrt();
         // (u, v) is the unit normal in the direction of p1 - p0
         let u = (x1 - x0) / d * uv_factor;
         let v = (y1 - y0) / d * uv_factor;
@@ -67,7 +67,7 @@ impl Arc {
         let end_angle = (y1 - cy).atan2(x1 - cx) + end_angle_offset;
         Self {
             center: Point::from([cx, cy]),
-            radius: r,
+            radius,
             start_angle,
             end_angle,
             flipped_construction,
