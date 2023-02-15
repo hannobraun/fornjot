@@ -59,11 +59,13 @@ impl Arc {
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
         // (u, v) is the unit normal in the direction of p1 - p0
-        let u = (x1 - x0) / distance_between_endpoints * uv_factor;
-        let v = (y1 - y0) / distance_between_endpoints * uv_factor;
+        let unit_vector_p0_to_p1 =
+            (p1 - p0) / distance_between_endpoints * uv_factor;
         // (cx, cy) is the center of the circle
-        let cx = ((x0 + x1) / 2.) - distance_center_to_midpoint * v;
-        let cy = ((y0 + y1) / 2.) + distance_center_to_midpoint * u;
+        let cx = ((x0 + x1) / 2.)
+            - distance_center_to_midpoint * unit_vector_p0_to_p1.v;
+        let cy = ((y0 + y1) / 2.)
+            + distance_center_to_midpoint * unit_vector_p0_to_p1.u;
         let start_angle = (y0 - cy).atan2(x0 - cx);
         let end_angle = (y1 - cy).atan2(x1 - cx) + end_angle_offset;
         Self {
