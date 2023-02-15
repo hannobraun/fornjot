@@ -139,7 +139,6 @@ mod tests {
 
         let epsilon = Scalar::default_epsilon() * 10.;
 
-        dbg!(center, arc.center);
         dbg!(arc.start_angle);
         dbg!(arc.end_angle);
         dbg!(arc.flipped_construction);
