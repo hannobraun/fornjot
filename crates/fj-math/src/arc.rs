@@ -83,7 +83,7 @@ impl Arc {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Point, Scalar};
+    use crate::{Point, Scalar, Vector};
 
     use super::Arc;
 
@@ -132,8 +132,8 @@ mod tests {
         let center = center.into();
         let angle = a1 - a0;
 
-        let p0 = [center.u + radius * a0.cos(), center.v + radius * a0.sin()];
-        let p1 = [center.u + radius * a1.cos(), center.v + radius * a1.sin()];
+        let p0 = center + Vector::from([a0.cos(), a0.sin()]) * radius;
+        let p1 = center + Vector::from([a1.cos(), a1.sin()]) * radius;
 
         let arc = Arc::from_endpoints_and_angle(p0, p1, Scalar::from(angle));
 
