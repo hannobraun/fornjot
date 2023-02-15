@@ -87,7 +87,7 @@ mod tests {
 
     use super::Arc;
 
-    use approx::AbsDiffEq;
+    use approx::{assert_abs_diff_eq, AbsDiffEq};
 
     fn check_arc_calculation(center: [f64; 2], radius: f64, a0: f64, a1: f64) {
         let angle = a1 - a0;
@@ -103,17 +103,37 @@ mod tests {
         dbg!(arc.start_angle);
         dbg!(arc.end_angle);
         dbg!(arc.flipped_construction);
-        assert!(arc.center.abs_diff_eq(&Point::from(center), epsilon));
-        assert!(arc.radius.abs_diff_eq(&Scalar::from(radius), epsilon));
+        assert_abs_diff_eq!(arc.center, Point::from(center), epsilon = epsilon);
+        assert_abs_diff_eq!(
+            arc.radius,
+            Scalar::from(radius),
+            epsilon = epsilon
+        );
 
         if a0 < a1 {
             assert!(!arc.flipped_construction);
-            assert!(arc.start_angle.abs_diff_eq(&Scalar::from(a0), epsilon));
-            assert!(arc.end_angle.abs_diff_eq(&Scalar::from(a1), epsilon));
+            assert_abs_diff_eq!(
+                arc.start_angle,
+                Scalar::from(a0),
+                epsilon = epsilon
+            );
+            assert_abs_diff_eq!(
+                arc.end_angle,
+                Scalar::from(a1),
+                epsilon = epsilon
+            );
         } else {
             assert!(arc.flipped_construction);
-            assert!(arc.end_angle.abs_diff_eq(&Scalar::from(a0), epsilon));
-            assert!(arc.start_angle.abs_diff_eq(&Scalar::from(a1), epsilon));
+            assert_abs_diff_eq!(
+                arc.end_angle,
+                Scalar::from(a0),
+                epsilon = epsilon
+            );
+            assert_abs_diff_eq!(
+                arc.start_angle,
+                Scalar::from(a1),
+                epsilon = epsilon
+            );
         }
     }
 
