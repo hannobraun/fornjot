@@ -62,7 +62,6 @@ impl Arc {
             (p1 - p0) / distance_between_endpoints * uv_factor;
         let unit_vector_midpoint_to_center =
             Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
-        // (cx, cy) is the center of the circle
         let center = Point {
             coords: (p0.coords + p1.coords) / 2.
                 + unit_vector_midpoint_to_center * distance_center_to_midpoint,
