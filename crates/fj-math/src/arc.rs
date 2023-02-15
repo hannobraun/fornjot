@@ -4,20 +4,26 @@ use crate::{Point, Scalar};
 pub struct Arc {
     /// Start point of the arc
     pub start: Point<2>,
+
     /// End point of the arc
     pub end: Point<2>,
+
     /// Center of the circle the arc is constructed on
     pub center: Point<2>,
+
     /// Radius of the circle the arc is constructed on
     pub radius: Scalar,
+
     /// Angle of `start` relative to `center`, in radians
     ///
     /// Guaranteed to be less than `end_angle`.
     pub start_angle: Scalar,
+
     /// Angle of `end` relative to `center`, in radians
     ///
     /// Guaranteed to be greater than `end_angle`.
     pub end_angle: Scalar,
+
     /// True if `start` and `end` were switched to ensure `end_angle` > `start_angle`
     pub flipped_construction: bool,
 }
