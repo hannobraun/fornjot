@@ -53,13 +53,15 @@ impl Arc {
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
         // distance between endpoints
-        let d = (p1 - p0).magnitude();
-        let radius = d / (2. * (angle_rad.into_f64() / 2.).sin());
+        let distance_between_endpoints = (p1 - p0).magnitude();
+        let radius = distance_between_endpoints
+            / (2. * (angle_rad.into_f64() / 2.).sin());
         // distance from center to midpoint between endpoints
-        let h = (radius.powi(2) - (d.powi(2) / 4.)).sqrt();
+        let h =
+            (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
         // (u, v) is the unit normal in the direction of p1 - p0
-        let u = (x1 - x0) / d * uv_factor;
-        let v = (y1 - y0) / d * uv_factor;
+        let u = (x1 - x0) / distance_between_endpoints * uv_factor;
+        let v = (y1 - y0) / distance_between_endpoints * uv_factor;
         // (cx, cy) is the center of the circle
         let cx = ((x0 + x1) / 2.) - h * v;
         let cy = ((y0 + y1) / 2.) + h * u;
