@@ -1,3 +1,5 @@
+use num_traits::Float;
+
 use crate::{Point, Scalar};
 
 /// Calculated geometry that is useful when dealing with an arc
@@ -29,8 +31,6 @@ impl Arc {
         p1: impl Into<Point<2>>,
         angle_rad: Scalar,
     ) -> Self {
-        use num_traits::Float;
-
         let (p0, p1) = (p0.into(), p1.into());
 
         let flipped_construction = angle_rad <= Scalar::ZERO;
