@@ -89,6 +89,40 @@ mod tests {
 
     use approx::{assert_abs_diff_eq, AbsDiffEq};
 
+    #[test]
+    fn arc_construction() {
+        check_arc_calculation(
+            [0., 0.],
+            1.,
+            0_f64.to_radians(),
+            90_f64.to_radians(),
+        );
+        check_arc_calculation(
+            [-4., 2.],
+            1.5,
+            5_f64.to_radians(),
+            -5_f64.to_radians(),
+        );
+        check_arc_calculation(
+            [3., 8.],
+            3.,
+            0_f64.to_radians(),
+            100_f64.to_radians(),
+        );
+        check_arc_calculation(
+            [1., -1.],
+            1.,
+            90_f64.to_radians(),
+            180_f64.to_radians(),
+        );
+        check_arc_calculation(
+            [0., 0.],
+            1.,
+            0_f64.to_radians(),
+            270_f64.to_radians(),
+        );
+    }
+
     fn check_arc_calculation(center: [f64; 2], radius: f64, a0: f64, a1: f64) {
         let angle = a1 - a0;
 
@@ -135,39 +169,5 @@ mod tests {
                 epsilon = epsilon
             );
         }
-    }
-
-    #[test]
-    fn arc_construction() {
-        check_arc_calculation(
-            [0., 0.],
-            1.,
-            0_f64.to_radians(),
-            90_f64.to_radians(),
-        );
-        check_arc_calculation(
-            [-4., 2.],
-            1.5,
-            5_f64.to_radians(),
-            -5_f64.to_radians(),
-        );
-        check_arc_calculation(
-            [3., 8.],
-            3.,
-            0_f64.to_radians(),
-            100_f64.to_radians(),
-        );
-        check_arc_calculation(
-            [1., -1.],
-            1.,
-            90_f64.to_radians(),
-            180_f64.to_radians(),
-        );
-        check_arc_calculation(
-            [0., 0.],
-            1.,
-            0_f64.to_radians(),
-            270_f64.to_radians(),
-        );
     }
 }
