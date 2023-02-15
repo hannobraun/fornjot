@@ -31,6 +31,9 @@ impl Arc {
         p1: impl Into<Point<2>>,
         angle_rad: Scalar,
     ) -> Self {
+        // This is an implementation of this solution:
+        // https://math.stackexchange.com/a/87374
+
         let (p0, p1) = (p0.into(), p1.into());
 
         let flipped_construction = angle_rad <= Scalar::ZERO;
@@ -48,7 +51,6 @@ impl Arc {
             (Scalar::ONE, Scalar::ZERO)
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
-        // https://math.stackexchange.com/questions/27535/how-to-find-center-of-an-arc-given-start-point-end-point-radius-and-arc-direc
         // distance between endpoints
         let d = ((x1 - x0).powi(2) + (y1 - y0).powi(2)).sqrt();
         // radius
