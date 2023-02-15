@@ -31,10 +31,11 @@ impl Arc {
         p1: impl Into<Point<2>>,
         angle_rad: Scalar,
     ) -> Self {
+        let p0 = p0.into();
+        let p1 = p1.into();
+
         // This is an implementation of this solution:
         // https://math.stackexchange.com/a/87374
-
-        let (p0, p1) = (p0.into(), p1.into());
 
         let flipped_construction = angle_rad <= Scalar::ZERO;
         let angle_rad = angle_rad.abs();
