@@ -1,6 +1,6 @@
 use num_traits::Float;
 
-use crate::{Point, Scalar};
+use crate::{Point, Scalar, Vector};
 
 /// Calculated geometry that is useful when dealing with an arc
 pub struct Arc {
@@ -60,11 +60,13 @@ impl Arc {
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
         let unit_vector_p0_to_p1 =
             (p1 - p0) / distance_between_endpoints * uv_factor;
+        let unit_vector_midpoint_to_center =
+            Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
         // (cx, cy) is the center of the circle
         let cx = ((x0 + x1) / 2.)
-            - distance_center_to_midpoint * unit_vector_p0_to_p1.v;
+            + distance_center_to_midpoint * unit_vector_midpoint_to_center.u;
         let cy = ((y0 + y1) / 2.)
-            + distance_center_to_midpoint * unit_vector_p0_to_p1.u;
+            + distance_center_to_midpoint * unit_vector_midpoint_to_center.v;
         let start_angle = (y0 - cy).atan2(x0 - cx);
         let end_angle = (y1 - cy).atan2(x1 - cx) + end_angle_offset;
         Self {
