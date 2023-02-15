@@ -58,7 +58,6 @@ impl Arc {
             (Scalar::ONE, Scalar::ZERO)
         };
         let [[x0, y0], [x1, y1]] = [p0, p1].map(|p| p.coords.components);
-        // (u, v) is the unit normal in the direction of p1 - p0
         let unit_vector_p0_to_p1 =
             (p1 - p0) / distance_between_endpoints * uv_factor;
         // (cx, cy) is the center of the circle
