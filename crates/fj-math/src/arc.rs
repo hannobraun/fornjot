@@ -63,14 +63,14 @@ impl Arc {
         let unit_vector_midpoint_to_center =
             Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
         // (cx, cy) is the center of the circle
-        let cx = ((x0 + x1) / 2.)
-            + distance_center_to_midpoint * unit_vector_midpoint_to_center.u;
-        let cy = ((y0 + y1) / 2.)
-            + distance_center_to_midpoint * unit_vector_midpoint_to_center.v;
-        let start_angle = (y0 - cy).atan2(x0 - cx);
-        let end_angle = (y1 - cy).atan2(x1 - cx) + end_angle_offset;
+        let center = Point {
+            coords: (p0.coords + p1.coords) / 2.
+                + unit_vector_midpoint_to_center * distance_center_to_midpoint,
+        };
+        let start_angle = (y0 - center.v).atan2(x0 - center.u);
+        let end_angle = (y1 - center.v).atan2(x1 - center.u) + end_angle_offset;
         Self {
-            center: Point::from([cx, cy]),
+            center,
             radius,
             start_angle,
             end_angle,
