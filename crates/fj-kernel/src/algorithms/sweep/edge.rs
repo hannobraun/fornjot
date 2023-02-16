@@ -197,7 +197,7 @@ mod tests {
             };
             let side_up = {
                 let mut side_up = PartialHalfEdge::default();
-                side_up.curve.write().surface = surface.clone();
+                side_up.replace_surface(surface.clone());
 
                 {
                     let [back, front] = side_up
@@ -209,7 +209,6 @@ mod tests {
 
                     let mut front = front.write();
                     front.position = Some([1., 1.].into());
-                    front.surface = surface.clone();
                 }
 
                 side_up.infer_global_form();
@@ -219,7 +218,7 @@ mod tests {
             };
             let top = {
                 let mut top = PartialHalfEdge::default();
-                top.curve.write().surface = surface.clone();
+                top.replace_surface(surface.clone());
 
                 {
                     let [(back, back_surface), (front, front_surface)] =
@@ -231,7 +230,6 @@ mod tests {
                     *front = Some(Point::from([0.]));
                     let mut front_surface = front_surface.write();
                     front_surface.position = Some([0., 1.].into());
-                    front_surface.surface = surface.clone();
                 }
 
                 top.infer_global_form();
@@ -246,7 +244,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge::default();
-                side_down.curve.write().surface = surface;
+                side_down.replace_surface(surface);
 
                 let [(back, back_surface), (front, front_surface)] =
                     side_down.vertices.each_mut_ext();
