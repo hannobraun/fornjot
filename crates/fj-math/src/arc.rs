@@ -31,10 +31,10 @@ impl Arc {
         // https://math.stackexchange.com/a/87374
 
         let distance_between_endpoints = (p1 - p0).magnitude();
+        let more_than_half_turn = angle_rad.abs() > Scalar::PI;
+
         let radius = distance_between_endpoints
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
-
-        let more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
         let center = {
             let clockwise_turn = angle_rad <= Scalar::ZERO;
