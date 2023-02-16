@@ -11,13 +11,9 @@ pub struct Arc {
     pub radius: Scalar,
 
     /// Angle of `start` relative to `center`, in radians
-    ///
-    /// Guaranteed to be less than `end_angle`.
     pub start_angle: Scalar,
 
     /// Angle of `end` relative to `center`, in radians
-    ///
-    /// Guaranteed to be greater than `end_angle`.
     pub end_angle: Scalar,
 }
 
