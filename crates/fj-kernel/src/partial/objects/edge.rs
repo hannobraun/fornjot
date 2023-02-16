@@ -98,12 +98,12 @@ impl PartialObject for PartialHalfEdge {
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
+        let surface = Partial::new();
+
         let curve = Partial::<Curve>::new();
         let vertices = array::from_fn(|_| {
-            let surface = Partial::new();
-
             let surface_form = Partial::from_partial(PartialSurfaceVertex {
-                surface,
+                surface: surface.clone(),
                 ..Default::default()
             });
 
