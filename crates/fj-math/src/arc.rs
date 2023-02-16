@@ -19,9 +19,6 @@ pub struct Arc {
     ///
     /// Guaranteed to be greater than `end_angle`.
     pub end_angle: Scalar,
-
-    /// True if `start` and `end` were switched to ensure `end_angle` > `start_angle`
-    pub flipped_construction: bool,
 }
 
 impl Arc {
@@ -46,17 +43,15 @@ impl Arc {
         let flipped_construction = angle_rad <= Scalar::ZERO;
         let angle_rad = angle_rad.abs();
 
-        let [p0, p1] = if flipped_construction {
-            [p1, p0]
-        } else {
-            [p0, p1]
-        };
-
-        let (uv_factor, end_angle_offset) = if angle_rad > Scalar::PI {
+        let (mut uv_factor, end_angle_offset) = if angle_rad > Scalar::PI {
             (Scalar::from_f64(-1.), Scalar::TAU)
         } else {
             (Scalar::ONE, Scalar::ZERO)
         };
+        if flipped_construction {
+            uv_factor *= -1.;
+        }
+
         let unit_vector_p0_to_p1 =
             (p1 - p0) / distance_between_endpoints * uv_factor;
         let unit_vector_midpoint_to_center =
@@ -78,7 +73,6 @@ impl Arc {
             radius,
             start_angle,
             end_angle,
-            flipped_construction,
         }
     }
 }
@@ -143,7 +137,6 @@ mod tests {
 
         dbg!(arc.start_angle);
         dbg!(arc.end_angle);
-        dbg!(arc.flipped_construction);
         assert_abs_diff_eq!(arc.center, center, epsilon = epsilon);
         assert_abs_diff_eq!(
             arc.radius,
@@ -151,30 +144,11 @@ mod tests {
             epsilon = epsilon
         );
 
-        if a0 < a1 {
-            assert!(!arc.flipped_construction);
-            assert_abs_diff_eq!(
-                arc.start_angle,
-                Scalar::from(a0),
-                epsilon = epsilon
-            );
-            assert_abs_diff_eq!(
-                arc.end_angle,
-                Scalar::from(a1),
-                epsilon = epsilon
-            );
-        } else {
-            assert!(arc.flipped_construction);
-            assert_abs_diff_eq!(
-                arc.end_angle,
-                Scalar::from(a0),
-                epsilon = epsilon
-            );
-            assert_abs_diff_eq!(
-                arc.start_angle,
-                Scalar::from(a1),
-                epsilon = epsilon
-            );
-        }
+        assert_abs_diff_eq!(
+            arc.start_angle,
+            Scalar::from(a0),
+            epsilon = epsilon
+        );
+        assert_abs_diff_eq!(arc.end_angle, Scalar::from(a1), epsilon = epsilon);
     }
 }
