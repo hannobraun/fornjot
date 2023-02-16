@@ -38,14 +38,19 @@ impl Arc {
 
         let angle_more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
-        let (mut uv_factor, end_angle_offset) = if angle_more_than_half_turn {
-            (Scalar::from_f64(-1.), Scalar::TAU)
+        let uv_factor =
+            match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn) {
+                (false, false) => Scalar::ONE,
+                (false, true) => -Scalar::ONE,
+                (true, false) => -Scalar::ONE,
+                (true, true) => Scalar::ONE,
+            };
+
+        let end_angle_offset = if angle_more_than_half_turn {
+            Scalar::TAU
         } else {
-            (Scalar::ONE, Scalar::ZERO)
+            Scalar::ZERO
         };
-        if angle_rad <= Scalar::ZERO {
-            uv_factor *= -1.;
-        }
 
         let unit_vector_p0_to_p1 =
             (p1 - p0) / distance_between_endpoints * uv_factor;
