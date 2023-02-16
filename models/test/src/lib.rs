@@ -69,8 +69,8 @@ fn star(
         }
     }
 
-    let outer = fj::Sketch::from_segments(outer).with_color(color);
-    let inner = fj::Sketch::from_segments(inner);
+    let outer = fj::Sketch::from_segments(outer).unwrap().with_color(color);
+    let inner = fj::Sketch::from_segments(inner).unwrap();
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 

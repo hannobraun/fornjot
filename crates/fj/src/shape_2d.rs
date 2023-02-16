@@ -29,8 +29,8 @@ impl Shape2d {
 /// Convenient syntax for this operation is available through [`crate::syntax`].
 ///
 /// ``` rust
-/// # let a = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]);
-/// # let b = fj::Sketch::from_points(vec![[2., 0.], [3., 0.], [2., 1.]]);
+/// # let a = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]).unwrap();
+/// # let b = fj::Sketch::from_points(vec![[2., 0.], [3., 0.], [2., 1.]]).unwrap();
 /// use fj::syntax::*;
 ///
 /// // `a` and `b` can be anything that converts to `fj::Shape2d`
@@ -102,18 +102,28 @@ pub struct Sketch {
 
 impl Sketch {
     /// Create a sketch made of sketch segments
-    pub fn from_segments(segments: Vec<SketchSegment>) -> Self {
-        Self {
-            chain: Chain::PolyChain(PolyChain::from_segments(segments)),
-            color: [255, 0, 0, 255],
+    pub fn from_segments(segments: Vec<SketchSegment>) -> Option<Self> {
+        // TODO Returning an option is just a temporary solution, see: https://github.com/hannobraun/Fornjot/issues/1507
+        if segments.is_empty() {
+            None
+        } else {
+            Some(Self {
+                chain: Chain::PolyChain(PolyChain::from_segments(segments)),
+                color: [255, 0, 0, 255],
+            })
         }
     }
 
     /// Create a sketch made of straight lines from a bunch of points
-    pub fn from_points(points: Vec<[f64; 2]>) -> Self {
-        Self {
-            chain: Chain::PolyChain(PolyChain::from_points(points)),
-            color: [255, 0, 0, 255],
+    pub fn from_points(points: Vec<[f64; 2]>) -> Option<Self> {
+        if points.is_empty() {
+            // TODO Returning an option is just a temporary solution, see: https://github.com/hannobraun/Fornjot/issues/1507
+            None
+        } else {
+            Some(Self {
+                chain: Chain::PolyChain(PolyChain::from_points(points)),
+                color: [255, 0, 0, 255],
+            })
         }
     }
 

@@ -7,7 +7,7 @@ use crate::{Shape, Shape2d};
 /// Convenient syntax for this operation is available through [`crate::syntax`].
 ///
 /// ``` rust
-/// # let shape = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]);
+/// # let shape = fj::Sketch::from_points(vec![[0., 0.], [1., 0.], [0., 1.]]).unwrap();
 /// use fj::syntax::*;
 ///
 /// // `shape` can be anything that converts to `fj::Shape2d`

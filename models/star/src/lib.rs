@@ -29,8 +29,8 @@ pub fn model(
         inner.push([x / 2., y / 2.]);
     }
 
-    let outer = fj::Sketch::from_points(outer);
-    let inner = fj::Sketch::from_points(inner);
+    let outer = fj::Sketch::from_points(outer).unwrap();
+    let inner = fj::Sketch::from_points(inner).unwrap();
 
     let footprint = fj::Difference2d::from_shapes([outer.into(), inner.into()]);
 
