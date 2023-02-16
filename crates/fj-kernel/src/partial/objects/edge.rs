@@ -6,7 +6,7 @@ use fj_math::Point;
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        SurfaceVertex,
+        Surface, SurfaceVertex,
     },
     partial::{
         FullToPartialCache, Partial, PartialObject, PartialSurfaceVertex,
@@ -17,6 +17,9 @@ use crate::{
 /// A partial [`HalfEdge`]
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
+    /// The surface that the half-edge is defined in
+    pub surface: Partial<Surface>,
+
     /// The curve that the half-edge is defined in
     pub curve: Partial<Curve>,
 
@@ -35,6 +38,10 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
+            surface: Partial::from_full(
+                half_edge.curve().surface().clone(),
+                cache,
+            ),
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .boundary()
@@ -125,6 +132,7 @@ impl Default for PartialHalfEdge {
         });
 
         Self {
+            surface,
             curve,
             vertices,
             global_form,
