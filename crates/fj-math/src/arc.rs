@@ -64,14 +64,14 @@ impl Arc {
             center_to_start.v.atan2(center_to_start.u)
         };
         let end_angle = {
-            let center_to_end = p1 - center;
+            let from_center = p1 - center;
             let offset = if more_than_half_turn {
                 Scalar::TAU
             } else {
                 Scalar::ZERO
             };
 
-            center_to_end.v.atan2(center_to_end.u) + offset
+            from_center.v.atan2(from_center.u) + offset
         };
         Self {
             center,
