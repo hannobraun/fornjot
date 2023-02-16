@@ -34,10 +34,10 @@ impl Arc {
         let radius = distance_between_endpoints
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
 
-        let clockwise_turn = angle_rad <= Scalar::ZERO;
         let more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
         let center = {
+            let clockwise_turn = angle_rad <= Scalar::ZERO;
             let f = match (clockwise_turn, more_than_half_turn) {
                 (false, false) | (true, true) => Scalar::ONE,
                 (false, true) | (true, false) => -Scalar::ONE,
