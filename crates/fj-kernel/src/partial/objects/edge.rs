@@ -99,7 +99,7 @@ impl PartialObject for PartialHalfEdge {
         });
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(curve, vertices, global_form)
+        HalfEdge::new(curve.surface().clone(), curve, vertices, global_form)
     }
 }
 
