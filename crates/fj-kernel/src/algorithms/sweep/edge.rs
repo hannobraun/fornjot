@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
@@ -34,7 +36,8 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         // be created by sweeping a curve, so let's sweep the curve of the edge
         // we're sweeping.
         face.exterior.write().surface = Partial::from(
-            edge.curve().clone().sweep_with_cache(path, cache, objects),
+            (edge.curve().clone(), edge.surface().deref())
+                .sweep_with_cache(path, cache, objects),
         );
 
         // Now we're ready to create the edges.
