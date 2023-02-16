@@ -80,10 +80,10 @@ impl PartialObject for PartialHalfEdge {
             // Infer global position, if not available.
             let position_global = vertex.1.read().global_form.read().position;
             if position_global.is_none() {
-                let surface = curve.surface().geometry();
-
-                let position_global =
-                    surface.point_from_surface_coords(position_surface);
+                let position_global = curve
+                    .surface()
+                    .geometry()
+                    .point_from_surface_coords(position_surface);
                 vertex.1.write().global_form.write().position =
                     Some(position_global);
             }
