@@ -198,7 +198,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self.curve.write().path =
             other.read().curve.read().path.as_ref().and_then(|path| {
-                match other.read().curve.read().surface.read().geometry {
+                match other.read().surface.read().geometry {
                     Some(surface) => {
                         // We have information about the other edge's surface
                         // available. We need to use that to interpret what the
