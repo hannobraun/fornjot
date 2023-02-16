@@ -1,14 +1,10 @@
 use fj_interop::{ext::ArrayExt, mesh::Color};
-use fj_math::{Line, Scalar, Vector};
-use iter_fixed::IntoIteratorFixed;
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    algorithms::{reverse::Reverse, transform::TransformObject},
-    geometry::path::SurfacePath,
+    builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{
-        Curve, Cycle, Face, GlobalEdge, HalfEdge, Objects, SurfaceVertex,
-    },
+    objects::{Face, HalfEdge, Objects},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -17,7 +13,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for (Handle<HalfEdge>, Color) {
-    type Swept = Handle<Face>;
+    type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
         self,
@@ -28,156 +24,135 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         let (edge, color) = self;
         let path = path.into();
 
-        let surface =
-            edge.curve().clone().sweep_with_cache(path, cache, objects);
-
-        // We can't use the edge we're sweeping from as the bottom edge, as that
-        // is not defined in the right surface. Let's create a new bottom edge,
-        // by swapping the surface of the original.
-        let bottom_edge = {
-            let points_curve_and_surface = edge
-                .boundary()
-                .map(|point| (point, [point.t, Scalar::ZERO]));
-
-            let curve = {
-                // Please note that creating a line here is correct, even if the
-                // global curve is a circle. Projected into the side surface, it
-                // is going to be a line either way.
-                let path =
-                    SurfacePath::Line(Line::from_points_with_line_coords(
-                        points_curve_and_surface,
-                    ));
-
-                Curve::new(
-                    surface.clone(),
-                    path,
-                    edge.curve().global_form().clone(),
-                )
-                .insert(objects)
-            };
-
-            let boundary = {
-                let points_surface = points_curve_and_surface
-                    .map(|(_, point_surface)| point_surface);
-
-                edge.boundary()
-                    .zip_ext(edge.surface_vertices())
-                    .into_iter_fixed()
-                    .zip(points_surface)
-                    .collect::<[_; 2]>()
-                    .map(|((point, surface_vertex), point_surface)| {
-                        let surface_vertex = SurfaceVertex::new(
-                            point_surface,
-                            surface.clone(),
-                            surface_vertex.global_form().clone(),
-                        )
-                        .insert(objects);
-
-                        (point, surface_vertex)
-                    })
-            };
-
-            HalfEdge::new(curve, boundary, edge.global_form().clone())
-                .insert(objects)
-        };
-
-        let side_edges = bottom_edge
-            .boundary()
-            .zip_ext(bottom_edge.surface_vertices())
-            .map(|(point, surface_vertex)| {
-                (point, surface_vertex.clone(), surface.clone())
-                    .sweep_with_cache(path, cache, objects)
-            });
-
-        let top_edge = {
-            let surface_vertices = side_edges.clone().map(|edge| {
-                let [_, surface_vertex] = edge.surface_vertices();
-                surface_vertex.clone()
-            });
-
-            let points_curve_and_surface = bottom_edge
-                .boundary()
-                .map(|point| (point, [point.t, Scalar::ONE]));
-
-            let curve = {
-                let global = bottom_edge
-                    .curve()
-                    .global_form()
-                    .clone()
-                    .translate(path, objects);
-
-                // Please note that creating a line here is correct, even if the
-                // global curve is a circle. Projected into the side surface, it
-                // is going to be a line either way.
-                let path =
-                    SurfacePath::Line(Line::from_points_with_line_coords(
-                        points_curve_and_surface,
-                    ));
-
-                Curve::new(surface, path, global).insert(objects)
-            };
-
-            let global = GlobalEdge::new(
-                curve.global_form().clone(),
-                surface_vertices
-                    .clone()
-                    .map(|surface_vertex| surface_vertex.global_form().clone()),
-            )
-            .insert(objects);
-
-            let boundary = bottom_edge
-                .boundary()
-                .into_iter_fixed()
-                .zip(surface_vertices)
-                .collect::<[_; 2]>();
-
-            HalfEdge::new(curve, boundary, global).insert(objects)
-        };
-
-        let cycle = {
-            let a = bottom_edge;
-            let [d, b] = side_edges;
-            let c = top_edge;
-
-            let mut edges = [a, b, c, d];
-
-            // Make sure that edges are oriented correctly.
-            let mut i = 0;
-            while i < edges.len() {
-                let j = (i + 1) % edges.len();
-
-                let [_, prev_last] = edges[i].surface_vertices();
-                let [next_first, _] = edges[j].surface_vertices();
-
-                // Need to compare surface forms here, as the global forms might
-                // be coincident when sweeping circles, despite the vertices
-                // being different!
-                if prev_last.id() != next_first.id() {
-                    edges[j] = edges[j].clone().reverse(objects);
-                }
-
-                i += 1;
-            }
-
-            Cycle::new(edges).insert(objects)
-        };
-
-        let face = PartialFace {
-            exterior: Partial::from(cycle),
+        // The result of sweeping an edge is a face. Let's create that.
+        let mut face = PartialFace {
             color: Some(color),
             ..Default::default()
         };
-        face.build(objects).insert(objects)
+
+        // A face (and everything in it) is defined on a surface. A surface can
+        // be created by sweeping a curve, so let's sweep the curve of the edge
+        // we're sweeping.
+        face.exterior.write().surface = Partial::from(
+            edge.curve().clone().sweep_with_cache(path, cache, objects),
+        );
+
+        // Now we're ready to create the edges.
+        let mut edge_bottom = face.exterior.write().add_half_edge();
+        let mut edge_up = face.exterior.write().add_half_edge();
+        let mut edge_top = face.exterior.write().add_half_edge();
+        let mut edge_down = face.exterior.write().add_half_edge();
+
+        // Those edges aren't fully defined yet. We'll do that shortly, but
+        // first we have to figure a few things out.
+        //
+        // Let's start with the global vertices and edges.
+        let (global_vertices, global_edges) = {
+            let [a, b] = edge
+                .surface_vertices()
+                .map(|surface_vertex| surface_vertex.global_form().clone());
+            let (edge_right, [_, c]) =
+                b.clone().sweep_with_cache(path, cache, objects);
+            let (edge_left, [_, d]) =
+                a.clone().sweep_with_cache(path, cache, objects);
+
+            (
+                [a, b, c, d],
+                [edge.global_form().clone(), edge_right, edge_left],
+            )
+        };
+
+        // Next, let's figure out the surface coordinates of the edge vertices.
+        let surface_points = {
+            let [a, b] = edge.boundary();
+
+            [
+                [a.t, Scalar::ZERO],
+                [b.t, Scalar::ZERO],
+                [b.t, Scalar::ONE],
+                [a.t, Scalar::ONE],
+            ]
+            .map(Point::from)
+        };
+
+        // Now, the boundaries of each edge.
+        let boundaries = {
+            let [a, b] = edge.boundary();
+            let [c, d] = [0., 1.].map(|coord| Point::from([coord]));
+
+            [[a, b], [c, d], [b, a], [d, c]]
+        };
+
+        // Armed with all of that, we can set the edge's vertices.
+        [
+            edge_bottom.write(),
+            edge_up.write(),
+            edge_top.write(),
+            edge_down.write(),
+        ]
+        .zip_ext(boundaries)
+        .zip_ext(surface_points)
+        .zip_ext(global_vertices)
+        .map(
+            |(((mut half_edge, boundary), surface_point), global_vertex)| {
+                for ((a, _), b) in
+                    half_edge.vertices.each_mut_ext().zip_ext(boundary)
+                {
+                    *a = Some(b);
+                }
+
+                // Writing to the start vertices is enough. Neighboring half-
+                // edges share surface vertices, so writing the start vertex of
+                // each half-edge writes to all vertices.
+                let mut vertex = half_edge.vertices[0].1.write();
+                vertex.position = Some(surface_point);
+                vertex.global_form = Partial::from(global_vertex);
+            },
+        );
+
+        // With the vertices set, we can now update the curves.
+        //
+        // Those are all line segments. For the bottom and top curve, because
+        // even if the original edge was a circle, it's still going to be a line
+        // when projected into the new surface. For the side edges, because
+        // we're sweeping along a straight path.
+        for mut edge in [
+            edge_bottom.write(),
+            edge_up.write(),
+            edge_top.write(),
+            edge_down.write(),
+        ] {
+            edge.update_as_line_segment();
+        }
+
+        // Finally, we can make sure that all edges refer to the correct global
+        // edges.
+        [edge_bottom.write(), edge_up.write(), edge_down.write()]
+            .zip_ext(global_edges)
+            .map(|(mut half_edge, global_edge)| {
+                let global_edge = Partial::from(global_edge);
+
+                half_edge.curve.write().global_form =
+                    global_edge.read().curve.clone();
+                half_edge.global_form = global_edge;
+            });
+
+        // And we're done creating the face! All that's left to do is build our
+        // return values.
+        let face = face.build(objects).insert(objects);
+        let edge_top = edge_top.build(objects);
+        (face, edge_top)
     }
 }
 
 #[cfg(test)]
 mod tests {
     use fj_interop::{ext::ArrayExt, mesh::Color};
+    use fj_math::Point;
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::{reverse::Reverse, sweep::Sweep},
+        algorithms::sweep::Sweep,
         builder::HalfEdgeBuilder,
         insert::Insert,
         partial::{
@@ -202,7 +177,7 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let face = (half_edge, Color::default())
+        let (face, _) = (half_edge, Color::default())
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
@@ -244,16 +219,16 @@ mod tests {
                 top.curve.write().surface = surface.clone();
 
                 {
-                    let [back, front] = top
-                        .vertices
-                        .each_mut_ext()
-                        .map(|(_, surface_vertex)| surface_vertex);
+                    let [(back, back_surface), (front, front_surface)] =
+                        top.vertices.each_mut_ext();
 
-                    let mut back = back.write();
-                    back.position = Some([0., 1.].into());
-                    back.surface = surface.clone();
+                    *back = Some(Point::from([1.]));
+                    *back_surface = side_up.vertices[1].1.clone();
 
-                    *front = side_up.vertices[1].1.clone();
+                    *front = Some(Point::from([0.]));
+                    let mut front_surface = front_surface.write();
+                    front_surface.position = Some([0., 1.].into());
+                    front_surface.surface = surface.clone();
                 }
 
                 top.infer_global_form();
@@ -261,8 +236,7 @@ mod tests {
 
                 Partial::from(
                     top.build(&mut services.objects)
-                        .insert(&mut services.objects)
-                        .reverse(&mut services.objects),
+                        .insert(&mut services.objects),
                 )
                 .read()
                 .clone()
@@ -271,13 +245,14 @@ mod tests {
                 let mut side_down = PartialHalfEdge::default();
                 side_down.curve.write().surface = surface;
 
-                let [back, front] = side_down
-                    .vertices
-                    .each_mut_ext()
-                    .map(|(_, surface_vertex)| surface_vertex);
+                let [(back, back_surface), (front, front_surface)] =
+                    side_down.vertices.each_mut_ext();
 
-                *back = bottom.vertices[0].1.clone();
-                *front = top.vertices[1].1.clone();
+                *back = Some(Point::from([1.]));
+                *front = Some(Point::from([0.]));
+
+                *back_surface = top.vertices[1].1.clone();
+                *front_surface = bottom.vertices[0].1.clone();
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();
@@ -285,8 +260,7 @@ mod tests {
                 Partial::from(
                     side_down
                         .build(&mut services.objects)
-                        .insert(&mut services.objects)
-                        .reverse(&mut services.objects),
+                        .insert(&mut services.objects),
                 )
                 .read()
                 .clone()

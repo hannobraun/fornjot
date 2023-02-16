@@ -1,11 +1,13 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
+    builder::{CycleBuilder, FaceBuilder},
     geometry::path::GlobalPath,
     insert::Insert,
     objects::{Face, Objects, Shell},
-    partial::{Partial, PartialObject, PartialShell},
+    partial::{Partial, PartialFace, PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -47,34 +49,77 @@ impl Sweep for Handle<Face> {
                 self.clone().reverse(objects)
             }
         };
-        faces.push(bottom_face);
+        faces.push(bottom_face.clone());
 
-        let top_face = {
-            let mut face = self.clone().translate(path, objects);
+        let mut top_face = PartialFace {
+            color: Some(self.color()),
+            ..PartialFace::default()
+        };
+        let top_surface =
+            bottom_face.surface().clone().translate(path, objects);
 
-            if is_negative_sweep {
-                face = face.reverse(objects);
+        for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
+            let cycle = cycle.reverse(objects);
+
+            let mut top_cycle = if i == 0 {
+                top_face.exterior.clone()
+            } else {
+                top_face.add_interior()
             };
 
-            face
-        };
-        faces.push(top_face);
-
-        // Generate side faces
-        for cycle in self.all_cycles() {
-            for half_edge in cycle.half_edges() {
-                let half_edge = if is_negative_sweep {
-                    half_edge.clone().reverse(objects)
-                } else {
-                    half_edge.clone()
-                };
-
-                let face = (half_edge, self.color())
+            let mut original_edges = Vec::new();
+            let mut top_edges = Vec::new();
+            for half_edge in cycle.half_edges().cloned() {
+                let (face, top_edge) = (half_edge.clone(), self.color())
                     .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
+
+                original_edges.push(half_edge);
+                top_edges.push(Partial::from(top_edge));
+            }
+
+            top_cycle.write().surface = Partial::from(top_surface.clone());
+
+            top_cycle.write().connect_to_closed_edges(top_edges);
+
+            for half_edge in &mut top_cycle.write().half_edges {
+                for (_, surface_vertex) in &mut half_edge.write().vertices {
+                    let mut surface_vertex = surface_vertex.write();
+                    let global_point =
+                        surface_vertex.global_form.read().position;
+
+                    if surface_vertex.position.is_none() {
+                        if let Some(global_point) = global_point {
+                            surface_vertex.position = Some(
+                                top_surface
+                                    .geometry()
+                                    .project_global_point(global_point),
+                            );
+                        }
+                    }
+                }
+            }
+
+            for (bottom, top) in original_edges
+                .into_iter()
+                .zip(top_cycle.write().half_edges.iter_mut())
+            {
+                top.write().curve.write().path =
+                    Some(bottom.curve().path().into());
+
+                let boundary = bottom.boundary();
+
+                for ((top, _), bottom) in
+                    top.write().vertices.each_mut_ext().zip_ext(boundary)
+                {
+                    *top = Some(bottom);
+                }
             }
         }
+
+        let top_face = top_face.build(objects).insert(objects);
+        faces.push(top_face);
 
         let faces = faces.into_iter().map(Partial::from).collect();
         PartialShell { faces }.build(objects).insert(objects)
@@ -159,7 +204,9 @@ mod tests {
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
-            (half_edge, Color::default()).sweep(UP, &mut services.objects)
+            let (face, _) =
+                (half_edge, Color::default()).sweep(UP, &mut services.objects);
+            face
         });
 
         assert!(side_faces
@@ -226,7 +273,9 @@ mod tests {
                     .insert(&mut services.objects)
                     .reverse(&mut services.objects)
             };
-            (half_edge, Color::default()).sweep(DOWN, &mut services.objects)
+            let (face, _) = (half_edge, Color::default())
+                .sweep(DOWN, &mut services.objects);
+            face
         });
 
         assert!(side_faces
