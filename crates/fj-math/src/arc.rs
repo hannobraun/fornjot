@@ -60,8 +60,8 @@ impl Arc {
         };
 
         let start_angle = {
-            let center_to_start = p0 - center;
-            center_to_start.v.atan2(center_to_start.u)
+            let from_center = p0 - center;
+            from_center.v.atan2(from_center.u)
         };
         let end_angle = {
             let from_center = p1 - center;
