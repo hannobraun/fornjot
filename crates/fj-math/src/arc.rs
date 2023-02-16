@@ -36,8 +36,9 @@ impl Arc {
         let distance_center_to_midpoint =
             (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
 
-        let (mut uv_factor, end_angle_offset) = if angle_rad.abs() > Scalar::PI
-        {
+        let angle_more_than_half_turn = angle_rad.abs() > Scalar::PI;
+
+        let (mut uv_factor, end_angle_offset) = if angle_more_than_half_turn {
             (Scalar::from_f64(-1.), Scalar::TAU)
         } else {
             (Scalar::ONE, Scalar::ZERO)
