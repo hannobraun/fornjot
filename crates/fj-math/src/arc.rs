@@ -39,10 +39,8 @@ impl Arc {
 
         let center = {
             let f = match (clockwise_turn, more_than_half_turn) {
-                (false, false) => Scalar::ONE,
-                (false, true) => -Scalar::ONE,
-                (true, false) => -Scalar::ONE,
-                (true, true) => Scalar::ONE,
+                (false, false) | (true, true) => Scalar::ONE,
+                (false, true) | (true, false) => -Scalar::ONE,
             };
 
             let unit_vector_p0_to_p1 =
