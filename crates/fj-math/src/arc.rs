@@ -37,16 +37,16 @@ impl Arc {
         let angle_more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
         let center = {
-            let uv_factor =
-                match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn) {
-                    (false, false) => Scalar::ONE,
-                    (false, true) => -Scalar::ONE,
-                    (true, false) => -Scalar::ONE,
-                    (true, true) => Scalar::ONE,
-                };
+            let f = match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn)
+            {
+                (false, false) => Scalar::ONE,
+                (false, true) => -Scalar::ONE,
+                (true, false) => -Scalar::ONE,
+                (true, true) => Scalar::ONE,
+            };
 
             let unit_vector_p0_to_p1 =
-                (p1 - p0) / distance_between_endpoints * uv_factor;
+                (p1 - p0) / distance_between_endpoints * f;
 
             let unit_vector_midpoint_to_center =
                 Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
