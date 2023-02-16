@@ -34,11 +34,10 @@ impl Arc {
         let radius = distance_between_endpoints
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
 
-        let angle_more_than_half_turn = angle_rad.abs() > Scalar::PI;
+        let more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
         let center = {
-            let f = match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn)
-            {
+            let f = match (angle_rad <= Scalar::ZERO, more_than_half_turn) {
                 (false, false) => Scalar::ONE,
                 (false, true) => -Scalar::ONE,
                 (true, false) => -Scalar::ONE,
@@ -61,7 +60,7 @@ impl Arc {
             }
         };
 
-        let end_angle_offset = if angle_more_than_half_turn {
+        let end_angle_offset = if more_than_half_turn {
             Scalar::TAU
         } else {
             Scalar::ZERO
