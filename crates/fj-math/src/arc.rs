@@ -37,6 +37,7 @@ impl Arc {
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
 
         let center = {
+            let midpoint = (p0.coords + p1.coords) / 2.;
             let unit_vector_midpoint_to_center = {
                 let clockwise_turn = angle_rad <= Scalar::ZERO;
                 let f = match (clockwise_turn, more_than_half_turn) {
@@ -54,7 +55,7 @@ impl Arc {
                 .sqrt();
 
             Point {
-                coords: (p0.coords + p1.coords) / 2.
+                coords: midpoint
                     + unit_vector_midpoint_to_center
                         * distance_center_to_midpoint,
             }
