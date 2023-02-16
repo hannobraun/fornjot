@@ -21,7 +21,9 @@ impl Sweep for Handle<Curve> {
         _: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        match self.surface().geometry().u {
+        let curve = self;
+
+        match curve.surface().geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.
@@ -45,17 +47,17 @@ impl Sweep for Handle<Curve> {
             }
         }
 
-        let u = match self.path() {
+        let u = match curve.path() {
             SurfacePath::Circle(circle) => {
-                let center = self
+                let center = curve
                     .surface()
                     .geometry()
                     .point_from_surface_coords(circle.center());
-                let a = self
+                let a = curve
                     .surface()
                     .geometry()
                     .vector_from_surface_coords(circle.a());
-                let b = self
+                let b = curve
                     .surface()
                     .geometry()
                     .vector_from_surface_coords(circle.b());
@@ -65,11 +67,11 @@ impl Sweep for Handle<Curve> {
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin = self
+                let origin = curve
                     .surface()
                     .geometry()
                     .point_from_surface_coords(line.origin());
-                let direction = self
+                let direction = curve
                     .surface()
                     .geometry()
                     .vector_from_surface_coords(line.direction());
