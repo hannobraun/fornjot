@@ -38,10 +38,7 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            surface: Partial::from_full(
-                half_edge.curve().surface().clone(),
-                cache,
-            ),
+            surface: Partial::from_full(half_edge.surface().clone(), cache),
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .boundary()
