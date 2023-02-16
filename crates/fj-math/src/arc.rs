@@ -27,7 +27,7 @@ impl Arc {
         let p0 = p0.into();
         let p1 = p1.into();
 
-        // This is an implementation of this solution:
+        // This is an adaptation of this:
         // https://math.stackexchange.com/a/87374
 
         let distance_between_endpoints = (p1 - p0).magnitude();
