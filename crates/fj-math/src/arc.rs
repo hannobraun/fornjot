@@ -36,15 +36,13 @@ impl Arc {
         let distance_center_to_midpoint =
             (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
 
-        let flipped_construction = angle_rad <= Scalar::ZERO;
-
         let (mut uv_factor, end_angle_offset) = if angle_rad.abs() > Scalar::PI
         {
             (Scalar::from_f64(-1.), Scalar::TAU)
         } else {
             (Scalar::ONE, Scalar::ZERO)
         };
-        if flipped_construction {
+        if angle_rad <= Scalar::ZERO {
             uv_factor *= -1.;
         }
 
