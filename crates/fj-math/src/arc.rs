@@ -33,18 +33,33 @@ impl Arc {
         let distance_between_endpoints = (p1 - p0).magnitude();
         let radius = distance_between_endpoints
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
-        let distance_center_to_midpoint =
-            (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
 
         let angle_more_than_half_turn = angle_rad.abs() > Scalar::PI;
 
-        let uv_factor =
-            match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn) {
-                (false, false) => Scalar::ONE,
-                (false, true) => -Scalar::ONE,
-                (true, false) => -Scalar::ONE,
-                (true, true) => Scalar::ONE,
-            };
+        let center = {
+            let uv_factor =
+                match (angle_rad <= Scalar::ZERO, angle_more_than_half_turn) {
+                    (false, false) => Scalar::ONE,
+                    (false, true) => -Scalar::ONE,
+                    (true, false) => -Scalar::ONE,
+                    (true, true) => Scalar::ONE,
+                };
+
+            let unit_vector_p0_to_p1 =
+                (p1 - p0) / distance_between_endpoints * uv_factor;
+
+            let unit_vector_midpoint_to_center =
+                Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
+            let distance_center_to_midpoint = (radius.powi(2)
+                - (distance_between_endpoints.powi(2) / 4.))
+                .sqrt();
+
+            Point {
+                coords: (p0.coords + p1.coords) / 2.
+                    + unit_vector_midpoint_to_center
+                        * distance_center_to_midpoint,
+            }
+        };
 
         let end_angle_offset = if angle_more_than_half_turn {
             Scalar::TAU
@@ -52,14 +67,6 @@ impl Arc {
             Scalar::ZERO
         };
 
-        let unit_vector_p0_to_p1 =
-            (p1 - p0) / distance_between_endpoints * uv_factor;
-        let unit_vector_midpoint_to_center =
-            Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
-        let center = Point {
-            coords: (p0.coords + p1.coords) / 2.
-                + unit_vector_midpoint_to_center * distance_center_to_midpoint,
-        };
         let start_angle = {
             let center_to_start = p0 - center;
             center_to_start.v.atan2(center_to_start.u)
