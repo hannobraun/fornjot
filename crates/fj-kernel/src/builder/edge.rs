@@ -136,14 +136,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     ) {
-        let surface = surface.into();
-
-        self.curve.write().surface = surface.clone();
+        self.replace_surface(surface.into());
 
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut surface_form = vertex.1.write();
             surface_form.position = Some(point.into());
-            surface_form.surface = surface.clone();
         }
 
         self.update_as_line_segment()
