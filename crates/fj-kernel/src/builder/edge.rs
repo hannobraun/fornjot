@@ -100,7 +100,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let points_surface = self.vertices.each_ref_ext().map(|vertex| {
+        let [start, end] = self.vertices.each_ref_ext().map(|vertex| {
             vertex
                 .1
                 .read()
@@ -108,11 +108,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 .expect("Can't infer arc without surface position")
         });
 
-        let arc = fj_math::Arc::from_endpoints_and_angle(
-            points_surface[0],
-            points_surface[1],
-            angle_rad,
-        );
+        let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
         let path = self
             .curve
