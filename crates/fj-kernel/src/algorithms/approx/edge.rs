@@ -5,6 +5,8 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
+use std::ops::Deref;
+
 use crate::{objects::HalfEdge, storage::Handle};
 
 use super::{
@@ -30,8 +32,8 @@ impl Approx for &Handle<HalfEdge> {
             self.start_vertex().global_form().position(),
         )
         .with_source((self.clone(), self.boundary()[0]));
-        let curve_approx =
-            (self.curve(), range).approx_with_cache(tolerance, cache);
+        let curve_approx = (self.curve(), self.surface().deref(), range)
+            .approx_with_cache(tolerance, cache);
 
         HalfEdgeApprox {
             first,

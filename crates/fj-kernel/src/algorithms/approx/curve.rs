@@ -19,7 +19,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, RangeOnPath) {
+impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
     type Approximation = CurveApprox;
     type Cache = CurveCache;
 
@@ -28,18 +28,14 @@ impl Approx for (&Handle<Curve>, RangeOnPath) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (curve, range) = self;
+        let (curve, surface, range) = self;
 
         let global_curve = curve.global_form().clone();
         let global_curve_approx = match cache.get(global_curve.clone(), range) {
             Some(approx) => approx,
             None => {
-                let approx = approx_global_curve(
-                    curve,
-                    curve.surface(),
-                    range,
-                    tolerance,
-                );
+                let approx =
+                    approx_global_curve(curve, surface, range, tolerance);
                 cache.insert(global_curve, range, approx)
             }
         };
@@ -214,7 +210,7 @@ impl GlobalCurveApprox {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::TAU;
+    use std::{f64::consts::TAU, ops::Deref};
 
     use pretty_assertions::assert_eq;
 
@@ -235,7 +231,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from(surface),
+            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
@@ -244,7 +240,7 @@ mod tests {
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, range).approx(1.);
+        let approx = (&curve, surface.deref(), range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -260,7 +256,7 @@ mod tests {
         .build(&mut services.objects)
         .insert(&mut services.objects);
         let mut curve = PartialCurve {
-            surface: Partial::from(surface),
+            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
@@ -269,7 +265,7 @@ mod tests {
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, range).approx(1.);
+        let approx = (&curve, surface.deref(), range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -294,7 +290,7 @@ mod tests {
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
 
-        let approx = (&curve, range).approx(tolerance);
+        let approx = (&curve, surface.deref(), range).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -316,7 +312,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from(surface),
+            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_circle_from_radius(1.);
@@ -326,16 +322,14 @@ mod tests {
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
-        let approx = (&curve, range).approx(tolerance);
+        let approx = (&curve, surface.deref(), range).approx(tolerance);
 
         let expected_approx = (curve.path(), range)
             .approx(tolerance)
             .into_iter()
             .map(|(_, point_surface)| {
-                let point_global = curve
-                    .surface()
-                    .geometry()
-                    .point_from_surface_coords(point_surface);
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
