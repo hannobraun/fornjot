@@ -119,12 +119,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .write()
             .update_as_circle_from_center_and_radius(arc.center, arc.radius);
 
-        let [a_curve, b_curve] = if arc.flipped_construction {
-            [arc.end_angle, arc.start_angle]
-        } else {
-            [arc.start_angle, arc.end_angle]
-        }
-        .map(|coord| Point::from([coord]));
+        let [a_curve, b_curve] =
+            [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
         for (vertex, point_curve) in
             self.vertices.each_mut_ext().zip_ext([a_curve, b_curve])

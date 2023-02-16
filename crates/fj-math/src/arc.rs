@@ -11,17 +11,10 @@ pub struct Arc {
     pub radius: Scalar,
 
     /// Angle of `start` relative to `center`, in radians
-    ///
-    /// Guaranteed to be less than `end_angle`.
     pub start_angle: Scalar,
 
     /// Angle of `end` relative to `center`, in radians
-    ///
-    /// Guaranteed to be greater than `end_angle`.
     pub end_angle: Scalar,
-
-    /// True if `start` and `end` were switched to ensure `end_angle` > `start_angle`
-    pub flipped_construction: bool,
 }
 
 impl Arc {
@@ -34,51 +27,58 @@ impl Arc {
         let p0 = p0.into();
         let p1 = p1.into();
 
-        // This is an implementation of this solution:
+        // This is an adaptation of this:
         // https://math.stackexchange.com/a/87374
 
         let distance_between_endpoints = (p1 - p0).magnitude();
+        let more_than_half_turn = angle_rad.abs() > Scalar::PI;
+
         let radius = distance_between_endpoints
             / (2. * (angle_rad.abs().into_f64() / 2.).sin());
-        let distance_center_to_midpoint =
-            (radius.powi(2) - (distance_between_endpoints.powi(2) / 4.)).sqrt();
 
-        let flipped_construction = angle_rad <= Scalar::ZERO;
-        let angle_rad = angle_rad.abs();
+        let center = {
+            let midpoint = Point {
+                coords: (p0.coords + p1.coords) / 2.,
+            };
+            let unit_vector_midpoint_to_center = {
+                let clockwise_turn = angle_rad <= Scalar::ZERO;
+                let f = match (clockwise_turn, more_than_half_turn) {
+                    (false, false) | (true, true) => Scalar::ONE,
+                    (false, true) | (true, false) => -Scalar::ONE,
+                };
 
-        let [p0, p1] = if flipped_construction {
-            [p1, p0]
-        } else {
-            [p0, p1]
+                let unit_vector_p0_to_p1 =
+                    (p1 - p0) / distance_between_endpoints * f;
+
+                Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u])
+            };
+            let distance_center_to_midpoint = (radius.powi(2)
+                - (distance_between_endpoints.powi(2) / 4.))
+                .sqrt();
+
+            midpoint
+                + unit_vector_midpoint_to_center * distance_center_to_midpoint
         };
 
-        let (uv_factor, end_angle_offset) = if angle_rad > Scalar::PI {
-            (Scalar::from_f64(-1.), Scalar::TAU)
-        } else {
-            (Scalar::ONE, Scalar::ZERO)
-        };
-        let unit_vector_p0_to_p1 =
-            (p1 - p0) / distance_between_endpoints * uv_factor;
-        let unit_vector_midpoint_to_center =
-            Vector::from([-unit_vector_p0_to_p1.v, unit_vector_p0_to_p1.u]);
-        let center = Point {
-            coords: (p0.coords + p1.coords) / 2.
-                + unit_vector_midpoint_to_center * distance_center_to_midpoint,
-        };
         let start_angle = {
-            let center_to_start = p0 - center;
-            center_to_start.v.atan2(center_to_start.u)
+            let from_center = p0 - center;
+            from_center.v.atan2(from_center.u)
         };
         let end_angle = {
-            let center_to_end = p1 - center;
-            center_to_end.v.atan2(center_to_end.u) + end_angle_offset
+            let from_center = p1 - center;
+            let offset = if more_than_half_turn {
+                Scalar::TAU
+            } else {
+                Scalar::ZERO
+            };
+
+            from_center.v.atan2(from_center.u) + offset
         };
         Self {
             center,
             radius,
             start_angle,
             end_angle,
-            flipped_construction,
         }
     }
 }
@@ -143,7 +143,6 @@ mod tests {
 
         dbg!(arc.start_angle);
         dbg!(arc.end_angle);
-        dbg!(arc.flipped_construction);
         assert_abs_diff_eq!(arc.center, center, epsilon = epsilon);
         assert_abs_diff_eq!(
             arc.radius,
@@ -151,30 +150,11 @@ mod tests {
             epsilon = epsilon
         );
 
-        if a0 < a1 {
-            assert!(!arc.flipped_construction);
-            assert_abs_diff_eq!(
-                arc.start_angle,
-                Scalar::from(a0),
-                epsilon = epsilon
-            );
-            assert_abs_diff_eq!(
-                arc.end_angle,
-                Scalar::from(a1),
-                epsilon = epsilon
-            );
-        } else {
-            assert!(arc.flipped_construction);
-            assert_abs_diff_eq!(
-                arc.end_angle,
-                Scalar::from(a0),
-                epsilon = epsilon
-            );
-            assert_abs_diff_eq!(
-                arc.start_angle,
-                Scalar::from(a1),
-                epsilon = epsilon
-            );
-        }
+        assert_abs_diff_eq!(
+            arc.start_angle,
+            Scalar::from(a0),
+            epsilon = epsilon
+        );
+        assert_abs_diff_eq!(arc.end_angle, Scalar::from(a1), epsilon = epsilon);
     }
 }
