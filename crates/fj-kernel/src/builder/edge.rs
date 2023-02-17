@@ -41,6 +41,9 @@ pub trait HalfEdgeBuilder {
     /// it.
     fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
 
+    /// Infer the vertex positions (surface and global), if not already set
+    fn infer_vertex_positions_if_necessary(&mut self);
+
     /// Update this edge from another
     ///
     /// Infers as much information about this edge from the other, under the
@@ -171,6 +174,52 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             .map(|vertex| vertex.1.read().global_form.clone());
 
         self.global_form.clone()
+    }
+
+    fn infer_vertex_positions_if_necessary(&mut self) {
+        let path = self
+            .curve
+            .read()
+            .path
+            .expect("Can't infer vertex positions without curve");
+        let MaybeSurfacePath::Defined(path) = path else {
+            panic!("Can't infer vertex positions with undefined path");
+        };
+
+        let surface =
+            self.surface.read().geometry.expect(
+                "Can't infer surface positions without surface geometry",
+            );
+
+        for vertex in &mut self.vertices {
+            let position_curve = vertex
+                .0
+                .expect("Can't infer surface position without curve position");
+
+            let position_surface = vertex.1.read().position;
+
+            // Infer surface position, if not available.
+            let position_surface = match position_surface {
+                Some(position_surface) => position_surface,
+                None => {
+                    let position_surface =
+                        path.point_from_path_coords(position_curve);
+
+                    vertex.1.write().position = Some(position_surface);
+
+                    position_surface
+                }
+            };
+
+            // Infer global position, if not available.
+            let position_global = vertex.1.read().global_form.read().position;
+            if position_global.is_none() {
+                let position_global =
+                    surface.point_from_surface_coords(position_surface);
+                vertex.1.write().global_form.write().position =
+                    Some(position_global);
+            }
+        }
     }
 
     fn update_from_other_edge(

@@ -4,6 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
+    builder::HalfEdgeBuilder,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex,
@@ -54,39 +55,15 @@ impl PartialObject for PartialHalfEdge {
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+    fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
+        self.infer_vertex_positions_if_necessary();
+
         let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
-        let vertices = self.vertices.map(|mut vertex| {
+        let vertices = self.vertices.map(|vertex| {
             let position_curve = vertex
                 .0
-                .expect("Can't infer surface position without curve position");
-
-            let position_surface = vertex.1.read().position;
-
-            // Infer surface position, if not available.
-            let position_surface = match position_surface {
-                Some(position_surface) => position_surface,
-                None => {
-                    let position_surface =
-                        curve.path().point_from_path_coords(position_curve);
-
-                    vertex.1.write().position = Some(position_surface);
-
-                    position_surface
-                }
-            };
-
-            // Infer global position, if not available.
-            let position_global = vertex.1.read().global_form.read().position;
-            if position_global.is_none() {
-                let position_global = surface
-                    .geometry()
-                    .point_from_surface_coords(position_surface);
-                vertex.1.write().global_form.write().position =
-                    Some(position_global);
-            }
-
+                .expect("Can't build `HalfEdge` without boundary positions");
             let surface_form = vertex.1.build(objects);
 
             (position_curve, surface_form)
