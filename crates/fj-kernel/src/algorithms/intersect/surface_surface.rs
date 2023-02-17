@@ -28,10 +28,9 @@ impl SurfaceSurfaceIntersection {
         // coordinates for each surface.
 
         let planes = surfaces.map(|surface| plane_from_surface(&surface));
-        let [a, b] = planes;
 
-        let (a_distance, a_normal) = a.constant_normal_form();
-        let (b_distance, b_normal) = b.constant_normal_form();
+        let [(a_distance, a_normal), (b_distance, b_normal)] =
+            planes.map(|plane| plane.constant_normal_form());
 
         let direction = a_normal.cross(&b_normal);
 
