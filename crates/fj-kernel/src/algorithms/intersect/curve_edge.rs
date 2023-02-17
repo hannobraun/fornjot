@@ -76,7 +76,7 @@ mod tests {
 
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
-        partial::{Partial, PartialCurve, PartialHalfEdge, PartialObject},
+        partial::{PartialCurve, PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -86,16 +86,14 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface,
-                [[1., -1.], [1., 1.]],
-            );
+            half_edge.update_as_line_segment_from_points([[1., -1.], [1., 1.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -114,16 +112,15 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface,
-                [[-1., -1.], [-1., 1.]],
-            );
+            half_edge
+                .update_as_line_segment_from_points([[-1., -1.], [-1., 1.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -142,16 +139,15 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface,
-                [[-1., -1.], [1., -1.]],
-            );
+            half_edge
+                .update_as_line_segment_from_points([[-1., -1.], [1., -1.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -165,16 +161,14 @@ mod tests {
     fn compute_edge_on_curve() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface,
-                [[-1., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[-1., 0.], [1., 0.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };

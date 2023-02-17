@@ -15,10 +15,6 @@ impl TransformObject for HalfEdge {
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let surface = self
-            .surface()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let curve = self
             .curve()
             .clone()
@@ -36,7 +32,7 @@ impl TransformObject for HalfEdge {
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(surface, curve, boundary, global_form)
+        Self::new(curve, boundary, global_form)
     }
 }
 

@@ -2,8 +2,11 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::path::{GlobalPath, SurfacePath},
-    objects::{GlobalEdge, HalfEdge, Surface},
+    geometry::{
+        path::{GlobalPath, SurfacePath},
+        surface::SurfaceGeometry,
+    },
+    objects::{GlobalEdge, HalfEdge},
     partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -25,7 +28,6 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     );
 
@@ -38,6 +40,12 @@ pub trait HalfEdgeBuilder {
     /// it.
     fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
 
+    /// Infer the vertex positions (surface and global), if not already set
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    );
+
     /// Update this edge from another
     ///
     /// Infers as much information about this edge from the other, under the
@@ -47,7 +55,11 @@ pub trait HalfEdgeBuilder {
     /// under various circumstances. As long as you're only dealing with lines
     /// and planes, you should be fine. Otherwise, please read the code of this
     /// method carefully, to make sure you don't run into trouble.
-    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>);
+    fn update_from_other_edge(
+        &mut self,
+        other: &Partial<HalfEdge>,
+        surface: &Option<SurfaceGeometry>,
+    );
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -111,11 +123,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     ) {
-        self.surface = surface.into();
-
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut surface_form = vertex.1.write();
             surface_form.position = Some(point.into());
@@ -166,14 +175,62 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.global_form.clone()
     }
 
-    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>) {
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    ) {
+        let path = self
+            .curve
+            .read()
+            .path
+            .expect("Can't infer vertex positions without curve");
+        let MaybeSurfacePath::Defined(path) = path else {
+            panic!("Can't infer vertex positions with undefined path");
+        };
+
+        for vertex in &mut self.vertices {
+            let position_curve = vertex
+                .0
+                .expect("Can't infer surface position without curve position");
+
+            let position_surface = vertex.1.read().position;
+
+            // Infer surface position, if not available.
+            let position_surface = match position_surface {
+                Some(position_surface) => position_surface,
+                None => {
+                    let position_surface =
+                        path.point_from_path_coords(position_curve);
+
+                    vertex.1.write().position = Some(position_surface);
+
+                    position_surface
+                }
+            };
+
+            // Infer global position, if not available.
+            let position_global = vertex.1.read().global_form.read().position;
+            if position_global.is_none() {
+                let position_global =
+                    surface.point_from_surface_coords(position_surface);
+                vertex.1.write().global_form.write().position =
+                    Some(position_global);
+            }
+        }
+    }
+
+    fn update_from_other_edge(
+        &mut self,
+        other: &Partial<HalfEdge>,
+        surface: &Option<SurfaceGeometry>,
+    ) {
         let global_curve = other.read().curve.read().global_form.clone();
         self.curve.write().global_form = global_curve.clone();
         self.global_form.write().curve = global_curve;
 
         self.curve.write().path =
             other.read().curve.read().path.as_ref().and_then(|path| {
-                match other.read().surface.read().geometry {
+                match surface {
                     Some(surface) => {
                         // We have information about the other edge's surface
                         // available. We need to use that to interpret what the

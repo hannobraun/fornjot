@@ -6,7 +6,7 @@ use fj_math::Point;
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, SurfaceVertex,
+        SurfaceVertex,
     },
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -15,9 +15,6 @@ use crate::{
 /// A partial [`HalfEdge`]
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
-    /// The surface that the half-edge is defined in
-    pub surface: Partial<Surface>,
-
     /// The curve that the half-edge is defined in
     pub curve: Partial<Curve>,
 
@@ -36,7 +33,6 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            surface: Partial::from_full(half_edge.surface().clone(), cache),
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .boundary()
@@ -55,53 +51,23 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
-        let vertices = self.vertices.map(|mut vertex| {
-            let position_surface = vertex.1.read().position;
-
-            // Infer surface position, if not available.
-            let position_surface = match position_surface {
-                Some(position_surface) => position_surface,
-                None => {
-                    let position_curve = vertex.0.expect(
-                        "Can't infer surface position without curve position",
-                    );
-                    let position_surface =
-                        curve.path().point_from_path_coords(position_curve);
-
-                    vertex.1.write().position = Some(position_surface);
-
-                    position_surface
-                }
-            };
-
-            // Infer global position, if not available.
-            let position_global = vertex.1.read().global_form.read().position;
-            if position_global.is_none() {
-                let position_global = surface
-                    .geometry()
-                    .point_from_surface_coords(position_surface);
-                vertex.1.write().global_form.write().position =
-                    Some(position_global);
-            }
-
-            let position =
-                vertex.0.expect("Can't build `Vertex` without position");
+        let vertices = self.vertices.map(|vertex| {
+            let position_curve = vertex
+                .0
+                .expect("Can't build `HalfEdge` without boundary positions");
             let surface_form = vertex.1.build(objects);
 
-            (position, surface_form)
+            (position_curve, surface_form)
         });
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(surface, curve, vertices, global_form)
+        HalfEdge::new(curve, vertices, global_form)
     }
 }
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        let surface = Partial::new();
-
         let curve = Partial::<Curve>::new();
         let vertices = array::from_fn(|_| {
             let surface_form = Partial::default();
@@ -123,7 +89,6 @@ impl Default for PartialHalfEdge {
         });
 
         Self {
-            surface,
             curve,
             vertices,
             global_form,

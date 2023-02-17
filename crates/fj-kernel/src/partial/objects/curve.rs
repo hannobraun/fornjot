@@ -46,7 +46,7 @@ impl PartialObject for PartialCurve {
 ///
 /// Can be a fully defined [`SurfacePath`], or just the type of path might be
 /// known.
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum MaybeSurfacePath {
     /// The surface path is fully defined
     Defined(SurfacePath),

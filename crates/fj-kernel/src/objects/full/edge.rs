@@ -4,14 +4,13 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, Surface, SurfaceVertex},
+    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex},
     storage::{Handle, HandleWrapper},
 };
 
 /// A half-edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    surface: Handle<Surface>,
     curve: Handle<Curve>,
     boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
     global_form: Handle<GlobalEdge>,
@@ -20,22 +19,15 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
-        surface: Handle<Surface>,
         curve: Handle<Curve>,
         boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
-            surface,
             curve,
             boundary,
             global_form,
         }
-    }
-
-    /// Access the surface that the half-edge is defined in
-    pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
     }
 
     /// Access the curve that defines the half-edge's geometry
@@ -173,14 +165,15 @@ mod tests {
 
         let a_to_b = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge
-                .update_as_line_segment_from_points(surface.clone(), [a, b]);
+            half_edge.update_as_line_segment_from_points([a, b]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
         let b_to_a = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(surface, [b, a]);
+            half_edge.update_as_line_segment_from_points([b, a]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };

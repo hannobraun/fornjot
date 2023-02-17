@@ -1,9 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{
-        GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface, SurfaceVertex,
-    },
+    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface},
     storage::Handle,
 };
 
@@ -18,7 +16,6 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_global_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
-        HalfEdgeValidationError::check_vertex_positions(self, config, errors);
     }
 }
 
@@ -107,33 +104,6 @@ pub enum HalfEdgeValidationError {
         /// The half-edge
         half_edge: HalfEdge,
     },
-
-    /// Mismatch between [`SurfaceVertex`] and [`GlobalVertex`] positions
-    #[error(
-        "`SurfaceVertex` position doesn't match position of its global form\n\
-        - Surface position: {surface_position:?}\n\
-        - Surface position converted to global position: \
-            {surface_position_as_global:?}\n\
-        - Global position: {global_position:?}\n\
-        - Distance between the positions: {distance}\n\
-        - `SurfaceVertex`: {surface_vertex:#?}"
-    )]
-    VertexSurfacePositionMismatch {
-        /// The position of the surface vertex
-        surface_position: Point<2>,
-
-        /// The surface position converted into a global position
-        surface_position_as_global: Point<3>,
-
-        /// The position of the global vertex
-        global_position: Point<3>,
-
-        /// The distance between the positions
-        distance: Scalar,
-
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
-    },
 }
 
 impl HalfEdgeValidationError {
@@ -206,36 +176,6 @@ impl HalfEdgeValidationError {
             );
         }
     }
-
-    fn check_vertex_positions(
-        half_edge: &HalfEdge,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for surface_vertex in half_edge.surface_vertices() {
-            let surface_position_as_global = half_edge
-                .surface()
-                .geometry()
-                .point_from_surface_coords(surface_vertex.position());
-            let global_position = surface_vertex.global_form().position();
-
-            let distance =
-                surface_position_as_global.distance_to(&global_position);
-
-            if distance > config.identical_max_distance {
-                errors.push(
-                    Box::new(Self::VertexSurfacePositionMismatch {
-                        surface_position: surface_vertex.position(),
-                        surface_position_as_global,
-                        global_position,
-                        distance,
-                        surface_vertex: surface_vertex.clone(),
-                    })
-                    .into(),
-                );
-            }
-        }
-    }
 }
 
 #[cfg(test)]
@@ -246,7 +186,7 @@ mod tests {
     use crate::{
         builder::HalfEdgeBuilder,
         insert::Insert,
-        objects::{GlobalCurve, HalfEdge, SurfaceVertex},
+        objects::{GlobalCurve, HalfEdge},
         partial::{Partial, PartialHalfEdge, PartialObject},
         services::Services,
         validate::Validate,
@@ -257,11 +197,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -277,12 +217,7 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(
-                valid.surface().clone(),
-                valid.curve().clone(),
-                vertices,
-                global_form,
-            )
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -296,11 +231,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -324,12 +259,7 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(
-                valid.surface().clone(),
-                valid.curve().clone(),
-                vertices,
-                global_form,
-            )
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -343,11 +273,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
@@ -357,49 +287,8 @@ mod tests {
             });
 
             HalfEdge::new(
-                valid.surface().clone(),
                 valid.curve().clone(),
                 vertices,
-                valid.global_form().clone(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
-
-    #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
-                [[0., 0.], [1., 0.]],
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-        let invalid = {
-            let mut surface_vertices =
-                valid.surface_vertices().map(Clone::clone);
-
-            let [_, surface_vertex] = surface_vertices.each_mut_ext();
-            *surface_vertex = SurfaceVertex::new(
-                [2., 0.],
-                surface_vertex.global_form().clone(),
-            )
-            .insert(&mut services.objects);
-
-            let boundary = valid.boundary().zip_ext(surface_vertices);
-
-            HalfEdge::new(
-                valid.surface().clone(),
-                valid.curve().clone(),
-                boundary,
                 valid.global_form().clone(),
             )
         };

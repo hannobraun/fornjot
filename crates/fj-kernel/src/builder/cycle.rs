@@ -149,7 +149,6 @@ impl CycleBuilder for PartialCycle {
 
             let [_, vertex] = &mut new_half_edge.vertices;
             vertex.1 = shared_surface_vertex;
-            new_half_edge.surface = self.surface.clone();
             new_half_edge.infer_global_form();
         }
 
@@ -247,7 +246,8 @@ impl CycleBuilder for PartialCycle {
             let mut this = half_edges.pop_front().expect(
                 "Pushed correct number of half-edges; should be able to pop",
             );
-            this.write().update_from_other_edge(&other);
+            this.write()
+                .update_from_other_edge(&other, &self.surface.read().geometry);
             this
         })
     }
@@ -261,7 +261,8 @@ impl CycleBuilder for PartialCycle {
     {
         edges.map(|other| {
             let mut this = self.add_half_edge();
-            this.write().update_from_other_edge(&other);
+            this.write()
+                .update_from_other_edge(&other, &self.surface.read().geometry);
             this
         })
     }
