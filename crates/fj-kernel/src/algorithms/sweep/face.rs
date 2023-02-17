@@ -85,7 +85,9 @@ impl Sweep for Handle<Face> {
 
             top_cycle.write().surface = Partial::from(top_surface.clone());
 
-            top_cycle.write().connect_to_closed_edges(top_edges);
+            top_cycle
+                .write()
+                .connect_to_closed_edges(top_edges, &top_surface.geometry());
 
             for half_edge in &mut top_cycle.write().half_edges {
                 for (_, surface_vertex) in &mut half_edge.write().vertices {

@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    geometry::surface::SurfaceGeometry,
     objects::HalfEdge,
     partial::{Partial, PartialCycle},
 };
@@ -69,6 +70,7 @@ pub trait CycleBuilder {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
+        surface: &SurfaceGeometry,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
@@ -174,14 +176,14 @@ impl CycleBuilder for PartialCycle {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
+        surface: &SurfaceGeometry,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
         edges.map(|other| {
             let mut this = self.add_half_edge();
-            this.write()
-                .update_from_other_edge(&other, &self.surface.read().geometry);
+            this.write().update_from_other_edge(&other, &Some(*surface));
             this
         })
     }
