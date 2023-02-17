@@ -168,10 +168,12 @@ mod tests {
     fn sweep() {
         let mut services = Services::new();
 
+        let surface = services.objects.surfaces.xy_plane();
+
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                surface,
                 [[0., 0.], [1., 0.]],
             );
 
