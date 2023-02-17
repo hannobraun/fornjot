@@ -230,9 +230,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
         let curve = curve
             .build(&mut services.objects)
@@ -254,9 +252,7 @@ mod tests {
         )
         .build(&mut services.objects)
         .insert(&mut services.objects);
-        let mut curve = PartialCurve {
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
         let curve = curve
             .build(&mut services.objects)
@@ -276,9 +272,7 @@ mod tests {
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let mut curve = PartialCurve {
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
         let curve = curve
             .build(&mut services.objects)
@@ -308,9 +302,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_circle_from_radius(1.);
         let curve = curve
             .build(&mut services.objects)

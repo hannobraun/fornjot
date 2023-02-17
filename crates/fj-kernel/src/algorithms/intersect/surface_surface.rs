@@ -120,16 +120,12 @@ mod tests {
             None,
         );
 
-        let mut expected_xy = PartialCurve {
-            ..Default::default()
-        };
+        let mut expected_xy = PartialCurve::default();
         expected_xy.update_as_u_axis();
         let expected_xy = expected_xy
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let mut expected_xz = PartialCurve {
-            ..Default::default()
-        };
+        let mut expected_xz = PartialCurve::default();
         expected_xz.update_as_u_axis();
         let expected_xz = expected_xz
             .build(&mut services.objects)
