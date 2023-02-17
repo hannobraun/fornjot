@@ -8,9 +8,7 @@ use crate::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex,
     },
-    partial::{
-        FullToPartialCache, Partial, PartialObject, PartialSurfaceVertex,
-    },
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
 
@@ -106,10 +104,7 @@ impl Default for PartialHalfEdge {
 
         let curve = Partial::<Curve>::new();
         let vertices = array::from_fn(|_| {
-            let surface_form = Partial::from_partial(PartialSurfaceVertex {
-                ..Default::default()
-            });
-
+            let surface_form = Partial::default();
             (None, surface_form)
         });
 
