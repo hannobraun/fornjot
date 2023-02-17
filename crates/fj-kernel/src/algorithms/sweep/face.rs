@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj_interop::ext::ArrayExt;
 use fj_math::{Scalar, Vector};
 
@@ -70,8 +72,9 @@ impl Sweep for Handle<Face> {
             let mut original_edges = Vec::new();
             let mut top_edges = Vec::new();
             for half_edge in cycle.half_edges().cloned() {
-                let (face, top_edge) = (half_edge.clone(), self.color())
-                    .sweep_with_cache(path, cache, objects);
+                let (face, top_edge) =
+                    (half_edge.clone(), self.surface().deref(), self.color())
+                        .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
 
@@ -128,6 +131,8 @@ impl Sweep for Handle<Face> {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::Deref;
+
     use fj_interop::{ext::SliceExt, mesh::Color};
 
     use crate::{
@@ -182,7 +187,7 @@ mod tests {
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
         top.exterior.write().surface =
-            Partial::from(surface.translate(UP, &mut services.objects));
+            Partial::from(surface.clone().translate(UP, &mut services.objects));
         top.exterior.write().update_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
@@ -204,8 +209,8 @@ mod tests {
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
-            let (face, _) =
-                (half_edge, Color::default()).sweep(UP, &mut services.objects);
+            let (face, _) = (half_edge, surface.deref(), Color::default())
+                .sweep(UP, &mut services.objects);
             face
         });
 
@@ -250,7 +255,7 @@ mod tests {
             .insert(&mut services.objects)
             .reverse(&mut services.objects);
         let mut top = PartialFace::default();
-        top.exterior.write().surface = Partial::from(surface);
+        top.exterior.write().surface = Partial::from(surface.clone());
         top.exterior.write().update_as_polygon_from_points(TRIANGLE);
         let top = top
             .build(&mut services.objects)
@@ -273,7 +278,7 @@ mod tests {
                     .insert(&mut services.objects)
                     .reverse(&mut services.objects)
             };
-            let (face, _) = (half_edge, Color::default())
+            let (face, _) = (half_edge, surface.deref(), Color::default())
                 .sweep(DOWN, &mut services.objects);
             face
         });

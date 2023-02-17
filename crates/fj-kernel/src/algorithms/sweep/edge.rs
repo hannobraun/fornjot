@@ -1,12 +1,10 @@
-use std::ops::Deref;
-
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects},
+    objects::{Face, HalfEdge, Objects, Surface},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -14,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, Color) {
+impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -23,7 +21,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        let (edge, color) = self;
+        let (edge, surface, color) = self;
         let path = path.into();
 
         // The result of sweeping an edge is a face. Let's create that.
@@ -36,7 +34,7 @@ impl Sweep for (Handle<HalfEdge>, Color) {
         // be created by sweeping a curve, so let's sweep the curve of the edge
         // we're sweeping.
         face.exterior.write().surface = Partial::from(
-            (edge.curve().clone(), edge.surface().deref())
+            (edge.curve().clone(), surface)
                 .sweep_with_cache(path, cache, objects),
         );
 
@@ -150,6 +148,8 @@ impl Sweep for (Handle<HalfEdge>, Color) {
 
 #[cfg(test)]
 mod tests {
+    use std::ops::Deref;
+
     use fj_interop::{ext::ArrayExt, mesh::Color};
     use fj_math::Point;
     use pretty_assertions::assert_eq;
@@ -173,7 +173,7 @@ mod tests {
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                surface,
+                surface.clone(),
                 [[0., 0.], [1., 0.]],
             );
 
@@ -182,7 +182,7 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let (face, _) = (half_edge, Color::default())
+        let (face, _) = (half_edge, surface.deref(), Color::default())
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
