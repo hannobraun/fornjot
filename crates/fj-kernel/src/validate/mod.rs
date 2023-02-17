@@ -12,7 +12,7 @@ mod vertex;
 
 pub use self::{
     cycle::CycleValidationError, edge::HalfEdgeValidationError,
-    face::FaceValidationError, vertex::SurfaceVertexValidationError,
+    face::FaceValidationError,
 };
 
 use std::convert::Infallible;
@@ -94,10 +94,6 @@ pub enum ValidationError {
     /// `HalfEdge` validation error
     #[error("`HalfEdge` validation error:\n{0}")]
     HalfEdge(#[from] Box<HalfEdgeValidationError>),
-
-    /// `SurfaceVertex` validation error
-    #[error("`SurfaceVertex` validation error:\n{0}")]
-    SurfaceVertex(#[from] Box<SurfaceVertexValidationError>),
 }
 
 impl From<Infallible> for ValidationError {

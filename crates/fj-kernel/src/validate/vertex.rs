@@ -19,7 +19,3 @@ impl Validate for GlobalVertex {
     ) {
     }
 }
-
-/// [`SurfaceVertex`] validation error
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum SurfaceVertexValidationError {}
