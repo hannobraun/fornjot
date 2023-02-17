@@ -204,6 +204,7 @@ mod tests {
                     services.objects.surfaces.xy_plane(),
                     [a, b],
                 );
+                half_edge.infer_vertex_positions_if_necessary();
 
                 half_edge
                     .build(&mut services.objects)
@@ -272,6 +273,7 @@ mod tests {
                     services.objects.surfaces.xy_plane(),
                     [a, b],
                 );
+                half_edge.infer_vertex_positions_if_necessary();
 
                 half_edge
                     .build(&mut services.objects)

@@ -176,6 +176,7 @@ mod tests {
                 surface.clone(),
                 [[0., 0.], [1., 0.]],
             );
+            half_edge.infer_vertex_positions_if_necessary();
 
             half_edge
                 .build(&mut services.objects)
@@ -240,6 +241,7 @@ mod tests {
 
                 top.infer_global_form();
                 top.update_as_line_segment();
+                top.infer_vertex_positions_if_necessary();
 
                 Partial::from(
                     top.build(&mut services.objects)
@@ -265,6 +267,7 @@ mod tests {
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();
+                side_down.infer_vertex_positions_if_necessary();
 
                 Partial::from(
                     side_down

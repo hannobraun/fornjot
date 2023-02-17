@@ -262,6 +262,7 @@ mod tests {
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
+            half_edge.infer_vertex_positions_if_necessary();
 
             half_edge.build(&mut services.objects)
         };
@@ -301,6 +302,7 @@ mod tests {
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
+            half_edge.infer_vertex_positions_if_necessary();
 
             half_edge.build(&mut services.objects)
         };
@@ -348,6 +350,7 @@ mod tests {
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
+            half_edge.infer_vertex_positions_if_necessary();
 
             half_edge.build(&mut services.objects)
         };
@@ -380,6 +383,7 @@ mod tests {
                 services.objects.surfaces.xy_plane(),
                 [[0., 0.], [1., 0.]],
             );
+            half_edge.infer_vertex_positions_if_necessary();
 
             half_edge.build(&mut services.objects)
         };

@@ -4,7 +4,6 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    builder::HalfEdgeBuilder,
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
         Surface, SurfaceVertex,
@@ -55,9 +54,7 @@ impl PartialObject for PartialHalfEdge {
         }
     }
 
-    fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
-        self.infer_vertex_positions_if_necessary();
-
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|vertex| {
