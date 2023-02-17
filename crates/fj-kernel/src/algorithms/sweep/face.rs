@@ -175,16 +175,20 @@ mod tests {
             .insert(&mut services.objects)
             .sweep(UP, &mut services.objects);
 
-        let mut bottom = PartialFace::default();
-        bottom.exterior.write().surface = Partial::from(surface.clone());
-        bottom
-            .exterior
-            .write()
-            .update_as_polygon_from_points(TRIANGLE);
-        let bottom = bottom
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .reverse(&mut services.objects);
+        let bottom = {
+            let mut bottom = PartialFace::default();
+
+            bottom.exterior.write().surface = Partial::from(surface.clone());
+            bottom
+                .exterior
+                .write()
+                .update_as_polygon_from_points(TRIANGLE);
+
+            bottom
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+                .reverse(&mut services.objects)
+        };
         let mut top = PartialFace::default();
         top.exterior.write().surface =
             Partial::from(surface.clone().translate(UP, &mut services.objects));
