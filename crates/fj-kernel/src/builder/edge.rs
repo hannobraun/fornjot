@@ -42,7 +42,10 @@ pub trait HalfEdgeBuilder {
     fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
 
     /// Infer the vertex positions (surface and global), if not already set
-    fn infer_vertex_positions_if_necessary(&mut self);
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    );
 
     /// Update this edge from another
     ///
@@ -176,7 +179,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.global_form.clone()
     }
 
-    fn infer_vertex_positions_if_necessary(&mut self) {
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    ) {
         let path = self
             .curve
             .read()
@@ -185,11 +191,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let MaybeSurfacePath::Defined(path) = path else {
             panic!("Can't infer vertex positions with undefined path");
         };
-
-        let surface =
-            self.surface.read().geometry.expect(
-                "Can't infer surface positions without surface geometry",
-            );
 
         for vertex in &mut self.vertices {
             let position_curve = vertex

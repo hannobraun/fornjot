@@ -175,14 +175,15 @@ mod tests {
             let mut half_edge = PartialHalfEdge::default();
             half_edge
                 .update_as_line_segment_from_points(surface.clone(), [a, b]);
-            half_edge.infer_vertex_positions_if_necessary();
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
         let b_to_a = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(surface, [b, a]);
-            half_edge.infer_vertex_positions_if_necessary();
+            half_edge
+                .update_as_line_segment_from_points(surface.clone(), [b, a]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
