@@ -57,6 +57,7 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|mut vertex| {
             let position_surface = vertex.1.read().position;
@@ -80,8 +81,7 @@ impl PartialObject for PartialHalfEdge {
             // Infer global position, if not available.
             let position_global = vertex.1.read().global_form.read().position;
             if position_global.is_none() {
-                let position_global = curve
-                    .surface()
+                let position_global = surface
                     .geometry()
                     .point_from_surface_coords(position_surface);
                 vertex.1.write().global_form.write().position =
@@ -96,7 +96,7 @@ impl PartialObject for PartialHalfEdge {
         });
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(curve.surface().clone(), curve, vertices, global_form)
+        HalfEdge::new(surface, curve, vertices, global_form)
     }
 }
 
