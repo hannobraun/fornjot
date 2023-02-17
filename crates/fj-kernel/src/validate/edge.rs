@@ -133,7 +133,7 @@ pub enum HalfEdgeValidationError {
         distance: Scalar,
 
         /// The surface vertex
-        surface_vertex: SurfaceVertex,
+        surface_vertex: Handle<SurfaceVertex>,
     },
 }
 
@@ -248,7 +248,7 @@ impl HalfEdgeValidationError {
                         surface_position_as_global,
                         global_position,
                         distance,
-                        surface_vertex: surface_vertex.clone_object(),
+                        surface_vertex: surface_vertex.clone(),
                     })
                     .into(),
                 );
