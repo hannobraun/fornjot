@@ -24,16 +24,19 @@ impl Approx for &Handle<HalfEdge> {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let boundary = self.boundary();
+        let half_edge = self;
+
+        let boundary = half_edge.boundary();
         let range = RangeOnPath { boundary };
 
         let first = ApproxPoint::new(
-            self.start_vertex().position(),
-            self.start_vertex().global_form().position(),
+            half_edge.start_vertex().position(),
+            half_edge.start_vertex().global_form().position(),
         )
-        .with_source((self.clone(), self.boundary()[0]));
-        let curve_approx = (self.curve(), self.surface().deref(), range)
-            .approx_with_cache(tolerance, cache);
+        .with_source((half_edge.clone(), half_edge.boundary()[0]));
+        let curve_approx =
+            (half_edge.curve(), half_edge.surface().deref(), range)
+                .approx_with_cache(tolerance, cache);
 
         HalfEdgeApprox {
             first,
