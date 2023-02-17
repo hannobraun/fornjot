@@ -183,7 +183,10 @@ mod tests {
         ];
 
         let face = {
-            let mut face = PartialFace::default();
+            let mut face = PartialFace {
+                surface: surface.clone(),
+                ..Default::default()
+            };
             face.exterior.write().surface = surface;
             face.exterior
                 .write()

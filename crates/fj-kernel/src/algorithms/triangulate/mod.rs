@@ -98,7 +98,10 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
 
-        let mut face = PartialFace::default();
+        let mut face = PartialFace {
+            surface: surface.clone(),
+            ..Default::default()
+        };
         face.exterior.write().surface = surface;
         face.exterior
             .write()
@@ -137,7 +140,10 @@ mod tests {
         let h = [3., 1.];
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut face = PartialFace::default();
+        let mut face = PartialFace {
+            surface: Partial::from(surface.clone()),
+            ..Default::default()
+        };
         face.exterior.write().surface = Partial::from(surface.clone());
         face.exterior
             .write()
@@ -201,7 +207,10 @@ mod tests {
         let e = [0.0, 1.0];
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut face = PartialFace::default();
+        let mut face = PartialFace {
+            surface: Partial::from(surface.clone()),
+            ..Default::default()
+        };
         face.exterior.write().surface = Partial::from(surface.clone());
         face.exterior
             .write()

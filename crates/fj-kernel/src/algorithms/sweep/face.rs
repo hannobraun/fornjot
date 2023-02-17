@@ -56,6 +56,7 @@ impl Sweep for Handle<Face> {
         let top_surface =
             bottom_face.surface().clone().translate(path, objects);
         let mut top_face = PartialFace {
+            surface: Partial::from(top_surface.clone()),
             color: Some(self.color()),
             ..PartialFace::default()
         };
@@ -161,6 +162,7 @@ mod tests {
             let mut sketch = PartialSketch::default();
 
             let mut face = sketch.add_face();
+            face.write().surface = Partial::from(surface.clone());
             face.write().exterior.write().surface =
                 Partial::from(surface.clone());
             face.write()
@@ -176,7 +178,10 @@ mod tests {
             .sweep(UP, &mut services.objects);
 
         let bottom = {
-            let mut bottom = PartialFace::default();
+            let mut bottom = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
 
             bottom.exterior.write().surface = Partial::from(surface.clone());
             bottom
@@ -192,7 +197,10 @@ mod tests {
         let top = {
             let surface = surface.clone().translate(UP, &mut services.objects);
 
-            let mut top = PartialFace::default();
+            let mut top = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
 
             top.exterior.write().surface = Partial::from(surface);
             top.exterior.write().update_as_polygon_from_points(TRIANGLE);
@@ -235,6 +243,7 @@ mod tests {
             let mut sketch = PartialSketch::default();
 
             let mut face = sketch.add_face();
+            face.write().surface = Partial::from(surface.clone());
             face.write().exterior.write().surface =
                 Partial::from(surface.clone());
             face.write()
@@ -253,7 +262,10 @@ mod tests {
             let surface =
                 surface.clone().translate(DOWN, &mut services.objects);
 
-            let mut bottom = PartialFace::default();
+            let mut bottom = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
 
             bottom.exterior.write().surface = Partial::from(surface);
             bottom
@@ -267,7 +279,10 @@ mod tests {
                 .reverse(&mut services.objects)
         };
         let top = {
-            let mut top = PartialFace::default();
+            let mut top = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
 
             top.exterior.write().surface = Partial::from(surface.clone());
             top.exterior.write().update_as_polygon_from_points(TRIANGLE);

@@ -38,6 +38,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
                 (edge.curve().clone(), surface)
                     .sweep_with_cache(path, cache, objects),
             );
+            face.surface = surface.clone();
             face.exterior.write().surface = surface;
         }
 
@@ -269,7 +270,7 @@ mod tests {
             };
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface),
+                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.half_edges.extend(
@@ -277,6 +278,7 @@ mod tests {
             );
 
             let face = PartialFace {
+                surface: Partial::from(surface),
                 exterior: Partial::from_partial(cycle),
                 ..Default::default()
             };

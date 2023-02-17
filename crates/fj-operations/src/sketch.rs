@@ -37,7 +37,7 @@ impl Shape for fj::Sketch {
                 };
                 let exterior = {
                     let mut cycle = PartialCycle {
-                        surface,
+                        surface: surface.clone(),
                         ..Default::default()
                     };
                     cycle.half_edges.push(half_edge);
@@ -45,6 +45,7 @@ impl Shape for fj::Sketch {
                 };
 
                 PartialFace {
+                    surface,
                     exterior,
                     color: Some(Color(self.color())),
                     ..Default::default()
@@ -59,7 +60,7 @@ impl Shape for fj::Sketch {
 
                 let exterior = {
                     let mut cycle = PartialCycle {
-                        surface: Partial::from(surface),
+                        surface: Partial::from(surface.clone()),
                         ..Default::default()
                     };
                     let mut line_segments = vec![];
@@ -98,6 +99,7 @@ impl Shape for fj::Sketch {
                 };
 
                 PartialFace {
+                    surface: Partial::from(surface),
                     exterior,
                     color: Some(Color(self.color())),
                     ..Default::default()
