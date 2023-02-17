@@ -1,12 +1,11 @@
 use fj_math::Point;
 
-use crate::{objects::Surface, storage::Handle};
+use crate::storage::Handle;
 
 /// A vertex, defined in surface (2D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
     position: Point<2>,
-    surface: Handle<Surface>,
     global_form: Handle<GlobalVertex>,
 }
 
@@ -14,13 +13,11 @@ impl SurfaceVertex {
     /// Construct a new instance of `SurfaceVertex`
     pub fn new(
         position: impl Into<Point<2>>,
-        surface: Handle<Surface>,
         global_form: Handle<GlobalVertex>,
     ) -> Self {
         let position = position.into();
         Self {
             position,
-            surface,
             global_form,
         }
     }
@@ -28,11 +25,6 @@ impl SurfaceVertex {
     /// Access the position of the vertex on the surface
     pub fn position(&self) -> Point<2> {
         self.position
-    }
-
-    /// Access the surface that the vertex is defined in
-    pub fn surface(&self) -> &Handle<Surface> {
-        &self.surface
     }
 
     /// Access the global form of the vertex

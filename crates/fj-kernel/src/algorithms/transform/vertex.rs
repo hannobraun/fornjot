@@ -18,16 +18,12 @@ impl TransformObject for SurfaceVertex {
         // coordinates and thus transforming the surface takes care of it.
         let position = self.position();
 
-        let surface = self
-            .surface()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let global_form = self
             .global_form()
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(position, surface, global_form)
+        Self::new(position, global_form)
     }
 }
 

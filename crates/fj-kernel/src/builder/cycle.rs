@@ -149,7 +149,7 @@ impl CycleBuilder for PartialCycle {
 
             let [_, vertex] = &mut new_half_edge.vertices;
             vertex.1 = shared_surface_vertex;
-            new_half_edge.replace_surface(self.surface.clone());
+            new_half_edge.surface = self.surface.clone();
             new_half_edge.infer_global_form();
         }
 
