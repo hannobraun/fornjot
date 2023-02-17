@@ -242,11 +242,12 @@ mod tests {
             .sweep(DOWN, &mut services.objects);
 
         let bottom = {
+            let surface =
+                surface.clone().translate(DOWN, &mut services.objects);
+
             let mut bottom = PartialFace::default();
 
-            bottom.exterior.write().surface = Partial::from(
-                surface.clone().translate(DOWN, &mut services.objects),
-            );
+            bottom.exterior.write().surface = Partial::from(surface);
             bottom
                 .exterior
                 .write()
