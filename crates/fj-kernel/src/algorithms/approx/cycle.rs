@@ -21,12 +21,13 @@ impl Approx for &Cycle {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
+        let cycle = self;
         let tolerance = tolerance.into();
 
-        let half_edges = self
+        let half_edges = cycle
             .half_edges()
             .map(|half_edge| {
-                (half_edge, self.surface().deref())
+                (half_edge, cycle.surface().deref())
                     .approx_with_cache(tolerance, cache)
             })
             .collect();
