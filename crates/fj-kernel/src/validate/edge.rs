@@ -20,10 +20,6 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_surface_identity(self, errors);
         HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
         HalfEdgeValidationError::check_vertex_positions(self, config, errors);
-
-        // We don't need to check anything about surfaces here. We already check
-        // curves, which makes sure the vertices are consistent with each other,
-        // and the validation of those vertices checks the surfaces.
     }
 }
 
