@@ -17,6 +17,10 @@ impl TransformObject for Face {
         // Color does not need to be transformed.
         let color = self.color();
 
+        let surface = self
+            .surface()
+            .clone()
+            .transform_with_cache(transform, objects, cache);
         let exterior = self
             .exterior()
             .clone()
@@ -25,7 +29,7 @@ impl TransformObject for Face {
             interior.transform_with_cache(transform, objects, cache)
         });
 
-        Self::new(exterior, interiors, color)
+        Self::new(surface, exterior, interiors, color)
     }
 }
 

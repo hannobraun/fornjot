@@ -40,11 +40,12 @@ impl PartialObject for PartialFace {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let surface = self.surface.build(objects);
         let exterior = self.exterior.build(objects);
         let interiors =
             self.interiors.into_iter().map(|cycle| cycle.build(objects));
         let color = self.color.unwrap_or_default();
 
-        Face::new(exterior, interiors, color)
+        Face::new(surface, exterior, interiors, color)
     }
 }

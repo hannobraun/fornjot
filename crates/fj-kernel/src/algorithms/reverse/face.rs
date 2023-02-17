@@ -15,6 +15,7 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(objects))
             .collect::<Vec<_>>();
 
-        Face::new(exterior, interiors, self.color()).insert(objects)
+        Face::new(self.surface().clone(), exterior, interiors, self.color())
+            .insert(objects)
     }
 }

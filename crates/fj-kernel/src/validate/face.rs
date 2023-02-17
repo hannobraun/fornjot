@@ -144,7 +144,12 @@ mod tests {
                 .insert(&mut services.objects);
 
             let interiors = [cycle];
-            Face::new(valid.exterior().clone(), interiors, valid.color())
+            Face::new(
+                valid.surface().clone(),
+                valid.exterior().clone(),
+                interiors,
+                valid.color(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -184,7 +189,12 @@ mod tests {
                 .map(|cycle| cycle.reverse(&mut services.objects))
                 .collect::<Vec<_>>();
 
-            Face::new(valid.exterior().clone(), interiors, valid.color())
+            Face::new(
+                valid.surface().clone(),
+                valid.exterior().clone(),
+                interiors,
+                valid.color(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
