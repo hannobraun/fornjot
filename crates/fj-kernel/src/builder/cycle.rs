@@ -183,7 +183,7 @@ impl CycleBuilder for PartialCycle {
     {
         edges.map(|other| {
             let mut this = self.add_half_edge();
-            this.write().update_from_other_edge(&other, &Some(*surface));
+            this.write().update_from_other_edge(&other, surface);
             this
         })
     }
