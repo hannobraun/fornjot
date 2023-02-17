@@ -199,9 +199,7 @@ mod tests {
                 half_edge
             };
             let side_up = {
-                let mut side_up = PartialHalfEdge {
-                    ..Default::default()
-                };
+                let mut side_up = PartialHalfEdge::default();
 
                 {
                     let [back, front] = side_up
@@ -221,9 +219,7 @@ mod tests {
                 side_up
             };
             let top = {
-                let mut top = PartialHalfEdge {
-                    ..Default::default()
-                };
+                let mut top = PartialHalfEdge::default();
 
                 {
                     let [(back, back_surface), (front, front_surface)] =
@@ -249,9 +245,7 @@ mod tests {
                 .clone()
             };
             let side_down = {
-                let mut side_down = PartialHalfEdge {
-                    ..Default::default()
-                };
+                let mut side_down = PartialHalfEdge::default();
 
                 let [(back, back_surface), (front, front_surface)] =
                     side_down.vertices.each_mut_ext();
