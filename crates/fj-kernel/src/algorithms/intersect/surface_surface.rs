@@ -27,11 +27,8 @@ impl SurfaceSurfaceIntersection {
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let surfaces_and_planes = surfaces.map(|surface| {
-            let plane = plane_from_surface(&surface);
-            (surface, plane)
-        });
-        let [a, b] = surfaces_and_planes.clone().map(|(_, plane)| plane);
+        let planes = surfaces.map(|surface| plane_from_surface(&surface));
+        let [a, b] = planes;
 
         let (a_distance, a_normal) = a.constant_normal_form();
         let (b_distance, b_normal) = b.constant_normal_form();
@@ -57,7 +54,7 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.map(|(_, plane)| {
+        let curves = planes.map(|plane| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve.insert(objects);
 
