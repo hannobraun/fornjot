@@ -45,13 +45,7 @@ impl Cycle {
 
     /// Access the surface that the cycle is in
     pub fn surface(&self) -> &Handle<Surface> {
-        if let Some(half_edge) = self.half_edges.first() {
-            return half_edge.surface();
-        }
-
-        unreachable!(
-            "Cycle has no half-edges, which the constructor should prevent."
-        )
+        &self.surface
     }
 
     /// Access the half-edges that make up the cycle
