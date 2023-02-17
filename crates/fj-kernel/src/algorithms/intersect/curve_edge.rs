@@ -76,7 +76,7 @@ mod tests {
 
     use crate::{
         builder::{CurveBuilder, HalfEdgeBuilder},
-        partial::{Partial, PartialCurve, PartialHalfEdge, PartialObject},
+        partial::{PartialCurve, PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -86,7 +86,7 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
@@ -115,7 +115,7 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
@@ -144,7 +144,7 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
@@ -168,7 +168,7 @@ mod tests {
     fn compute_edge_on_curve() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
+        let surface = services.objects.surfaces.xy_plane();
         let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
