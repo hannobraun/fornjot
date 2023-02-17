@@ -60,7 +60,7 @@ impl Face {
 
     /// Access the surface of the face
     pub fn surface(&self) -> &Handle<Surface> {
-        self.exterior().surface()
+        &self.surface
     }
 
     /// Access the cycle that bounds the face on the outside
