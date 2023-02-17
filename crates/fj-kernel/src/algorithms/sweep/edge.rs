@@ -187,7 +187,7 @@ mod tests {
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
-            let surface = Partial::from(services.objects.surfaces.xz_plane());
+            let surface = services.objects.surfaces.xz_plane();
 
             let bottom = {
                 let mut half_edge = PartialHalfEdge::default();
@@ -200,7 +200,7 @@ mod tests {
             };
             let side_up = {
                 let mut side_up = PartialHalfEdge {
-                    surface: surface.clone(),
+                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 
@@ -223,7 +223,7 @@ mod tests {
             };
             let top = {
                 let mut top = PartialHalfEdge {
-                    surface: surface.clone(),
+                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 
@@ -252,7 +252,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge {
-                    surface: surface.clone(),
+                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 
@@ -279,7 +279,7 @@ mod tests {
             };
 
             let mut cycle = PartialCycle {
-                surface,
+                surface: Partial::from(surface),
                 ..Default::default()
             };
             cycle.half_edges.extend(
