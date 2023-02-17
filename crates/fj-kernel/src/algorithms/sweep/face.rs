@@ -257,12 +257,15 @@ mod tests {
                 .insert(&mut services.objects)
                 .reverse(&mut services.objects)
         };
-        let mut top = PartialFace::default();
-        top.exterior.write().surface = Partial::from(surface.clone());
-        top.exterior.write().update_as_polygon_from_points(TRIANGLE);
-        let top = top
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let top = {
+            let mut top = PartialFace::default();
+
+            top.exterior.write().surface = Partial::from(surface.clone());
+            top.exterior.write().update_as_polygon_from_points(TRIANGLE);
+
+            top.build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
 
         assert!(solid.find_face(&bottom).is_some());
         assert!(solid.find_face(&top).is_some());
