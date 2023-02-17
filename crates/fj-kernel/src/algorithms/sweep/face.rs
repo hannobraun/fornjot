@@ -190,11 +190,11 @@ mod tests {
                 .reverse(&mut services.objects)
         };
         let top = {
+            let surface = surface.clone().translate(UP, &mut services.objects);
+
             let mut top = PartialFace::default();
 
-            top.exterior.write().surface = Partial::from(
-                surface.clone().translate(UP, &mut services.objects),
-            );
+            top.exterior.write().surface = Partial::from(surface);
             top.exterior.write().update_as_polygon_from_points(TRIANGLE);
 
             top.build(&mut services.objects)
