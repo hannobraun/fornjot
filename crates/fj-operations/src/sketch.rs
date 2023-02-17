@@ -31,7 +31,6 @@ impl Shape for fj::Sketch {
 
                 let half_edge = {
                     let mut half_edge = PartialHalfEdge {
-                        surface: surface.clone(),
                         ..Default::default()
                     };
                     half_edge.update_as_circle_from_radius(circle.radius());

@@ -6,7 +6,7 @@ use fj_math::Point;
 use crate::{
     objects::{
         Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        Surface, SurfaceVertex,
+        SurfaceVertex,
     },
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -15,9 +15,6 @@ use crate::{
 /// A partial [`HalfEdge`]
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
-    /// The surface that the half-edge is defined in
-    pub surface: Partial<Surface>,
-
     /// The curve that the half-edge is defined in
     pub curve: Partial<Curve>,
 
@@ -36,7 +33,6 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            surface: Partial::from_full(half_edge.surface().clone(), cache),
             curve: Partial::from_full(half_edge.curve().clone(), cache),
             vertices: half_edge
                 .boundary()
@@ -55,7 +51,6 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|vertex| {
             let position_curve = vertex
@@ -67,14 +62,12 @@ impl PartialObject for PartialHalfEdge {
         });
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(surface, curve, vertices, global_form)
+        HalfEdge::new(curve, vertices, global_form)
     }
 }
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        let surface = Partial::new();
-
         let curve = Partial::<Curve>::new();
         let vertices = array::from_fn(|_| {
             let surface_form = Partial::default();
@@ -96,7 +89,6 @@ impl Default for PartialHalfEdge {
         });
 
         Self {
-            surface,
             curve,
             vertices,
             global_form,

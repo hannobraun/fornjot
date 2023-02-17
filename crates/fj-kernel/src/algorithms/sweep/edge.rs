@@ -200,7 +200,6 @@ mod tests {
             };
             let side_up = {
                 let mut side_up = PartialHalfEdge {
-                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 
@@ -223,7 +222,6 @@ mod tests {
             };
             let top = {
                 let mut top = PartialHalfEdge {
-                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 
@@ -252,7 +250,6 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge {
-                    surface: Partial::from(surface.clone()),
                     ..Default::default()
                 };
 

@@ -220,12 +220,7 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(
-                valid.surface().clone(),
-                valid.curve().clone(),
-                vertices,
-                global_form,
-            )
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -270,12 +265,7 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(
-                valid.surface().clone(),
-                valid.curve().clone(),
-                vertices,
-                global_form,
-            )
+            HalfEdge::new(valid.curve().clone(), vertices, global_form)
         };
 
         valid.validate_and_return_first_error()?;
@@ -306,7 +296,6 @@ mod tests {
             });
 
             HalfEdge::new(
-                valid.surface().clone(),
                 valid.curve().clone(),
                 vertices,
                 valid.global_form().clone(),
