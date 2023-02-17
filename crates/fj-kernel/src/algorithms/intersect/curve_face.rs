@@ -163,10 +163,7 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
 
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
         let curve = curve.build(&mut services.objects);
 

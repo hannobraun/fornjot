@@ -87,10 +87,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
@@ -118,10 +115,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
@@ -149,10 +143,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {
@@ -175,10 +166,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
-        let mut curve = PartialCurve {
-            surface: surface.clone(),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_u_axis();
         let curve = curve.build(&mut services.objects);
         let half_edge = {

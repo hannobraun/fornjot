@@ -13,13 +13,13 @@ use std::collections::BTreeMap;
 
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
-    objects::{Curve, GlobalCurve},
+    objects::{Curve, GlobalCurve, Surface},
     storage::{Handle, ObjectId},
 };
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, RangeOnPath) {
+impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
     type Approximation = CurveApprox;
     type Cache = CurveCache;
 
@@ -28,13 +28,14 @@ impl Approx for (&Handle<Curve>, RangeOnPath) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (curve, range) = self;
+        let (curve, surface, range) = self;
 
         let global_curve = curve.global_form().clone();
         let global_curve_approx = match cache.get(global_curve.clone(), range) {
             Some(approx) => approx,
             None => {
-                let approx = approx_global_curve(curve, range, tolerance);
+                let approx =
+                    approx_global_curve(curve, surface, range, tolerance);
                 cache.insert(global_curve, range, approx)
             }
         };
@@ -53,6 +54,7 @@ impl Approx for (&Handle<Curve>, RangeOnPath) {
 
 fn approx_global_curve(
     curve: &Curve,
+    surface: &Surface,
     range: RangeOnPath,
     tolerance: impl Into<Tolerance>,
 ) -> GlobalCurveApprox {
@@ -62,7 +64,7 @@ fn approx_global_curve(
     // This will probably all be unified eventually, as `SurfacePath` and
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
-    let points = match (curve.path(), curve.surface().geometry().u) {
+    let points = match (curve.path(), surface.geometry().u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             todo!(
                 "Approximating a circle on a curved surface not supported yet."
@@ -88,8 +90,7 @@ fn approx_global_curve(
                     //    surface point available, so it needs to be computed
                     //    later anyway, in the general case.
 
-                    let point_global = curve
-                        .surface()
+                    let point_global = surface
                         .geometry()
                         .point_from_surface_coords(point_surface);
                     (point_curve, point_global)
@@ -102,17 +103,15 @@ fn approx_global_curve(
                     [curve.path().point_from_path_coords(point_curve).u]
                 }));
 
-            let approx_u = (curve.surface().geometry().u, range_u)
+            let approx_u = (surface.geometry().u, range_u)
                 .approx_with_cache(tolerance, &mut ());
 
             let mut points = Vec::new();
             for (u, _) in approx_u {
                 let t = (u.t - line.origin().u) / line.direction().u;
                 let point_surface = curve.path().point_from_path_coords([t]);
-                let point_global = curve
-                    .surface()
-                    .geometry()
-                    .point_from_surface_coords(point_surface);
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
                 points.push((u, point_global));
             }
 
@@ -211,7 +210,7 @@ impl GlobalCurveApprox {
 
 #[cfg(test)]
 mod tests {
-    use std::f64::consts::TAU;
+    use std::{f64::consts::TAU, ops::Deref};
 
     use pretty_assertions::assert_eq;
 
@@ -220,7 +219,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        partial::{Partial, PartialCurve, PartialObject, PartialSurface},
+        partial::{PartialCurve, PartialObject, PartialSurface},
         services::Services,
     };
 
@@ -231,17 +230,14 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, range).approx(1.);
+        let approx = (&curve, surface.deref(), range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -256,17 +252,14 @@ mod tests {
         )
         .build(&mut services.objects)
         .insert(&mut services.objects);
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, range).approx(1.);
+        let approx = (&curve, surface.deref(), range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -279,10 +272,7 @@ mod tests {
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
         let curve = curve
             .build(&mut services.objects)
@@ -291,7 +281,7 @@ mod tests {
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
 
-        let approx = (&curve, range).approx(tolerance);
+        let approx = (&curve, surface.deref(), range).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -312,10 +302,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve {
-            surface: Partial::from(surface),
-            ..Default::default()
-        };
+        let mut curve = PartialCurve::default();
         curve.update_as_circle_from_radius(1.);
         let curve = curve
             .build(&mut services.objects)
@@ -323,16 +310,14 @@ mod tests {
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
-        let approx = (&curve, range).approx(tolerance);
+        let approx = (&curve, surface.deref(), range).approx(tolerance);
 
         let expected_approx = (curve.path(), range)
             .approx(tolerance)
             .into_iter()
             .map(|(_, point_surface)| {
-                let point_global = curve
-                    .surface()
-                    .geometry()
-                    .point_from_surface_coords(point_surface);
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();

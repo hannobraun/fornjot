@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Handle<Curve> {
+impl Sweep for (Handle<Curve>, &Surface) {
     type Swept = Handle<Surface>;
 
     fn sweep_with_cache(
@@ -21,7 +21,9 @@ impl Sweep for Handle<Curve> {
         _: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        match self.surface().geometry().u {
+        let (curve, surface) = self;
+
+        match surface.geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.
@@ -45,32 +47,24 @@ impl Sweep for Handle<Curve> {
             }
         }
 
-        let u = match self.path() {
+        let u = match curve.path() {
             SurfacePath::Circle(circle) => {
-                let center = self
-                    .surface()
+                let center = surface
                     .geometry()
                     .point_from_surface_coords(circle.center());
-                let a = self
-                    .surface()
-                    .geometry()
-                    .vector_from_surface_coords(circle.a());
-                let b = self
-                    .surface()
-                    .geometry()
-                    .vector_from_surface_coords(circle.b());
+                let a =
+                    surface.geometry().vector_from_surface_coords(circle.a());
+                let b =
+                    surface.geometry().vector_from_surface_coords(circle.b());
 
                 let circle = Circle::new(center, a, b);
 
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin = self
-                    .surface()
-                    .geometry()
-                    .point_from_surface_coords(line.origin());
-                let direction = self
-                    .surface()
+                let origin =
+                    surface.geometry().point_from_surface_coords(line.origin());
+                let direction = surface
                     .geometry()
                     .vector_from_surface_coords(line.direction());
 

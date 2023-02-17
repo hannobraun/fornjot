@@ -64,7 +64,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>) {
         let surface = surface.into();
 
-        self.curve.write().surface = surface.clone();
+        self.surface = surface.clone();
 
         for vertex in &mut self.vertices {
             vertex.1.write().surface = surface.clone();
@@ -134,14 +134,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     ) {
-        let surface = surface.into();
-
-        self.curve.write().surface = surface.clone();
+        self.replace_surface(surface.into());
 
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut surface_form = vertex.1.write();
             surface_form.position = Some(point.into());
-            surface_form.surface = surface.clone();
         }
 
         self.update_as_line_segment()
@@ -196,7 +193,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self.curve.write().path =
             other.read().curve.read().path.as_ref().and_then(|path| {
-                match other.read().curve.read().surface.read().geometry {
+                match other.read().surface.read().geometry {
                     Some(surface) => {
                         // We have information about the other edge's surface
                         // available. We need to use that to interpret what the

@@ -31,13 +31,7 @@ impl Shape for fj::Sketch {
                     let surface = Partial::from(surface);
 
                     let mut half_edge = PartialHalfEdge::default();
-
-                    half_edge.curve.write().surface = surface.clone();
-
-                    for vertex in &mut half_edge.vertices {
-                        vertex.1.write().surface = surface.clone();
-                    }
-
+                    half_edge.replace_surface(surface);
                     half_edge.update_as_circle_from_radius(circle.radius());
 
                     Partial::from_partial(half_edge)

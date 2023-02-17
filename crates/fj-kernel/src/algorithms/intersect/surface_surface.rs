@@ -27,14 +27,10 @@ impl SurfaceSurfaceIntersection {
         // Adaptations were made to get the intersection curves in local
         // coordinates for each surface.
 
-        let surfaces_and_planes = surfaces.map(|surface| {
-            let plane = plane_from_surface(&surface);
-            (surface, plane)
-        });
-        let [a, b] = surfaces_and_planes.clone().map(|(_, plane)| plane);
+        let planes = surfaces.map(|surface| plane_from_surface(&surface));
 
-        let (a_distance, a_normal) = a.constant_normal_form();
-        let (b_distance, b_normal) = b.constant_normal_form();
+        let [(a_distance, a_normal), (b_distance, b_normal)] =
+            planes.map(|plane| plane.constant_normal_form());
 
         let direction = a_normal.cross(&b_normal);
 
@@ -57,11 +53,11 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.map(|(surface, plane)| {
+        let curves = planes.map(|plane| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve.insert(objects);
 
-            Curve::new(surface, path, global_form).insert(objects)
+            Curve::new(path, global_form).insert(objects)
         });
 
         Some(Self {
@@ -92,7 +88,7 @@ mod tests {
         algorithms::transform::TransformObject,
         builder::CurveBuilder,
         insert::Insert,
-        partial::{Partial, PartialCurve, PartialObject},
+        partial::{PartialCurve, PartialObject},
         services::Services,
     };
 
@@ -120,18 +116,13 @@ mod tests {
             None,
         );
 
-        let mut expected_xy = PartialCurve {
-            surface: Partial::from(xy.clone()),
-            ..Default::default()
-        };
+        let mut expected_xy = PartialCurve::default();
         expected_xy.update_as_u_axis();
         let expected_xy = expected_xy
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let mut expected_xz = PartialCurve {
-            surface: Partial::from(xz.clone()),
-            ..Default::default()
-        };
+
+        let mut expected_xz = PartialCurve::default();
         expected_xz.update_as_u_axis();
         let expected_xz = expected_xz
             .build(&mut services.objects)

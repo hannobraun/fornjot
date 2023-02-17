@@ -165,13 +165,13 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let curve_surface = half_edge.curve().surface();
+        let surface = half_edge.surface();
         let surface_form_surface = half_edge.start_vertex().surface();
 
-        if curve_surface.id() != surface_form_surface.id() {
+        if surface.id() != surface_form_surface.id() {
             errors.push(
                 Box::new(Self::SurfaceMismatch {
-                    curve_surface: curve_surface.clone(),
+                    curve_surface: surface.clone(),
                     surface_form_surface: surface_form_surface.clone(),
                 })
                 .into(),
@@ -240,7 +240,12 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(valid.curve().clone(), vertices, global_form)
+            HalfEdge::new(
+                valid.surface().clone(),
+                valid.curve().clone(),
+                vertices,
+                global_form,
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -282,7 +287,12 @@ mod tests {
                 .boundary()
                 .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(valid.curve().clone(), vertices, global_form)
+            HalfEdge::new(
+                valid.surface().clone(),
+                valid.curve().clone(),
+                vertices,
+                global_form,
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -318,6 +328,7 @@ mod tests {
                 });
 
             HalfEdge::new(
+                valid.surface().clone(),
                 valid.curve().clone(),
                 vertices,
                 valid.global_form().clone(),
@@ -349,6 +360,7 @@ mod tests {
             });
 
             HalfEdge::new(
+                valid.surface().clone(),
                 valid.curve().clone(),
                 vertices,
                 valid.global_form().clone(),
