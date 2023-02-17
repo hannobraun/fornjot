@@ -2,7 +2,10 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::path::{GlobalPath, SurfacePath},
+    geometry::{
+        path::{GlobalPath, SurfacePath},
+        surface::SurfaceGeometry,
+    },
     objects::{GlobalEdge, HalfEdge, Surface},
     partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
@@ -47,7 +50,11 @@ pub trait HalfEdgeBuilder {
     /// under various circumstances. As long as you're only dealing with lines
     /// and planes, you should be fine. Otherwise, please read the code of this
     /// method carefully, to make sure you don't run into trouble.
-    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>);
+    fn update_from_other_edge(
+        &mut self,
+        other: &Partial<HalfEdge>,
+        surface: &Option<SurfaceGeometry>,
+    );
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -166,14 +173,18 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.global_form.clone()
     }
 
-    fn update_from_other_edge(&mut self, other: &Partial<HalfEdge>) {
+    fn update_from_other_edge(
+        &mut self,
+        other: &Partial<HalfEdge>,
+        surface: &Option<SurfaceGeometry>,
+    ) {
         let global_curve = other.read().curve.read().global_form.clone();
         self.curve.write().global_form = global_curve.clone();
         self.global_form.write().curve = global_curve;
 
         self.curve.write().path =
             other.read().curve.read().path.as_ref().and_then(|path| {
-                match other.read().surface.read().geometry {
+                match surface {
                     Some(surface) => {
                         // We have information about the other edge's surface
                         // available. We need to use that to interpret what the

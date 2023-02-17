@@ -247,7 +247,8 @@ impl CycleBuilder for PartialCycle {
             let mut this = half_edges.pop_front().expect(
                 "Pushed correct number of half-edges; should be able to pop",
             );
-            this.write().update_from_other_edge(&other);
+            this.write()
+                .update_from_other_edge(&other, &self.surface.read().geometry);
             this
         })
     }
@@ -261,7 +262,8 @@ impl CycleBuilder for PartialCycle {
     {
         edges.map(|other| {
             let mut this = self.add_half_edge();
-            this.write().update_from_other_edge(&other);
+            this.write()
+                .update_from_other_edge(&other, &self.surface.read().geometry);
             this
         })
     }
