@@ -53,12 +53,12 @@ impl Sweep for Handle<Face> {
         };
         faces.push(bottom_face.clone());
 
+        let top_surface =
+            bottom_face.surface().clone().translate(path, objects);
         let mut top_face = PartialFace {
             color: Some(self.color()),
             ..PartialFace::default()
         };
-        let top_surface =
-            bottom_face.surface().clone().translate(path, objects);
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
             let cycle = cycle.reverse(objects);
