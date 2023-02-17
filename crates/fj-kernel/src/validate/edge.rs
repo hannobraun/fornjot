@@ -109,7 +109,7 @@ pub enum HalfEdgeValidationError {
         half_edge: HalfEdge,
     },
 
-    /// Mismatch between position and position of global form
+    /// Mismatch between [`SurfaceVertex`] and [`GlobalVertex`] positions
     #[error(
         "`SurfaceVertex` position doesn't match position of its global form\n\
         - Surface position: {surface_position:?}\n\
