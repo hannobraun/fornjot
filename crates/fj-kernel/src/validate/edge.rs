@@ -16,7 +16,7 @@ impl Validate for HalfEdge {
         HalfEdgeValidationError::check_global_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_surface_identity(self, errors);
-        HalfEdgeValidationError::check_vertex_positions(self, config, errors);
+        HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
 
         // We don't need to check anything about surfaces here. We already check
         // curves, which makes sure the vertices are consistent with each other,
@@ -179,7 +179,7 @@ impl HalfEdgeValidationError {
         }
     }
 
-    fn check_vertex_positions(
+    fn check_vertex_coincidence(
         half_edge: &HalfEdge,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
