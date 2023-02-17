@@ -107,7 +107,6 @@ impl Default for PartialHalfEdge {
         let curve = Partial::<Curve>::new();
         let vertices = array::from_fn(|_| {
             let surface_form = Partial::from_partial(PartialSurfaceVertex {
-                surface: surface.clone(),
                 ..Default::default()
             });
 

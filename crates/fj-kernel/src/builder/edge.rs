@@ -64,11 +64,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn replace_surface(&mut self, surface: impl Into<Partial<Surface>>) {
         let surface = surface.into();
 
-        self.surface = surface.clone();
-
-        for vertex in &mut self.vertices {
-            vertex.1.write().surface = surface.clone();
-        }
+        self.surface = surface;
     }
 
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
