@@ -166,16 +166,12 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let surface = half_edge.surface();
-
-        let curve_surface = half_edge.curve().surface();
         let surface_form_surface = half_edge.start_vertex().surface();
 
-        if surface.id() != curve_surface.id()
-            || surface.id() != surface_form_surface.id()
-        {
+        if surface.id() != surface_form_surface.id() {
             errors.push(
                 Box::new(Self::SurfaceMismatch {
-                    curve_surface: curve_surface.clone(),
+                    curve_surface: surface.clone(),
                     surface_form_surface: surface_form_surface.clone(),
                 })
                 .into(),

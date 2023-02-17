@@ -18,16 +18,12 @@ impl TransformObject for Curve {
         // coordinates, and thus transforming `surface` takes care of it.
         let path = self.path();
 
-        let surface = self
-            .surface()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let global_form = self
             .global_form()
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(surface, path, global_form)
+        Self::new(path, global_form)
     }
 }
 

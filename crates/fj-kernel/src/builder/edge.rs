@@ -66,8 +66,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self.surface = surface.clone();
 
-        self.curve.write().surface = surface.clone();
-
         for vertex in &mut self.vertices {
             vertex.1.write().surface = surface.clone();
         }

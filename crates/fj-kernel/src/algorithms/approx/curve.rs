@@ -219,7 +219,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        partial::{Partial, PartialCurve, PartialObject, PartialSurface},
+        partial::{PartialCurve, PartialObject, PartialSurface},
         services::Services,
     };
 
@@ -231,7 +231,6 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
@@ -256,7 +255,6 @@ mod tests {
         .build(&mut services.objects)
         .insert(&mut services.objects);
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
@@ -279,7 +277,6 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
@@ -312,7 +309,6 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let mut curve = PartialCurve {
-            surface: Partial::from(surface.clone()),
             ..Default::default()
         };
         curve.update_as_circle_from_radius(1.);

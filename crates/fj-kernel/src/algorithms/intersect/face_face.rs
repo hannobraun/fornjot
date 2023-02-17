@@ -132,9 +132,8 @@ mod tests {
         let intersection =
             FaceFaceIntersection::compute([&a, &b], &mut services.objects);
 
-        let expected_curves = surfaces.map(|surface| {
+        let expected_curves = surfaces.map(|_| {
             let mut curve = PartialCurve {
-                surface: Partial::from(surface),
                 ..Default::default()
             };
             curve.update_as_line_from_points([[0., 0.], [1., 0.]]);

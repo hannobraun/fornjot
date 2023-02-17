@@ -88,7 +88,6 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
         let mut curve = PartialCurve {
-            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -119,7 +118,6 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
         let mut curve = PartialCurve {
-            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -150,7 +148,6 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
         let mut curve = PartialCurve {
-            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();
@@ -176,7 +173,6 @@ mod tests {
 
         let surface = Partial::from(services.objects.surfaces.xy_plane());
         let mut curve = PartialCurve {
-            surface: surface.clone(),
             ..Default::default()
         };
         curve.update_as_u_axis();

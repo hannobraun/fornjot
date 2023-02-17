@@ -57,11 +57,11 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = surfaces_and_planes.map(|(surface, plane)| {
+        let curves = surfaces_and_planes.map(|(_, plane)| {
             let path = SurfacePath::Line(plane.project_line(&line));
             let global_form = GlobalCurve.insert(objects);
 
-            Curve::new(surface, path, global_form).insert(objects)
+            Curve::new(path, global_form).insert(objects)
         });
 
         Some(Self {
@@ -92,7 +92,7 @@ mod tests {
         algorithms::transform::TransformObject,
         builder::CurveBuilder,
         insert::Insert,
-        partial::{Partial, PartialCurve, PartialObject},
+        partial::{PartialCurve, PartialObject},
         services::Services,
     };
 
@@ -121,7 +121,6 @@ mod tests {
         );
 
         let mut expected_xy = PartialCurve {
-            surface: Partial::from(xy.clone()),
             ..Default::default()
         };
         expected_xy.update_as_u_axis();
@@ -129,7 +128,6 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let mut expected_xz = PartialCurve {
-            surface: Partial::from(xz.clone()),
             ..Default::default()
         };
         expected_xz.update_as_u_axis();
