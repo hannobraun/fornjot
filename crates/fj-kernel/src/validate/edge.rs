@@ -257,9 +257,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                surface,
                 [[0., 0.], [1., 0.]],
             );
             half_edge.infer_vertex_positions_if_necessary();
@@ -297,9 +299,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                surface,
                 [[0., 0.], [1., 0.]],
             );
             half_edge.infer_vertex_positions_if_necessary();
@@ -345,9 +349,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                surface,
                 [[0., 0.], [1., 0.]],
             );
             half_edge.infer_vertex_positions_if_necessary();
@@ -378,9 +384,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points(
-                services.objects.surfaces.xy_plane(),
+                surface,
                 [[0., 0.], [1., 0.]],
             );
             half_edge.infer_vertex_positions_if_necessary();
