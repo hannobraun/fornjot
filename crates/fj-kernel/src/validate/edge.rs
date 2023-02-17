@@ -232,7 +232,7 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         for surface_vertex in half_edge.surface_vertices() {
-            let surface_position_as_global = surface_vertex
+            let surface_position_as_global = half_edge
                 .surface()
                 .geometry()
                 .point_from_surface_coords(surface_vertex.position());
