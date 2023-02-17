@@ -86,11 +86,11 @@ impl PartialObject for PartialHalfEdge {
                     Some(position_global);
             }
 
-            let position =
+            let position_curve =
                 vertex.0.expect("Can't build `Vertex` without position");
             let surface_form = vertex.1.build(objects);
 
-            (position, surface_form)
+            (position_curve, surface_form)
         });
         let global_form = self.global_form.build(objects);
 
