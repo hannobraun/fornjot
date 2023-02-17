@@ -176,7 +176,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(half_edges)
+            Cycle::new(valid.surface().clone(), half_edges)
         };
 
         valid.validate_and_return_first_error()?;
@@ -212,7 +212,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(half_edges)
+            Cycle::new(valid.surface().clone(), half_edges)
         };
 
         valid.validate_and_return_first_error()?;

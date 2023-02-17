@@ -12,6 +12,7 @@ use crate::{
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
+    surface: Handle<Surface>,
     half_edges: Vec<Handle<HalfEdge>>,
 }
 
@@ -21,7 +22,10 @@ impl Cycle {
     /// # Panics
     ///
     /// Panics, if `half_edges` does not yield at least one half-edge.
-    pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
+    pub fn new(
+        surface: Handle<Surface>,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+    ) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
 
         // This is not a validation check, and thus not part of the validation
@@ -33,7 +37,10 @@ impl Cycle {
             "Cycle must contain at least one half-edge"
         );
 
-        Self { half_edges }
+        Self {
+            surface,
+            half_edges,
+        }
     }
 
     /// Access the surface that the cycle is in

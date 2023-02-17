@@ -29,11 +29,12 @@ impl PartialObject for PartialCycle {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+        let surface = self.surface.build(objects);
         let half_edges = self
             .half_edges
             .into_iter()
             .map(|half_edge| half_edge.build(objects));
 
-        Cycle::new(half_edges)
+        Cycle::new(surface, half_edges)
     }
 }

@@ -248,7 +248,7 @@ mod tests {
             };
             let side_down = {
                 let mut side_down = PartialHalfEdge {
-                    surface,
+                    surface: surface.clone(),
                     ..Default::default()
                 };
 
@@ -273,7 +273,10 @@ mod tests {
                 .clone()
             };
 
-            let mut cycle = PartialCycle::default();
+            let mut cycle = PartialCycle {
+                surface,
+                ..Default::default()
+            };
             cycle.half_edges.extend(
                 [bottom, side_up, top, side_down].map(Partial::from_partial),
             );

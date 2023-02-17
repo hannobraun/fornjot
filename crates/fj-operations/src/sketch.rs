@@ -27,11 +27,11 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge = {
-                    let surface = Partial::from(surface);
+                let surface = Partial::from(surface);
 
+                let half_edge = {
                     let mut half_edge = PartialHalfEdge {
-                        surface,
+                        surface: surface.clone(),
                         ..Default::default()
                     };
                     half_edge.update_as_circle_from_radius(circle.radius());
@@ -39,7 +39,10 @@ impl Shape for fj::Sketch {
                     Partial::from_partial(half_edge)
                 };
                 let exterior = {
-                    let mut cycle = PartialCycle::default();
+                    let mut cycle = PartialCycle {
+                        surface,
+                        ..Default::default()
+                    };
                     cycle.half_edges.push(half_edge);
                     Partial::from_partial(cycle)
                 };
