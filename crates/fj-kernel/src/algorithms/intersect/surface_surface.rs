@@ -125,6 +125,7 @@ mod tests {
         let expected_xy = expected_xy
             .build(&mut services.objects)
             .insert(&mut services.objects);
+
         let mut expected_xz = PartialCurve::default();
         expected_xz.update_as_u_axis();
         let expected_xz = expected_xz
