@@ -119,7 +119,7 @@ pub enum HalfEdgeValidationError {
         - Distance between the positions: {distance}\n\
         - `SurfaceVertex`: {surface_vertex:#?}"
     )]
-    PositionMismatch {
+    VertexSurfacePositionMismatch {
         /// The position of the surface vertex
         surface_position: Point<2>,
 
@@ -243,7 +243,7 @@ impl HalfEdgeValidationError {
 
             if distance > config.identical_max_distance {
                 errors.push(
-                    Box::new(Self::PositionMismatch {
+                    Box::new(Self::VertexSurfacePositionMismatch {
                         surface_position: surface_vertex.position(),
                         surface_position_as_global,
                         global_position,
