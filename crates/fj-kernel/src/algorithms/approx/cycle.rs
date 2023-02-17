@@ -2,17 +2,15 @@
 //!
 //! See [`CycleApprox`].
 
-use std::ops::Deref;
-
 use fj_math::Segment;
 
-use crate::objects::Cycle;
+use crate::objects::{Cycle, Surface};
 
 use super::{
     curve::CurveCache, edge::HalfEdgeApprox, Approx, ApproxPoint, Tolerance,
 };
 
-impl Approx for &Cycle {
+impl Approx for (&Cycle, &Surface) {
     type Approximation = CycleApprox;
     type Cache = CurveCache;
 
@@ -21,13 +19,13 @@ impl Approx for &Cycle {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
+        let (cycle, surface) = self;
         let tolerance = tolerance.into();
 
-        let half_edges = self
+        let half_edges = cycle
             .half_edges()
             .map(|half_edge| {
-                (half_edge, self.surface().deref())
-                    .approx_with_cache(tolerance, cache)
+                (half_edge, surface).approx_with_cache(tolerance, cache)
             })
             .collect();
 

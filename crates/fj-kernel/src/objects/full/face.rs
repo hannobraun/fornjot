@@ -34,6 +34,7 @@ use crate::{
 /// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
+    surface: Handle<Surface>,
     exterior: Handle<Cycle>,
     interiors: Vec<Handle<Cycle>>,
     color: Color,
@@ -42,6 +43,7 @@ pub struct Face {
 impl Face {
     /// Construct an instance of `Face`
     pub fn new(
+        surface: Handle<Surface>,
         exterior: Handle<Cycle>,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Color,
@@ -49,6 +51,7 @@ impl Face {
         let interiors = interiors.into_iter().collect();
 
         Self {
+            surface,
             exterior,
             interiors,
             color,
@@ -57,7 +60,7 @@ impl Face {
 
     /// Access the surface of the face
     pub fn surface(&self) -> &Handle<Surface> {
-        self.exterior().surface()
+        &self.surface
     }
 
     /// Access the cycle that bounds the face on the outside

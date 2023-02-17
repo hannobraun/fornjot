@@ -115,7 +115,10 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let valid = {
-            let mut face = PartialFace::default();
+            let mut face = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
             face.exterior.write().surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
@@ -141,7 +144,12 @@ mod tests {
                 .insert(&mut services.objects);
 
             let interiors = [cycle];
-            Face::new(valid.exterior().clone(), interiors, valid.color())
+            Face::new(
+                valid.surface().clone(),
+                valid.exterior().clone(),
+                interiors,
+                valid.color(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -157,7 +165,10 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let valid = {
-            let mut face = PartialFace::default();
+            let mut face = PartialFace {
+                surface: Partial::from(surface.clone()),
+                ..Default::default()
+            };
             face.exterior.write().surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
@@ -178,7 +189,12 @@ mod tests {
                 .map(|cycle| cycle.reverse(&mut services.objects))
                 .collect::<Vec<_>>();
 
-            Face::new(valid.exterior().clone(), interiors, valid.color())
+            Face::new(
+                valid.surface().clone(),
+                valid.exterior().clone(),
+                interiors,
+                valid.color(),
+            )
         };
 
         valid.validate_and_return_first_error()?;

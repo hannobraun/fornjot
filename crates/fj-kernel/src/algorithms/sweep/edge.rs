@@ -33,10 +33,14 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         // A face (and everything in it) is defined on a surface. A surface can
         // be created by sweeping a curve, so let's sweep the curve of the edge
         // we're sweeping.
-        face.exterior.write().surface = Partial::from(
-            (edge.curve().clone(), surface)
-                .sweep_with_cache(path, cache, objects),
-        );
+        {
+            let surface = Partial::from(
+                (edge.curve().clone(), surface)
+                    .sweep_with_cache(path, cache, objects),
+            );
+            face.surface = surface.clone();
+            face.exterior.write().surface = surface;
+        }
 
         // Now we're ready to create the edges.
         let mut edge_bottom = face.exterior.write().add_half_edge();
@@ -266,7 +270,7 @@ mod tests {
             };
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface),
+                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.half_edges.extend(
@@ -274,6 +278,7 @@ mod tests {
             );
 
             let face = PartialFace {
+                surface: Partial::from(surface),
                 exterior: Partial::from_partial(cycle),
                 ..Default::default()
             };

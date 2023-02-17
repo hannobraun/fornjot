@@ -2,7 +2,7 @@
 //!
 //! See [`FaceApprox`].
 
-use std::collections::BTreeSet;
+use std::{collections::BTreeSet, ops::Deref};
 
 use fj_interop::mesh::Color;
 
@@ -87,11 +87,13 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let exterior = self.exterior().approx_with_cache(tolerance, cache);
+        let exterior = (self.exterior().deref(), self.surface().deref())
+            .approx_with_cache(tolerance, cache);
 
         let mut interiors = BTreeSet::new();
         for cycle in self.interiors() {
-            let cycle = cycle.approx_with_cache(tolerance, cache);
+            let cycle = (cycle.deref(), self.surface().deref())
+                .approx_with_cache(tolerance, cache);
             interiors.insert(cycle);
         }
 

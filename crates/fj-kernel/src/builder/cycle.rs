@@ -1,10 +1,7 @@
-use std::collections::VecDeque;
-
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    builder::SurfaceBuilder,
+    geometry::surface::SurfaceGeometry,
     objects::HalfEdge,
     partial::{Partial, PartialCycle},
 };
@@ -64,35 +61,6 @@ pub trait CycleBuilder {
     /// Will update each half-edge in the cycle to be a line segment.
     fn update_as_polygon(&mut self);
 
-    /// Update cycle as a triangle, from global (3D) points
-    ///
-    /// Uses the three points to infer a plane that is used as the surface.
-    ///
-    /// # Implementation Note
-    ///
-    /// This method is probably just temporary, and will be generalized into a
-    /// "update as polygon from global points" method sooner or later. For now,
-    /// I didn't want to deal with the question of how to infer the surface, and
-    /// how to handle points that don't fit that surface.
-    fn update_as_triangle_from_global_points(
-        &mut self,
-        points: [impl Into<Point<3>>; 3],
-    ) -> [Partial<HalfEdge>; 3];
-
-    /// Connect the cycle to the provided half-edges
-    ///
-    /// Assumes that the provided half-edges, once translated into local
-    /// equivalents of this cycle, will not form a cycle themselves.
-    ///
-    /// Returns the local equivalents of the provided half-edges and, as the
-    /// last entry, an additional half-edge that closes the cycle.
-    fn connect_to_open_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SizePlusOne<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>;
-
     /// Connect the cycles to the provided half-edges
     ///
     /// Assumes that the provided half-edges, once translated into local
@@ -102,6 +70,7 @@ pub trait CycleBuilder {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
+        surface: &SurfaceGeometry,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
@@ -204,65 +173,17 @@ impl CycleBuilder for PartialCycle {
         }
     }
 
-    fn update_as_triangle_from_global_points(
-        &mut self,
-        points_global: [impl Into<Point<3>>; 3],
-    ) -> [Partial<HalfEdge>; 3] {
-        let points_global = points_global.map(Into::into);
-
-        let (points_surface, _) = self
-            .surface
-            .write()
-            .update_as_plane_from_points(points_global);
-
-        let half_edges = self.update_as_polygon_from_points(points_surface);
-
-        for (mut half_edge, point) in half_edges.clone().zip_ext(points_global)
-        {
-            let [vertex, _] = &mut half_edge.write().vertices;
-            vertex.1.write().global_form.write().position = Some(point);
-        }
-
-        half_edges
-    }
-
-    fn connect_to_open_edges<O>(
-        &mut self,
-        edges: O,
-    ) -> O::SizePlusOne<Partial<HalfEdge>>
-    where
-        O: ObjectArgument<Partial<HalfEdge>>,
-    {
-        // We need to create the additional half-edge last, but at the same time
-        // need to provide it to the `map_plus_one` method first. Really no
-        // choice but to create them all in one go, as we do here.
-        let mut half_edges = VecDeque::new();
-        for _ in 0..edges.num_objects() {
-            half_edges.push_back(self.add_half_edge());
-        }
-        let additional_half_edge = self.add_half_edge();
-
-        edges.map_plus_one(additional_half_edge, |other| {
-            let mut this = half_edges.pop_front().expect(
-                "Pushed correct number of half-edges; should be able to pop",
-            );
-            this.write()
-                .update_from_other_edge(&other, &self.surface.read().geometry);
-            this
-        })
-    }
-
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
+        surface: &SurfaceGeometry,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
         edges.map(|other| {
             let mut this = self.add_half_edge();
-            this.write()
-                .update_from_other_edge(&other, &self.surface.read().geometry);
+            this.write().update_from_other_edge(&other, surface);
             this
         })
     }
