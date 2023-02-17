@@ -166,7 +166,7 @@ impl CycleValidationError {
     ) {
         for half_edge in cycle.half_edges() {
             for surface_vertex in half_edge.surface_vertices() {
-                let surface_position_as_global = half_edge
+                let surface_position_as_global = cycle
                     .surface()
                     .geometry()
                     .point_from_surface_coords(surface_vertex.position());
