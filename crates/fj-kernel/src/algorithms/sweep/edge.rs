@@ -172,10 +172,7 @@ mod tests {
 
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface.clone(),
-                [[0., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge
@@ -191,10 +188,8 @@ mod tests {
 
             let bottom = {
                 let mut half_edge = PartialHalfEdge::default();
-                half_edge.update_as_line_segment_from_points(
-                    surface.clone(),
-                    [[0., 0.], [1., 0.]],
-                );
+                half_edge
+                    .update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
 
                 half_edge
             };

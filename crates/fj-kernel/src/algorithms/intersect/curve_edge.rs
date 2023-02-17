@@ -92,10 +92,7 @@ mod tests {
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface.clone(),
-                [[1., -1.], [1., 1.]],
-            );
+            half_edge.update_as_line_segment_from_points([[1., -1.], [1., 1.]]);
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
@@ -121,10 +118,8 @@ mod tests {
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface.clone(),
-                [[-1., -1.], [-1., 1.]],
-            );
+            half_edge
+                .update_as_line_segment_from_points([[-1., -1.], [-1., 1.]]);
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
@@ -150,10 +145,8 @@ mod tests {
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface.clone(),
-                [[-1., -1.], [1., -1.]],
-            );
+            half_edge
+                .update_as_line_segment_from_points([[-1., -1.], [1., -1.]]);
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
@@ -174,10 +167,7 @@ mod tests {
         let curve = curve.build(&mut services.objects);
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                surface.clone(),
-                [[-1., 0.], [1., 0.]],
-            );
+            half_edge.update_as_line_segment_from_points([[-1., 0.], [1., 0.]]);
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)

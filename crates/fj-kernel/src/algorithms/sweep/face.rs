@@ -200,10 +200,7 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = {
                 let mut half_edge = PartialHalfEdge::default();
-                half_edge.update_as_line_segment_from_points(
-                    services.objects.surfaces.xy_plane(),
-                    [a, b],
-                );
+                half_edge.update_as_line_segment_from_points([a, b]);
                 half_edge
                     .infer_vertex_positions_if_necessary(&surface.geometry());
 
@@ -270,10 +267,7 @@ mod tests {
         let side_faces = triangle.array_windows_ext().map(|&[a, b]| {
             let half_edge = {
                 let mut half_edge = PartialHalfEdge::default();
-                half_edge.update_as_line_segment_from_points(
-                    services.objects.surfaces.xy_plane(),
-                    [a, b],
-                );
+                half_edge.update_as_line_segment_from_points([a, b]);
                 half_edge
                     .infer_vertex_positions_if_necessary(&surface.geometry());
 

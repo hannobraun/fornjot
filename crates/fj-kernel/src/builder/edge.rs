@@ -6,7 +6,7 @@ use crate::{
         path::{GlobalPath, SurfacePath},
         surface::SurfaceGeometry,
     },
-    objects::{GlobalEdge, HalfEdge, Surface},
+    objects::{GlobalEdge, HalfEdge},
     partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -28,7 +28,6 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
-        surface: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     );
 
@@ -124,7 +123,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment_from_points(
         &mut self,
-        _: impl Into<Partial<Surface>>,
         points: [impl Into<Point<2>>; 2],
     ) {
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
