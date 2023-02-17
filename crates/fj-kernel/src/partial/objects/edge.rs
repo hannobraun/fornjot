@@ -58,15 +58,16 @@ impl PartialObject for PartialHalfEdge {
         let surface = self.surface.build(objects);
         let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|mut vertex| {
+            let position_curve = vertex
+                .0
+                .expect("Can't infer surface position without curve position");
+
             let position_surface = vertex.1.read().position;
 
             // Infer surface position, if not available.
             let position_surface = match position_surface {
                 Some(position_surface) => position_surface,
                 None => {
-                    let position_curve = vertex.0.expect(
-                        "Can't infer surface position without curve position",
-                    );
                     let position_surface =
                         curve.path().point_from_path_coords(position_curve);
 
@@ -86,8 +87,6 @@ impl PartialObject for PartialHalfEdge {
                     Some(position_global);
             }
 
-            let position_curve =
-                vertex.0.expect("Can't build `Vertex` without position");
             let surface_form = vertex.1.build(objects);
 
             (position_curve, surface_form)
