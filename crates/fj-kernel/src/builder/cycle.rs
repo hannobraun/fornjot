@@ -74,6 +74,9 @@ pub trait CycleBuilder {
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
+
+    /// Infer the positions of all vertices, if necessary
+    fn infer_vertex_positions_if_necessary(&mut self);
 }
 
 impl CycleBuilder for PartialCycle {
@@ -186,5 +189,19 @@ impl CycleBuilder for PartialCycle {
             this.write().update_from_other_edge(&other, surface);
             this
         })
+    }
+
+    fn infer_vertex_positions_if_necessary(&mut self) {
+        let surface = self
+            .surface
+            .read()
+            .geometry
+            .expect("Need surface geometry to infer vertex positions");
+
+        for half_edge in &mut self.half_edges {
+            half_edge
+                .write()
+                .infer_vertex_positions_if_necessary(&surface);
+        }
     }
 }
