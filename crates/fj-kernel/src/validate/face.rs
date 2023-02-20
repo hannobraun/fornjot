@@ -134,8 +134,10 @@ mod tests {
             face.build(&mut services.objects)
         };
         let invalid = {
+            let surface = services.objects.surfaces.xz_plane();
+
             let mut cycle = PartialCycle {
-                surface: Partial::from(services.objects.surfaces.xz_plane()),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
