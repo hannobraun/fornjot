@@ -268,9 +268,7 @@ mod tests {
                 .clone()
             };
 
-            let mut cycle = PartialCycle {
-                ..Default::default()
-            };
+            let mut cycle = PartialCycle::default();
             cycle.half_edges.extend(
                 [bottom, side_up, top, side_down].map(Partial::from_partial),
             );

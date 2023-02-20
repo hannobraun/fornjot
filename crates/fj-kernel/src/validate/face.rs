@@ -181,9 +181,7 @@ mod tests {
         let invalid = {
             let surface = services.objects.surfaces.xz_plane();
 
-            let mut cycle = PartialCycle {
-                ..Default::default()
-            };
+            let mut cycle = PartialCycle::default();
             cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
             cycle.infer_vertex_positions_if_necessary(&surface.geometry());
             let cycle = cycle
