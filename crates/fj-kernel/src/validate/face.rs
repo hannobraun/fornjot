@@ -68,7 +68,7 @@ pub enum FaceValidationError {
         - Distance between the positions: {distance}\n\
         - `SurfaceVertex`: {surface_vertex:#?}"
     )]
-    VertexSurfacePositionMismatch {
+    VertexPositionMismatch {
         /// The position of the surface vertex
         surface_position: Point<2>,
 
@@ -143,7 +143,7 @@ impl FaceValidationError {
 
                     if distance > config.identical_max_distance {
                         errors.push(
-                            Box::new(Self::VertexSurfacePositionMismatch {
+                            Box::new(Self::VertexPositionMismatch {
                                 surface_position: surface_vertex.position(),
                                 surface_position_as_global,
                                 global_position,
