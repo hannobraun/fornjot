@@ -1,6 +1,5 @@
 use crate::{
-    builder::HalfEdgeBuilder,
-    objects::{Cycle, HalfEdge, Objects, Surface},
+    objects::{Cycle, HalfEdge, Objects},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
 };
@@ -8,9 +7,6 @@ use crate::{
 /// A partial [`Cycle`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialCycle {
-    /// The surface that the cycle is defined in
-    pub surface: Partial<Surface>,
-
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
 }
@@ -20,7 +16,6 @@ impl PartialObject for PartialCycle {
 
     fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
-            surface: Partial::from_full(cycle.surface().clone(), cache),
             half_edges: cycle
                 .half_edges()
                 .cloned()
@@ -30,15 +25,11 @@ impl PartialObject for PartialCycle {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface.build(objects);
-        let surface_geometry = surface.geometry();
-        let half_edges = self.half_edges.into_iter().map(|mut half_edge| {
-            half_edge
-                .write()
-                .infer_vertex_positions_if_necessary(&surface_geometry);
-            half_edge.build(objects)
-        });
+        let half_edges = self
+            .half_edges
+            .into_iter()
+            .map(|half_edge| half_edge.build(objects));
 
-        Cycle::new(surface, half_edges)
+        Cycle::new(half_edges)
     }
 }

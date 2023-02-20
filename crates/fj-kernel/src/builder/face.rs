@@ -5,7 +5,7 @@ use fj_interop::ext::ArrayExt;
 use crate::{
     geometry::path::SurfacePath,
     objects::{Cycle, Surface},
-    partial::{MaybeSurfacePath, Partial, PartialCycle, PartialFace},
+    partial::{MaybeSurfacePath, Partial, PartialFace},
 };
 
 use super::SurfaceBuilder;
@@ -33,16 +33,13 @@ pub trait FaceBuilder {
 
 impl FaceBuilder for PartialFace {
     fn add_interior(&mut self) -> Partial<Cycle> {
-        let cycle = Partial::from_partial(PartialCycle {
-            surface: self.exterior.read().surface.clone(),
-            ..Default::default()
-        });
+        let cycle = Partial::new();
         self.interiors.push(cycle.clone());
         cycle
     }
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
-        let mut exterior = self.exterior.write();
+        let exterior = self.exterior.read();
         let mut vertices = exterior
             .half_edges
             .iter()
@@ -69,7 +66,7 @@ impl FaceBuilder for PartialFace {
             let first_three_points_global =
                 first_three_vertices.each_ref_ext().map(|(_, point)| *point);
 
-            let (first_three_points_surface, surface) = exterior
+            let (first_three_points_surface, surface) = self
                 .surface
                 .write()
                 .update_as_plane_from_points(first_three_points_global);
@@ -92,7 +89,7 @@ impl FaceBuilder for PartialFace {
             surface_vertex.write().position = Some(point);
         }
 
-        exterior.surface.clone()
+        self.surface.clone()
     }
 
     fn infer_curves(&mut self) {

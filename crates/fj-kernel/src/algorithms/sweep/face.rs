@@ -83,8 +83,6 @@ impl Sweep for Handle<Face> {
                 top_edges.push(Partial::from(top_edge));
             }
 
-            top_cycle.write().surface = Partial::from(top_surface.clone());
-
             top_cycle
                 .write()
                 .connect_to_closed_edges(top_edges, &top_surface.geometry());
@@ -165,8 +163,6 @@ mod tests {
 
             let mut face = sketch.add_face();
             face.write().surface = Partial::from(surface.clone());
-            face.write().exterior.write().surface =
-                Partial::from(surface.clone());
             face.write()
                 .exterior
                 .write()
@@ -185,7 +181,6 @@ mod tests {
                 ..Default::default()
             };
 
-            bottom.exterior.write().surface = Partial::from(surface.clone());
             bottom
                 .exterior
                 .write()
@@ -200,11 +195,10 @@ mod tests {
             let surface = surface.clone().translate(UP, &mut services.objects);
 
             let mut top = PartialFace {
-                surface: Partial::from(surface.clone()),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
 
-            top.exterior.write().surface = Partial::from(surface);
             top.exterior.write().update_as_polygon_from_points(TRIANGLE);
 
             top.build(&mut services.objects)
@@ -246,8 +240,6 @@ mod tests {
 
             let mut face = sketch.add_face();
             face.write().surface = Partial::from(surface.clone());
-            face.write().exterior.write().surface =
-                Partial::from(surface.clone());
             face.write()
                 .exterior
                 .write()
@@ -265,11 +257,10 @@ mod tests {
                 surface.clone().translate(DOWN, &mut services.objects);
 
             let mut bottom = PartialFace {
-                surface: Partial::from(surface.clone()),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
 
-            bottom.exterior.write().surface = Partial::from(surface);
             bottom
                 .exterior
                 .write()
@@ -286,7 +277,6 @@ mod tests {
                 ..Default::default()
             };
 
-            top.exterior.write().surface = Partial::from(surface.clone());
             top.exterior.write().update_as_polygon_from_points(TRIANGLE);
 
             top.build(&mut services.objects)

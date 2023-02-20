@@ -38,8 +38,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
                 (edge.curve().clone(), surface)
                     .sweep_with_cache(path, cache, objects),
             );
-            face.surface = surface.clone();
-            face.exterior.write().surface = surface;
+            face.surface = surface;
         }
 
         // Now we're ready to create the edges.
@@ -269,10 +268,7 @@ mod tests {
                 .clone()
             };
 
-            let mut cycle = PartialCycle {
-                surface: Partial::from(surface.clone()),
-                ..Default::default()
-            };
+            let mut cycle = PartialCycle::default();
             cycle.half_edges.extend(
                 [bottom, side_up, top, side_down].map(Partial::from_partial),
             );

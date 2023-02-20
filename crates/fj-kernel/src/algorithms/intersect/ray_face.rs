@@ -163,13 +163,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.yz_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.yz_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -190,13 +187,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.yz_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.yz_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -220,13 +214,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.yz_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.yz_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -247,13 +238,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.yz_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.yz_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -285,13 +273,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.yz_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.yz_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -323,13 +308,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.xy_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],
@@ -352,13 +334,10 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
-
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface: Partial::from(services.objects.surfaces.xy_plane()),
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior.write().update_as_polygon_from_points([
             [-1., -1.],
             [1., -1.],

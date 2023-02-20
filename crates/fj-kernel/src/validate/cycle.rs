@@ -17,11 +17,6 @@ impl Validate for Cycle {
     ) {
         CycleValidationError::check_half_edge_connections(self, errors);
         CycleValidationError::check_half_edge_boundaries(self, config, errors);
-        CycleValidationError::check_vertex_positions(self, config, errors);
-
-        // We don't need to check that all half-edges are defined in the same
-        // surface. We already check that they are connected by identical
-        // surface vertices, so that would be redundant.
     }
 }
 
@@ -70,33 +65,6 @@ pub enum CycleValidationError {
 
         /// The half-edge
         half_edge: Handle<HalfEdge>,
-    },
-
-    /// Mismatch between [`SurfaceVertex`] and `GlobalVertex` positions
-    #[error(
-        "`SurfaceVertex` position doesn't match position of its global form\n\
-        - Surface position: {surface_position:?}\n\
-        - Surface position converted to global position: \
-            {surface_position_as_global:?}\n\
-        - Global position: {global_position:?}\n\
-        - Distance between the positions: {distance}\n\
-        - `SurfaceVertex`: {surface_vertex:#?}"
-    )]
-    VertexSurfacePositionMismatch {
-        /// The position of the surface vertex
-        surface_position: Point<2>,
-
-        /// The surface position converted into a global position
-        surface_position_as_global: Point<3>,
-
-        /// The position of the global vertex
-        global_position: Point<3>,
-
-        /// The distance between the positions
-        distance: Scalar,
-
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
     },
 }
 
@@ -158,49 +126,15 @@ impl CycleValidationError {
             }
         }
     }
-
-    fn check_vertex_positions(
-        cycle: &Cycle,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for half_edge in cycle.half_edges() {
-            for surface_vertex in half_edge.surface_vertices() {
-                let surface_position_as_global = cycle
-                    .surface()
-                    .geometry()
-                    .point_from_surface_coords(surface_vertex.position());
-                let global_position = surface_vertex.global_form().position();
-
-                let distance =
-                    surface_position_as_global.distance_to(&global_position);
-
-                if distance > config.identical_max_distance {
-                    errors.push(
-                        Self::VertexSurfacePositionMismatch {
-                            surface_position: surface_vertex.position(),
-                            surface_position_as_global,
-                            global_position,
-                            distance,
-                            surface_vertex: surface_vertex.clone(),
-                        }
-                        .into(),
-                    );
-                }
-            }
-        }
-    }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
-    use fj_math::{Point, Scalar, Vector};
+    use fj_math::Point;
 
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder},
-        insert::Insert,
-        objects::{Cycle, HalfEdge, SurfaceVertex},
+        builder::CycleBuilder,
+        objects::Cycle,
         partial::{Partial, PartialCycle, PartialObject},
         services::Services,
         validate::Validate,
@@ -211,11 +145,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut cycle = PartialCycle {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
+            let surface = services.objects.surfaces.xy_plane();
+
+            let mut cycle = PartialCycle::default();
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
+            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
             cycle.build(&mut services.objects)
         };
         let invalid = {
@@ -238,7 +172,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(valid.surface().clone(), half_edges)
+            Cycle::new(half_edges)
         };
 
         valid.validate_and_return_first_error()?;
@@ -252,11 +186,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut cycle = PartialCycle {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
+            let surface = services.objects.surfaces.xy_plane();
+
+            let mut cycle = PartialCycle::default();
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
+            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
             cycle.build(&mut services.objects)
         };
         let invalid = {
@@ -274,69 +208,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(valid.surface().clone(), half_edges)
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
-
-    #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
-            let mut cycle = PartialCycle {
-                surface: Partial::from(surface.clone()),
-                ..Default::default()
-            };
-
-            let mut half_edge = cycle.add_half_edge();
-            half_edge.write().update_as_circle_from_radius(1.);
-            half_edge
-                .write()
-                .infer_vertex_positions_if_necessary(&surface.geometry());
-
-            cycle.build(&mut services.objects)
-        };
-        let invalid = {
-            let half_edge = {
-                let half_edge = valid.half_edges().next().unwrap();
-
-                let boundary = half_edge
-                    .boundary()
-                    .map(|point| point + Vector::from([Scalar::PI / 2.]));
-
-                let mut surface_vertices =
-                    half_edge.surface_vertices().map(Clone::clone);
-
-                let mut invalid = None;
-                for surface_vertex in surface_vertices.each_mut_ext() {
-                    let invalid = invalid.get_or_insert_with(|| {
-                        SurfaceVertex::new(
-                            [0., 1.],
-                            surface_vertex.global_form().clone(),
-                        )
-                        .insert(&mut services.objects)
-                    });
-                    *surface_vertex = invalid.clone();
-                }
-
-                let boundary = boundary.zip_ext(surface_vertices);
-
-                HalfEdge::new(
-                    half_edge.curve().clone(),
-                    boundary,
-                    half_edge.global_form().clone(),
-                )
-                .insert(&mut services.objects)
-            };
-
-            Cycle::new(valid.surface().clone(), [half_edge])
+            Cycle::new(half_edges)
         };
 
         valid.validate_and_return_first_error()?;
