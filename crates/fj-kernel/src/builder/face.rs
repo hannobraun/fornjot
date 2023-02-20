@@ -34,7 +34,6 @@ pub trait FaceBuilder {
 impl FaceBuilder for PartialFace {
     fn add_interior(&mut self) -> Partial<Cycle> {
         let cycle = Partial::from_partial(PartialCycle {
-            surface: self.exterior.read().surface.clone(),
             ..Default::default()
         });
         self.interiors.push(cycle.clone());

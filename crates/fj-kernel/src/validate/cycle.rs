@@ -148,7 +148,6 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
@@ -175,7 +174,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(valid.surface().clone(), half_edges)
+            Cycle::new(half_edges)
         };
 
         valid.validate_and_return_first_error()?;
@@ -192,7 +191,6 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
@@ -214,7 +212,7 @@ mod tests {
                 .into_iter()
                 .map(|half_edge| half_edge.build(&mut services.objects));
 
-            Cycle::new(valid.surface().clone(), half_edges)
+            Cycle::new(half_edges)
         };
 
         valid.validate_and_return_first_error()?;

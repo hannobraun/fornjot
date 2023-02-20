@@ -13,7 +13,6 @@ impl Validate for Face {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        FaceValidationError::check_surface_identity(self, errors);
         FaceValidationError::check_interior_winding(self, errors);
         FaceValidationError::check_vertex_positions(self, config, errors);
     }
@@ -87,23 +86,6 @@ pub enum FaceValidationError {
 }
 
 impl FaceValidationError {
-    fn check_surface_identity(face: &Face, errors: &mut Vec<ValidationError>) {
-        let surface = face.surface();
-
-        for interior in face.interiors() {
-            if surface.id() != interior.surface().id() {
-                errors.push(
-                    Box::new(Self::SurfaceMismatch {
-                        surface: surface.clone(),
-                        interior: interior.clone(),
-                        face: face.clone(),
-                    })
-                    .into(),
-                );
-            }
-        }
-    }
-
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
         let exterior_winding = face.exterior().winding();
 
@@ -182,10 +164,9 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut face = PartialFace {
-                surface: Partial::from(surface.clone()),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
-            face.exterior.write().surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
                 [3., 0.],
@@ -203,7 +184,6 @@ mod tests {
             let surface = services.objects.surfaces.xz_plane();
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
@@ -235,10 +215,9 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut face = PartialFace {
-                surface: Partial::from(surface.clone()),
+                surface: Partial::from(surface),
                 ..Default::default()
             };
-            face.exterior.write().surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
                 [3., 0.],
@@ -283,7 +262,6 @@ mod tests {
                 surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
-            face.exterior.write().surface = Partial::from(surface.clone());
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
@@ -326,8 +304,8 @@ mod tests {
                 .insert(&mut services.objects)
             };
 
-            let exterior = Cycle::new(valid.surface().clone(), [half_edge])
-                .insert(&mut services.objects);
+            let exterior =
+                Cycle::new([half_edge]).insert(&mut services.objects);
 
             Face::new(
                 valid.surface().clone(),

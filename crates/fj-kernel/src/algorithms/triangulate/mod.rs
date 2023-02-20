@@ -99,10 +99,9 @@ mod tests {
         let surface = Partial::from(services.objects.surfaces.xy_plane());
 
         let mut face = PartialFace {
-            surface: surface.clone(),
+            surface,
             ..Default::default()
         };
-        face.exterior.write().surface = surface;
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d]);
@@ -144,7 +143,6 @@ mod tests {
             surface: Partial::from(surface.clone()),
             ..Default::default()
         };
-        face.exterior.write().surface = Partial::from(surface.clone());
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d]);
@@ -211,7 +209,6 @@ mod tests {
             surface: Partial::from(surface.clone()),
             ..Default::default()
         };
-        face.exterior.write().surface = Partial::from(surface.clone());
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d, e]);

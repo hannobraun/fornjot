@@ -184,10 +184,9 @@ mod tests {
 
         let face = {
             let mut face = PartialFace {
-                surface: surface.clone(),
+                surface,
                 ..Default::default()
             };
-            face.exterior.write().surface = surface;
             face.exterior
                 .write()
                 .update_as_polygon_from_points(exterior);
