@@ -42,7 +42,7 @@ impl FaceBuilder for PartialFace {
     }
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
-        let mut exterior = self.exterior.write();
+        let exterior = self.exterior.write();
         let mut vertices = exterior
             .half_edges
             .iter()
@@ -69,7 +69,7 @@ impl FaceBuilder for PartialFace {
             let first_three_points_global =
                 first_three_vertices.each_ref_ext().map(|(_, point)| *point);
 
-            let (first_three_points_surface, surface) = exterior
+            let (first_three_points_surface, surface) = self
                 .surface
                 .write()
                 .update_as_plane_from_points(first_three_points_global);
@@ -92,7 +92,7 @@ impl FaceBuilder for PartialFace {
             surface_vertex.write().position = Some(point);
         }
 
-        exterior.surface.clone()
+        self.surface.clone()
     }
 
     fn infer_curves(&mut self) {
