@@ -41,12 +41,17 @@ impl PartialObject for PartialFace {
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
-        self.exterior.write().infer_vertex_positions_if_necessary();
+        let surface = self.surface.build(objects);
+
+        self.exterior
+            .write()
+            .infer_vertex_positions_if_necessary(&surface.geometry());
         for interior in &mut self.interiors {
-            interior.write().infer_vertex_positions_if_necessary();
+            interior
+                .write()
+                .infer_vertex_positions_if_necessary(&surface.geometry());
         }
 
-        let surface = self.surface.build(objects);
         let exterior = self.exterior.build(objects);
         let interiors =
             self.interiors.into_iter().map(|cycle| cycle.build(objects));

@@ -214,11 +214,11 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface),
+                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
-            cycle.infer_vertex_positions_if_necessary();
+            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
             cycle.build(&mut services.objects)
         };
         let invalid = {
@@ -258,11 +258,11 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut cycle = PartialCycle {
-                surface: Partial::from(surface),
+                surface: Partial::from(surface.clone()),
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
-            cycle.infer_vertex_positions_if_necessary();
+            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
             cycle.build(&mut services.objects)
         };
         let invalid = {

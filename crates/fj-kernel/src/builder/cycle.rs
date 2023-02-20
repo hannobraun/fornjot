@@ -76,7 +76,10 @@ pub trait CycleBuilder {
         O: ObjectArgument<Partial<HalfEdge>>;
 
     /// Infer the positions of all vertices, if necessary
-    fn infer_vertex_positions_if_necessary(&mut self);
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    );
 }
 
 impl CycleBuilder for PartialCycle {
@@ -191,17 +194,14 @@ impl CycleBuilder for PartialCycle {
         })
     }
 
-    fn infer_vertex_positions_if_necessary(&mut self) {
-        let surface = self
-            .surface
-            .read()
-            .geometry
-            .expect("Need surface geometry to infer vertex positions");
-
+    fn infer_vertex_positions_if_necessary(
+        &mut self,
+        surface: &SurfaceGeometry,
+    ) {
         for half_edge in &mut self.half_edges {
             half_edge
                 .write()
-                .infer_vertex_positions_if_necessary(&surface);
+                .infer_vertex_positions_if_necessary(surface);
         }
     }
 }
