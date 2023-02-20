@@ -139,6 +139,7 @@ mod tests {
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
+            cycle.infer_vertex_positions_if_necessary();
             let cycle = cycle
                 .build(&mut services.objects)
                 .insert(&mut services.objects);

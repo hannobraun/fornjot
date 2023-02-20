@@ -1,6 +1,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
+    builder::CycleBuilder,
     objects::{Cycle, Face, Objects, Surface},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -39,7 +40,12 @@ impl PartialObject for PartialFace {
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+    fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
+        self.exterior.write().infer_vertex_positions_if_necessary();
+        for interior in &mut self.interiors {
+            interior.write().infer_vertex_positions_if_necessary();
+        }
+
         let surface = self.surface.build(objects);
         let exterior = self.exterior.build(objects);
         let interiors =

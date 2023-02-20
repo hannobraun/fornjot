@@ -216,6 +216,7 @@ mod tests {
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
+            cycle.infer_vertex_positions_if_necessary();
             cycle.build(&mut services.objects)
         };
         let invalid = {
@@ -257,6 +258,7 @@ mod tests {
                 ..Default::default()
             };
             cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
+            cycle.infer_vertex_positions_if_necessary();
             cycle.build(&mut services.objects)
         };
         let invalid = {

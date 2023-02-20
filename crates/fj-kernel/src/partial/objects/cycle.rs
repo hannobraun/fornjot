@@ -1,5 +1,4 @@
 use crate::{
-    builder::CycleBuilder,
     objects::{Cycle, HalfEdge, Objects, Surface},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -29,9 +28,7 @@ impl PartialObject for PartialCycle {
         }
     }
 
-    fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
-        self.infer_vertex_positions_if_necessary();
-
+    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let surface = self.surface.build(objects);
         let half_edges = self
             .half_edges
