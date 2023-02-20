@@ -23,7 +23,7 @@ fj-viewer.workspace = true
 fj-window.workspace = true
 
 [dependencies.clap]
-version = "4.1.4"
+version = "4.1.6"
 features = ["derive", "string"]
 
 [dependencies.figment]
