@@ -5,7 +5,7 @@ use fj_interop::ext::ArrayExt;
 use crate::{
     geometry::path::SurfacePath,
     objects::{Cycle, Surface},
-    partial::{MaybeSurfacePath, Partial, PartialCycle, PartialFace},
+    partial::{MaybeSurfacePath, Partial, PartialFace},
 };
 
 use super::SurfaceBuilder;
@@ -33,9 +33,7 @@ pub trait FaceBuilder {
 
 impl FaceBuilder for PartialFace {
     fn add_interior(&mut self) -> Partial<Cycle> {
-        let cycle = Partial::from_partial(PartialCycle {
-            ..Default::default()
-        });
+        let cycle = Partial::new();
         self.interiors.push(cycle.clone());
         cycle
     }
