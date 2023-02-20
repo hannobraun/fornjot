@@ -161,8 +161,6 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let surface = Partial::from(services.objects.surfaces.xy_plane());
-
         let mut curve = PartialCurve::default();
         curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
         let curve = curve.build(&mut services.objects);
@@ -184,7 +182,7 @@ mod tests {
 
         let face = {
             let mut face = PartialFace {
-                surface,
+                surface: Partial::from(services.objects.surfaces.xy_plane()),
                 ..Default::default()
             };
             face.exterior

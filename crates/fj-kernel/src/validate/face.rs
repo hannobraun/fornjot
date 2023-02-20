@@ -161,10 +161,8 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
             let mut face = PartialFace {
-                surface: Partial::from(surface),
+                surface: Partial::from(services.objects.surfaces.xy_plane()),
                 ..Default::default()
             };
             face.exterior.write().update_as_polygon_from_points([
@@ -212,10 +210,8 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
             let mut face = PartialFace {
-                surface: Partial::from(surface),
+                surface: Partial::from(services.objects.surfaces.xy_plane()),
                 ..Default::default()
             };
             face.exterior.write().update_as_polygon_from_points([
