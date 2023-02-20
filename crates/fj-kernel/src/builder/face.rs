@@ -42,7 +42,7 @@ impl FaceBuilder for PartialFace {
     }
 
     fn update_surface_as_plane(&mut self) -> Partial<Surface> {
-        let exterior = self.exterior.write();
+        let exterior = self.exterior.read();
         let mut vertices = exterior
             .half_edges
             .iter()
