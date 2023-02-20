@@ -1,5 +1,57 @@
 # Fornjot - Changelog
 
+## v0.37.0 (2023-02-20)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Add UI element that shows model orientation ([#1573], [#1584]; thank you, [@erenoku]!)
+- Don't panic, if model code creates empty sketch ([#1585]; thank you, [@tmayoff]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Rewrite parts of sweep code ([#1593])
+- Start consolidating redundant references to `Surface` ([#1596], [#1597], [#1598], [#1599])
+
+#### `fj-math`
+
+- Make various minor improvements ([#1590])
+- Clean up and simplify `Arc` ([#1591], [#1592])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update release procedure ([#1576])
+- Update dependencies ([#1580], [#1582], [#1583], [#1587], [#1595])
+
+[#1573]: https://github.com/hannobraun/Fornjot/pull/1573
+[#1576]: https://github.com/hannobraun/Fornjot/pull/1576
+[#1580]: https://github.com/hannobraun/Fornjot/pull/1580
+[#1582]: https://github.com/hannobraun/Fornjot/pull/1582
+[#1583]: https://github.com/hannobraun/Fornjot/pull/1583
+[#1584]: https://github.com/hannobraun/Fornjot/pull/1584
+[#1585]: https://github.com/hannobraun/Fornjot/pull/1585
+[#1587]: https://github.com/hannobraun/Fornjot/pull/1587
+[#1590]: https://github.com/hannobraun/Fornjot/pull/1590
+[#1591]: https://github.com/hannobraun/Fornjot/pull/1591
+[#1592]: https://github.com/hannobraun/Fornjot/pull/1592
+[#1593]: https://github.com/hannobraun/Fornjot/pull/1593
+[#1595]: https://github.com/hannobraun/Fornjot/pull/1595
+[#1596]: https://github.com/hannobraun/Fornjot/pull/1596
+[#1597]: https://github.com/hannobraun/Fornjot/pull/1597
+[#1598]: https://github.com/hannobraun/Fornjot/pull/1598
+[#1599]: https://github.com/hannobraun/Fornjot/pull/1599
+
+[@erenoku]: https://github.com/erenoku
+[@tmayoff]: https://github.com/tmayoff
+
+
 ## v0.36.0 (2023-02-13)
 
 ### End-user improvements
