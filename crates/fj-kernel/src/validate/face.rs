@@ -112,9 +112,9 @@ mod tests {
     fn face_surface_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
-
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut face = PartialFace {
                 surface: Partial::from(surface.clone()),
                 ..Default::default()
@@ -165,9 +165,9 @@ mod tests {
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let surface = services.objects.surfaces.xy_plane();
-
         let valid = {
+            let surface = services.objects.surfaces.xy_plane();
+
             let mut face = PartialFace {
                 surface: Partial::from(surface.clone()),
                 ..Default::default()
