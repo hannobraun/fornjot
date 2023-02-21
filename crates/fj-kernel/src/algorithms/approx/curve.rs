@@ -218,6 +218,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
+        objects::GlobalCurve,
         partial::{PartialCurve, PartialObject, PartialSurface},
         services::Services,
     };
@@ -234,11 +235,10 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx =
-            (&curve, surface.deref(), curve.global_form().clone(), range)
-                .approx(1.);
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -258,11 +258,10 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx =
-            (&curve, surface.deref(), curve.global_form().clone(), range)
-                .approx(1.);
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -280,13 +279,13 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
 
         let approx =
-            (&curve, surface.deref(), curve.global_form().clone(), range)
-                .approx(tolerance);
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -312,12 +311,12 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
         let approx =
-            (&curve, surface.deref(), curve.global_form().clone(), range)
-                .approx(tolerance);
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
 
         let expected_approx = (curve.path(), range)
             .approx(tolerance)
