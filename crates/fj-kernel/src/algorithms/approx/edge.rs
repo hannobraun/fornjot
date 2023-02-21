@@ -80,11 +80,13 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::{CurveBuilder, SurfaceBuilder},
+        builder::{CurveBuilder, HalfEdgeBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
         objects::GlobalCurve,
-        partial::{PartialCurve, PartialObject, PartialSurface},
+        partial::{
+            PartialCurve, PartialHalfEdge, PartialObject, PartialSurface,
+        },
         services::Services,
     };
 
@@ -95,17 +97,20 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
-        let curve = curve
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let global_curve = GlobalCurve.insert(&mut services.objects);
-        let range = RangeOnPath::from([[0.], [1.]]);
+        let half_edge = {
+            let mut half_edge = PartialHalfEdge::default();
 
-        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
+            half_edge.update_as_line_segment_from_points([[1., 1.], [2., 1.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
-        assert_eq!(approx, CurveApprox::empty());
+            half_edge
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
+
+        let approx = (&half_edge, surface.deref()).approx(1.);
+
+        assert_eq!(approx.curve_approx, CurveApprox::empty());
     }
 
     #[test]
@@ -118,17 +123,20 @@ mod tests {
         )
         .build(&mut services.objects)
         .insert(&mut services.objects);
-        let mut curve = PartialCurve::default();
-        curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
-        let curve = curve
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let global_curve = GlobalCurve.insert(&mut services.objects);
-        let range = RangeOnPath::from([[0.], [1.]]);
+        let half_edge = {
+            let mut half_edge = PartialHalfEdge::default();
 
-        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
+            half_edge.update_as_line_segment_from_points([[1., 1.], [2., 1.]]);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
-        assert_eq!(approx, CurveApprox::empty());
+            half_edge
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
+
+        let approx = (&half_edge, surface.deref()).approx(1.);
+
+        assert_eq!(approx.curve_approx, CurveApprox::empty());
     }
 
     #[test]
