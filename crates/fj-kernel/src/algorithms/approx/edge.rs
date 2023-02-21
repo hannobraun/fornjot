@@ -146,6 +146,8 @@ mod tests {
         let mut services = Services::new();
 
         let path = GlobalPath::circle_from_radius(1.);
+        let range = RangeOnPath::from([[0.], [TAU]]);
+
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -156,9 +158,7 @@ mod tests {
             .insert(&mut services.objects);
         let global_curve = GlobalCurve.insert(&mut services.objects);
 
-        let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
-
         let approx =
             (&curve, surface.deref(), global_curve, range).approx(tolerance);
 
