@@ -51,7 +51,7 @@ impl Approx for (&Handle<Curve>, &Surface, Handle<GlobalCurve>, RangeOnPath) {
     }
 }
 
-fn approx_global_curve(
+pub(super) fn approx_global_curve(
     curve: &Curve,
     surface: &Surface,
     range: RangeOnPath,
