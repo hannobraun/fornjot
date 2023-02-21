@@ -135,9 +135,6 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
             .zip_ext(global_edges)
             .map(|(mut half_edge, global_edge)| {
                 let global_edge = Partial::from(global_edge);
-
-                half_edge.curve.write().global_form =
-                    global_edge.read().curve.clone();
                 half_edge.global_form = global_edge;
             });
 
