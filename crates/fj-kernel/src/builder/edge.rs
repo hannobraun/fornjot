@@ -166,7 +166,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
-        self.global_form.write().curve = self.curve.read().global_form.clone();
         self.global_form.write().vertices = self
             .vertices
             .each_ref_ext()
