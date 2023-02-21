@@ -108,7 +108,8 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let approx = (&half_edge, surface.deref()).approx(1.);
+        let tolerance = 1.;
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         assert_eq!(approx.curve_approx, CurveApprox::empty());
     }
@@ -134,7 +135,8 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let approx = (&half_edge, surface.deref()).approx(1.);
+        let tolerance = 1.;
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         assert_eq!(approx.curve_approx, CurveApprox::empty());
     }
