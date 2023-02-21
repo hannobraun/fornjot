@@ -19,7 +19,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
+impl Approx for (&Handle<Curve>, &Surface, Handle<GlobalCurve>, RangeOnPath) {
     type Approximation = CurveApprox;
     type Cache = CurveCache;
 
@@ -28,9 +28,8 @@ impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (curve, surface, range) = self;
+        let (curve, surface, global_curve, range) = self;
 
-        let global_curve = curve.global_form().clone();
         let global_curve_approx = match cache.get(global_curve.clone(), range) {
             Some(approx) => approx,
             None => {
@@ -237,7 +236,9 @@ mod tests {
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, surface.deref(), range).approx(1.);
+        let approx =
+            (&curve, surface.deref(), curve.global_form().clone(), range)
+                .approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -259,7 +260,9 @@ mod tests {
             .insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, surface.deref(), range).approx(1.);
+        let approx =
+            (&curve, surface.deref(), curve.global_form().clone(), range)
+                .approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -281,7 +284,9 @@ mod tests {
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
 
-        let approx = (&curve, surface.deref(), range).approx(tolerance);
+        let approx =
+            (&curve, surface.deref(), curve.global_form().clone(), range)
+                .approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -310,7 +315,9 @@ mod tests {
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
-        let approx = (&curve, surface.deref(), range).approx(tolerance);
+        let approx =
+            (&curve, surface.deref(), curve.global_form().clone(), range)
+                .approx(tolerance);
 
         let expected_approx = (curve.path(), range)
             .approx(tolerance)
