@@ -71,3 +71,127 @@ impl HalfEdgeApprox {
         points
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::{f64::consts::TAU, ops::Deref};
+
+    use pretty_assertions::assert_eq;
+
+    use crate::{
+        algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
+        builder::{CurveBuilder, SurfaceBuilder},
+        geometry::path::GlobalPath,
+        insert::Insert,
+        objects::GlobalCurve,
+        partial::{PartialCurve, PartialObject, PartialSurface},
+        services::Services,
+    };
+
+    use super::CurveApprox;
+
+    #[test]
+    fn approx_line_on_flat_surface() {
+        let mut services = Services::new();
+
+        let surface = services.objects.surfaces.xz_plane();
+        let mut curve = PartialCurve::default();
+        curve.update_as_line_from_points([[1., 1.], [2., 1.]]);
+        let curve = curve
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
+        let range = RangeOnPath::from([[0.], [1.]]);
+
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
+
+        assert_eq!(approx, CurveApprox::empty());
+    }
+
+    #[test]
+    fn approx_line_on_curved_surface_but_not_along_curve() {
+        let mut services = Services::new();
+
+        let surface = PartialSurface::from_axes(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+        )
+        .build(&mut services.objects)
+        .insert(&mut services.objects);
+        let mut curve = PartialCurve::default();
+        curve.update_as_line_from_points([[1., 1.], [1., 2.]]);
+        let curve = curve
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
+        let range = RangeOnPath::from([[0.], [1.]]);
+
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
+
+        assert_eq!(approx, CurveApprox::empty());
+    }
+
+    #[test]
+    fn approx_line_on_curved_surface_along_curve() {
+        let mut services = Services::new();
+
+        let path = GlobalPath::circle_from_radius(1.);
+        let surface = PartialSurface::from_axes(path, [0., 0., 1.])
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let mut curve = PartialCurve::default();
+        curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
+        let curve = curve
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
+
+        let range = RangeOnPath::from([[0.], [TAU]]);
+        let tolerance = 1.;
+
+        let approx =
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
+
+        let expected_approx = (path, range)
+            .approx(tolerance)
+            .into_iter()
+            .map(|(point_local, _)| {
+                let point_surface =
+                    curve.path().point_from_path_coords(point_local);
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
+                ApproxPoint::new(point_surface, point_global)
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(approx.points, expected_approx);
+    }
+
+    #[test]
+    fn approx_circle_on_flat_surface() {
+        let mut services = Services::new();
+
+        let surface = services.objects.surfaces.xz_plane();
+        let mut curve = PartialCurve::default();
+        curve.update_as_circle_from_radius(1.);
+        let curve = curve
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
+
+        let range = RangeOnPath::from([[0.], [TAU]]);
+        let tolerance = 1.;
+        let approx =
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
+
+        let expected_approx = (curve.path(), range)
+            .approx(tolerance)
+            .into_iter()
+            .map(|(_, point_surface)| {
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
+                ApproxPoint::new(point_surface, point_global)
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(approx.points, expected_approx);
+    }
+}
