@@ -53,7 +53,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
 /// An approximation of an [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdgeApprox {
-    /// The point that approximates the first vertex of the curve
+    /// The point that approximates the first vertex of the edge
     pub first: ApproxPoint<2>,
 
     /// The approximation of the edge's curve
