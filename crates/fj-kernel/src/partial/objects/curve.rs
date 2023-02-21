@@ -3,7 +3,7 @@ use fj_math::Scalar;
 use crate::{
     geometry::path::SurfacePath,
     objects::{Curve, GlobalCurve, Objects},
-    partial::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, PartialObject},
     services::Service,
 };
 
@@ -12,22 +12,18 @@ use crate::{
 pub struct PartialCurve {
     /// The path that defines the curve
     pub path: Option<MaybeSurfacePath>,
-
-    /// The global form of the curve
-    pub global_form: Partial<GlobalCurve>,
 }
 
 impl PartialObject for PartialCurve {
     type Full = Curve;
 
-    fn from_full(curve: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+    fn from_full(curve: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
             path: Some(curve.path().into()),
-            global_form: Partial::from_full(curve.global_form().clone(), cache),
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
         let path = match self.path.expect("Need path to build curve") {
             MaybeSurfacePath::Defined(path) => path,
             undefined => {
@@ -36,9 +32,8 @@ impl PartialObject for PartialCurve {
                 )
             }
         };
-        let global_form = self.global_form.build(objects);
 
-        Curve::new(path, global_form)
+        Curve::new(path)
     }
 }
 

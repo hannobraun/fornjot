@@ -11,13 +11,6 @@ use super::{
 };
 
 /// The available object stores
-///
-/// # Implementation Note
-///
-/// The intention is to eventually manage all objects in here. Making this
-/// happen is simply a case of putting in the required work. See [#1021].
-///
-/// [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 #[derive(Debug, Default)]
 pub struct Objects {
     /// Store for [`Curve`]s
@@ -80,7 +73,7 @@ impl Surfaces {
         self.store.reserve()
     }
 
-    /// Insert a [`Surface`] into the store
+    /// Insert an object into the store
     pub fn insert(&mut self, handle: Handle<Surface>, surface: Surface) {
         self.store.insert(handle, surface);
     }

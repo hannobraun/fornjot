@@ -10,20 +10,15 @@ use super::{TransformCache, TransformObject};
 impl TransformObject for Curve {
     fn transform_with_cache(
         self,
-        transform: &Transform,
-        objects: &mut Service<Objects>,
-        cache: &mut TransformCache,
+        _: &Transform,
+        _: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
         // Don't need to transform path, as that's defined in surface
         // coordinates, and thus transforming `surface` takes care of it.
         let path = self.path();
 
-        let global_form = self
-            .global_form()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
-
-        Self::new(path, global_form)
+        Self::new(path)
     }
 }
 

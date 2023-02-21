@@ -74,7 +74,6 @@ impl Default for PartialHalfEdge {
             (None, surface_form)
         });
 
-        let global_curve = curve.read().global_form.clone();
         let global_vertices = vertices.each_ref_ext().map(
             |vertex: &(Option<Point<1>>, Partial<SurfaceVertex>)| {
                 let surface_vertex = vertex.1.clone();
@@ -84,8 +83,8 @@ impl Default for PartialHalfEdge {
         );
 
         let global_form = Partial::from_partial(PartialGlobalEdge {
-            curve: global_curve,
             vertices: global_vertices,
+            ..Default::default()
         });
 
         Self {

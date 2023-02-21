@@ -19,7 +19,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
+impl Approx for (&Handle<Curve>, &Surface, Handle<GlobalCurve>, RangeOnPath) {
     type Approximation = CurveApprox;
     type Cache = CurveCache;
 
@@ -28,9 +28,8 @@ impl Approx for (&Handle<Curve>, &Surface, RangeOnPath) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (curve, surface, range) = self;
+        let (curve, surface, global_curve, range) = self;
 
-        let global_curve = curve.global_form().clone();
         let global_curve_approx = match cache.get(global_curve.clone(), range) {
             Some(approx) => approx,
             None => {
@@ -219,6 +218,7 @@ mod tests {
         builder::{CurveBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
+        objects::GlobalCurve,
         partial::{PartialCurve, PartialObject, PartialSurface},
         services::Services,
     };
@@ -235,9 +235,10 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, surface.deref(), range).approx(1.);
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -257,9 +258,10 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
         let range = RangeOnPath::from([[0.], [1.]]);
 
-        let approx = (&curve, surface.deref(), range).approx(1.);
+        let approx = (&curve, surface.deref(), global_curve, range).approx(1.);
 
         assert_eq!(approx, CurveApprox::empty());
     }
@@ -277,11 +279,13 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
 
-        let approx = (&curve, surface.deref(), range).approx(tolerance);
+        let approx =
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -307,10 +311,12 @@ mod tests {
         let curve = curve
             .build(&mut services.objects)
             .insert(&mut services.objects);
+        let global_curve = GlobalCurve.insert(&mut services.objects);
 
         let range = RangeOnPath::from([[0.], [TAU]]);
         let tolerance = 1.;
-        let approx = (&curve, surface.deref(), range).approx(tolerance);
+        let approx =
+            (&curve, surface.deref(), global_curve, range).approx(tolerance);
 
         let expected_approx = (curve.path(), range)
             .approx(tolerance)

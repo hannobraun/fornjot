@@ -35,7 +35,12 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
             half_edge.start_vertex().global_form().position(),
         )
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
-        let curve_approx = (half_edge.curve(), surface, range)
+        let curve_approx = (
+            half_edge.curve(),
+            surface,
+            half_edge.global_form().curve().clone(),
+            range,
+        )
             .approx_with_cache(tolerance, cache);
 
         HalfEdgeApprox {

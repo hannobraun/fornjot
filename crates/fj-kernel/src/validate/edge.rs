@@ -13,7 +13,6 @@ impl Validate for HalfEdge {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        HalfEdgeValidationError::check_global_curve_identity(self, errors);
         HalfEdgeValidationError::check_global_vertex_identity(self, errors);
         HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
     }
@@ -107,26 +106,6 @@ pub enum HalfEdgeValidationError {
 }
 
 impl HalfEdgeValidationError {
-    fn check_global_curve_identity(
-        half_edge: &HalfEdge,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let global_curve_from_curve = half_edge.curve().global_form();
-        let global_curve_from_global_form = half_edge.global_form().curve();
-
-        if global_curve_from_curve.id() != global_curve_from_global_form.id() {
-            errors.push(
-                Box::new(Self::GlobalCurveMismatch {
-                    global_curve_from_curve: global_curve_from_curve.clone(),
-                    global_curve_from_global_form:
-                        global_curve_from_global_form.clone(),
-                    half_edge: half_edge.clone(),
-                })
-                .into(),
-            );
-        }
-    }
-
     fn check_global_vertex_identity(
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
@@ -185,46 +164,11 @@ mod tests {
 
     use crate::{
         builder::HalfEdgeBuilder,
-        insert::Insert,
-        objects::{GlobalCurve, HalfEdge},
+        objects::HalfEdge,
         partial::{Partial, PartialHalfEdge, PartialObject},
         services::Services,
         validate::Validate,
     };
-
-    #[test]
-    fn half_edge_global_curve_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
-
-            half_edge.build(&mut services.objects)
-        };
-        let invalid = {
-            let global_form = {
-                let mut global_edge =
-                    Partial::from(valid.global_form().clone());
-                global_edge.write().curve =
-                    Partial::from(GlobalCurve.insert(&mut services.objects));
-                global_edge.build(&mut services.objects)
-            };
-            let vertices = valid
-                .boundary()
-                .zip_ext(valid.surface_vertices().map(Clone::clone));
-
-            HalfEdge::new(valid.curve().clone(), vertices, global_form)
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
 
     #[test]
     fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {

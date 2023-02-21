@@ -3,7 +3,7 @@ use fj_math::{Line, Plane, Point, Scalar};
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
     insert::Insert,
-    objects::{Curve, GlobalCurve, Objects, Surface},
+    objects::{Curve, Objects, Surface},
     services::Service,
     storage::Handle,
 };
@@ -55,9 +55,7 @@ impl SurfaceSurfaceIntersection {
 
         let curves = planes.map(|plane| {
             let path = SurfacePath::Line(plane.project_line(&line));
-            let global_form = GlobalCurve.insert(objects);
-
-            Curve::new(path, global_form).insert(objects)
+            Curve::new(path).insert(objects)
         });
 
         Some(Self {
