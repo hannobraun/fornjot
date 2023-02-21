@@ -171,7 +171,7 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx, CurveApprox::empty().with_points(expected_approx));
     }
 
     #[test]
@@ -200,6 +200,6 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx, CurveApprox::empty().with_points(expected_approx));
     }
 }
