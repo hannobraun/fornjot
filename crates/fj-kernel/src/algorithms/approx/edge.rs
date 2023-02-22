@@ -78,7 +78,7 @@ pub struct HalfEdgeApprox {
     /// The point that approximates the first vertex of the edge
     pub first: ApproxPoint<2>,
 
-    /// The approximation of the edge's curve
+    /// The approximation of the edge
     pub points: Vec<ApproxPoint<2>>,
 }
 
@@ -182,7 +182,7 @@ impl EdgeCache {
         Self::default()
     }
 
-    /// Insert the approximation of a [`GlobalCurve`]
+    /// Insert the approximation of a [`GlobalEdge`]
     pub fn insert(
         &mut self,
         handle: Handle<GlobalEdge>,
@@ -193,7 +193,7 @@ impl EdgeCache {
         approx
     }
 
-    /// Access the approximation for the given [`GlobalCurve`], if available
+    /// Access the approximation for the given [`GlobalEdge`], if available
     pub fn get(
         &self,
         handle: Handle<GlobalEdge>,
@@ -212,10 +212,10 @@ impl EdgeCache {
     }
 }
 
-/// An approximation of a [`GlobalCurve`]
+/// An approximation of a [`GlobalEdge`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdgeApprox {
-    /// The points that approximate the curve
+    /// The points that approximate the edge
     pub points: Vec<ApproxPoint<1>>,
 }
 
