@@ -97,7 +97,6 @@ impl FaceBuilder for PartialFace {
             let mut half_edge = half_edge.write();
 
             let mut curve = half_edge.curve.clone();
-            let mut curve = curve.write();
 
             if let Some(path) = &mut curve.path {
                 match path {
