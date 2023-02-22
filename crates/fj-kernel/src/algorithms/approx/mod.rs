@@ -121,5 +121,5 @@ impl<const D: usize> PartialOrd for ApproxPoint<D> {
 /// The source of an [`ApproxPoint`]
 pub trait Source: Any + Debug {}
 
-impl Source for (Handle<Curve>, Point<1>) {}
+impl Source for (Curve, Point<1>) {}
 impl Source for (Handle<HalfEdge>, Point<1>) {}

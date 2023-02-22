@@ -61,7 +61,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
 
                     ApproxPoint::new(point_surface, point.global_form)
                         .with_source((
-                            half_edge.curve().clone(),
+                            half_edge.curve().clone_object(),
                             point.local_form,
                         ))
                 })
