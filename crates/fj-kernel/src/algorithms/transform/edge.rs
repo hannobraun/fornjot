@@ -43,15 +43,11 @@ impl TransformObject for GlobalEdge {
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let curve = self
-            .curve()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let vertices =
             self.vertices().access_in_normalized_order().map(|vertex| {
                 vertex.transform_with_cache(transform, objects, cache)
             });
 
-        Self::new(curve, vertices)
+        Self::new(vertices)
     }
 }

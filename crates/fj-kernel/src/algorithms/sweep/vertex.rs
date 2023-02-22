@@ -2,7 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     insert::Insert,
-    objects::{GlobalCurve, GlobalEdge, GlobalVertex, Objects},
+    objects::{GlobalEdge, GlobalVertex, Objects},
     services::Service,
     storage::Handle,
 };
@@ -18,8 +18,6 @@ impl Sweep for Handle<GlobalVertex> {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        let curve = GlobalCurve.insert(objects);
-
         let a = self.clone();
         let b = cache
             .global_vertex
@@ -30,8 +28,7 @@ impl Sweep for Handle<GlobalVertex> {
             .clone();
 
         let vertices = [a, b];
-        let global_edge =
-            GlobalEdge::new(curve, vertices.clone()).insert(objects);
+        let global_edge = GlobalEdge::new(vertices.clone()).insert(objects);
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the

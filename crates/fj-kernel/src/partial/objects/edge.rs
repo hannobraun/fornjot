@@ -5,8 +5,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{
-        Curve, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Objects,
-        SurfaceVertex,
+        Curve, GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex,
     },
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -84,7 +83,6 @@ impl Default for PartialHalfEdge {
 
         let global_form = Partial::from_partial(PartialGlobalEdge {
             vertices: global_vertices,
-            ..Default::default()
         });
 
         Self {
@@ -98,9 +96,6 @@ impl Default for PartialHalfEdge {
 /// A partial [`GlobalEdge`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
-    /// The curve that defines the edge's geometry
-    pub curve: Partial<GlobalCurve>,
-
     /// The vertices that bound the edge on the curve
     pub vertices: [Partial<GlobalVertex>; 2],
 }
@@ -113,7 +108,6 @@ impl PartialObject for PartialGlobalEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            curve: Partial::from_full(global_edge.curve().clone(), cache),
             vertices: global_edge
                 .vertices()
                 .access_in_normalized_order()
@@ -122,9 +116,7 @@ impl PartialObject for PartialGlobalEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let curve = self.curve.build(objects);
         let vertices = self.vertices.map(|vertex| vertex.build(objects));
-
-        GlobalEdge::new(curve, vertices)
+        GlobalEdge::new(vertices)
     }
 }
