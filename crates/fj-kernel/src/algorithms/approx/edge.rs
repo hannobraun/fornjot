@@ -35,7 +35,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         )
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
-        let curve_approx = {
+        let points = {
             let global_curve_approx = match cache
                 .get(half_edge.global_form().clone(), range)
             {
@@ -69,10 +69,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                 .collect()
         };
 
-        HalfEdgeApprox {
-            first,
-            curve_approx,
-        }
+        HalfEdgeApprox { first, points }
     }
 }
 
@@ -83,7 +80,7 @@ pub struct HalfEdgeApprox {
     pub first: ApproxPoint<2>,
 
     /// The approximation of the edge's curve
-    pub curve_approx: Vec<ApproxPoint<2>>,
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 impl HalfEdgeApprox {
@@ -92,7 +89,7 @@ impl HalfEdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first.clone());
-        points.extend(self.curve_approx.clone());
+        points.extend(self.points.clone());
 
         points
     }
@@ -265,7 +262,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.curve_approx, Vec::new());
+        assert_eq!(approx.points, Vec::new());
     }
 
     #[test]
@@ -292,7 +289,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.curve_approx, Vec::new());
+        assert_eq!(approx.points, Vec::new());
     }
 
     #[test]
@@ -336,7 +333,7 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx.curve_approx, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -369,6 +366,6 @@ mod tests {
                     ApproxPoint::new(point_surface, point_global)
                 })
                 .collect::<Vec<_>>();
-        assert_eq!(approx.curve_approx, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 }
