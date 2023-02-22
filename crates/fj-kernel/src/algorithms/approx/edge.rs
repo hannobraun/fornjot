@@ -9,7 +9,7 @@ use std::collections::BTreeMap;
 
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
-    objects::{Curve, GlobalCurve, HalfEdge, Surface},
+    objects::{Curve, GlobalEdge, HalfEdge, Surface},
     storage::{Handle, ObjectId},
 };
 
@@ -37,7 +37,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
 
         let curve_approx = {
             let global_curve_approx = match cache
-                .get(half_edge.global_form().curve().clone(), range)
+                .get(half_edge.global_form().clone(), range)
             {
                 Some(approx) => approx,
                 None => {
@@ -47,11 +47,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                         range,
                         tolerance,
                     );
-                    cache.insert(
-                        half_edge.global_form().curve().clone(),
-                        range,
-                        approx,
-                    )
+                    cache.insert(half_edge.global_form().clone(), range, approx)
                 }
             };
 
@@ -193,7 +189,7 @@ impl CurveCache {
     /// Insert the approximation of a [`GlobalCurve`]
     pub fn insert(
         &mut self,
-        handle: Handle<GlobalCurve>,
+        handle: Handle<GlobalEdge>,
         range: RangeOnPath,
         approx: GlobalCurveApprox,
     ) -> GlobalCurveApprox {
@@ -204,7 +200,7 @@ impl CurveCache {
     /// Access the approximation for the given [`GlobalCurve`], if available
     pub fn get(
         &self,
-        handle: Handle<GlobalCurve>,
+        handle: Handle<GlobalEdge>,
         range: RangeOnPath,
     ) -> Option<GlobalCurveApprox> {
         if let Some(approx) = self.inner.get(&(handle.id(), range)) {
