@@ -1,7 +1,7 @@
 use crate::geometry::path::SurfacePath;
 
 /// A curve, defined in local surface coordinates
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Curve {
     path: SurfacePath,
 }
