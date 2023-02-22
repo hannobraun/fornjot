@@ -6,12 +6,13 @@
 //! the caller doesn't have to call with duplicate vertices.
 
 use crate::{
-    objects::{HalfEdge, Surface},
+    geometry::path::{GlobalPath, SurfacePath},
+    objects::{Curve, HalfEdge, Surface},
     storage::Handle,
 };
 
 use super::{
-    curve::{CurveApprox, CurveCache},
+    curve::{CurveApprox, CurveCache, GlobalCurveApprox},
     path::RangeOnPath,
     Approx, ApproxPoint, Tolerance,
 };
@@ -38,11 +39,11 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
 
         let curve_approx = {
             let global_curve_approx = match cache
-                .get(half_edge.global_form().curve().clone().clone(), range)
+                .get(half_edge.global_form().curve().clone(), range)
             {
                 Some(approx) => approx,
                 None => {
-                    let approx = super::curve::approx_global_curve(
+                    let approx = approx_global_curve(
                         half_edge.curve(),
                         surface,
                         range,
@@ -99,6 +100,82 @@ impl HalfEdgeApprox {
 
         points
     }
+}
+
+fn approx_global_curve(
+    curve: &Curve,
+    surface: &Surface,
+    range: RangeOnPath,
+    tolerance: impl Into<Tolerance>,
+) -> GlobalCurveApprox {
+    // There are different cases of varying complexity. Circles are the hard
+    // part here, as they need to be approximated, while lines don't need to be.
+    //
+    // This will probably all be unified eventually, as `SurfacePath` and
+    // `GlobalPath` grow APIs that are better suited to implementing this code
+    // in a more abstract way.
+    let points = match (curve.path(), surface.geometry().u) {
+        (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
+            todo!(
+                "Approximating a circle on a curved surface not supported yet."
+            )
+        }
+        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
+            (curve.path(), range)
+                .approx_with_cache(tolerance, &mut ())
+                .into_iter()
+                .map(|(point_curve, point_surface)| {
+                    // We're throwing away `point_surface` here, which is a bit
+                    // weird, as we're recomputing it later (outside of this
+                    // function).
+                    //
+                    // It should be fine though:
+                    //
+                    // 1. We're throwing this version away, so there's no danger
+                    //    of inconsistency between this and the later version.
+                    // 2. This version should have been computed using the same
+                    //    path and parameters and the later version will be, so
+                    //    they should be the same anyway.
+                    // 3. Not all other cases handled in this function have a
+                    //    surface point available, so it needs to be computed
+                    //    later anyway, in the general case.
+
+                    let point_global = surface
+                        .geometry()
+                        .point_from_surface_coords(point_surface);
+                    (point_curve, point_global)
+                })
+                .collect()
+        }
+        (SurfacePath::Line(line), _) => {
+            let range_u =
+                RangeOnPath::from(range.boundary.map(|point_curve| {
+                    [curve.path().point_from_path_coords(point_curve).u]
+                }));
+
+            let approx_u = (surface.geometry().u, range_u)
+                .approx_with_cache(tolerance, &mut ());
+
+            let mut points = Vec::new();
+            for (u, _) in approx_u {
+                let t = (u.t - line.origin().u) / line.direction().u;
+                let point_surface = curve.path().point_from_path_coords([t]);
+                let point_global =
+                    surface.geometry().point_from_surface_coords(point_surface);
+                points.push((u, point_global));
+            }
+
+            points
+        }
+    };
+
+    let points = points
+        .into_iter()
+        .map(|(point_curve, point_global)| {
+            ApproxPoint::new(point_curve, point_global)
+        })
+        .collect();
+    GlobalCurveApprox { points }
 }
 
 #[cfg(test)]
