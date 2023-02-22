@@ -254,41 +254,40 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         surface: &SurfaceGeometry,
     ) {
         self.curve.path = other.read().curve.path.as_ref().and_then(|path| {
-            // We have information about the other edge's surface available.
-            // We need to use that to interpret what the other edge's curve
-            // path means for our curve path.
+            // We have information about the other edge's surface available. We
+            // need to use that to interpret what the other edge's curve path
+            // means for our curve path.
             match surface.u {
                 GlobalPath::Circle(circle) => {
-                    // The other surface is curved. We're entering some
-                    // dodgy territory here, as only some edge cases can be
+                    // The other surface is curved. We're entering some dodgy
+                    // territory here, as only some edge cases can be
                     // represented using our current curve/surface
                     // representation.
                     match path {
                         MaybeSurfacePath::Defined(SurfacePath::Line(_))
                         | MaybeSurfacePath::UndefinedLine => {
-                            // We're dealing with a line on a rounded
-                            // surface.
+                            // We're dealing with a line on a rounded surface.
                             //
-                            // Based on the current uses of this method, we
-                            // can make some assumptions:
+                            // Based on the current uses of this method, we can
+                            // make some assumptions:
                             //
                             // 1. The line is parallel to the u-axis of the
                             //    other surface.
-                            // 2. The surface that *our* edge is in is a
-                            //    plane that is parallel to the the plane of
-                            //    the circle that defines the curvature of
-                            //    the other surface.
+                            // 2. The surface that *our* edge is in is a plane
+                            //    that is parallel to the the plane of the
+                            //    circle that defines the curvature of the other
+                            //    surface.
                             //
-                            // These assumptions are necessary preconditions
-                            // for the following code to work. But
-                            // unfortunately, I see no way to check those
-                            // preconditions here, as neither the other line
-                            // nor our surface is necessarily defined yet.
+                            // These assumptions are necessary preconditions for
+                            // the following code to work. But unfortunately, I
+                            // see no way to check those preconditions here, as
+                            // neither the other line nor our surface is
+                            // necessarily defined yet.
                             //
-                            // Handling this case anyway feels like a grave
-                            // sin, but I don't know what else to do. If you
-                            // tracked some extremely subtle and annoying
-                            // bug back to this code, I apologize.
+                            // Handling this case anyway feels like a grave sin,
+                            // but I don't know what else to do. If you tracked
+                            // some extremely subtle and annoying bug back to
+                            // this code, I apologize.
                             //
                             // I hope that I'll come up with a better curve/
                             // surface representation before this becomes a
@@ -312,17 +311,15 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     match path {
                         MaybeSurfacePath::Defined(SurfacePath::Line(_))
                         | MaybeSurfacePath::UndefinedLine => {
-                            // The other edge is a line segment on a plane.
-                            // That means our edge must be a line segment
-                            // too.
+                            // The other edge is a line segment on a plane. That
+                            // means our edge must be a line segment too.
                             Some(MaybeSurfacePath::UndefinedLine)
                         }
                         _ => {
-                            // The other edge is a circle or arc on a plane.
-                            // I'm actually not sure what that means for our
-                            // edge. We might be able to represent it
-                            // somehow, but let's leave that as an exercise
-                            // for later.
+                            // The other edge is a circle or arc on a plane. I'm
+                            // actually not sure what that means for our edge.
+                            // We might be able to represent it somehow, but
+                            // let's leave that as an exercise for later.
                             todo!("Can't connect edge to circle on plane")
                         }
                     }
