@@ -36,8 +36,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
         let points = {
-            let global_curve_approx = match cache
-                .get(half_edge.global_form().clone(), range)
+            let approx = match cache.get(half_edge.global_form().clone(), range)
             {
                 Some(approx) => approx,
                 None => {
@@ -51,7 +50,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                 }
             };
 
-            global_curve_approx
+            approx
                 .points
                 .into_iter()
                 .map(|point| {
