@@ -12,7 +12,7 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApprox, CurveCache, GlobalCurveApprox},
+    curve::{CurveCache, GlobalCurveApprox},
     path::RangeOnPath,
     Approx, ApproxPoint, Tolerance,
 };
@@ -57,8 +57,10 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                 }
             };
 
-            CurveApprox::empty().with_points(
-                global_curve_approx.points.into_iter().map(|point| {
+            global_curve_approx
+                .points
+                .into_iter()
+                .map(|point| {
                     let point_surface = half_edge
                         .curve()
                         .path()
@@ -69,8 +71,8 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                             half_edge.curve().clone(),
                             point.local_form,
                         ))
-                }),
-            )
+                })
+                .collect()
         };
 
         HalfEdgeApprox {
@@ -87,7 +89,7 @@ pub struct HalfEdgeApprox {
     pub first: ApproxPoint<2>,
 
     /// The approximation of the edge's curve
-    pub curve_approx: CurveApprox,
+    pub curve_approx: Vec<ApproxPoint<2>>,
 }
 
 impl HalfEdgeApprox {
@@ -96,7 +98,7 @@ impl HalfEdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first.clone());
-        points.extend(self.curve_approx.points.clone());
+        points.extend(self.curve_approx.clone());
 
         points
     }
@@ -193,8 +195,6 @@ mod tests {
         services::Services,
     };
 
-    use super::CurveApprox;
-
     #[test]
     fn approx_line_on_flat_surface() {
         let mut services = Services::new();
@@ -214,7 +214,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.curve_approx, CurveApprox::empty());
+        assert_eq!(approx.curve_approx, Vec::new());
     }
 
     #[test]
@@ -241,7 +241,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.curve_approx, CurveApprox::empty());
+        assert_eq!(approx.curve_approx, Vec::new());
     }
 
     #[test]
@@ -285,10 +285,7 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(
-            approx.curve_approx,
-            CurveApprox::empty().with_points(expected_approx)
-        );
+        assert_eq!(approx.curve_approx, expected_approx);
     }
 
     #[test]
@@ -321,9 +318,6 @@ mod tests {
                     ApproxPoint::new(point_surface, point_global)
                 })
                 .collect::<Vec<_>>();
-        assert_eq!(
-            approx.curve_approx,
-            CurveApprox::empty().with_points(expected_approx)
-        );
+        assert_eq!(approx.curve_approx, expected_approx);
     }
 }
