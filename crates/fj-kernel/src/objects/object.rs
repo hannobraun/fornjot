@@ -2,8 +2,8 @@ use std::any::Any;
 
 use crate::{
     objects::{
-        Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
-        Objects, Shell, Sketch, Solid, Surface, SurfaceVertex,
+        Curve, Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
+        Sketch, Solid, Surface, SurfaceVertex,
     },
     storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
@@ -111,7 +111,6 @@ object!(
     Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;
-    GlobalCurve, "global curve", global_curves;
     GlobalEdge, "global edge", global_edges;
     GlobalVertex, "global vertex", global_vertices;
     HalfEdge, "half-edge", half_edges;

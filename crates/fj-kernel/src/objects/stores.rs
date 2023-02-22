@@ -6,8 +6,8 @@ use crate::{
 };
 
 use super::{
-    Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Shell,
-    Sketch, Solid, Surface, SurfaceVertex,
+    Curve, Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Shell, Sketch,
+    Solid, Surface, SurfaceVertex,
 };
 
 /// The available object stores
@@ -21,9 +21,6 @@ pub struct Objects {
 
     /// Store for [`Face`]s
     pub faces: Store<Face>,
-
-    /// Store for [`GlobalCurve`]s
-    pub global_curves: Store<GlobalCurve>,
 
     /// Store for [`GlobalEdge`]s
     pub global_edges: Store<GlobalEdge>,

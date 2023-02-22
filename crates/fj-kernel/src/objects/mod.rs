@@ -79,7 +79,7 @@ mod stores;
 
 pub use self::{
     full::{
-        curve::{Curve, GlobalCurve},
+        curve::Curve,
         cycle::{Cycle, HalfEdgesOfCycle},
         edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
         face::{Face, FaceSet, Handedness},

@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge, Surface},
+    objects::{GlobalEdge, GlobalVertex, HalfEdge, Surface},
     storage::Handle,
 };
 
@@ -30,25 +30,6 @@ impl Validate for GlobalEdge {
 /// [`HalfEdge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum HalfEdgeValidationError {
-    /// [`HalfEdge`]'s [`GlobalCurve`]s do not match
-    #[error(
-        "Global form of `HalfEdge`'s `Curve` does not match `GlobalCurve` of \n\
-        the `HalfEdge`'s `GlobalEdge`\n\
-        - `GlobalCurve` from `Curve`: {global_curve_from_curve:#?}\n\
-        - `GlobalCurve` from `GlobalEdge`: {global_curve_from_global_form:#?}\n\
-        - `HalfEdge`: {half_edge:#?}",
-    )]
-    GlobalCurveMismatch {
-        /// The [`GlobalCurve`] from the [`HalfEdge`]'s `Curve`
-        global_curve_from_curve: Handle<GlobalCurve>,
-
-        /// The [`GlobalCurve`] from the [`HalfEdge`]'s global form
-        global_curve_from_global_form: Handle<GlobalCurve>,
-
-        /// The half-edge
-        half_edge: HalfEdge,
-    },
-
     /// [`HalfEdge`]'s [`GlobalVertex`] objects do not match
     #[error(
         "Global forms of `HalfEdge` vertices do not match vertices of \n\

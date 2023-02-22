@@ -223,9 +223,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         other: &Partial<HalfEdge>,
         surface: &SurfaceGeometry,
     ) {
-        let global_curve = other.read().global_form.read().curve.clone();
-        self.global_form.write().curve = global_curve;
-
         self.curve.write().path =
             other.read().curve.read().path.as_ref().and_then(|path| {
                 // We have information about the other edge's surface available.

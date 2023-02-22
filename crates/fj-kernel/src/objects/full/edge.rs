@@ -1,11 +1,9 @@
-use std::fmt;
-
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalCurve, GlobalVertex, SurfaceVertex},
-    storage::{Handle, HandleWrapper},
+    objects::{Curve, GlobalVertex, SurfaceVertex},
+    storage::Handle,
 };
 
 /// A directed edge, defined in a surface's 2D space
@@ -95,16 +93,6 @@ impl HalfEdge {
     }
 }
 
-impl fmt::Display for HalfEdge {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.boundary();
-        write!(f, "edge from {a:?} to {b:?}")?;
-        write!(f, " on {:?}", self.global_form().curve())?;
-
-        Ok(())
-    }
-}
-
 /// An undirected edge, defined in global (3D) coordinates
 ///
 /// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
@@ -116,7 +104,6 @@ impl fmt::Display for HalfEdge {
 /// between [`HalfEdge`] and `GlobalEdge`.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
-    curve: HandleWrapper<GlobalCurve>,
     vertices: VerticesInNormalizedOrder,
 }
 
@@ -126,19 +113,10 @@ impl GlobalEdge {
     /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
     /// `curve` and `vertices` will end up being equal, regardless of the order
     /// of `vertices` here.
-    pub fn new(
-        curve: impl Into<HandleWrapper<GlobalCurve>>,
-        vertices: [Handle<GlobalVertex>; 2],
-    ) -> Self {
-        let curve = curve.into();
+    pub fn new(vertices: [Handle<GlobalVertex>; 2]) -> Self {
         let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
 
-        Self { curve, vertices }
-    }
-
-    /// Access the curve that defines the edge's geometry
-    pub fn curve(&self) -> &Handle<GlobalCurve> {
-        &self.curve
+        Self { vertices }
     }
 
     /// Access the vertices that bound the edge on the curve
