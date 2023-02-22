@@ -103,7 +103,7 @@ fn approx_edge(
     surface: &Surface,
     range: RangeOnPath,
     tolerance: impl Into<Tolerance>,
-) -> GlobalCurveApprox {
+) -> GlobalEdgeApprox {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
     //
@@ -171,13 +171,13 @@ fn approx_edge(
             ApproxPoint::new(point_curve, point_global)
         })
         .collect();
-    GlobalCurveApprox { points }
+    GlobalEdgeApprox { points }
 }
 
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct CurveCache {
-    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalCurveApprox>,
+    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
 }
 
 impl CurveCache {
@@ -191,8 +191,8 @@ impl CurveCache {
         &mut self,
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
-        approx: GlobalCurveApprox,
-    ) -> GlobalCurveApprox {
+        approx: GlobalEdgeApprox,
+    ) -> GlobalEdgeApprox {
         self.inner.insert((handle.id(), range), approx.clone());
         approx
     }
@@ -202,7 +202,7 @@ impl CurveCache {
         &self,
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
-    ) -> Option<GlobalCurveApprox> {
+    ) -> Option<GlobalEdgeApprox> {
         if let Some(approx) = self.inner.get(&(handle.id(), range)) {
             return Some(approx.clone());
         }
@@ -218,12 +218,12 @@ impl CurveCache {
 
 /// An approximation of a [`GlobalCurve`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalCurveApprox {
+pub struct GlobalEdgeApprox {
     /// The points that approximate the curve
     pub points: Vec<ApproxPoint<1>>,
 }
 
-impl GlobalCurveApprox {
+impl GlobalEdgeApprox {
     /// Reverse the order of the approximation
     pub fn reverse(mut self) -> Self {
         self.points.reverse();
