@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Curve, GlobalCurve, Objects},
+    objects::{Curve, Objects},
     services::Service,
 };
 
@@ -19,20 +19,5 @@ impl TransformObject for Curve {
         let path = self.path();
 
         Self::new(path)
-    }
-}
-
-impl TransformObject for GlobalCurve {
-    fn transform_with_cache(
-        self,
-        _: &Transform,
-        _: &mut Service<Objects>,
-        _: &mut TransformCache,
-    ) -> Self {
-        // `GlobalCurve` doesn't contain any internal geometry. If it did, that
-        // would just be redundant with the geometry of other objects, and this
-        // other geometry is already being transformed by other implementations
-        // of this trait.
-        self
     }
 }

@@ -17,7 +17,3 @@ impl Curve {
         self.path
     }
 }
-
-/// A curve, defined in global (3D) coordinates
-#[derive(Clone, Copy, Debug)]
-pub struct GlobalCurve;

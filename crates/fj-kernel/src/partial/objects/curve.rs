@@ -2,7 +2,7 @@ use fj_math::Scalar;
 
 use crate::{
     geometry::path::SurfacePath,
-    objects::{Curve, GlobalCurve, Objects},
+    objects::{Curve, Objects},
     partial::{FullToPartialCache, PartialObject},
     services::Service,
 };
@@ -59,21 +59,5 @@ pub enum MaybeSurfacePath {
 impl From<SurfacePath> for MaybeSurfacePath {
     fn from(path: SurfacePath) -> Self {
         Self::Defined(path)
-    }
-}
-
-/// A partial [`GlobalCurve`]
-#[derive(Clone, Debug, Default)]
-pub struct PartialGlobalCurve;
-
-impl PartialObject for PartialGlobalCurve {
-    type Full = GlobalCurve;
-
-    fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
-        Self
-    }
-
-    fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        GlobalCurve
     }
 }

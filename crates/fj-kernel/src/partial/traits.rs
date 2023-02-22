@@ -36,7 +36,6 @@ impl_trait!(
     Curve, PartialCurve;
     Cycle, PartialCycle;
     Face, PartialFace;
-    GlobalCurve, PartialGlobalCurve;
     GlobalEdge, PartialGlobalEdge;
     GlobalVertex, PartialGlobalVertex;
     HalfEdge, PartialHalfEdge;

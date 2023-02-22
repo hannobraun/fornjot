@@ -16,7 +16,7 @@ mod wrapper;
 
 pub use self::{
     objects::{
-        curve::{MaybeSurfacePath, PartialCurve, PartialGlobalCurve},
+        curve::{MaybeSurfacePath, PartialCurve},
         cycle::PartialCycle,
         edge::{PartialGlobalEdge, PartialHalfEdge},
         face::PartialFace,

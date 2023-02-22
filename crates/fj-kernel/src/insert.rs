@@ -4,8 +4,8 @@
 
 use crate::{
     objects::{
-        Curve, Cycle, Face, GlobalCurve, GlobalEdge, GlobalVertex, HalfEdge,
-        Objects, Shell, Sketch, Solid, Surface, SurfaceVertex,
+        Curve, Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
+        Sketch, Solid, Surface, SurfaceVertex,
     },
     services::{Service, ServiceObjectsExt},
     storage::Handle,
@@ -37,7 +37,6 @@ impl_insert!(
     Curve, curves;
     Cycle, cycles;
     Face, faces;
-    GlobalCurve, global_curves;
     GlobalEdge, global_edges;
     GlobalVertex, global_vertices;
     HalfEdge, half_edges;
