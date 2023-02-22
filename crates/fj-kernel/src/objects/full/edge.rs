@@ -1,5 +1,3 @@
-use std::fmt;
-
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
@@ -92,16 +90,6 @@ impl HalfEdge {
     /// Access the global form of the half-edge
     pub fn global_form(&self) -> &Handle<GlobalEdge> {
         &self.global_form
-    }
-}
-
-impl fmt::Display for HalfEdge {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = self.boundary();
-        write!(f, "edge from {a:?} to {b:?}")?;
-        write!(f, " on {:?}", self.global_form().curve())?;
-
-        Ok(())
     }
 }
 
