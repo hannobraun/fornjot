@@ -35,7 +35,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         // we're sweeping.
         {
             let surface = Partial::from(
-                (edge.curve().clone(), surface)
+                (edge.curve().clone_object(), surface)
                     .sweep_with_cache(path, cache, objects),
             );
             face.surface = surface;

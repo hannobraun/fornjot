@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<Curve>, &Surface) {
+impl Sweep for (Curve, &Surface) {
     type Swept = Handle<Surface>;
 
     fn sweep_with_cache(
