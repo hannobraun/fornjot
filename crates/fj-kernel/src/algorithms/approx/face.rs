@@ -12,7 +12,7 @@ use crate::{
 };
 
 use super::{
-    curve::CurveCache, cycle::CycleApprox, Approx, ApproxPoint, Tolerance,
+    cycle::CycleApprox, edge::CurveCache, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &FaceSet {

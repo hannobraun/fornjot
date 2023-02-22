@@ -5,17 +5,15 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to call with duplicate vertices.
 
+use std::collections::BTreeMap;
+
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
-    objects::{Curve, HalfEdge, Surface},
-    storage::Handle,
+    objects::{Curve, GlobalCurve, HalfEdge, Surface},
+    storage::{Handle, ObjectId},
 };
 
-use super::{
-    curve::{CurveCache, GlobalCurveApprox},
-    path::RangeOnPath,
-    Approx, ApproxPoint, Tolerance,
-};
+use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Handle<HalfEdge>, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -178,6 +176,63 @@ fn approx_edge(
         })
         .collect();
     GlobalCurveApprox { points }
+}
+
+/// A cache for results of an approximation
+#[derive(Default)]
+pub struct CurveCache {
+    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalCurveApprox>,
+}
+
+impl CurveCache {
+    /// Create an empty cache
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Insert the approximation of a [`GlobalCurve`]
+    pub fn insert(
+        &mut self,
+        handle: Handle<GlobalCurve>,
+        range: RangeOnPath,
+        approx: GlobalCurveApprox,
+    ) -> GlobalCurveApprox {
+        self.inner.insert((handle.id(), range), approx.clone());
+        approx
+    }
+
+    /// Access the approximation for the given [`GlobalCurve`], if available
+    pub fn get(
+        &self,
+        handle: Handle<GlobalCurve>,
+        range: RangeOnPath,
+    ) -> Option<GlobalCurveApprox> {
+        if let Some(approx) = self.inner.get(&(handle.id(), range)) {
+            return Some(approx.clone());
+        }
+        if let Some(approx) = self.inner.get(&(handle.id(), range.reverse())) {
+            // If we have a cache entry for the reverse range, we need to use
+            // that too!
+            return Some(approx.clone().reverse());
+        }
+
+        None
+    }
+}
+
+/// An approximation of a [`GlobalCurve`]
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalCurveApprox {
+    /// The points that approximate the curve
+    pub points: Vec<ApproxPoint<1>>,
+}
+
+impl GlobalCurveApprox {
+    /// Reverse the order of the approximation
+    pub fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
 }
 
 #[cfg(test)]
