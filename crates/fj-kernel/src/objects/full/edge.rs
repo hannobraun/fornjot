@@ -72,7 +72,7 @@ impl fmt::Display for HalfEdge {
 
 /// An edge, defined in global (3D) coordinates
 ///
-/// In contract to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
+/// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
 /// defined direction, and its vertices have no defined order. This means it can
 /// be used to determine whether two [`HalfEdge`]s map to the same `GlobalEdge`,
 /// regardless of their direction.
