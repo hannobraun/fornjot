@@ -43,7 +43,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
             {
                 Some(approx) => approx,
                 None => {
-                    let approx = approx_global_curve(
+                    let approx = approx_edge(
                         half_edge.curve(),
                         surface,
                         range,
@@ -102,7 +102,7 @@ impl HalfEdgeApprox {
     }
 }
 
-fn approx_global_curve(
+fn approx_edge(
     curve: &Curve,
     surface: &Surface,
     range: RangeOnPath,
