@@ -89,7 +89,7 @@ impl HalfEdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first.clone());
-        points.extend(self.points.clone());
+        points.extend(self.points.iter().cloned());
 
         points
     }
