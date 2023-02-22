@@ -6,10 +6,8 @@
 //!
 //! This is a bit of an in-between module. It is closely associated with curves
 //! ([`Curve`]/[`GlobalCurve`]) and [`Surface`]s, but paths are not really
-//! objects themselves, as logically speaking, they are owned and not referenced
-//! (practically speaking, all objects are owned and not referenced, but that is
-//! an implementation detail; see [#1021] for context on where things are
-//! going).
+//! objects themselves, as logically speaking, they are owned and not
+//! referenced.
 //!
 //! On the other hand, the types in this module don't follow the general style
 //! of types in `fj-math`.
@@ -20,7 +18,6 @@
 //! [`Curve`]: crate::objects::Curve
 //! [`GlobalCurve`]: crate::objects::GlobalCurve
 //! [`Surface`]: crate::objects::Surface
-//! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
