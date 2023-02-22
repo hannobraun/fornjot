@@ -80,13 +80,10 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::{CurveBuilder, HalfEdgeBuilder, SurfaceBuilder},
+        builder::{HalfEdgeBuilder, SurfaceBuilder},
         geometry::path::GlobalPath,
         insert::Insert,
-        objects::GlobalCurve,
-        partial::{
-            PartialCurve, PartialHalfEdge, PartialObject, PartialSurface,
-        },
+        partial::{PartialHalfEdge, PartialObject, PartialSurface},
         services::Services,
     };
 
@@ -151,29 +148,41 @@ mod tests {
         let surface = PartialSurface::from_axes(path, [0., 0., 1.])
             .build(&mut services.objects)
             .insert(&mut services.objects);
-        let mut curve = PartialCurve::default();
-        curve.update_as_line_from_points([[0., 1.], [1., 1.]]);
-        let curve = curve
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let global_curve = GlobalCurve.insert(&mut services.objects);
+        let half_edge = {
+            let mut half_edge = PartialHalfEdge::default();
+
+            half_edge.update_as_line_segment_from_points([[0., 1.], [1., 1.]]);
+
+            half_edge.vertices[0].0 = Some(range.boundary[0]);
+            half_edge.vertices[1].0 = Some(range.boundary[1]);
+
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+
+            half_edge
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface.deref(), global_curve, range).approx(tolerance);
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
-                let point_surface =
-                    curve.path().point_from_path_coords(point_local);
+                let point_surface = half_edge
+                    .curve()
+                    .path()
+                    .point_from_path_coords(point_local);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx, CurveApprox::empty().with_points(expected_approx));
+        assert_eq!(
+            approx.curve_approx,
+            CurveApprox::empty().with_points(expected_approx)
+        );
     }
 
     #[test]
@@ -181,27 +190,34 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_circle_from_radius(1.);
-        let curve = curve
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let global_curve = GlobalCurve.insert(&mut services.objects);
+        let half_edge = {
+            let mut half_edge = PartialHalfEdge::default();
 
-        let range = RangeOnPath::from([[0.], [TAU]]);
+            half_edge.update_as_circle_from_radius(1.);
+            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+
+            half_edge
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        };
+
         let tolerance = 1.;
-        let approx =
-            (&curve, surface.deref(), global_curve, range).approx(tolerance);
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
-        let expected_approx = (curve.path(), range)
-            .approx(tolerance)
-            .into_iter()
-            .map(|(_, point_surface)| {
-                let point_global =
-                    surface.geometry().point_from_surface_coords(point_surface);
-                ApproxPoint::new(point_surface, point_global)
-            })
-            .collect::<Vec<_>>();
-        assert_eq!(approx, CurveApprox::empty().with_points(expected_approx));
+        let expected_approx =
+            (half_edge.curve().path(), RangeOnPath::from([[0.], [TAU]]))
+                .approx(tolerance)
+                .into_iter()
+                .map(|(_, point_surface)| {
+                    let point_global = surface
+                        .geometry()
+                        .point_from_surface_coords(point_surface);
+                    ApproxPoint::new(point_surface, point_global)
+                })
+                .collect::<Vec<_>>();
+        assert_eq!(
+            approx.curve_approx,
+            CurveApprox::empty().with_points(expected_approx)
+        );
     }
 }
