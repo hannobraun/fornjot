@@ -105,12 +105,15 @@ impl fmt::Display for HalfEdge {
     }
 }
 
-/// An edge, defined in global (3D) coordinates
+/// An undirected edge, defined in global (3D) coordinates
 ///
 /// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
 /// defined direction, and its vertices have no defined order. This means it can
 /// be used to determine whether two [`HalfEdge`]s map to the same `GlobalEdge`,
 /// regardless of their direction.
+///
+/// See [`HalfEdge`]'s documentation for more information on the relationship
+/// between [`HalfEdge`] and `GlobalEdge`.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct GlobalEdge {
     curve: HandleWrapper<GlobalCurve>,
