@@ -19,38 +19,6 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &Surface, Handle<GlobalCurve>, RangeOnPath) {
-    type Approximation = CurveApprox;
-    type Cache = CurveCache;
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-    ) -> Self::Approximation {
-        let (curve, surface, global_curve, range) = self;
-
-        let global_curve_approx = match cache.get(global_curve.clone(), range) {
-            Some(approx) => approx,
-            None => {
-                let approx =
-                    approx_global_curve(curve, surface, range, tolerance);
-                cache.insert(global_curve, range, approx)
-            }
-        };
-
-        CurveApprox::empty().with_points(
-            global_curve_approx.points.into_iter().map(|point| {
-                let point_surface =
-                    curve.path().point_from_path_coords(point.local_form);
-
-                ApproxPoint::new(point_surface, point.global_form)
-                    .with_source((curve.clone(), point.local_form))
-            }),
-        )
-    }
-}
-
 pub(super) fn approx_global_curve(
     curve: &Curve,
     surface: &Surface,

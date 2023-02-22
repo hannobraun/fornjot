@@ -35,13 +35,42 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
             half_edge.start_vertex().global_form().position(),
         )
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
-        let curve_approx = (
-            half_edge.curve(),
-            surface,
-            half_edge.global_form().curve().clone(),
-            range,
-        )
-            .approx_with_cache(tolerance, cache);
+
+        let curve_approx = {
+            let global_curve_approx = match cache
+                .get(half_edge.global_form().curve().clone().clone(), range)
+            {
+                Some(approx) => approx,
+                None => {
+                    let approx = super::curve::approx_global_curve(
+                        half_edge.curve(),
+                        surface,
+                        range,
+                        tolerance,
+                    );
+                    cache.insert(
+                        half_edge.global_form().curve().clone(),
+                        range,
+                        approx,
+                    )
+                }
+            };
+
+            CurveApprox::empty().with_points(
+                global_curve_approx.points.into_iter().map(|point| {
+                    let point_surface = half_edge
+                        .curve()
+                        .path()
+                        .point_from_path_coords(point.local_form);
+
+                    ApproxPoint::new(point_surface, point.global_form)
+                        .with_source((
+                            half_edge.curve().clone(),
+                            point.local_form,
+                        ))
+                }),
+            )
+        };
 
         HalfEdgeApprox {
             first,
