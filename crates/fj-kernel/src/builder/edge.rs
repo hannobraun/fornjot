@@ -10,8 +10,6 @@ use crate::{
     partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
-use super::CurveBuilder;
-
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
     /// Update partial half-edge to represent the u-axis of the surface it is on
@@ -174,12 +172,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         });
 
         let path = if let [Some(start), Some(end)] = boundary {
-            let boundary = [start, end];
-            self.curve
-                .write()
-                .update_as_line_from_points_with_line_coords(
-                    boundary.zip_ext(points_surface),
-                )
+            let points = [start, end].zip_ext(points_surface);
+
+            let path = SurfacePath::from_points_with_line_coords(points);
+            self.curve.write().path = Some(path.into());
+
+            path
         } else {
             let (path, _) = SurfacePath::line_from_points(points_surface);
             self.curve.write().path = Some(path.into());

@@ -1,25 +1,9 @@
-use fj_math::Point;
-
-use crate::{geometry::path::SurfacePath, partial::PartialCurve};
+use crate::partial::PartialCurve;
 
 /// Builder API for [`PartialCurve`]
 pub trait CurveBuilder {
-    /// Update partial curve to be a line, from provided points and line coords
-    ///
-    /// Returns the updated path.
-    fn update_as_line_from_points_with_line_coords(
-        &mut self,
-        points: [(impl Into<Point<1>>, impl Into<Point<2>>); 2],
-    ) -> SurfacePath;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl CurveBuilder for PartialCurve {
-    fn update_as_line_from_points_with_line_coords(
-        &mut self,
-        points: [(impl Into<Point<1>>, impl Into<Point<2>>); 2],
-    ) -> SurfacePath {
-        let path = SurfacePath::from_points_with_line_coords(points);
-        self.path = Some(path.into());
-        path
-    }
-}
+impl CurveBuilder for PartialCurve {}
