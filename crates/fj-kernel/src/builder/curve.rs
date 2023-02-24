@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar, Vector};
+use fj_math::{Point, Scalar};
 
 use crate::{geometry::path::SurfacePath, partial::PartialCurve};
 
@@ -56,10 +56,9 @@ impl CurveBuilder for PartialCurve {
     }
 
     fn update_as_v_axis(&mut self) -> SurfacePath {
-        let a = Point::origin();
-        let b = a + Vector::unit_v();
-
-        self.update_as_line_from_points([a, b])
+        let path = SurfacePath::v_axis();
+        self.path = Some(path.into());
+        path
     }
 
     fn update_as_circle_from_radius(

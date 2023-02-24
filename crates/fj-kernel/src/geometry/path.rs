@@ -52,6 +52,15 @@ impl SurfacePath {
         self_
     }
 
+    /// Build a line that represents the v-axis of the surface its on
+    pub fn v_axis() -> Self {
+        let a = Point::origin();
+        let b = a + Vector::unit_v();
+
+        let (self_, _) = Self::line_from_points([a, b]);
+        self_
+    }
+
     /// Construct a line from two points
     ///
     /// Also returns the coordinates of the points on the path.
