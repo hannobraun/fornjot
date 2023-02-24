@@ -1,41 +1,6 @@
 use fj_math::Scalar;
 
-use crate::{
-    geometry::path::SurfacePath,
-    objects::{Curve, Objects},
-    partial::{FullToPartialCache, PartialObject},
-    services::Service,
-};
-
-/// A partial [`Curve`]
-#[derive(Clone, Debug, Default)]
-pub struct PartialCurve {
-    /// The path that defines the curve
-    pub path: Option<MaybeSurfacePath>,
-}
-
-impl PartialObject for PartialCurve {
-    type Full = Curve;
-
-    fn from_full(curve: &Self::Full, _: &mut FullToPartialCache) -> Self {
-        Self {
-            path: Some(curve.path().into()),
-        }
-    }
-
-    fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let path = match self.path.expect("Need path to build curve") {
-            MaybeSurfacePath::Defined(path) => path,
-            undefined => {
-                panic!(
-                    "Trying to build curve with undefined path: {undefined:?}"
-                )
-            }
-        };
-
-        Curve::new(path)
-    }
-}
+use crate::geometry::path::SurfacePath;
 
 /// The definition of a surface path within a partial object
 ///
