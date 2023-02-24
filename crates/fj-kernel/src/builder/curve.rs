@@ -4,11 +4,6 @@ use crate::{geometry::path::SurfacePath, partial::PartialCurve};
 
 /// Builder API for [`PartialCurve`]
 pub trait CurveBuilder {
-    /// Update partial curve to represent the v-axis of the surface it is on
-    ///
-    /// Returns the updated path.
-    fn update_as_v_axis(&mut self) -> SurfacePath;
-
     /// Update partial curve to be a circle, from the provided radius
     ///
     /// Returns the updated path.
@@ -44,12 +39,6 @@ pub trait CurveBuilder {
 }
 
 impl CurveBuilder for PartialCurve {
-    fn update_as_v_axis(&mut self) -> SurfacePath {
-        let path = SurfacePath::v_axis();
-        self.path = Some(path.into());
-        path
-    }
-
     fn update_as_circle_from_radius(
         &mut self,
         radius: impl Into<Scalar>,
