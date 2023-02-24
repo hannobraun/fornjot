@@ -1,6 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::{geometry::path::SurfacePath, objects::HalfEdge};
+use crate::{geometry::curve::Curve, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
@@ -28,15 +28,15 @@ impl CurveEdgeIntersection {
     /// Currently, only intersections between lines and line segments can be
     /// computed. Panics, if a different type of curve or [`HalfEdge`] is
     /// passed.
-    pub fn compute(curve: &SurfacePath, half_edge: &HalfEdge) -> Option<Self> {
+    pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
         let curve_as_line = match curve {
-            SurfacePath::Line(line) => line,
+            Curve::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
             let edge_curve_as_line = match half_edge.curve() {
-                SurfacePath::Line(line) => line,
+                Curve::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
@@ -73,7 +73,7 @@ mod tests {
 
     use crate::{
         builder::HalfEdgeBuilder,
-        geometry::path::SurfacePath,
+        geometry::curve::Curve,
         partial::{PartialHalfEdge, PartialObject},
         services::Services,
     };
@@ -85,7 +85,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let curve = SurfacePath::u_axis();
+        let curve = Curve::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points([[1., -1.], [1., 1.]]);
@@ -109,7 +109,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let curve = SurfacePath::u_axis();
+        let curve = Curve::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge
@@ -134,7 +134,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let curve = SurfacePath::u_axis();
+        let curve = Curve::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge
@@ -154,7 +154,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let curve = SurfacePath::u_axis();
+        let curve = Curve::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points([[-1., 0.], [1., 0.]]);

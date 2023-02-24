@@ -1,12 +1,12 @@
 //! Paths through 2D and 3D space
 //!
-//! See [`SurfacePath`] and [`GlobalPath`].
+//! See [`Curve`] and [`GlobalPath`].
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum SurfacePath {
+pub enum Curve {
     /// A circle
     Circle(Circle<2>),
 
@@ -14,7 +14,7 @@ pub enum SurfacePath {
     Line(Line<2>),
 }
 
-impl SurfacePath {
+impl Curve {
     /// Build a circle from the given radius
     pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
         Self::circle_from_center_and_radius(Point::origin(), radius)

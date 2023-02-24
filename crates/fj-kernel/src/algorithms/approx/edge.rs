@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    geometry::path::{GlobalPath, SurfacePath},
+    geometry::curve::{Curve, GlobalPath},
     objects::{GlobalEdge, HalfEdge, Surface},
     storage::{Handle, ObjectId},
 };
@@ -91,7 +91,7 @@ impl HalfEdgeApprox {
 }
 
 fn approx_edge(
-    curve: &SurfacePath,
+    curve: &Curve,
     surface: &Surface,
     range: RangeOnPath,
     tolerance: impl Into<Tolerance>,
@@ -103,12 +103,12 @@ fn approx_edge(
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
     let points = match (curve, surface.geometry().u) {
-        (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
+        (Curve::Circle(_), GlobalPath::Circle(_)) => {
             todo!(
                 "Approximating a circle on a curved surface not supported yet."
             )
         }
-        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
+        (Curve::Circle(_), GlobalPath::Line(_)) => {
             (curve, range)
                 .approx_with_cache(tolerance, &mut ())
                 .into_iter()
@@ -135,7 +135,7 @@ fn approx_edge(
                 })
                 .collect()
         }
-        (SurfacePath::Line(line), _) => {
+        (Curve::Line(line), _) => {
             let range_u =
                 RangeOnPath::from(range.boundary.map(|point_curve| {
                     [curve.point_from_path_coords(point_curve).u]
@@ -232,7 +232,7 @@ mod tests {
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::{HalfEdgeBuilder, SurfaceBuilder},
-        geometry::path::GlobalPath,
+        geometry::curve::GlobalPath,
         insert::Insert,
         partial::{PartialHalfEdge, PartialObject, PartialSurface},
         services::Services,

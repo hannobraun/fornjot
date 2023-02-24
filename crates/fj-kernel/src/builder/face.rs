@@ -3,9 +3,9 @@ use std::{array, collections::VecDeque};
 use fj_interop::ext::ArrayExt;
 
 use crate::{
-    geometry::path::SurfacePath,
+    geometry::curve::Curve,
     objects::{Cycle, Surface},
-    partial::{MaybeSurfacePath, Partial, PartialFace},
+    partial::{MaybeCurve, Partial, PartialFace},
 };
 
 use super::SurfaceBuilder;
@@ -100,13 +100,13 @@ impl FaceBuilder for PartialFace {
 
             if let Some(path) = &mut curve {
                 match path {
-                    MaybeSurfacePath::Defined(_) => {
+                    MaybeCurve::Defined(_) => {
                         // Path is already defined. Nothing to infer.
                     }
-                    MaybeSurfacePath::UndefinedCircle { .. } => todo!(
+                    MaybeCurve::UndefinedCircle { .. } => todo!(
                         "Inferring undefined circles is not supported yet"
                     ),
-                    MaybeSurfacePath::UndefinedLine => {
+                    MaybeCurve::UndefinedLine => {
                         let points_surface =
                             half_edge.vertices.each_ref_ext().map(|vertex| {
                                 vertex.1.read().position.expect(
@@ -114,9 +114,9 @@ impl FaceBuilder for PartialFace {
                                 )
                             });
                         let (line, points_curve) =
-                            SurfacePath::line_from_points(points_surface);
+                            Curve::line_from_points(points_surface);
 
-                        *path = MaybeSurfacePath::Defined(line);
+                        *path = MaybeCurve::Defined(line);
                         for (vertex, point) in half_edge
                             .vertices
                             .each_mut_ext()

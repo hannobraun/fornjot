@@ -6,7 +6,7 @@ use fj_math::{Scalar, Vector};
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     builder::{CycleBuilder, FaceBuilder},
-    geometry::path::GlobalPath,
+    geometry::curve::GlobalPath,
     insert::Insert,
     objects::{Face, Objects, Shell},
     partial::{Partial, PartialFace, PartialObject, PartialShell},

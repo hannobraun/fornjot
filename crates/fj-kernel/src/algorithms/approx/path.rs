@@ -32,11 +32,11 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::path::{GlobalPath, SurfacePath};
+use crate::geometry::curve::{Curve, GlobalPath};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (&SurfacePath, RangeOnPath) {
+impl Approx for (&Curve, RangeOnPath) {
     type Approximation = Vec<(Point<1>, Point<2>)>;
     type Cache = ();
 
@@ -48,10 +48,10 @@ impl Approx for (&SurfacePath, RangeOnPath) {
         let (path, range) = self;
 
         match path {
-            SurfacePath::Circle(circle) => {
+            Curve::Circle(circle) => {
                 approx_circle(circle, range, tolerance.into())
             }
-            SurfacePath::Line(_) => vec![],
+            Curve::Line(_) => vec![],
         }
     }
 }
