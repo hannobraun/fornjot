@@ -1,11 +1,7 @@
 use fj_interop::ext::ArrayExt;
 use iter_fixed::IntoIteratorFixed;
 
-use crate::{
-    objects::{Curve, Face, Objects},
-    services::Service,
-    storage::Handle,
-};
+use crate::{geometry::path::SurfacePath, objects::Face};
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
 
@@ -18,7 +14,7 @@ pub struct FaceFaceIntersection {
     /// representation of the intersection on the respective face's surface.
     ///
     /// They both represent the same global curve.
-    pub intersection_curves: [Handle<Curve>; 2],
+    pub intersection_curves: [SurfacePath; 2],
 
     /// The interval of this intersection, in curve coordinates
     ///
@@ -28,14 +24,11 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(
-        faces: [&Face; 2],
-        objects: &mut Service<Objects>,
-    ) -> Option<Self> {
+    pub fn compute(faces: [&Face; 2]) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
-            match SurfaceSurfaceIntersection::compute(surfaces, objects) {
+            match SurfaceSurfaceIntersection::compute(surfaces) {
                 Some(intersection) => intersection.intersection_curves,
                 None => return None,
             };
@@ -69,9 +62,9 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        builder::{CurveBuilder, CycleBuilder},
-        insert::Insert,
-        partial::{Partial, PartialCurve, PartialFace, PartialObject},
+        builder::CycleBuilder,
+        geometry::path::SurfacePath,
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -102,8 +95,7 @@ mod tests {
             face.build(&mut services.objects)
         });
 
-        let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         assert!(intersection.is_none());
     }
@@ -133,15 +125,11 @@ mod tests {
             face.build(&mut services.objects)
         });
 
-        let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         let expected_curves = surfaces.map(|_| {
-            let mut curve = PartialCurve::default();
-            curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-            curve
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
+            let (path, _) = SurfacePath::line_from_points([[0., 0.], [1., 0.]]);
+            path
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);

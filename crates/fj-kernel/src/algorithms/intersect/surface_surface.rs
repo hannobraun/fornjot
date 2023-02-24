@@ -2,9 +2,7 @@ use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
-    insert::Insert,
-    objects::{Curve, Objects, Surface},
-    services::Service,
+    objects::Surface,
     storage::Handle,
 };
 
@@ -12,15 +10,12 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
     /// The intersection curves
-    pub intersection_curves: [Handle<Curve>; 2],
+    pub intersection_curves: [SurfacePath; 2],
 }
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(
-        surfaces: [Handle<Surface>; 2],
-        objects: &mut Service<Objects>,
-    ) -> Option<Self> {
+    pub fn compute(surfaces: [Handle<Surface>; 2]) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -53,10 +48,8 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = planes.map(|plane| {
-            let path = SurfacePath::Line(plane.project_line(&line));
-            Curve::new(path).insert(objects)
-        });
+        let curves =
+            planes.map(|plane| SurfacePath::Line(plane.project_line(&line)));
 
         Some(Self {
             intersection_curves: curves,
@@ -83,10 +76,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject,
-        builder::CurveBuilder,
-        insert::Insert,
-        partial::{PartialCurve, PartialObject},
+        algorithms::transform::TransformObject, geometry::path::SurfacePath,
         services::Services,
     };
 
@@ -101,36 +91,21 @@ mod tests {
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
-                [
-                    xy.clone(),
-                    xy.clone().transform(
-                        &Transform::translation([0., 0., 1.],),
-                        &mut services.objects
-                    )
-                ],
-                &mut services.objects
-            ),
+            SurfaceSurfaceIntersection::compute([
+                xy.clone(),
+                xy.clone().transform(
+                    &Transform::translation([0., 0., 1.],),
+                    &mut services.objects
+                )
+            ],),
             None,
         );
 
-        let mut expected_xy = PartialCurve::default();
-        expected_xy.update_as_u_axis();
-        let expected_xy = expected_xy
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-
-        let mut expected_xz = PartialCurve::default();
-        expected_xz.update_as_u_axis();
-        let expected_xz = expected_xz
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let expected_xy = SurfacePath::u_axis();
+        let expected_xz = SurfacePath::u_axis();
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
-                [xy, xz],
-                &mut services.objects
-            ),
+            SurfaceSurfaceIntersection::compute([xy, xz],),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

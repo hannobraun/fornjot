@@ -3,11 +3,11 @@ use std::vec;
 use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
-use crate::objects::{Curve, Face};
+use crate::{geometry::path::SurfacePath, objects::Face};
 
 use super::CurveEdgeIntersection;
 
-/// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
+/// The intersections between a curve and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersection {
     /// The intervals where the curve and face intersect, in curve coordinates
@@ -27,8 +27,8 @@ impl CurveFaceIntersection {
         Self { intervals }
     }
 
-    /// Compute the intersections between a [`Curve`] and a [`Face`]
-    pub fn compute(curve: &Curve, face: &Face) -> Self {
+    /// Compute the intersection
+    pub fn compute(curve: &SurfacePath, face: &Face) -> Self {
         let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
@@ -150,8 +150,9 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, CycleBuilder, FaceBuilder},
-        partial::{Partial, PartialCurve, PartialFace, PartialObject},
+        builder::{CycleBuilder, FaceBuilder},
+        geometry::path::SurfacePath,
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -161,9 +162,7 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let mut curve = PartialCurve::default();
-        curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
-        let curve = curve.build(&mut services.objects);
+        let (curve, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior = [
