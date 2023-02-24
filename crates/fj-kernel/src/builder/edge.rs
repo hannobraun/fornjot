@@ -14,6 +14,11 @@ use super::CurveBuilder;
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
+    /// Update partial half-edge to represent the u-axis of the surface it is on
+    ///
+    /// Returns the updated path.
+    fn update_as_u_axis(&mut self) -> SurfacePath;
+
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
 
@@ -63,6 +68,12 @@ pub trait HalfEdgeBuilder {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
+    fn update_as_u_axis(&mut self) -> SurfacePath {
+        let path = SurfacePath::u_axis();
+        self.curve.write().path = Some(path.into());
+        path
+    }
+
     fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
         let path = self.curve.write().update_as_circle_from_radius(radius);
 
