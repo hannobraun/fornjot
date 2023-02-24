@@ -2,8 +2,7 @@ use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
     geometry::path::{GlobalPath, SurfacePath},
-    objects::{Objects, Surface},
-    services::Service,
+    objects::Surface,
     storage::Handle,
 };
 
@@ -16,10 +15,7 @@ pub struct SurfaceSurfaceIntersection {
 
 impl SurfaceSurfaceIntersection {
     /// Compute the intersection between two surfaces
-    pub fn compute(
-        surfaces: [Handle<Surface>; 2],
-        _: &mut Service<Objects>,
-    ) -> Option<Self> {
+    pub fn compute(surfaces: [Handle<Surface>; 2]) -> Option<Self> {
         // Algorithm from Real-Time Collision Detection by Christer Ericson. See
         // section 5.4.4, Intersection of Two Planes.
         //
@@ -95,16 +91,13 @@ mod tests {
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
-                [
-                    xy.clone(),
-                    xy.clone().transform(
-                        &Transform::translation([0., 0., 1.],),
-                        &mut services.objects
-                    )
-                ],
-                &mut services.objects
-            ),
+            SurfaceSurfaceIntersection::compute([
+                xy.clone(),
+                xy.clone().transform(
+                    &Transform::translation([0., 0., 1.],),
+                    &mut services.objects
+                )
+            ],),
             None,
         );
 
@@ -112,10 +105,7 @@ mod tests {
         let expected_xz = SurfacePath::u_axis();
 
         assert_eq!(
-            SurfaceSurfaceIntersection::compute(
-                [xy, xz],
-                &mut services.objects
-            ),
+            SurfaceSurfaceIntersection::compute([xy, xz],),
             Some(SurfaceSurfaceIntersection {
                 intersection_curves: [expected_xy, expected_xz],
             })

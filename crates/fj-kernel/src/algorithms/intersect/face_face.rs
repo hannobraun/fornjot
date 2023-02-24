@@ -30,12 +30,12 @@ impl FaceFaceIntersection {
     /// Compute the intersections between two faces
     pub fn compute(
         faces: [&Face; 2],
-        objects: &mut Service<Objects>,
+        _: &mut Service<Objects>,
     ) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
-            match SurfaceSurfaceIntersection::compute(surfaces, objects) {
+            match SurfaceSurfaceIntersection::compute(surfaces) {
                 Some(intersection) => intersection.intersection_curves,
                 None => return None,
             };
