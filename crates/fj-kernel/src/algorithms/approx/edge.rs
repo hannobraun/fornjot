@@ -60,7 +60,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                         .point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
-                        .with_source((half_edge.curve(), point.local_form))
+                        .with_source((half_edge.clone(), point.local_form))
                 })
                 .collect()
         };

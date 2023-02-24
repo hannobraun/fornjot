@@ -19,10 +19,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::{
-    objects::{Curve, HalfEdge},
-    storage::Handle,
-};
+use crate::{objects::HalfEdge, storage::Handle};
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
@@ -121,5 +118,4 @@ impl<const D: usize> PartialOrd for ApproxPoint<D> {
 /// The source of an [`ApproxPoint`]
 pub trait Source: Any + Debug {}
 
-impl Source for (Curve, Point<1>) {}
 impl Source for (Handle<HalfEdge>, Point<1>) {}
