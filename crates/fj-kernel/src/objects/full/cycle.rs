@@ -3,7 +3,7 @@ use std::slice;
 use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
 
-use crate::{geometry::path::SurfacePath, objects::HalfEdge, storage::Handle};
+use crate::{geometry::path::Curve, objects::HalfEdge, storage::Handle};
 
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -56,8 +56,8 @@ impl Cycle {
             let edge_direction_positive = a < b;
 
             let circle = match first.curve() {
-                SurfacePath::Circle(circle) => circle,
-                SurfacePath::Line(_) => unreachable!(
+                Curve::Circle(circle) => circle,
+                Curve::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"
                 ),
             };

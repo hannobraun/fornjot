@@ -3,7 +3,7 @@ use std::{array, collections::VecDeque};
 use fj_interop::ext::ArrayExt;
 
 use crate::{
-    geometry::path::SurfacePath,
+    geometry::path::Curve,
     objects::{Cycle, Surface},
     partial::{MaybeSurfacePath, Partial, PartialFace},
 };
@@ -114,7 +114,7 @@ impl FaceBuilder for PartialFace {
                                 )
                             });
                         let (line, points_curve) =
-                            SurfacePath::line_from_points(points_surface);
+                            Curve::line_from_points(points_surface);
 
                         *path = MaybeSurfacePath::Defined(line);
                         for (vertex, point) in half_edge

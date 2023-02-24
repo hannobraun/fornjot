@@ -3,7 +3,7 @@ use std::vec;
 use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
-use crate::{geometry::path::SurfacePath, objects::Face};
+use crate::{geometry::path::Curve, objects::Face};
 
 use super::CurveEdgeIntersection;
 
@@ -28,7 +28,7 @@ impl CurveFaceIntersection {
     }
 
     /// Compute the intersection
-    pub fn compute(curve: &SurfacePath, face: &Face) -> Self {
+    pub fn compute(curve: &Curve, face: &Face) -> Self {
         let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
@@ -151,7 +151,7 @@ where
 mod tests {
     use crate::{
         builder::{CycleBuilder, FaceBuilder},
-        geometry::path::SurfacePath,
+        geometry::path::Curve,
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
@@ -162,7 +162,7 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let (curve, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
+        let (curve, _) = Curve::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior = [

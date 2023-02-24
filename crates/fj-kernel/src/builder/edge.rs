@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{
-        path::{GlobalPath, SurfacePath},
+        path::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
     objects::{GlobalEdge, HalfEdge},
@@ -15,18 +15,18 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to represent the u-axis of the surface it is on
     ///
     /// Returns the updated path.
-    fn update_as_u_axis(&mut self) -> SurfacePath;
+    fn update_as_u_axis(&mut self) -> Curve;
 
     /// Update partial curve to represent the v-axis of the surface it is on
     ///
     /// Returns the updated path.
-    fn update_as_v_axis(&mut self) -> SurfacePath;
+    fn update_as_v_axis(&mut self) -> Curve;
 
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(
         &mut self,
         radius: impl Into<Scalar>,
-    ) -> SurfacePath;
+    ) -> Curve;
 
     /// Update partial half-edge to be an arc, spanning the given angle in
     /// radians
@@ -40,10 +40,10 @@ pub trait HalfEdgeBuilder {
     fn update_as_line_segment_from_points(
         &mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> SurfacePath;
+    ) -> Curve;
 
     /// Update partial half-edge to be a line segment
-    fn update_as_line_segment(&mut self) -> SurfacePath;
+    fn update_as_line_segment(&mut self) -> Curve;
 
     /// Infer the global form of the half-edge
     ///
@@ -74,14 +74,14 @@ pub trait HalfEdgeBuilder {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn update_as_u_axis(&mut self) -> SurfacePath {
-        let path = SurfacePath::u_axis();
+    fn update_as_u_axis(&mut self) -> Curve {
+        let path = Curve::u_axis();
         self.curve = Some(path.into());
         path
     }
 
-    fn update_as_v_axis(&mut self) -> SurfacePath {
-        let path = SurfacePath::v_axis();
+    fn update_as_v_axis(&mut self) -> Curve {
+        let path = Curve::v_axis();
         self.curve = Some(path.into());
         path
     }
@@ -89,8 +89,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_circle_from_radius(
         &mut self,
         radius: impl Into<Scalar>,
-    ) -> SurfacePath {
-        let path = SurfacePath::circle_from_radius(radius);
+    ) -> Curve {
+        let path = Curve::circle_from_radius(radius);
         self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
@@ -131,8 +131,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
-        let path =
-            SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
+        let path = Curve::circle_from_center_and_radius(arc.center, arc.radius);
         self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
@@ -152,7 +151,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_line_segment_from_points(
         &mut self,
         points: [impl Into<Point<2>>; 2],
-    ) -> SurfacePath {
+    ) -> Curve {
         for (vertex, point) in self.vertices.each_mut_ext().zip_ext(points) {
             let mut surface_form = vertex.1.write();
             surface_form.position = Some(point.into());
@@ -161,7 +160,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         self.update_as_line_segment()
     }
 
-    fn update_as_line_segment(&mut self) -> SurfacePath {
+    fn update_as_line_segment(&mut self) -> Curve {
         let boundary = self.vertices.each_ref_ext().map(|vertex| vertex.0);
         let points_surface = self.vertices.each_ref_ext().map(|vertex| {
             vertex
@@ -174,12 +173,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let path = if let [Some(start), Some(end)] = boundary {
             let points = [start, end].zip_ext(points_surface);
 
-            let path = SurfacePath::from_points_with_line_coords(points);
+            let path = Curve::from_points_with_line_coords(points);
             self.curve = Some(path.into());
 
             path
         } else {
-            let (path, _) = SurfacePath::line_from_points(points_surface);
+            let (path, _) = Curve::line_from_points(points_surface);
             self.curve = Some(path.into());
 
             for (vertex, position) in
@@ -263,7 +262,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     // represented using our current curve/surface
                     // representation.
                     match path {
-                        MaybeSurfacePath::Defined(SurfacePath::Line(_))
+                        MaybeSurfacePath::Defined(Curve::Line(_))
                         | MaybeSurfacePath::UndefinedLine => {
                             // We're dealing with a line on a rounded surface.
                             //
@@ -308,7 +307,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 GlobalPath::Line(_) => {
                     // The other edge is defined on a plane.
                     match path {
-                        MaybeSurfacePath::Defined(SurfacePath::Line(_))
+                        MaybeSurfacePath::Defined(Curve::Line(_))
                         | MaybeSurfacePath::UndefinedLine => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.

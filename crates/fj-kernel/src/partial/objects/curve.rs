@@ -1,15 +1,14 @@
 use fj_math::Scalar;
 
-use crate::geometry::path::SurfacePath;
+use crate::geometry::path::Curve;
 
 /// The definition of a surface path within a partial object
 ///
-/// Can be a fully defined [`SurfacePath`], or just the type of path might be
-/// known.
+/// Can be a fully defined [`Curve`], or just the type of path might be known.
 #[derive(Clone, Copy, Debug)]
 pub enum MaybeSurfacePath {
     /// The surface path is fully defined
-    Defined(SurfacePath),
+    Defined(Curve),
 
     /// The surface path is undefined, but we know it is a circle
     UndefinedCircle {
@@ -21,8 +20,8 @@ pub enum MaybeSurfacePath {
     UndefinedLine,
 }
 
-impl From<SurfacePath> for MaybeSurfacePath {
-    fn from(path: SurfacePath) -> Self {
+impl From<Curve> for MaybeSurfacePath {
+    fn from(path: Curve) -> Self {
         Self::Defined(path)
     }
 }
