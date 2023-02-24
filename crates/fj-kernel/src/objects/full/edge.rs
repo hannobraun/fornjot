@@ -2,7 +2,8 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Curve, GlobalVertex, SurfaceVertex},
+    geometry::path::SurfacePath,
+    objects::{GlobalVertex, SurfaceVertex},
     storage::Handle,
 };
 
@@ -44,7 +45,7 @@ use crate::{
 /// <https://github.com/hannobraun/Fornjot/issues/1608>
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    curve: Handle<Curve>,
+    curve: SurfacePath,
     boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
     global_form: Handle<GlobalEdge>,
 }
@@ -52,7 +53,7 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
-        curve: Handle<Curve>,
+        curve: SurfacePath,
         boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
@@ -64,8 +65,8 @@ impl HalfEdge {
     }
 
     /// Access the curve that defines the half-edge's geometry
-    pub fn curve(&self) -> &Handle<Curve> {
-        &self.curve
+    pub fn curve(&self) -> SurfacePath {
+        self.curve
     }
 
     /// Access the boundary points of the half-edge on the curve

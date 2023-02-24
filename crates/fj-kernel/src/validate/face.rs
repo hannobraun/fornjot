@@ -291,7 +291,7 @@ mod tests {
                 let boundary = boundary.zip_ext(surface_vertices);
 
                 HalfEdge::new(
-                    half_edge.curve().clone(),
+                    half_edge.curve(),
                     boundary,
                     half_edge.global_form().clone(),
                 )

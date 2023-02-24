@@ -33,7 +33,6 @@ macro_rules! impl_trait {
 }
 
 impl_trait!(
-    Curve, PartialCurve;
     Cycle, PartialCycle;
     Face, PartialFace;
     GlobalEdge, PartialGlobalEdge;

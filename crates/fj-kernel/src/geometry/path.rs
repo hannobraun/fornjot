@@ -1,21 +1,6 @@
 //! Paths through 2D and 3D space
 //!
 //! See [`SurfacePath`] and [`GlobalPath`].
-//!
-//! # Implementation Note
-//!
-//! This is a bit of an in-between module. It is closely associated with
-//! [`Curve`] and [`Surface`]s, but paths are not really objects themselves, as
-//! logically speaking, they are owned and not referenced.
-//!
-//! On the other hand, the types in this module don't follow the general style
-//! of types in `fj-math`.
-//!
-//! We'll see how it shakes out. Maybe it will stay its own thing, maybe it will
-//! move to `fj-math`, maybe something else entirely will happen.
-//!
-//! [`Curve`]: crate::objects::Curve
-//! [`Surface`]: crate::objects::Surface
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 

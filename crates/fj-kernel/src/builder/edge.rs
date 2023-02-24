@@ -76,13 +76,13 @@ pub trait HalfEdgeBuilder {
 impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_u_axis(&mut self) -> SurfacePath {
         let path = SurfacePath::u_axis();
-        self.curve.write().path = Some(path.into());
+        self.curve = Some(path.into());
         path
     }
 
     fn update_as_v_axis(&mut self) -> SurfacePath {
         let path = SurfacePath::v_axis();
-        self.curve.write().path = Some(path.into());
+        self.curve = Some(path.into());
         path
     }
 
@@ -91,7 +91,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
     ) -> SurfacePath {
         let path = SurfacePath::circle_from_radius(radius);
-        self.curve.write().path = Some(path.into());
+        self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -133,7 +133,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let path =
             SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve.write().path = Some(path.into());
+        self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
@@ -175,12 +175,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let points = [start, end].zip_ext(points_surface);
 
             let path = SurfacePath::from_points_with_line_coords(points);
-            self.curve.write().path = Some(path.into());
+            self.curve = Some(path.into());
 
             path
         } else {
             let (path, _) = SurfacePath::line_from_points(points_surface);
-            self.curve.write().path = Some(path.into());
+            self.curve = Some(path.into());
 
             for (vertex, position) in
                 self.vertices.each_mut_ext().zip_ext([0., 1.])
@@ -211,8 +211,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) {
         let path = self
             .curve
-            .read()
-            .path
             .expect("Can't infer vertex positions without curve");
         let MaybeSurfacePath::Defined(path) = path else {
             panic!("Can't infer vertex positions with undefined path");
@@ -254,83 +252,79 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         other: &Partial<HalfEdge>,
         surface: &SurfaceGeometry,
     ) {
-        self.curve.write().path =
-            other.read().curve.read().path.as_ref().and_then(|path| {
-                // We have information about the other edge's surface available.
-                // We need to use that to interpret what the other edge's curve
-                // path means for our curve path.
-                match surface.u {
-                    GlobalPath::Circle(circle) => {
-                        // The other surface is curved. We're entering some
-                        // dodgy territory here, as only some edge cases can be
-                        // represented using our current curve/surface
-                        // representation.
-                        match path {
-                            MaybeSurfacePath::Defined(SurfacePath::Line(_))
-                            | MaybeSurfacePath::UndefinedLine => {
-                                // We're dealing with a line on a rounded
-                                // surface.
-                                //
-                                // Based on the current uses of this method, we
-                                // can make some assumptions:
-                                //
-                                // 1. The line is parallel to the u-axis of the
-                                //    other surface.
-                                // 2. The surface that *our* edge is in is a
-                                //    plane that is parallel to the the plane of
-                                //    the circle that defines the curvature of
-                                //    the other surface.
-                                //
-                                // These assumptions are necessary preconditions
-                                // for the following code to work. But
-                                // unfortunately, I see no way to check those
-                                // preconditions here, as neither the other line
-                                // nor our surface is necessarily defined yet.
-                                //
-                                // Handling this case anyway feels like a grave
-                                // sin, but I don't know what else to do. If you
-                                // tracked some extremely subtle and annoying
-                                // bug back to this code, I apologize.
-                                //
-                                // I hope that I'll come up with a better curve/
-                                // surface representation before this becomes a
-                                // problem.
-                                Some(MaybeSurfacePath::UndefinedCircle {
-                                    radius: circle.radius(),
-                                })
-                            }
-                            _ => {
-                                // The other edge is a line segment in a curved
-                                // surface. No idea how to deal with this.
-                                todo!(
-                                    "Can't connect edge to circle on curved \
-                                    surface"
-                                )
-                            }
+        self.curve = other.read().curve.as_ref().and_then(|path| {
+            // We have information about the other edge's surface available. We
+            // need to use that to interpret what the other edge's curve path
+            // means for our curve path.
+            match surface.u {
+                GlobalPath::Circle(circle) => {
+                    // The other surface is curved. We're entering some dodgy
+                    // territory here, as only some edge cases can be
+                    // represented using our current curve/surface
+                    // representation.
+                    match path {
+                        MaybeSurfacePath::Defined(SurfacePath::Line(_))
+                        | MaybeSurfacePath::UndefinedLine => {
+                            // We're dealing with a line on a rounded surface.
+                            //
+                            // Based on the current uses of this method, we can
+                            // make some assumptions:
+                            //
+                            // 1. The line is parallel to the u-axis of the
+                            //    other surface.
+                            // 2. The surface that *our* edge is in is a plane
+                            //    that is parallel to the the plane of the
+                            //    circle that defines the curvature of the other
+                            //    surface.
+                            //
+                            // These assumptions are necessary preconditions for
+                            // the following code to work. But unfortunately, I
+                            // see no way to check those preconditions here, as
+                            // neither the other line nor our surface is
+                            // necessarily defined yet.
+                            //
+                            // Handling this case anyway feels like a grave sin,
+                            // but I don't know what else to do. If you tracked
+                            // some extremely subtle and annoying bug back to
+                            // this code, I apologize.
+                            //
+                            // I hope that I'll come up with a better curve/
+                            // surface representation before this becomes a
+                            // problem.
+                            Some(MaybeSurfacePath::UndefinedCircle {
+                                radius: circle.radius(),
+                            })
                         }
-                    }
-                    GlobalPath::Line(_) => {
-                        // The other edge is defined on a plane.
-                        match path {
-                            MaybeSurfacePath::Defined(SurfacePath::Line(_))
-                            | MaybeSurfacePath::UndefinedLine => {
-                                // The other edge is a line segment on a plane.
-                                // That means our edge must be a line segment
-                                // too.
-                                Some(MaybeSurfacePath::UndefinedLine)
-                            }
-                            _ => {
-                                // The other edge is a circle or arc on a plane.
-                                // I'm actually not sure what that means for our
-                                // edge. We might be able to represent it
-                                // somehow, but let's leave that as an exercise
-                                // for later.
-                                todo!("Can't connect edge to circle on plane")
-                            }
+                        _ => {
+                            // The other edge is a line segment in a curved
+                            // surface. No idea how to deal with this.
+                            todo!(
+                                "Can't connect edge to circle on curved \
+                                    surface"
+                            )
                         }
                     }
                 }
-            });
+                GlobalPath::Line(_) => {
+                    // The other edge is defined on a plane.
+                    match path {
+                        MaybeSurfacePath::Defined(SurfacePath::Line(_))
+                        | MaybeSurfacePath::UndefinedLine => {
+                            // The other edge is a line segment on a plane. That
+                            // means our edge must be a line segment too.
+                            Some(MaybeSurfacePath::UndefinedLine)
+                        }
+                        _ => {
+                            // The other edge is a circle or arc on a plane. I'm
+                            // actually not sure what that means for our edge.
+                            // We might be able to represent it somehow, but
+                            // let's leave that as an exercise for later.
+                            todo!("Can't connect edge to circle on plane")
+                        }
+                    }
+                }
+            }
+        });
 
         for (this, other) in self
             .vertices

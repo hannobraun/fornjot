@@ -55,7 +55,7 @@ impl Cycle {
             let [a, b] = first.boundary();
             let edge_direction_positive = a < b;
 
-            let circle = match first.curve().path() {
+            let circle = match first.curve() {
                 SurfacePath::Circle(circle) => circle,
                 SurfacePath::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"

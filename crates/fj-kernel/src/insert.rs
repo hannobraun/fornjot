@@ -4,7 +4,7 @@
 
 use crate::{
     objects::{
-        Curve, Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
+        Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
         Sketch, Solid, Surface, SurfaceVertex,
     },
     services::{Service, ServiceObjectsExt},
@@ -34,7 +34,6 @@ macro_rules! impl_insert {
 }
 
 impl_insert!(
-    Curve, curves;
     Cycle, cycles;
     Face, faces;
     GlobalEdge, global_edges;
