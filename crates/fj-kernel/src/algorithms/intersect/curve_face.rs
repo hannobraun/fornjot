@@ -7,7 +7,7 @@ use crate::objects::{Curve, Face};
 
 use super::CurveEdgeIntersection;
 
-/// The intersections between a [`Curve`] and a [`Face`], in curve coordinates
+/// The intersections between a curve and a [`Face`], in curve coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveFaceIntersection {
     /// The intervals where the curve and face intersect, in curve coordinates

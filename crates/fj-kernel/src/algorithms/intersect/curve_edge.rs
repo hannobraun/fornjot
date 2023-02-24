@@ -7,7 +7,7 @@ use crate::{
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a [`Curve`] and a [`HalfEdge`]
+/// The intersection between a curve and a [`HalfEdge`]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point
@@ -29,7 +29,7 @@ impl CurveEdgeIntersection {
     /// # Panics
     ///
     /// Currently, only intersections between lines and line segments can be
-    /// computed. Panics, if a different type of [`Curve`] or [`HalfEdge`] is
+    /// computed. Panics, if a different type of curve or [`HalfEdge`] is
     /// passed.
     pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
         let curve_as_line = match curve.path() {
