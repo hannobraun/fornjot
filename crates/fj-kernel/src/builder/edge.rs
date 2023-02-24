@@ -7,7 +7,7 @@ use crate::{
         surface::SurfaceGeometry,
     },
     objects::{GlobalEdge, HalfEdge},
-    partial::{MaybeSurfacePath, Partial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
 /// Builder API for [`PartialHalfEdge`]
@@ -211,7 +211,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let path = self
             .curve
             .expect("Can't infer vertex positions without curve");
-        let MaybeSurfacePath::Defined(path) = path else {
+        let MaybeCurve::Defined(path) = path else {
             panic!("Can't infer vertex positions with undefined path");
         };
 
@@ -262,8 +262,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     // represented using our current curve/surface
                     // representation.
                     match path {
-                        MaybeSurfacePath::Defined(Curve::Line(_))
-                        | MaybeSurfacePath::UndefinedLine => {
+                        MaybeCurve::Defined(Curve::Line(_))
+                        | MaybeCurve::UndefinedLine => {
                             // We're dealing with a line on a rounded surface.
                             //
                             // Based on the current uses of this method, we can
@@ -290,7 +290,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                             // I hope that I'll come up with a better curve/
                             // surface representation before this becomes a
                             // problem.
-                            Some(MaybeSurfacePath::UndefinedCircle {
+                            Some(MaybeCurve::UndefinedCircle {
                                 radius: circle.radius(),
                             })
                         }
@@ -307,11 +307,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 GlobalPath::Line(_) => {
                     // The other edge is defined on a plane.
                     match path {
-                        MaybeSurfacePath::Defined(Curve::Line(_))
-                        | MaybeSurfacePath::UndefinedLine => {
+                        MaybeCurve::Defined(Curve::Line(_))
+                        | MaybeCurve::UndefinedLine => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.
-                            Some(MaybeSurfacePath::UndefinedLine)
+                            Some(MaybeCurve::UndefinedLine)
                         }
                         _ => {
                             // The other edge is a circle or arc on a plane. I'm

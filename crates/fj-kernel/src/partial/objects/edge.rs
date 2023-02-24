@@ -5,7 +5,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex},
-    partial::{FullToPartialCache, MaybeSurfacePath, Partial, PartialObject},
+    partial::{FullToPartialCache, MaybeCurve, Partial, PartialObject},
     services::Service,
 };
 
@@ -13,7 +13,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
-    pub curve: Option<MaybeSurfacePath>,
+    pub curve: Option<MaybeCurve>,
 
     /// The vertices that bound the half-edge on the curve
     pub vertices: [(Option<Point<1>>, Partial<SurfaceVertex>); 2],
@@ -49,7 +49,7 @@ impl PartialObject for PartialHalfEdge {
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let curve = match self.curve.expect("Need path to build curve") {
-            MaybeSurfacePath::Defined(path) => path,
+            MaybeCurve::Defined(path) => path,
             undefined => {
                 panic!(
                     "Trying to build curve with undefined path: {undefined:?}"

@@ -6,7 +6,7 @@ use crate::geometry::path::Curve;
 ///
 /// Can be a fully defined [`Curve`], or just the type of path might be known.
 #[derive(Clone, Copy, Debug)]
-pub enum MaybeSurfacePath {
+pub enum MaybeCurve {
     /// The surface path is fully defined
     Defined(Curve),
 
@@ -20,7 +20,7 @@ pub enum MaybeSurfacePath {
     UndefinedLine,
 }
 
-impl From<Curve> for MaybeSurfacePath {
+impl From<Curve> for MaybeCurve {
     fn from(path: Curve) -> Self {
         Self::Defined(path)
     }
