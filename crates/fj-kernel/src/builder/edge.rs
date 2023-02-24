@@ -25,7 +25,10 @@ pub trait HalfEdgeBuilder {
     fn update_as_v_axis(&mut self) -> SurfacePath;
 
     /// Update partial half-edge to be a circle, from the given radius
-    fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>);
+    fn update_as_circle_from_radius(
+        &mut self,
+        radius: impl Into<Scalar>,
+    ) -> SurfacePath;
 
     /// Update partial half-edge to be an arc, spanning the given angle in
     /// radians
@@ -85,7 +88,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn update_as_circle_from_radius(&mut self, radius: impl Into<Scalar>) {
+    fn update_as_circle_from_radius(
+        &mut self,
+        radius: impl Into<Scalar>,
+    ) -> SurfacePath {
         let path = self.curve.write().update_as_circle_from_radius(radius);
 
         let [a_curve, b_curve] =
@@ -107,6 +113,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         }
 
         self.infer_global_form();
+
+        path
     }
 
     fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>) {
