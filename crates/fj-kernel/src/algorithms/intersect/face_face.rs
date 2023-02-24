@@ -36,9 +36,7 @@ impl FaceFaceIntersection {
 
         let intersection_curves =
             match SurfaceSurfaceIntersection::compute(surfaces, objects) {
-                Some(intersection) => {
-                    intersection.intersection_curves.map(|curve| curve.path())
-                }
+                Some(intersection) => intersection.intersection_curves,
                 None => return None,
             };
 
