@@ -133,10 +133,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
-        let path = self
-            .curve
-            .write()
-            .update_as_circle_from_center_and_radius(arc.center, arc.radius);
+        let path =
+            SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
+        self.curve.write().path = Some(path.into());
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
