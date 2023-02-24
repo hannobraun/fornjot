@@ -27,7 +27,7 @@ impl CurveFaceIntersection {
         Self { intervals }
     }
 
-    /// Compute the intersections between a [`Curve`] and a [`Face`]
+    /// Compute the intersection
     pub fn compute(curve: &Curve, face: &Face) -> Self {
         let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
 
