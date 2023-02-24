@@ -4,9 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{
-        Curve, GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex,
-    },
+    objects::{GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex},
     partial::{FullToPartialCache, MaybeSurfacePath, Partial, PartialObject},
     services::Service,
 };
@@ -32,7 +30,7 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            curve: Some(half_edge.curve().path().into()),
+            curve: Some(half_edge.curve().into()),
             vertices: half_edge
                 .boundary()
                 .zip_ext(half_edge.surface_vertices())
@@ -50,17 +48,13 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let curve = {
-            let path = match self.curve.expect("Need path to build curve") {
-                MaybeSurfacePath::Defined(path) => path,
-                undefined => {
-                    panic!(
+        let curve = match self.curve.expect("Need path to build curve") {
+            MaybeSurfacePath::Defined(path) => path,
+            undefined => {
+                panic!(
                     "Trying to build curve with undefined path: {undefined:?}"
                 )
-                }
-            };
-
-            Curve::new(path)
+            }
         };
         let vertices = self.vertices.map(|vertex| {
             let position_curve = vertex

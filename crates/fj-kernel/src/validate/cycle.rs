@@ -101,10 +101,8 @@ impl CycleValidationError {
                 .boundary()
                 .zip_ext([half_edge.start_vertex(), next.start_vertex()]);
             for (position_on_curve, surface_vertex) in boundary_and_vertices {
-                let curve_position_on_surface = half_edge
-                    .curve()
-                    .path()
-                    .point_from_path_coords(position_on_curve);
+                let curve_position_on_surface =
+                    half_edge.curve().point_from_path_coords(position_on_curve);
                 let surface_position_from_vertex = surface_vertex.position();
 
                 let distance = curve_position_on_surface

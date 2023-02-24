@@ -41,7 +41,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
-                        &half_edge.curve().path(),
+                        &half_edge.curve(),
                         surface,
                         range,
                         tolerance,
@@ -56,7 +56,6 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                 .map(|point| {
                     let point_surface = half_edge
                         .curve()
-                        .path()
                         .point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
@@ -320,10 +319,8 @@ mod tests {
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
-                let point_surface = half_edge
-                    .curve()
-                    .path()
-                    .point_from_path_coords(point_local);
+                let point_surface =
+                    half_edge.curve().point_from_path_coords(point_local);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
@@ -352,7 +349,7 @@ mod tests {
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.curve().path(), RangeOnPath::from([[0.], [TAU]]))
+            (&half_edge.curve(), RangeOnPath::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {
