@@ -181,10 +181,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     boundary.zip_ext(points_surface),
                 )
         } else {
-            let path = self
-                .curve
-                .write()
-                .update_as_line_from_points(points_surface);
+            let (path, _) = SurfacePath::line_from_points(points_surface);
+            self.curve.write().path = Some(path.into());
 
             for (vertex, position) in
                 self.vertices.each_mut_ext().zip_ext([0., 1.])
