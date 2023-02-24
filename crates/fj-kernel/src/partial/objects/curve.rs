@@ -37,7 +37,7 @@ impl PartialObject for PartialCurve {
     }
 }
 
-/// The definition of a surface path within [`PartialCurve`]
+/// The definition of a surface path within a partial object
 ///
 /// Can be a fully defined [`SurfacePath`], or just the type of path might be
 /// known.
