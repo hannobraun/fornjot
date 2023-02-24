@@ -72,8 +72,9 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::{CurveBuilder, HalfEdgeBuilder},
-        partial::{PartialCurve, PartialHalfEdge, PartialObject},
+        builder::HalfEdgeBuilder,
+        geometry::path::SurfacePath,
+        partial::{PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -84,9 +85,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_u_axis();
-        let curve = curve.build(&mut services.objects);
+        let curve = SurfacePath::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points([[1., -1.], [1., 1.]]);
@@ -95,8 +94,7 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection =
-            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert_eq!(
             intersection,
@@ -111,9 +109,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_u_axis();
-        let curve = curve.build(&mut services.objects);
+        let curve = SurfacePath::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge
@@ -123,8 +119,7 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection =
-            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert_eq!(
             intersection,
@@ -139,9 +134,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_u_axis();
-        let curve = curve.build(&mut services.objects);
+        let curve = SurfacePath::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge
@@ -151,8 +144,7 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection =
-            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert!(intersection.is_none());
     }
@@ -162,9 +154,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xy_plane();
-        let mut curve = PartialCurve::default();
-        curve.update_as_u_axis();
-        let curve = curve.build(&mut services.objects);
+        let curve = SurfacePath::u_axis();
         let half_edge = {
             let mut half_edge = PartialHalfEdge::default();
             half_edge.update_as_line_segment_from_points([[-1., 0.], [1., 0.]]);
@@ -173,8 +163,7 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection =
-            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
         assert_eq!(
             intersection,
