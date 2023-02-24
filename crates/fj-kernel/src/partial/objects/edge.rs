@@ -31,7 +31,9 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            curve: PartialCurve::from_full(half_edge.curve(), cache),
+            curve: PartialCurve {
+                path: Some(half_edge.curve().path().into()),
+            },
             vertices: half_edge
                 .boundary()
                 .zip_ext(half_edge.surface_vertices())
@@ -49,7 +51,7 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let curve = self.curve.build(objects).insert(objects);
+        let curve = self.curve.build(objects).insert(objects).clone_object();
         let vertices = self.vertices.map(|vertex| {
             let position_curve = vertex
                 .0

@@ -18,11 +18,7 @@ impl Reverse for Handle<HalfEdge> {
             [b, a]
         };
 
-        HalfEdge::new(
-            self.curve().clone(),
-            vertices,
-            self.global_form().clone(),
-        )
-        .insert(objects)
+        HalfEdge::new(self.curve(), vertices, self.global_form().clone())
+            .insert(objects)
     }
 }
