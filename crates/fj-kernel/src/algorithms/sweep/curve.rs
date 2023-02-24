@@ -4,7 +4,7 @@ use crate::{
     builder::SurfaceBuilder,
     geometry::path::{GlobalPath, SurfacePath},
     insert::Insert,
-    objects::{Curve, Objects, Surface},
+    objects::{Objects, Surface},
     partial::{PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Curve, &Surface) {
+impl Sweep for (SurfacePath, &Surface) {
     type Swept = Handle<Surface>;
 
     fn sweep_with_cache(
@@ -47,7 +47,7 @@ impl Sweep for (Curve, &Surface) {
             }
         }
 
-        let u = match curve.path() {
+        let u = match curve {
             SurfacePath::Circle(circle) => {
                 let center = surface
                     .geometry()
