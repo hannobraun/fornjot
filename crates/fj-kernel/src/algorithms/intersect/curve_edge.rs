@@ -1,9 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::{
-    geometry::path::SurfacePath,
-    objects::{Curve, HalfEdge},
-};
+use crate::{geometry::path::SurfacePath, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
@@ -31,8 +28,8 @@ impl CurveEdgeIntersection {
     /// Currently, only intersections between lines and line segments can be
     /// computed. Panics, if a different type of curve or [`HalfEdge`] is
     /// passed.
-    pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
-        let curve_as_line = match curve.path() {
+    pub fn compute(curve: &SurfacePath, half_edge: &HalfEdge) -> Option<Self> {
+        let curve_as_line = match curve {
             SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
@@ -53,7 +50,7 @@ impl CurveEdgeIntersection {
         };
 
         let intersection =
-            LineSegmentIntersection::compute(&curve_as_line, &edge_as_segment)?;
+            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
 
         let intersection = match intersection {
             LineSegmentIntersection::Point { point_on_line } => Self::Point {
@@ -98,7 +95,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection =
+            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
 
         assert_eq!(
             intersection,
@@ -125,7 +123,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection =
+            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
 
         assert_eq!(
             intersection,
@@ -152,7 +151,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection =
+            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
 
         assert!(intersection.is_none());
     }
@@ -173,7 +173,8 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection =
+            CurveEdgeIntersection::compute(&curve.path(), &half_edge);
 
         assert_eq!(
             intersection,
