@@ -2,7 +2,7 @@ use std::any::Any;
 
 use crate::{
     objects::{
-        Curve, Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
+        Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
         Sketch, Solid, Surface, SurfaceVertex,
     },
     storage::{Handle, ObjectId},
@@ -108,7 +108,6 @@ macro_rules! object {
 }
 
 object!(
-    Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;
     GlobalEdge, "global edge", global_edges;
