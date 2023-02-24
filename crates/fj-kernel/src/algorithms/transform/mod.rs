@@ -1,6 +1,5 @@
 //! API for transforming objects
 
-mod curve;
 mod cycle;
 mod edge;
 mod face;

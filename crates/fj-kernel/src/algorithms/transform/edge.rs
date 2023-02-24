@@ -15,8 +15,9 @@ impl TransformObject for HalfEdge {
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        let curve =
-            self.curve().transform_with_cache(transform, objects, cache);
+        // Don't need to transform curve, as that's defined in surface
+        // coordinates.
+        let curve = self.curve();
         let boundary = self.boundary().zip_ext(self.surface_vertices()).map(
             |(point, surface_vertex)| {
                 let surface_vertex = surface_vertex
