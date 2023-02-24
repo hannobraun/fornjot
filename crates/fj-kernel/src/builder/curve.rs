@@ -50,10 +50,9 @@ pub trait CurveBuilder {
 
 impl CurveBuilder for PartialCurve {
     fn update_as_u_axis(&mut self) -> SurfacePath {
-        let a = Point::origin();
-        let b = a + Vector::unit_u();
-
-        self.update_as_line_from_points([a, b])
+        let path = SurfacePath::u_axis();
+        self.path = Some(path.into());
+        path
     }
 
     fn update_as_v_axis(&mut self) -> SurfacePath {
