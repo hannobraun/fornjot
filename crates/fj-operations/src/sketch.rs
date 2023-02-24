@@ -84,7 +84,7 @@ impl Shape for fj::Sketch {
                         },
                     );
                     line_segments.into_iter().for_each(|mut half_edge| {
-                        half_edge.write().update_as_line_segment()
+                        half_edge.write().update_as_line_segment();
                     });
                     arcs.into_iter().for_each(|(mut half_edge, angle)| {
                         half_edge.write().update_as_arc(angle.rad())
