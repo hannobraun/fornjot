@@ -76,13 +76,13 @@ pub trait HalfEdgeBuilder {
 impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_u_axis(&mut self) -> SurfacePath {
         let path = SurfacePath::u_axis();
-        self.curve.path = Some(path.into());
+        self.curve = Some(path.into());
         path
     }
 
     fn update_as_v_axis(&mut self) -> SurfacePath {
         let path = SurfacePath::v_axis();
-        self.curve.path = Some(path.into());
+        self.curve = Some(path.into());
         path
     }
 
@@ -91,7 +91,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
     ) -> SurfacePath {
         let path = SurfacePath::circle_from_radius(radius);
-        self.curve.path = Some(path.into());
+        self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -133,7 +133,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let path =
             SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve.path = Some(path.into());
+        self.curve = Some(path.into());
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
@@ -175,12 +175,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let points = [start, end].zip_ext(points_surface);
 
             let path = SurfacePath::from_points_with_line_coords(points);
-            self.curve.path = Some(path.into());
+            self.curve = Some(path.into());
 
             path
         } else {
             let (path, _) = SurfacePath::line_from_points(points_surface);
-            self.curve.path = Some(path.into());
+            self.curve = Some(path.into());
 
             for (vertex, position) in
                 self.vertices.each_mut_ext().zip_ext([0., 1.])
@@ -211,7 +211,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) {
         let path = self
             .curve
-            .path
             .expect("Can't infer vertex positions without curve");
         let MaybeSurfacePath::Defined(path) = path else {
             panic!("Can't infer vertex positions with undefined path");
@@ -253,7 +252,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         other: &Partial<HalfEdge>,
         surface: &SurfaceGeometry,
     ) {
-        self.curve.path = other.read().curve.path.as_ref().and_then(|path| {
+        self.curve = other.read().curve.as_ref().and_then(|path| {
             // We have information about the other edge's surface available. We
             // need to use that to interpret what the other edge's curve path
             // means for our curve path.

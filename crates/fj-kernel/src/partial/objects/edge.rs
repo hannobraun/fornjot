@@ -4,9 +4,10 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    insert::Insert,
-    objects::{GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex},
-    partial::{FullToPartialCache, Partial, PartialCurve, PartialObject},
+    objects::{
+        Curve, GlobalEdge, GlobalVertex, HalfEdge, Objects, SurfaceVertex,
+    },
+    partial::{FullToPartialCache, MaybeSurfacePath, Partial, PartialObject},
     services::Service,
 };
 
@@ -14,7 +15,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
-    pub curve: PartialCurve,
+    pub curve: Option<MaybeSurfacePath>,
 
     /// The vertices that bound the half-edge on the curve
     pub vertices: [(Option<Point<1>>, Partial<SurfaceVertex>); 2],
@@ -31,9 +32,7 @@ impl PartialObject for PartialHalfEdge {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            curve: PartialCurve {
-                path: Some(half_edge.curve().path().into()),
-            },
+            curve: Some(half_edge.curve().path().into()),
             vertices: half_edge
                 .boundary()
                 .zip_ext(half_edge.surface_vertices())
@@ -51,7 +50,18 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let curve = self.curve.build(objects).insert(objects).clone_object();
+        let curve = {
+            let path = match self.curve.expect("Need path to build curve") {
+                MaybeSurfacePath::Defined(path) => path,
+                undefined => {
+                    panic!(
+                    "Trying to build curve with undefined path: {undefined:?}"
+                )
+                }
+            };
+
+            Curve::new(path)
+        };
         let vertices = self.vertices.map(|vertex| {
             let position_curve = vertex
                 .0
@@ -68,7 +78,7 @@ impl PartialObject for PartialHalfEdge {
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        let curve = PartialCurve::default();
+        let curve = None;
         let vertices = array::from_fn(|_| {
             let surface_form = Partial::default();
             (None, surface_form)
