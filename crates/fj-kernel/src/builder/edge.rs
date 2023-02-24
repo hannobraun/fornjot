@@ -92,7 +92,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         &mut self,
         radius: impl Into<Scalar>,
     ) -> SurfacePath {
-        let path = self.curve.write().update_as_circle_from_radius(radius);
+        let path = SurfacePath::circle_from_radius(radius);
+        self.curve.write().path = Some(path.into());
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));

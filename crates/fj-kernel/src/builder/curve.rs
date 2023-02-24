@@ -7,14 +7,6 @@ pub trait CurveBuilder {
     /// Update partial curve to be a circle, from the provided radius
     ///
     /// Returns the updated path.
-    fn update_as_circle_from_radius(
-        &mut self,
-        radius: impl Into<Scalar>,
-    ) -> SurfacePath;
-
-    /// Update partial curve to be a circle, from the provided radius
-    ///
-    /// Returns the updated path.
     fn update_as_circle_from_center_and_radius(
         &mut self,
         center: impl Into<Point<2>>,
@@ -39,15 +31,6 @@ pub trait CurveBuilder {
 }
 
 impl CurveBuilder for PartialCurve {
-    fn update_as_circle_from_radius(
-        &mut self,
-        radius: impl Into<Scalar>,
-    ) -> SurfacePath {
-        let path = SurfacePath::circle_from_radius(radius);
-        self.path = Some(path.into());
-        path
-    }
-
     fn update_as_circle_from_center_and_radius(
         &mut self,
         center: impl Into<Point<2>>,
