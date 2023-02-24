@@ -3,7 +3,7 @@ use std::{array, collections::VecDeque};
 use fj_interop::ext::ArrayExt;
 
 use crate::{
-    geometry::path::Curve,
+    geometry::curve::Curve,
     objects::{Cycle, Surface},
     partial::{MaybeCurve, Partial, PartialFace},
 };

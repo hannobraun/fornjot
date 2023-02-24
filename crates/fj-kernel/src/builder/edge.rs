@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{
-        path::{Curve, GlobalPath},
+        curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
     objects::{GlobalEdge, HalfEdge},

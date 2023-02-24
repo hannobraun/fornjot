@@ -3,7 +3,7 @@ use std::vec;
 use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
-use crate::{geometry::path::Curve, objects::Face};
+use crate::{geometry::curve::Curve, objects::Face};
 
 use super::CurveEdgeIntersection;
 
@@ -151,7 +151,7 @@ where
 mod tests {
     use crate::{
         builder::{CycleBuilder, FaceBuilder},
-        geometry::path::Curve,
+        geometry::curve::Curve,
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };

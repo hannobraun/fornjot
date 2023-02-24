@@ -8,7 +8,7 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    geometry::path::{Curve, GlobalPath},
+    geometry::curve::{Curve, GlobalPath},
     objects::{GlobalEdge, HalfEdge, Surface},
     storage::{Handle, ObjectId},
 };
@@ -232,7 +232,7 @@ mod tests {
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::{HalfEdgeBuilder, SurfaceBuilder},
-        geometry::path::GlobalPath,
+        geometry::curve::GlobalPath,
         insert::Insert,
         partial::{PartialHalfEdge, PartialObject, PartialSurface},
         services::Services,

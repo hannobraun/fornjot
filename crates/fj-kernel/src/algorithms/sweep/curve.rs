@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     builder::SurfaceBuilder,
-    geometry::path::{Curve, GlobalPath},
+    geometry::curve::{Curve, GlobalPath},
     insert::Insert,
     objects::{Objects, Surface},
     partial::{PartialObject, PartialSurface},

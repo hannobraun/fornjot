@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    geometry::path::Curve,
+    geometry::curve::Curve,
     objects::{GlobalVertex, SurfaceVertex},
     storage::Handle,
 };

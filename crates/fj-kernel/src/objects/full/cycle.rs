@@ -3,7 +3,7 @@ use std::slice;
 use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
 
-use crate::{geometry::path::Curve, objects::HalfEdge, storage::Handle};
+use crate::{geometry::curve::Curve, objects::HalfEdge, storage::Handle};
 
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

@@ -1,6 +1,6 @@
 use fj_math::Scalar;
 
-use crate::geometry::path::Curve;
+use crate::geometry::curve::Curve;
 
 /// A possibly undefined curve
 #[derive(Clone, Copy, Debug)]

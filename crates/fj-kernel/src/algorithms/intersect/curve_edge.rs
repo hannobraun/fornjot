@@ -1,6 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::{geometry::path::Curve, objects::HalfEdge};
+use crate::{geometry::curve::Curve, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
@@ -73,7 +73,7 @@ mod tests {
 
     use crate::{
         builder::HalfEdgeBuilder,
-        geometry::path::Curve,
+        geometry::curve::Curve,
         partial::{PartialHalfEdge, PartialObject},
         services::Services,
     };

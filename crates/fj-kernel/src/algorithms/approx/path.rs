@@ -32,7 +32,7 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::path::{Curve, GlobalPath};
+use crate::geometry::curve::{Curve, GlobalPath};
 
 use super::{Approx, Tolerance};
 
