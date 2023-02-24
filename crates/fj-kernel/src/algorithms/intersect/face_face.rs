@@ -2,9 +2,9 @@ use fj_interop::ext::ArrayExt;
 use iter_fixed::IntoIteratorFixed;
 
 use crate::{
-    objects::{Curve, Face, Objects},
+    geometry::path::SurfacePath,
+    objects::{Face, Objects},
     services::Service,
-    storage::Handle,
 };
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
@@ -18,7 +18,7 @@ pub struct FaceFaceIntersection {
     /// representation of the intersection on the respective face's surface.
     ///
     /// They both represent the same global curve.
-    pub intersection_curves: [Handle<Curve>; 2],
+    pub intersection_curves: [SurfacePath; 2],
 
     /// The interval of this intersection, in curve coordinates
     ///
@@ -36,7 +36,9 @@ impl FaceFaceIntersection {
 
         let intersection_curves =
             match SurfaceSurfaceIntersection::compute(surfaces, objects) {
-                Some(intersection) => intersection.intersection_curves,
+                Some(intersection) => {
+                    intersection.intersection_curves.map(|curve| curve.path())
+                }
                 None => return None,
             };
 
@@ -44,9 +46,7 @@ impl FaceFaceIntersection {
             .each_ref_ext()
             .into_iter_fixed()
             .zip(faces)
-            .map(|(curve, face)| {
-                CurveFaceIntersection::compute(&curve.path(), face)
-            })
+            .map(|(curve, face)| CurveFaceIntersection::compute(curve, face))
             .collect::<[_; 2]>();
 
         let intersection_intervals = {
@@ -71,9 +71,9 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        builder::{CurveBuilder, CycleBuilder},
-        insert::Insert,
-        partial::{Partial, PartialCurve, PartialFace, PartialObject},
+        builder::CycleBuilder,
+        geometry::path::SurfacePath,
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -139,11 +139,8 @@ mod tests {
             FaceFaceIntersection::compute([&a, &b], &mut services.objects);
 
         let expected_curves = surfaces.map(|_| {
-            let mut curve = PartialCurve::default();
-            curve.update_as_line_from_points([[0., 0.], [1., 0.]]);
-            curve
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
+            let (path, _) = SurfacePath::line_from_points([[0., 0.], [1., 0.]]);
+            path
         });
         let expected_intervals =
             CurveFaceIntersection::from_intervals([[[-1.], [1.]]]);
