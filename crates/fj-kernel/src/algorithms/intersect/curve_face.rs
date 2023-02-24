@@ -150,8 +150,9 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CurveBuilder, CycleBuilder, FaceBuilder},
-        partial::{Partial, PartialCurve, PartialFace, PartialObject},
+        builder::{CycleBuilder, FaceBuilder},
+        geometry::path::SurfacePath,
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -161,9 +162,7 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let mut curve = PartialCurve::default();
-        curve.update_as_line_from_points([[-3., 0.], [-2., 0.]]);
-        let curve = curve.build(&mut services.objects);
+        let (curve, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior = [
@@ -197,10 +196,7 @@ mod tests {
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
-        assert_eq!(
-            CurveFaceIntersection::compute(&curve.path(), &face),
-            expected
-        );
+        assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
     }
 
     #[test]
