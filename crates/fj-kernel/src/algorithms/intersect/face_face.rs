@@ -44,7 +44,9 @@ impl FaceFaceIntersection {
             .each_ref_ext()
             .into_iter_fixed()
             .zip(faces)
-            .map(|(curve, face)| CurveFaceIntersection::compute(curve, face))
+            .map(|(curve, face)| {
+                CurveFaceIntersection::compute(&curve.path(), face)
+            })
             .collect::<[_; 2]>();
 
         let intersection_intervals = {

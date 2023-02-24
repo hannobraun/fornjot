@@ -3,7 +3,7 @@ use std::vec;
 use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
-use crate::objects::{Curve, Face};
+use crate::{geometry::path::SurfacePath, objects::Face};
 
 use super::CurveEdgeIntersection;
 
@@ -28,14 +28,13 @@ impl CurveFaceIntersection {
     }
 
     /// Compute the intersection
-    pub fn compute(curve: &Curve, face: &Face) -> Self {
+    pub fn compute(curve: &SurfacePath, face: &Face) -> Self {
         let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
 
         for half_edge in half_edges {
-            let intersection =
-                CurveEdgeIntersection::compute(&curve.path(), half_edge);
+            let intersection = CurveEdgeIntersection::compute(curve, half_edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
@@ -198,7 +197,10 @@ mod tests {
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
-        assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
+        assert_eq!(
+            CurveFaceIntersection::compute(&curve.path(), &face),
+            expected
+        );
     }
 
     #[test]
