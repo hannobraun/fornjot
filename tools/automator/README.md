@@ -16,4 +16,4 @@ To learn how to use it, run the following command:
 automator --help
 ```
 
-Please also refer to the [release procedure](../../RELEASES.md), which is the main use case for `automator`, as of this writing.
+Please also refer to the [release procedure](../../release-procedure.md), which is the main use case for `automator`, as of this writing.
