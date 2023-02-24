@@ -36,7 +36,7 @@ use crate::geometry::path::{GlobalPath, SurfacePath};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (SurfacePath, RangeOnPath) {
+impl Approx for (&SurfacePath, RangeOnPath) {
     type Approximation = Vec<(Point<1>, Point<2>)>;
     type Cache = ();
 
@@ -49,7 +49,7 @@ impl Approx for (SurfacePath, RangeOnPath) {
 
         match path {
             SurfacePath::Circle(circle) => {
-                approx_circle(&circle, range, tolerance.into())
+                approx_circle(circle, range, tolerance.into())
             }
             SurfacePath::Line(_) => vec![],
         }

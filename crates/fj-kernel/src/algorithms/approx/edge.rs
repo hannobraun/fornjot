@@ -113,7 +113,7 @@ fn approx_edge(
             )
         }
         (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (curve.path(), range)
+            (&curve.path(), range)
                 .approx_with_cache(tolerance, &mut ())
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
@@ -355,7 +355,7 @@ mod tests {
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (half_edge.curve().path(), RangeOnPath::from([[0.], [TAU]]))
+            (&half_edge.curve().path(), RangeOnPath::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {
