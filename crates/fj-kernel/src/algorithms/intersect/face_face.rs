@@ -1,11 +1,7 @@
 use fj_interop::ext::ArrayExt;
 use iter_fixed::IntoIteratorFixed;
 
-use crate::{
-    geometry::path::SurfacePath,
-    objects::{Face, Objects},
-    services::Service,
-};
+use crate::{geometry::path::SurfacePath, objects::Face};
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
 
@@ -28,10 +24,7 @@ pub struct FaceFaceIntersection {
 
 impl FaceFaceIntersection {
     /// Compute the intersections between two faces
-    pub fn compute(
-        faces: [&Face; 2],
-        _: &mut Service<Objects>,
-    ) -> Option<Self> {
+    pub fn compute(faces: [&Face; 2]) -> Option<Self> {
         let surfaces = faces.map(|face| face.surface().clone());
 
         let intersection_curves =
@@ -102,8 +95,7 @@ mod tests {
             face.build(&mut services.objects)
         });
 
-        let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         assert!(intersection.is_none());
     }
@@ -133,8 +125,7 @@ mod tests {
             face.build(&mut services.objects)
         });
 
-        let intersection =
-            FaceFaceIntersection::compute([&a, &b], &mut services.objects);
+        let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         let expected_curves = surfaces.map(|_| {
             let (path, _) = SurfacePath::line_from_points([[0., 0.], [1., 0.]]);
