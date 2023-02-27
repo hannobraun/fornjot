@@ -3,7 +3,6 @@
 use crate::{objects::Objects, services::Service};
 
 mod cycle;
-mod edge;
 mod face;
 
 /// Reverse the direction/orientation of an object

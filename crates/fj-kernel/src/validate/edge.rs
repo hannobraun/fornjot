@@ -140,7 +140,6 @@ impl HalfEdgeValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::Point;
 
     use crate::{
@@ -180,11 +179,13 @@ mod tests {
                     });
                 global_edge.build(&mut services.objects)
             };
-            let vertices = valid
-                .boundary()
-                .zip_ext(valid.surface_vertices().map(Clone::clone));
 
-            HalfEdge::new(valid.curve(), vertices, global_form)
+            HalfEdge::new(
+                valid.curve(),
+                valid.boundary(),
+                valid.surface_vertices().map(Clone::clone),
+                global_form,
+            )
         };
 
         valid.validate_and_return_first_error()?;
@@ -207,11 +208,14 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = {
-            let vertices = valid.surface_vertices().map(|surface_vertex| {
-                (Point::from([0.]), surface_vertex.clone())
-            });
+            let boundary = [Point::from([0.]); 2];
 
-            HalfEdge::new(valid.curve(), vertices, valid.global_form().clone())
+            HalfEdge::new(
+                valid.curve(),
+                boundary,
+                valid.surface_vertices().map(Clone::clone),
+                valid.global_form().clone(),
+            )
         };
 
         valid.validate_and_return_first_error()?;
