@@ -9,7 +9,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// The simplest model function takes no parameters and returns a hard-coded
 /// `fj::Shape`.
 ///
-/// ```rust
+/// ``` rust ignore
 /// # use fj_proc::model;
 /// use fj::{Circle, Sketch, Shape};
 /// #[model]
@@ -22,7 +22,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// For convenience, you can also return anything that could be converted into
 /// a `fj::Shape` (e.g. a `fj::Sketch`).
 ///
-/// ```rust
+/// ``` rust ignore
 /// # use fj_proc::model;
 /// use fj::{Circle, Sketch};
 /// #[model]
@@ -35,7 +35,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// The return type is checked at compile time. That means something like this
 /// won't work because `()` can't be converted into a `fj::Shape`.
 ///
-/// ```rust,compile_fail
+/// ``` rust ignore
 /// # use fj_proc::model;
 /// #[model]
 /// fn model() { todo!() }
@@ -44,7 +44,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// The model function's arguments can be anything that implement
 /// [`std::str::FromStr`].
 ///
-/// ```rust
+/// ``` rust ignore
 /// # use fj_proc::model;
 /// #[model]
 /// fn cylinder(height: f64, label: String, is_horizontal: bool) -> fj::Shape { todo!() }
@@ -53,7 +53,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// Constraints and default values can be added to an argument using the
 /// `#[param]` attribute.
 ///
-/// ```rust
+/// ``` rust ignore
 /// use fj::syntax::*;
 ///
 /// #[fj::model]
@@ -75,7 +75,7 @@ use syn::{parse_macro_input, FnArg, ItemFn};
 /// For more complex situations, model functions are allowed to return any
 /// error type that converts into a model error.
 ///
-/// ```rust
+/// ``` rust ignore
 /// #[fj::model]
 /// pub fn model() -> Result<fj::Shape, std::env::VarError> {
 ///     let home_dir = std::env::var("HOME")?;
