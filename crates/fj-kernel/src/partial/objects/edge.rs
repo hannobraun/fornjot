@@ -15,7 +15,7 @@ pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
     pub curve: Option<MaybeCurve>,
 
-    /// The vertices that bound the half-edge on the curve
+    /// The boundary of the half-edge on the curve
     pub boundary: [Option<Point<1>>; 2],
 
     /// The surface vertices that bound the half-edge
