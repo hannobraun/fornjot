@@ -100,7 +100,10 @@ where
     }
 }
 
-impl<S: State> Subscriber<S::Command> for Service<S> {
+impl<S: State> Subscriber<S::Command> for Service<S>
+where
+    S::Command: Clone,
+{
     fn handle_event(&mut self, event: &S::Command) {
         self.execute(event.clone());
     }
@@ -113,13 +116,13 @@ pub trait State {
     /// A command that relates to the state
     ///
     /// Commands are processed by [`State::decide`].
-    type Command: Clone;
+    type Command;
 
     /// An event that captures modifications to this state
     ///
     /// Events are produced by [`State::decide`] and processed by
     /// [`State::evolve`].
-    type Event: Clone;
+    type Event;
 
     /// Decide how to react to the provided command
     ///
