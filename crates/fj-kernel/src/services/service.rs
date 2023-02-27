@@ -122,7 +122,7 @@ pub trait State {
     ///
     /// Events are produced by [`State::decide`] and processed by
     /// [`State::evolve`].
-    type Event: Clone;
+    type Event;
 
     /// Decide how to react to the provided command
     ///
