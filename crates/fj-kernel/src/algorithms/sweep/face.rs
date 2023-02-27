@@ -293,10 +293,16 @@ mod tests {
                 half_edge
                     .infer_vertex_positions_if_necessary(&surface.geometry());
 
+                half_edge.boundary =
+                    [half_edge.boundary[1], half_edge.boundary[0]];
+                half_edge.surface_vertices = [
+                    half_edge.surface_vertices[1].clone(),
+                    half_edge.surface_vertices[0].clone(),
+                ];
+
                 half_edge
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
-                    .reverse(&mut services.objects)
             };
             let (face, _) = (half_edge, surface.deref(), Color::default())
                 .sweep(DOWN, &mut services.objects);
