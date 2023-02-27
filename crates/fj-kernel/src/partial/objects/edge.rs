@@ -74,17 +74,15 @@ impl PartialObject for PartialHalfEdge {
 impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = None;
-        let vertices = array::from_fn(|_| Partial::default());
+        let surface_vertices = array::from_fn(|_| Partial::default());
 
-        let global_vertices =
-            vertices
-                .each_ref_ext()
-                .map(|vertex: &Partial<SurfaceVertex>| {
-                    let surface_vertex = vertex.clone();
-                    let global_vertex =
-                        surface_vertex.read().global_form.clone();
-                    global_vertex
-                });
+        let global_vertices = surface_vertices.each_ref_ext().map(
+            |vertex: &Partial<SurfaceVertex>| {
+                let surface_vertex = vertex.clone();
+                let global_vertex = surface_vertex.read().global_form.clone();
+                global_vertex
+            },
+        );
 
         let global_form = Partial::from_partial(PartialGlobalEdge {
             vertices: global_vertices,
@@ -93,7 +91,7 @@ impl Default for PartialHalfEdge {
         Self {
             curve,
             boundary: [None; 2],
-            surface_vertices: vertices,
+            surface_vertices,
             global_form,
         }
     }
