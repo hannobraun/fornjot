@@ -106,7 +106,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point_curve) in
             self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            let mut vertex = vertex;
             vertex.0 = Some(point_curve);
             vertex.1 = surface_vertex.clone();
         }
