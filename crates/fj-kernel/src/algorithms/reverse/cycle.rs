@@ -1,6 +1,6 @@
 use crate::{
     insert::Insert,
-    objects::{Cycle, Objects},
+    objects::{Cycle, HalfEdge, Objects},
     services::Service,
     storage::Handle,
 };
@@ -12,7 +12,24 @@ impl Reverse for Handle<Cycle> {
         let mut edges = self
             .half_edges()
             .cloned()
-            .map(|edge| edge.reverse(objects))
+            .map(|edge| {
+                let boundary = {
+                    let [a, b] = edge.boundary();
+                    [b, a]
+                };
+                let surface_vertices = {
+                    let [a, b] = edge.surface_vertices().map(Clone::clone);
+                    [b, a]
+                };
+
+                HalfEdge::new(
+                    edge.curve(),
+                    boundary,
+                    surface_vertices,
+                    edge.global_form().clone(),
+                )
+                .insert(objects)
+            })
             .collect::<Vec<_>>();
 
         edges.reverse();
