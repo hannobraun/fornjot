@@ -208,11 +208,11 @@ mod tests {
             half_edge.build(&mut services.objects)
         };
         let invalid = {
-            let vertices = [Point::from([0.]); 2];
+            let boundary = [Point::from([0.]); 2];
 
             HalfEdge::new(
                 valid.curve(),
-                vertices,
+                boundary,
                 valid.surface_vertices().map(Clone::clone),
                 valid.global_form().clone(),
             )
