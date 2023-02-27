@@ -56,15 +56,13 @@ impl PartialObject for PartialHalfEdge {
                 )
             }
         };
-        let vertices =
-            self.boundary.zip_ext(self.surface_vertices).map(|vertex| {
-                let position_curve = vertex.0.expect(
-                    "Can't build `HalfEdge` without boundary positions",
-                );
-                let surface_form = vertex.1.build(objects);
-
-                (position_curve, surface_form)
-            });
+        let boundary = self.boundary.map(|point| {
+            point.expect("Can't build `HalfEdge` without boundary positions")
+        });
+        let surface_vertices = self
+            .surface_vertices
+            .map(|surface_vertex| surface_vertex.build(objects));
+        let vertices = boundary.zip_ext(surface_vertices);
         let global_form = self.global_form.build(objects);
 
         HalfEdge::new(curve, vertices, global_form)
