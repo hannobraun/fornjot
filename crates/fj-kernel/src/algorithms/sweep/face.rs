@@ -2,6 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::ext::ArrayExt;
 use fj_math::{Scalar, Vector};
+use itertools::Itertools;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
@@ -72,10 +73,16 @@ impl Sweep for Handle<Face> {
 
             let mut original_edges = Vec::new();
             let mut top_edges = Vec::new();
-            for half_edge in cycle.half_edges().cloned() {
-                let (face, top_edge) =
-                    (half_edge.clone(), self.surface().deref(), self.color())
-                        .sweep_with_cache(path, cache, objects);
+            for (half_edge, next) in
+                cycle.half_edges().cloned().circular_tuple_windows()
+            {
+                let (face, top_edge) = (
+                    half_edge.clone(),
+                    next.start_vertex(),
+                    self.surface().deref(),
+                    self.color(),
+                )
+                    .sweep_with_cache(path, cache, objects);
 
                 faces.push(face);
 
@@ -219,7 +226,12 @@ mod tests {
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
-            let (face, _) = (half_edge, surface.deref(), Color::default())
+            let (face, _) = (
+                half_edge.clone(),
+                half_edge.surface_vertices()[1],
+                surface.deref(),
+                Color::default(),
+            )
                 .sweep(UP, &mut services.objects);
             face
         });
@@ -304,7 +316,12 @@ mod tests {
                     .build(&mut services.objects)
                     .insert(&mut services.objects)
             };
-            let (face, _) = (half_edge, surface.deref(), Color::default())
+            let (face, _) = (
+                half_edge.clone(),
+                half_edge.surface_vertices()[1],
+                surface.deref(),
+                Color::default(),
+            )
                 .sweep(DOWN, &mut services.objects);
             face
         });

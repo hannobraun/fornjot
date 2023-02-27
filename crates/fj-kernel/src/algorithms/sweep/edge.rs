@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects, Surface},
+    objects::{Face, HalfEdge, Objects, Surface, SurfaceVertex},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
+impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -21,7 +21,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        let (edge, surface, color) = self;
+        let (edge, next_vertex, surface, color) = self;
         let path = path.into();
 
         // The result of sweeping an edge is a face. Let's create that.
@@ -51,8 +51,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         //
         // Let's start with the global vertices and edges.
         let (global_vertices, global_edges) = {
-            let [a, b] = edge
-                .surface_vertices()
+            let [a, b] = [edge.start_vertex(), next_vertex]
                 .map(|surface_vertex| surface_vertex.global_form().clone());
             let (edge_right, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, objects);
@@ -178,7 +177,12 @@ mod tests {
                 .insert(&mut services.objects)
         };
 
-        let (face, _) = (half_edge, surface.deref(), Color::default())
+        let (face, _) = (
+            half_edge.clone(),
+            half_edge.surface_vertices()[1],
+            surface.deref(),
+            Color::default(),
+        )
             .sweep([0., 0., 1.], &mut services.objects);
 
         let expected_face = {
