@@ -88,7 +88,7 @@ impl Sweep for Handle<Face> {
                 .connect_to_closed_edges(top_edges, &top_surface.geometry());
 
             for half_edge in &mut top_cycle.write().half_edges {
-                for (_, surface_vertex) in &mut half_edge.write().boundary {
+                for surface_vertex in &mut half_edge.write().surface_vertices {
                     let mut surface_vertex = surface_vertex.write();
                     let global_point =
                         surface_vertex.global_form.read().position;
@@ -113,7 +113,7 @@ impl Sweep for Handle<Face> {
 
                 let boundary = bottom.boundary();
 
-                for ((top, _), bottom) in
+                for (top, bottom) in
                     top.write().boundary.each_mut_ext().zip_ext(boundary)
                 {
                     *top = Some(bottom);

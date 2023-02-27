@@ -16,7 +16,10 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybeCurve>,
 
     /// The vertices that bound the half-edge on the curve
-    pub boundary: [(Option<Point<1>>, Partial<SurfaceVertex>); 2],
+    pub boundary: [Option<Point<1>>; 2],
+
+    /// The surface vertices that bound the half-edge
+    pub surface_vertices: [Partial<SurfaceVertex>; 2],
 
     /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
@@ -31,15 +34,12 @@ impl PartialObject for PartialHalfEdge {
     ) -> Self {
         Self {
             curve: Some(half_edge.curve().into()),
-            boundary: half_edge
-                .boundary()
-                .zip_ext(half_edge.surface_vertices())
-                .map(|(position, surface_vertex)| {
-                    (
-                        Some(position),
-                        Partial::from_full(surface_vertex.clone(), cache),
-                    )
-                }),
+            boundary: half_edge.boundary().map(Some),
+            surface_vertices: half_edge.surface_vertices().map(
+                |surface_vertex| {
+                    Partial::from_full(surface_vertex.clone(), cache)
+                },
+            ),
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
                 cache,
@@ -56,14 +56,15 @@ impl PartialObject for PartialHalfEdge {
                 )
             }
         };
-        let vertices = self.boundary.map(|vertex| {
-            let position_curve = vertex
-                .0
-                .expect("Can't build `HalfEdge` without boundary positions");
-            let surface_form = vertex.1.build(objects);
+        let vertices =
+            self.boundary.zip_ext(self.surface_vertices).map(|vertex| {
+                let position_curve = vertex.0.expect(
+                    "Can't build `HalfEdge` without boundary positions",
+                );
+                let surface_form = vertex.1.build(objects);
 
-            (position_curve, surface_form)
-        });
+                (position_curve, surface_form)
+            });
         let global_form = self.global_form.build(objects);
 
         HalfEdge::new(curve, vertices, global_form)
@@ -73,18 +74,17 @@ impl PartialObject for PartialHalfEdge {
 impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = None;
-        let vertices = array::from_fn(|_| {
-            let surface_form = Partial::default();
-            (None, surface_form)
-        });
+        let vertices = array::from_fn(|_| Partial::default());
 
-        let global_vertices = vertices.each_ref_ext().map(
-            |vertex: &(Option<Point<1>>, Partial<SurfaceVertex>)| {
-                let surface_vertex = vertex.1.clone();
-                let global_vertex = surface_vertex.read().global_form.clone();
-                global_vertex
-            },
-        );
+        let global_vertices =
+            vertices
+                .each_ref_ext()
+                .map(|vertex: &Partial<SurfaceVertex>| {
+                    let surface_vertex = vertex.clone();
+                    let global_vertex =
+                        surface_vertex.read().global_form.clone();
+                    global_vertex
+                });
 
         let global_form = Partial::from_partial(PartialGlobalEdge {
             vertices: global_vertices,
@@ -92,7 +92,8 @@ impl Default for PartialHalfEdge {
 
         Self {
             curve,
-            boundary: vertices,
+            boundary: [None; 2],
+            surface_vertices: vertices,
             global_form,
         }
     }

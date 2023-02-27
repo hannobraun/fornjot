@@ -98,7 +98,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         .zip_ext(global_vertices)
         .map(
             |(((mut half_edge, boundary), surface_point), global_vertex)| {
-                for ((a, _), b) in
+                for (a, b) in
                     half_edge.boundary.each_mut_ext().zip_ext(boundary)
                 {
                     *a = Some(b);
@@ -107,7 +107,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
                 // Writing to the start vertices is enough. Neighboring half-
                 // edges share surface vertices, so writing the start vertex of
                 // each half-edge writes to all vertices.
-                let mut vertex = half_edge.boundary[0].1.write();
+                let mut vertex = half_edge.surface_vertices[0].write();
                 vertex.position = Some(surface_point);
                 vertex.global_form = Partial::from(global_vertex);
             },
@@ -195,12 +195,9 @@ mod tests {
                 let mut side_up = PartialHalfEdge::default();
 
                 {
-                    let [back, front] = side_up
-                        .boundary
-                        .each_mut_ext()
-                        .map(|(_, surface_vertex)| surface_vertex);
+                    let [back, front] = side_up.surface_vertices.each_mut_ext();
 
-                    *back = bottom.boundary[1].1.clone();
+                    *back = bottom.surface_vertices[1].clone();
 
                     let mut front = front.write();
                     front.position = Some([1., 1.].into());
@@ -215,11 +212,12 @@ mod tests {
                 let mut top = PartialHalfEdge::default();
 
                 {
-                    let [(back, back_surface), (front, front_surface)] =
-                        top.boundary.each_mut_ext();
+                    let [back, front] = top.boundary.each_mut_ext();
+                    let [back_surface, front_surface] =
+                        top.surface_vertices.each_mut_ext();
 
                     *back = Some(Point::from([1.]));
-                    *back_surface = side_up.boundary[1].1.clone();
+                    *back_surface = side_up.surface_vertices[1].clone();
 
                     *front = Some(Point::from([0.]));
                     let mut front_surface = front_surface.write();
@@ -240,14 +238,15 @@ mod tests {
             let side_down = {
                 let mut side_down = PartialHalfEdge::default();
 
-                let [(back, back_surface), (front, front_surface)] =
-                    side_down.boundary.each_mut_ext();
+                let [back, front] = side_down.boundary.each_mut_ext();
+                let [back_surface, front_surface] =
+                    side_down.surface_vertices.each_mut_ext();
 
                 *back = Some(Point::from([1.]));
                 *front = Some(Point::from([0.]));
 
-                *back_surface = top.boundary[1].1.clone();
-                *front_surface = bottom.boundary[0].1.clone();
+                *back_surface = top.surface_vertices[1].clone();
+                *front_surface = bottom.surface_vertices[0].clone();
 
                 side_down.infer_global_form();
                 side_down.update_as_line_segment();
