@@ -302,8 +302,8 @@ mod tests {
 
             half_edge.update_as_line_segment_from_points([[0., 1.], [1., 1.]]);
 
-            half_edge.vertices[0].0 = Some(range.boundary[0]);
-            half_edge.vertices[1].0 = Some(range.boundary[1]);
+            half_edge.boundary[0].0 = Some(range.boundary[0]);
+            half_edge.boundary[1].0 = Some(range.boundary[1]);
 
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 

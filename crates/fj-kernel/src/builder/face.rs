@@ -44,7 +44,7 @@ impl FaceBuilder for PartialFace {
             .half_edges
             .iter()
             .map(|half_edge| {
-                let [(_, surface_vertex), _] = &half_edge.read().vertices;
+                let [(_, surface_vertex), _] = &half_edge.read().boundary;
                 let global_position = surface_vertex
                     .read()
                     .global_form
@@ -108,7 +108,7 @@ impl FaceBuilder for PartialFace {
                     ),
                     MaybeCurve::UndefinedLine => {
                         let points_surface =
-                            half_edge.vertices.each_ref_ext().map(|vertex| {
+                            half_edge.boundary.each_ref_ext().map(|vertex| {
                                 vertex.1.read().position.expect(
                                     "Can't infer curve without surface points",
                                 )
@@ -118,7 +118,7 @@ impl FaceBuilder for PartialFace {
 
                         *path = MaybeCurve::Defined(line);
                         for (vertex, point) in half_edge
-                            .vertices
+                            .boundary
                             .each_mut_ext()
                             .zip_ext(points_curve)
                         {

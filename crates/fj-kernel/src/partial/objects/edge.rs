@@ -16,7 +16,7 @@ pub struct PartialHalfEdge {
     pub curve: Option<MaybeCurve>,
 
     /// The vertices that bound the half-edge on the curve
-    pub vertices: [(Option<Point<1>>, Partial<SurfaceVertex>); 2],
+    pub boundary: [(Option<Point<1>>, Partial<SurfaceVertex>); 2],
 
     /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
@@ -31,7 +31,7 @@ impl PartialObject for PartialHalfEdge {
     ) -> Self {
         Self {
             curve: Some(half_edge.curve().into()),
-            vertices: half_edge
+            boundary: half_edge
                 .boundary()
                 .zip_ext(half_edge.surface_vertices())
                 .map(|(position, surface_vertex)| {
@@ -56,7 +56,7 @@ impl PartialObject for PartialHalfEdge {
                 )
             }
         };
-        let vertices = self.vertices.map(|vertex| {
+        let vertices = self.boundary.map(|vertex| {
             let position_curve = vertex
                 .0
                 .expect("Can't build `HalfEdge` without boundary positions");
@@ -92,7 +92,7 @@ impl Default for PartialHalfEdge {
 
         Self {
             curve,
-            vertices,
+            boundary: vertices,
             global_form,
         }
     }
