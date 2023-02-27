@@ -1156,7 +1156,6 @@ version = "0.38.0"
 dependencies = [
  "bytemuck",
  "chrono",
- "crossbeam-channel",
  "egui",
  "egui-wgpu",
  "fj-interop",
