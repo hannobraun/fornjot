@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use crate::{
     insert::Insert,
     objects::{Cycle, HalfEdge, Objects},
@@ -12,15 +14,15 @@ impl Reverse for Handle<Cycle> {
         let mut edges = self
             .half_edges()
             .cloned()
-            .map(|current| {
+            .circular_tuple_windows()
+            .map(|(current, next)| {
                 let boundary = {
                     let [a, b] = current.boundary();
                     [b, a]
                 };
-                let surface_vertices = {
-                    let [a, b] = current.surface_vertices().map(Clone::clone);
-                    [b, a]
-                };
+                let surface_vertices =
+                    [next.start_vertex(), current.start_vertex()]
+                        .map(Clone::clone);
 
                 HalfEdge::new(
                     current.curve(),
