@@ -1,5 +1,3 @@
-use fj_interop::ext::ArrayExt;
-
 use crate::{
     insert::Insert,
     objects::{HalfEdge, Objects},
@@ -20,9 +18,12 @@ impl Reverse for Handle<HalfEdge> {
             [b, a]
         };
 
-        let vertices = boundary.zip_ext(surface_vertices);
-
-        HalfEdge::new(self.curve(), vertices, self.global_form().clone())
-            .insert(objects)
+        HalfEdge::new(
+            self.curve(),
+            boundary,
+            surface_vertices,
+            self.global_form().clone(),
+        )
+        .insert(objects)
     }
 }

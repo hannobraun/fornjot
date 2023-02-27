@@ -62,10 +62,9 @@ impl PartialObject for PartialHalfEdge {
         let surface_vertices = self
             .surface_vertices
             .map(|surface_vertex| surface_vertex.build(objects));
-        let vertices = boundary.zip_ext(surface_vertices);
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(curve, vertices, global_form)
+        HalfEdge::new(curve, boundary, surface_vertices, global_form)
     }
 }
 
