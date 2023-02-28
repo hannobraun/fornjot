@@ -20,15 +20,12 @@ impl Reverse for Handle<Cycle> {
                     let [a, b] = current.boundary();
                     [b, a]
                 };
-                let [start_vertex, end_vertex] =
-                    [next.start_vertex(), current.start_vertex()]
-                        .map(Clone::clone);
 
                 HalfEdge::new(
                     current.curve(),
                     boundary,
-                    start_vertex,
-                    end_vertex,
+                    next.start_vertex().clone(),
+                    current.start_vertex().clone(),
                     current.global_form().clone(),
                 )
                 .insert(objects)
