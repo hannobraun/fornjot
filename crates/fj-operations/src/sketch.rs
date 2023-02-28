@@ -85,7 +85,7 @@ impl Shape for fj::Sketch {
                             fj::SketchSegmentRoute::Arc { angle } => {
                                 half_edge
                                     .write()
-                                    .update_as_arc(angle.rad(), next_vertex);
+                                    .update_as_arc(angle.rad(), next_half_edge);
                             }
                         }
                     }

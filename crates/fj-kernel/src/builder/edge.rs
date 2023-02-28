@@ -27,7 +27,7 @@ pub trait HalfEdgeBuilder {
     fn update_as_arc(
         &mut self,
         angle_rad: impl Into<Scalar>,
-        next_vertex: Partial<SurfaceVertex>,
+        next_half_edge: Partial<HalfEdge>,
     );
 
     /// Update partial half-edge to be a line segment, from the given points
@@ -104,18 +104,21 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_arc(
         &mut self,
         angle_rad: impl Into<Scalar>,
-        mut next_vertex: Partial<SurfaceVertex>,
+        mut next_half_edge: Partial<HalfEdge>,
     ) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let [start, end] = [&self.start_vertex, &next_vertex].map(|vertex| {
-            vertex
-                .read()
-                .position
-                .expect("Can't infer arc without surface position")
-        });
+        let [start, end] =
+            [&self.start_vertex, &next_half_edge.read().start_vertex].map(
+                |vertex| {
+                    vertex
+                        .read()
+                        .position
+                        .expect("Can't infer arc without surface position")
+                },
+            );
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
@@ -128,7 +131,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for ((point_boundary, surface_vertex), point_curve) in self
             .boundary
             .each_mut_ext()
-            .zip_ext([&mut self.start_vertex, &mut next_vertex])
+            .zip_ext([
+                &mut self.start_vertex,
+                &mut next_half_edge.write().start_vertex,
+            ])
             .zip_ext([a_curve, b_curve])
         {
             *point_boundary = Some(point_curve);
@@ -136,7 +142,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 Some(path.point_from_path_coords(point_curve));
         }
 
-        self.infer_global_form(next_vertex);
+        self.infer_global_form(next_half_edge.read().start_vertex.clone());
     }
 
     fn update_as_line_segment_from_points(
