@@ -119,12 +119,12 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
         for mut edge in [
-            edge_bottom.write(),
-            edge_up.write(),
-            edge_top.write(),
-            edge_down.write(),
+            edge_bottom.clone(),
+            edge_up.clone(),
+            edge_top.clone(),
+            edge_down.clone(),
         ] {
-            edge.update_as_line_segment();
+            edge.write().update_as_line_segment();
         }
 
         // Finally, we can make sure that all edges refer to the correct global
