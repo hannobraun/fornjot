@@ -1,6 +1,7 @@
 use std::{array, collections::VecDeque};
 
 use fj_interop::ext::ArrayExt;
+use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
@@ -93,7 +94,14 @@ impl FaceBuilder for PartialFace {
     }
 
     fn infer_curves(&mut self) {
-        for mut half_edge in self.exterior.read().half_edges.iter().cloned() {
+        for (mut half_edge, next_half_edge) in self
+            .exterior
+            .read()
+            .half_edges
+            .iter()
+            .cloned()
+            .circular_tuple_windows()
+        {
             let mut half_edge = half_edge.write();
 
             let mut curve = half_edge.curve;
@@ -107,13 +115,15 @@ impl FaceBuilder for PartialFace {
                         "Inferring undefined circles is not supported yet"
                     ),
                     MaybeCurve::UndefinedLine => {
-                        let points_surface =
-                            [&half_edge.start_vertex, &half_edge.end_vertex]
-                                .map(|vertex| {
-                                    vertex.read().position.expect(
-                                    "Can't infer curve without surface points",
-                                )
-                                });
+                        let points_surface = [
+                            &half_edge.start_vertex,
+                            &next_half_edge.read().start_vertex,
+                        ]
+                        .map(|vertex| {
+                            vertex.read().position.expect(
+                                "Can't infer curve without surface points",
+                            )
+                        });
                         let (line, points_curve) =
                             Curve::line_from_points(points_surface);
 
