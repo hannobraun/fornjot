@@ -143,9 +143,9 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::HalfEdgeBuilder,
+        builder::{CycleBuilder, HalfEdgeBuilder},
         objects::HalfEdge,
-        partial::{Partial, PartialHalfEdge, PartialObject},
+        partial::{Partial, PartialCycle},
         services::Services,
         validate::Validate,
     };
@@ -157,14 +157,13 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                [[0., 0.], [1., 0.]],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let mut cycle = PartialCycle::default();
+
+            let [mut half_edge, next_half_edge, _] = cycle
+                .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -208,14 +207,13 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                [[0., 0.], [1., 0.]],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let mut cycle = PartialCycle::default();
+
+            let [mut half_edge, next_half_edge, _] = cycle
+                .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
