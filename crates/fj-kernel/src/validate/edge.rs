@@ -183,7 +183,8 @@ mod tests {
             HalfEdge::new(
                 valid.curve(),
                 valid.boundary(),
-                valid.surface_vertices().map(Clone::clone),
+                valid.start_vertex().clone(),
+                valid.end_vertex().clone(),
                 global_form,
             )
         };
@@ -213,7 +214,8 @@ mod tests {
             HalfEdge::new(
                 valid.curve(),
                 boundary,
-                valid.surface_vertices().map(Clone::clone),
+                valid.start_vertex().clone(),
+                valid.end_vertex().clone(),
                 valid.global_form().clone(),
             )
         };

@@ -56,11 +56,10 @@ impl HalfEdge {
     pub fn new(
         curve: Curve,
         boundary: [Point<1>; 2],
-        surface_vertices: [Handle<SurfaceVertex>; 2],
+        start_vertex: Handle<SurfaceVertex>,
+        end_vertex: Handle<SurfaceVertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
-        let [start_vertex, end_vertex] = surface_vertices;
-
         Self {
             curve,
             boundary,

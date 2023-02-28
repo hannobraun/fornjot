@@ -288,10 +288,13 @@ mod tests {
                     *surface_vertex = invalid.clone();
                 }
 
+                let [start_vertex, end_vertex] = surface_vertices;
+
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
-                    surface_vertices,
+                    start_vertex,
+                    end_vertex,
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)
