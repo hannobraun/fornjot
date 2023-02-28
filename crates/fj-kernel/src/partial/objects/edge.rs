@@ -1,6 +1,3 @@
-use std::array;
-
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -76,9 +73,10 @@ impl PartialObject for PartialHalfEdge {
 impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = None;
-        let surface_vertices = array::from_fn(|_| Partial::default());
+        let start_vertex = Partial::default();
+        let end_vertex = Partial::default();
 
-        let global_vertices = surface_vertices.each_ref_ext().map(
+        let global_vertices = [&start_vertex, &end_vertex].map(
             |vertex: &Partial<SurfaceVertex>| {
                 let surface_vertex = vertex.clone();
                 let global_vertex = surface_vertex.read().global_form.clone();
@@ -89,8 +87,6 @@ impl Default for PartialHalfEdge {
         let global_form = Partial::from_partial(PartialGlobalEdge {
             vertices: global_vertices,
         });
-
-        let [start_vertex, end_vertex] = surface_vertices;
 
         Self {
             curve,
