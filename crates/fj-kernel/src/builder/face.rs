@@ -93,7 +93,7 @@ impl FaceBuilder for PartialFace {
     }
 
     fn infer_curves(&mut self) {
-        for half_edge in &mut self.exterior.write().half_edges {
+        for mut half_edge in self.exterior.read().half_edges.iter().cloned() {
             let mut half_edge = half_edge.write();
 
             let mut curve = half_edge.curve;
