@@ -58,16 +58,16 @@ impl Shape for fj::Sketch {
                 let exterior = {
                     let mut cycle = PartialCycle::default();
 
-                    let mut half_edges = Vec::new();
-
-                    poly_chain.to_segments().into_iter().for_each(
-                        |fj::SketchSegment { endpoint, route }| {
+                    let half_edges = poly_chain
+                        .to_segments()
+                        .into_iter()
+                        .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
                             let half_edge = cycle
                                 .add_half_edge_from_point_to_start(endpoint);
-                            half_edges.push((half_edge, route));
-                        },
-                    );
+                            (half_edge, route)
+                        })
+                        .collect::<Vec<_>>();
 
                     for (mut half_edge, route) in half_edges {
                         match route {
