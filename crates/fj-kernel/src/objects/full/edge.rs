@@ -187,7 +187,10 @@ mod tests {
                 [a, b],
                 half_edge.end_vertex.clone(),
             );
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+            half_edge.infer_vertex_positions_if_necessary(
+                &surface.geometry(),
+                half_edge.end_vertex.clone(),
+            );
 
             half_edge.build(&mut services.objects)
         };
@@ -197,7 +200,10 @@ mod tests {
                 [b, a],
                 half_edge.end_vertex.clone(),
             );
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+            half_edge.infer_vertex_positions_if_necessary(
+                &surface.geometry(),
+                half_edge.end_vertex.clone(),
+            );
 
             half_edge.build(&mut services.objects)
         };

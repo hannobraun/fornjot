@@ -194,9 +194,10 @@ impl CycleBuilder for PartialCycle {
         surface: &SurfaceGeometry,
     ) {
         for half_edge in &mut self.half_edges {
+            let next_vertex = half_edge.read().end_vertex.clone();
             half_edge
                 .write()
-                .infer_vertex_positions_if_necessary(surface);
+                .infer_vertex_positions_if_necessary(surface, next_vertex);
         }
     }
 }

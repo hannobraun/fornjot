@@ -66,6 +66,7 @@ pub trait HalfEdgeBuilder {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
+        next_vertex: Partial<SurfaceVertex>,
     );
 
     /// Update this edge from another
@@ -225,6 +226,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
+        mut next_vertex: Partial<SurfaceVertex>,
     ) {
         let path = self
             .curve
@@ -235,7 +237,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         for (boundary_point, surface_vertex) in self
             .boundary
-            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
+            .zip_ext([&mut self.start_vertex, &mut next_vertex])
         {
             let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
