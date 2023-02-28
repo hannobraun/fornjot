@@ -164,7 +164,7 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn update_as_polygon(&mut self) {
-        for half_edge in &mut self.half_edges {
+        for mut half_edge in self.half_edges.iter().cloned() {
             half_edge.write().update_as_line_segment();
         }
     }
