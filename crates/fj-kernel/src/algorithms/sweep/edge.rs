@@ -1,5 +1,6 @@
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
+use itertools::Itertools;
 
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
@@ -118,13 +119,17 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for mut edge in [
+        for (mut edge, next) in [
             edge_bottom.clone(),
             edge_up.clone(),
             edge_top.clone(),
             edge_down.clone(),
-        ] {
-            edge.write().update_as_line_segment();
+        ]
+        .into_iter()
+        .circular_tuple_windows()
+        {
+            edge.write()
+                .update_as_line_segment(next.read().start_vertex.clone());
         }
 
         // Finally, we can make sure that all edges refer to the correct global

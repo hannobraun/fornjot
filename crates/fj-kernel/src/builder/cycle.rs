@@ -1,4 +1,5 @@
 use fj_math::Point;
+use itertools::Itertools;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
@@ -164,8 +165,12 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn update_as_polygon(&mut self) {
-        for mut half_edge in self.half_edges.iter().cloned() {
-            half_edge.write().update_as_line_segment();
+        for (mut half_edge, next) in
+            self.half_edges.iter().cloned().circular_tuple_windows()
+        {
+            half_edge
+                .write()
+                .update_as_line_segment(next.read().start_vertex.clone());
         }
     }
 

@@ -78,7 +78,9 @@ impl Shape for fj::Sketch {
 
                         match route {
                             fj::SketchSegmentRoute::Direct => {
-                                half_edge.write().update_as_line_segment();
+                                half_edge
+                                    .write()
+                                    .update_as_line_segment(next_vertex);
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
                                 half_edge

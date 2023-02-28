@@ -48,7 +48,10 @@ pub trait HalfEdgeBuilder {
     ) -> Curve;
 
     /// Update partial half-edge to be a line segment
-    fn update_as_line_segment(&mut self) -> Curve;
+    fn update_as_line_segment(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Curve;
 
     /// Infer the global form of the half-edge
     ///
@@ -166,18 +169,20 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             surface_form.position = Some(point.into());
         }
 
-        self.update_as_line_segment()
+        self.update_as_line_segment(next_vertex)
     }
 
-    fn update_as_line_segment(&mut self) -> Curve {
+    fn update_as_line_segment(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Curve {
         let boundary = self.boundary;
-        let points_surface =
-            [&self.start_vertex, &self.end_vertex].map(|vertex| {
-                vertex
-                    .read()
-                    .position
-                    .expect("Can't infer line segment without surface position")
-            });
+        let points_surface = [&self.start_vertex, &next_vertex].map(|vertex| {
+            vertex
+                .read()
+                .position
+                .expect("Can't infer line segment without surface position")
+        });
 
         let path = if let [Some(start), Some(end)] = boundary {
             let points = [start, end].zip_ext(points_surface);
