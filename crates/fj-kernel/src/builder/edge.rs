@@ -335,10 +335,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
+        let other = other.read();
+
         for (this, other) in self
             .surface_vertices
             .iter_mut()
-            .zip(other.read().surface_vertices.iter().rev())
+            .zip(other.surface_vertices.iter().rev())
         {
             this.write().global_form.write().position =
                 other.read().global_form.read().position;
