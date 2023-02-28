@@ -289,7 +289,7 @@ mod tests {
             .exterior()
             .half_edges()
             .find(|half_edge| {
-                half_edge.start_vertex().position() == Point::from([-1., -1.])
+                half_edge.start_position() == Point::from([-1., -1.])
             })
             .map(|half_edge| half_edge.start_vertex().clone())
             .unwrap();
