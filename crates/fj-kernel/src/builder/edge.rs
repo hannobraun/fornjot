@@ -100,10 +100,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             Some(path.point_from_path_coords(a_curve));
         self.end_vertex = self.start_vertex.clone();
 
-        for (vertex, point_curve) in
+        for (point_boundary, point_curve) in
             self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            *vertex = Some(point_curve);
+            *point_boundary = Some(point_curve);
         }
 
         self.infer_global_form();
