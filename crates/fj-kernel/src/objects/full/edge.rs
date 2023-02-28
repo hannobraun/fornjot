@@ -85,6 +85,11 @@ impl HalfEdge {
         &self.start_vertex
     }
 
+    /// Access the vertex from where this half-edge ends
+    pub fn end_vertex(&self) -> &Handle<SurfaceVertex> {
+        &self.end_vertex
+    }
+
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
         [&self.start_vertex, &self.end_vertex]
