@@ -276,7 +276,8 @@ mod tests {
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
                 let mut surface_vertices =
-                    half_edge.surface_vertices().map(Clone::clone);
+                    [half_edge.start_vertex(), half_edge.end_vertex()]
+                        .map(Clone::clone);
 
                 let mut invalid = None;
                 for surface_vertex in surface_vertices.each_mut_ext() {
