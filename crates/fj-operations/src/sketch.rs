@@ -12,6 +12,7 @@ use fj_kernel::{
     services::Service,
 };
 use fj_math::{Aabb, Point};
+use itertools::Itertools;
 
 use super::Shape;
 
@@ -57,38 +58,38 @@ impl Shape for fj::Sketch {
 
                 let exterior = {
                     let mut cycle = PartialCycle::default();
-                    let mut line_segments = vec![];
-                    let mut arcs = vec![];
-                    poly_chain.to_segments().into_iter().for_each(
-                        |fj::SketchSegment { endpoint, route }| {
+
+                    let half_edges = poly_chain
+                        .to_segments()
+                        .into_iter()
+                        .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            match route {
-                                fj::SketchSegmentRoute::Direct => {
-                                    line_segments.push(
-                                        cycle
-                                            .add_half_edge_from_point_to_start(
-                                                endpoint,
-                                            ),
-                                    );
-                                }
-                                fj::SketchSegmentRoute::Arc { angle } => {
-                                    arcs.push((
-                                        cycle
-                                            .add_half_edge_from_point_to_start(
-                                                endpoint,
-                                            ),
-                                        angle,
-                                    ));
-                                }
+                            let half_edge = cycle
+                                .add_half_edge_from_point_to_start(endpoint);
+                            (half_edge, route)
+                        })
+                        .collect::<Vec<_>>();
+
+                    for ((mut half_edge, route), (next_half_edge, _)) in
+                        half_edges.into_iter().circular_tuple_windows()
+                    {
+                        let next_vertex =
+                            next_half_edge.read().start_vertex.clone();
+
+                        match route {
+                            fj::SketchSegmentRoute::Direct => {
+                                half_edge
+                                    .write()
+                                    .update_as_line_segment(next_vertex);
                             }
-                        },
-                    );
-                    line_segments.into_iter().for_each(|mut half_edge| {
-                        half_edge.write().update_as_line_segment();
-                    });
-                    arcs.into_iter().for_each(|(mut half_edge, angle)| {
-                        half_edge.write().update_as_arc(angle.rad())
-                    });
+                            fj::SketchSegmentRoute::Arc { angle } => {
+                                half_edge
+                                    .write()
+                                    .update_as_arc(angle.rad(), next_vertex);
+                            }
+                        }
+                    }
+
                     Partial::from_partial(cycle)
                 };
 

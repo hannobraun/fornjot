@@ -1,6 +1,7 @@
 use std::{array, collections::VecDeque};
 
 use fj_interop::ext::ArrayExt;
+use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
@@ -44,7 +45,7 @@ impl FaceBuilder for PartialFace {
             .half_edges
             .iter()
             .map(|half_edge| {
-                let [surface_vertex, _] = &half_edge.read().surface_vertices;
+                let surface_vertex = &half_edge.read().start_vertex;
                 let global_position = surface_vertex
                     .read()
                     .global_form
@@ -93,7 +94,14 @@ impl FaceBuilder for PartialFace {
     }
 
     fn infer_curves(&mut self) {
-        for half_edge in &mut self.exterior.write().half_edges {
+        for (mut half_edge, next_half_edge) in self
+            .exterior
+            .read()
+            .half_edges
+            .iter()
+            .cloned()
+            .circular_tuple_windows()
+        {
             let mut half_edge = half_edge.write();
 
             let mut curve = half_edge.curve;
@@ -107,14 +115,15 @@ impl FaceBuilder for PartialFace {
                         "Inferring undefined circles is not supported yet"
                     ),
                     MaybeCurve::UndefinedLine => {
-                        let points_surface = half_edge
-                            .surface_vertices
-                            .each_ref_ext()
-                            .map(|vertex| {
-                                vertex.read().position.expect(
-                                    "Can't infer curve without surface points",
-                                )
-                            });
+                        let points_surface = [
+                            &half_edge.start_vertex,
+                            &next_half_edge.read().start_vertex,
+                        ]
+                        .map(|vertex| {
+                            vertex.read().position.expect(
+                                "Can't infer curve without surface points",
+                            )
+                        });
                         let (line, points_curve) =
                             Curve::line_from_points(points_surface);
 

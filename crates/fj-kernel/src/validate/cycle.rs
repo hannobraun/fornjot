@@ -74,8 +74,8 @@ impl CycleValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         for (a, b) in cycle.half_edges().circular_tuple_windows() {
-            let [_, prev] = a.surface_vertices();
-            let [next, _] = b.surface_vertices();
+            let prev = a.end_vertex();
+            let next = b.start_vertex();
 
             if prev.id() != next.id() {
                 errors.push(
@@ -160,8 +160,7 @@ mod tests {
             // cycle.
             {
                 let first_half_edge = half_edges.first_mut().unwrap();
-                let [first_vertex, _] =
-                    &mut first_half_edge.write().surface_vertices;
+                let first_vertex = &mut first_half_edge.write().start_vertex;
                 let surface_vertex =
                     Partial::from_partial(first_vertex.read().clone());
                 *first_vertex = surface_vertex;

@@ -1137,6 +1137,7 @@ dependencies = [
  "fj-interop",
  "fj-kernel",
  "fj-math",
+ "itertools",
  "thiserror",
 ]
 

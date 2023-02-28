@@ -112,7 +112,9 @@ impl FaceValidationError {
     ) {
         for cycle in face.all_cycles() {
             for half_edge in cycle.half_edges() {
-                for surface_vertex in half_edge.surface_vertices() {
+                for surface_vertex in
+                    [half_edge.start_vertex(), half_edge.end_vertex()]
+                {
                     let surface_position_as_global = face
                         .surface()
                         .geometry()
@@ -259,9 +261,11 @@ mod tests {
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
-            half_edge
-                .write()
-                .infer_vertex_positions_if_necessary(&surface.geometry());
+            let next_vertex = half_edge.read().end_vertex.clone();
+            half_edge.write().infer_vertex_positions_if_necessary(
+                &surface.geometry(),
+                next_vertex,
+            );
 
             face.build(&mut services.objects)
         };
@@ -274,7 +278,8 @@ mod tests {
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
                 let mut surface_vertices =
-                    half_edge.surface_vertices().map(Clone::clone);
+                    [half_edge.start_vertex(), half_edge.end_vertex()]
+                        .map(Clone::clone);
 
                 let mut invalid = None;
                 for surface_vertex in surface_vertices.each_mut_ext() {
@@ -288,10 +293,13 @@ mod tests {
                     *surface_vertex = invalid.clone();
                 }
 
+                let [start_vertex, end_vertex] = surface_vertices;
+
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
-                    surface_vertices,
+                    start_vertex,
+                    end_vertex,
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)

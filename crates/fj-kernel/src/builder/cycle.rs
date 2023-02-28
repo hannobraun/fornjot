@@ -1,4 +1,5 @@
 use fj_math::Point;
+use itertools::Itertools;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
@@ -102,29 +103,23 @@ impl CycleBuilder for PartialCycle {
             };
 
         {
-            let shared_surface_vertex = {
-                let [vertex, _] = &new_half_edge.read().surface_vertices;
-                vertex.clone()
-            };
+            let shared_surface_vertex =
+                new_half_edge.read().start_vertex.clone();
 
             let mut last_half_edge = last_half_edge.write();
 
-            let [_, vertex] = &mut last_half_edge.surface_vertices;
-            *vertex = shared_surface_vertex;
-            last_half_edge.infer_global_form();
+            last_half_edge.end_vertex = shared_surface_vertex.clone();
+            last_half_edge.infer_global_form(shared_surface_vertex);
         }
 
         {
-            let shared_surface_vertex = {
-                let [vertex, _] = &first_half_edge.read().surface_vertices;
-                vertex.clone()
-            };
+            let shared_surface_vertex =
+                first_half_edge.read().start_vertex.clone();
 
             let mut new_half_edge = new_half_edge.write();
 
-            let [_, vertex] = &mut new_half_edge.surface_vertices;
-            *vertex = shared_surface_vertex;
-            new_half_edge.infer_global_form();
+            new_half_edge.end_vertex = shared_surface_vertex.clone();
+            new_half_edge.infer_global_form(shared_surface_vertex);
         }
 
         self.half_edges.push(new_half_edge.clone());
@@ -136,12 +131,7 @@ impl CycleBuilder for PartialCycle {
         point: impl Into<Point<2>>,
     ) -> Partial<HalfEdge> {
         let mut half_edge = self.add_half_edge();
-
-        {
-            let [vertex, _] = &mut half_edge.write().surface_vertices;
-            vertex.write().position = Some(point.into());
-        }
-
+        half_edge.write().start_vertex.write().position = Some(point.into());
         half_edge
     }
 
@@ -150,12 +140,13 @@ impl CycleBuilder for PartialCycle {
         point: impl Into<Point<3>>,
     ) -> Partial<HalfEdge> {
         let mut half_edge = self.add_half_edge();
-
-        {
-            let [vertex, _] = &mut half_edge.write().surface_vertices;
-            vertex.write().global_form.write().position = Some(point.into());
-        }
-
+        half_edge
+            .write()
+            .start_vertex
+            .write()
+            .global_form
+            .write()
+            .position = Some(point.into());
         half_edge
     }
 
@@ -174,8 +165,12 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn update_as_polygon(&mut self) {
-        for half_edge in &mut self.half_edges {
-            half_edge.write().update_as_line_segment();
+        for (mut half_edge, next) in
+            self.half_edges.iter().cloned().circular_tuple_windows()
+        {
+            half_edge
+                .write()
+                .update_as_line_segment(next.read().start_vertex.clone());
         }
     }
 
@@ -198,10 +193,13 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         surface: &SurfaceGeometry,
     ) {
-        for half_edge in &mut self.half_edges {
+        for (mut half_edge, next_half_edge) in
+            self.half_edges.iter().cloned().circular_tuple_windows()
+        {
+            let next_vertex = next_half_edge.read().start_vertex.clone();
             half_edge
                 .write()
-                .infer_vertex_positions_if_necessary(surface);
+                .infer_vertex_positions_if_necessary(surface, next_vertex);
         }
     }
 }

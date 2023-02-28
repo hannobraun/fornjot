@@ -6,7 +6,7 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{GlobalEdge, HalfEdge},
+    objects::{GlobalEdge, HalfEdge, SurfaceVertex},
     partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -34,27 +34,39 @@ pub trait HalfEdgeBuilder {
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>);
+    fn update_as_arc(
+        &mut self,
+        angle_rad: impl Into<Scalar>,
+        next_vertex: Partial<SurfaceVertex>,
+    );
 
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
         &mut self,
         points: [impl Into<Point<2>>; 2],
+        next_vertex: Partial<SurfaceVertex>,
     ) -> Curve;
 
     /// Update partial half-edge to be a line segment
-    fn update_as_line_segment(&mut self) -> Curve;
+    fn update_as_line_segment(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Curve;
 
     /// Infer the global form of the half-edge
     ///
     /// Updates the global form referenced by this half-edge, and also returns
     /// it.
-    fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
+    fn infer_global_form(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Partial<GlobalEdge>;
 
     /// Infer the vertex positions (surface and global), if not already set
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
+        next_vertex: Partial<SurfaceVertex>,
     );
 
     /// Update this edge from another
@@ -96,34 +108,31 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let mut surface_vertex = {
-            let [vertex, _] = &mut self.surface_vertices;
-            vertex.clone()
-        };
-        surface_vertex.write().position =
+        self.start_vertex.write().position =
             Some(path.point_from_path_coords(a_curve));
+        self.end_vertex = self.start_vertex.clone();
 
-        for (vertex, point_curve) in self
-            .boundary
-            .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
-            .zip_ext([a_curve, b_curve])
+        for (point_boundary, point_curve) in
+            self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            *vertex.0 = Some(point_curve);
-            *vertex.1 = surface_vertex.clone();
+            *point_boundary = Some(point_curve);
         }
 
-        self.infer_global_form();
+        self.infer_global_form(self.start_vertex.clone());
 
         path
     }
 
-    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>) {
+    fn update_as_arc(
+        &mut self,
+        angle_rad: impl Into<Scalar>,
+        mut next_vertex: Partial<SurfaceVertex>,
+    ) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let [start, end] = self.surface_vertices.each_ref_ext().map(|vertex| {
+        let [start, end] = [&self.start_vertex, &next_vertex].map(|vertex| {
             vertex
                 .read()
                 .position
@@ -138,43 +147,46 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        for (vertex, point_curve) in self
+        for ((point_boundary, surface_vertex), point_curve) in self
             .boundary
             .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
+            .zip_ext([&mut self.start_vertex, &mut next_vertex])
             .zip_ext([a_curve, b_curve])
         {
-            *vertex.0 = Some(point_curve);
-            vertex.1.write().position =
+            *point_boundary = Some(point_curve);
+            surface_vertex.write().position =
                 Some(path.point_from_path_coords(point_curve));
         }
 
-        self.infer_global_form();
+        self.infer_global_form(next_vertex);
     }
 
     fn update_as_line_segment_from_points(
         &mut self,
         points: [impl Into<Point<2>>; 2],
+        mut next_vertex: Partial<SurfaceVertex>,
     ) -> Curve {
         for (vertex, point) in
-            self.surface_vertices.each_mut_ext().zip_ext(points)
+            [&mut self.start_vertex, &mut next_vertex].zip_ext(points)
         {
             let mut surface_form = vertex.write();
             surface_form.position = Some(point.into());
         }
 
-        self.update_as_line_segment()
+        self.update_as_line_segment(next_vertex)
     }
 
-    fn update_as_line_segment(&mut self) -> Curve {
+    fn update_as_line_segment(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Curve {
         let boundary = self.boundary;
-        let points_surface =
-            self.surface_vertices.each_ref_ext().map(|vertex| {
-                vertex
-                    .read()
-                    .position
-                    .expect("Can't infer line segment without surface position")
-            });
+        let points_surface = [&self.start_vertex, &next_vertex].map(|vertex| {
+            vertex
+                .read()
+                .position
+                .expect("Can't infer line segment without surface position")
+        });
 
         let path = if let [Some(start), Some(end)] = boundary {
             let points = [start, end].zip_ext(points_surface);
@@ -196,15 +208,16 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             path
         };
 
-        self.infer_global_form();
+        self.infer_global_form(next_vertex);
 
         path
     }
 
-    fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
-        self.global_form.write().vertices = self
-            .surface_vertices
-            .each_ref_ext()
+    fn infer_global_form(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Partial<GlobalEdge> {
+        self.global_form.write().vertices = [&self.start_vertex, &next_vertex]
             .map(|vertex| vertex.read().global_form.clone());
 
         self.global_form.clone()
@@ -213,6 +226,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
+        mut next_vertex: Partial<SurfaceVertex>,
     ) {
         let path = self
             .curve
@@ -221,16 +235,14 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("Can't infer vertex positions with undefined path");
         };
 
-        for vertex in self
+        for (boundary_point, surface_vertex) in self
             .boundary
-            .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
+            .zip_ext([&mut self.start_vertex, &mut next_vertex])
         {
-            let position_curve = vertex
-                .0
+            let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
 
-            let position_surface = vertex.1.read().position;
+            let position_surface = surface_vertex.read().position;
 
             // Infer surface position, if not available.
             let position_surface = match position_surface {
@@ -239,18 +251,19 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     let position_surface =
                         path.point_from_path_coords(position_curve);
 
-                    vertex.1.write().position = Some(position_surface);
+                    surface_vertex.write().position = Some(position_surface);
 
                     position_surface
                 }
             };
 
             // Infer global position, if not available.
-            let position_global = vertex.1.read().global_form.read().position;
+            let position_global =
+                surface_vertex.read().global_form.read().position;
             if position_global.is_none() {
                 let position_global =
                     surface.point_from_surface_coords(position_surface);
-                vertex.1.write().global_form.write().position =
+                surface_vertex.write().global_form.write().position =
                     Some(position_global);
             }
         }
@@ -335,10 +348,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        for (this, other) in self
-            .surface_vertices
+        let other = other.read();
+
+        for (this, other) in [&mut self.start_vertex, &mut self.end_vertex]
             .iter_mut()
-            .zip(other.read().surface_vertices.iter().rev())
+            .zip([&other.end_vertex, &other.start_vertex])
         {
             this.write().global_form.write().position =
                 other.read().global_form.read().position;

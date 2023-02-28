@@ -1,5 +1,6 @@
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
+use itertools::Itertools;
 
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
@@ -106,7 +107,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
                 // Writing to the start vertices is enough. Neighboring half-
                 // edges share surface vertices, so writing the start vertex of
                 // each half-edge writes to all vertices.
-                let mut vertex = half_edge.surface_vertices[0].write();
+                let mut vertex = half_edge.start_vertex.write();
                 vertex.position = Some(surface_point);
                 vertex.global_form = Partial::from(global_vertex);
             },
@@ -118,13 +119,17 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for mut edge in [
-            edge_bottom.write(),
-            edge_up.write(),
-            edge_top.write(),
-            edge_down.write(),
-        ] {
-            edge.update_as_line_segment();
+        for (mut edge, next) in [
+            edge_bottom.clone(),
+            edge_up.clone(),
+            edge_top.clone(),
+            edge_down.clone(),
+        ]
+        .into_iter()
+        .circular_tuple_windows()
+        {
+            edge.write()
+                .update_as_line_segment(next.read().start_vertex.clone());
         }
 
         // Finally, we can make sure that all edges refer to the correct global

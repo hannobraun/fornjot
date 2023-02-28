@@ -1,4 +1,3 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -47,7 +46,8 @@ use crate::{
 pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
-    surface_vertices: [Handle<SurfaceVertex>; 2],
+    start_vertex: Handle<SurfaceVertex>,
+    end_vertex: Handle<SurfaceVertex>,
     global_form: Handle<GlobalEdge>,
 }
 
@@ -56,13 +56,15 @@ impl HalfEdge {
     pub fn new(
         curve: Curve,
         boundary: [Point<1>; 2],
-        surface_vertices: [Handle<SurfaceVertex>; 2],
+        start_vertex: Handle<SurfaceVertex>,
+        end_vertex: Handle<SurfaceVertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             curve,
             boundary,
-            surface_vertices,
+            start_vertex,
+            end_vertex,
             global_form,
         }
     }
@@ -79,13 +81,12 @@ impl HalfEdge {
 
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
-        let [vertex, _] = self.surface_vertices.each_ref_ext();
-        vertex
+        &self.start_vertex
     }
 
-    /// Access the surface vertices that bound the half-edge
-    pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        self.surface_vertices.each_ref_ext()
+    /// Access the vertex from where this half-edge ends
+    pub fn end_vertex(&self) -> &Handle<SurfaceVertex> {
+        &self.end_vertex
     }
 
     /// Access the global form of the half-edge
@@ -182,15 +183,27 @@ mod tests {
 
         let a_to_b = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([a, b]);
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+            half_edge.update_as_line_segment_from_points(
+                [a, b],
+                half_edge.end_vertex.clone(),
+            );
+            half_edge.infer_vertex_positions_if_necessary(
+                &surface.geometry(),
+                half_edge.end_vertex.clone(),
+            );
 
             half_edge.build(&mut services.objects)
         };
         let b_to_a = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([b, a]);
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
+            half_edge.update_as_line_segment_from_points(
+                [b, a],
+                half_edge.end_vertex.clone(),
+            );
+            half_edge.infer_vertex_positions_if_necessary(
+                &surface.geometry(),
+                half_edge.end_vertex.clone(),
+            );
 
             half_edge.build(&mut services.objects)
         };

@@ -15,4 +15,5 @@ fj.workspace = true
 fj-interop.workspace = true
 fj-kernel.workspace = true
 fj-math.workspace = true
+itertools = "0.10.5"
 thiserror = "1.0.35"
