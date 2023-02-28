@@ -102,10 +102,8 @@ impl CycleBuilder for PartialCycle {
             };
 
         {
-            let shared_surface_vertex = {
-                let vertex = &new_half_edge.read().start_vertex;
-                vertex.clone()
-            };
+            let shared_surface_vertex =
+                new_half_edge.read().start_vertex.clone();
 
             let mut last_half_edge = last_half_edge.write();
 
@@ -115,10 +113,8 @@ impl CycleBuilder for PartialCycle {
         }
 
         {
-            let shared_surface_vertex = {
-                let vertex = &first_half_edge.read().start_vertex;
-                vertex.clone()
-            };
+            let shared_surface_vertex =
+                first_half_edge.read().start_vertex.clone();
 
             let mut new_half_edge = new_half_edge.write();
 
