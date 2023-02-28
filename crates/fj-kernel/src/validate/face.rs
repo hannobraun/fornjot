@@ -112,7 +112,9 @@ impl FaceValidationError {
     ) {
         for cycle in face.all_cycles() {
             for half_edge in cycle.half_edges() {
-                for surface_vertex in half_edge.surface_vertices() {
+                for surface_vertex in
+                    [half_edge.start_vertex(), half_edge.end_vertex()]
+                {
                     let surface_position_as_global = face
                         .surface()
                         .geometry()
