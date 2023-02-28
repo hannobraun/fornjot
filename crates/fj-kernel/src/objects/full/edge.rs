@@ -89,11 +89,6 @@ impl HalfEdge {
         &self.end_vertex
     }
 
-    /// Access the surface vertices that bound the half-edge
-    pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        [&self.start_vertex, &self.end_vertex]
-    }
-
     /// Access the global form of the half-edge
     pub fn global_form(&self) -> &Handle<GlobalEdge> {
         &self.global_form
