@@ -35,11 +35,10 @@ impl PartialObject for PartialHalfEdge {
         Self {
             curve: Some(half_edge.curve().into()),
             boundary: half_edge.boundary().map(Some),
-            surface_vertices: half_edge.surface_vertices().map(
-                |surface_vertex| {
-                    Partial::from_full(surface_vertex.clone(), cache)
-                },
-            ),
+            surface_vertices: [
+                Partial::from_full(half_edge.start_vertex().clone(), cache),
+                Partial::from_full(half_edge.end_vertex().clone(), cache),
+            ],
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
                 cache,
