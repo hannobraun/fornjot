@@ -6,7 +6,7 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{GlobalEdge, HalfEdge},
+    objects::{GlobalEdge, HalfEdge, SurfaceVertex},
     partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -34,7 +34,11 @@ pub trait HalfEdgeBuilder {
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>);
+    fn update_as_arc(
+        &mut self,
+        angle_rad: impl Into<Scalar>,
+        next_vertex: Partial<SurfaceVertex>,
+    );
 
     /// Update partial half-edge to be a line segment, from the given points
     fn update_as_line_segment_from_points(
@@ -111,18 +115,21 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn update_as_arc(&mut self, angle_rad: impl Into<Scalar>) {
+    fn update_as_arc(
+        &mut self,
+        angle_rad: impl Into<Scalar>,
+        mut next_vertex: Partial<SurfaceVertex>,
+    ) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let [start, end] =
-            [&self.start_vertex, &self.end_vertex].map(|vertex| {
-                vertex
-                    .read()
-                    .position
-                    .expect("Can't infer arc without surface position")
-            });
+        let [start, end] = [&self.start_vertex, &next_vertex].map(|vertex| {
+            vertex
+                .read()
+                .position
+                .expect("Can't infer arc without surface position")
+        });
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
@@ -135,7 +142,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for ((point_boundary, surface_vertex), point_curve) in self
             .boundary
             .each_mut_ext()
-            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
+            .zip_ext([&mut self.start_vertex, &mut next_vertex])
             .zip_ext([a_curve, b_curve])
         {
             *point_boundary = Some(point_curve);

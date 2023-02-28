@@ -12,6 +12,7 @@ use fj_kernel::{
     services::Service,
 };
 use fj_math::{Aabb, Point};
+use itertools::Itertools;
 
 use super::Shape;
 
@@ -69,13 +70,18 @@ impl Shape for fj::Sketch {
                         })
                         .collect::<Vec<_>>();
 
-                    for (mut half_edge, route) in half_edges {
+                    for ((mut half_edge, route), (next_half_edge, _)) in
+                        half_edges.into_iter().circular_tuple_windows()
+                    {
                         match route {
                             fj::SketchSegmentRoute::Direct => {
                                 half_edge.write().update_as_line_segment();
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                half_edge.write().update_as_arc(angle.rad());
+                                half_edge.write().update_as_arc(
+                                    angle.rad(),
+                                    next_half_edge.read().start_vertex.clone(),
+                                );
                             }
                         }
                     }
