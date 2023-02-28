@@ -318,10 +318,7 @@ mod tests {
         let edge = face
             .exterior()
             .half_edges()
-            .find(|edge| {
-                let vertex = edge.start_vertex();
-                vertex.position() == Point::from([0., 0.])
-            })
+            .find(|edge| edge.start_position() == Point::from([0., 0.]))
             .unwrap();
         assert_eq!(
             intersection,
