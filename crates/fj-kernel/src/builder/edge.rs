@@ -99,15 +99,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let mut surface_vertex = self.start_vertex.clone();
         surface_vertex.write().position =
             Some(path.point_from_path_coords(a_curve));
+        self.end_vertex = surface_vertex;
 
-        for (vertex, point_curve) in self
-            .boundary
-            .each_mut_ext()
-            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
-            .zip_ext([a_curve, b_curve])
+        for (vertex, point_curve) in
+            self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
-            *vertex.0 = Some(point_curve);
-            *vertex.1 = surface_vertex.clone();
+            *vertex = Some(point_curve);
         }
 
         self.infer_global_form();
