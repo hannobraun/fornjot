@@ -94,6 +94,19 @@ To install Fornjot itself, you have the following options:
 
 While the Fornjot application is a graphical application that opens a window and displays a 3D view of your model, it can currently only be started from the command-line. The instructions below assume that you have the Fornjot application installed somewhere on your path, under the name `fj-app`.
 
+#### Mac OS
+If you download in [latest release](https://github.com/hannobraun/Fornjot/releases) binary, two problems need to be noticed when running on your local computer.
+1. The mac will prompt that "fj-app-x86_64-apple-arwin" cannot be opened because it is from an unknown developer.
+
+The solution is Open the Mac system preferences. In the preferences interface, click to open **security and privacy**. In the security and privacy interface, click **General**. In the call settings panel, click the **Still want to open** button. In the pop-up window, click the **Open** button.
+
+2. Failed to open the document "fj-app". Text encoding Unicode (UTF-8) is not applicable.
+
+The solution is enter the following command in the terminal, (we recommend changing the file name to fj-app)
+```shell
+chmod a+x fj-app
+```
+
 #### Via Nix
 
 There's a Nix [flake](https://nixos.wiki/wiki/Flakes) in the subdirectory `./nix` which contains a devshell environment (via `nix develop` or `nix-shell`) and the package `fj-app`.
