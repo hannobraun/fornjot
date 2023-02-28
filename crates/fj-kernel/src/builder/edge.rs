@@ -57,7 +57,10 @@ pub trait HalfEdgeBuilder {
     ///
     /// Updates the global form referenced by this half-edge, and also returns
     /// it.
-    fn infer_global_form(&mut self) -> Partial<GlobalEdge>;
+    fn infer_global_form(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Partial<GlobalEdge>;
 
     /// Infer the vertex positions (surface and global), if not already set
     fn infer_vertex_positions_if_necessary(
@@ -114,7 +117,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             *point_boundary = Some(point_curve);
         }
 
-        self.infer_global_form();
+        self.infer_global_form(self.start_vertex.clone());
 
         path
     }
@@ -154,7 +157,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 Some(path.point_from_path_coords(point_curve));
         }
 
-        self.infer_global_form();
+        self.infer_global_form(next_vertex);
     }
 
     fn update_as_line_segment_from_points(
@@ -204,15 +207,17 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             path
         };
 
-        self.infer_global_form();
+        self.infer_global_form(next_vertex);
 
         path
     }
 
-    fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
-        self.global_form.write().vertices =
-            [&self.start_vertex, &self.end_vertex]
-                .map(|vertex| vertex.read().global_form.clone());
+    fn infer_global_form(
+        &mut self,
+        next_vertex: Partial<SurfaceVertex>,
+    ) -> Partial<GlobalEdge> {
+        self.global_form.write().vertices = [&self.start_vertex, &next_vertex]
+            .map(|vertex| vertex.read().global_form.clone());
 
         self.global_form.clone()
     }
