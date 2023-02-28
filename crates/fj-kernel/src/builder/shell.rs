@@ -1,21 +1,9 @@
-use crate::{
-    objects::Face,
-    partial::{Partial, PartialShell},
-};
+use crate::partial::PartialShell;
 
 /// Builder API for [`PartialShell`]
 pub trait ShellBuilder {
-    /// Add a face to the shell
-    ///
-    /// The face will not be connected to any other faces that the shell might
-    /// already have.
-    fn add_face(&mut self) -> Partial<Face>;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl ShellBuilder for PartialShell {
-    fn add_face(&mut self) -> Partial<Face> {
-        let face = Partial::default();
-        self.faces.push(face.clone());
-        face
-    }
-}
+impl ShellBuilder for PartialShell {}

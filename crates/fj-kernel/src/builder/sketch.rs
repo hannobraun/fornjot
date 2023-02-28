@@ -1,18 +1,9 @@
-use crate::{
-    objects::Face,
-    partial::{Partial, PartialSketch},
-};
+use crate::partial::PartialSketch;
 
 /// Builder API for [`PartialSketch`]
 pub trait SketchBuilder {
-    /// Add a face to the sketch
-    fn add_face(&mut self) -> Partial<Face>;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl SketchBuilder for PartialSketch {
-    fn add_face(&mut self) -> Partial<Face> {
-        let face = Partial::default();
-        self.faces.extend([face.clone()]);
-        face
-    }
-}
+impl SketchBuilder for PartialSketch {}

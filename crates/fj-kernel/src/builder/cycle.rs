@@ -35,19 +35,6 @@ pub trait CycleBuilder {
         point: impl Into<Point<2>>,
     ) -> Partial<HalfEdge>;
 
-    /// Add a new half-edge that starts at the provided point
-    ///
-    /// Opens the cycle between the last and first edge, updates the last edge
-    /// to go the provided point, and adds a new half-edge from the provided
-    /// point the the first edge.
-    ///
-    /// If the cycle doesn't have any edges yet, the new edge connects to
-    /// itself, starting and ending at the provided point.
-    fn add_half_edge_from_global_point_to_start(
-        &mut self,
-        point: impl Into<Point<3>>,
-    ) -> Partial<HalfEdge>;
-
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
         &mut self,
@@ -132,21 +119,6 @@ impl CycleBuilder for PartialCycle {
     ) -> Partial<HalfEdge> {
         let mut half_edge = self.add_half_edge();
         half_edge.write().start_vertex.write().position = Some(point.into());
-        half_edge
-    }
-
-    fn add_half_edge_from_global_point_to_start(
-        &mut self,
-        point: impl Into<Point<3>>,
-    ) -> Partial<HalfEdge> {
-        let mut half_edge = self.add_half_edge();
-        half_edge
-            .write()
-            .start_vertex
-            .write()
-            .global_form
-            .write()
-            .position = Some(point.into());
         half_edge
     }
 

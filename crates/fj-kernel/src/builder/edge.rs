@@ -12,16 +12,6 @@ use crate::{
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
-    /// Update partial half-edge to represent the u-axis of the surface it is on
-    ///
-    /// Returns the updated path.
-    fn update_as_u_axis(&mut self) -> Curve;
-
-    /// Update partial curve to represent the v-axis of the surface it is on
-    ///
-    /// Returns the updated path.
-    fn update_as_v_axis(&mut self) -> Curve;
-
     /// Update partial half-edge to be a circle, from the given radius
     fn update_as_circle_from_radius(
         &mut self,
@@ -86,18 +76,6 @@ pub trait HalfEdgeBuilder {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn update_as_u_axis(&mut self) -> Curve {
-        let path = Curve::u_axis();
-        self.curve = Some(path.into());
-        path
-    }
-
-    fn update_as_v_axis(&mut self) -> Curve {
-        let path = Curve::v_axis();
-        self.curve = Some(path.into());
-        path
-    }
-
     fn update_as_circle_from_radius(
         &mut self,
         radius: impl Into<Scalar>,
