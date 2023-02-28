@@ -235,7 +235,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         for (boundary_point, surface_vertex) in self
             .boundary
-            .each_mut_ext()
             .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
         {
             let position_curve = boundary_point
