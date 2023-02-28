@@ -18,12 +18,14 @@ impl TransformObject for HalfEdge {
         // coordinates.
         let curve = self.curve();
         let boundary = self.boundary();
-        let [start_vertex, end_vertex] =
-            self.surface_vertices().map(|surface_vertex| {
-                surface_vertex
-                    .clone()
-                    .transform_with_cache(transform, objects, cache)
-            });
+        let start_vertex = self
+            .start_vertex()
+            .clone()
+            .transform_with_cache(transform, objects, cache);
+        let end_vertex = self
+            .end_vertex()
+            .clone()
+            .transform_with_cache(transform, objects, cache);
         let global_form = self
             .global_form()
             .clone()
