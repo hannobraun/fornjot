@@ -130,12 +130,7 @@ impl CycleBuilder for PartialCycle {
         point: impl Into<Point<2>>,
     ) -> Partial<HalfEdge> {
         let mut half_edge = self.add_half_edge();
-
-        {
-            let vertex = &mut half_edge.write().start_vertex;
-            vertex.write().position = Some(point.into());
-        }
-
+        half_edge.write().start_vertex.write().position = Some(point.into());
         half_edge
     }
 
@@ -144,12 +139,13 @@ impl CycleBuilder for PartialCycle {
         point: impl Into<Point<3>>,
     ) -> Partial<HalfEdge> {
         let mut half_edge = self.add_half_edge();
-
-        {
-            let vertex = &mut half_edge.write().start_vertex;
-            vertex.write().global_form.write().position = Some(point.into());
-        }
-
+        half_edge
+            .write()
+            .start_vertex
+            .write()
+            .global_form
+            .write()
+            .position = Some(point.into());
         half_edge
     }
 
