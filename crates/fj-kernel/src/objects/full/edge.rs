@@ -1,4 +1,3 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -47,7 +46,8 @@ use crate::{
 pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
-    surface_vertices: [Handle<SurfaceVertex>; 2],
+    start_vertex: Handle<SurfaceVertex>,
+    end_vertex: Handle<SurfaceVertex>,
     global_form: Handle<GlobalEdge>,
 }
 
@@ -59,10 +59,13 @@ impl HalfEdge {
         surface_vertices: [Handle<SurfaceVertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
+        let [start_vertex, end_vertex] = surface_vertices;
+
         Self {
             curve,
             boundary,
-            surface_vertices,
+            start_vertex,
+            end_vertex,
             global_form,
         }
     }
@@ -79,13 +82,12 @@ impl HalfEdge {
 
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
-        let [vertex, _] = self.surface_vertices.each_ref_ext();
-        vertex
+        &self.start_vertex
     }
 
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        self.surface_vertices.each_ref_ext()
+        [&self.start_vertex, &self.end_vertex]
     }
 
     /// Access the global form of the half-edge
