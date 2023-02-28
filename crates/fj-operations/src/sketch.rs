@@ -58,40 +58,27 @@ impl Shape for fj::Sketch {
                 let exterior = {
                     let mut cycle = PartialCycle::default();
 
-                    let mut line_segments = vec![];
-                    let mut arcs = vec![];
+                    let mut half_edges = Vec::new();
 
                     poly_chain.to_segments().into_iter().for_each(
                         |fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            match route {
-                                fj::SketchSegmentRoute::Direct => {
-                                    line_segments.push(
-                                        cycle
-                                            .add_half_edge_from_point_to_start(
-                                                endpoint,
-                                            ),
-                                    );
-                                }
-                                fj::SketchSegmentRoute::Arc { angle } => {
-                                    arcs.push((
-                                        cycle
-                                            .add_half_edge_from_point_to_start(
-                                                endpoint,
-                                            ),
-                                        angle,
-                                    ));
-                                }
-                            }
+                            let half_edge = cycle
+                                .add_half_edge_from_point_to_start(endpoint);
+                            half_edges.push((half_edge, route));
                         },
                     );
 
-                    line_segments.into_iter().for_each(|mut half_edge| {
-                        half_edge.write().update_as_line_segment();
-                    });
-                    arcs.into_iter().for_each(|(mut half_edge, angle)| {
-                        half_edge.write().update_as_arc(angle.rad())
-                    });
+                    for (mut half_edge, route) in half_edges {
+                        match route {
+                            fj::SketchSegmentRoute::Direct => {
+                                half_edge.write().update_as_line_segment();
+                            }
+                            fj::SketchSegmentRoute::Arc { angle } => {
+                                half_edge.write().update_as_arc(angle.rad());
+                            }
+                        }
+                    }
 
                     Partial::from_partial(cycle)
                 };
