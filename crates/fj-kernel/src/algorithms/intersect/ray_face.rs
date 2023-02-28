@@ -288,10 +288,10 @@ mod tests {
         let vertex = face
             .exterior()
             .half_edges()
-            .map(|half_edge| half_edge.start_vertex().clone())
-            .find(|surface_vertex| {
-                surface_vertex.position() == Point::from([-1., -1.])
+            .find(|half_edge| {
+                half_edge.start_vertex().position() == Point::from([-1., -1.])
             })
+            .map(|half_edge| half_edge.start_vertex().clone())
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
