@@ -183,14 +183,20 @@ mod tests {
 
         let a_to_b = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([a, b]);
+            half_edge.update_as_line_segment_from_points(
+                [a, b],
+                half_edge.end_vertex.clone(),
+            );
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
         };
         let b_to_a = {
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([b, a]);
+            half_edge.update_as_line_segment_from_points(
+                [b, a],
+                half_edge.end_vertex.clone(),
+            );
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)

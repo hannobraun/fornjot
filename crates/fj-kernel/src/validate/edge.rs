@@ -158,7 +158,10 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
+            half_edge.update_as_line_segment_from_points(
+                [[0., 0.], [1., 0.]],
+                half_edge.end_vertex.clone(),
+            );
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
@@ -203,7 +206,10 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
+            half_edge.update_as_line_segment_from_points(
+                [[0., 0.], [1., 0.]],
+                half_edge.end_vertex.clone(),
+            );
             half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
 
             half_edge.build(&mut services.objects)
