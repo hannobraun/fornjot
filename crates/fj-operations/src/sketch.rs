@@ -73,15 +73,17 @@ impl Shape for fj::Sketch {
                     for ((mut half_edge, route), (next_half_edge, _)) in
                         half_edges.into_iter().circular_tuple_windows()
                     {
+                        let next_vertex =
+                            next_half_edge.read().start_vertex.clone();
+
                         match route {
                             fj::SketchSegmentRoute::Direct => {
                                 half_edge.write().update_as_line_segment();
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                half_edge.write().update_as_arc(
-                                    angle.rad(),
-                                    next_half_edge.read().start_vertex.clone(),
-                                );
+                                half_edge
+                                    .write()
+                                    .update_as_arc(angle.rad(), next_vertex);
                             }
                         }
                     }
