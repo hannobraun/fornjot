@@ -46,7 +46,8 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     curve: Curve,
-    boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
+    boundary: [Point<1>; 2],
+    surface_vertices: [Handle<SurfaceVertex>; 2],
     global_form: Handle<GlobalEdge>,
 }
 
@@ -54,12 +55,14 @@ impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         curve: Curve,
-        boundary: [(Point<1>, Handle<SurfaceVertex>); 2],
+        boundary: [Point<1>; 2],
+        surface_vertices: [Handle<SurfaceVertex>; 2],
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             curve,
             boundary,
+            surface_vertices,
             global_form,
         }
     }
@@ -71,21 +74,18 @@ impl HalfEdge {
 
     /// Access the boundary points of the half-edge on the curve
     pub fn boundary(&self) -> [Point<1>; 2] {
-        self.boundary.each_ref_ext().map(|&(point, _)| point)
+        self.boundary
     }
 
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
-        let [vertex, _] =
-            self.boundary.each_ref_ext().map(|(_, vertex)| vertex);
+        let [vertex, _] = self.surface_vertices.each_ref_ext();
         vertex
     }
 
     /// Access the surface vertices that bound the half-edge
     pub fn surface_vertices(&self) -> [&Handle<SurfaceVertex>; 2] {
-        self.boundary
-            .each_ref_ext()
-            .map(|(_, surface_form)| surface_form)
+        self.surface_vertices.each_ref_ext()
     }
 
     /// Access the global form of the half-edge

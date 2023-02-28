@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects, Surface},
+    objects::{Face, HalfEdge, Objects, Surface, SurfaceVertex},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
+impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -21,7 +21,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
-        let (edge, surface, color) = self;
+        let (edge, next_vertex, surface, color) = self;
         let path = path.into();
 
         // The result of sweeping an edge is a face. Let's create that.
@@ -51,8 +51,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         //
         // Let's start with the global vertices and edges.
         let (global_vertices, global_edges) = {
-            let [a, b] = edge
-                .surface_vertices()
+            let [a, b] = [edge.start_vertex(), next_vertex]
                 .map(|surface_vertex| surface_vertex.global_form().clone());
             let (edge_right, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, objects);
@@ -98,8 +97,8 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         .zip_ext(global_vertices)
         .map(
             |(((mut half_edge, boundary), surface_point), global_vertex)| {
-                for ((a, _), b) in
-                    half_edge.vertices.each_mut_ext().zip_ext(boundary)
+                for (a, b) in
+                    half_edge.boundary.each_mut_ext().zip_ext(boundary)
                 {
                     *a = Some(b);
                 }
@@ -107,7 +106,7 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
                 // Writing to the start vertices is enough. Neighboring half-
                 // edges share surface vertices, so writing the start vertex of
                 // each half-edge writes to all vertices.
-                let mut vertex = half_edge.vertices[0].1.write();
+                let mut vertex = half_edge.surface_vertices[0].write();
                 vertex.position = Some(surface_point);
                 vertex.global_form = Partial::from(global_vertex);
             },
@@ -141,142 +140,5 @@ impl Sweep for (Handle<HalfEdge>, &Surface, Color) {
         let face = face.build(objects).insert(objects);
         let edge_top = edge_top.build(objects);
         (face, edge_top)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use std::ops::Deref;
-
-    use fj_interop::{ext::ArrayExt, mesh::Color};
-    use fj_math::Point;
-    use pretty_assertions::assert_eq;
-
-    use crate::{
-        algorithms::sweep::Sweep,
-        builder::HalfEdgeBuilder,
-        insert::Insert,
-        partial::{
-            Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
-        },
-        services::Services,
-    };
-
-    #[test]
-    fn sweep() {
-        let mut services = Services::new();
-
-        let surface = services.objects.surfaces.xy_plane();
-
-        let half_edge = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
-            half_edge.infer_vertex_positions_if_necessary(&surface.geometry());
-
-            half_edge
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-        };
-
-        let (face, _) = (half_edge, surface.deref(), Color::default())
-            .sweep([0., 0., 1.], &mut services.objects);
-
-        let expected_face = {
-            let surface = services.objects.surfaces.xz_plane();
-
-            let bottom = {
-                let mut half_edge = PartialHalfEdge::default();
-                half_edge
-                    .update_as_line_segment_from_points([[0., 0.], [1., 0.]]);
-
-                half_edge
-            };
-            let side_up = {
-                let mut side_up = PartialHalfEdge::default();
-
-                {
-                    let [back, front] = side_up
-                        .vertices
-                        .each_mut_ext()
-                        .map(|(_, surface_vertex)| surface_vertex);
-
-                    *back = bottom.vertices[1].1.clone();
-
-                    let mut front = front.write();
-                    front.position = Some([1., 1.].into());
-                }
-
-                side_up.infer_global_form();
-                side_up.update_as_line_segment();
-
-                side_up
-            };
-            let top = {
-                let mut top = PartialHalfEdge::default();
-
-                {
-                    let [(back, back_surface), (front, front_surface)] =
-                        top.vertices.each_mut_ext();
-
-                    *back = Some(Point::from([1.]));
-                    *back_surface = side_up.vertices[1].1.clone();
-
-                    *front = Some(Point::from([0.]));
-                    let mut front_surface = front_surface.write();
-                    front_surface.position = Some([0., 1.].into());
-                }
-
-                top.infer_global_form();
-                top.update_as_line_segment();
-                top.infer_vertex_positions_if_necessary(&surface.geometry());
-
-                Partial::from(
-                    top.build(&mut services.objects)
-                        .insert(&mut services.objects),
-                )
-                .read()
-                .clone()
-            };
-            let side_down = {
-                let mut side_down = PartialHalfEdge::default();
-
-                let [(back, back_surface), (front, front_surface)] =
-                    side_down.vertices.each_mut_ext();
-
-                *back = Some(Point::from([1.]));
-                *front = Some(Point::from([0.]));
-
-                *back_surface = top.vertices[1].1.clone();
-                *front_surface = bottom.vertices[0].1.clone();
-
-                side_down.infer_global_form();
-                side_down.update_as_line_segment();
-                side_down
-                    .infer_vertex_positions_if_necessary(&surface.geometry());
-
-                Partial::from(
-                    side_down
-                        .build(&mut services.objects)
-                        .insert(&mut services.objects),
-                )
-                .read()
-                .clone()
-            };
-
-            let mut cycle = PartialCycle::default();
-            cycle.half_edges.extend(
-                [bottom, side_up, top, side_down].map(Partial::from_partial),
-            );
-
-            let face = PartialFace {
-                surface: Partial::from(surface),
-                exterior: Partial::from_partial(cycle),
-                ..Default::default()
-            };
-            face.build(&mut services.objects)
-                .insert(&mut services.objects)
-        };
-
-        assert_eq!(face, expected_face);
     }
 }

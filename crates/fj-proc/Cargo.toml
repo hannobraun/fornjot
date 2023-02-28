@@ -22,8 +22,5 @@ version = "1.0.152"
 optional = true
 
 [dependencies.syn]
-version = "1.0.105"
+version = "1.0.109"
 features = ["full", "extra-traits"]
-
-[dev-dependencies]
-fj.workspace = true

@@ -160,10 +160,11 @@ mod tests {
             // cycle.
             {
                 let first_half_edge = half_edges.first_mut().unwrap();
-                let [first_vertex, _] = &mut first_half_edge.write().vertices;
+                let [first_vertex, _] =
+                    &mut first_half_edge.write().surface_vertices;
                 let surface_vertex =
-                    Partial::from_partial(first_vertex.1.read().clone());
-                first_vertex.1 = surface_vertex;
+                    Partial::from_partial(first_vertex.read().clone());
+                *first_vertex = surface_vertex;
             }
 
             let half_edges = half_edges
@@ -199,7 +200,7 @@ mod tests {
 
             // Update a single boundary position so it becomes wrong.
             if let Some(half_edge) = half_edges.first_mut() {
-                half_edge.write().vertices[0].0.replace(Point::from([-1.]));
+                half_edge.write().boundary[0].replace(Point::from([-1.]));
             }
 
             let half_edges = half_edges

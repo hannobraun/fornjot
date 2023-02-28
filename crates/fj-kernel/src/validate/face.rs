@@ -288,11 +288,10 @@ mod tests {
                     *surface_vertex = invalid.clone();
                 }
 
-                let boundary = boundary.zip_ext(surface_vertices);
-
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
+                    surface_vertices,
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)
