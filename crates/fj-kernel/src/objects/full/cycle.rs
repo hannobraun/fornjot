@@ -77,8 +77,7 @@ impl Cycle {
         let mut sum = Scalar::ZERO;
 
         for [a, b] in self.half_edges.as_slice().array_windows_ext() {
-            let [a, b] =
-                [a, b].map(|half_edge| half_edge.start_vertex().position());
+            let [a, b] = [a, b].map(|half_edge| half_edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);
         }
