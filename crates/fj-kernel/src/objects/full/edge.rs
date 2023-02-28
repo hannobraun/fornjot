@@ -80,7 +80,7 @@ impl HalfEdge {
     }
 
     /// Compute the surface position where the half-edge starts
-    pub fn start_surface_position(&self) -> Point<2> {
+    pub fn start_position(&self) -> Point<2> {
         self.start_vertex.position()
     }
 
