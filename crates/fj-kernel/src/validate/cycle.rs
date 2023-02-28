@@ -160,8 +160,7 @@ mod tests {
             // cycle.
             {
                 let first_half_edge = half_edges.first_mut().unwrap();
-                let [first_vertex, _] =
-                    &mut first_half_edge.write().surface_vertices;
+                let first_vertex = &mut first_half_edge.write().start_vertex;
                 let surface_vertex =
                     Partial::from_partial(first_vertex.read().clone());
                 *first_vertex = surface_vertex;

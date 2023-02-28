@@ -97,7 +97,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         let mut surface_vertex = {
-            let [vertex, _] = &mut self.surface_vertices;
+            let vertex = &mut self.start_vertex;
             vertex.clone()
         };
         surface_vertex.write().position =
@@ -106,7 +106,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point_curve) in self
             .boundary
             .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
+            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
             .zip_ext([a_curve, b_curve])
         {
             *vertex.0 = Some(point_curve);
@@ -123,12 +123,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let [start, end] = self.surface_vertices.each_ref_ext().map(|vertex| {
-            vertex
-                .read()
-                .position
-                .expect("Can't infer arc without surface position")
-        });
+        let [start, end] =
+            [&self.start_vertex, &self.end_vertex].map(|vertex| {
+                vertex
+                    .read()
+                    .position
+                    .expect("Can't infer arc without surface position")
+            });
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
@@ -141,7 +142,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for (vertex, point_curve) in self
             .boundary
             .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
+            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
             .zip_ext([a_curve, b_curve])
         {
             *vertex.0 = Some(point_curve);
@@ -157,7 +158,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         points: [impl Into<Point<2>>; 2],
     ) -> Curve {
         for (vertex, point) in
-            self.surface_vertices.each_mut_ext().zip_ext(points)
+            [&mut self.start_vertex, &mut self.end_vertex].zip_ext(points)
         {
             let mut surface_form = vertex.write();
             surface_form.position = Some(point.into());
@@ -169,7 +170,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_line_segment(&mut self) -> Curve {
         let boundary = self.boundary;
         let points_surface =
-            self.surface_vertices.each_ref_ext().map(|vertex| {
+            [&self.start_vertex, &self.end_vertex].map(|vertex| {
                 vertex
                     .read()
                     .position
@@ -202,10 +203,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     }
 
     fn infer_global_form(&mut self) -> Partial<GlobalEdge> {
-        self.global_form.write().vertices = self
-            .surface_vertices
-            .each_ref_ext()
-            .map(|vertex| vertex.read().global_form.clone());
+        self.global_form.write().vertices =
+            [&self.start_vertex, &self.end_vertex]
+                .map(|vertex| vertex.read().global_form.clone());
 
         self.global_form.clone()
     }
@@ -224,7 +224,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         for vertex in self
             .boundary
             .each_mut_ext()
-            .zip_ext(self.surface_vertices.each_mut_ext())
+            .zip_ext([&mut self.start_vertex, &mut self.end_vertex])
         {
             let position_curve = vertex
                 .0
@@ -337,10 +337,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let other = other.read();
 
-        for (this, other) in self
-            .surface_vertices
+        for (this, other) in [&mut self.start_vertex, &mut self.end_vertex]
             .iter_mut()
-            .zip(other.surface_vertices.iter().rev())
+            .zip([&other.end_vertex, &other.start_vertex])
         {
             this.write().global_form.write().position =
                 other.read().global_form.read().position;

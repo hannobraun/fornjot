@@ -103,26 +103,26 @@ impl CycleBuilder for PartialCycle {
 
         {
             let shared_surface_vertex = {
-                let [vertex, _] = &new_half_edge.read().surface_vertices;
+                let vertex = &new_half_edge.read().start_vertex;
                 vertex.clone()
             };
 
             let mut last_half_edge = last_half_edge.write();
 
-            let [_, vertex] = &mut last_half_edge.surface_vertices;
+            let vertex = &mut last_half_edge.end_vertex;
             *vertex = shared_surface_vertex;
             last_half_edge.infer_global_form();
         }
 
         {
             let shared_surface_vertex = {
-                let [vertex, _] = &first_half_edge.read().surface_vertices;
+                let vertex = &first_half_edge.read().start_vertex;
                 vertex.clone()
             };
 
             let mut new_half_edge = new_half_edge.write();
 
-            let [_, vertex] = &mut new_half_edge.surface_vertices;
+            let vertex = &mut new_half_edge.end_vertex;
             *vertex = shared_surface_vertex;
             new_half_edge.infer_global_form();
         }
@@ -138,7 +138,7 @@ impl CycleBuilder for PartialCycle {
         let mut half_edge = self.add_half_edge();
 
         {
-            let [vertex, _] = &mut half_edge.write().surface_vertices;
+            let vertex = &mut half_edge.write().start_vertex;
             vertex.write().position = Some(point.into());
         }
 
@@ -152,7 +152,7 @@ impl CycleBuilder for PartialCycle {
         let mut half_edge = self.add_half_edge();
 
         {
-            let [vertex, _] = &mut half_edge.write().surface_vertices;
+            let vertex = &mut half_edge.write().start_vertex;
             vertex.write().global_form.write().position = Some(point.into());
         }
 

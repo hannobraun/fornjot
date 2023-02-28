@@ -95,9 +95,12 @@ impl Sweep for Handle<Face> {
                 .connect_to_closed_edges(top_edges, &top_surface.geometry());
 
             for half_edge in &mut top_cycle.write().half_edges {
-                let mut half_edge = half_edge.write();
+                let half_edge = half_edge.write();
 
-                for surface_vertex in &mut half_edge.surface_vertices {
+                let start_vertex = &mut half_edge.start_vertex.clone();
+                let end_vertex = &mut half_edge.end_vertex.clone();
+
+                for surface_vertex in [start_vertex, end_vertex] {
                     let mut surface_vertex = surface_vertex.write();
                     let global_point =
                         surface_vertex.global_form.read().position;

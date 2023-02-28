@@ -44,7 +44,7 @@ impl FaceBuilder for PartialFace {
             .half_edges
             .iter()
             .map(|half_edge| {
-                let [surface_vertex, _] = &half_edge.read().surface_vertices;
+                let surface_vertex = &half_edge.read().start_vertex;
                 let global_position = surface_vertex
                     .read()
                     .global_form
@@ -107,14 +107,13 @@ impl FaceBuilder for PartialFace {
                         "Inferring undefined circles is not supported yet"
                     ),
                     MaybeCurve::UndefinedLine => {
-                        let points_surface = half_edge
-                            .surface_vertices
-                            .each_ref_ext()
-                            .map(|vertex| {
-                                vertex.read().position.expect(
+                        let points_surface =
+                            [&half_edge.start_vertex, &half_edge.end_vertex]
+                                .map(|vertex| {
+                                    vertex.read().position.expect(
                                     "Can't infer curve without surface points",
                                 )
-                            });
+                                });
                         let (line, points_curve) =
                             Curve::line_from_points(points_surface);
 
