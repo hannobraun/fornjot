@@ -256,10 +256,7 @@ mod tests {
         let edge = face
             .exterior()
             .half_edges()
-            .find(|edge| {
-                let vertex = edge.start_vertex();
-                vertex.position() == Point::from([-1., 1.])
-            })
+            .find(|edge| edge.start_position() == Point::from([-1., 1.]))
             .unwrap();
         assert_eq!(
             (&ray, &face).intersect(),
