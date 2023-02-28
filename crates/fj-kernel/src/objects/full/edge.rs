@@ -79,6 +79,11 @@ impl HalfEdge {
         self.boundary
     }
 
+    /// Compute the surface position where the half-edge starts
+    pub fn start_surface_position(&self) -> Point<2> {
+        self.start_vertex.position()
+    }
+
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
         &self.start_vertex
