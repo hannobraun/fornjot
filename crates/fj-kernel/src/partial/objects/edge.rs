@@ -25,6 +25,13 @@ pub struct PartialHalfEdge {
     pub global_form: Partial<GlobalEdge>,
 }
 
+impl PartialHalfEdge {
+    /// Compute the surface position where the half-edge starts
+    pub fn start_position(&self) -> Option<Point<2>> {
+        self.start_vertex.read().position
+    }
+}
+
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
