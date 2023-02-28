@@ -177,8 +177,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        builder::HalfEdgeBuilder,
-        partial::{PartialHalfEdge, PartialObject},
+        builder::{CycleBuilder, HalfEdgeBuilder},
+        partial::PartialCycle,
         services::Services,
     };
 
@@ -190,29 +190,28 @@ mod tests {
 
         let a = [0., 0.];
         let b = [1., 0.];
+        let c = [0., 1.];
 
         let a_to_b = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                [a, b],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let mut cycle = PartialCycle::default();
+
+            let [mut half_edge, next_half_edge, _] =
+                cycle.update_as_polygon_from_points([a, b, c]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
         };
         let b_to_a = {
-            let mut half_edge = PartialHalfEdge::default();
-            half_edge.update_as_line_segment_from_points(
-                [b, a],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let mut cycle = PartialCycle::default();
+
+            let [mut half_edge, next_half_edge, _] =
+                cycle.update_as_polygon_from_points([b, a, c]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
