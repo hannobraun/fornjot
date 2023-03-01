@@ -133,7 +133,7 @@ mod tests {
         objects::HalfEdge,
         partial::{Partial, PartialCycle},
         services::Services,
-        validate::Validate,
+        validate::{HalfEdgeValidationError, Validate, ValidationError},
     };
 
     #[test]
@@ -181,7 +181,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::HalfEdge(
+                HalfEdgeValidationError::GlobalVertexMismatch { .. }
+            ))
+        ));
 
         Ok(())
     }
@@ -217,7 +222,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::HalfEdge(
+                HalfEdgeValidationError::VerticesAreCoincident { .. }
+            ))
+        ));
 
         Ok(())
     }
