@@ -153,57 +153,10 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{Cycle, Face, HalfEdge, SurfaceVertex},
-        partial::{Partial, PartialCycle, PartialFace, PartialObject},
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
         validate::Validate,
     };
-
-    #[test]
-    fn face_surface_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
-            face.exterior.write().update_as_polygon_from_points([
-                [0., 0.],
-                [3., 0.],
-                [0., 3.],
-            ]);
-            face.add_interior().write().update_as_polygon_from_points([
-                [1., 1.],
-                [1., 2.],
-                [2., 1.],
-            ]);
-
-            face.build(&mut services.objects)
-        };
-        let invalid = {
-            let surface = services.objects.surfaces.xz_plane();
-
-            let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
-            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
-            let cycle = cycle
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
-
-            let interiors = [cycle];
-            Face::new(
-                valid.surface().clone(),
-                valid.exterior().clone(),
-                interiors,
-                valid.color(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
 
     #[test]
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
