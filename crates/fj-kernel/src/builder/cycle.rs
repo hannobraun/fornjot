@@ -92,17 +92,17 @@ impl CycleBuilder for PartialCycle {
         {
             let shared_surface_vertex =
                 new_half_edge.read().start_vertex.clone();
-
-            let mut last_half_edge = last_half_edge.write();
-            last_half_edge.infer_global_form(shared_surface_vertex);
+            last_half_edge
+                .write()
+                .infer_global_form(shared_surface_vertex);
         }
 
         {
             let shared_surface_vertex =
                 first_half_edge.read().start_vertex.clone();
-
-            let mut new_half_edge = new_half_edge.write();
-            new_half_edge.infer_global_form(shared_surface_vertex);
+            new_half_edge
+                .write()
+                .infer_global_form(shared_surface_vertex);
         }
 
         self.half_edges.push(new_half_edge.clone());
