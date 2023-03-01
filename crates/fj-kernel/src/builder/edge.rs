@@ -311,16 +311,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        let other = other.read();
         let other_prev = other_prev.read();
 
-        for (this, other) in [&mut self.start_vertex, &mut self.end_vertex]
-            .iter_mut()
-            .zip([&other_prev.start_vertex, &other.start_vertex])
-        {
-            this.write().global_form.write().position =
-                other.read().global_form.read().position;
-        }
+        self.start_vertex.write().global_form.write().position =
+            other_prev.start_vertex.read().global_form.read().position;
     }
 }
 
