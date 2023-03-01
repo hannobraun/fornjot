@@ -94,31 +94,29 @@ impl FaceValidationError {
     ) {
         for cycle in face.all_cycles() {
             for half_edge in cycle.half_edges() {
-                for surface_vertex in
-                    [half_edge.start_vertex(), half_edge.end_vertex()]
-                {
-                    let surface_position_as_global = face
-                        .surface()
-                        .geometry()
-                        .point_from_surface_coords(surface_vertex.position());
-                    let global_position =
-                        surface_vertex.global_form().position();
+                let surface_position_as_global =
+                    face.surface().geometry().point_from_surface_coords(
+                        half_edge.start_vertex().position(),
+                    );
+                let global_position =
+                    half_edge.start_vertex().global_form().position();
 
-                    let distance = surface_position_as_global
-                        .distance_to(&global_position);
+                let distance =
+                    surface_position_as_global.distance_to(&global_position);
 
-                    if distance > config.identical_max_distance {
-                        errors.push(
-                            Self::VertexPositionMismatch {
-                                surface_position: surface_vertex.position(),
-                                surface_position_as_global,
-                                global_position,
-                                distance,
-                                surface_vertex: surface_vertex.clone(),
-                            }
-                            .into(),
-                        );
-                    }
+                if distance > config.identical_max_distance {
+                    errors.push(
+                        Self::VertexPositionMismatch {
+                            surface_position: half_edge
+                                .start_vertex()
+                                .position(),
+                            surface_position_as_global,
+                            global_position,
+                            distance,
+                            surface_vertex: half_edge.start_vertex().clone(),
+                        }
+                        .into(),
+                    );
                 }
             }
         }
