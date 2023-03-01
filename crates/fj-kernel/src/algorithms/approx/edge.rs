@@ -231,10 +231,12 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::{HalfEdgeBuilder, SurfaceBuilder},
+        builder::{CycleBuilder, HalfEdgeBuilder, SurfaceBuilder},
         geometry::curve::GlobalPath,
         insert::Insert,
-        partial::{PartialHalfEdge, PartialObject, PartialSurface},
+        partial::{
+            PartialCycle, PartialHalfEdge, PartialObject, PartialSurface,
+        },
         services::Services,
     };
 
@@ -244,17 +246,16 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let half_edge = {
-            let mut half_edge = PartialHalfEdge::default();
+            let mut cycle = PartialCycle::default();
 
-            half_edge.update_as_line_segment_from_points(
-                [[1., 1.], [2., 1.]],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let [mut half_edge, next_half_edge, _] = cycle
+                .update_as_polygon_from_points([[1., 1.], [2., 1.], [1., 2.]]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
+            let half_edge = half_edge.read().clone();
             half_edge
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
@@ -277,17 +278,16 @@ mod tests {
         .build(&mut services.objects)
         .insert(&mut services.objects);
         let half_edge = {
-            let mut half_edge = PartialHalfEdge::default();
+            let mut cycle = PartialCycle::default();
 
-            half_edge.update_as_line_segment_from_points(
-                [[1., 1.], [2., 1.]],
-                half_edge.end_vertex.clone(),
-            );
-            half_edge.infer_vertex_positions_if_necessary(
+            let [mut half_edge, next_half_edge, _] = cycle
+                .update_as_polygon_from_points([[1., 1.], [2., 1.], [1., 2.]]);
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
+            let half_edge = half_edge.read().clone();
             half_edge
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
@@ -310,21 +310,20 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let half_edge = {
-            let mut half_edge = PartialHalfEdge::default();
+            let mut cycle = PartialCycle::default();
 
-            half_edge.update_as_line_segment_from_points(
-                [[0., 1.], [1., 1.]],
-                half_edge.end_vertex.clone(),
-            );
+            let [mut half_edge, next_half_edge, _] = cycle
+                .update_as_polygon_from_points([[0., 1.], [1., 1.], [1., 2.]]);
 
-            half_edge.boundary[0] = Some(range.boundary[0]);
-            half_edge.boundary[1] = Some(range.boundary[1]);
+            half_edge.write().boundary[0] = Some(range.boundary[0]);
+            half_edge.write().boundary[1] = Some(range.boundary[1]);
 
-            half_edge.infer_vertex_positions_if_necessary(
+            half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
+            let half_edge = half_edge.read().clone();
             half_edge
                 .build(&mut services.objects)
                 .insert(&mut services.objects)
