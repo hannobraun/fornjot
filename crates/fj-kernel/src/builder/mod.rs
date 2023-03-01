@@ -53,6 +53,14 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
     where
         F: FnMut(T) -> R;
 
+    /// Create a return value by mapping the implementing type
+    ///
+    /// Provides access to the (circular) next item.
+    fn map_with_prev<F, R>(self, f: F) -> Self::SameSize<R>
+    where
+        F: FnMut(T, T) -> R,
+        T: Clone;
+
     /// Create a return value with one more element
     fn map_plus_one<F, R>(self, item: R, f: F) -> Self::SizePlusOne<R>
     where
@@ -75,6 +83,25 @@ impl<T> ObjectArgument<T> for Vec<T> {
 
         for item in self {
             ret.push(f(item));
+        }
+
+        ret
+    }
+
+    fn map_with_prev<F, R>(self, mut f: F) -> Self::SameSize<R>
+    where
+        F: FnMut(T, T) -> R,
+        T: Clone,
+    {
+        let mut prev = Vec::new();
+        for i in 0..self.len() {
+            prev.push(self[(i + self.len() - 1) % self.len()].clone());
+        }
+
+        let mut ret = Vec::new();
+        for (i, item) in self.into_iter().enumerate() {
+            let prev = prev[i].clone();
+            ret.push(f(item, prev));
         }
 
         ret
@@ -110,6 +137,24 @@ macro_rules! impl_object_argument_for_arrays {
                     F: FnMut(T) -> R,
                 {
                     self.map(f)
+                }
+
+                fn map_with_prev<F, R>(self, mut f: F) -> Self::SameSize<R>
+                where
+                    F: FnMut(T, T) -> R,
+                    T: Clone,
+                {
+                    let prev: [_; $len] = array::from_fn(|i| {
+                        self[(i + self.len() - 1) % self.len()].clone()
+                    });
+
+                    let mut i = 0;
+                    self.map(|item| {
+                        let prev = prev[i].clone();
+                        i += 1;
+
+                        f(item, prev)
+                    })
                 }
 
                 fn map_plus_one<F, R>(self, item: R, mut f: F)
