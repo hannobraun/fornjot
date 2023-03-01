@@ -82,7 +82,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         self.start_vertex.write().position =
             Some(path.point_from_path_coords(a_curve));
-        self.end_vertex = self.start_vertex.clone();
 
         for (point_boundary, point_curve) in
             self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])

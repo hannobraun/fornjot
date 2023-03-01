@@ -219,13 +219,11 @@ mod tests {
                     half_edge.start_vertex().global_form().clone(),
                 )
                 .insert(&mut services.objects);
-                let end_vertex = start_vertex.clone();
 
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
                     start_vertex,
-                    end_vertex,
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)

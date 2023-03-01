@@ -25,7 +25,6 @@ impl Reverse for Handle<Cycle> {
                     current.curve(),
                     boundary,
                     next.start_vertex().clone(),
-                    current.start_vertex().clone(),
                     current.global_form().clone(),
                 )
                 .insert(objects)
