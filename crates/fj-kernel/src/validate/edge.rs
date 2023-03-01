@@ -175,7 +175,6 @@ mod tests {
                 valid.curve(),
                 valid.boundary(),
                 valid.start_vertex().clone(),
-                valid.end_vertex().clone(),
                 global_form,
             )
         };
@@ -216,7 +215,6 @@ mod tests {
                 valid.curve(),
                 boundary,
                 valid.start_vertex().clone(),
-                valid.end_vertex().clone(),
                 valid.global_form().clone(),
             )
         };

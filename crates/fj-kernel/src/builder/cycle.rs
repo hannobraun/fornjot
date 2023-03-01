@@ -92,21 +92,17 @@ impl CycleBuilder for PartialCycle {
         {
             let shared_surface_vertex =
                 new_half_edge.read().start_vertex.clone();
-
-            let mut last_half_edge = last_half_edge.write();
-
-            last_half_edge.end_vertex = shared_surface_vertex.clone();
-            last_half_edge.infer_global_form(shared_surface_vertex);
+            last_half_edge
+                .write()
+                .infer_global_form(shared_surface_vertex);
         }
 
         {
             let shared_surface_vertex =
                 first_half_edge.read().start_vertex.clone();
-
-            let mut new_half_edge = new_half_edge.write();
-
-            new_half_edge.end_vertex = shared_surface_vertex.clone();
-            new_half_edge.infer_global_form(shared_surface_vertex);
+            new_half_edge
+                .write()
+                .infer_global_form(shared_surface_vertex);
         }
 
         self.half_edges.push(new_half_edge.clone());
@@ -152,9 +148,9 @@ impl CycleBuilder for PartialCycle {
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
-        edges.map(|other| {
+        edges.map_with_prev(|other, prev| {
             let mut this = self.add_half_edge();
-            this.write().update_from_other_edge(&other, surface);
+            this.write().update_from_other_edge(&other, &prev, surface);
             this
         })
     }

@@ -18,9 +18,6 @@ pub struct PartialHalfEdge {
     /// The surface vertex where the half-edge starts
     pub start_vertex: Partial<SurfaceVertex>,
 
-    /// The surface vertex where the half-edge ends
-    pub end_vertex: Partial<SurfaceVertex>,
-
     /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
 }
@@ -46,10 +43,6 @@ impl PartialObject for PartialHalfEdge {
                 half_edge.start_vertex().clone(),
                 cache,
             ),
-            end_vertex: Partial::from_full(
-                half_edge.end_vertex().clone(),
-                cache,
-            ),
             global_form: Partial::from_full(
                 half_edge.global_form().clone(),
                 cache,
@@ -70,10 +63,9 @@ impl PartialObject for PartialHalfEdge {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
         let start_vertex = self.start_vertex.build(objects);
-        let end_vertex = self.end_vertex.build(objects);
         let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(curve, boundary, start_vertex, end_vertex, global_form)
+        HalfEdge::new(curve, boundary, start_vertex, global_form)
     }
 }
 
@@ -99,7 +91,6 @@ impl Default for PartialHalfEdge {
             curve,
             boundary: [None; 2],
             start_vertex,
-            end_vertex,
             global_form,
         }
     }

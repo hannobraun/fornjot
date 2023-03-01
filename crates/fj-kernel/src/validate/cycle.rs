@@ -15,7 +15,6 @@ impl Validate for Cycle {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        CycleValidationError::check_half_edge_connections(self, errors);
         CycleValidationError::check_half_edge_boundaries(self, config, errors);
     }
 }
@@ -69,26 +68,6 @@ pub enum CycleValidationError {
 }
 
 impl CycleValidationError {
-    fn check_half_edge_connections(
-        cycle: &Cycle,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for (a, b) in cycle.half_edges().circular_tuple_windows() {
-            let prev = a.end_vertex();
-            let next = b.start_vertex();
-
-            if prev.id() != next.id() {
-                errors.push(
-                    Self::HalfEdgeConnection {
-                        prev: prev.clone(),
-                        next: next.clone(),
-                    }
-                    .into(),
-                );
-            }
-        }
-    }
-
     fn check_half_edge_boundaries(
         cycle: &Cycle,
         config: &ValidationConfig,
@@ -137,52 +116,6 @@ mod tests {
         services::Services,
         validate::{CycleValidationError, Validate, ValidationError},
     };
-
-    #[test]
-    fn cycle_half_edge_connections() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
-            let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon_from_points([[0., 0.], [1., 0.], [0., 1.]]);
-            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
-            cycle.build(&mut services.objects)
-        };
-        let invalid = {
-            let mut half_edges = valid
-                .half_edges()
-                .map(|half_edge| Partial::from(half_edge.clone()))
-                .collect::<Vec<_>>();
-
-            // Sever connection between the last and first half-edge in the
-            // cycle.
-            {
-                let first_half_edge = half_edges.first_mut().unwrap();
-                let first_vertex = &mut first_half_edge.write().start_vertex;
-                let surface_vertex =
-                    Partial::from_partial(first_vertex.read().clone());
-                *first_vertex = surface_vertex;
-            }
-
-            let half_edges = half_edges
-                .into_iter()
-                .map(|half_edge| half_edge.build(&mut services.objects));
-
-            Cycle::new(half_edges)
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(matches!(
-            invalid.validate_and_return_first_error(),
-            Err(ValidationError::Cycle(
-                CycleValidationError::HalfEdgeConnection { .. }
-            ))
-        ));
-
-        Ok(())
-    }
 
     #[test]
     fn vertex_position_mismatch() -> anyhow::Result<()> {

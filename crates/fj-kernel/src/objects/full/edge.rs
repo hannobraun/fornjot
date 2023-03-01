@@ -47,7 +47,6 @@ pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
     start_vertex: Handle<SurfaceVertex>,
-    end_vertex: Handle<SurfaceVertex>,
     global_form: Handle<GlobalEdge>,
 }
 
@@ -57,14 +56,12 @@ impl HalfEdge {
         curve: Curve,
         boundary: [Point<1>; 2],
         start_vertex: Handle<SurfaceVertex>,
-        end_vertex: Handle<SurfaceVertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             curve,
             boundary,
             start_vertex,
-            end_vertex,
             global_form,
         }
     }
@@ -92,11 +89,6 @@ impl HalfEdge {
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<SurfaceVertex> {
         &self.start_vertex
-    }
-
-    /// Access the vertex from where this half-edge ends
-    pub fn end_vertex(&self) -> &Handle<SurfaceVertex> {
-        &self.end_vertex
     }
 
     /// Access the global form of the half-edge

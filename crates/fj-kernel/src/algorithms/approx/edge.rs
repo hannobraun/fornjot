@@ -357,7 +357,7 @@ mod tests {
             half_edge.update_as_circle_from_radius(1.);
             half_edge.infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.end_vertex.clone(),
+                half_edge.start_vertex.clone(),
             );
 
             half_edge

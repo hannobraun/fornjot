@@ -22,16 +22,12 @@ impl TransformObject for HalfEdge {
             .start_vertex()
             .clone()
             .transform_with_cache(transform, objects, cache);
-        let end_vertex = self
-            .end_vertex()
-            .clone()
-            .transform_with_cache(transform, objects, cache);
         let global_form = self
             .global_form()
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(curve, boundary, start_vertex, end_vertex, global_form)
+        Self::new(curve, boundary, start_vertex, global_form)
     }
 }
 

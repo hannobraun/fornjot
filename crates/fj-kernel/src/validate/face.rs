@@ -94,31 +94,29 @@ impl FaceValidationError {
     ) {
         for cycle in face.all_cycles() {
             for half_edge in cycle.half_edges() {
-                for surface_vertex in
-                    [half_edge.start_vertex(), half_edge.end_vertex()]
-                {
-                    let surface_position_as_global = face
-                        .surface()
-                        .geometry()
-                        .point_from_surface_coords(surface_vertex.position());
-                    let global_position =
-                        surface_vertex.global_form().position();
+                let surface_position_as_global =
+                    face.surface().geometry().point_from_surface_coords(
+                        half_edge.start_vertex().position(),
+                    );
+                let global_position =
+                    half_edge.start_vertex().global_form().position();
 
-                    let distance = surface_position_as_global
-                        .distance_to(&global_position);
+                let distance =
+                    surface_position_as_global.distance_to(&global_position);
 
-                    if distance > config.identical_max_distance {
-                        errors.push(
-                            Self::VertexPositionMismatch {
-                                surface_position: surface_vertex.position(),
-                                surface_position_as_global,
-                                global_position,
-                                distance,
-                                surface_vertex: surface_vertex.clone(),
-                            }
-                            .into(),
-                        );
-                    }
+                if distance > config.identical_max_distance {
+                    errors.push(
+                        Self::VertexPositionMismatch {
+                            surface_position: half_edge
+                                .start_vertex()
+                                .position(),
+                            surface_position_as_global,
+                            global_position,
+                            distance,
+                            surface_vertex: half_edge.start_vertex().clone(),
+                        }
+                        .into(),
+                    );
                 }
             }
         }
@@ -127,7 +125,6 @@ impl FaceValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::ext::ArrayExt;
     use fj_math::{Scalar, Vector};
 
     use crate::{
@@ -201,7 +198,7 @@ mod tests {
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.read().end_vertex.clone();
+            let next_vertex = half_edge.read().start_vertex.clone();
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
                 next_vertex,
@@ -217,29 +214,16 @@ mod tests {
                     .boundary()
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
-                let mut surface_vertices =
-                    [half_edge.start_vertex(), half_edge.end_vertex()]
-                        .map(Clone::clone);
-
-                let mut invalid = None;
-                for surface_vertex in surface_vertices.each_mut_ext() {
-                    let invalid = invalid.get_or_insert_with(|| {
-                        SurfaceVertex::new(
-                            [0., 1.],
-                            surface_vertex.global_form().clone(),
-                        )
-                        .insert(&mut services.objects)
-                    });
-                    *surface_vertex = invalid.clone();
-                }
-
-                let [start_vertex, end_vertex] = surface_vertices;
+                let start_vertex = SurfaceVertex::new(
+                    [0., 1.],
+                    half_edge.start_vertex().global_form().clone(),
+                )
+                .insert(&mut services.objects);
 
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
                     start_vertex,
-                    end_vertex,
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)
