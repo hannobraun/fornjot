@@ -311,10 +311,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        let other_prev = other_prev.read();
-
-        self.start_vertex.write().global_form.write().position =
-            other_prev.start_vertex.read().global_form.read().position;
+        self.start_vertex.write().global_form.write().position = other_prev
+            .read()
+            .start_vertex
+            .read()
+            .global_form
+            .read()
+            .position;
     }
 }
 
