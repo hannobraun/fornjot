@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{GlobalEdge, GlobalVertex, HalfEdge, Surface},
+    objects::{GlobalEdge, GlobalVertex, HalfEdge},
     storage::Handle,
 };
 
@@ -48,20 +48,6 @@ pub enum HalfEdgeValidationError {
 
         /// The half-edge
         half_edge: HalfEdge,
-    },
-
-    /// Mismatch between the surface's of the curve and surface form
-    #[error(
-        "Surface form of vertex must be defined on same surface as curve\n\
-        - `Surface` of curve: {curve_surface:#?}\n\
-        - `Surface` of surface form: {surface_form_surface:#?}"
-    )]
-    SurfaceMismatch {
-        /// The surface of the vertex' curve
-        curve_surface: Handle<Surface>,
-
-        /// The surface of the vertex' surface form
-        surface_form_surface: Handle<Surface>,
     },
 
     /// [`HalfEdge`]'s vertices are coincident

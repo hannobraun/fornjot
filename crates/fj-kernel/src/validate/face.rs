@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Winding};
 
 use crate::{
-    objects::{Cycle, Face, Surface, SurfaceVertex},
+    objects::{Face, SurfaceVertex},
     storage::Handle,
 };
 
@@ -21,24 +21,6 @@ impl Validate for Face {
 /// [`Face`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
-    /// [`Surface`] of an interior [`Cycle`] doesn't match [`Face`]'s `Surface`
-    #[error(
-        "`Surface` of an interior `Cycle` doesn't match `Face`'s `Surface`\n\
-        - `Surface` of the `Face`: {surface:#?}\n\
-        - Invalid interior `Cycle`: {interior:#?}\n\
-        - `Face`: {face:#?}"
-    )]
-    SurfaceMismatch {
-        /// The surface of the [`Face`]
-        surface: Handle<Surface>,
-
-        /// The invalid interior cycle of the [`Face`]
-        interior: Handle<Cycle>,
-
-        /// The face
-        face: Face,
-    },
-
     /// Interior of [`Face`] has invalid winding; must be opposite of exterior
     #[error(
         "Interior of `Face` has invalid winding; must be opposite of exterior\n\
