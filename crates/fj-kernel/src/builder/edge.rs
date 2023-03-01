@@ -64,6 +64,7 @@ pub trait HalfEdgeBuilder {
     fn update_from_other_edge(
         &mut self,
         other: &Partial<HalfEdge>,
+        other_prev: &Partial<HalfEdge>,
         surface: &SurfaceGeometry,
     );
 }
@@ -233,6 +234,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_from_other_edge(
         &mut self,
         other: &Partial<HalfEdge>,
+        other_prev: &Partial<HalfEdge>,
         surface: &SurfaceGeometry,
     ) {
         self.curve = other.read().curve.as_ref().and_then(|path| {
@@ -310,10 +312,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         });
 
         let other = other.read();
+        let other_prev = other_prev.read();
 
         for (this, other) in [&mut self.start_vertex, &mut self.end_vertex]
             .iter_mut()
-            .zip([&other.end_vertex, &other.start_vertex])
+            .zip([&other_prev.start_vertex, &other.start_vertex])
         {
             this.write().global_form.write().position =
                 other.read().global_form.read().position;

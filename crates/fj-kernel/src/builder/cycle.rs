@@ -152,9 +152,9 @@ impl CycleBuilder for PartialCycle {
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
-        edges.map(|other| {
+        edges.map_with_prev(|other, prev| {
             let mut this = self.add_half_edge();
-            this.write().update_from_other_edge(&other, surface);
+            this.write().update_from_other_edge(&other, &prev, surface);
             this
         })
     }
