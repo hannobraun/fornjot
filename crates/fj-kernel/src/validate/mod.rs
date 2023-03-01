@@ -23,6 +23,7 @@ use fj_math::Scalar;
 /// This trait is used automatically when inserting an object into a store.
 pub trait Validate: Sized {
     /// Validate the object using default config and return on first error
+    #[allow(clippy::result_large_err)]
     fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
         self.validate(&mut errors);
@@ -88,11 +89,11 @@ pub enum ValidationError {
 
     /// `Face` validation error
     #[error("`Face` validation error:\n{0}")]
-    Face(#[from] Box<FaceValidationError>),
+    Face(#[from] FaceValidationError),
 
     /// `HalfEdge` validation error
     #[error("`HalfEdge` validation error:\n{0}")]
-    HalfEdge(#[from] Box<HalfEdgeValidationError>),
+    HalfEdge(#[from] HalfEdgeValidationError),
 }
 
 impl From<Infallible> for ValidationError {

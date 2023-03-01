@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Winding};
 
 use crate::{
-    objects::{Cycle, Face, Surface, SurfaceVertex},
+    objects::{Face, SurfaceVertex},
     storage::Handle,
 };
 
@@ -21,24 +21,6 @@ impl Validate for Face {
 /// [`Face`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
-    /// [`Surface`] of an interior [`Cycle`] doesn't match [`Face`]'s `Surface`
-    #[error(
-        "`Surface` of an interior `Cycle` doesn't match `Face`'s `Surface`\n\
-        - `Surface` of the `Face`: {surface:#?}\n\
-        - Invalid interior `Cycle`: {interior:#?}\n\
-        - `Face`: {face:#?}"
-    )]
-    SurfaceMismatch {
-        /// The surface of the [`Face`]
-        surface: Handle<Surface>,
-
-        /// The invalid interior cycle of the [`Face`]
-        interior: Handle<Cycle>,
-
-        /// The face
-        face: Face,
-    },
-
     /// Interior of [`Face`] has invalid winding; must be opposite of exterior
     #[error(
         "Interior of `Face` has invalid winding; must be opposite of exterior\n\
@@ -94,11 +76,11 @@ impl FaceValidationError {
 
             if exterior_winding == interior_winding {
                 errors.push(
-                    Box::new(Self::InvalidInteriorWinding {
+                    Self::InvalidInteriorWinding {
                         exterior_winding,
                         interior_winding,
                         face: face.clone(),
-                    })
+                    }
                     .into(),
                 );
             }
@@ -127,13 +109,13 @@ impl FaceValidationError {
 
                     if distance > config.identical_max_distance {
                         errors.push(
-                            Box::new(Self::VertexPositionMismatch {
+                            Self::VertexPositionMismatch {
                                 surface_position: surface_vertex.position(),
                                 surface_position_as_global,
                                 global_position,
                                 distance,
                                 surface_vertex: surface_vertex.clone(),
-                            })
+                            }
                             .into(),
                         );
                     }
@@ -153,57 +135,10 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{Cycle, Face, HalfEdge, SurfaceVertex},
-        partial::{Partial, PartialCycle, PartialFace, PartialObject},
+        partial::{Partial, PartialFace, PartialObject},
         services::Services,
-        validate::Validate,
+        validate::{FaceValidationError, Validate, ValidationError},
     };
-
-    #[test]
-    fn face_surface_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
-            face.exterior.write().update_as_polygon_from_points([
-                [0., 0.],
-                [3., 0.],
-                [0., 3.],
-            ]);
-            face.add_interior().write().update_as_polygon_from_points([
-                [1., 1.],
-                [1., 2.],
-                [2., 1.],
-            ]);
-
-            face.build(&mut services.objects)
-        };
-        let invalid = {
-            let surface = services.objects.surfaces.xz_plane();
-
-            let mut cycle = PartialCycle::default();
-            cycle.update_as_polygon_from_points([[1., 1.], [1., 2.], [2., 1.]]);
-            cycle.infer_vertex_positions_if_necessary(&surface.geometry());
-            let cycle = cycle
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
-
-            let interiors = [cycle];
-            Face::new(
-                valid.surface().clone(),
-                valid.exterior().clone(),
-                interiors,
-                valid.color(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
-
-        Ok(())
-    }
 
     #[test]
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
@@ -242,7 +177,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::Face(
+                FaceValidationError::InvalidInteriorWinding { .. }
+            ))
+        ));
 
         Ok(())
     }
@@ -317,7 +257,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::Face(
+                FaceValidationError::VertexPositionMismatch { .. }
+            ))
+        ));
 
         Ok(())
     }

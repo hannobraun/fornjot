@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{GlobalEdge, GlobalVertex, HalfEdge, Surface},
+    objects::{GlobalEdge, GlobalVertex, HalfEdge},
     storage::Handle,
 };
 
@@ -50,20 +50,6 @@ pub enum HalfEdgeValidationError {
         half_edge: HalfEdge,
     },
 
-    /// Mismatch between the surface's of the curve and surface form
-    #[error(
-        "Surface form of vertex must be defined on same surface as curve\n\
-        - `Surface` of curve: {curve_surface:#?}\n\
-        - `Surface` of surface form: {surface_form_surface:#?}"
-    )]
-    SurfaceMismatch {
-        /// The surface of the vertex' curve
-        curve_surface: Handle<Surface>,
-
-        /// The surface of the vertex' surface form
-        surface_form_surface: Handle<Surface>,
-    },
-
     /// [`HalfEdge`]'s vertices are coincident
     #[error(
         "Vertices of `HalfEdge` on curve are coincident\n\
@@ -106,11 +92,11 @@ impl HalfEdgeValidationError {
 
         if matching_global_vertex.is_none() {
             errors.push(
-                Box::new(Self::GlobalVertexMismatch {
+                Self::GlobalVertexMismatch {
                     global_vertex_from_half_edge,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
-                })
+                }
                 .into(),
             );
         }
@@ -126,12 +112,12 @@ impl HalfEdgeValidationError {
 
         if distance < config.distinct_min_distance {
             errors.push(
-                Box::new(Self::VerticesAreCoincident {
+                Self::VerticesAreCoincident {
                     back_position,
                     front_position,
                     distance,
                     half_edge: half_edge.clone(),
-                })
+                }
                 .into(),
             );
         }
@@ -147,7 +133,7 @@ mod tests {
         objects::HalfEdge,
         partial::{Partial, PartialCycle},
         services::Services,
-        validate::Validate,
+        validate::{HalfEdgeValidationError, Validate, ValidationError},
     };
 
     #[test]
@@ -195,7 +181,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::HalfEdge(
+                HalfEdgeValidationError::GlobalVertexMismatch { .. }
+            ))
+        ));
 
         Ok(())
     }
@@ -231,7 +222,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::HalfEdge(
+                HalfEdgeValidationError::VerticesAreCoincident { .. }
+            ))
+        ));
 
         Ok(())
     }

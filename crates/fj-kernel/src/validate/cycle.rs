@@ -135,7 +135,7 @@ mod tests {
         objects::Cycle,
         partial::{Partial, PartialCycle, PartialObject},
         services::Services,
-        validate::Validate,
+        validate::{CycleValidationError, Validate, ValidationError},
     };
 
     #[test]
@@ -174,7 +174,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::Cycle(
+                CycleValidationError::HalfEdgeConnection { .. }
+            ))
+        ));
 
         Ok(())
     }
@@ -210,7 +215,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(invalid.validate_and_return_first_error().is_err());
+        assert!(matches!(
+            invalid.validate_and_return_first_error(),
+            Err(ValidationError::Cycle(
+                CycleValidationError::HalfEdgeBoundaryMismatch { .. }
+            ))
+        ));
 
         Ok(())
     }
