@@ -60,7 +60,7 @@ impl ShapeProcessor {
 pub enum Error {
     /// Error converting to shape
     #[error("Error converting to shape")]
-    ToShape(#[from] ValidationError),
+    ToShape(#[from] Box<ValidationError>),
 
     /// Model has zero size
     #[error("Model has zero size")]
