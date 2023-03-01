@@ -76,11 +76,11 @@ impl FaceValidationError {
 
             if exterior_winding == interior_winding {
                 errors.push(
-                    Box::new(Self::InvalidInteriorWinding {
+                    Self::InvalidInteriorWinding {
                         exterior_winding,
                         interior_winding,
                         face: face.clone(),
-                    })
+                    }
                     .into(),
                 );
             }
@@ -109,13 +109,13 @@ impl FaceValidationError {
 
                     if distance > config.identical_max_distance {
                         errors.push(
-                            Box::new(Self::VertexPositionMismatch {
+                            Self::VertexPositionMismatch {
                                 surface_position: surface_vertex.position(),
                                 surface_position_as_global,
                                 global_position,
                                 distance,
                                 surface_vertex: surface_vertex.clone(),
-                            })
+                            }
                             .into(),
                         );
                     }

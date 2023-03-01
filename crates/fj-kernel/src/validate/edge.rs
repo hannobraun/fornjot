@@ -92,11 +92,11 @@ impl HalfEdgeValidationError {
 
         if matching_global_vertex.is_none() {
             errors.push(
-                Box::new(Self::GlobalVertexMismatch {
+                Self::GlobalVertexMismatch {
                     global_vertex_from_half_edge,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
-                })
+                }
                 .into(),
             );
         }
@@ -112,12 +112,12 @@ impl HalfEdgeValidationError {
 
         if distance < config.distinct_min_distance {
             errors.push(
-                Box::new(Self::VerticesAreCoincident {
+                Self::VerticesAreCoincident {
                     back_position,
                     front_position,
                     distance,
                     half_edge: half_edge.clone(),
-                })
+                }
                 .into(),
             );
         }
