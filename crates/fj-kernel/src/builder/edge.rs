@@ -142,8 +142,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) -> Curve {
         let boundary = self.boundary;
         let points_surface = [
-            &self.start_position(),
-            &next_half_edge.read().start_position(),
+            self.start_position(),
+            next_half_edge.read().start_position(),
         ]
         .map(|position| {
             position.expect("Can't infer line segment without surface position")
