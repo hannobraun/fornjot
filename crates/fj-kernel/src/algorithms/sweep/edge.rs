@@ -119,7 +119,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for (mut edge, next) in [
+        for (mut edge, next_half_edge) in [
             edge_bottom.clone(),
             edge_up.clone(),
             edge_top.clone(),
@@ -132,14 +132,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
                 .read()
                 .start_position()
                 .expect("Can't infer line segment without surface position");
-            let end = next
+            let end = next_half_edge
                 .read()
                 .start_position()
                 .expect("Can't infer line segment without surface position");
 
             edge.write().update_as_line_segment(start, end);
             edge.write()
-                .infer_global_form(next.read().start_vertex.clone());
+                .infer_global_form(next_half_edge.read().start_vertex.clone());
         }
 
         // Finally, we can make sure that all edges refer to the correct global
