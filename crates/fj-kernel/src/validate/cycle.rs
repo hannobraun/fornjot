@@ -22,20 +22,6 @@ impl Validate for Cycle {
 /// [`Cycle`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum CycleValidationError {
-    /// Half-edges are not connected
-    #[error(
-        "`HalfEdge`s of `Cycle` are not connected\n\
-        - Front vertex of previous `HalfEdge`: {prev:#?}\n\
-        - Back vertex of next `HalfEdge`: {next:#?}"
-    )]
-    HalfEdgeConnection {
-        /// The front vertex of the previous half-edge
-        prev: Handle<SurfaceVertex>,
-
-        /// The back vertex of the next half-edge
-        next: Handle<SurfaceVertex>,
-    },
-
     /// Mismatch between half-edge boundary and surface vertex position
     #[error(
         "Half-edge boundary on curve doesn't match surface vertex position\n\
