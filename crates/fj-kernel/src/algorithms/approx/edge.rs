@@ -355,9 +355,10 @@ mod tests {
             let mut half_edge = PartialHalfEdge::default();
 
             half_edge.update_as_circle_from_radius(1.);
+            let next_vertex = half_edge.start_vertex.clone();
             half_edge.infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.start_vertex.clone(),
+                next_vertex,
             );
 
             half_edge
