@@ -81,12 +81,12 @@ impl HalfEdgeValidationError {
             .vertices()
             .access_in_normalized_order();
 
-        let matching_global_vertex =
+        let matching_vertex =
             vertices_from_global_form.iter().find(|global_vertex| {
                 global_vertex.id() == vertex_from_half_edge.id()
             });
 
-        if matching_global_vertex.is_none() {
+        if matching_vertex.is_none() {
             errors.push(
                 Self::VertexMismatch {
                     vertex_from_half_edge,
