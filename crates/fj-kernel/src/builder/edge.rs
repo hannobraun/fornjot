@@ -6,7 +6,7 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex},
+    objects::{GlobalEdge, GlobalVertex, HalfEdge},
     partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -44,7 +44,7 @@ pub trait HalfEdgeBuilder {
     /// it.
     fn infer_global_form(
         &mut self,
-        next_vertex: Partial<SurfaceVertex>,
+        next_vertex: Partial<GlobalVertex>,
     ) -> Partial<GlobalEdge>;
 
     /// Infer the vertex positions (surface and global), if not already set
@@ -88,7 +88,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             *point_boundary = Some(point_curve);
         }
 
-        let next_vertex = self.start_vertex.clone();
+        let next_vertex = self.start_vertex.read().global_form.clone();
         self.infer_global_form(next_vertex);
 
         path
@@ -153,10 +153,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn infer_global_form(
         &mut self,
-        next_vertex: Partial<SurfaceVertex>,
+        next_vertex: Partial<GlobalVertex>,
     ) -> Partial<GlobalEdge> {
-        self.global_form.write().vertices = [&self.start_vertex, &next_vertex]
-            .map(|vertex| vertex.read().global_form.clone());
+        self.global_form.write().vertices =
+            [&self.start_vertex.read().global_form, &next_vertex]
+                .map(|vertex| vertex.clone());
 
         self.global_form.clone()
     }
