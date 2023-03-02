@@ -134,7 +134,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
+    fn vertex_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
