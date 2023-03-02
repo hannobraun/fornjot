@@ -75,9 +75,13 @@ impl Shape for fj::Sketch {
                     {
                         match route {
                             fj::SketchSegmentRoute::Direct => {
+                                let start = half_edge.read().start_position();
                                 let end =
                                     next_half_edge.read().start_position();
-                                half_edge.write().update_as_line_segment(end);
+
+                                half_edge
+                                    .write()
+                                    .update_as_line_segment(start, end);
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
                                 half_edge

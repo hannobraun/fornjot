@@ -128,9 +128,10 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         .into_iter()
         .circular_tuple_windows()
         {
+            let start = edge.read().start_position();
             let end = next.read().start_position();
 
-            edge.write().update_as_line_segment(end);
+            edge.write().update_as_line_segment(start, end);
             edge.write()
                 .infer_global_form(next.read().start_vertex.clone());
         }
