@@ -185,7 +185,7 @@ mod tests {
     }
 
     #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
+    fn vertex_position_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
