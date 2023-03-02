@@ -1,25 +1,5 @@
 use fj_math::Point;
 
-use crate::storage::Handle;
-
-/// A vertex, defined in surface (2D) coordinates
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct SurfaceVertex {
-    global_form: Handle<GlobalVertex>,
-}
-
-impl SurfaceVertex {
-    /// Construct a new instance of `SurfaceVertex`
-    pub fn new(global_form: Handle<GlobalVertex>) -> Self {
-        Self { global_form }
-    }
-
-    /// Access the global form of the vertex
-    pub fn global_form(&self) -> &Handle<GlobalVertex> {
-        &self.global_form
-    }
-}
-
 /// A vertex, defined in global (3D) coordinates
 ///
 /// This struct exists to distinguish between vertices and points at the type

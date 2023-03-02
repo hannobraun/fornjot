@@ -3,7 +3,7 @@ use std::any::Any;
 use crate::{
     objects::{
         Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
-        Sketch, Solid, Surface, SurfaceVertex,
+        Sketch, Solid, Surface,
     },
     storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
@@ -117,7 +117,6 @@ object!(
     Sketch, "sketch", sketches;
     Solid, "solid", solids;
     Surface, "surface", surfaces;
-    SurfaceVertex, "surface vertex", surface_vertices;
 );
 
 /// The form that an object can take
