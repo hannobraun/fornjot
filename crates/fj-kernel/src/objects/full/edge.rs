@@ -191,7 +191,12 @@ mod tests {
                 cycle.update_as_polygon_from_points([a, b, c]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+                next_half_edge
+                    .read()
+                    .start_vertex
+                    .read()
+                    .global_form
+                    .clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -203,7 +208,12 @@ mod tests {
                 cycle.update_as_polygon_from_points([b, a, c]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+                next_half_edge
+                    .read()
+                    .start_vertex
+                    .read()
+                    .global_form
+                    .clone(),
             );
 
             half_edge.build(&mut services.objects)

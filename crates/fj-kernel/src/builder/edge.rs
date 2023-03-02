@@ -6,7 +6,7 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{GlobalEdge, HalfEdge, SurfaceVertex},
+    objects::{GlobalEdge, GlobalVertex, HalfEdge, SurfaceVertex},
     partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
 };
 
@@ -51,7 +51,7 @@ pub trait HalfEdgeBuilder {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
-        next_vertex: Partial<SurfaceVertex>,
+        next_vertex: Partial<GlobalVertex>,
     );
 
     /// Update this edge from another
@@ -163,7 +163,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
-        next_vertex: Partial<SurfaceVertex>,
+        next_vertex: Partial<GlobalVertex>,
     ) {
         let path = self
             .curve
@@ -172,21 +172,20 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("Can't infer vertex positions with undefined path");
         };
 
-        for (boundary_point, mut vertex) in self
-            .boundary
-            .zip_ext([self.start_vertex.clone(), next_vertex])
-        {
+        for (boundary_point, mut vertex) in self.boundary.zip_ext([
+            self.start_vertex.read().global_form.clone(),
+            next_vertex,
+        ]) {
             let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
             let position_surface = path.point_from_path_coords(position_curve);
 
             // Infer global position, if not available.
-            let position_global = vertex.read().global_form.read().position;
+            let position_global = vertex.read().position;
             if position_global.is_none() {
                 let position_global =
                     surface.point_from_surface_coords(position_surface);
-                vertex.write().global_form.write().position =
-                    Some(position_global);
+                vertex.write().position = Some(position_global);
             }
         }
     }

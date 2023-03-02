@@ -207,7 +207,8 @@ mod tests {
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.read().start_vertex.clone();
+            let next_vertex =
+                half_edge.read().start_vertex.read().global_form.clone();
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
                 next_vertex,

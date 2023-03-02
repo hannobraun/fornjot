@@ -138,7 +138,12 @@ impl CycleBuilder for PartialCycle {
         for (mut half_edge, next_half_edge) in
             self.half_edges.iter().cloned().circular_tuple_windows()
         {
-            let next_vertex = next_half_edge.read().start_vertex.clone();
+            let next_vertex = next_half_edge
+                .read()
+                .start_vertex
+                .read()
+                .global_form
+                .clone();
             half_edge
                 .write()
                 .infer_vertex_positions_if_necessary(surface, next_vertex);

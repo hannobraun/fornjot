@@ -252,7 +252,12 @@ mod tests {
                 .update_as_polygon_from_points([[1., 1.], [2., 1.], [1., 2.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+                next_half_edge
+                    .read()
+                    .start_vertex
+                    .read()
+                    .global_form
+                    .clone(),
             );
 
             let half_edge = half_edge.read().clone();
@@ -284,7 +289,12 @@ mod tests {
                 .update_as_polygon_from_points([[1., 1.], [2., 1.], [1., 2.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+                next_half_edge
+                    .read()
+                    .start_vertex
+                    .read()
+                    .global_form
+                    .clone(),
             );
 
             let half_edge = half_edge.read().clone();
@@ -320,7 +330,12 @@ mod tests {
 
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+                next_half_edge
+                    .read()
+                    .start_vertex
+                    .read()
+                    .global_form
+                    .clone(),
             );
 
             let half_edge = half_edge.read().clone();
@@ -355,7 +370,7 @@ mod tests {
             let mut half_edge = PartialHalfEdge::default();
 
             half_edge.update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.start_vertex.clone();
+            let next_vertex = half_edge.start_vertex.read().global_form.clone();
             half_edge.infer_vertex_positions_if_necessary(
                 &surface.geometry(),
                 next_vertex,
