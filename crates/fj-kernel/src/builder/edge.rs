@@ -98,7 +98,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn update_as_arc(
         &mut self,
         angle_rad: impl Into<Scalar>,
-        mut next_half_edge: Partial<HalfEdge>,
+        next_half_edge: Partial<HalfEdge>,
     ) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
@@ -119,19 +119,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
+        self.start_vertex.write().position =
+            Some(path.point_from_path_coords(a_curve));
 
-        for ((point_boundary, surface_vertex), point_curve) in self
-            .boundary
-            .each_mut_ext()
-            .zip_ext([
-                &mut self.start_vertex,
-                &mut next_half_edge.write().start_vertex,
-            ])
-            .zip_ext([a_curve, b_curve])
+        for (point_boundary, point_curve) in
+            self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
             *point_boundary = Some(point_curve);
-            surface_vertex.write().position =
-                Some(path.point_from_path_coords(point_curve));
         }
     }
 
