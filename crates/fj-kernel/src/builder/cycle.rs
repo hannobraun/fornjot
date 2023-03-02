@@ -124,11 +124,11 @@ impl CycleBuilder for PartialCycle {
         let half_edges =
             points.map(|point| self.add_half_edge_from_point_to_start(point));
 
-        for (mut half_edge, next) in
+        for (mut half_edge, next_half_edge) in
             self.half_edges.iter().cloned().circular_tuple_windows()
         {
             let start = half_edge.read().start_position();
-            let end = next.read().start_position();
+            let end = next_half_edge.read().start_position();
 
             half_edge.write().update_as_line_segment(start, end);
         }
