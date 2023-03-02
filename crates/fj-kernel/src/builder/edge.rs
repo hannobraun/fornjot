@@ -163,7 +163,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn infer_vertex_positions_if_necessary(
         &mut self,
         surface: &SurfaceGeometry,
-        mut next_vertex: Partial<SurfaceVertex>,
+        next_vertex: Partial<SurfaceVertex>,
     ) {
         let path = self
             .curve
@@ -172,9 +172,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("Can't infer vertex positions with undefined path");
         };
 
-        for (boundary_point, vertex) in self
+        for (boundary_point, mut vertex) in self
             .boundary
-            .zip_ext([&mut self.start_vertex, &mut next_vertex])
+            .zip_ext([self.start_vertex.clone(), next_vertex])
         {
             let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
