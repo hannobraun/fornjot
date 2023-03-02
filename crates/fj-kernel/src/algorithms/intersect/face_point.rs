@@ -4,7 +4,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    objects::{Face, HalfEdge, SurfaceVertex},
+    objects::{Face, HalfEdge},
     storage::Handle,
 };
 
@@ -51,13 +51,13 @@ impl Intersect for (&Handle<Face>, &Point<2>) {
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = half_edge.start_vertex().clone();
+                        let vertex = half_edge.start_position();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = next_half_edge.start_vertex().clone();
+                        let vertex = next_half_edge.start_position();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -128,7 +128,7 @@ pub enum FacePointIntersection {
     PointIsOnEdge(Handle<HalfEdge>),
 
     /// The point is coincident with a vertex
-    PointIsOnVertex(Handle<SurfaceVertex>),
+    PointIsOnVertex(Point<2>),
 }
 
 #[cfg(test)]
@@ -352,7 +352,7 @@ mod tests {
             .find(|half_edge| {
                 half_edge.start_position() == Point::from([1., 0.])
             })
-            .map(|half_edge| half_edge.start_vertex().clone())
+            .map(|half_edge| half_edge.start_position())
             .unwrap();
         assert_eq!(
             intersection,
