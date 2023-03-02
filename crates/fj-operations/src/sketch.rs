@@ -73,15 +73,12 @@ impl Shape for fj::Sketch {
                     for ((mut half_edge, route), (next_half_edge, _)) in
                         half_edges.into_iter().circular_tuple_windows()
                     {
+                        let start = half_edge.read().start_position().unwrap();
+                        let end =
+                            next_half_edge.read().start_position().unwrap();
+
                         match route {
                             fj::SketchSegmentRoute::Direct => {
-                                let start =
-                                    half_edge.read().start_position().unwrap();
-                                let end = next_half_edge
-                                    .read()
-                                    .start_position()
-                                    .unwrap();
-
                                 half_edge
                                     .write()
                                     .update_as_line_segment(start, end);
