@@ -52,8 +52,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<GlobalVertex>, &Surface, Color) {
         //
         // Let's start with the global vertices and edges.
         let (global_vertices, global_edges) = {
-            let [a, b] = [edge.start_vertex().global_form(), next_vertex]
-                .map(Clone::clone);
+            let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
             let (edge_right, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, objects);
             let (edge_left, [_, d]) =
@@ -103,8 +102,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<GlobalVertex>, &Surface, Color) {
             // Writing to the start vertices is enough. Neighboring half-
             // edges share surface vertices, so writing the start vertex of
             // each half-edge writes to all vertices.
-            let mut vertex = half_edge.start_vertex.write();
-            vertex.global_form = Partial::from(global_vertex);
+            half_edge.start_vertex = Partial::from(global_vertex);
         });
 
         // With the vertices set, we can now update the curves.
@@ -124,14 +122,9 @@ impl Sweep for (Handle<HalfEdge>, &Handle<GlobalVertex>, &Surface, Color) {
         .circular_tuple_windows()
         {
             half_edge.write().update_as_line_segment(start, end);
-            half_edge.write().infer_global_form(
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
-            );
+            half_edge
+                .write()
+                .infer_global_form(next_half_edge.read().start_vertex.clone());
         }
 
         // Finally, we can make sure that all edges refer to the correct global

@@ -73,19 +73,15 @@ impl CycleBuilder for PartialCycle {
 
         {
             let shared_surface_vertex =
-                new_half_edge.read().start_vertex.read().global_form.clone();
+                new_half_edge.read().start_vertex.clone();
             last_half_edge
                 .write()
                 .infer_global_form(shared_surface_vertex);
         }
 
         {
-            let shared_surface_vertex = first_half_edge
-                .read()
-                .start_vertex
-                .read()
-                .global_form
-                .clone();
+            let shared_surface_vertex =
+                first_half_edge.read().start_vertex.clone();
             new_half_edge
                 .write()
                 .infer_global_form(shared_surface_vertex);
@@ -142,12 +138,7 @@ impl CycleBuilder for PartialCycle {
         for (mut half_edge, next_half_edge) in
             self.half_edges.iter().cloned().circular_tuple_windows()
         {
-            let next_vertex = next_half_edge
-                .read()
-                .start_vertex
-                .read()
-                .global_form
-                .clone();
+            let next_vertex = next_half_edge.read().start_vertex.clone();
             half_edge
                 .write()
                 .infer_vertex_positions_if_necessary(surface, next_vertex);

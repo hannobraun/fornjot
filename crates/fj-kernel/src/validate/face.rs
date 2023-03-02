@@ -109,7 +109,7 @@ impl FaceValidationError {
                         .surface()
                         .geometry()
                         .point_from_surface_coords(curve_position_as_surface);
-                    let global_position = vertex.global_form().position();
+                    let global_position = vertex.position();
 
                     let distance =
                         curve_position_as_global.distance_to(&global_position);
@@ -207,8 +207,7 @@ mod tests {
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
-            let next_vertex =
-                half_edge.read().start_vertex.read().global_form.clone();
+            let next_vertex = half_edge.read().start_vertex.clone();
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
                 next_vertex,

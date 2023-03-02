@@ -77,8 +77,7 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let global_vertex_from_half_edge =
-            half_edge.start_vertex().global_form().clone();
+        let global_vertex_from_half_edge = half_edge.start_vertex().clone();
         let global_vertices_from_global_form = half_edge
             .global_form()
             .vertices()
@@ -149,12 +148,7 @@ mod tests {
                 .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -208,12 +202,7 @@ mod tests {
                 .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)

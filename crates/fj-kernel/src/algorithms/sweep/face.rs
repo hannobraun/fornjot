@@ -78,7 +78,7 @@ impl Sweep for Handle<Face> {
             {
                 let (face, top_edge) = (
                     half_edge.clone(),
-                    next.start_vertex().global_form(),
+                    next.start_vertex(),
                     self.surface().deref(),
                     self.color(),
                 )

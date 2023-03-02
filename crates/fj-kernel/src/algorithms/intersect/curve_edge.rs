@@ -93,12 +93,7 @@ mod tests {
                 .update_as_polygon_from_points([[1., -1.], [1., 1.], [0., 1.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -131,12 +126,7 @@ mod tests {
                 ]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -169,12 +159,7 @@ mod tests {
                 ]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)
@@ -198,12 +183,7 @@ mod tests {
                 .update_as_polygon_from_points([[-1., 0.], [1., 0.], [1., 1.]]);
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                next_half_edge
-                    .read()
-                    .start_vertex
-                    .read()
-                    .global_form
-                    .clone(),
+                next_half_edge.read().start_vertex.clone(),
             );
 
             half_edge.build(&mut services.objects)

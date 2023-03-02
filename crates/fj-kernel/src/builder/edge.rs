@@ -88,7 +88,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             *point_boundary = Some(point_curve);
         }
 
-        let next_vertex = self.start_vertex.read().global_form.clone();
+        let next_vertex = self.start_vertex.clone();
         self.infer_global_form(next_vertex);
 
         path
@@ -156,8 +156,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         next_vertex: Partial<GlobalVertex>,
     ) -> Partial<GlobalEdge> {
         self.global_form.write().vertices =
-            [&self.start_vertex.read().global_form, &next_vertex]
-                .map(|vertex| vertex.clone());
+            [&self.start_vertex, &next_vertex].map(|vertex| vertex.clone());
 
         self.global_form.clone()
     }
@@ -174,10 +173,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("Can't infer vertex positions with undefined path");
         };
 
-        for (boundary_point, mut vertex) in self.boundary.zip_ext([
-            self.start_vertex.read().global_form.clone(),
-            next_vertex,
-        ]) {
+        for (boundary_point, mut vertex) in self
+            .boundary
+            .zip_ext([self.start_vertex.clone(), next_vertex])
+        {
             let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
             let position_surface = path.point_from_path_coords(position_curve);
@@ -272,13 +271,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        self.start_vertex.write().global_form.write().position = other_prev
-            .read()
-            .start_vertex
-            .read()
-            .global_form
-            .read()
-            .position;
+        self.start_vertex.write().position =
+            other_prev.read().start_vertex.read().position;
     }
 }
 
