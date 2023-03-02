@@ -37,7 +37,7 @@ pub enum HalfEdgeValidationError {
         - Vertices from `GlobalEdge`: {global_vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
-    GlobalVertexMismatch {
+    VertexMismatch {
         /// The [`Vertex`] from the [`HalfEdge`]'s start vertex
         global_vertex_from_half_edge: Handle<Vertex>,
 
@@ -89,7 +89,7 @@ impl HalfEdgeValidationError {
 
         if matching_global_vertex.is_none() {
             errors.push(
-                Self::GlobalVertexMismatch {
+                Self::VertexMismatch {
                     global_vertex_from_half_edge,
                     global_vertices_from_global_form,
                     half_edge: half_edge.clone(),
@@ -180,7 +180,7 @@ mod tests {
         assert!(matches!(
             invalid.validate_and_return_first_error(),
             Err(ValidationError::HalfEdge(
-                HalfEdgeValidationError::GlobalVertexMismatch { .. }
+                HalfEdgeValidationError::VertexMismatch { .. }
             ))
         ));
 
