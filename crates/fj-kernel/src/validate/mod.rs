@@ -9,10 +9,7 @@ mod solid;
 mod surface;
 mod vertex;
 
-pub use self::{
-    cycle::CycleValidationError, edge::HalfEdgeValidationError,
-    face::FaceValidationError,
-};
+pub use self::{edge::HalfEdgeValidationError, face::FaceValidationError};
 
 use std::convert::Infallible;
 
@@ -83,10 +80,6 @@ impl Default for ValidationConfig {
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// `Cycle` validation error
-    #[error("`Cycle` validation error:\n{0}")]
-    Cycle(#[from] CycleValidationError),
-
     /// `Face` validation error
     #[error("`Face` validation error:\n{0}")]
     Face(#[from] FaceValidationError),

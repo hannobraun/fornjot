@@ -10,7 +10,3 @@ impl Validate for Cycle {
     ) {
     }
 }
-
-/// [`Cycle`] validation error
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum CycleValidationError {}
