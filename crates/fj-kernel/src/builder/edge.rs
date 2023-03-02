@@ -24,7 +24,12 @@ pub trait HalfEdgeBuilder {
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn update_as_arc(&mut self, end: Point<2>, angle_rad: impl Into<Scalar>);
+    fn update_as_arc(
+        &mut self,
+        start: Point<2>,
+        end: Point<2>,
+        angle_rad: impl Into<Scalar>,
+    );
 
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(
@@ -91,16 +96,18 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn update_as_arc(&mut self, end: Point<2>, angle_rad: impl Into<Scalar>) {
+    fn update_as_arc(
+        &mut self,
+        start: Point<2>,
+        end: Point<2>,
+        angle_rad: impl Into<Scalar>,
+    ) {
+        self.start_vertex.write().position = Some(start);
+
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
-        let [start, end] = [
-            self.start_position()
-                .expect("Can't infer arc without surface position"),
-            end,
-        ];
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 

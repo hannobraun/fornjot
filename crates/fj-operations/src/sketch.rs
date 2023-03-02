@@ -84,9 +84,11 @@ impl Shape for fj::Sketch {
                                     .update_as_line_segment(start, end);
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                half_edge
-                                    .write()
-                                    .update_as_arc(end, angle.rad());
+                                half_edge.write().update_as_arc(
+                                    start,
+                                    end,
+                                    angle.rad(),
+                                );
                             }
                         }
                     }
