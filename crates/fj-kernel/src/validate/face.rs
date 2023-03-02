@@ -43,7 +43,7 @@ pub enum FaceValidationError {
 
     /// Mismatch between edge boundary and `Vertex` positions
     #[error(
-        "`HalfEdge` boundary doesn't match position of `GlobalVertex`\n\
+        "`HalfEdge` boundary doesn't match position of `Vertex`\n\
         - Curve position: {curve_position:?}\n\
         - Curve position converted to global position: \
             {curve_position_as_global:?}\n\
