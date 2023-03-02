@@ -88,11 +88,8 @@ impl Default for PartialHalfEdge {
         let start_vertex = Partial::default();
         let end_vertex = Partial::default();
 
-        let global_vertices = [&start_vertex, &end_vertex]
-            .map(|vertex: &Partial<GlobalVertex>| vertex.clone());
-
         let global_form = Partial::from_partial(PartialGlobalEdge {
-            vertices: global_vertices,
+            vertices: [start_vertex.clone(), end_vertex],
         });
 
         Self {
