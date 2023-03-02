@@ -119,7 +119,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for (mut edge, next_half_edge) in [
+        for (mut half_edge, next_half_edge) in [
             edge_bottom.clone(),
             edge_up.clone(),
             edge_top.clone(),
@@ -128,7 +128,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         .into_iter()
         .circular_tuple_windows()
         {
-            let start = edge
+            let start = half_edge
                 .read()
                 .start_position()
                 .expect("Can't infer line segment without surface position");
@@ -137,8 +137,9 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
                 .start_position()
                 .expect("Can't infer line segment without surface position");
 
-            edge.write().update_as_line_segment(start, end);
-            edge.write()
+            half_edge.write().update_as_line_segment(start, end);
+            half_edge
+                .write()
                 .infer_global_form(next_half_edge.read().start_vertex.clone());
         }
 
