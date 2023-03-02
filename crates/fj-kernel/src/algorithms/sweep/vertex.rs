@@ -2,14 +2,14 @@ use fj_math::Vector;
 
 use crate::{
     insert::Insert,
-    objects::{GlobalEdge, GlobalVertex, Objects},
+    objects::{GlobalEdge, Objects, Vertex},
     services::Service,
     storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Handle<GlobalVertex> {
+impl Sweep for Handle<Vertex> {
     type Swept = (Handle<GlobalEdge>, [Self; 2]);
 
     fn sweep_with_cache(
@@ -23,7 +23,7 @@ impl Sweep for Handle<GlobalVertex> {
             .global_vertex
             .entry(self.id())
             .or_insert_with(|| {
-                GlobalVertex::new(self.position() + path.into()).insert(objects)
+                Vertex::new(self.position() + path.into()).insert(objects)
             })
             .clone();
 

@@ -1,12 +1,12 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{GlobalVertex, Objects},
+    objects::{Objects, Vertex},
     partial::{FullToPartialCache, PartialObject},
     services::Service,
 };
 
-/// A partial [`GlobalVertex`]
+/// A partial [`Vertex`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalVertex {
     /// The position of the vertex
@@ -14,7 +14,7 @@ pub struct PartialGlobalVertex {
 }
 
 impl PartialObject for PartialGlobalVertex {
-    type Full = GlobalVertex;
+    type Full = Vertex;
 
     fn from_full(
         global_vertex: &Self::Full,
@@ -30,6 +30,6 @@ impl PartialObject for PartialGlobalVertex {
             .position
             .expect("Can't build `GlobalVertex` without position");
 
-        GlobalVertex::new(position)
+        Vertex::new(position)
     }
 }

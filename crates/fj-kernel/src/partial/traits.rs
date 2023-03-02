@@ -36,7 +36,7 @@ impl_trait!(
     Cycle, PartialCycle;
     Face, PartialFace;
     GlobalEdge, PartialGlobalEdge;
-    GlobalVertex, PartialGlobalVertex;
+    Vertex, PartialGlobalVertex;
     HalfEdge, PartialHalfEdge;
     Shell, PartialShell;
     Sketch, PartialSketch;

@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{GlobalEdge, GlobalVertex, HalfEdge, Objects},
+    objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{FullToPartialCache, MaybeCurve, Partial, PartialObject},
     services::Service,
 };
@@ -16,7 +16,7 @@ pub struct PartialHalfEdge {
     pub boundary: [Option<Point<1>>; 2],
 
     /// The surface vertex where the half-edge starts
-    pub start_vertex: Partial<GlobalVertex>,
+    pub start_vertex: Partial<Vertex>,
 
     /// The global form of the half-edge
     pub global_form: Partial<GlobalEdge>,
@@ -105,7 +105,7 @@ impl Default for PartialHalfEdge {
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {
     /// The vertices that bound the edge on the curve
-    pub vertices: [Partial<GlobalVertex>; 2],
+    pub vertices: [Partial<Vertex>; 2],
 }
 
 impl PartialObject for PartialGlobalEdge {
