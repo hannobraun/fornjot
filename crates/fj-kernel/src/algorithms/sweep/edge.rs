@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, GlobalVertex, HalfEdge, Objects, Surface},
+    objects::{Face, HalfEdge, Objects, Surface, Vertex},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, &Handle<GlobalVertex>, &Surface, Color) {
+impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(

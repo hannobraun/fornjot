@@ -1,8 +1,8 @@
-use crate::objects::GlobalVertex;
+use crate::objects::Vertex;
 
 use super::{Validate, ValidationConfig, ValidationError};
 
-impl Validate for GlobalVertex {
+impl Validate for Vertex {
     fn validate_with_config(
         &self,
         _: &ValidationConfig,

@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{GlobalEdge, GlobalVertex, HalfEdge},
+    objects::{GlobalEdge, HalfEdge, Vertex},
     storage::Handle,
 };
 
@@ -30,21 +30,19 @@ impl Validate for GlobalEdge {
 /// [`HalfEdge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum HalfEdgeValidationError {
-    /// [`HalfEdge`]'s [`GlobalVertex`] objects do not match
+    /// [`HalfEdge`]'s [`Vertex`] objects do not match
     #[error(
-        "Global forms of `HalfEdge` vertices do not match vertices of \n\
-        `HalfEdge`'s global form\n\
-        - `GlobalVertex` from start vertex: {global_vertex_from_half_edge:#?}\n\
-        - `GlobalVertex` objects from `GlobalEdge`: \
-            {global_vertices_from_global_form:#?}\n\
+        "`HalfEdge` vertices don't match vertices of `HalfEdge`'s global form\n\
+        - Start vertex: {vertex_from_half_edge:#?}\n\
+        - Vertices from `GlobalEdge`: {vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
-    GlobalVertexMismatch {
-        /// The [`GlobalVertex`] from the [`HalfEdge`]'s start vertex
-        global_vertex_from_half_edge: Handle<GlobalVertex>,
+    VertexMismatch {
+        /// The [`Vertex`] from the [`HalfEdge`]'s start vertex
+        vertex_from_half_edge: Handle<Vertex>,
 
-        /// The [`GlobalVertex`] instances from the [`HalfEdge`]'s global form
-        global_vertices_from_global_form: [Handle<GlobalVertex>; 2],
+        /// The [`Vertex`] instances from the [`HalfEdge`]'s global form
+        vertices_from_global_form: [Handle<Vertex>; 2],
 
         /// The half-edge
         half_edge: HalfEdge,
@@ -77,23 +75,22 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let global_vertex_from_half_edge = half_edge.start_vertex().clone();
-        let global_vertices_from_global_form = half_edge
+        let vertex_from_half_edge = half_edge.start_vertex().clone();
+        let vertices_from_global_form = half_edge
             .global_form()
             .vertices()
             .access_in_normalized_order();
 
-        let matching_global_vertex = global_vertices_from_global_form
-            .iter()
-            .find(|global_vertex| {
-                global_vertex.id() == global_vertex_from_half_edge.id()
+        let matching_vertex =
+            vertices_from_global_form.iter().find(|global_vertex| {
+                global_vertex.id() == vertex_from_half_edge.id()
             });
 
-        if matching_global_vertex.is_none() {
+        if matching_vertex.is_none() {
             errors.push(
-                Self::GlobalVertexMismatch {
-                    global_vertex_from_half_edge,
-                    global_vertices_from_global_form,
+                Self::VertexMismatch {
+                    vertex_from_half_edge,
+                    vertices_from_global_form,
                     half_edge: half_edge.clone(),
                 }
                 .into(),
@@ -136,7 +133,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edge_global_vertex_mismatch() -> anyhow::Result<()> {
+    fn vertex_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -182,7 +179,7 @@ mod tests {
         assert!(matches!(
             invalid.validate_and_return_first_error(),
             Err(ValidationError::HalfEdge(
-                HalfEdgeValidationError::GlobalVertexMismatch { .. }
+                HalfEdgeValidationError::VertexMismatch { .. }
             ))
         ));
 

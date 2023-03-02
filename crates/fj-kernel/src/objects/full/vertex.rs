@@ -19,12 +19,12 @@ use fj_math::Point;
 ///
 /// [`ValidationConfig`]: crate::validate::ValidationConfig
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalVertex {
+pub struct Vertex {
     position: Point<3>,
 }
 
-impl GlobalVertex {
-    /// Construct a `GlobalVertex` from a position
+impl Vertex {
+    /// Construct a `Vertex` from a position
     pub fn new(position: impl Into<Point<3>>) -> Self {
         let position = position.into();
         Self { position }

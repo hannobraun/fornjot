@@ -1,17 +1,17 @@
 //! Objects of a shape
 //!
 //! Objects, in Fornjot parlance, are the elements that make up shapes. An
-//! object can be simple and just contain data (like [`GlobalVertex`], for
-//! example), or they can be quite complex and refer to other objects (which is
-//! actually most of them).
+//! object can be simple and just contain data (like [`Vertex`], for example),
+//! or they can be quite complex and refer to other objects (which is actually
+//! most of them).
 //!
 //! # Object Identity vs Object Equality
 //!
 //! Two objects are *equal*, if they contain the same data. For example, two
-//! instances of [`GlobalVertex`] are equal, if they have the same position.
-//! This doesn't mean those objects are *identical*. They might have been
-//! created by different pieces of code. Or maybe by the same piece of code, but
-//! at different times, maybe even based on different inputs.
+//! instances of [`Vertex`] are equal, if they have the same position. This
+//! doesn't mean those objects are *identical*. They might have been created by
+//! different pieces of code. Or maybe by the same piece of code, but at
+//! different times, maybe even based on different inputs.
 //!
 //! This distinction is relevant, because non-identical objects that are
 //! *supposed* to be equal can end up being equal, if they are created based on
@@ -28,8 +28,8 @@
 //!
 //! If you compute the global coordinates from each of the line-local
 //! coordinates, you'll end up with the same result for sure. If we create two
-//! [`GlobalVertex`] instances from these global coordinates, any validation
-//! code that expects those two instances to be equal, will be happy.
+//! [`Vertex`] instances from these global coordinates, any validation code that
+//! expects those two instances to be equal, will be happy.
 //!
 //! But what if the situation is not so simple? Let's say the curves are circles
 //! instead of lines, and instead of being all neat, they are at some arbitrary
@@ -52,8 +52,8 @@
 //! identity, not equality. That way, this problem can never happen, because we
 //! never expect non-identical objects to be the same.
 //!
-//! For our example, this would mean we compute *one* [`GlobalVertex`] from
-//! *one* of the local coordinates.
+//! For our example, this would mean we compute *one* [`Vertex`] from *one* of
+//! the local coordinates.
 //!
 //! ## How Identity Works
 //!
@@ -86,7 +86,7 @@ pub use self::{
         sketch::Sketch,
         solid::Solid,
         surface::Surface,
-        vertex::GlobalVertex,
+        vertex::Vertex,
     },
     object::{Bare, BehindHandle, Form, Object, WithHandle},
     stores::{Objects, Surfaces},

@@ -1,9 +1,9 @@
-use crate::partial::PartialGlobalVertex;
+use crate::partial::PartialVertex;
 
-/// Builder API for [`PartialGlobalVertex`]
-pub trait GlobalVertexBuilder {
+/// Builder API for [`PartialVertex`]
+pub trait VertexBuilder {
     // No methods are currently defined. This trait serves as a placeholder, to
     // make it clear where to add such methods, once necessary.
 }
 
-impl GlobalVertexBuilder for PartialGlobalVertex {}
+impl VertexBuilder for PartialVertex {}

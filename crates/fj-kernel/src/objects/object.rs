@@ -2,8 +2,8 @@ use std::any::Any;
 
 use crate::{
     objects::{
-        Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
-        Sketch, Solid, Surface,
+        Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
+        Surface, Vertex,
     },
     storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
@@ -111,12 +111,12 @@ object!(
     Cycle, "cycle", cycles;
     Face, "face", faces;
     GlobalEdge, "global edge", global_edges;
-    GlobalVertex, "global vertex", global_vertices;
     HalfEdge, "half-edge", half_edges;
     Shell, "shell", shells;
     Sketch, "sketch", sketches;
     Solid, "solid", solids;
     Surface, "surface", surfaces;
+    Vertex, "vertex", vertices;
 );
 
 /// The form that an object can take

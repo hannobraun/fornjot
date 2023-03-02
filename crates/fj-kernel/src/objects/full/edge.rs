@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use crate::{geometry::curve::Curve, objects::GlobalVertex, storage::Handle};
+use crate::{geometry::curve::Curve, objects::Vertex, storage::Handle};
 
 /// A directed edge, defined in a surface's 2D space
 ///
@@ -42,7 +42,7 @@ use crate::{geometry::curve::Curve, objects::GlobalVertex, storage::Handle};
 pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
-    start_vertex: Handle<GlobalVertex>,
+    start_vertex: Handle<Vertex>,
     global_form: Handle<GlobalEdge>,
 }
 
@@ -51,7 +51,7 @@ impl HalfEdge {
     pub fn new(
         curve: Curve,
         boundary: [Point<1>; 2],
-        start_vertex: Handle<GlobalVertex>,
+        start_vertex: Handle<Vertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
@@ -83,7 +83,7 @@ impl HalfEdge {
     }
 
     /// Access the vertex from where this half-edge starts
-    pub fn start_vertex(&self) -> &Handle<GlobalVertex> {
+    pub fn start_vertex(&self) -> &Handle<Vertex> {
         &self.start_vertex
     }
 
@@ -113,7 +113,7 @@ impl GlobalEdge {
     /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
     /// `curve` and `vertices` will end up being equal, regardless of the order
     /// of `vertices` here.
-    pub fn new(vertices: [Handle<GlobalVertex>; 2]) -> Self {
+    pub fn new(vertices: [Handle<Vertex>; 2]) -> Self {
         let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
 
         Self { vertices }
@@ -137,14 +137,14 @@ impl GlobalEdge {
 /// possible to construct two [`GlobalEdge`] instances that are meant to
 /// represent the same edge, but aren't equal.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesInNormalizedOrder([Handle<GlobalVertex>; 2]);
+pub struct VerticesInNormalizedOrder([Handle<Vertex>; 2]);
 
 impl VerticesInNormalizedOrder {
     /// Construct a new instance of `VerticesInNormalizedOrder`
     ///
     /// The provided vertices can be in any order. The returned `bool` value
     /// indicates whether the normalization changed the order of the vertices.
-    pub fn new([a, b]: [Handle<GlobalVertex>; 2]) -> (Self, bool) {
+    pub fn new([a, b]: [Handle<Vertex>; 2]) -> (Self, bool) {
         if a < b {
             (Self([a, b]), false)
         } else {
@@ -155,7 +155,7 @@ impl VerticesInNormalizedOrder {
     /// Access the vertices
     ///
     /// The vertices in the returned array will be in normalized order.
-    pub fn access_in_normalized_order(&self) -> [Handle<GlobalVertex>; 2] {
+    pub fn access_in_normalized_order(&self) -> [Handle<Vertex>; 2] {
         self.0.clone()
     }
 }

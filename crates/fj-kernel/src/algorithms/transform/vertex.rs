@@ -1,13 +1,13 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{GlobalVertex, Objects},
+    objects::{Objects, Vertex},
     services::Service,
 };
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for GlobalVertex {
+impl TransformObject for Vertex {
     fn transform_with_cache(
         self,
         transform: &Transform,

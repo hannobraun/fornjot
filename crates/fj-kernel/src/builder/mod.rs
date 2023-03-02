@@ -20,7 +20,7 @@ pub use self::{
     sketch::SketchBuilder,
     solid::SolidBuilder,
     surface::SurfaceBuilder,
-    vertex::GlobalVertexBuilder,
+    vertex::VertexBuilder,
 };
 
 /// Pass objects to a builder method
