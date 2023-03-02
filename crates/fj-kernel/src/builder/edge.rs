@@ -133,8 +133,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             surface_vertex.write().position =
                 Some(path.point_from_path_coords(point_curve));
         }
-
-        self.infer_global_form(next_half_edge.read().start_vertex.clone());
     }
 
     fn update_as_line_segment(
