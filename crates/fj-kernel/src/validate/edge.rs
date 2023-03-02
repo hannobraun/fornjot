@@ -32,11 +32,9 @@ impl Validate for GlobalEdge {
 pub enum HalfEdgeValidationError {
     /// [`HalfEdge`]'s [`Vertex`] objects do not match
     #[error(
-        "Global forms of `HalfEdge` vertices do not match vertices of \n\
-        `HalfEdge`'s global form\n\
-        - `GlobalVertex` from start vertex: {global_vertex_from_half_edge:#?}\n\
-        - `GlobalVertex` objects from `GlobalEdge`: \
-            {global_vertices_from_global_form:#?}\n\
+        "`HalfEdge` vertices don't match vertices of `HalfEdge`'s global form\n\
+        - Start vertex: {global_vertex_from_half_edge:#?}\n\
+        - Vertices from `GlobalEdge`: {global_vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
     GlobalVertexMismatch {
