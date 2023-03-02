@@ -34,7 +34,7 @@ pub enum HalfEdgeValidationError {
     #[error(
         "`HalfEdge` vertices don't match vertices of `HalfEdge`'s global form\n\
         - Start vertex: {vertex_from_half_edge:#?}\n\
-        - Vertices from `GlobalEdge`: {global_vertices_from_global_form:#?}\n\
+        - Vertices from `GlobalEdge`: {vertices_from_global_form:#?}\n\
         - `HalfEdge`: {half_edge:#?}"
     )]
     VertexMismatch {
@@ -42,7 +42,7 @@ pub enum HalfEdgeValidationError {
         vertex_from_half_edge: Handle<Vertex>,
 
         /// The [`Vertex`] instances from the [`HalfEdge`]'s global form
-        global_vertices_from_global_form: [Handle<Vertex>; 2],
+        vertices_from_global_form: [Handle<Vertex>; 2],
 
         /// The half-edge
         half_edge: HalfEdge,
@@ -76,14 +76,13 @@ impl HalfEdgeValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let vertex_from_half_edge = half_edge.start_vertex().clone();
-        let global_vertices_from_global_form = half_edge
+        let vertices_from_global_form = half_edge
             .global_form()
             .vertices()
             .access_in_normalized_order();
 
-        let matching_global_vertex = global_vertices_from_global_form
-            .iter()
-            .find(|global_vertex| {
+        let matching_global_vertex =
+            vertices_from_global_form.iter().find(|global_vertex| {
                 global_vertex.id() == vertex_from_half_edge.id()
             });
 
@@ -91,7 +90,7 @@ impl HalfEdgeValidationError {
             errors.push(
                 Self::VertexMismatch {
                     vertex_from_half_edge,
-                    global_vertices_from_global_form,
+                    vertices_from_global_form,
                     half_edge: half_edge.clone(),
                 }
                 .into(),
