@@ -22,19 +22,6 @@ pub trait CycleBuilder {
     /// meaning its front and back vertices are the same.
     fn add_half_edge(&mut self) -> Partial<HalfEdge>;
 
-    /// Add a new half-edge that starts at the provided point
-    ///
-    /// Opens the cycle between the last and first edge, updates the last edge
-    /// to go the provided point, and adds a new half-edge from the provided
-    /// point the the first edge.
-    ///
-    /// If the cycle doesn't have any edges yet, the new edge connects to
-    /// itself, starting and ending at the provided point.
-    fn add_half_edge_from_point_to_start(
-        &mut self,
-        point: impl Into<Point<2>>,
-    ) -> Partial<HalfEdge>;
-
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
         &mut self,
@@ -43,11 +30,6 @@ pub trait CycleBuilder {
     where
         O: ObjectArgument<P>,
         P: Into<Point<2>>;
-
-    /// Update cycle as a polygon
-    ///
-    /// Will update each half-edge in the cycle to be a line segment.
-    fn update_as_polygon(&mut self);
 
     /// Connect the cycles to the provided half-edges
     ///
@@ -109,15 +91,6 @@ impl CycleBuilder for PartialCycle {
         new_half_edge
     }
 
-    fn add_half_edge_from_point_to_start(
-        &mut self,
-        point: impl Into<Point<2>>,
-    ) -> Partial<HalfEdge> {
-        let mut half_edge = self.add_half_edge();
-        half_edge.write().start_vertex.write().position = Some(point.into());
-        half_edge
-    }
-
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
@@ -126,18 +99,21 @@ impl CycleBuilder for PartialCycle {
         O: ObjectArgument<P>,
         P: Into<Point<2>>,
     {
-        let half_edges =
-            points.map(|point| self.add_half_edge_from_point_to_start(point));
-        self.update_as_polygon();
-        half_edges
-    }
+        let mut start_positions = Vec::new();
+        let half_edges = points.map(|point| {
+            start_positions.push(point.into());
+            self.add_half_edge()
+        });
 
-    fn update_as_polygon(&mut self) {
-        for (mut half_edge, next) in
-            self.half_edges.iter().cloned().circular_tuple_windows()
+        for ((start, end), half_edge) in start_positions
+            .into_iter()
+            .circular_tuple_windows()
+            .zip(&mut self.half_edges)
         {
-            half_edge.write().update_as_line_segment(next.clone());
+            half_edge.write().update_as_line_segment(start, end);
         }
+
+        half_edges
     }
 
     fn connect_to_closed_edges<O>(

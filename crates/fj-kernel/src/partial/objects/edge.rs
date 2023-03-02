@@ -25,7 +25,20 @@ pub struct PartialHalfEdge {
 impl PartialHalfEdge {
     /// Compute the surface position where the half-edge starts
     pub fn start_position(&self) -> Option<Point<2>> {
-        self.start_vertex.read().position
+        // Computing the surface position from the curve position is fine.
+        // `HalfEdge` "owns" its start position. There is no competing code that
+        // could compute the surface position from slightly different data.
+
+        let [start, _] = self.boundary;
+        start.and_then(|start| {
+            let curve = self.curve?;
+
+            if let MaybeCurve::Defined(curve) = curve {
+                return Some(curve.point_from_path_coords(start));
+            }
+
+            None
+        })
     }
 }
 

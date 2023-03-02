@@ -196,11 +196,11 @@ mod tests {
         // is not part of the polygon. The higher-level triangulation will
         // filter that out, but it will result in missing triangles.
 
-        let a = [0.1, 0.0];
-        let b = [0.2, 0.9];
-        let c = [0.2, 1.0];
-        let d = [0.1, 0.1];
-        let e = [0.0, 1.0];
+        let a = [1., 0.];
+        let b = [2., 8.];
+        let c = [2., 9.];
+        let d = [1., 1.];
+        let e = [0., 9.];
 
         let surface = services.objects.surfaces.xy_plane();
         let mut face = PartialFace {

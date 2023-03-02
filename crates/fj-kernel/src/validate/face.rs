@@ -1,7 +1,9 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar, Winding};
+use itertools::Itertools;
 
 use crate::{
-    objects::{Face, SurfaceVertex},
+    objects::{Face, HalfEdge},
     storage::Handle,
 };
 
@@ -39,22 +41,22 @@ pub enum FaceValidationError {
         face: Face,
     },
 
-    /// Mismatch between [`SurfaceVertex`] and `GlobalVertex` positions
+    /// Mismatch between edge boundary and `GlobalVertex` positions
     #[error(
-        "`SurfaceVertex` position doesn't match position of its global form\n\
-        - Surface position: {surface_position:?}\n\
-        - Surface position converted to global position: \
-            {surface_position_as_global:?}\n\
+        "`HalfEdge` boundary doesn't match position of `GlobalVertex`\n\
+        - Curve position: {curve_position:?}\n\
+        - Curve position converted to global position: \
+            {curve_position_as_global:?}\n\
         - Global position: {global_position:?}\n\
         - Distance between the positions: {distance}\n\
-        - `SurfaceVertex`: {surface_vertex:#?}"
+        - `HalfEdge`: {half_edge:#?}"
     )]
     VertexPositionMismatch {
         /// The position of the surface vertex
-        surface_position: Point<2>,
+        curve_position: Point<1>,
 
         /// The surface position converted into a global position
-        surface_position_as_global: Point<3>,
+        curve_position_as_global: Point<3>,
 
         /// The position of the global vertex
         global_position: Point<3>,
@@ -62,8 +64,8 @@ pub enum FaceValidationError {
         /// The distance between the positions
         distance: Scalar,
 
-        /// The surface vertex
-        surface_vertex: Handle<SurfaceVertex>,
+        /// The half-edge
+        half_edge: Handle<HalfEdge>,
     },
 }
 
@@ -93,30 +95,37 @@ impl FaceValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         for cycle in face.all_cycles() {
-            for half_edge in cycle.half_edges() {
-                let surface_position_as_global =
-                    face.surface().geometry().point_from_surface_coords(
-                        half_edge.start_vertex().position(),
-                    );
-                let global_position =
-                    half_edge.start_vertex().global_form().position();
+            for (half_edge, next_half_edge) in
+                cycle.half_edges().circular_tuple_windows()
+            {
+                for (curve_position, vertex) in half_edge.boundary().zip_ext([
+                    half_edge.start_vertex(),
+                    next_half_edge.start_vertex(),
+                ]) {
+                    let curve_position_as_surface = half_edge
+                        .curve()
+                        .point_from_path_coords(curve_position);
+                    let curve_position_as_global = face
+                        .surface()
+                        .geometry()
+                        .point_from_surface_coords(curve_position_as_surface);
+                    let global_position = vertex.global_form().position();
 
-                let distance =
-                    surface_position_as_global.distance_to(&global_position);
+                    let distance =
+                        curve_position_as_global.distance_to(&global_position);
 
-                if distance > config.identical_max_distance {
-                    errors.push(
-                        Self::VertexPositionMismatch {
-                            surface_position: half_edge
-                                .start_vertex()
-                                .position(),
-                            surface_position_as_global,
-                            global_position,
-                            distance,
-                            surface_vertex: half_edge.start_vertex().clone(),
-                        }
-                        .into(),
-                    );
+                    if distance > config.identical_max_distance {
+                        errors.push(
+                            Self::VertexPositionMismatch {
+                                curve_position,
+                                curve_position_as_global,
+                                global_position,
+                                distance,
+                                half_edge: half_edge.clone(),
+                            }
+                            .into(),
+                        );
+                    }
                 }
             }
         }
@@ -131,7 +140,7 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{Cycle, Face, HalfEdge, SurfaceVertex},
+        objects::{Cycle, Face, HalfEdge},
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
@@ -185,7 +194,7 @@ mod tests {
     }
 
     #[test]
-    fn surface_vertex_position_mismatch() -> anyhow::Result<()> {
+    fn vertex_position_mismatch() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = {
@@ -214,16 +223,10 @@ mod tests {
                     .boundary()
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
-                let start_vertex = SurfaceVertex::new(
-                    [0., 1.],
-                    half_edge.start_vertex().global_form().clone(),
-                )
-                .insert(&mut services.objects);
-
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
-                    start_vertex,
+                    half_edge.start_vertex().clone(),
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)

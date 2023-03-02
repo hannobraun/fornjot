@@ -64,25 +64,26 @@ impl Shape for fj::Sketch {
                         .into_iter()
                         .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            let half_edge = cycle
-                                .add_half_edge_from_point_to_start(endpoint);
-                            (half_edge, route)
+                            let half_edge = cycle.add_half_edge();
+                            (half_edge, endpoint, route)
                         })
                         .collect::<Vec<_>>();
 
-                    for ((mut half_edge, route), (next_half_edge, _)) in
+                    for ((mut half_edge, start, route), (_, end, _)) in
                         half_edges.into_iter().circular_tuple_windows()
                     {
                         match route {
                             fj::SketchSegmentRoute::Direct => {
                                 half_edge
                                     .write()
-                                    .update_as_line_segment(next_half_edge);
+                                    .update_as_line_segment(start, end);
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                half_edge
-                                    .write()
-                                    .update_as_arc(angle.rad(), next_half_edge);
+                                half_edge.write().update_as_arc(
+                                    start,
+                                    end,
+                                    angle.rad(),
+                                );
                             }
                         }
                     }
