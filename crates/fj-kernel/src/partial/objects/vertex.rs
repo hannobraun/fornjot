@@ -8,12 +8,12 @@ use crate::{
 
 /// A partial [`Vertex`]
 #[derive(Clone, Debug, Default)]
-pub struct PartialGlobalVertex {
+pub struct PartialVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
 }
 
-impl PartialObject for PartialGlobalVertex {
+impl PartialObject for PartialVertex {
     type Full = Vertex;
 
     fn from_full(
