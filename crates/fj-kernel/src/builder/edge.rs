@@ -105,8 +105,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
         let [start, end] = [
-            &self.start_position(),
-            &next_half_edge.read().start_position(),
+            self.start_position(),
+            next_half_edge.read().start_position(),
         ]
         .map(|position| {
             position.expect("Can't infer arc without surface position")
