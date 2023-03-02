@@ -172,7 +172,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("Can't infer vertex positions with undefined path");
         };
 
-        for (boundary_point, surface_vertex) in self
+        for (boundary_point, vertex) in self
             .boundary
             .zip_ext([&mut self.start_vertex, &mut next_vertex])
         {
@@ -181,12 +181,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let position_surface = path.point_from_path_coords(position_curve);
 
             // Infer global position, if not available.
-            let position_global =
-                surface_vertex.read().global_form.read().position;
+            let position_global = vertex.read().global_form.read().position;
             if position_global.is_none() {
                 let position_global =
                     surface.point_from_surface_coords(position_surface);
-                surface_vertex.write().global_form.write().position =
+                vertex.write().global_form.write().position =
                     Some(position_global);
             }
         }
