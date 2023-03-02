@@ -28,7 +28,7 @@ impl PartialObject for PartialGlobalVertex {
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
         let position = self
             .position
-            .expect("Can't build `GlobalVertex` without position");
+            .expect("Can't build `Vertex` without position");
 
         Vertex::new(position)
     }
