@@ -88,7 +88,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             *point_boundary = Some(point_curve);
         }
 
-        self.infer_global_form(self.start_vertex.clone());
+        let next_vertex = self.start_vertex.clone();
+        self.infer_global_form(next_vertex);
 
         path
     }
