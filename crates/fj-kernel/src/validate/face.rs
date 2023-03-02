@@ -140,7 +140,7 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
-        objects::{Cycle, Face, HalfEdge, SurfaceVertex},
+        objects::{Cycle, Face, HalfEdge},
         partial::{Partial, PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
@@ -223,15 +223,10 @@ mod tests {
                     .boundary()
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
-                let start_vertex = SurfaceVertex::new(
-                    half_edge.start_vertex().global_form().clone(),
-                )
-                .insert(&mut services.objects);
-
                 HalfEdge::new(
                     half_edge.curve(),
                     boundary,
-                    start_vertex,
+                    half_edge.start_vertex().clone(),
                     half_edge.global_form().clone(),
                 )
                 .insert(&mut services.objects)
