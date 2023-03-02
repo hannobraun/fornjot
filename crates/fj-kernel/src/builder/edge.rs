@@ -105,12 +105,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
         let [start, end] = [
-            self.start_position(),
-            next_half_edge.read().start_position(),
-        ]
-        .map(|position| {
-            position.expect("Can't infer arc without surface position")
-        });
+            self.start_position()
+                .expect("Can't infer arc without surface position"),
+            next_half_edge
+                .read()
+                .start_position()
+                .expect("Can't infer arc without surface position"),
+        ];
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
