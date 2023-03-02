@@ -44,11 +44,6 @@ pub trait CycleBuilder {
         O: ObjectArgument<P>,
         P: Into<Point<2>>;
 
-    /// Update cycle as a polygon
-    ///
-    /// Will update each half-edge in the cycle to be a line segment.
-    fn update_as_polygon(&mut self);
-
     /// Connect the cycles to the provided half-edges
     ///
     /// Assumes that the provided half-edges, once translated into local
@@ -128,16 +123,14 @@ impl CycleBuilder for PartialCycle {
     {
         let half_edges =
             points.map(|point| self.add_half_edge_from_point_to_start(point));
-        self.update_as_polygon();
-        half_edges
-    }
 
-    fn update_as_polygon(&mut self) {
         for (mut half_edge, next) in
             self.half_edges.iter().cloned().circular_tuple_windows()
         {
             half_edge.write().update_as_line_segment(next.clone());
         }
+
+        half_edges
     }
 
     fn connect_to_closed_edges<O>(
