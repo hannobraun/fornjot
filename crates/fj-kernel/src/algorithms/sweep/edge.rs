@@ -94,24 +94,18 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
             edge_down.write(),
         ]
         .zip_ext(boundaries)
-        .zip_ext(surface_points)
         .zip_ext(global_vertices)
-        .map(
-            |(((mut half_edge, boundary), surface_point), global_vertex)| {
-                for (a, b) in
-                    half_edge.boundary.each_mut_ext().zip_ext(boundary)
-                {
-                    *a = Some(b);
-                }
+        .map(|((mut half_edge, boundary), global_vertex)| {
+            for (a, b) in half_edge.boundary.each_mut_ext().zip_ext(boundary) {
+                *a = Some(b);
+            }
 
-                // Writing to the start vertices is enough. Neighboring half-
-                // edges share surface vertices, so writing the start vertex of
-                // each half-edge writes to all vertices.
-                let mut vertex = half_edge.start_vertex.write();
-                vertex.position = Some(surface_point);
-                vertex.global_form = Partial::from(global_vertex);
-            },
-        );
+            // Writing to the start vertices is enough. Neighboring half-
+            // edges share surface vertices, so writing the start vertex of
+            // each half-edge writes to all vertices.
+            let mut vertex = half_edge.start_vertex.write();
+            vertex.global_form = Partial::from(global_vertex);
+        });
 
         // With the vertices set, we can now update the curves.
         //
@@ -119,24 +113,16 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for (mut half_edge, next_half_edge) in [
+        for ((mut half_edge, start), (next_half_edge, end)) in [
             edge_bottom.clone(),
             edge_up.clone(),
             edge_top.clone(),
             edge_down.clone(),
         ]
+        .zip_ext(surface_points)
         .into_iter()
         .circular_tuple_windows()
         {
-            let start = half_edge
-                .read()
-                .start_position()
-                .expect("Can't infer line segment without surface position");
-            let end = next_half_edge
-                .read()
-                .start_position()
-                .expect("Can't infer line segment without surface position");
-
             half_edge.write().update_as_line_segment(start, end);
             half_edge
                 .write()
