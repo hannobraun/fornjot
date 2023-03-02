@@ -116,7 +116,7 @@ object!(
     Sketch, "sketch", sketches;
     Solid, "solid", solids;
     Surface, "surface", surfaces;
-    Vertex, "global vertex", vertices;
+    Vertex, "vertex", vertices;
 );
 
 /// The form that an object can take
