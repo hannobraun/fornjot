@@ -121,16 +121,20 @@ impl CycleBuilder for PartialCycle {
         O: ObjectArgument<P>,
         P: Into<Point<2>>,
     {
-        let half_edges =
-            points.map(|point| self.add_half_edge_from_point_to_start(point));
+        let mut start_positions = Vec::new();
+        let half_edges = points.map(|point| {
+            start_positions.push(point.into());
+            self.add_half_edge()
+        });
 
-        for (mut half_edge, next_half_edge) in
-            self.half_edges.iter().cloned().circular_tuple_windows()
+        for ((start, end), half_edge) in start_positions
+            .into_iter()
+            .circular_tuple_windows()
+            .zip(&mut self.half_edges)
         {
-            let start = half_edge.read().start_position();
-            let end = next_half_edge.read().start_position();
-
-            half_edge.write().update_as_line_segment(start, end);
+            half_edge
+                .write()
+                .update_as_line_segment(Some(start), Some(end));
         }
 
         half_edges
