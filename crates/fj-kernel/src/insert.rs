@@ -5,7 +5,7 @@
 use crate::{
     objects::{
         Cycle, Face, GlobalEdge, GlobalVertex, HalfEdge, Objects, Shell,
-        Sketch, Solid, Surface, SurfaceVertex,
+        Sketch, Solid, Surface,
     },
     services::{Service, ServiceObjectsExt},
     storage::Handle,
@@ -42,6 +42,5 @@ impl_insert!(
     Shell, shells;
     Sketch, sketches;
     Solid, solids;
-    SurfaceVertex, surface_vertices;
     Surface, surfaces;
 );

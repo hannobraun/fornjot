@@ -77,8 +77,7 @@ impl HalfEdgeValidationError {
         half_edge: &HalfEdge,
         errors: &mut Vec<ValidationError>,
     ) {
-        let global_vertex_from_half_edge =
-            half_edge.start_vertex().global_form().clone();
+        let global_vertex_from_half_edge = half_edge.start_vertex().clone();
         let global_vertices_from_global_form = half_edge
             .global_form()
             .vertices()

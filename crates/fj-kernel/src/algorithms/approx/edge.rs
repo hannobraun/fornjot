@@ -31,7 +31,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
 
         let first = ApproxPoint::new(
             half_edge.start_position(),
-            half_edge.start_vertex().global_form().position(),
+            half_edge.start_vertex().position(),
         )
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
@@ -355,9 +355,10 @@ mod tests {
             let mut half_edge = PartialHalfEdge::default();
 
             half_edge.update_as_circle_from_radius(1.);
+            let next_vertex = half_edge.start_vertex.clone();
             half_edge.infer_vertex_positions_if_necessary(
                 &surface.geometry(),
-                half_edge.start_vertex.clone(),
+                next_vertex,
             );
 
             half_edge

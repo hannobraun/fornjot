@@ -109,7 +109,7 @@ impl FaceValidationError {
                         .surface()
                         .geometry()
                         .point_from_surface_coords(curve_position_as_surface);
-                    let global_position = vertex.global_form().position();
+                    let global_position = vertex.position();
 
                     let distance =
                         curve_position_as_global.distance_to(&global_position);
