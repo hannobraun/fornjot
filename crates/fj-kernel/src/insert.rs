@@ -37,10 +37,10 @@ impl_insert!(
     Cycle, cycles;
     Face, faces;
     GlobalEdge, global_edges;
-    Vertex, vertices;
     HalfEdge, half_edges;
     Shell, shells;
     Sketch, sketches;
     Solid, solids;
     Surface, surfaces;
+    Vertex, vertices;
 );

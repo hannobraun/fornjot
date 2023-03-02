@@ -21,9 +21,6 @@ pub struct Objects {
     /// Store for [`GlobalEdge`]s
     pub global_edges: Store<GlobalEdge>,
 
-    /// Store for [`Vertex`] objects
-    pub vertices: Store<Vertex>,
-
     /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,
 
@@ -38,6 +35,9 @@ pub struct Objects {
 
     /// Store for [`Surface`]s
     pub surfaces: Surfaces,
+
+    /// Store for [`Vertex`] objects
+    pub vertices: Store<Vertex>,
 }
 
 impl Objects {

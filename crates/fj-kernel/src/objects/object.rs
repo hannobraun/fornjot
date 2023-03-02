@@ -111,12 +111,12 @@ object!(
     Cycle, "cycle", cycles;
     Face, "face", faces;
     GlobalEdge, "global edge", global_edges;
-    Vertex, "global vertex", vertices;
     HalfEdge, "half-edge", half_edges;
     Shell, "shell", shells;
     Sketch, "sketch", sketches;
     Solid, "solid", solids;
     Surface, "surface", surfaces;
+    Vertex, "global vertex", vertices;
 );
 
 /// The form that an object can take
