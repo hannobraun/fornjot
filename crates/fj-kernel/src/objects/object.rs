@@ -111,7 +111,7 @@ object!(
     Cycle, "cycle", cycles;
     Face, "face", faces;
     GlobalEdge, "global edge", global_edges;
-    Vertex, "global vertex", global_vertices;
+    Vertex, "global vertex", vertices;
     HalfEdge, "half-edge", half_edges;
     Shell, "shell", shells;
     Sketch, "sketch", sketches;

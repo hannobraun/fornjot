@@ -22,7 +22,7 @@ pub struct Objects {
     pub global_edges: Store<GlobalEdge>,
 
     /// Store for [`Vertex`] objects
-    pub global_vertices: Store<Vertex>,
+    pub vertices: Store<Vertex>,
 
     /// Store for [`HalfEdge`]s
     pub half_edges: Store<HalfEdge>,

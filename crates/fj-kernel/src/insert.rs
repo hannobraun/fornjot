@@ -37,7 +37,7 @@ impl_insert!(
     Cycle, cycles;
     Face, faces;
     GlobalEdge, global_edges;
-    Vertex, global_vertices;
+    Vertex, vertices;
     HalfEdge, half_edges;
     Shell, shells;
     Sketch, sketches;
