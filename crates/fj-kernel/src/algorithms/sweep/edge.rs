@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects, Surface, SurfaceVertex},
+    objects::{Face, GlobalVertex, HalfEdge, Objects, Surface},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
+impl Sweep for (Handle<HalfEdge>, &Handle<GlobalVertex>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -52,8 +52,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         //
         // Let's start with the global vertices and edges.
         let (global_vertices, global_edges) = {
-            let [a, b] = [edge.start_vertex(), next_vertex]
-                .map(|surface_vertex| surface_vertex.global_form().clone());
+            let [a, b] = [edge.start_vertex().global_form(), next_vertex]
+                .map(Clone::clone);
             let (edge_right, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, objects);
             let (edge_left, [_, d]) =
