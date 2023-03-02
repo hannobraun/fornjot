@@ -75,9 +75,12 @@ impl Shape for fj::Sketch {
                     {
                         match route {
                             fj::SketchSegmentRoute::Direct => {
-                                let start = half_edge.read().start_position();
-                                let end =
-                                    next_half_edge.read().start_position();
+                                let start =
+                                    half_edge.read().start_position().unwrap();
+                                let end = next_half_edge
+                                    .read()
+                                    .start_position()
+                                    .unwrap();
 
                                 half_edge
                                     .write()

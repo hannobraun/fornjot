@@ -128,8 +128,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         .into_iter()
         .circular_tuple_windows()
         {
-            let start = edge.read().start_position();
-            let end = next.read().start_position();
+            let start = edge
+                .read()
+                .start_position()
+                .expect("Can't infer line segment without surface position");
+            let end = next
+                .read()
+                .start_position()
+                .expect("Can't infer line segment without surface position");
 
             edge.write().update_as_line_segment(start, end);
             edge.write()
