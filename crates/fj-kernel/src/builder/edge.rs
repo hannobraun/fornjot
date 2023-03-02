@@ -82,9 +82,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        self.start_vertex.write().position =
-            Some(path.point_from_path_coords(a_curve));
-
         for (point_boundary, point_curve) in
             self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
         {
@@ -102,8 +99,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         end: Point<2>,
         angle_rad: impl Into<Scalar>,
     ) {
-        self.start_vertex.write().position = Some(start);
-
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -116,8 +111,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
-        self.start_vertex.write().position =
-            Some(path.point_from_path_coords(a_curve));
 
         for (point_boundary, point_curve) in
             self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
@@ -131,8 +124,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start: Point<2>,
         end: Point<2>,
     ) -> Curve {
-        self.start_vertex.write().position = Some(start);
-
         let boundary = self.boundary;
         let points_surface = [start, end];
 
@@ -187,21 +178,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         {
             let position_curve = boundary_point
                 .expect("Can't infer surface position without curve position");
-
-            let position_surface = surface_vertex.read().position;
-
-            // Infer surface position, if not available.
-            let position_surface = match position_surface {
-                Some(position_surface) => position_surface,
-                None => {
-                    let position_surface =
-                        path.point_from_path_coords(position_curve);
-
-                    surface_vertex.write().position = Some(position_surface);
-
-                    position_surface
-                }
-            };
+            let position_surface = path.point_from_path_coords(position_curve);
 
             // Infer global position, if not available.
             let position_global =

@@ -5,26 +5,13 @@ use crate::storage::Handle;
 /// A vertex, defined in surface (2D) coordinates
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceVertex {
-    position: Point<2>,
     global_form: Handle<GlobalVertex>,
 }
 
 impl SurfaceVertex {
     /// Construct a new instance of `SurfaceVertex`
-    pub fn new(
-        position: impl Into<Point<2>>,
-        global_form: Handle<GlobalVertex>,
-    ) -> Self {
-        let position = position.into();
-        Self {
-            position,
-            global_form,
-        }
-    }
-
-    /// Access the position of the vertex on the surface
-    pub fn position(&self) -> Point<2> {
-        self.position
+    pub fn new(global_form: Handle<GlobalVertex>) -> Self {
+        Self { global_form }
     }
 
     /// Access the global form of the vertex

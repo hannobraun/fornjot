@@ -9,9 +9,6 @@ use crate::{
 /// A partial [`SurfaceVertex`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialSurfaceVertex {
-    /// The position of the vertex on the surface
-    pub position: Option<Point<2>>,
-
     /// The global form of the vertex
     pub global_form: Partial<GlobalVertex>,
 }
@@ -24,7 +21,6 @@ impl PartialObject for PartialSurfaceVertex {
         cache: &mut FullToPartialCache,
     ) -> Self {
         Self {
-            position: Some(surface_vertex.position()),
             global_form: Partial::from_full(
                 surface_vertex.global_form().clone(),
                 cache,
@@ -33,12 +29,8 @@ impl PartialObject for PartialSurfaceVertex {
     }
 
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let position = self
-            .position
-            .expect("Can't build `SurfaceVertex` without position");
         let global_form = self.global_form.build(objects);
-
-        SurfaceVertex::new(position, global_form)
+        SurfaceVertex::new(global_form)
     }
 }
 

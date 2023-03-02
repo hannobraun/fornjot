@@ -14,16 +14,12 @@ impl TransformObject for SurfaceVertex {
         objects: &mut Service<Objects>,
         cache: &mut TransformCache,
     ) -> Self {
-        // Don't need to transform position, as that is defined in surface
-        // coordinates and thus transforming the surface takes care of it.
-        let position = self.position();
-
         let global_form = self
             .global_form()
             .clone()
             .transform_with_cache(transform, objects, cache);
 
-        Self::new(position, global_form)
+        Self::new(global_form)
     }
 }
 

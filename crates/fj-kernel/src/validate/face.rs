@@ -224,7 +224,6 @@ mod tests {
                     .map(|point| point + Vector::from([Scalar::PI / 2.]));
 
                 let start_vertex = SurfaceVertex::new(
-                    [0., 1.],
                     half_edge.start_vertex().global_form().clone(),
                 )
                 .insert(&mut services.objects);
