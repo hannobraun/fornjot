@@ -169,8 +169,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             path
         };
 
-        self.infer_global_form(next_half_edge.read().start_vertex.clone());
-
         path
     }
 

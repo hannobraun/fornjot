@@ -129,6 +129,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<SurfaceVertex>, &Surface, Color) {
         .circular_tuple_windows()
         {
             edge.write().update_as_line_segment(next.clone());
+            edge.write()
+                .infer_global_form(next.read().start_vertex.clone());
         }
 
         // Finally, we can make sure that all edges refer to the correct global
