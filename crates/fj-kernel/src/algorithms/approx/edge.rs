@@ -29,8 +29,10 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         let boundary = half_edge.boundary();
         let range = RangeOnPath { boundary };
 
+        let position_surface = half_edge.start_position();
+
         let first = ApproxPoint::new(
-            half_edge.start_position(),
+            position_surface,
             half_edge.start_vertex().position(),
         )
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
