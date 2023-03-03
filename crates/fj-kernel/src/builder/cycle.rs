@@ -54,7 +54,7 @@ pub trait CycleBuilder {
 
 impl CycleBuilder for PartialCycle {
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
-        let new_half_edge = Partial::<HalfEdge>::new();
+        let new_half_edge = Partial::new();
         self.half_edges.push(new_half_edge.clone());
         new_half_edge
     }
