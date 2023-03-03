@@ -1,5 +1,3 @@
-use fj_math::Point;
-
 /// A vertex, defined in global (3D) coordinates
 ///
 /// This struct exists to distinguish between vertices and points at the type
@@ -18,20 +16,12 @@ use fj_math::Point;
 /// [`ValidationConfig`].
 ///
 /// [`ValidationConfig`]: crate::validate::ValidationConfig
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Vertex {
-    position: Point<3>,
-}
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Vertex {}
 
 impl Vertex {
     /// Construct a `Vertex` from a position
-    pub fn new(position: impl Into<Point<3>>) -> Self {
-        let position = position.into();
-        Self { position }
-    }
-
-    /// Access the position of the vertex
-    pub fn position(&self) -> Point<3> {
-        self.position
+    pub fn new() -> Self {
+        Self::default()
     }
 }
