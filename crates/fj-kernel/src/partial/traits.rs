@@ -11,7 +11,7 @@ pub trait HasPartial {
 }
 
 /// Implemented for partial objects
-pub trait PartialObject: Clone + Debug + Default {
+pub trait PartialObject: Clone + Debug {
     /// The type representing the full object
     type Full: HasPartial<Partial = Self>;
 
