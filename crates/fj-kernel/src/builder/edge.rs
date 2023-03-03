@@ -249,7 +249,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        self.start_vertex.write().position =
-            other_prev.read().start_vertex.read().position;
+        self.start_vertex = other_prev.read().start_vertex.clone();
     }
 }
