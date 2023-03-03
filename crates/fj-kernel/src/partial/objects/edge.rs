@@ -96,7 +96,7 @@ impl PartialObject for PartialHalfEdge {
 }
 
 /// A partial [`GlobalEdge`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialGlobalEdge {}
 
 impl PartialObject for PartialGlobalEdge {
