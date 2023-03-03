@@ -30,7 +30,7 @@ pub struct Partial<T: HasPartial> {
 impl<T: HasPartial + 'static> Partial<T> {
     /// Construct a `Partial` with a default inner partial object
     pub fn new() -> Self {
-        Self::from_partial(T::Partial::default())
+        Self::from_partial(T::Partial::new())
     }
 
     /// Construct a `Partial` from a partial object
