@@ -32,11 +32,9 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // A face (and everything in it) is defined on a surface. A surface can
         // be created by sweeping a curve, so let's sweep the curve of the edge
         // we're sweeping.
-        {
-            face.surface = Partial::from(
-                (edge.curve(), surface).sweep_with_cache(path, cache, objects),
-            );
-        }
+        face.surface = Partial::from(
+            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
+        );
 
         // Now we're ready to create the edges.
         let mut edge_bottom = face.exterior.write().add_half_edge(objects);
