@@ -7,7 +7,6 @@ mod face;
 mod shell;
 mod sketch;
 mod solid;
-mod surface;
 mod vertex;
 
 use std::array;
@@ -15,7 +14,7 @@ use std::array;
 pub use self::{
     cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder,
     shell::ShellBuilder, sketch::SketchBuilder, solid::SolidBuilder,
-    surface::SurfaceBuilder, vertex::VertexBuilder,
+    vertex::VertexBuilder,
 };
 
 /// Pass objects to a builder method
