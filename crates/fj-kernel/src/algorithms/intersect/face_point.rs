@@ -151,11 +151,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [1., 1.],
-            [0., 2.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [1., 1.], [0., 2.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -172,11 +171,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [0., 2.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [2., 1.], [0., 2.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -196,11 +194,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [4., 2.],
-            [0., 4.],
-            [0., 0.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[4., 2.], [0., 4.], [0., 0.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -220,12 +217,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 0.],
-            [3., 4.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -245,12 +240,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 1.],
-            [0., 2.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -270,13 +263,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [2., 1.],
-            [3., 1.],
-            [4., 0.],
-            [4., 5.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -296,11 +286,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [2., 0.],
-            [0., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [2., 0.], [0., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -326,11 +315,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [0., 0.],
-            [1., 0.],
-            [0., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[0., 0.], [1., 0.], [0., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);

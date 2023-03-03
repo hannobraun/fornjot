@@ -166,12 +166,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.yz_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -189,12 +187,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.yz_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -215,12 +211,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.yz_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -238,12 +232,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.yz_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -269,12 +261,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.yz_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)
@@ -303,12 +293,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
@@ -328,12 +316,10 @@ mod tests {
         let mut face = PartialFace::new();
 
         face.surface = Partial::from(services.objects.surfaces.xy_plane());
-        face.exterior.write().update_as_polygon_from_points([
-            [-1., -1.],
-            [1., -1.],
-            [1., 1.],
-            [-1., 1.],
-        ]);
+        face.exterior.write().update_as_polygon_from_points(
+            [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+            &mut services.objects,
+        );
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects)

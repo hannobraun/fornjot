@@ -3,8 +3,9 @@ use itertools::Itertools;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::HalfEdge,
+    objects::{HalfEdge, Objects},
     partial::{Partial, PartialCycle},
+    services::Service,
 };
 
 use super::{HalfEdgeBuilder, ObjectArgument};
@@ -26,6 +27,7 @@ pub trait CycleBuilder {
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
@@ -62,6 +64,7 @@ impl CycleBuilder for PartialCycle {
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
+        _: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,

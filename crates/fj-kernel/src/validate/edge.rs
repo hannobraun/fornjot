@@ -93,7 +93,10 @@ mod tests {
             let mut cycle = PartialCycle::new();
 
             let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);
+                .update_as_polygon_from_points(
+                    [[0., 0.], [1., 0.], [1., 1.]],
+                    &mut services.objects,
+                );
             half_edge.write().infer_vertex_positions_if_necessary(
                 &surface.geometry(),
                 next_half_edge.read().start_vertex.clone(),
