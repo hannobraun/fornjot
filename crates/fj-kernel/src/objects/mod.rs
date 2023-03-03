@@ -80,7 +80,7 @@ mod stores;
 pub use self::{
     full::{
         cycle::{Cycle, HalfEdgesOfCycle},
-        edge::{GlobalEdge, HalfEdge, VerticesInNormalizedOrder},
+        edge::{GlobalEdge, HalfEdge},
         face::{Face, FaceSet, Handedness},
         shell::Shell,
         sketch::Sketch,

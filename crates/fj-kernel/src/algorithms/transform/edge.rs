@@ -34,15 +34,13 @@ impl TransformObject for HalfEdge {
 impl TransformObject for GlobalEdge {
     fn transform_with_cache(
         self,
-        transform: &Transform,
-        objects: &mut Service<Objects>,
-        cache: &mut TransformCache,
+        _: &Transform,
+        _: &mut Service<Objects>,
+        _: &mut TransformCache,
     ) -> Self {
-        let vertices =
-            self.vertices().access_in_normalized_order().map(|vertex| {
-                vertex.transform_with_cache(transform, objects, cache)
-            });
-
-        Self::new(vertices)
+        // There's nothing to actually transform here, as `GlobalEdge` holds no
+        // data. We still need this implementation though, as a new `GlobalEdge`
+        // must be created to represent the new and transformed edge.
+        Self::new()
     }
 }

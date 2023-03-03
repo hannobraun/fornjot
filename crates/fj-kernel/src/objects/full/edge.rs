@@ -1,6 +1,10 @@
 use fj_math::Point;
 
-use crate::{geometry::curve::Curve, objects::Vertex, storage::Handle};
+use crate::{
+    geometry::curve::Curve,
+    objects::Vertex,
+    storage::{Handle, HandleWrapper},
+};
 
 /// A directed edge, defined in a surface's 2D space
 ///
@@ -43,7 +47,7 @@ pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
     start_vertex: Handle<Vertex>,
-    global_form: Handle<GlobalEdge>,
+    global_form: HandleWrapper<GlobalEdge>,
 }
 
 impl HalfEdge {
@@ -58,7 +62,7 @@ impl HalfEdge {
             curve,
             boundary,
             start_vertex,
-            global_form,
+            global_form: global_form.into(),
         }
     }
 
@@ -96,16 +100,13 @@ impl HalfEdge {
 /// An undirected edge, defined in global (3D) coordinates
 ///
 /// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
-/// defined direction, and its vertices have no defined order. This means it can
-/// be used to determine whether two [`HalfEdge`]s map to the same `GlobalEdge`,
-/// regardless of their direction.
+/// defined direction. This means it can be used to determine whether two
+/// [`HalfEdge`]s map to the same `GlobalEdge`, regardless of their direction.
 ///
 /// See [`HalfEdge`]'s documentation for more information on the relationship
 /// between [`HalfEdge`] and `GlobalEdge`.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalEdge {
-    vertices: VerticesInNormalizedOrder,
-}
+#[derive(Clone, Debug, Default, Hash)]
+pub struct GlobalEdge {}
 
 impl GlobalEdge {
     /// Create a new instance
@@ -113,98 +114,7 @@ impl GlobalEdge {
     /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
     /// `curve` and `vertices` will end up being equal, regardless of the order
     /// of `vertices` here.
-    pub fn new(vertices: [Handle<Vertex>; 2]) -> Self {
-        let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
-
-        Self { vertices }
-    }
-
-    /// Access the vertices that bound the edge on the curve
-    ///
-    /// As the name indicates, the order of the returned vertices is normalized
-    /// and might not match the order of the vertices that were passed to
-    /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
-    /// specific order.
-    pub fn vertices(&self) -> &VerticesInNormalizedOrder {
-        &self.vertices
-    }
-}
-
-/// The vertices of a [`GlobalEdge`]
-///
-/// Since [`GlobalEdge`] is the single global representation of an edge in
-/// global space, it must normalize the order of its vertices. Otherwise, it is
-/// possible to construct two [`GlobalEdge`] instances that are meant to
-/// represent the same edge, but aren't equal.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesInNormalizedOrder([Handle<Vertex>; 2]);
-
-impl VerticesInNormalizedOrder {
-    /// Construct a new instance of `VerticesInNormalizedOrder`
-    ///
-    /// The provided vertices can be in any order. The returned `bool` value
-    /// indicates whether the normalization changed the order of the vertices.
-    pub fn new([a, b]: [Handle<Vertex>; 2]) -> (Self, bool) {
-        if a < b {
-            (Self([a, b]), false)
-        } else {
-            (Self([b, a]), true)
-        }
-    }
-
-    /// Access the vertices
-    ///
-    /// The vertices in the returned array will be in normalized order.
-    pub fn access_in_normalized_order(&self) -> [Handle<Vertex>; 2] {
-        self.0.clone()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use pretty_assertions::assert_eq;
-
-    use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder},
-        partial::PartialCycle,
-        services::Services,
-    };
-
-    #[test]
-    fn global_edge_equality() {
-        let mut services = Services::new();
-
-        let surface = services.objects.surfaces.xy_plane();
-
-        let a = [0., 0.];
-        let b = [1., 0.];
-        let c = [0., 1.];
-
-        let a_to_b = {
-            let mut cycle = PartialCycle::default();
-
-            let [mut half_edge, next_half_edge, _] =
-                cycle.update_as_polygon_from_points([a, b, c]);
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-        let b_to_a = {
-            let mut cycle = PartialCycle::default();
-
-            let [mut half_edge, next_half_edge, _] =
-                cycle.update_as_polygon_from_points([b, a, c]);
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
-            );
-
-            half_edge.build(&mut services.objects)
-        };
-
-        assert_eq!(a_to_b.global_form(), b_to_a.global_form());
+    pub fn new() -> Self {
+        Self::default()
     }
 }

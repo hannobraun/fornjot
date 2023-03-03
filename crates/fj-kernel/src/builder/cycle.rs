@@ -54,41 +54,9 @@ pub trait CycleBuilder {
 
 impl CycleBuilder for PartialCycle {
     fn add_half_edge(&mut self) -> Partial<HalfEdge> {
-        let mut new_half_edge = Partial::<HalfEdge>::new();
-
-        let (first_half_edge, mut last_half_edge) =
-            match self.half_edges.first() {
-                Some(first_half_edge) => {
-                    let first_half_edge = first_half_edge.clone();
-                    let last_half_edge = self
-                        .half_edges
-                        .last()
-                        .cloned()
-                        .unwrap_or_else(|| first_half_edge.clone());
-
-                    (first_half_edge, last_half_edge)
-                }
-                None => (new_half_edge.clone(), new_half_edge.clone()),
-            };
-
-        {
-            let shared_surface_vertex =
-                new_half_edge.read().start_vertex.clone();
-            last_half_edge
-                .write()
-                .infer_global_form(shared_surface_vertex);
-        }
-
-        {
-            let shared_surface_vertex =
-                first_half_edge.read().start_vertex.clone();
-            new_half_edge
-                .write()
-                .infer_global_form(shared_surface_vertex);
-        }
-
-        self.half_edges.push(new_half_edge.clone());
-        new_half_edge
+        let half_edge = Partial::new();
+        self.half_edges.push(half_edge.clone());
+        half_edge
     }
 
     fn update_as_polygon_from_points<O, P>(

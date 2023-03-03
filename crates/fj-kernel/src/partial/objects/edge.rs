@@ -86,11 +86,7 @@ impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = None;
         let start_vertex = Partial::default();
-        let end_vertex = Partial::default();
-
-        let global_form = Partial::from_partial(PartialGlobalEdge {
-            vertices: [start_vertex.clone(), end_vertex],
-        });
+        let global_form = Partial::default();
 
         Self {
             curve,
@@ -103,28 +99,16 @@ impl Default for PartialHalfEdge {
 
 /// A partial [`GlobalEdge`]
 #[derive(Clone, Debug, Default)]
-pub struct PartialGlobalEdge {
-    /// The vertices that bound the edge on the curve
-    pub vertices: [Partial<Vertex>; 2],
-}
+pub struct PartialGlobalEdge {}
 
 impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
 
-    fn from_full(
-        global_edge: &Self::Full,
-        cache: &mut FullToPartialCache,
-    ) -> Self {
-        Self {
-            vertices: global_edge
-                .vertices()
-                .access_in_normalized_order()
-                .map(|vertex| Partial::from_full(vertex, cache)),
-        }
+    fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
+        Self {}
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let vertices = self.vertices.map(|vertex| vertex.build(objects));
-        GlobalEdge::new(vertices)
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
+        GlobalEdge::new()
     }
 }
