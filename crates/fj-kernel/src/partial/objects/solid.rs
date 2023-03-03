@@ -15,7 +15,7 @@ impl PartialObject for PartialSolid {
     type Full = Solid;
 
     fn new() -> Self {
-        Self::default()
+        Self { shells: Vec::new() }
     }
 
     fn from_full(solid: &Self::Full, cache: &mut FullToPartialCache) -> Self {
