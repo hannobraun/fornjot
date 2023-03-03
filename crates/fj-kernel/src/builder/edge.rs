@@ -7,7 +7,7 @@ use crate::{
         surface::SurfaceGeometry,
     },
     objects::{HalfEdge, Vertex},
-    partial::{MaybeCurve, Partial, PartialGlobalEdge, PartialHalfEdge},
+    partial::{MaybeCurve, Partial, PartialHalfEdge},
 };
 
 /// Builder API for [`PartialHalfEdge`]
@@ -253,11 +253,3 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             other_prev.read().start_vertex.read().position;
     }
 }
-
-/// Builder API for [`PartialGlobalEdge`]
-pub trait GlobalEdgeBuilder {
-    // No methods are currently defined. This trait serves as a placeholder, to
-    // make it clear where to add such methods, once necessary.
-}
-
-impl GlobalEdgeBuilder for PartialGlobalEdge {}
