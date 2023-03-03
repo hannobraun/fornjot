@@ -1,6 +1,10 @@
 use fj_math::Point;
 
-use crate::{geometry::curve::Curve, objects::Vertex, storage::Handle};
+use crate::{
+    geometry::curve::Curve,
+    objects::Vertex,
+    storage::{Handle, HandleWrapper},
+};
 
 /// A directed edge, defined in a surface's 2D space
 ///
@@ -43,7 +47,7 @@ pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
     start_vertex: Handle<Vertex>,
-    global_form: Handle<GlobalEdge>,
+    global_form: HandleWrapper<GlobalEdge>,
 }
 
 impl HalfEdge {
@@ -58,7 +62,7 @@ impl HalfEdge {
             curve,
             boundary,
             start_vertex,
-            global_form,
+            global_form: global_form.into(),
         }
     }
 
