@@ -103,7 +103,7 @@ impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
 
     fn new() -> Self {
-        Self::default()
+        Self {}
     }
 
     fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
