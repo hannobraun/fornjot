@@ -86,7 +86,7 @@ impl Default for PartialHalfEdge {
     fn default() -> Self {
         let curve = None;
         let start_vertex = Partial::default();
-        let global_form = Partial::from_partial(PartialGlobalEdge {});
+        let global_form = Partial::default();
 
         Self {
             curve,
