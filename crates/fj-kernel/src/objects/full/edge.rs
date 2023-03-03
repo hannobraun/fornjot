@@ -46,7 +46,7 @@ use crate::{
 pub struct HalfEdge {
     curve: Curve,
     boundary: [Point<1>; 2],
-    start_vertex: Handle<Vertex>,
+    start_vertex: HandleWrapper<Vertex>,
     global_form: HandleWrapper<GlobalEdge>,
 }
 
@@ -61,7 +61,7 @@ impl HalfEdge {
         Self {
             curve,
             boundary,
-            start_vertex,
+            start_vertex: start_vertex.into(),
             global_form: global_form.into(),
         }
     }
