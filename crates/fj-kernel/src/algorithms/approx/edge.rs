@@ -231,12 +231,11 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::{CycleBuilder, HalfEdgeBuilder, SurfaceBuilder},
-        geometry::curve::GlobalPath,
+        builder::{CycleBuilder, HalfEdgeBuilder},
+        geometry::{curve::GlobalPath, surface::SurfaceGeometry},
         insert::Insert,
-        partial::{
-            PartialCycle, PartialHalfEdge, PartialObject, PartialSurface,
-        },
+        objects::Surface,
+        partial::{PartialCycle, PartialHalfEdge, PartialObject},
         services::Services,
     };
 
@@ -274,11 +273,10 @@ mod tests {
     fn approx_line_on_curved_surface_but_not_along_curve() {
         let mut services = Services::new();
 
-        let surface = PartialSurface::from_axes(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
-        )
-        .build(&mut services.objects)
+        let surface = Surface::new(SurfaceGeometry {
+            u: GlobalPath::circle_from_radius(1.),
+            v: [0., 0., 1.].into(),
+        })
         .insert(&mut services.objects);
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
@@ -312,9 +310,11 @@ mod tests {
         let path = GlobalPath::circle_from_radius(1.);
         let range = RangeOnPath::from([[0.], [TAU]]);
 
-        let surface = PartialSurface::from_axes(path, [0., 0., 1.])
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let surface = Surface::new(SurfaceGeometry {
+            u: path,
+            v: [0., 0., 1.].into(),
+        })
+        .insert(&mut services.objects);
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
