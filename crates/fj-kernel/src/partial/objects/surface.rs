@@ -16,7 +16,7 @@ impl PartialObject for PartialSurface {
     type Full = Surface;
 
     fn new() -> Self {
-        Self::default()
+        Self { geometry: None }
     }
 
     fn from_full(surface: &Self::Full, _: &mut FullToPartialCache) -> Self {
