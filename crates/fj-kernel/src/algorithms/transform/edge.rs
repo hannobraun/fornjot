@@ -38,6 +38,9 @@ impl TransformObject for GlobalEdge {
         _: &mut Service<Objects>,
         _: &mut TransformCache,
     ) -> Self {
+        // There's nothing to actually transform here, as `GlobalEdge` holds no
+        // data. We still need this implementation though, as a new `GlobalEdge`
+        // must be created to represent the new and transformed edge.
         Self::new()
     }
 }
