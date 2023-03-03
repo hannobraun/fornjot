@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Solid`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialSolid {
     /// The shells that make up the solid
     pub shells: Vec<Partial<Shell>>,
