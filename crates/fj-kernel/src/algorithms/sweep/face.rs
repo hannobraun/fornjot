@@ -89,9 +89,11 @@ impl Sweep for Handle<Face> {
                 top_edges.push(Partial::from(top_edge));
             }
 
-            top_cycle
-                .write()
-                .connect_to_closed_edges(top_edges, &top_surface.geometry());
+            top_cycle.write().connect_to_closed_edges(
+                top_edges,
+                &top_surface.geometry(),
+                objects,
+            );
 
             for (bottom, top) in original_edges
                 .into_iter()

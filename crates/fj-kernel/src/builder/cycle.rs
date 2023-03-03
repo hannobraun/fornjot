@@ -43,6 +43,7 @@ pub trait CycleBuilder {
         &mut self,
         edges: O,
         surface: &SurfaceGeometry,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
@@ -91,6 +92,7 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         edges: O,
         surface: &SurfaceGeometry,
+        _: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
