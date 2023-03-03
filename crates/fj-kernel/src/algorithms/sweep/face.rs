@@ -67,7 +67,7 @@ impl Sweep for Handle<Face> {
             let mut top_cycle = if i == 0 {
                 top_face.exterior.clone()
             } else {
-                top_face.add_interior()
+                top_face.add_interior(objects)
             };
 
             let mut original_edges = Vec::new();

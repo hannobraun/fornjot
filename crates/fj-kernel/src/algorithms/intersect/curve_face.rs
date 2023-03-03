@@ -186,7 +186,7 @@ mod tests {
             face.exterior
                 .write()
                 .update_as_polygon_from_points(exterior);
-            face.add_interior()
+            face.add_interior(&mut services.objects)
                 .write()
                 .update_as_polygon_from_points(interior);
 
