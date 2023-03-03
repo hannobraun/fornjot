@@ -17,7 +17,7 @@ impl PartialObject for PartialVertex {
     type Full = Vertex;
 
     fn new() -> Self {
-        Self::default()
+        Self { position: None }
     }
 
     fn from_full(
