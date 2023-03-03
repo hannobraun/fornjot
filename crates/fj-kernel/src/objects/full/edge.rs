@@ -100,9 +100,8 @@ impl HalfEdge {
 /// An undirected edge, defined in global (3D) coordinates
 ///
 /// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
-/// defined direction, and its vertices have no defined order. This means it can
-/// be used to determine whether two [`HalfEdge`]s map to the same `GlobalEdge`,
-/// regardless of their direction.
+/// defined direction. This means it can be used to determine whether two
+/// [`HalfEdge`]s map to the same `GlobalEdge`, regardless of their direction.
 ///
 /// See [`HalfEdge`]'s documentation for more information on the relationship
 /// between [`HalfEdge`] and `GlobalEdge`.
