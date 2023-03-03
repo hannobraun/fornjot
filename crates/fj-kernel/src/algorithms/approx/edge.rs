@@ -36,23 +36,23 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
         let points = {
-            let approx = match cache.get(half_edge.global_form().clone(), range)
-            {
-                Some(approx) => approx,
-                None => {
-                    let approx = approx_edge(
-                        &half_edge.curve(),
-                        surface,
-                        range,
-                        tolerance,
-                    );
-                    cache.insert_edge(
-                        half_edge.global_form().clone(),
-                        range,
-                        approx,
-                    )
-                }
-            };
+            let approx =
+                match cache.get_edge(half_edge.global_form().clone(), range) {
+                    Some(approx) => approx,
+                    None => {
+                        let approx = approx_edge(
+                            &half_edge.curve(),
+                            surface,
+                            range,
+                            tolerance,
+                        );
+                        cache.insert_edge(
+                            half_edge.global_form().clone(),
+                            range,
+                            approx,
+                        )
+                    }
+                };
 
             approx
                 .points
@@ -195,7 +195,7 @@ impl EdgeCache {
     }
 
     /// Access the approximation for the given [`GlobalEdge`], if available
-    pub fn get(
+    pub fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
