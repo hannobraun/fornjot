@@ -352,7 +352,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let half_edge = {
-            let mut half_edge = PartialHalfEdge::default();
+            let mut half_edge = PartialHalfEdge::new();
 
             half_edge.update_as_circle_from_radius(1.);
             let next_vertex = half_edge.start_vertex.clone();
