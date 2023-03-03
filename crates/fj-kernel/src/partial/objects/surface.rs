@@ -15,6 +15,10 @@ pub struct PartialSurface {
 impl PartialObject for PartialSurface {
     type Full = Surface;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(surface: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
             geometry: Some(surface.geometry()),

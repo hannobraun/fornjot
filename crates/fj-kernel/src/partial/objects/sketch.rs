@@ -14,6 +14,10 @@ pub struct PartialSketch {
 impl PartialObject for PartialSketch {
     type Full = Sketch;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(sketch: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             faces: sketch

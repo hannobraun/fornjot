@@ -16,6 +16,10 @@ pub struct PartialVertex {
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(
         global_vertex: &Self::Full,
         _: &mut FullToPartialCache,

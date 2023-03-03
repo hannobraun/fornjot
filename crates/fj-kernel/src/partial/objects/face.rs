@@ -28,6 +28,10 @@ pub struct PartialFace {
 impl PartialObject for PartialFace {
     type Full = Face;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             surface: Partial::from_full(face.surface().clone(), cache),

@@ -14,6 +14,10 @@ pub struct PartialCycle {
 impl PartialObject for PartialCycle {
     type Full = Cycle;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             half_edges: cycle

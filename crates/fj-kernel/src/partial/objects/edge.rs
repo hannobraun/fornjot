@@ -45,6 +45,10 @@ impl PartialHalfEdge {
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(
         half_edge: &Self::Full,
         cache: &mut FullToPartialCache,
@@ -103,6 +107,10 @@ pub struct PartialGlobalEdge {}
 
 impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
+
+    fn new() -> Self {
+        Self::default()
+    }
 
     fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {}

@@ -14,6 +14,10 @@ pub struct PartialShell {
 impl PartialObject for PartialShell {
     type Full = Shell;
 
+    fn new() -> Self {
+        Self::default()
+    }
+
     fn from_full(shell: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             faces: shell
