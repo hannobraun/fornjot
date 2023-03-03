@@ -15,7 +15,7 @@ impl PartialObject for PartialShell {
     type Full = Shell;
 
     fn new() -> Self {
-        Self::default()
+        Self { faces: Vec::new() }
     }
 
     fn from_full(shell: &Self::Full, cache: &mut FullToPartialCache) -> Self {
