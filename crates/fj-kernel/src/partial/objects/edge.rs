@@ -48,15 +48,11 @@ impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
     fn new(objects: &mut Service<Objects>) -> Self {
-        let curve = None;
-        let start_vertex = Partial::new(objects);
-        let global_form = GlobalEdge::new().insert(objects);
-
         Self {
-            curve,
+            curve: None,
             boundary: [None; 2],
-            start_vertex,
-            global_form,
+            start_vertex: Partial::new(objects),
+            global_form: GlobalEdge::new().insert(objects),
         }
     }
 
