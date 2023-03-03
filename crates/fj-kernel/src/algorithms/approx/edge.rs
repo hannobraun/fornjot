@@ -169,7 +169,7 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
-    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
+    edge_approx: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
 }
 
 impl EdgeCache {
@@ -185,7 +185,8 @@ impl EdgeCache {
         range: RangeOnPath,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
-        self.inner.insert((handle.id(), range), approx.clone());
+        self.edge_approx
+            .insert((handle.id(), range), approx.clone());
         approx
     }
 
@@ -195,10 +196,12 @@ impl EdgeCache {
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.inner.get(&(handle.id(), range)) {
+        if let Some(approx) = self.edge_approx.get(&(handle.id(), range)) {
             return Some(approx.clone());
         }
-        if let Some(approx) = self.inner.get(&(handle.id(), range.reverse())) {
+        if let Some(approx) =
+            self.edge_approx.get(&(handle.id(), range.reverse()))
+        {
             // If we have a cache entry for the reverse range, we need to use
             // that too!
             return Some(approx.clone().reverse());
