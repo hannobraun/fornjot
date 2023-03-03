@@ -7,9 +7,11 @@
 
 use std::collections::BTreeMap;
 
+use fj_math::Point;
+
 use crate::{
     geometry::curve::{Curve, GlobalPath},
-    objects::{GlobalEdge, HalfEdge, Surface},
+    objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
 
@@ -30,12 +32,19 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         let range = RangeOnPath { boundary };
 
         let position_surface = half_edge.start_position();
+        let position_global = match cache.get_position(half_edge.start_vertex())
+        {
+            Some(position) => position,
+            None => {
+                let position_global = surface
+                    .geometry()
+                    .point_from_surface_coords(position_surface);
+                cache.insert_position(half_edge.start_vertex(), position_global)
+            }
+        };
 
-        let first = ApproxPoint::new(
-            position_surface,
-            half_edge.start_vertex().position(),
-        )
-        .with_source((half_edge.clone(), half_edge.boundary()[0]));
+        let first = ApproxPoint::new(position_surface, position_global)
+            .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
         let points = {
             let approx =
@@ -176,6 +185,7 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeCache {
     edge_approx: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
+    vertex_approx: BTreeMap<ObjectId, Point<3>>,
 }
 
 impl EdgeCache {
@@ -214,6 +224,20 @@ impl EdgeCache {
         self.edge_approx
             .insert((handle.id(), range), approx.clone())
             .unwrap_or(approx)
+    }
+
+    fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
+        self.vertex_approx.get(&handle.id()).cloned()
+    }
+
+    fn insert_position(
+        &mut self,
+        handle: &Handle<Vertex>,
+        position: Point<3>,
+    ) -> Point<3> {
+        self.vertex_approx
+            .insert(handle.id(), position)
+            .unwrap_or(position)
     }
 }
 
