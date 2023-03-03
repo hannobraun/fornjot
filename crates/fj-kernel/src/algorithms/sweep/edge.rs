@@ -33,10 +33,9 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // be created by sweeping a curve, so let's sweep the curve of the edge
         // we're sweeping.
         {
-            let surface = Partial::from(
+            face.surface = Partial::from(
                 (edge.curve(), surface).sweep_with_cache(path, cache, objects),
             );
-            face.surface = surface;
         }
 
         // Now we're ready to create the edges.
