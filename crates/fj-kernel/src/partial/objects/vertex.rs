@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A partial [`Vertex`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
