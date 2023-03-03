@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// A partial [`Surface`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialSurface {
     /// The surface's geometry
     pub geometry: Option<SurfaceGeometry>,
@@ -14,6 +14,10 @@ pub struct PartialSurface {
 
 impl PartialObject for PartialSurface {
     type Full = Surface;
+
+    fn new(_: &mut Service<Objects>) -> Self {
+        Self { geometry: None }
+    }
 
     fn from_full(surface: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {

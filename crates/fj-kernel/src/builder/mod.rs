@@ -13,14 +13,9 @@ mod vertex;
 use std::array;
 
 pub use self::{
-    cycle::CycleBuilder,
-    edge::{GlobalEdgeBuilder, HalfEdgeBuilder},
-    face::FaceBuilder,
-    shell::ShellBuilder,
-    sketch::SketchBuilder,
-    solid::SolidBuilder,
-    surface::SurfaceBuilder,
-    vertex::VertexBuilder,
+    cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder,
+    shell::ShellBuilder, sketch::SketchBuilder, solid::SolidBuilder,
+    surface::SurfaceBuilder, vertex::VertexBuilder,
 };
 
 /// Pass objects to a builder method

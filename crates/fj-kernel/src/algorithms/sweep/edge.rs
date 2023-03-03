@@ -26,10 +26,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         let path = path.into();
 
         // The result of sweeping an edge is a face. Let's create that.
-        let mut face = PartialFace {
-            color: Some(color),
-            ..Default::default()
-        };
+        let mut face = PartialFace::new(objects);
+        face.color = Some(color);
 
         // A face (and everything in it) is defined on a surface. A surface can
         // be created by sweeping a curve, so let's sweep the curve of the edge
@@ -42,10 +40,10 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         }
 
         // Now we're ready to create the edges.
-        let mut edge_bottom = face.exterior.write().add_half_edge();
-        let mut edge_up = face.exterior.write().add_half_edge();
-        let mut edge_top = face.exterior.write().add_half_edge();
-        let mut edge_down = face.exterior.write().add_half_edge();
+        let mut edge_bottom = face.exterior.write().add_half_edge(objects);
+        let mut edge_up = face.exterior.write().add_half_edge(objects);
+        let mut edge_top = face.exterior.write().add_half_edge(objects);
+        let mut edge_down = face.exterior.write().add_half_edge(objects);
 
         // Those edges aren't fully defined yet. We'll do that shortly, but
         // first we have to figure a few things out.
@@ -129,7 +127,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         [edge_bottom.write(), edge_up.write(), edge_down.write()]
             .zip_ext(global_edges)
             .map(|(mut half_edge, global_edge)| {
-                half_edge.global_form = Partial::from(global_edge);
+                half_edge.global_form = global_edge;
             });
 
         // And we're done creating the face! All that's left to do is build our

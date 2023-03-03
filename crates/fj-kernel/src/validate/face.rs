@@ -151,20 +151,19 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
-            face.exterior.write().update_as_polygon_from_points([
-                [0., 0.],
-                [3., 0.],
-                [0., 3.],
-            ]);
-            face.add_interior().write().update_as_polygon_from_points([
-                [1., 1.],
-                [1., 2.],
-                [2., 1.],
-            ]);
+            let mut face = PartialFace::new(&mut services.objects);
+
+            face.surface = Partial::from(services.objects.surfaces.xy_plane());
+            face.exterior.write().update_as_polygon_from_points(
+                [[0., 0.], [3., 0.], [0., 3.]],
+                &mut services.objects,
+            );
+            face.add_interior(&mut services.objects)
+                .write()
+                .update_as_polygon_from_points(
+                    [[1., 1.], [1., 2.], [2., 1.]],
+                    &mut services.objects,
+                );
             face.build(&mut services.objects)
         };
         let invalid = {
@@ -200,12 +199,11 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut face = PartialFace {
-                surface: Partial::from(surface.clone()),
-                ..Default::default()
-            };
+            let mut face = PartialFace::new(&mut services.objects);
+            face.surface = Partial::from(surface.clone());
 
-            let mut half_edge = face.exterior.write().add_half_edge();
+            let mut half_edge =
+                face.exterior.write().add_half_edge(&mut services.objects);
             half_edge.write().update_as_circle_from_radius(1.);
             let next_vertex = half_edge.read().start_vertex.clone();
             half_edge.write().infer_vertex_positions_if_necessary(

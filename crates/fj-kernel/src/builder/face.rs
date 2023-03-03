@@ -1,17 +1,24 @@
 use crate::{
-    objects::Cycle,
+    objects::{Cycle, Objects},
     partial::{Partial, PartialFace},
+    services::Service,
 };
 
 /// Builder API for [`PartialFace`]
 pub trait FaceBuilder {
     /// Add an interior cycle
-    fn add_interior(&mut self) -> Partial<Cycle>;
+    fn add_interior(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<Cycle>;
 }
 
 impl FaceBuilder for PartialFace {
-    fn add_interior(&mut self) -> Partial<Cycle> {
-        let cycle = Partial::new();
+    fn add_interior(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<Cycle> {
+        let cycle = Partial::new(objects);
         self.interiors.push(cycle.clone());
         cycle
     }

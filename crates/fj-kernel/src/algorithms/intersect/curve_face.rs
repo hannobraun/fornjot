@@ -180,16 +180,15 @@ mod tests {
         ];
 
         let face = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..Default::default()
-            };
+            let mut face = PartialFace::new(&mut services.objects);
+
+            face.surface = Partial::from(services.objects.surfaces.xy_plane());
             face.exterior
                 .write()
-                .update_as_polygon_from_points(exterior);
-            face.add_interior()
+                .update_as_polygon_from_points(exterior, &mut services.objects);
+            face.add_interior(&mut services.objects)
                 .write()
-                .update_as_polygon_from_points(interior);
+                .update_as_polygon_from_points(interior, &mut services.objects);
 
             face.build(&mut services.objects)
         };

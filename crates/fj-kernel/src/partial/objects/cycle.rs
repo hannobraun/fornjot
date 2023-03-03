@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Cycle`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
     pub half_edges: Vec<Partial<HalfEdge>>,
@@ -13,6 +13,12 @@ pub struct PartialCycle {
 
 impl PartialObject for PartialCycle {
     type Full = Cycle;
+
+    fn new(_: &mut Service<Objects>) -> Self {
+        Self {
+            half_edges: Vec::new(),
+        }
+    }
 
     fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {

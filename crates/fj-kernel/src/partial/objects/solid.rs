@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// A partial [`Solid`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialSolid {
     /// The shells that make up the solid
     pub shells: Vec<Partial<Shell>>,
@@ -13,6 +13,10 @@ pub struct PartialSolid {
 
 impl PartialObject for PartialSolid {
     type Full = Solid;
+
+    fn new(_: &mut Service<Objects>) -> Self {
+        Self { shells: Vec::new() }
+    }
 
     fn from_full(solid: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {

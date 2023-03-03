@@ -3,8 +3,9 @@ use itertools::Itertools;
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::HalfEdge,
+    objects::{HalfEdge, Objects},
     partial::{Partial, PartialCycle},
+    services::Service,
 };
 
 use super::{HalfEdgeBuilder, ObjectArgument};
@@ -20,12 +21,16 @@ pub trait CycleBuilder {
     ///
     /// If this is the first half-edge being added, it is connected to itself,
     /// meaning its front and back vertices are the same.
-    fn add_half_edge(&mut self) -> Partial<HalfEdge>;
+    fn add_half_edge(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge>;
 
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
@@ -41,6 +46,7 @@ pub trait CycleBuilder {
         &mut self,
         edges: O,
         surface: &SurfaceGeometry,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
@@ -53,8 +59,11 @@ pub trait CycleBuilder {
 }
 
 impl CycleBuilder for PartialCycle {
-    fn add_half_edge(&mut self) -> Partial<HalfEdge> {
-        let half_edge = Partial::new();
+    fn add_half_edge(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
+        let half_edge = Partial::new(objects);
         self.half_edges.push(half_edge.clone());
         half_edge
     }
@@ -62,6 +71,7 @@ impl CycleBuilder for PartialCycle {
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
@@ -70,7 +80,7 @@ impl CycleBuilder for PartialCycle {
         let mut start_positions = Vec::new();
         let half_edges = points.map(|point| {
             start_positions.push(point.into());
-            self.add_half_edge()
+            self.add_half_edge(objects)
         });
 
         for ((start, end), half_edge) in start_positions
@@ -88,12 +98,13 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         edges: O,
         surface: &SurfaceGeometry,
+        objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
         edges.map_with_prev(|other, prev| {
-            let mut this = self.add_half_edge();
+            let mut this = self.add_half_edge(objects);
             this.write().update_from_other_edge(&other, &prev, surface);
             this
         })

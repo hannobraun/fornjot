@@ -1,9 +1,11 @@
 use fj_math::Point;
 
 use crate::{
+    insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{FullToPartialCache, MaybeCurve, Partial, PartialObject},
     services::Service,
+    storage::Handle,
 };
 
 /// A partial [`HalfEdge`]
@@ -19,7 +21,7 @@ pub struct PartialHalfEdge {
     pub start_vertex: Partial<Vertex>,
 
     /// The global form of the half-edge
-    pub global_form: Partial<GlobalEdge>,
+    pub global_form: Handle<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
@@ -45,6 +47,15 @@ impl PartialHalfEdge {
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
+    fn new(objects: &mut Service<Objects>) -> Self {
+        Self {
+            curve: None,
+            boundary: [None; 2],
+            start_vertex: Partial::new(objects),
+            global_form: GlobalEdge::new().insert(objects),
+        }
+    }
+
     fn from_full(
         half_edge: &Self::Full,
         cache: &mut FullToPartialCache,
@@ -56,10 +67,7 @@ impl PartialObject for PartialHalfEdge {
                 half_edge.start_vertex().clone(),
                 cache,
             ),
-            global_form: Partial::from_full(
-                half_edge.global_form().clone(),
-                cache,
-            ),
+            global_form: half_edge.global_form().clone(),
         }
     }
 
@@ -76,39 +84,7 @@ impl PartialObject for PartialHalfEdge {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
         let start_vertex = self.start_vertex.build(objects);
-        let global_form = self.global_form.build(objects);
 
-        HalfEdge::new(curve, boundary, start_vertex, global_form)
-    }
-}
-
-impl Default for PartialHalfEdge {
-    fn default() -> Self {
-        let curve = None;
-        let start_vertex = Partial::default();
-        let global_form = Partial::default();
-
-        Self {
-            curve,
-            boundary: [None; 2],
-            start_vertex,
-            global_form,
-        }
-    }
-}
-
-/// A partial [`GlobalEdge`]
-#[derive(Clone, Debug, Default)]
-pub struct PartialGlobalEdge {}
-
-impl PartialObject for PartialGlobalEdge {
-    type Full = GlobalEdge;
-
-    fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
-        Self {}
-    }
-
-    fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        GlobalEdge::new()
+        HalfEdge::new(curve, boundary, start_vertex, self.global_form)
     }
 }

@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A partial [`Vertex`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialVertex {
     /// The position of the vertex
     pub position: Option<Point<3>>,
@@ -15,6 +15,10 @@ pub struct PartialVertex {
 
 impl PartialObject for PartialVertex {
     type Full = Vertex;
+
+    fn new(_: &mut Service<Objects>) -> Self {
+        Self { position: None }
+    }
 
     fn from_full(
         global_vertex: &Self::Full,

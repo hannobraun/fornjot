@@ -8,7 +8,7 @@ use crate::{
 };
 
 /// A partial [`Face`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialFace {
     /// The surface that the face is defined in
     pub surface: Partial<Surface>,
@@ -27,6 +27,15 @@ pub struct PartialFace {
 
 impl PartialObject for PartialFace {
     type Full = Face;
+
+    fn new(objects: &mut Service<Objects>) -> Self {
+        Self {
+            surface: Partial::new(objects),
+            exterior: Partial::new(objects),
+            interiors: Vec::new(),
+            color: None,
+        }
+    }
 
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {

@@ -11,9 +11,12 @@ pub trait HasPartial {
 }
 
 /// Implemented for partial objects
-pub trait PartialObject: Clone + Debug + Default {
+pub trait PartialObject: Clone + Debug {
     /// The type representing the full object
     type Full: HasPartial<Partial = Self>;
+
+    /// Construct a default partial object
+    fn new(objects: &mut Service<Objects>) -> Self;
 
     /// Construct a partial object from a full one
     fn from_full(full: &Self::Full, cache: &mut FullToPartialCache) -> Self;
@@ -35,7 +38,6 @@ macro_rules! impl_trait {
 impl_trait!(
     Cycle, PartialCycle;
     Face, PartialFace;
-    GlobalEdge, PartialGlobalEdge;
     HalfEdge, PartialHalfEdge;
     Shell, PartialShell;
     Sketch, PartialSketch;
