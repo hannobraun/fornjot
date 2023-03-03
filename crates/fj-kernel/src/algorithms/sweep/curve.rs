@@ -1,11 +1,12 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    builder::SurfaceBuilder,
-    geometry::curve::{Curve, GlobalPath},
+    geometry::{
+        curve::{Curve, GlobalPath},
+        surface::SurfaceGeometry,
+    },
     insert::Insert,
     objects::{Objects, Surface},
-    partial::{PartialObject, PartialSurface},
     services::Service,
     storage::Handle,
 };
@@ -74,8 +75,6 @@ impl Sweep for (Curve, &Surface) {
             }
         };
 
-        PartialSurface::from_axes(u, path)
-            .build(objects)
-            .insert(objects)
+        Surface::new(SurfaceGeometry { u, v: path.into() }).insert(objects)
     }
 }

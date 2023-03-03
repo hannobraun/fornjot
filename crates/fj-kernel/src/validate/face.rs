@@ -141,7 +141,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
         insert::Insert,
         objects::{Cycle, Face, HalfEdge},
-        partial::{Partial, PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -153,7 +153,7 @@ mod tests {
         let valid = {
             let mut face = PartialFace::new(&mut services.objects);
 
-            face.surface = Partial::from(services.objects.surfaces.xy_plane());
+            face.surface = Some(services.objects.surfaces.xy_plane());
             face.exterior.write().update_as_polygon_from_points(
                 [[0., 0.], [3., 0.], [0., 3.]],
                 &mut services.objects,
@@ -200,7 +200,7 @@ mod tests {
             let surface = services.objects.surfaces.xy_plane();
 
             let mut face = PartialFace::new(&mut services.objects);
-            face.surface = Partial::from(surface.clone());
+            face.surface = Some(surface.clone());
 
             let mut half_edge =
                 face.exterior.write().add_half_edge(&mut services.objects);

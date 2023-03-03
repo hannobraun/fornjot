@@ -1,9 +1,10 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::{
+    geometry::curve::Curve,
     insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::{FullToPartialCache, MaybeCurve, Partial, PartialObject},
+    partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -86,5 +87,27 @@ impl PartialObject for PartialHalfEdge {
         let start_vertex = self.start_vertex.build(objects);
 
         HalfEdge::new(curve, boundary, start_vertex, self.global_form)
+    }
+}
+
+/// A possibly undefined curve
+#[derive(Clone, Copy, Debug)]
+pub enum MaybeCurve {
+    /// The curve is fully defined
+    Defined(Curve),
+
+    /// The curve is undefined, but we know it is a circle
+    UndefinedCircle {
+        /// The radius of the undefined circle
+        radius: Scalar,
+    },
+
+    /// The curve is undefined, but we know it is a line
+    UndefinedLine,
+}
+
+impl From<Curve> for MaybeCurve {
+    fn from(path: Curve) -> Self {
+        Self::Defined(path)
     }
 }

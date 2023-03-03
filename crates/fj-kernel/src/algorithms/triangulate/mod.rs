@@ -80,7 +80,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
         objects::Face,
-        partial::{Partial, PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
@@ -97,7 +97,7 @@ mod tests {
         let d = [0., 1.];
 
         let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Partial::from(services.objects.surfaces.xy_plane());
+        face.surface = Some(services.objects.surfaces.xy_plane());
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d], &mut services.objects);
@@ -137,7 +137,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Partial::from(surface.clone());
+        face.surface = Some(surface.clone());
         face.exterior
             .write()
             .update_as_polygon_from_points([a, b, c, d], &mut services.objects);
@@ -202,7 +202,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Partial::from(surface.clone());
+        face.surface = Some(surface.clone());
         face.exterior.write().update_as_polygon_from_points(
             [a, b, c, d, e],
             &mut services.objects,
