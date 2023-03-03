@@ -14,8 +14,11 @@ pub trait FaceBuilder {
 }
 
 impl FaceBuilder for PartialFace {
-    fn add_interior(&mut self, _: &mut Service<Objects>) -> Partial<Cycle> {
-        let cycle = Partial::new();
+    fn add_interior(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<Cycle> {
+        let cycle = Partial::new(objects);
         self.interiors.push(cycle.clone());
         cycle
     }

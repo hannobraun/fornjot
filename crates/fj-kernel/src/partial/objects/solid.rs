@@ -14,7 +14,7 @@ pub struct PartialSolid {
 impl PartialObject for PartialSolid {
     type Full = Solid;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self { shells: Vec::new() }
     }
 

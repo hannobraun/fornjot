@@ -15,7 +15,7 @@ pub struct PartialSurface {
 impl PartialObject for PartialSurface {
     type Full = Surface;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self { geometry: None }
     }
 

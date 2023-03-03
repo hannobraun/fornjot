@@ -87,7 +87,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let curve = Curve::u_axis();
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -119,7 +119,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let curve = Curve::u_axis();
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -151,7 +151,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let curve = Curve::u_axis();
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -178,7 +178,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
         let curve = Curve::u_axis();
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(

@@ -86,7 +86,7 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            let mut face = PartialFace::new();
+            let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Partial::from(surface);
             face.exterior
@@ -117,7 +117,7 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            let mut face = PartialFace::new();
+            let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Partial::from(surface);
             face.exterior

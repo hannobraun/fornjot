@@ -16,7 +16,7 @@ pub struct PartialVertex {
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self { position: None }
     }
 

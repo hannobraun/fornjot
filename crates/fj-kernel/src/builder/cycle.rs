@@ -59,8 +59,11 @@ pub trait CycleBuilder {
 }
 
 impl CycleBuilder for PartialCycle {
-    fn add_half_edge(&mut self, _: &mut Service<Objects>) -> Partial<HalfEdge> {
-        let half_edge = Partial::new();
+    fn add_half_edge(
+        &mut self,
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
+        let half_edge = Partial::new(objects);
         self.half_edges.push(half_edge.clone());
         half_edge
     }

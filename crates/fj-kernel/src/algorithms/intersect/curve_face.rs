@@ -180,7 +180,7 @@ mod tests {
         ];
 
         let face = {
-            let mut face = PartialFace::new();
+            let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Partial::from(services.objects.surfaces.xy_plane());
             face.exterior

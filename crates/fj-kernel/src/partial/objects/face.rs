@@ -28,10 +28,10 @@ pub struct PartialFace {
 impl PartialObject for PartialFace {
     type Full = Face;
 
-    fn new() -> Self {
+    fn new(objects: &mut Service<Objects>) -> Self {
         Self {
-            surface: Partial::new(),
-            exterior: Partial::new(),
+            surface: Partial::new(objects),
+            exterior: Partial::new(objects),
             interiors: Vec::new(),
             color: None,
         }

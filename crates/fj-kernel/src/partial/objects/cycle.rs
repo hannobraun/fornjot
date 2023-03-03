@@ -14,7 +14,7 @@ pub struct PartialCycle {
 impl PartialObject for PartialCycle {
     type Full = Cycle;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self {
             half_edges: Vec::new(),
         }

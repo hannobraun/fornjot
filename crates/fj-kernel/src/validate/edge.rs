@@ -90,7 +90,7 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(

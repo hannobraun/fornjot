@@ -57,7 +57,7 @@ impl Sweep for Handle<Face> {
         let top_surface =
             bottom_face.surface().clone().translate(path, objects);
 
-        let mut top_face = PartialFace::new();
+        let mut top_face = PartialFace::new(objects);
         top_face.surface = Partial::from(top_surface.clone());
         top_face.color = Some(self.color());
 

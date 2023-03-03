@@ -14,7 +14,7 @@ pub struct PartialShell {
 impl PartialObject for PartialShell {
     type Full = Shell;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self { faces: Vec::new() }
     }
 

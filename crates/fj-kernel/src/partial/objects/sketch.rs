@@ -14,7 +14,7 @@ pub struct PartialSketch {
 impl PartialObject for PartialSketch {
     type Full = Sketch;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self { faces: Vec::new() }
     }
 

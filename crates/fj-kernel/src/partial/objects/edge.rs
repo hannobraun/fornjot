@@ -45,10 +45,10 @@ impl PartialHalfEdge {
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
-    fn new() -> Self {
+    fn new(objects: &mut Service<Objects>) -> Self {
         let curve = None;
-        let start_vertex = Partial::new();
-        let global_form = Partial::new();
+        let start_vertex = Partial::new(objects);
+        let global_form = Partial::new(objects);
 
         Self {
             curve,
@@ -102,7 +102,7 @@ pub struct PartialGlobalEdge {}
 impl PartialObject for PartialGlobalEdge {
     type Full = GlobalEdge;
 
-    fn new() -> Self {
+    fn new(_: &mut Service<Objects>) -> Self {
         Self {}
     }
 

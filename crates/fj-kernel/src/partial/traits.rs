@@ -16,7 +16,7 @@ pub trait PartialObject: Clone + Debug {
     type Full: HasPartial<Partial = Self>;
 
     /// Construct a default partial object
-    fn new() -> Self;
+    fn new(objects: &mut Service<Objects>) -> Self;
 
     /// Construct a partial object from a full one
     fn from_full(full: &Self::Full, cache: &mut FullToPartialCache) -> Self;

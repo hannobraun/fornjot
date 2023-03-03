@@ -246,7 +246,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -281,7 +281,7 @@ mod tests {
         .build(&mut services.objects)
         .insert(&mut services.objects);
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -316,7 +316,7 @@ mod tests {
             .build(&mut services.objects)
             .insert(&mut services.objects);
         let half_edge = {
-            let mut cycle = PartialCycle::new();
+            let mut cycle = PartialCycle::new(&mut services.objects);
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points(
@@ -361,7 +361,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let half_edge = {
-            let mut half_edge = PartialHalfEdge::new();
+            let mut half_edge = PartialHalfEdge::new(&mut services.objects);
 
             half_edge.update_as_circle_from_radius(1.);
             let next_vertex = half_edge.start_vertex.clone();
