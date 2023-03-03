@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// A partial [`Surface`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialSurface {
     /// The surface's geometry
     pub geometry: Option<SurfaceGeometry>,
