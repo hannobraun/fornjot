@@ -29,6 +29,7 @@ pub struct Partial<T: HasPartial> {
 
 impl<T: HasPartial + 'static> Partial<T> {
     /// Construct a `Partial` with a default inner partial object
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self::from_partial(T::Partial::new())
     }
@@ -139,12 +140,6 @@ impl<T: HasPartial> Clone for Partial<T> {
         Self {
             inner: self.inner.clone(),
         }
-    }
-}
-
-impl<T: HasPartial + 'static> Default for Partial<T> {
-    fn default() -> Self {
-        Self::new()
     }
 }
 
