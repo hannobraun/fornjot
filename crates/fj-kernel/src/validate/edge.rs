@@ -78,7 +78,7 @@ mod tests {
     use crate::{
         builder::{CycleBuilder, HalfEdgeBuilder},
         objects::HalfEdge,
-        partial::PartialCycle,
+        partial::{PartialCycle, PartialObject},
         services::Services,
         validate::{HalfEdgeValidationError, Validate, ValidationError},
     };
@@ -90,7 +90,7 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut cycle = PartialCycle::default();
+            let mut cycle = PartialCycle::new();
 
             let [mut half_edge, next_half_edge, _] = cycle
                 .update_as_polygon_from_points([[0., 0.], [1., 0.], [1., 1.]]);

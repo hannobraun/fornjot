@@ -37,7 +37,7 @@ impl Shape for fj::Sketch {
                     Partial::from_partial(half_edge)
                 };
                 let exterior = {
-                    let mut cycle = PartialCycle::default();
+                    let mut cycle = PartialCycle::new();
                     cycle.half_edges.push(half_edge);
                     Partial::from_partial(cycle)
                 };
@@ -57,7 +57,7 @@ impl Shape for fj::Sketch {
                 );
 
                 let exterior = {
-                    let mut cycle = PartialCycle::default();
+                    let mut cycle = PartialCycle::new();
 
                     let half_edges = poly_chain
                         .to_segments()

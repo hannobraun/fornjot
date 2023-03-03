@@ -15,7 +15,9 @@ impl PartialObject for PartialCycle {
     type Full = Cycle;
 
     fn new() -> Self {
-        Self::default()
+        Self {
+            half_edges: Vec::new(),
+        }
     }
 
     fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
