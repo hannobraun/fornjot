@@ -46,7 +46,16 @@ impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
     fn new() -> Self {
-        Self::default()
+        let curve = None;
+        let start_vertex = Partial::default();
+        let global_form = Partial::default();
+
+        Self {
+            curve,
+            boundary: [None; 2],
+            start_vertex,
+            global_form,
+        }
     }
 
     fn from_full(
@@ -88,16 +97,7 @@ impl PartialObject for PartialHalfEdge {
 
 impl Default for PartialHalfEdge {
     fn default() -> Self {
-        let curve = None;
-        let start_vertex = Partial::default();
-        let global_form = Partial::default();
-
-        Self {
-            curve,
-            boundary: [None; 2],
-            start_vertex,
-            global_form,
-        }
+        Self::new()
     }
 }
 
