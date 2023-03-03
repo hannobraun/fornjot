@@ -50,12 +50,6 @@ pub trait CycleBuilder {
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>;
-
-    /// Infer the positions of all vertices, if necessary
-    fn infer_vertex_positions_if_necessary(
-        &mut self,
-        surface: &SurfaceGeometry,
-    );
 }
 
 impl CycleBuilder for PartialCycle {
@@ -109,6 +103,4 @@ impl CycleBuilder for PartialCycle {
             this
         })
     }
-
-    fn infer_vertex_positions_if_necessary(&mut self, _: &SurfaceGeometry) {}
 }
