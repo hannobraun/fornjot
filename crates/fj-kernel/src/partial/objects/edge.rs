@@ -95,12 +95,6 @@ impl PartialObject for PartialHalfEdge {
     }
 }
 
-impl Default for PartialHalfEdge {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 /// A partial [`GlobalEdge`]
 #[derive(Clone, Debug, Default)]
 pub struct PartialGlobalEdge {}
