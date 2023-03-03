@@ -1,9 +1,11 @@
 use fj_math::Point;
 
 use crate::{
+    insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{FullToPartialCache, MaybeCurve, Partial, PartialObject},
     services::Service,
+    storage::Handle,
 };
 
 /// A partial [`HalfEdge`]
@@ -19,7 +21,7 @@ pub struct PartialHalfEdge {
     pub start_vertex: Partial<Vertex>,
 
     /// The global form of the half-edge
-    pub global_form: Partial<GlobalEdge>,
+    pub global_form: Handle<GlobalEdge>,
 }
 
 impl PartialHalfEdge {
@@ -48,7 +50,7 @@ impl PartialObject for PartialHalfEdge {
     fn new(objects: &mut Service<Objects>) -> Self {
         let curve = None;
         let start_vertex = Partial::new(objects);
-        let global_form = Partial::new(objects);
+        let global_form = GlobalEdge::new().insert(objects);
 
         Self {
             curve,
@@ -69,10 +71,7 @@ impl PartialObject for PartialHalfEdge {
                 half_edge.start_vertex().clone(),
                 cache,
             ),
-            global_form: Partial::from_full(
-                half_edge.global_form().clone(),
-                cache,
-            ),
+            global_form: half_edge.global_form().clone(),
         }
     }
 
@@ -89,7 +88,7 @@ impl PartialObject for PartialHalfEdge {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
         let start_vertex = self.start_vertex.build(objects);
-        let global_form = self.global_form.build(objects);
+        let global_form = self.global_form;
 
         HalfEdge::new(curve, boundary, start_vertex, global_form)
     }

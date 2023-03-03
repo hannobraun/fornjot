@@ -127,7 +127,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         [edge_bottom.write(), edge_up.write(), edge_down.write()]
             .zip_ext(global_edges)
             .map(|(mut half_edge, global_edge)| {
-                half_edge.global_form = Partial::from(global_edge);
+                half_edge.global_form = global_edge;
             });
 
         // And we're done creating the face! All that's left to do is build our
