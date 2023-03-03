@@ -212,8 +212,8 @@ impl EdgeCache {
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
-            .insert((handle.id(), range), approx.clone());
-        approx
+            .insert((handle.id(), range), approx.clone())
+            .unwrap_or(approx)
     }
 }
 
