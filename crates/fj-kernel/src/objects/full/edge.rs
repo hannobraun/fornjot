@@ -106,7 +106,7 @@ impl HalfEdge {
 ///
 /// See [`HalfEdge`]'s documentation for more information on the relationship
 /// between [`HalfEdge`] and `GlobalEdge`.
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default, Hash)]
 pub struct GlobalEdge {}
 
 impl GlobalEdge {
