@@ -15,7 +15,7 @@ impl PartialObject for PartialSketch {
     type Full = Sketch;
 
     fn new() -> Self {
-        Self::default()
+        Self { faces: Vec::new() }
     }
 
     fn from_full(sketch: &Self::Full, cache: &mut FullToPartialCache) -> Self {
