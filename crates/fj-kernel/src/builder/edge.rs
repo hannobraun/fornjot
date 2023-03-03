@@ -6,7 +6,7 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{HalfEdge, Vertex},
+    objects::HalfEdge,
     partial::{MaybeCurve, Partial, PartialHalfEdge},
 };
 
@@ -37,13 +37,6 @@ pub trait HalfEdgeBuilder {
         start: Point<2>,
         end: Point<2>,
     ) -> Curve;
-
-    /// Infer the vertex positions (surface and global), if not already set
-    fn infer_vertex_positions_if_necessary(
-        &mut self,
-        surface: &SurfaceGeometry,
-        next_vertex: Partial<Vertex>,
-    );
 
     /// Update this edge from another
     ///
@@ -139,36 +132,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn infer_vertex_positions_if_necessary(
-        &mut self,
-        surface: &SurfaceGeometry,
-        next_vertex: Partial<Vertex>,
-    ) {
-        let path = self
-            .curve
-            .expect("Can't infer vertex positions without curve");
-        let MaybeCurve::Defined(path) = path else {
-            panic!("Can't infer vertex positions with undefined path");
-        };
-
-        for (boundary_point, mut vertex) in self
-            .boundary
-            .zip_ext([self.start_vertex.clone(), next_vertex])
-        {
-            let position_curve = boundary_point
-                .expect("Can't infer surface position without curve position");
-            let position_surface = path.point_from_path_coords(position_curve);
-
-            // Infer global position, if not available.
-            let position_global = vertex.read().position;
-            if position_global.is_none() {
-                let position_global =
-                    surface.point_from_surface_coords(position_surface);
-                vertex.write().position = Some(position_global);
-            }
-        }
-    }
-
     fn update_from_other_edge(
         &mut self,
         other: &Partial<HalfEdge>,
@@ -249,7 +212,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             }
         });
 
-        self.start_vertex.write().position =
-            other_prev.read().start_vertex.read().position;
+        self.start_vertex = other_prev.read().start_vertex.clone();
     }
 }

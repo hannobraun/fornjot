@@ -76,7 +76,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder},
+        builder::CycleBuilder,
         objects::HalfEdge,
         partial::{PartialCycle, PartialObject},
         services::Services,
@@ -88,18 +88,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[0., 0.], [1., 0.], [1., 1.]],
-                    &mut services.objects,
-                );
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[0., 0.], [1., 0.], [1., 1.]],
+                &mut services.objects,
             );
 
             half_edge.build(&mut services.objects)

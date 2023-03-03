@@ -7,9 +7,11 @@
 
 use std::collections::BTreeMap;
 
+use fj_math::Point;
+
 use crate::{
     geometry::curve::{Curve, GlobalPath},
-    objects::{GlobalEdge, HalfEdge, Surface},
+    objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
 
@@ -29,26 +31,39 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
         let boundary = half_edge.boundary();
         let range = RangeOnPath { boundary };
 
-        let first = ApproxPoint::new(
-            half_edge.start_position(),
-            half_edge.start_vertex().position(),
-        )
-        .with_source((half_edge.clone(), half_edge.boundary()[0]));
+        let position_surface = half_edge.start_position();
+        let position_global = match cache.get_position(half_edge.start_vertex())
+        {
+            Some(position) => position,
+            None => {
+                let position_global = surface
+                    .geometry()
+                    .point_from_surface_coords(position_surface);
+                cache.insert_position(half_edge.start_vertex(), position_global)
+            }
+        };
+
+        let first = ApproxPoint::new(position_surface, position_global)
+            .with_source((half_edge.clone(), half_edge.boundary()[0]));
 
         let points = {
-            let approx = match cache.get(half_edge.global_form().clone(), range)
-            {
-                Some(approx) => approx,
-                None => {
-                    let approx = approx_edge(
-                        &half_edge.curve(),
-                        surface,
-                        range,
-                        tolerance,
-                    );
-                    cache.insert(half_edge.global_form().clone(), range, approx)
-                }
-            };
+            let approx =
+                match cache.get_edge(half_edge.global_form().clone(), range) {
+                    Some(approx) => approx,
+                    None => {
+                        let approx = approx_edge(
+                            &half_edge.curve(),
+                            surface,
+                            range,
+                            tolerance,
+                        );
+                        cache.insert_edge(
+                            half_edge.global_form().clone(),
+                            range,
+                            approx,
+                        )
+                    }
+                };
 
             approx
                 .points
@@ -169,7 +184,8 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
-    inner: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
+    edge_approx: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
+    vertex_approx: BTreeMap<ObjectId, Point<3>>,
 }
 
 impl EdgeCache {
@@ -178,33 +194,50 @@ impl EdgeCache {
         Self::default()
     }
 
-    /// Insert the approximation of a [`GlobalEdge`]
-    pub fn insert(
-        &mut self,
-        handle: Handle<GlobalEdge>,
-        range: RangeOnPath,
-        approx: GlobalEdgeApprox,
-    ) -> GlobalEdgeApprox {
-        self.inner.insert((handle.id(), range), approx.clone());
-        approx
-    }
-
     /// Access the approximation for the given [`GlobalEdge`], if available
-    pub fn get(
+    pub fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.inner.get(&(handle.id(), range)) {
+        if let Some(approx) = self.edge_approx.get(&(handle.id(), range)) {
             return Some(approx.clone());
         }
-        if let Some(approx) = self.inner.get(&(handle.id(), range.reverse())) {
+        if let Some(approx) =
+            self.edge_approx.get(&(handle.id(), range.reverse()))
+        {
             // If we have a cache entry for the reverse range, we need to use
             // that too!
             return Some(approx.clone().reverse());
         }
 
         None
+    }
+
+    /// Insert the approximation of a [`GlobalEdge`]
+    pub fn insert_edge(
+        &mut self,
+        handle: Handle<GlobalEdge>,
+        range: RangeOnPath,
+        approx: GlobalEdgeApprox,
+    ) -> GlobalEdgeApprox {
+        self.edge_approx
+            .insert((handle.id(), range), approx.clone())
+            .unwrap_or(approx)
+    }
+
+    fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
+        self.vertex_approx.get(&handle.id()).cloned()
+    }
+
+    fn insert_position(
+        &mut self,
+        handle: &Handle<Vertex>,
+        position: Point<3>,
+    ) -> Point<3> {
+        self.vertex_approx
+            .insert(handle.id(), position)
+            .unwrap_or(position)
     }
 }
 
@@ -247,14 +280,9 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[1., 1.], [2., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[1., 1.], [2., 1.], [1., 2.]],
+                &mut services.objects,
             );
 
             let half_edge = half_edge.read().clone();
@@ -281,14 +309,9 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[1., 1.], [2., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[1., 1.], [2., 1.], [1., 2.]],
+                &mut services.objects,
             );
 
             let half_edge = half_edge.read().clone();
@@ -318,19 +341,13 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[0., 1.], [1., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
+            let [mut half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[0., 1.], [1., 1.], [1., 2.]],
+                &mut services.objects,
+            );
 
             half_edge.write().boundary[0] = Some(range.boundary[0]);
             half_edge.write().boundary[1] = Some(range.boundary[1]);
-
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
-            );
 
             let half_edge = half_edge.read().clone();
             half_edge
@@ -364,11 +381,6 @@ mod tests {
             let mut half_edge = PartialHalfEdge::new(&mut services.objects);
 
             half_edge.update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.start_vertex.clone();
-            half_edge.infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_vertex,
-            );
 
             half_edge
                 .build(&mut services.objects)

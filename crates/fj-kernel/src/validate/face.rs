@@ -1,22 +1,16 @@
-use fj_interop::ext::ArrayExt;
-use fj_math::{Point, Scalar, Winding};
-use itertools::Itertools;
+use fj_math::Winding;
 
-use crate::{
-    objects::{Face, HalfEdge},
-    storage::Handle,
-};
+use crate::objects::Face;
 
 use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Face {
     fn validate_with_config(
         &self,
-        config: &ValidationConfig,
+        _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
         FaceValidationError::check_interior_winding(self, errors);
-        FaceValidationError::check_vertex_positions(self, config, errors);
     }
 }
 
@@ -40,33 +34,6 @@ pub enum FaceValidationError {
         /// The face
         face: Face,
     },
-
-    /// Mismatch between edge boundary and `Vertex` positions
-    #[error(
-        "`HalfEdge` boundary doesn't match position of `Vertex`\n\
-        - Curve position: {curve_position:?}\n\
-        - Curve position converted to global position: \
-            {curve_position_as_global:?}\n\
-        - Global position: {global_position:?}\n\
-        - Distance between the positions: {distance}\n\
-        - `HalfEdge`: {half_edge:#?}"
-    )]
-    VertexPositionMismatch {
-        /// The position of the surface vertex
-        curve_position: Point<1>,
-
-        /// The surface position converted into a global position
-        curve_position_as_global: Point<3>,
-
-        /// The position of the global vertex
-        global_position: Point<3>,
-
-        /// The distance between the positions
-        distance: Scalar,
-
-        /// The half-edge
-        half_edge: Handle<HalfEdge>,
-    },
 }
 
 impl FaceValidationError {
@@ -88,59 +55,14 @@ impl FaceValidationError {
             }
         }
     }
-
-    fn check_vertex_positions(
-        face: &Face,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        for cycle in face.all_cycles() {
-            for (half_edge, next_half_edge) in
-                cycle.half_edges().circular_tuple_windows()
-            {
-                for (curve_position, vertex) in half_edge.boundary().zip_ext([
-                    half_edge.start_vertex(),
-                    next_half_edge.start_vertex(),
-                ]) {
-                    let curve_position_as_surface = half_edge
-                        .curve()
-                        .point_from_path_coords(curve_position);
-                    let curve_position_as_global = face
-                        .surface()
-                        .geometry()
-                        .point_from_surface_coords(curve_position_as_surface);
-                    let global_position = vertex.position();
-
-                    let distance =
-                        curve_position_as_global.distance_to(&global_position);
-
-                    if distance > config.identical_max_distance {
-                        errors.push(
-                            Self::VertexPositionMismatch {
-                                curve_position,
-                                curve_position_as_global,
-                                global_position,
-                                distance,
-                                half_edge: half_edge.clone(),
-                            }
-                            .into(),
-                        );
-                    }
-                }
-            }
-        }
-    }
 }
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Scalar, Vector};
-
     use crate::{
         algorithms::reverse::Reverse,
-        builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
-        insert::Insert,
-        objects::{Cycle, Face, HalfEdge},
+        builder::{CycleBuilder, FaceBuilder},
+        objects::Face,
         partial::{PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
@@ -186,66 +108,6 @@ mod tests {
             invalid.validate_and_return_first_error(),
             Err(ValidationError::Face(
                 FaceValidationError::InvalidInteriorWinding { .. }
-            ))
-        ));
-
-        Ok(())
-    }
-
-    #[test]
-    fn vertex_position_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = {
-            let surface = services.objects.surfaces.xy_plane();
-
-            let mut face = PartialFace::new(&mut services.objects);
-            face.surface = Some(surface.clone());
-
-            let mut half_edge =
-                face.exterior.write().add_half_edge(&mut services.objects);
-            half_edge.write().update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.read().start_vertex.clone();
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_vertex,
-            );
-
-            face.build(&mut services.objects)
-        };
-        let invalid = {
-            let half_edge = {
-                let half_edge = valid.exterior().half_edges().next().unwrap();
-
-                let boundary = half_edge
-                    .boundary()
-                    .map(|point| point + Vector::from([Scalar::PI / 2.]));
-
-                HalfEdge::new(
-                    half_edge.curve(),
-                    boundary,
-                    half_edge.start_vertex().clone(),
-                    half_edge.global_form().clone(),
-                )
-                .insert(&mut services.objects)
-            };
-
-            let exterior =
-                Cycle::new([half_edge]).insert(&mut services.objects);
-
-            Face::new(
-                valid.surface().clone(),
-                exterior,
-                valid.interiors().cloned(),
-                valid.color(),
-            )
-        };
-
-        valid.validate_and_return_first_error()?;
-        assert!(matches!(
-            invalid.validate_and_return_first_error(),
-            Err(ValidationError::Face(
-                FaceValidationError::VertexPositionMismatch { .. }
             ))
         ));
 

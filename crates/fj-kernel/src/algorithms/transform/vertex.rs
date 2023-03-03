@@ -10,11 +10,13 @@ use super::{TransformCache, TransformObject};
 impl TransformObject for Vertex {
     fn transform_with_cache(
         self,
-        transform: &Transform,
+        _: &Transform,
         _: &mut Service<Objects>,
         _: &mut TransformCache,
     ) -> Self {
-        let position = transform.transform_point(&self.position());
-        Self::new(position)
+        // There's nothing to actually transform here, as `Vertex` holds no
+        // data. We still need this implementation though, as a new `Vertex`
+        // object must be created to represent the new and transformed vertex.
+        Self::new()
     }
 }

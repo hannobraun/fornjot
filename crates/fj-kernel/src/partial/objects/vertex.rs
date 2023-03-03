@@ -1,5 +1,3 @@
-use fj_math::Point;
-
 use crate::{
     objects::{Objects, Vertex},
     partial::{FullToPartialCache, PartialObject},
@@ -8,32 +6,20 @@ use crate::{
 
 /// A partial [`Vertex`]
 #[derive(Clone, Debug)]
-pub struct PartialVertex {
-    /// The position of the vertex
-    pub position: Option<Point<3>>,
-}
+pub struct PartialVertex {}
 
 impl PartialObject for PartialVertex {
     type Full = Vertex;
 
     fn new(_: &mut Service<Objects>) -> Self {
-        Self { position: None }
+        Self {}
     }
 
-    fn from_full(
-        global_vertex: &Self::Full,
-        _: &mut FullToPartialCache,
-    ) -> Self {
-        Self {
-            position: Some(global_vertex.position()),
-        }
+    fn from_full(_: &Self::Full, _: &mut FullToPartialCache) -> Self {
+        Self {}
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let position = self
-            .position
-            .expect("Can't build `Vertex` without position");
-
-        Vertex::new(position)
+        Vertex::new()
     }
 }

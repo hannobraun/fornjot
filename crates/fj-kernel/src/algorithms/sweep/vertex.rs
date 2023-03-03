@@ -14,7 +14,7 @@ impl Sweep for Handle<Vertex> {
 
     fn sweep_with_cache(
         self,
-        path: impl Into<Vector<3>>,
+        _: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         objects: &mut Service<Objects>,
     ) -> Self::Swept {
@@ -22,9 +22,7 @@ impl Sweep for Handle<Vertex> {
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| {
-                Vertex::new(self.position() + path.into()).insert(objects)
-            })
+            .or_insert_with(|| Vertex::new().insert(objects))
             .clone();
 
         let vertices = [a, b];
