@@ -16,7 +16,7 @@
 /// [`ValidationConfig`].
 ///
 /// [`ValidationConfig`]: crate::validate::ValidationConfig
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Hash)]
 pub struct Vertex {}
 
 impl Vertex {
