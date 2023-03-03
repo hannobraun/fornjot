@@ -180,10 +180,9 @@ mod tests {
         ];
 
         let face = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..PartialFace::new()
-            };
+            let mut face = PartialFace::new();
+
+            face.surface = Partial::from(services.objects.surfaces.xy_plane());
             face.exterior
                 .write()
                 .update_as_polygon_from_points(exterior);

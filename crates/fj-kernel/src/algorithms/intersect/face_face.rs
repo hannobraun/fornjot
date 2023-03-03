@@ -86,10 +86,9 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            let mut face = PartialFace {
-                surface: Partial::from(surface),
-                ..PartialFace::new()
-            };
+            let mut face = PartialFace::new();
+
+            face.surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points(points);
 
             face.build(&mut services.objects)
@@ -116,10 +115,9 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            let mut face = PartialFace {
-                surface: Partial::from(surface),
-                ..PartialFace::new()
-            };
+            let mut face = PartialFace::new();
+
+            face.surface = Partial::from(surface);
             face.exterior.write().update_as_polygon_from_points(points);
 
             face.build(&mut services.objects)

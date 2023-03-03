@@ -151,10 +151,9 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut face = PartialFace {
-                surface: Partial::from(services.objects.surfaces.xy_plane()),
-                ..PartialFace::new()
-            };
+            let mut face = PartialFace::new();
+
+            face.surface = Partial::from(services.objects.surfaces.xy_plane());
             face.exterior.write().update_as_polygon_from_points([
                 [0., 0.],
                 [3., 0.],
@@ -200,10 +199,8 @@ mod tests {
         let valid = {
             let surface = services.objects.surfaces.xy_plane();
 
-            let mut face = PartialFace {
-                surface: Partial::from(surface.clone()),
-                ..PartialFace::new()
-            };
+            let mut face = PartialFace::new();
+            face.surface = Partial::from(surface.clone());
 
             let mut half_edge = face.exterior.write().add_half_edge();
             half_edge.write().update_as_circle_from_radius(1.);
