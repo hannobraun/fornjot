@@ -40,10 +40,10 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         }
 
         // Now we're ready to create the edges.
-        let mut edge_bottom = face.exterior.write().add_half_edge();
-        let mut edge_up = face.exterior.write().add_half_edge();
-        let mut edge_top = face.exterior.write().add_half_edge();
-        let mut edge_down = face.exterior.write().add_half_edge();
+        let mut edge_bottom = face.exterior.write().add_half_edge(objects);
+        let mut edge_up = face.exterior.write().add_half_edge(objects);
+        let mut edge_top = face.exterior.write().add_half_edge(objects);
+        let mut edge_down = face.exterior.write().add_half_edge(objects);
 
         // Those edges aren't fully defined yet. We'll do that shortly, but
         // first we have to figure a few things out.

@@ -202,7 +202,8 @@ mod tests {
             let mut face = PartialFace::new();
             face.surface = Partial::from(surface.clone());
 
-            let mut half_edge = face.exterior.write().add_half_edge();
+            let mut half_edge =
+                face.exterior.write().add_half_edge(&mut services.objects);
             half_edge.write().update_as_circle_from_radius(1.);
             let next_vertex = half_edge.read().start_vertex.clone();
             half_edge.write().infer_vertex_positions_if_necessary(

@@ -64,7 +64,7 @@ impl Shape for fj::Sketch {
                         .into_iter()
                         .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            let half_edge = cycle.add_half_edge();
+                            let half_edge = cycle.add_half_edge(objects);
                             (half_edge, endpoint, route)
                         })
                         .collect::<Vec<_>>();
