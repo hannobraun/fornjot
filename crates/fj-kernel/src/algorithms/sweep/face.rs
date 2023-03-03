@@ -59,7 +59,7 @@ impl Sweep for Handle<Face> {
         let mut top_face = PartialFace {
             surface: Partial::from(top_surface.clone()),
             color: Some(self.color()),
-            ..PartialFace::default()
+            ..PartialFace::new()
         };
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {

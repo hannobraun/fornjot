@@ -88,7 +88,7 @@ mod tests {
         .map(|surface| {
             let mut face = PartialFace {
                 surface: Partial::from(surface),
-                ..Default::default()
+                ..PartialFace::new()
             };
             face.exterior.write().update_as_polygon_from_points(points);
 
@@ -118,7 +118,7 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             let mut face = PartialFace {
                 surface: Partial::from(surface),
-                ..Default::default()
+                ..PartialFace::new()
             };
             face.exterior.write().update_as_polygon_from_points(points);
 

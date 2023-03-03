@@ -46,7 +46,7 @@ impl Shape for fj::Sketch {
                     surface,
                     exterior,
                     color: Some(Color(self.color())),
-                    ..Default::default()
+                    ..PartialFace::new()
                 }
             }
             fj::Chain::PolyChain(poly_chain) => {
@@ -95,7 +95,7 @@ impl Shape for fj::Sketch {
                     surface: Partial::from(surface),
                     exterior,
                     color: Some(Color(self.color())),
-                    ..Default::default()
+                    ..PartialFace::new()
                 }
             }
         };

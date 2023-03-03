@@ -29,7 +29,12 @@ impl PartialObject for PartialFace {
     type Full = Face;
 
     fn new() -> Self {
-        Self::default()
+        Self {
+            surface: Partial::new(),
+            exterior: Partial::new(),
+            interiors: Vec::new(),
+            color: None,
+        }
     }
 
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {

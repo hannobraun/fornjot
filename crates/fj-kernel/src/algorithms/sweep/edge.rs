@@ -28,7 +28,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // The result of sweeping an edge is a face. Let's create that.
         let mut face = PartialFace {
             color: Some(color),
-            ..Default::default()
+            ..PartialFace::new()
         };
 
         // A face (and everything in it) is defined on a surface. A surface can
