@@ -84,9 +84,8 @@ impl PartialObject for PartialHalfEdge {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
         let start_vertex = self.start_vertex.build(objects);
-        let global_form = self.global_form;
 
-        HalfEdge::new(curve, boundary, start_vertex, global_form)
+        HalfEdge::new(curve, boundary, start_vertex, self.global_form)
     }
 }
 
