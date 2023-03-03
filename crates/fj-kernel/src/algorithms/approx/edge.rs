@@ -184,18 +184,6 @@ impl EdgeCache {
         Self::default()
     }
 
-    /// Insert the approximation of a [`GlobalEdge`]
-    pub fn insert_edge(
-        &mut self,
-        handle: Handle<GlobalEdge>,
-        range: RangeOnPath,
-        approx: GlobalEdgeApprox,
-    ) -> GlobalEdgeApprox {
-        self.edge_approx
-            .insert((handle.id(), range), approx.clone());
-        approx
-    }
-
     /// Access the approximation for the given [`GlobalEdge`], if available
     pub fn get_edge(
         &self,
@@ -214,6 +202,18 @@ impl EdgeCache {
         }
 
         None
+    }
+
+    /// Insert the approximation of a [`GlobalEdge`]
+    pub fn insert_edge(
+        &mut self,
+        handle: Handle<GlobalEdge>,
+        range: RangeOnPath,
+        approx: GlobalEdgeApprox,
+    ) -> GlobalEdgeApprox {
+        self.edge_approx
+            .insert((handle.id(), range), approx.clone());
+        approx
     }
 }
 
