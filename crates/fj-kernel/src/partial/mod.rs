@@ -16,9 +16,14 @@ mod wrapper;
 
 pub use self::{
     objects::{
-        curve::MaybeCurve, cycle::PartialCycle, edge::PartialHalfEdge,
-        face::PartialFace, shell::PartialShell, sketch::PartialSketch,
-        solid::PartialSolid, surface::PartialSurface, vertex::PartialVertex,
+        cycle::PartialCycle,
+        edge::{MaybeCurve, PartialHalfEdge},
+        face::PartialFace,
+        shell::PartialShell,
+        sketch::PartialSketch,
+        solid::PartialSolid,
+        surface::PartialSurface,
+        vertex::PartialVertex,
     },
     traits::{HasPartial, PartialObject},
     wrapper::{FullToPartialCache, Partial},
