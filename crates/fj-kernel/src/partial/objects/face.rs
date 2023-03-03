@@ -8,7 +8,7 @@ use crate::{
 };
 
 /// A partial [`Face`]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct PartialFace {
     /// The surface that the face is defined in
     pub surface: Partial<Surface>,
