@@ -102,10 +102,8 @@ impl HalfEdge {
 ///
 /// See [`HalfEdge`]'s documentation for more information on the relationship
 /// between [`HalfEdge`] and `GlobalEdge`.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalEdge {
-    vertices: VerticesInNormalizedOrder,
-}
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct GlobalEdge {}
 
 impl GlobalEdge {
     /// Create a new instance
@@ -113,20 +111,8 @@ impl GlobalEdge {
     /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
     /// `curve` and `vertices` will end up being equal, regardless of the order
     /// of `vertices` here.
-    pub fn new(vertices: [Handle<Vertex>; 2]) -> Self {
-        let (vertices, _) = VerticesInNormalizedOrder::new(vertices);
-
-        Self { vertices }
-    }
-
-    /// Access the vertices that bound the edge on the curve
-    ///
-    /// As the name indicates, the order of the returned vertices is normalized
-    /// and might not match the order of the vertices that were passed to
-    /// [`GlobalEdge::new`]. You must not rely on the vertices being in any
-    /// specific order.
-    pub fn vertices(&self) -> &VerticesInNormalizedOrder {
-        &self.vertices
+    pub fn new() -> Self {
+        Self::default()
     }
 }
 

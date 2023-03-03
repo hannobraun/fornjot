@@ -151,13 +151,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn infer_global_form(
-        &mut self,
-        next_vertex: Partial<Vertex>,
-    ) -> Partial<GlobalEdge> {
-        self.global_form.write().vertices =
-            [&self.start_vertex, &next_vertex].map(|vertex| vertex.clone());
-
+    fn infer_global_form(&mut self, _: Partial<Vertex>) -> Partial<GlobalEdge> {
         self.global_form.clone()
     }
 
