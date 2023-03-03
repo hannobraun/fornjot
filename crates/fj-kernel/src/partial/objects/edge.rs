@@ -4,7 +4,7 @@ use crate::{
     geometry::curve::Curve,
     insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -19,7 +19,7 @@ pub struct PartialHalfEdge {
     pub boundary: [Option<Point<1>>; 2],
 
     /// The surface vertex where the half-edge starts
-    pub start_vertex: Partial<Vertex>,
+    pub start_vertex: Handle<Vertex>,
 
     /// The global form of the half-edge
     pub global_form: Handle<GlobalEdge>,
@@ -52,27 +52,21 @@ impl PartialObject for PartialHalfEdge {
         Self {
             curve: None,
             boundary: [None; 2],
-            start_vertex: Partial::new(objects),
+            start_vertex: Vertex::new().insert(objects),
             global_form: GlobalEdge::new().insert(objects),
         }
     }
 
-    fn from_full(
-        half_edge: &Self::Full,
-        cache: &mut FullToPartialCache,
-    ) -> Self {
+    fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
             curve: Some(half_edge.curve().into()),
             boundary: half_edge.boundary().map(Some),
-            start_vertex: Partial::from_full(
-                half_edge.start_vertex().clone(),
-                cache,
-            ),
+            start_vertex: half_edge.start_vertex().clone(),
             global_form: half_edge.global_form().clone(),
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
         let curve = match self.curve.expect("Need path to build curve") {
             MaybeCurve::Defined(path) => path,
             undefined => {
@@ -84,9 +78,8 @@ impl PartialObject for PartialHalfEdge {
         let boundary = self.boundary.map(|point| {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
-        let start_vertex = self.start_vertex.build(objects);
 
-        HalfEdge::new(curve, boundary, start_vertex, self.global_form)
+        HalfEdge::new(curve, boundary, self.start_vertex, self.global_form)
     }
 }
 

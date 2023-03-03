@@ -42,5 +42,4 @@ impl_trait!(
     Shell, PartialShell;
     Sketch, PartialSketch;
     Solid, PartialSolid;
-    Vertex, PartialVertex;
 );

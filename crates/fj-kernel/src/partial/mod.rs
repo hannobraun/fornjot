@@ -22,7 +22,6 @@ pub use self::{
         shell::PartialShell,
         sketch::PartialSketch,
         solid::PartialSolid,
-        vertex::PartialVertex,
     },
     traits::{HasPartial, PartialObject},
     wrapper::{FullToPartialCache, Partial},

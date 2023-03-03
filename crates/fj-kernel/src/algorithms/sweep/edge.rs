@@ -6,7 +6,7 @@ use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Face, HalfEdge, Objects, Surface, Vertex},
-    partial::{Partial, PartialFace, PartialObject},
+    partial::{PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -97,7 +97,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             // Writing to the start vertices is enough. Neighboring half-
             // edges share surface vertices, so writing the start vertex of
             // each half-edge writes to all vertices.
-            half_edge.start_vertex = Partial::from(global_vertex);
+            half_edge.start_vertex = global_vertex;
         });
 
         // With the vertices set, we can now update the curves.
