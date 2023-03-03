@@ -46,7 +46,11 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                         range,
                         tolerance,
                     );
-                    cache.insert(half_edge.global_form().clone(), range, approx)
+                    cache.insert_edge(
+                        half_edge.global_form().clone(),
+                        range,
+                        approx,
+                    )
                 }
             };
 
@@ -179,7 +183,7 @@ impl EdgeCache {
     }
 
     /// Insert the approximation of a [`GlobalEdge`]
-    pub fn insert(
+    pub fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
         range: RangeOnPath,
