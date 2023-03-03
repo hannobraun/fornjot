@@ -280,14 +280,9 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[1., 1.], [2., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[1., 1.], [2., 1.], [1., 2.]],
+                &mut services.objects,
             );
 
             let half_edge = half_edge.read().clone();
@@ -314,14 +309,9 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[1., 1.], [2., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
+            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[1., 1.], [2., 1.], [1., 2.]],
+                &mut services.objects,
             );
 
             let half_edge = half_edge.read().clone();
@@ -351,19 +341,13 @@ mod tests {
         let half_edge = {
             let mut cycle = PartialCycle::new(&mut services.objects);
 
-            let [mut half_edge, next_half_edge, _] = cycle
-                .update_as_polygon_from_points(
-                    [[0., 1.], [1., 1.], [1., 2.]],
-                    &mut services.objects,
-                );
+            let [mut half_edge, _, _] = cycle.update_as_polygon_from_points(
+                [[0., 1.], [1., 1.], [1., 2.]],
+                &mut services.objects,
+            );
 
             half_edge.write().boundary[0] = Some(range.boundary[0]);
             half_edge.write().boundary[1] = Some(range.boundary[1]);
-
-            half_edge.write().infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_half_edge.read().start_vertex.clone(),
-            );
 
             let half_edge = half_edge.read().clone();
             half_edge
@@ -397,11 +381,6 @@ mod tests {
             let mut half_edge = PartialHalfEdge::new(&mut services.objects);
 
             half_edge.update_as_circle_from_radius(1.);
-            let next_vertex = half_edge.start_vertex.clone();
-            half_edge.infer_vertex_positions_if_necessary(
-                &surface.geometry(),
-                next_vertex,
-            );
 
             half_edge
                 .build(&mut services.objects)
