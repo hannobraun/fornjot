@@ -42,12 +42,12 @@ impl Shape for fj::Sketch {
                     Partial::from_partial(cycle)
                 };
 
-                PartialFace {
-                    surface,
-                    exterior,
-                    color: Some(Color(self.color())),
-                    ..PartialFace::new()
-                }
+                let mut face = PartialFace::new();
+                face.surface = surface;
+                face.exterior = exterior;
+                face.color = Some(Color(self.color()));
+
+                face
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let segments = poly_chain.to_segments();
@@ -91,12 +91,12 @@ impl Shape for fj::Sketch {
                     Partial::from_partial(cycle)
                 };
 
-                PartialFace {
-                    surface: Partial::from(surface),
-                    exterior,
-                    color: Some(Color(self.color())),
-                    ..PartialFace::new()
-                }
+                let mut face = PartialFace::new();
+                face.surface = Partial::from(surface);
+                face.exterior = exterior;
+                face.color = Some(Color(self.color()));
+
+                face
             }
         };
 
