@@ -116,36 +116,6 @@ impl GlobalEdge {
     }
 }
 
-/// The vertices of a [`GlobalEdge`]
-///
-/// Since [`GlobalEdge`] is the single global representation of an edge in
-/// global space, it must normalize the order of its vertices. Otherwise, it is
-/// possible to construct two [`GlobalEdge`] instances that are meant to
-/// represent the same edge, but aren't equal.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct VerticesInNormalizedOrder([Handle<Vertex>; 2]);
-
-impl VerticesInNormalizedOrder {
-    /// Construct a new instance of `VerticesInNormalizedOrder`
-    ///
-    /// The provided vertices can be in any order. The returned `bool` value
-    /// indicates whether the normalization changed the order of the vertices.
-    pub fn new([a, b]: [Handle<Vertex>; 2]) -> (Self, bool) {
-        if a < b {
-            (Self([a, b]), false)
-        } else {
-            (Self([b, a]), true)
-        }
-    }
-
-    /// Access the vertices
-    ///
-    /// The vertices in the returned array will be in normalized order.
-    pub fn access_in_normalized_order(&self) -> [Handle<Vertex>; 2] {
-        self.0.clone()
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use pretty_assertions::assert_eq;
