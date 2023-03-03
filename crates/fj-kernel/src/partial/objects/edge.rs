@@ -47,8 +47,8 @@ impl PartialObject for PartialHalfEdge {
 
     fn new() -> Self {
         let curve = None;
-        let start_vertex = Partial::default();
-        let global_form = Partial::default();
+        let start_vertex = Partial::new();
+        let global_form = Partial::new();
 
         Self {
             curve,
