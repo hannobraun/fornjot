@@ -14,6 +14,9 @@ impl TransformObject for Vertex {
         _: &mut Service<Objects>,
         _: &mut TransformCache,
     ) -> Self {
+        // There's nothing to actually transform here, as `Vertex` holds no
+        // data. We still need this implementation though, as a new `Vertex`
+        // object must be created to represent the new and transformed vertex.
         Self::new()
     }
 }
