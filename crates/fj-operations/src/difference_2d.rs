@@ -82,7 +82,7 @@ impl Shape for fj::Difference2d {
             );
 
             let face = PartialFace {
-                surface: Partial::from(surface.clone()),
+                surface: Some(surface.clone()),
                 exterior: Partial::from(exterior),
                 interiors,
                 color: Some(Color(self.color())),

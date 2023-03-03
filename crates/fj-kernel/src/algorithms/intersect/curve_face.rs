@@ -152,7 +152,7 @@ mod tests {
     use crate::{
         builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
-        partial::{Partial, PartialFace, PartialObject},
+        partial::{PartialFace, PartialObject},
         services::Services,
     };
 
@@ -182,7 +182,7 @@ mod tests {
         let face = {
             let mut face = PartialFace::new(&mut services.objects);
 
-            face.surface = Partial::from(services.objects.surfaces.xy_plane());
+            face.surface = Some(services.objects.surfaces.xy_plane());
             face.exterior
                 .write()
                 .update_as_polygon_from_points(exterior, &mut services.objects);

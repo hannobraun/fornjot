@@ -5,13 +5,14 @@ use crate::{
     objects::{Cycle, Face, Objects, Surface},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
+    storage::Handle,
 };
 
 /// A partial [`Face`]
 #[derive(Clone, Debug)]
 pub struct PartialFace {
     /// The surface that the face is defined in
-    pub surface: Partial<Surface>,
+    pub surface: Option<Handle<Surface>>,
 
     /// The cycle that bounds the face on the outside
     pub exterior: Partial<Cycle>,
@@ -30,7 +31,7 @@ impl PartialObject for PartialFace {
 
     fn new(objects: &mut Service<Objects>) -> Self {
         Self {
-            surface: Partial::new(objects),
+            surface: None,
             exterior: Partial::new(objects),
             interiors: Vec::new(),
             color: None,
@@ -39,7 +40,7 @@ impl PartialObject for PartialFace {
 
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
-            surface: Partial::from_full(face.surface().clone(), cache),
+            surface: Some(face.surface().clone()),
             exterior: Partial::from_full(face.exterior().clone(), cache),
             interiors: face
                 .interiors()
@@ -50,7 +51,7 @@ impl PartialObject for PartialFace {
     }
 
     fn build(mut self, objects: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface.build(objects);
+        let surface = self.surface.expect("Need `Surface` to build `Face`");
 
         self.exterior
             .write()

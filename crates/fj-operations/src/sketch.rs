@@ -41,7 +41,7 @@ impl Shape for fj::Sketch {
                 };
 
                 let mut face = PartialFace::new(objects);
-                face.surface = Partial::from(surface);
+                face.surface = Some(surface);
                 face.exterior = exterior;
                 face.color = Some(Color(self.color()));
 
@@ -90,7 +90,7 @@ impl Shape for fj::Sketch {
                 };
 
                 let mut face = PartialFace::new(objects);
-                face.surface = Partial::from(surface);
+                face.surface = Some(surface);
                 face.exterior = exterior;
                 face.color = Some(Color(self.color()));
 
