@@ -11,7 +11,7 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-bytemuck = "1.13.0"
+bytemuck = "1.13.1"
 chrono = "0.4.23"
 egui = "0.21.0"
 egui-wgpu = "0.21.0"
