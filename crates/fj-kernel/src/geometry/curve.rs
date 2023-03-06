@@ -57,7 +57,7 @@ impl Curve {
     }
 
     /// Create a line from two points that include line coordinates
-    pub fn from_points_with_line_coords(
+    pub fn line_from_points_with_coords(
         points: [(impl Into<Point<1>>, impl Into<Point<2>>); 2],
     ) -> Self {
         Self::Line(Line::from_points_with_line_coords(points))
