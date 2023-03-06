@@ -14,6 +14,6 @@ categories.workspace = true
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
-thiserror = "1.0.35"
+thiserror = "1.0.39"
 threemf = "0.4.0"
 stl = "0.2.1"
