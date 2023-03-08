@@ -2,7 +2,6 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::surface::SurfaceGeometry,
     objects::{HalfEdge, Objects},
     partial::{Partial, PartialCycle},
     services::Service,
@@ -45,7 +44,6 @@ pub trait CycleBuilder {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
-        surface: &SurfaceGeometry,
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
@@ -91,7 +89,6 @@ impl CycleBuilder for PartialCycle {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
-        _: &SurfaceGeometry,
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
