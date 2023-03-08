@@ -13,7 +13,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
-    pub curve: Option<MaybeCurve>,
+    pub curve: Option<Curve>,
 
     /// The boundary of the half-edge on the curve
     pub boundary: [Option<Point<1>>; 2],
@@ -35,8 +35,6 @@ impl PartialHalfEdge {
         let [start, _] = self.boundary;
         start.and_then(|start| {
             let curve = self.curve?;
-
-            let MaybeCurve::Defined(curve) = curve;
             Some(curve.point_from_path_coords(start))
         })
     }
@@ -56,7 +54,7 @@ impl PartialObject for PartialHalfEdge {
 
     fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            curve: Some(half_edge.curve().into()),
+            curve: Some(half_edge.curve()),
             boundary: half_edge.boundary().map(Some),
             start_vertex: half_edge.start_vertex().clone(),
             global_form: half_edge.global_form().clone(),
@@ -64,8 +62,7 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let MaybeCurve::Defined(curve) =
-            self.curve.expect("Need path to build curve");
+        let curve = self.curve.expect("Need path to build curve");
         let boundary = self.boundary.map(|point| {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });

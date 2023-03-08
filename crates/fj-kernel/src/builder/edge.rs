@@ -7,7 +7,7 @@ use crate::{
         surface::SurfaceGeometry,
     },
     objects::HalfEdge,
-    partial::{MaybeCurve, Partial, PartialHalfEdge},
+    partial::{Partial, PartialHalfEdge},
 };
 
 /// Builder API for [`PartialHalfEdge`]
@@ -61,7 +61,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
     ) -> Curve {
         let path = Curve::circle_from_radius(radius);
-        self.curve = Some(path.into());
+        self.curve = Some(path);
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -89,7 +89,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
         let path = Curve::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve = Some(path.into());
+        self.curve = Some(path);
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
@@ -112,12 +112,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             let points = [start, end].zip_ext(points_surface);
 
             let path = Curve::line_from_points_with_coords(points);
-            self.curve = Some(path.into());
+            self.curve = Some(path);
 
             path
         } else {
             let (path, _) = Curve::line_from_points(points_surface);
-            self.curve = Some(path.into());
+            self.curve = Some(path);
 
             for (vertex, position) in
                 self.boundary.each_mut_ext().zip_ext([0., 1.])
@@ -148,7 +148,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     // represented using our current curve/surface
                     // representation.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_)) => {
+                        Curve::Line(_) => {
                             // We're dealing with a line on a rounded surface.
                             //
                             // Based on the current uses of this method, we can
@@ -190,7 +190,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 GlobalPath::Line(_) => {
                     // The other edge is defined on a plane.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_)) => {
+                        Curve::Line(_) => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.
                             None
