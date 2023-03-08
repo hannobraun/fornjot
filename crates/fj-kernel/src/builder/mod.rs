@@ -47,7 +47,7 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
 
     /// Create a return value by mapping the implementing type
     ///
-    /// Provides access to the (circular) next item.
+    /// Provides access to the (circular) previous item.
     fn map_with_prev<F, R>(self, f: F) -> Self::SameSize<R>
     where
         F: FnMut(T, T) -> R,

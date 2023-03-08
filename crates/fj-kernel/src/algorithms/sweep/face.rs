@@ -58,7 +58,7 @@ impl Sweep for Handle<Face> {
             bottom_face.surface().clone().translate(path, objects);
 
         let mut top_face = PartialFace::new(objects);
-        top_face.surface = Some(top_surface.clone());
+        top_face.surface = Some(top_surface);
         top_face.color = Some(self.color());
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
@@ -89,11 +89,7 @@ impl Sweep for Handle<Face> {
                 top_edges.push(Partial::from(top_edge));
             }
 
-            top_cycle.write().connect_to_closed_edges(
-                top_edges,
-                &top_surface.geometry(),
-                objects,
-            );
+            top_cycle.write().connect_to_edges(top_edges, objects);
 
             for (bottom, top) in original_edges
                 .into_iter()

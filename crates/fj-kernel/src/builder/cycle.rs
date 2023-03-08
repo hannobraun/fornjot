@@ -2,7 +2,6 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::surface::SurfaceGeometry,
     objects::{HalfEdge, Objects},
     partial::{Partial, PartialCycle},
     services::Service,
@@ -42,10 +41,9 @@ pub trait CycleBuilder {
     /// equivalents of this cycle, form a cycle themselves.
     ///
     /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_closed_edges<O>(
+    fn connect_to_edges<O>(
         &mut self,
         edges: O,
-        surface: &SurfaceGeometry,
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
@@ -88,19 +86,18 @@ impl CycleBuilder for PartialCycle {
         half_edges
     }
 
-    fn connect_to_closed_edges<O>(
+    fn connect_to_edges<O>(
         &mut self,
         edges: O,
-        surface: &SurfaceGeometry,
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
-        edges.map_with_prev(|other, prev| {
-            let mut this = self.add_half_edge(objects);
-            this.write().update_from_other_edge(&other, &prev, surface);
-            this
+        edges.map_with_prev(|_, prev| {
+            let mut edge = self.add_half_edge(objects);
+            edge.write().start_vertex = prev.read().start_vertex.clone();
+            edge
         })
     }
 }
