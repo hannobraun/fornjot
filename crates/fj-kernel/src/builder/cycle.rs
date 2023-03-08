@@ -96,7 +96,7 @@ impl CycleBuilder for PartialCycle {
     {
         edges.map_with_prev(|_, prev| {
             let mut this = self.add_half_edge(objects);
-            this.write().update_from_other_edge(&prev);
+            this.write().start_vertex = prev.read().start_vertex.clone();
             this
         })
     }

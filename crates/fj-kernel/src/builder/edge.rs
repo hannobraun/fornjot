@@ -1,11 +1,7 @@
 use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
-use crate::{
-    geometry::curve::Curve,
-    objects::HalfEdge,
-    partial::{Partial, PartialHalfEdge},
-};
+use crate::{geometry::curve::Curve, partial::PartialHalfEdge};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
@@ -34,17 +30,6 @@ pub trait HalfEdgeBuilder {
         start: Point<2>,
         end: Point<2>,
     ) -> Curve;
-
-    /// Update this edge from another
-    ///
-    /// Infers as much information about this edge from the other, under the
-    /// assumption that the other edge is on a different surface.
-    ///
-    /// This method is quite fragile. It might panic, or even silently fail,
-    /// under various circumstances. As long as you're only dealing with lines
-    /// and planes, you should be fine. Otherwise, please read the code of this
-    /// method carefully, to make sure you don't run into trouble.
-    fn update_from_other_edge(&mut self, other_prev: &Partial<HalfEdge>);
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -121,9 +106,5 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         };
 
         path
-    }
-
-    fn update_from_other_edge(&mut self, other_prev: &Partial<HalfEdge>) {
-        self.start_vertex = other_prev.read().start_vertex.clone();
     }
 }
