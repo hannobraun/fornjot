@@ -70,16 +70,3 @@ impl PartialObject for PartialHalfEdge {
         HalfEdge::new(curve, boundary, self.start_vertex, self.global_form)
     }
 }
-
-/// A possibly undefined curve
-#[derive(Clone, Copy, Debug)]
-pub enum MaybeCurve {
-    /// The curve is fully defined
-    Defined(Curve),
-}
-
-impl From<Curve> for MaybeCurve {
-    fn from(path: Curve) -> Self {
-        Self::Defined(path)
-    }
-}
