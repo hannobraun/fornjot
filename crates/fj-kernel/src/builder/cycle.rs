@@ -91,15 +91,15 @@ impl CycleBuilder for PartialCycle {
     fn connect_to_closed_edges<O>(
         &mut self,
         edges: O,
-        surface: &SurfaceGeometry,
+        _: &SurfaceGeometry,
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<Partial<HalfEdge>>,
     {
-        edges.map_with_prev(|other, prev| {
+        edges.map_with_prev(|_, prev| {
             let mut this = self.add_half_edge(objects);
-            this.write().update_from_other_edge(&other, &prev, surface);
+            this.write().update_from_other_edge(&prev);
             this
         })
     }

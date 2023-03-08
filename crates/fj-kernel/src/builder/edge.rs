@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{curve::Curve, surface::SurfaceGeometry},
+    geometry::curve::Curve,
     objects::HalfEdge,
     partial::{Partial, PartialHalfEdge},
 };
@@ -44,12 +44,7 @@ pub trait HalfEdgeBuilder {
     /// under various circumstances. As long as you're only dealing with lines
     /// and planes, you should be fine. Otherwise, please read the code of this
     /// method carefully, to make sure you don't run into trouble.
-    fn update_from_other_edge(
-        &mut self,
-        other: &Partial<HalfEdge>,
-        other_prev: &Partial<HalfEdge>,
-        surface: &SurfaceGeometry,
-    );
+    fn update_from_other_edge(&mut self, other_prev: &Partial<HalfEdge>);
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -128,12 +123,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         path
     }
 
-    fn update_from_other_edge(
-        &mut self,
-        _: &Partial<HalfEdge>,
-        other_prev: &Partial<HalfEdge>,
-        _: &SurfaceGeometry,
-    ) {
+    fn update_from_other_edge(&mut self, other_prev: &Partial<HalfEdge>) {
         self.start_vertex = other_prev.read().start_vertex.clone();
     }
 }
