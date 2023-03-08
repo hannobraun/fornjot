@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar};
+use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
@@ -13,7 +13,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
-    pub curve: Option<MaybeCurve>,
+    pub curve: Option<Curve>,
 
     /// The boundary of the half-edge on the curve
     pub boundary: [Option<Point<1>>; 2],
@@ -35,12 +35,7 @@ impl PartialHalfEdge {
         let [start, _] = self.boundary;
         start.and_then(|start| {
             let curve = self.curve?;
-
-            if let MaybeCurve::Defined(curve) = curve {
-                return Some(curve.point_from_path_coords(start));
-            }
-
-            None
+            Some(curve.point_from_path_coords(start))
         })
     }
 }
@@ -59,7 +54,7 @@ impl PartialObject for PartialHalfEdge {
 
     fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            curve: Some(half_edge.curve().into()),
+            curve: Some(half_edge.curve()),
             boundary: half_edge.boundary().map(Some),
             start_vertex: half_edge.start_vertex().clone(),
             global_form: half_edge.global_form().clone(),
@@ -67,40 +62,11 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let curve = match self.curve.expect("Need path to build curve") {
-            MaybeCurve::Defined(path) => path,
-            undefined => {
-                panic!(
-                    "Trying to build curve with undefined path: {undefined:?}"
-                )
-            }
-        };
+        let curve = self.curve.expect("Need path to build curve");
         let boundary = self.boundary.map(|point| {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
 
         HalfEdge::new(curve, boundary, self.start_vertex, self.global_form)
-    }
-}
-
-/// A possibly undefined curve
-#[derive(Clone, Copy, Debug)]
-pub enum MaybeCurve {
-    /// The curve is fully defined
-    Defined(Curve),
-
-    /// The curve is undefined, but we know it is a circle
-    UndefinedCircle {
-        /// The radius of the undefined circle
-        radius: Scalar,
-    },
-
-    /// The curve is undefined, but we know it is a line
-    UndefinedLine,
-}
-
-impl From<Curve> for MaybeCurve {
-    fn from(path: Curve) -> Self {
-        Self::Defined(path)
     }
 }

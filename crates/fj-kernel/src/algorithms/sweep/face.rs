@@ -99,7 +99,7 @@ impl Sweep for Handle<Face> {
                 .into_iter()
                 .zip(top_cycle.write().half_edges.iter_mut())
             {
-                top.write().curve = Some(bottom.curve().into());
+                top.write().curve = Some(bottom.curve());
 
                 let boundary = bottom.boundary();
 

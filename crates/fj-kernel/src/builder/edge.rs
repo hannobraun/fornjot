@@ -7,7 +7,7 @@ use crate::{
         surface::SurfaceGeometry,
     },
     objects::HalfEdge,
-    partial::{MaybeCurve, Partial, PartialHalfEdge},
+    partial::{Partial, PartialHalfEdge},
 };
 
 /// Builder API for [`PartialHalfEdge`]
@@ -61,7 +61,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         radius: impl Into<Scalar>,
     ) -> Curve {
         let path = Curve::circle_from_radius(radius);
-        self.curve = Some(path.into());
+        self.curve = Some(path);
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -89,7 +89,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
         let path = Curve::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve = Some(path.into());
+        self.curve = Some(path);
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
@@ -106,19 +106,18 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start: Point<2>,
         end: Point<2>,
     ) -> Curve {
-        let boundary = self.boundary;
         let points_surface = [start, end];
 
-        let path = if let [Some(start), Some(end)] = boundary {
+        let path = if let [Some(start), Some(end)] = self.boundary {
             let points = [start, end].zip_ext(points_surface);
 
-            let path = Curve::from_points_with_line_coords(points);
-            self.curve = Some(path.into());
+            let path = Curve::line_from_points_with_coords(points);
+            self.curve = Some(path);
 
             path
         } else {
             let (path, _) = Curve::line_from_points(points_surface);
-            self.curve = Some(path.into());
+            self.curve = Some(path);
 
             for (vertex, position) in
                 self.boundary.each_mut_ext().zip_ext([0., 1.])
@@ -143,14 +142,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             // need to use that to interpret what the other edge's curve path
             // means for our curve path.
             match surface.u {
-                GlobalPath::Circle(circle) => {
+                GlobalPath::Circle(_) => {
                     // The other surface is curved. We're entering some dodgy
                     // territory here, as only some edge cases can be
                     // represented using our current curve/surface
                     // representation.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_))
-                        | MaybeCurve::UndefinedLine => {
+                        Curve::Line(_) => {
                             // We're dealing with a line on a rounded surface.
                             //
                             // Based on the current uses of this method, we can
@@ -177,9 +175,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                             // I hope that I'll come up with a better curve/
                             // surface representation before this becomes a
                             // problem.
-                            Some(MaybeCurve::UndefinedCircle {
-                                radius: circle.radius(),
-                            })
+                            None
                         }
                         _ => {
                             // The other edge is a line segment in a curved
@@ -194,11 +190,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 GlobalPath::Line(_) => {
                     // The other edge is defined on a plane.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_))
-                        | MaybeCurve::UndefinedLine => {
+                        Curve::Line(_) => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.
-                            Some(MaybeCurve::UndefinedLine)
+                            None
                         }
                         _ => {
                             // The other edge is a circle or arc on a plane. I'm
