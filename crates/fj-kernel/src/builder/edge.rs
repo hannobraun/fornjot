@@ -148,8 +148,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                     // represented using our current curve/surface
                     // representation.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_))
-                        | MaybeCurve::UndefinedLine => {
+                        MaybeCurve::Defined(Curve::Line(_)) => {
                             // We're dealing with a line on a rounded surface.
                             //
                             // Based on the current uses of this method, we can
@@ -193,8 +192,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                 GlobalPath::Line(_) => {
                     // The other edge is defined on a plane.
                     match path {
-                        MaybeCurve::Defined(Curve::Line(_))
-                        | MaybeCurve::UndefinedLine => {
+                        MaybeCurve::Defined(Curve::Line(_)) => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.
                             None

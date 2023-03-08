@@ -94,9 +94,6 @@ pub enum MaybeCurve {
         /// The radius of the undefined circle
         radius: Scalar,
     },
-
-    /// The curve is undefined, but we know it is a line
-    UndefinedLine,
 }
 
 impl From<Curve> for MaybeCurve {
