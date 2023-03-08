@@ -41,7 +41,7 @@ pub trait CycleBuilder {
     /// equivalents of this cycle, form a cycle themselves.
     ///
     /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_closed_edges<O>(
+    fn connect_to_edges<O>(
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
@@ -86,7 +86,7 @@ impl CycleBuilder for PartialCycle {
         half_edges
     }
 
-    fn connect_to_closed_edges<O>(
+    fn connect_to_edges<O>(
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
