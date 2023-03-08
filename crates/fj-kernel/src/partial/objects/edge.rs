@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar};
+use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
@@ -36,11 +36,8 @@ impl PartialHalfEdge {
         start.and_then(|start| {
             let curve = self.curve?;
 
-            if let MaybeCurve::Defined(curve) = curve {
-                return Some(curve.point_from_path_coords(start));
-            }
-
-            None
+            let MaybeCurve::Defined(curve) = curve;
+            Some(curve.point_from_path_coords(start))
         })
     }
 }
@@ -67,14 +64,8 @@ impl PartialObject for PartialHalfEdge {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let curve = match self.curve.expect("Need path to build curve") {
-            MaybeCurve::Defined(path) => path,
-            undefined => {
-                panic!(
-                    "Trying to build curve with undefined path: {undefined:?}"
-                )
-            }
-        };
+        let MaybeCurve::Defined(curve) =
+            self.curve.expect("Need path to build curve");
         let boundary = self.boundary.map(|point| {
             point.expect("Can't build `HalfEdge` without boundary positions")
         });
@@ -88,12 +79,6 @@ impl PartialObject for PartialHalfEdge {
 pub enum MaybeCurve {
     /// The curve is fully defined
     Defined(Curve),
-
-    /// The curve is undefined, but we know it is a circle
-    UndefinedCircle {
-        /// The radius of the undefined circle
-        radius: Scalar,
-    },
 }
 
 impl From<Curve> for MaybeCurve {
