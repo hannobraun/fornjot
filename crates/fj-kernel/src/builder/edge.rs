@@ -197,7 +197,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
                         | MaybeCurve::UndefinedLine => {
                             // The other edge is a line segment on a plane. That
                             // means our edge must be a line segment too.
-                            Some(MaybeCurve::UndefinedLine)
+                            None
                         }
                         _ => {
                             // The other edge is a circle or arc on a plane. I'm
