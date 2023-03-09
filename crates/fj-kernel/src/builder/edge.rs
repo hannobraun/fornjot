@@ -88,10 +88,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) -> Partial<HalfEdge> {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
-
-        let points = boundary.zip_ext(points_surface);
-
-        let curve = Curve::line_from_points_with_coords(points);
+        let curve = Curve::line_from_points_with_coords(
+            boundary.zip_ext(points_surface),
+        );
 
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
