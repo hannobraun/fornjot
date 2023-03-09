@@ -133,9 +133,8 @@ macro_rules! impl_object_argument_for_arrays {
                     F: FnMut(T, T) -> R,
                     T: Clone,
                 {
-                    let prev: [_; $len] = array::from_fn(|i| {
-                        self[(i + self.len() - 1) % self.len()].clone()
-                    });
+                    let mut prev = self.clone();
+                    prev.rotate_right(1);
 
                     let mut i = 0;
                     self.map(|item| {
