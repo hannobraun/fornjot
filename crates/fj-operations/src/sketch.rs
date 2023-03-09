@@ -57,19 +57,18 @@ impl Shape for fj::Sketch {
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
 
-                    let half_edges = poly_chain
+                    let segments = poly_chain
                         .to_segments()
                         .into_iter()
                         .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            let half_edge = cycle.add_half_edge(objects);
-                            (half_edge, endpoint, route)
+                            (endpoint, route)
                         })
-                        .collect::<Vec<_>>();
+                        .circular_tuple_windows();
 
-                    for ((mut half_edge, start, route), (_, end, _)) in
-                        half_edges.into_iter().circular_tuple_windows()
-                    {
+                    for ((start, route), (end, _)) in segments {
+                        let mut half_edge = cycle.add_half_edge(objects);
+
                         match route {
                             fj::SketchSegmentRoute::Direct => {
                                 half_edge
