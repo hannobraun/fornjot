@@ -40,14 +40,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // the global vertices and edges.
         let (global_vertices, global_edges) = {
             let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
-            let (edge_right, [_, c]) =
+            let (edge_up, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, objects);
-            let (edge_left, [_, d]) =
+            let (edge_down, [_, d]) =
                 a.clone().sweep_with_cache(path, cache, objects);
 
             (
                 [a, b, c, d],
-                [edge.global_form().clone(), edge_right, edge_left],
+                [edge.global_form().clone(), edge_up, edge_down],
             )
         };
 
