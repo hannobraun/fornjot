@@ -5,7 +5,7 @@ use itertools::Itertools;
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects, Surface, Vertex},
+    objects::{Face, GlobalEdge, HalfEdge, Objects, Surface, Vertex},
     partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
@@ -47,7 +47,12 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
 
             (
                 [a, b, c, d],
-                [edge.global_form().clone(), edge_up, edge_down],
+                [
+                    Some(edge.global_form().clone()),
+                    Some(edge_up),
+                    Some(edge_down),
+                    None,
+                ],
             )
         };
 
@@ -73,27 +78,26 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         };
 
         // Armed with all of that, we're ready to create the edges.
-        let [mut edge_bottom, mut edge_up, edge_top, mut edge_down] =
-            boundaries.zip_ext(global_vertices).map(
-                |(boundary, global_vertex)| {
-                    let mut half_edge = Partial::<HalfEdge>::new(objects);
+        let [edge_bottom, edge_up, edge_top, edge_down] = boundaries
+            .zip_ext(global_vertices)
+            .zip_ext(global_edges)
+            .map(|((boundary, global_vertex), global_edge)| {
+                let mut half_edge = Partial::<HalfEdge>::new(objects);
 
-                    for (a, b) in half_edge
-                        .write()
-                        .boundary
-                        .each_mut_ext()
-                        .zip_ext(boundary)
-                    {
-                        *a = Some(b);
-                    }
+                for (a, b) in
+                    half_edge.write().boundary.each_mut_ext().zip_ext(boundary)
+                {
+                    *a = Some(b);
+                }
 
-                    half_edge.write().start_vertex = global_vertex;
+                half_edge.write().start_vertex = global_vertex;
+                half_edge.write().global_form = global_edge
+                    .unwrap_or_else(|| GlobalEdge::new().insert(objects));
 
-                    face.exterior.write().add_half_edge(half_edge.clone());
+                face.exterior.write().add_half_edge(half_edge.clone());
 
-                    half_edge
-                },
-            );
+                half_edge
+            });
 
         // With the vertices set, we can now update the curves.
         //
@@ -101,26 +105,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // even if the original edge was a circle, it's still going to be a line
         // when projected into the new surface. For the side edges, because
         // we're sweeping along a straight path.
-        for ((mut half_edge, start), (_, end)) in [
-            edge_bottom.clone(),
-            edge_up.clone(),
-            edge_top.clone(),
-            edge_down.clone(),
-        ]
-        .zip_ext(surface_points)
-        .into_iter()
-        .circular_tuple_windows()
+        for ((mut half_edge, start), (_, end)) in
+            [edge_bottom, edge_up, edge_top.clone(), edge_down]
+                .zip_ext(surface_points)
+                .into_iter()
+                .circular_tuple_windows()
         {
             half_edge.write().update_as_line_segment(start, end);
         }
-
-        // Finally, we can make sure that all edges refer to the correct global
-        // edges.
-        [edge_bottom.write(), edge_up.write(), edge_down.write()]
-            .zip_ext(global_edges)
-            .map(|(mut half_edge, global_edge)| {
-                half_edge.global_form = global_edge;
-            });
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
