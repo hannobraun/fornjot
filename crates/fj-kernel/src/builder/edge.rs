@@ -22,7 +22,7 @@ pub trait HalfEdgeBuilder {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-    );
+    ) -> Curve;
 
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(
@@ -57,7 +57,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-    ) {
+    ) -> Curve {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -77,6 +77,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         {
             *point_boundary = Some(point_curve);
         }
+
+        curve
     }
 
     fn update_as_line_segment(
