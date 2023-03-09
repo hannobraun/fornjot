@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{HalfEdge, Objects},
-    partial::{Partial, PartialCycle},
+    partial::{Partial, PartialCycle, PartialHalfEdge},
     services::Service,
 };
 
@@ -61,8 +61,8 @@ impl CycleBuilder for PartialCycle {
         P: Clone + Into<Point<2>>,
     {
         points.map_with_next(|start, end| {
-            let mut half_edge = Partial::<HalfEdge>::new(objects);
-            half_edge.write().update_as_line_segment([start, end], None);
+            let half_edge =
+                PartialHalfEdge::make_line_segment([start, end], None, objects);
 
             self.add_half_edge(half_edge.clone());
 

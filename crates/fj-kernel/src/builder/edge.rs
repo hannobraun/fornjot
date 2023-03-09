@@ -31,11 +31,11 @@ pub trait HalfEdgeBuilder {
     ) -> Partial<HalfEdge>;
 
     /// Update partial half-edge to be a line segment
-    fn update_as_line_segment(
-        &mut self,
+    fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-    ) -> Curve;
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge>;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -81,21 +81,23 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         })
     }
 
-    fn update_as_line_segment(
-        &mut self,
+    fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-    ) -> Curve {
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
-
-        self.boundary = boundary.map(Some);
 
         let points = boundary.zip_ext(points_surface);
 
         let curve = Curve::line_from_points_with_coords(points);
-        self.curve = Some(curve);
 
-        curve
+        Partial::from_partial(PartialHalfEdge {
+            curve: Some(curve),
+            boundary: boundary.map(Some),
+            start_vertex: Vertex::new().insert(objects),
+            global_form: GlobalEdge::new().insert(objects),
+        })
     }
 }

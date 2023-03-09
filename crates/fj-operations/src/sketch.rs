@@ -4,7 +4,7 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{HalfEdge, Objects, Sketch},
+    objects::{Objects, Sketch},
     partial::{
         Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
         PartialSketch,
@@ -65,12 +65,11 @@ impl Shape for fj::Sketch {
                     for ((start, route), (end, _)) in segments {
                         let half_edge = match route {
                             fj::SketchSegmentRoute::Direct => {
-                                let mut half_edge: Partial<HalfEdge> =
-                                    Partial::new(objects);
-                                half_edge
-                                    .write()
-                                    .update_as_line_segment([start, end], None);
-                                half_edge
+                                PartialHalfEdge::make_line_segment(
+                                    [start, end],
+                                    None,
+                                    objects,
+                                )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
                                 PartialHalfEdge::make_arc(

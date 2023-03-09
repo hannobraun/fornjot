@@ -5,7 +5,7 @@ use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Face, GlobalEdge, HalfEdge, Objects, Surface, Vertex},
-    partial::{Partial, PartialFace, PartialObject},
+    partial::{PartialFace, PartialHalfEdge, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -88,14 +88,15 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .zip_ext(global_vertices)
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), global_vertex), global_edge)| {
-                let mut half_edge = Partial::<HalfEdge>::new(objects);
+                let mut half_edge = PartialHalfEdge::make_line_segment(
+                    [start, end],
+                    Some(boundary),
+                    objects,
+                );
 
                 half_edge.write().start_vertex = global_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));
-                half_edge
-                    .write()
-                    .update_as_line_segment([start, end], Some(boundary));
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 
