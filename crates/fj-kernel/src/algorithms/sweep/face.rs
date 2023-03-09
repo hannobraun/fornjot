@@ -64,12 +64,6 @@ impl Sweep for Handle<Face> {
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
             let cycle = cycle.reverse(objects);
 
-            let mut top_cycle = if i == 0 {
-                top_face.exterior.clone()
-            } else {
-                top_face.add_interior(objects)
-            };
-
             let mut original_edges = Vec::new();
             let mut top_edges = Vec::new();
             for (half_edge, next) in
@@ -89,6 +83,11 @@ impl Sweep for Handle<Face> {
                 top_edges.push(Partial::from(top_edge));
             }
 
+            let mut top_cycle = if i == 0 {
+                top_face.exterior.clone()
+            } else {
+                top_face.add_interior(objects)
+            };
             top_cycle.write().connect_to_edges(top_edges, objects);
 
             for (bottom, top) in original_edges
