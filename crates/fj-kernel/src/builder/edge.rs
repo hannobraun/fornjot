@@ -40,11 +40,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let curve = Curve::circle_from_radius(radius);
         self.curve = Some(curve);
 
-        let [a_curve, b_curve] =
+        let points_curve =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         for (point_boundary, point_curve) in
-            self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
+            self.boundary.each_mut_ext().zip_ext(points_curve)
         {
             *point_boundary = Some(point_curve);
         }
@@ -69,11 +69,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             Curve::circle_from_center_and_radius(arc.center, arc.radius);
         self.curve = Some(curve);
 
-        let [a_curve, b_curve] =
+        let points_curve =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
         for (point_boundary, point_curve) in
-            self.boundary.each_mut_ext().zip_ext([a_curve, b_curve])
+            self.boundary.each_mut_ext().zip_ext(points_curve)
         {
             *point_boundary = Some(point_curve);
         }
