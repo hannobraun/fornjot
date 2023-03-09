@@ -93,9 +93,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let points = boundary.zip_ext(points_surface);
 
-        let path = Curve::line_from_points_with_coords(points);
-        self.curve = Some(path);
+        let curve = Curve::line_from_points_with_coords(points);
+        self.curve = Some(curve);
 
-        path
+        curve
     }
 }
