@@ -23,12 +23,12 @@ pub trait HalfEdgeBuilder {
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn update_as_arc(
-        &mut self,
+    fn make_arc(
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-    ) -> Curve;
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge>;
 
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(
@@ -55,12 +55,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         })
     }
 
-    fn update_as_arc(
-        &mut self,
+    fn make_arc(
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-    ) -> Curve {
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -70,18 +70,15 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let curve =
             Curve::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve = Some(curve);
-
         let points_curve =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        for (point_boundary, point_curve) in
-            self.boundary.each_mut_ext().zip_ext(points_curve)
-        {
-            *point_boundary = Some(point_curve);
-        }
-
-        curve
+        Partial::from_partial(PartialHalfEdge {
+            curve: Some(curve),
+            boundary: points_curve.map(Some),
+            start_vertex: Vertex::new().insert(objects),
+            global_form: GlobalEdge::new().insert(objects),
+        })
     }
 
     fn update_as_line_segment(

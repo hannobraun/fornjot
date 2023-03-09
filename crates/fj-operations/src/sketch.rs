@@ -73,14 +73,12 @@ impl Shape for fj::Sketch {
                                 half_edge
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                let mut half_edge: Partial<HalfEdge> =
-                                    Partial::new(objects);
-                                half_edge.write().update_as_arc(
+                                PartialHalfEdge::make_arc(
                                     start,
                                     end,
                                     angle.rad(),
-                                );
-                                half_edge
+                                    objects,
+                                )
                             }
                         };
 
