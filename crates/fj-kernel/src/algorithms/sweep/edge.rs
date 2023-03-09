@@ -87,9 +87,6 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                         *a = Some(b);
                     }
 
-                    // Writing to the start vertices is enough. Neighboring
-                    // half-edges share surface vertices, so writing the start
-                    // vertex of each half-edge writes to all vertices.
                     half_edge.write().start_vertex = global_vertex;
 
                     face.exterior.write().add_half_edge(half_edge.clone());
