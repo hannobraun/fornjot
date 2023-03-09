@@ -24,18 +24,6 @@ pub struct PartialHalfEdge {
     pub global_form: Handle<GlobalEdge>,
 }
 
-impl PartialHalfEdge {
-    /// Compute the surface position where the half-edge starts
-    pub fn start_position(&self) -> Option<Point<2>> {
-        // Computing the surface position from the curve position is fine.
-        // `HalfEdge` "owns" its start position. There is no competing code that
-        // could compute the surface position from slightly different data.
-
-        let [start, _] = self.boundary;
-        Some(self.curve.point_from_path_coords(start))
-    }
-}
-
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
