@@ -89,8 +89,7 @@ impl<T> ObjectArgument<T> for Vec<T> {
         prev.rotate_right(1);
 
         let mut ret = Vec::new();
-        for (i, item) in self.into_iter().enumerate() {
-            let prev = prev[i].clone();
+        for (item, prev) in self.into_iter().zip(prev) {
             ret.push(f(item, prev));
         }
 
