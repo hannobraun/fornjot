@@ -2,7 +2,6 @@ use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
-    insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{FullToPartialCache, PartialObject},
     services::Service,
@@ -43,13 +42,10 @@ impl PartialHalfEdge {
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
-    fn new(objects: &mut Service<Objects>) -> Self {
-        Self {
-            curve: None,
-            boundary: [None; 2],
-            start_vertex: Vertex::new().insert(objects),
-            global_form: GlobalEdge::new().insert(objects),
-        }
+    fn new(_: &mut Service<Objects>) -> Self {
+        // This method is no longer used, and since `PartialHalfEdge` will be
+        // replaced with `HalfEdge`, it will soon be removed.
+        unreachable!()
     }
 
     fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
