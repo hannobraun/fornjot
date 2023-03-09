@@ -1,5 +1,3 @@
-use std::array;
-
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
@@ -74,33 +72,31 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
-        // Now we're ready to create the edges.
-        let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
-            array::from_fn(|_| {
-                let half_edge = Partial::new(objects);
-                face.exterior.write().add_half_edge(half_edge.clone());
-                half_edge
-            });
+        // Armed with all of that, we're ready to create the edges.
+        let [mut edge_bottom, mut edge_up, edge_top, mut edge_down] =
+            boundaries.zip_ext(global_vertices).map(
+                |(boundary, global_vertex)| {
+                    let mut half_edge = Partial::<HalfEdge>::new(objects);
 
-        // Armed with all of that, we can set the edge's vertices.
-        [
-            edge_bottom.write(),
-            edge_up.write(),
-            edge_top.write(),
-            edge_down.write(),
-        ]
-        .zip_ext(boundaries)
-        .zip_ext(global_vertices)
-        .map(|((mut half_edge, boundary), global_vertex)| {
-            for (a, b) in half_edge.boundary.each_mut_ext().zip_ext(boundary) {
-                *a = Some(b);
-            }
+                    for (a, b) in half_edge
+                        .write()
+                        .boundary
+                        .each_mut_ext()
+                        .zip_ext(boundary)
+                    {
+                        *a = Some(b);
+                    }
 
-            // Writing to the start vertices is enough. Neighboring half-
-            // edges share surface vertices, so writing the start vertex of
-            // each half-edge writes to all vertices.
-            half_edge.start_vertex = global_vertex;
-        });
+                    // Writing to the start vertices is enough. Neighboring
+                    // half-edges share surface vertices, so writing the start
+                    // vertex of each half-edge writes to all vertices.
+                    half_edge.write().start_vertex = global_vertex;
+
+                    face.exterior.write().add_half_edge(half_edge.clone());
+
+                    half_edge
+                },
+            );
 
         // With the vertices set, we can now update the curves.
         //
