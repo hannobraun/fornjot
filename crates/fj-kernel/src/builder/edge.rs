@@ -1,15 +1,21 @@
 use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
-use crate::{geometry::curve::Curve, partial::PartialHalfEdge};
+use crate::{
+    geometry::curve::Curve,
+    insert::Insert,
+    objects::{GlobalEdge, HalfEdge, Objects, Vertex},
+    partial::{Partial, PartialHalfEdge},
+    services::Service,
+};
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a circle, from the given radius
-    fn update_as_circle_from_radius(
-        &mut self,
+    fn make_circle(
         radius: impl Into<Scalar>,
-    ) -> Curve;
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge>;
 
     /// Update partial half-edge to be an arc, spanning the given angle in
     /// radians
@@ -33,23 +39,20 @@ pub trait HalfEdgeBuilder {
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
-    fn update_as_circle_from_radius(
-        &mut self,
+    fn make_circle(
         radius: impl Into<Scalar>,
-    ) -> Curve {
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
         let curve = Curve::circle_from_radius(radius);
-        self.curve = Some(curve);
-
         let points_curve =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        for (point_boundary, point_curve) in
-            self.boundary.each_mut_ext().zip_ext(points_curve)
-        {
-            *point_boundary = Some(point_curve);
-        }
-
-        curve
+        Partial::from_partial(PartialHalfEdge {
+            curve: Some(curve),
+            boundary: points_curve.map(Some),
+            start_vertex: Vertex::new().insert(objects),
+            global_form: GlobalEdge::new().insert(objects),
+        })
     }
 
     fn update_as_arc(
