@@ -86,29 +86,15 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         points_surface: [Point<2>; 2],
         boundary: Option<[Point<1>; 2]>,
     ) -> Curve {
-        if let Some(boundary) = boundary {
-            self.boundary = boundary.map(Some);
-        }
+        let boundary =
+            boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
 
-        let path = if let Some(boundary) = boundary {
-            let points = boundary.zip_ext(points_surface);
+        self.boundary = boundary.map(Some);
 
-            let path = Curve::line_from_points_with_coords(points);
-            self.curve = Some(path);
+        let points = boundary.zip_ext(points_surface);
 
-            path
-        } else {
-            let (path, _) = Curve::line_from_points(points_surface);
-            self.curve = Some(path);
-
-            for (vertex, position) in
-                self.boundary.each_mut_ext().zip_ext([0., 1.])
-            {
-                *vertex = Some([position].into());
-            }
-
-            path
-        };
+        let path = Curve::line_from_points_with_coords(points);
+        self.curve = Some(path);
 
         path
     }
