@@ -19,8 +19,8 @@ pub trait HalfEdgeBuilder {
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
     fn update_as_arc(
         &mut self,
-        start: Point<2>,
-        end: Point<2>,
+        start: impl Into<Point<2>>,
+        end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
     );
 
@@ -54,8 +54,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_arc(
         &mut self,
-        start: Point<2>,
-        end: Point<2>,
+        start: impl Into<Point<2>>,
+        end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
     ) {
         let angle_rad = angle_rad.into();
