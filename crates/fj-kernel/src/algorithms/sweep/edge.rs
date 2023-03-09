@@ -91,10 +91,10 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                 let mut half_edge = PartialHalfEdge::make_line_segment(
                     [start, end],
                     Some(boundary),
+                    Some(start_vertex),
                     objects,
                 );
 
-                half_edge.write().start_vertex = start_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));
 

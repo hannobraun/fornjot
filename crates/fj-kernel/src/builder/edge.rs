@@ -7,6 +7,7 @@ use crate::{
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{Partial, PartialHalfEdge},
     services::Service,
+    storage::Handle,
 };
 
 /// Builder API for [`PartialHalfEdge`]
@@ -34,6 +35,7 @@ pub trait HalfEdgeBuilder {
     fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
+        start_vertex: Option<Handle<Vertex>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
 }
@@ -84,6 +86,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
+        start_vertex: Option<Handle<Vertex>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge> {
         let boundary =
@@ -91,11 +94,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let curve = Curve::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
+        let start_vertex =
+            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects));
 
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
             boundary: boundary.map(Some),
-            start_vertex: Vertex::new().insert(objects),
+            start_vertex,
             global_form: GlobalEdge::new().insert(objects),
         })
     }

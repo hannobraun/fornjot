@@ -68,6 +68,7 @@ impl Shape for fj::Sketch {
                                 PartialHalfEdge::make_line_segment(
                                     [start, end],
                                     None,
+                                    None,
                                     objects,
                                 )
                             }
