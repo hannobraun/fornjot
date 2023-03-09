@@ -35,6 +35,7 @@ pub trait HalfEdgeBuilder {
         &mut self,
         start: Point<2>,
         end: Point<2>,
+        boundary: Option<[Point<1>; 2]>,
     ) -> Curve;
 }
 
@@ -85,10 +86,11 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         &mut self,
         start: Point<2>,
         end: Point<2>,
+        boundary: Option<[Point<1>; 2]>,
     ) -> Curve {
         let points_surface = [start, end];
 
-        let path = if let [Some(start), Some(end)] = self.boundary {
+        let path = if let Some([start, end]) = boundary {
             let points = [start, end].zip_ext(points_surface);
 
             let path = Curve::line_from_points_with_coords(points);

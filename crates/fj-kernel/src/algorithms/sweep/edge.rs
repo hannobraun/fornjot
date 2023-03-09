@@ -99,7 +99,11 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                 half_edge.write().start_vertex = global_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));
-                half_edge.write().update_as_line_segment(start, end);
+                half_edge.write().update_as_line_segment(
+                    start,
+                    end,
+                    Some(boundary),
+                );
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 
