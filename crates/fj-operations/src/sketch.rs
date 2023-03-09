@@ -128,11 +128,11 @@ impl Shape for fj::Sketch {
                                 segment.endpoint,
                                 fj_math::Scalar::from_f64(angle.rad()),
                             );
-                            for circle_minmax_angle in
+                            for circle_min_max_angle in
                                 [0., PI / 2., PI, 3. * PI / 2.]
                             {
                                 let mm_angle = fj_math::Scalar::from_f64(
-                                    circle_minmax_angle,
+                                    circle_min_max_angle,
                                 );
                                 if arc.start_angle < mm_angle
                                     && mm_angle < arc.end_angle
@@ -141,9 +141,11 @@ impl Shape for fj::Sketch {
                                         arc.center
                                             + [
                                                 arc.radius
-                                                    * circle_minmax_angle.cos(),
+                                                    * circle_min_max_angle
+                                                        .cos(),
                                                 arc.radius
-                                                    * circle_minmax_angle.sin(),
+                                                    * circle_min_max_angle
+                                                        .sin(),
                                             ],
                                     );
                                 }
