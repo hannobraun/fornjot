@@ -1,5 +1,4 @@
 use fj_math::Point;
-use itertools::Itertools;
 
 use crate::{
     objects::{HalfEdge, Objects},
@@ -30,7 +29,7 @@ pub trait CycleBuilder {
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
-        P: Into<Point<2>>;
+        P: Clone + Into<Point<2>>;
 
     /// Connect the cycles to the provided half-edges
     ///
@@ -59,27 +58,16 @@ impl CycleBuilder for PartialCycle {
     ) -> O::SameSize<Partial<HalfEdge>>
     where
         O: ObjectArgument<P>,
-        P: Into<Point<2>>,
+        P: Clone + Into<Point<2>>,
     {
-        let mut start_positions = Vec::new();
-        let half_edges = points.map(|point| {
-            start_positions.push(point.into());
+        points.map_with_next(|start, end| {
+            let mut half_edge = Partial::<HalfEdge>::new(objects);
+            half_edge.write().update_as_line_segment([start, end], None);
 
-            let half_edge = Partial::new(objects);
             self.add_half_edge(half_edge.clone());
 
             half_edge
-        });
-
-        for ((start, end), half_edge) in start_positions
-            .into_iter()
-            .circular_tuple_windows()
-            .zip(&mut self.half_edges)
-        {
-            half_edge.write().update_as_line_segment([start, end], None);
-        }
-
-        half_edges
+        })
     }
 
     fn connect_to_edges<O>(
