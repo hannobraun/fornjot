@@ -1,6 +1,5 @@
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
-use itertools::Itertools;
 
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
@@ -68,6 +67,11 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             ]
             .map(Point::from)
         };
+        let surface_points_next = {
+            let mut points = surface_points;
+            points.rotate_left(1);
+            points
+        };
 
         // Now, the boundaries of each edge.
         let boundaries = {
@@ -78,10 +82,12 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         };
 
         // Armed with all of that, we're ready to create the edges.
-        let [edge_bottom, edge_up, edge_top, edge_down] = boundaries
+        let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
+            .zip_ext(surface_points)
+            .zip_ext(surface_points_next)
             .zip_ext(global_vertices)
             .zip_ext(global_edges)
-            .map(|((boundary, global_vertex), global_edge)| {
+            .map(|((((boundary, start), end), global_vertex), global_edge)| {
                 let mut half_edge = Partial::<HalfEdge>::new(objects);
 
                 for (a, b) in
@@ -93,26 +99,12 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                 half_edge.write().start_vertex = global_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));
+                half_edge.write().update_as_line_segment(start, end);
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 
                 half_edge
             });
-
-        // With the vertices set, we can now update the curves.
-        //
-        // Those are all line segments. For the bottom and top curve, because
-        // even if the original edge was a circle, it's still going to be a line
-        // when projected into the new surface. For the side edges, because
-        // we're sweeping along a straight path.
-        for ((mut half_edge, start), (_, end)) in
-            [edge_bottom, edge_up, edge_top.clone(), edge_down]
-                .zip_ext(surface_points)
-                .into_iter()
-                .circular_tuple_windows()
-        {
-            half_edge.write().update_as_line_segment(start, end);
-        }
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
