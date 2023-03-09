@@ -67,7 +67,8 @@ impl Shape for fj::Sketch {
                         .circular_tuple_windows();
 
                     for ((start, route), (end, _)) in segments {
-                        let mut half_edge = cycle.add_half_edge(objects);
+                        let mut half_edge = Partial::new(objects);
+                        cycle.add_half_edge(half_edge.clone());
 
                         match route {
                             fj::SketchSegmentRoute::Direct => {

@@ -8,7 +8,7 @@ use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Face, HalfEdge, Objects, Surface, Vertex},
-    partial::{PartialFace, PartialObject},
+    partial::{Partial, PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -40,7 +40,11 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
 
         // Now we're ready to create the edges.
         let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
-            array::from_fn(|_| face.exterior.write().add_half_edge(objects));
+            array::from_fn(|_| {
+                let edge = Partial::new(objects);
+                face.exterior.write().add_half_edge(edge.clone());
+                edge
+            });
 
         // Those edges aren't fully defined yet. We'll do that shortly, but
         // first we have to figure a few things out.

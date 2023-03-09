@@ -22,7 +22,7 @@ pub trait CycleBuilder {
     /// meaning its front and back vertices are the same.
     fn add_half_edge(
         &mut self,
-        objects: &mut Service<Objects>,
+        half_edge: Partial<HalfEdge>,
     ) -> Partial<HalfEdge>;
 
     /// Update cycle as a polygon from the provided points
@@ -53,9 +53,8 @@ pub trait CycleBuilder {
 impl CycleBuilder for PartialCycle {
     fn add_half_edge(
         &mut self,
-        objects: &mut Service<Objects>,
+        half_edge: Partial<HalfEdge>,
     ) -> Partial<HalfEdge> {
-        let half_edge = Partial::new(objects);
         self.half_edges.push(half_edge.clone());
         half_edge
     }
@@ -72,7 +71,11 @@ impl CycleBuilder for PartialCycle {
         let mut start_positions = Vec::new();
         let half_edges = points.map(|point| {
             start_positions.push(point.into());
-            self.add_half_edge(objects)
+
+            let half_edge = Partial::new(objects);
+            self.add_half_edge(half_edge.clone());
+
+            half_edge
         });
 
         for ((start, end), half_edge) in start_positions
@@ -95,8 +98,11 @@ impl CycleBuilder for PartialCycle {
         O: ObjectArgument<Partial<HalfEdge>>,
     {
         edges.map_with_prev(|_, prev| {
-            let mut edge = self.add_half_edge(objects);
+            let mut edge: Partial<HalfEdge> = Partial::new(objects);
             edge.write().start_vertex = prev.read().start_vertex.clone();
+
+            self.add_half_edge(edge.clone());
+
             edge
         })
     }
