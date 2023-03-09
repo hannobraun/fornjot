@@ -38,18 +38,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             (edge.curve(), surface).sweep_with_cache(path, cache, objects),
         );
 
-        // Now we're ready to create the edges.
-        let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
-            array::from_fn(|_| {
-                let edge = Partial::new(objects);
-                face.exterior.write().add_half_edge(edge.clone());
-                edge
-            });
-
-        // Those edges aren't fully defined yet. We'll do that shortly, but
-        // first we have to figure a few things out.
-        //
-        // Let's start with the global vertices and edges.
+        // Next, we need to define the boundaries of the face. Let's start with
+        // the global vertices and edges.
         let (global_vertices, global_edges) = {
             let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
             let (edge_right, [_, c]) =
@@ -63,7 +53,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             )
         };
 
-        // Next, let's figure out the surface coordinates of the edge vertices.
+        // Let's figure out the surface coordinates of the edge vertices.
         let surface_points = {
             let [a, b] = edge.boundary();
 
@@ -83,6 +73,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
 
             [[a, b], [c, d], [b, a], [d, c]]
         };
+
+        // Now we're ready to create the edges.
+        let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
+            array::from_fn(|_| {
+                let edge = Partial::new(objects);
+                face.exterior.write().add_half_edge(edge.clone());
+                edge
+            });
 
         // Armed with all of that, we can set the edge's vertices.
         [
