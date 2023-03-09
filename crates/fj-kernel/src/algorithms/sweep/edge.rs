@@ -87,14 +87,14 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .zip_ext(surface_points_next)
             .zip_ext(global_vertices)
             .zip_ext(global_edges)
-            .map(|((((boundary, start), end), global_vertex), global_edge)| {
+            .map(|((((boundary, start), end), start_vertex), global_edge)| {
                 let mut half_edge = PartialHalfEdge::make_line_segment(
                     [start, end],
                     Some(boundary),
                     objects,
                 );
 
-                half_edge.write().start_vertex = global_vertex;
+                half_edge.write().start_vertex = start_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));
 
