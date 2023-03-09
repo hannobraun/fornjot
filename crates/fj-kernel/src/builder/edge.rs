@@ -12,14 +12,13 @@ use crate::{
 
 /// Builder API for [`PartialHalfEdge`]
 pub trait HalfEdgeBuilder {
-    /// Update partial half-edge to be a circle, from the given radius
+    /// Create a circle
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
 
-    /// Update partial half-edge to be an arc, spanning the given angle in
-    /// radians
+    /// Create an arc
     ///
     /// # Panics
     ///
@@ -31,7 +30,7 @@ pub trait HalfEdgeBuilder {
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
 
-    /// Update partial half-edge to be a line segment
+    /// Create a line segment
     fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
