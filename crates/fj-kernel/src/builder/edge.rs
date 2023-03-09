@@ -38,6 +38,15 @@ pub trait HalfEdgeBuilder {
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
+
+    /// Create a half-edge
+    fn make_half_edge(
+        curve: Curve,
+        boundary: [Point<1>; 2],
+        start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge>;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -49,12 +58,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        Partial::from_partial(PartialHalfEdge {
-            curve: Some(curve),
-            boundary: boundary.map(Some),
-            start_vertex: Vertex::new().insert(objects),
-            global_form: GlobalEdge::new().insert(objects),
-        })
+        Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
     fn make_arc(
@@ -75,12 +79,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        Partial::from_partial(PartialHalfEdge {
-            curve: Some(curve),
-            boundary: boundary.map(Some),
-            start_vertex: Vertex::new().insert(objects),
-            global_form: GlobalEdge::new().insert(objects),
-        })
+        Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
     fn make_line_segment(
@@ -95,16 +94,30 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let curve = Curve::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
-        let start_vertex =
-            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects));
-        let global_form =
-            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects));
 
+        Self::make_half_edge(
+            curve,
+            boundary,
+            start_vertex,
+            global_form,
+            objects,
+        )
+    }
+
+    fn make_half_edge(
+        curve: Curve,
+        boundary: [Point<1>; 2],
+        start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
+        objects: &mut Service<Objects>,
+    ) -> Partial<HalfEdge> {
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
             boundary: boundary.map(Some),
-            start_vertex,
-            global_form,
+            start_vertex: start_vertex
+                .unwrap_or_else(|| Vertex::new().insert(objects)),
+            global_form: global_form
+                .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         })
     }
 }
