@@ -33,7 +33,7 @@ pub trait HalfEdgeBuilder {
     /// Update partial half-edge to be a line segment
     fn update_as_line_segment(
         &mut self,
-        points_surface: [Point<2>; 2],
+        points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
     ) -> Curve;
 }
@@ -83,7 +83,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
     fn update_as_line_segment(
         &mut self,
-        points_surface: [Point<2>; 2],
+        points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
     ) -> Curve {
         let boundary =
