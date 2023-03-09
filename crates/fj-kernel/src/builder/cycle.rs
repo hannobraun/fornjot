@@ -76,7 +76,7 @@ impl CycleBuilder for PartialCycle {
             .circular_tuple_windows()
             .zip(&mut self.half_edges)
         {
-            half_edge.write().update_as_line_segment(start, end, None);
+            half_edge.write().update_as_line_segment([start, end], None);
         }
 
         half_edges

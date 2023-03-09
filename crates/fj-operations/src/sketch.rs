@@ -69,7 +69,7 @@ impl Shape for fj::Sketch {
                                     Partial::new(objects);
                                 half_edge
                                     .write()
-                                    .update_as_line_segment(start, end, None);
+                                    .update_as_line_segment([start, end], None);
                                 half_edge
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
