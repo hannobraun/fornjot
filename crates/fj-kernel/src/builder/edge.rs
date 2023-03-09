@@ -70,12 +70,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let curve =
             Curve::circle_from_center_and_radius(arc.center, arc.radius);
-        let points_curve =
+        let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
-            boundary: points_curve.map(Some),
+            boundary: boundary.map(Some),
             start_vertex: Vertex::new().insert(objects),
             global_form: GlobalEdge::new().insert(objects),
         })
