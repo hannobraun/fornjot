@@ -37,8 +37,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         &mut self,
         radius: impl Into<Scalar>,
     ) -> Curve {
-        let path = Curve::circle_from_radius(radius);
-        self.curve = Some(path);
+        let curve = Curve::circle_from_radius(radius);
+        self.curve = Some(curve);
 
         let [a_curve, b_curve] =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -49,7 +49,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             *point_boundary = Some(point_curve);
         }
 
-        path
+        curve
     }
 
     fn update_as_arc(
@@ -65,8 +65,9 @@ impl HalfEdgeBuilder for PartialHalfEdge {
 
         let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
 
-        let path = Curve::circle_from_center_and_radius(arc.center, arc.radius);
-        self.curve = Some(path);
+        let curve =
+            Curve::circle_from_center_and_radius(arc.center, arc.radius);
+        self.curve = Some(curve);
 
         let [a_curve, b_curve] =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
