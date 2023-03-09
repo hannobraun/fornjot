@@ -15,7 +15,7 @@ pub struct PartialHalfEdge {
     pub curve: Curve,
 
     /// The boundary of the half-edge on the curve
-    pub boundary: [Option<Point<1>>; 2],
+    pub boundary: [Point<1>; 2],
 
     /// The surface vertex where the half-edge starts
     pub start_vertex: Handle<Vertex>,
@@ -32,7 +32,7 @@ impl PartialHalfEdge {
         // could compute the surface position from slightly different data.
 
         let [start, _] = self.boundary;
-        start.map(|start| self.curve.point_from_path_coords(start))
+        Some(self.curve.point_from_path_coords(start))
     }
 }
 
@@ -48,16 +48,14 @@ impl PartialObject for PartialHalfEdge {
     fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
             curve: half_edge.curve(),
-            boundary: half_edge.boundary().map(Some),
+            boundary: half_edge.boundary(),
             start_vertex: half_edge.start_vertex().clone(),
             global_form: half_edge.global_form().clone(),
         }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let boundary = self.boundary.map(|point| {
-            point.expect("Can't build `HalfEdge` without boundary positions")
-        });
+        let boundary = self.boundary;
 
         HalfEdge::new(self.curve, boundary, self.start_vertex, self.global_form)
     }

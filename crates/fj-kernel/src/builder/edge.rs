@@ -113,7 +113,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     ) -> Partial<HalfEdge> {
         Partial::from_partial(PartialHalfEdge {
             curve,
-            boundary: boundary.map(Some),
+            boundary,
             start_vertex: start_vertex
                 .unwrap_or_else(|| Vertex::new().insert(objects)),
             global_form: global_form

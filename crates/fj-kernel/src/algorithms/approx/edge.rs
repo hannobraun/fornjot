@@ -346,8 +346,8 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.write().boundary[0] = Some(range.boundary[0]);
-            half_edge.write().boundary[1] = Some(range.boundary[1]);
+            half_edge.write().boundary[0] = range.boundary[0];
+            half_edge.write().boundary[1] = range.boundary[1];
 
             let half_edge = half_edge.read().clone();
             half_edge
