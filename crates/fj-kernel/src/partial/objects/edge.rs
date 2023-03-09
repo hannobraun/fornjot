@@ -32,10 +32,7 @@ impl PartialHalfEdge {
         // could compute the surface position from slightly different data.
 
         let [start, _] = self.boundary;
-        start.map(|start| {
-            let curve = self.curve;
-            curve.point_from_path_coords(start)
-        })
+        start.map(|start| self.curve.point_from_path_coords(start))
     }
 }
 
