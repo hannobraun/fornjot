@@ -1,3 +1,5 @@
+use std::array;
+
 use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
@@ -37,10 +39,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         );
 
         // Now we're ready to create the edges.
-        let mut edge_bottom = face.exterior.write().add_half_edge(objects);
-        let mut edge_up = face.exterior.write().add_half_edge(objects);
-        let mut edge_top = face.exterior.write().add_half_edge(objects);
-        let mut edge_down = face.exterior.write().add_half_edge(objects);
+        let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
+            array::from_fn(|_| face.exterior.write().add_half_edge(objects));
 
         // Those edges aren't fully defined yet. We'll do that shortly, but
         // first we have to figure a few things out.
