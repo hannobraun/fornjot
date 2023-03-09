@@ -2,7 +2,6 @@ use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
-    insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     partial::{FullToPartialCache, PartialObject},
     services::Service,
@@ -13,10 +12,10 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialHalfEdge {
     /// The curve that the half-edge is defined in
-    pub curve: Option<Curve>,
+    pub curve: Curve,
 
     /// The boundary of the half-edge on the curve
-    pub boundary: [Option<Point<1>>; 2],
+    pub boundary: [Point<1>; 2],
 
     /// The surface vertex where the half-edge starts
     pub start_vertex: Handle<Vertex>,
@@ -25,48 +24,30 @@ pub struct PartialHalfEdge {
     pub global_form: Handle<GlobalEdge>,
 }
 
-impl PartialHalfEdge {
-    /// Compute the surface position where the half-edge starts
-    pub fn start_position(&self) -> Option<Point<2>> {
-        // Computing the surface position from the curve position is fine.
-        // `HalfEdge` "owns" its start position. There is no competing code that
-        // could compute the surface position from slightly different data.
-
-        let [start, _] = self.boundary;
-        start.and_then(|start| {
-            let curve = self.curve?;
-            Some(curve.point_from_path_coords(start))
-        })
-    }
-}
-
 impl PartialObject for PartialHalfEdge {
     type Full = HalfEdge;
 
-    fn new(objects: &mut Service<Objects>) -> Self {
-        Self {
-            curve: None,
-            boundary: [None; 2],
-            start_vertex: Vertex::new().insert(objects),
-            global_form: GlobalEdge::new().insert(objects),
-        }
+    fn new(_: &mut Service<Objects>) -> Self {
+        // This method is no longer used, and since `PartialHalfEdge` will be
+        // replaced with `HalfEdge`, it will soon be removed.
+        unreachable!()
     }
 
     fn from_full(half_edge: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            curve: Some(half_edge.curve()),
-            boundary: half_edge.boundary().map(Some),
+            curve: half_edge.curve(),
+            boundary: half_edge.boundary(),
             start_vertex: half_edge.start_vertex().clone(),
             global_form: half_edge.global_form().clone(),
         }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let curve = self.curve.expect("Need path to build curve");
-        let boundary = self.boundary.map(|point| {
-            point.expect("Can't build `HalfEdge` without boundary positions")
-        });
-
-        HalfEdge::new(curve, boundary, self.start_vertex, self.global_form)
+        HalfEdge::new(
+            self.curve,
+            self.boundary,
+            self.start_vertex,
+            self.global_form,
+        )
     }
 }

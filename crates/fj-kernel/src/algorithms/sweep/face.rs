@@ -1,6 +1,5 @@
 use std::ops::Deref;
 
-use fj_interop::ext::ArrayExt;
 use fj_math::{Scalar, Vector};
 use itertools::Itertools;
 
@@ -64,13 +63,6 @@ impl Sweep for Handle<Face> {
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
             let cycle = cycle.reverse(objects);
 
-            let mut top_cycle = if i == 0 {
-                top_face.exterior.clone()
-            } else {
-                top_face.add_interior(objects)
-            };
-
-            let mut original_edges = Vec::new();
             let mut top_edges = Vec::new();
             for (half_edge, next) in
                 cycle.half_edges().cloned().circular_tuple_windows()
@@ -85,26 +77,19 @@ impl Sweep for Handle<Face> {
 
                 faces.push(face);
 
-                original_edges.push(half_edge);
-                top_edges.push(Partial::from(top_edge));
+                top_edges.push((
+                    Partial::from(top_edge),
+                    half_edge.curve(),
+                    half_edge.boundary(),
+                ));
             }
 
+            let mut top_cycle = if i == 0 {
+                top_face.exterior.clone()
+            } else {
+                top_face.add_interior(objects)
+            };
             top_cycle.write().connect_to_edges(top_edges, objects);
-
-            for (bottom, top) in original_edges
-                .into_iter()
-                .zip(top_cycle.write().half_edges.iter_mut())
-            {
-                top.write().curve = Some(bottom.curve());
-
-                let boundary = bottom.boundary();
-
-                for (top, bottom) in
-                    top.write().boundary.each_mut_ext().zip_ext(boundary)
-                {
-                    *top = Some(bottom);
-                }
-            }
         }
 
         let top_face = top_face.build(objects).insert(objects);

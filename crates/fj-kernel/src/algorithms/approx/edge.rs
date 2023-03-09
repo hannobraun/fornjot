@@ -338,22 +338,14 @@ mod tests {
             v: [0., 0., 1.].into(),
         })
         .insert(&mut services.objects);
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [mut half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[0., 1.], [1., 1.], [1., 2.]],
-                &mut services.objects,
-            );
-
-            half_edge.write().boundary[0] = Some(range.boundary[0]);
-            half_edge.write().boundary[1] = Some(range.boundary[1]);
-
-            let half_edge = half_edge.read().clone();
-            half_edge
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-        };
+        let half_edge = PartialHalfEdge::make_line_segment(
+            [[0., 1.], [TAU, 1.]],
+            Some(range.boundary),
+            None,
+            None,
+            &mut services.objects,
+        )
+        .build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

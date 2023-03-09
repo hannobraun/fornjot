@@ -112,8 +112,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge> {
         Partial::from_partial(PartialHalfEdge {
-            curve: Some(curve),
-            boundary: boundary.map(Some),
+            curve,
+            boundary,
             start_vertex: start_vertex
                 .unwrap_or_else(|| Vertex::new().insert(objects)),
             global_form: global_form
