@@ -77,9 +77,9 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // Now we're ready to create the edges.
         let [mut edge_bottom, mut edge_up, mut edge_top, mut edge_down] =
             array::from_fn(|_| {
-                let edge = Partial::new(objects);
-                face.exterior.write().add_half_edge(edge.clone());
-                edge
+                let half_edge = Partial::new(objects);
+                face.exterior.write().add_half_edge(half_edge.clone());
+                half_edge
             });
 
         // Armed with all of that, we can set the edge's vertices.
