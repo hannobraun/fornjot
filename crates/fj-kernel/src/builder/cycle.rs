@@ -65,6 +65,7 @@ impl CycleBuilder for PartialCycle {
                 [start, end],
                 None,
                 None,
+                None,
                 objects,
             );
 

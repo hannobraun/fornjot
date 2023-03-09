@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, GlobalEdge, HalfEdge, Objects, Surface, Vertex},
+    objects::{Face, HalfEdge, Objects, Surface, Vertex},
     partial::{PartialFace, PartialHalfEdge, PartialObject},
     services::Service,
     storage::Handle,
@@ -88,15 +88,13 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .zip_ext(vertices)
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
-                let mut half_edge = PartialHalfEdge::make_line_segment(
+                let half_edge = PartialHalfEdge::make_line_segment(
                     [start, end],
                     Some(boundary),
                     Some(start_vertex),
+                    global_edge,
                     objects,
                 );
-
-                half_edge.write().global_form = global_edge
-                    .unwrap_or_else(|| GlobalEdge::new().insert(objects));
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 

@@ -69,6 +69,7 @@ impl Shape for fj::Sketch {
                                     [start, end],
                                     None,
                                     None,
+                                    None,
                                     objects,
                                 )
                             }

@@ -36,6 +36,7 @@ pub trait HalfEdgeBuilder {
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
 }
@@ -87,6 +88,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge> {
         let boundary =
@@ -96,12 +98,14 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         );
         let start_vertex =
             start_vertex.unwrap_or_else(|| Vertex::new().insert(objects));
+        let global_form =
+            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects));
 
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
             boundary: boundary.map(Some),
             start_vertex,
-            global_form: GlobalEdge::new().insert(objects),
+            global_form,
         })
     }
 }
