@@ -44,12 +44,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge> {
         let curve = Curve::circle_from_radius(radius);
-        let points_curve =
+        let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         Partial::from_partial(PartialHalfEdge {
             curve: Some(curve),
-            boundary: points_curve.map(Some),
+            boundary: boundary.map(Some),
             start_vertex: Vertex::new().insert(objects),
             global_form: GlobalEdge::new().insert(objects),
         })
