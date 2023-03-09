@@ -1,5 +1,5 @@
 use fj_interop::ext::ArrayExt;
-use fj_math::{Point, Scalar};
+use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
@@ -66,7 +66,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
         }
 
-        let arc = fj_math::Arc::from_endpoints_and_angle(start, end, angle_rad);
+        let arc = Arc::from_endpoints_and_angle(start, end, angle_rad);
 
         let curve =
             Curve::circle_from_center_and_radius(arc.center, arc.radius);
