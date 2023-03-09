@@ -84,12 +84,12 @@ impl CycleBuilder for PartialCycle {
         O: ObjectArgument<Partial<HalfEdge>>,
     {
         edges.map_with_prev(|_, prev| {
-            let mut edge: Partial<HalfEdge> = Partial::new(objects);
-            edge.write().start_vertex = prev.read().start_vertex.clone();
+            let mut half_edge: Partial<HalfEdge> = Partial::new(objects);
+            half_edge.write().start_vertex = prev.read().start_vertex.clone();
 
-            self.add_half_edge(edge.clone());
+            self.add_half_edge(half_edge.clone());
 
-            edge
+            half_edge
         })
     }
 }
