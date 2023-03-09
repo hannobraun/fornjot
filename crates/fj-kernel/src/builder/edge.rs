@@ -90,8 +90,8 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             self.boundary = boundary.map(Some);
         }
 
-        let path = if let Some([start, end]) = boundary {
-            let points = [start, end].zip_ext(points_surface);
+        let path = if let Some(boundary) = boundary {
+            let points = boundary.zip_ext(points_surface);
 
             let path = Curve::line_from_points_with_coords(points);
             self.curve = Some(path);
