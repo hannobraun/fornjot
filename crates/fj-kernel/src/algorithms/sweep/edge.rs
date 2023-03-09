@@ -90,12 +90,6 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .map(|((((boundary, start), end), global_vertex), global_edge)| {
                 let mut half_edge = Partial::<HalfEdge>::new(objects);
 
-                for (a, b) in
-                    half_edge.write().boundary.each_mut_ext().zip_ext(boundary)
-                {
-                    *a = Some(b);
-                }
-
                 half_edge.write().start_vertex = global_vertex;
                 half_edge.write().global_form = global_edge
                     .unwrap_or_else(|| GlobalEdge::new().insert(objects));

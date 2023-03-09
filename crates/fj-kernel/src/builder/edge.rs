@@ -88,6 +88,10 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         end: Point<2>,
         boundary: Option<[Point<1>; 2]>,
     ) -> Curve {
+        if let Some(boundary) = boundary {
+            self.boundary = boundary.map(Some);
+        }
+
         let points_surface = [start, end];
 
         let path = if let Some([start, end]) = boundary {
