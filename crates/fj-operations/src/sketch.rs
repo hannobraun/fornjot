@@ -28,12 +28,8 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge = {
-                    let mut half_edge = PartialHalfEdge::new(objects);
-                    half_edge.update_as_circle_from_radius(circle.radius());
-
-                    Partial::from_partial(half_edge)
-                };
+                let half_edge =
+                    PartialHalfEdge::make_circle(circle.radius(), objects);
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
                     cycle.half_edges.push(half_edge);
@@ -57,33 +53,37 @@ impl Shape for fj::Sketch {
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
 
-                    let half_edges = poly_chain
+                    let segments = poly_chain
                         .to_segments()
                         .into_iter()
                         .map(|fj::SketchSegment { endpoint, route }| {
                             let endpoint = Point::from(endpoint);
-                            let half_edge = cycle.add_half_edge(objects);
-                            (half_edge, endpoint, route)
+                            (endpoint, route)
                         })
-                        .collect::<Vec<_>>();
+                        .circular_tuple_windows();
 
-                    for ((mut half_edge, start, route), (_, end, _)) in
-                        half_edges.into_iter().circular_tuple_windows()
-                    {
-                        match route {
+                    for ((start, route), (end, _)) in segments {
+                        let half_edge = match route {
                             fj::SketchSegmentRoute::Direct => {
-                                half_edge
-                                    .write()
-                                    .update_as_line_segment(start, end);
+                                PartialHalfEdge::make_line_segment(
+                                    [start, end],
+                                    None,
+                                    None,
+                                    None,
+                                    objects,
+                                )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                half_edge.write().update_as_arc(
+                                PartialHalfEdge::make_arc(
                                     start,
                                     end,
                                     angle.rad(),
-                                );
+                                    objects,
+                                )
                             }
-                        }
+                        };
+
+                        cycle.add_half_edge(half_edge);
                     }
 
                     Partial::from_partial(cycle)
@@ -132,11 +132,11 @@ impl Shape for fj::Sketch {
                                 segment.endpoint,
                                 fj_math::Scalar::from_f64(angle.rad()),
                             );
-                            for circle_minmax_angle in
+                            for circle_min_max_angle in
                                 [0., PI / 2., PI, 3. * PI / 2.]
                             {
                                 let mm_angle = fj_math::Scalar::from_f64(
-                                    circle_minmax_angle,
+                                    circle_min_max_angle,
                                 );
                                 if arc.start_angle < mm_angle
                                     && mm_angle < arc.end_angle
@@ -145,9 +145,11 @@ impl Shape for fj::Sketch {
                                         arc.center
                                             + [
                                                 arc.radius
-                                                    * circle_minmax_angle.cos(),
+                                                    * circle_min_max_angle
+                                                        .cos(),
                                                 arc.radius
-                                                    * circle_minmax_angle.sin(),
+                                                    * circle_min_max_angle
+                                                        .sin(),
                                             ],
                                     );
                                 }

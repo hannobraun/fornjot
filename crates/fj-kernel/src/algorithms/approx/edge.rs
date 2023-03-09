@@ -377,15 +377,8 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = {
-            let mut half_edge = PartialHalfEdge::new(&mut services.objects);
-
-            half_edge.update_as_circle_from_radius(1.);
-
-            half_edge
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-        };
+        let half_edge = PartialHalfEdge::make_circle(1., &mut services.objects)
+            .build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

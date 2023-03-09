@@ -47,6 +47,14 @@ pub trait ObjectArgument<T>: IntoIterator<Item = T> {
 
     /// Create a return value by mapping the implementing type
     ///
+    /// Provides access to the (circular) next item.
+    fn map_with_next<F, R>(self, f: F) -> Self::SameSize<R>
+    where
+        F: FnMut(T, T) -> R,
+        T: Clone;
+
+    /// Create a return value by mapping the implementing type
+    ///
     /// Provides access to the (circular) previous item.
     fn map_with_prev<F, R>(self, f: F) -> Self::SameSize<R>
     where
@@ -80,19 +88,32 @@ impl<T> ObjectArgument<T> for Vec<T> {
         ret
     }
 
+    fn map_with_next<F, R>(self, mut f: F) -> Self::SameSize<R>
+    where
+        F: FnMut(T, T) -> R,
+        T: Clone,
+    {
+        let mut next = self.clone();
+        next.rotate_left(1);
+
+        let mut ret = Vec::new();
+        for (item, next) in self.into_iter().zip(next) {
+            ret.push(f(item, next));
+        }
+
+        ret
+    }
+
     fn map_with_prev<F, R>(self, mut f: F) -> Self::SameSize<R>
     where
         F: FnMut(T, T) -> R,
         T: Clone,
     {
-        let mut prev = Vec::new();
-        for i in 0..self.len() {
-            prev.push(self[(i + self.len() - 1) % self.len()].clone());
-        }
+        let mut prev = self.clone();
+        prev.rotate_right(1);
 
         let mut ret = Vec::new();
-        for (i, item) in self.into_iter().enumerate() {
-            let prev = prev[i].clone();
+        for (item, prev) in self.into_iter().zip(prev) {
             ret.push(f(item, prev));
         }
 
@@ -131,14 +152,30 @@ macro_rules! impl_object_argument_for_arrays {
                     self.map(f)
                 }
 
+                fn map_with_next<F, R>(self, mut f: F) -> Self::SameSize<R>
+                where
+                    F: FnMut(T, T) -> R,
+                    T: Clone,
+                {
+                    let mut next = self.clone();
+                    next.rotate_left(1);
+
+                    let mut i = 0;
+                    self.map(|item| {
+                        let next = next[i].clone();
+                        i += 1;
+
+                        f(item, next)
+                    })
+                }
+
                 fn map_with_prev<F, R>(self, mut f: F) -> Self::SameSize<R>
                 where
                     F: FnMut(T, T) -> R,
                     T: Clone,
                 {
-                    let prev: [_; $len] = array::from_fn(|i| {
-                        self[(i + self.len() - 1) % self.len()].clone()
-                    });
+                    let mut prev = self.clone();
+                    prev.rotate_right(1);
 
                     let mut i = 0;
                     self.map(|item| {
