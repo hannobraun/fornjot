@@ -88,13 +88,21 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .zip_ext(vertices)
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
-                let half_edge = HalfEdge::make_line_segment(
-                    [start, end],
-                    Some(boundary),
-                    Some(start_vertex),
-                    global_edge,
-                    objects,
-                );
+                let half_edge = {
+                    let builder = HalfEdgeBuilder::line_segment(
+                        [start, end],
+                        Some(boundary),
+                    )
+                    .with_start_vertex(start_vertex);
+
+                    let builder = if let Some(global_edge) = global_edge {
+                        builder.with_global_form(global_edge)
+                    } else {
+                        builder
+                    };
+
+                    builder.build(objects).insert(objects)
+                };
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 

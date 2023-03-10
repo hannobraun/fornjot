@@ -10,62 +10,34 @@ use crate::{
 };
 
 /// Builder API for [`HalfEdge`]
-pub trait HalfEdgeBuilder {
-    /// Create a circle
-    fn make_circle(
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
+pub struct HalfEdgeBuilder {
+    curve: Curve,
+    boundary: [Point<1>; 2],
+    start_vertex: Option<Handle<Vertex>>,
+    global_form: Option<Handle<GlobalEdge>>,
+}
+
+impl HalfEdgeBuilder {
+    /// Create an instance of `HalfEdgeBuilder`
+    pub fn new(curve: Curve, boundary: [Point<1>; 2]) -> Self {
+        Self {
+            curve,
+            boundary,
+            start_vertex: None,
+            global_form: None,
+        }
+    }
 
     /// Create an arc
     ///
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn make_arc(
+    pub fn arc(
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-
-    /// Create a line segment
-    fn make_line_segment(
-        points_surface: [impl Into<Point<2>>; 2],
-        boundary: Option<[Point<1>; 2]>,
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-
-    /// Create a half-edge
-    fn make_half_edge(
-        curve: Curve,
-        boundary: [Point<1>; 2],
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-}
-
-impl HalfEdgeBuilder for HalfEdge {
-    fn make_circle(
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
-        let curve = Curve::circle_from_radius(radius);
-        let boundary =
-            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
-
-        Self::make_half_edge(curve, boundary, None, None, objects)
-    }
-
-    fn make_arc(
-        start: impl Into<Point<2>>,
-        end: impl Into<Point<2>>,
-        angle_rad: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
+    ) -> Self {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -78,44 +50,53 @@ impl HalfEdgeBuilder for HalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge(curve, boundary, None, None, objects)
+        Self::new(curve, boundary)
     }
 
-    fn make_line_segment(
+    /// Create a circle
+    pub fn circle(radius: impl Into<Scalar>) -> Self {
+        let curve = Curve::circle_from_radius(radius);
+        let boundary =
+            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
+
+        Self::new(curve, boundary)
+    }
+
+    /// Create a line segment
+    pub fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
+    ) -> Self {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
         let curve = Curve::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 
-        Self::make_half_edge(
-            curve,
-            boundary,
-            start_vertex,
-            global_form,
-            objects,
-        )
+        Self::new(curve, boundary)
     }
 
-    fn make_half_edge(
-        curve: Curve,
-        boundary: [Point<1>; 2],
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
+    /// Build the half-edge with a specific start vertex
+    pub fn with_start_vertex(mut self, start_vertex: Handle<Vertex>) -> Self {
+        self.start_vertex = Some(start_vertex);
+        self
+    }
+
+    /// Build the half-edge with a specific global form
+    pub fn with_global_form(mut self, global_form: Handle<GlobalEdge>) -> Self {
+        self.global_form = Some(global_form);
+        self
+    }
+
+    /// Create a half-edge
+    pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
         HalfEdge::new(
-            curve,
-            boundary,
-            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects)),
-            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects)),
+            self.curve,
+            self.boundary,
+            self.start_vertex
+                .unwrap_or_else(|| Vertex::new().insert(objects)),
+            self.global_form
+                .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         )
-        .insert(objects)
     }
 }

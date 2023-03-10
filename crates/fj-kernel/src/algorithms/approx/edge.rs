@@ -267,7 +267,7 @@ mod tests {
         builder::{CycleBuilder, HalfEdgeBuilder},
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
         insert::Insert,
-        objects::{HalfEdge, Surface},
+        objects::Surface,
         partial::{PartialCycle, PartialObject},
         services::Services,
     };
@@ -332,13 +332,12 @@ mod tests {
             v: [0., 0., 1.].into(),
         })
         .insert(&mut services.objects);
-        let half_edge = HalfEdge::make_line_segment(
+        let half_edge = HalfEdgeBuilder::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
-            None,
-            None,
-            &mut services.objects,
-        );
+        )
+        .build(&mut services.objects)
+        .insert(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -362,7 +361,9 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdge::make_circle(1., &mut services.objects);
+        let half_edge = HalfEdgeBuilder::circle(1.)
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
