@@ -40,12 +40,6 @@ pub trait HalfEdgeBuilder {
     ) -> Handle<HalfEdge>;
 
     /// Create a half-edge
-    ///
-    /// # Implementation Note
-    ///
-    /// This is a temporary variant of `make_half_edge`, while the unification
-    /// of `HalfEdge` and `PartialHalfEdge` is still in progress. Issue:
-    /// <https://github.com/hannobraun/Fornjot/issues/1570>
     fn make_half_edge(
         curve: Curve,
         boundary: [Point<1>; 2],
