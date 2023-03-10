@@ -336,7 +336,7 @@ mod tests {
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
         )
-        .build(None, None, &mut services.objects);
+        .build(None, &mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -360,11 +360,8 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdgeBuilder::circle(1.).build(
-            None,
-            None,
-            &mut services.objects,
-        );
+        let half_edge =
+            HalfEdgeBuilder::circle(1.).build(None, &mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

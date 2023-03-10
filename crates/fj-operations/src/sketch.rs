@@ -28,7 +28,7 @@ impl Shape for fj::Sketch {
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
                 let half_edge = HalfEdgeBuilder::circle(circle.radius())
-                    .build(None, None, objects);
+                    .build(None, objects);
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
                     cycle.half_edges.push(half_edge);
@@ -74,7 +74,7 @@ impl Shape for fj::Sketch {
                             }
                         };
 
-                        let half_edge = half_edge.build(None, None, objects);
+                        let half_edge = half_edge.build(None, objects);
                         cycle.add_half_edge(half_edge);
                     }
 

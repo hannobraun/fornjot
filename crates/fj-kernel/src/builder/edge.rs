@@ -13,12 +13,17 @@ use crate::{
 pub struct HalfEdgeBuilder {
     curve: Curve,
     boundary: [Point<1>; 2],
+    start_vertex: Option<Handle<Vertex>>,
 }
 
 impl HalfEdgeBuilder {
     /// Create an instance of `HalfEdgeBuilder`
     pub fn new(curve: Curve, boundary: [Point<1>; 2]) -> Self {
-        Self { curve, boundary }
+        Self {
+            curve,
+            boundary,
+            start_vertex: None,
+        }
     }
 
     /// Create an arc
@@ -69,17 +74,23 @@ impl HalfEdgeBuilder {
         Self::new(curve, boundary)
     }
 
+    /// Build the half-edge with a specific start vertex
+    pub fn with_start_vertex(mut self, start_vertex: Handle<Vertex>) -> Self {
+        self.start_vertex = Some(start_vertex);
+        self
+    }
+
     /// Create a half-edge
     pub fn build(
         self,
-        start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Handle<HalfEdge> {
         HalfEdge::new(
             self.curve,
             self.boundary,
-            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects)),
+            self.start_vertex
+                .unwrap_or_else(|| Vertex::new().insert(objects)),
             global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         )
         .insert(objects)

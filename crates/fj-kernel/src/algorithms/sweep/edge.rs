@@ -90,7 +90,8 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
                 let half_edge =
                     HalfEdgeBuilder::line_segment([start, end], Some(boundary))
-                        .build(Some(start_vertex), global_edge, objects);
+                        .with_start_vertex(start_vertex)
+                        .build(global_edge, objects);
 
                 face.exterior.write().add_half_edge(half_edge.clone());
 
