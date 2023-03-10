@@ -17,7 +17,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<HalfEdge>, &Surface) {
+impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
     type Cache = EdgeCache;
 
@@ -287,7 +287,7 @@ mod tests {
         };
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -313,7 +313,7 @@ mod tests {
         };
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -338,7 +338,7 @@ mod tests {
         .insert(&mut services.objects);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -364,7 +364,7 @@ mod tests {
             .insert(&mut services.objects);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
 
         let expected_approx =
             (&half_edge.curve(), RangeOnPath::from([[0.], [TAU]]))
