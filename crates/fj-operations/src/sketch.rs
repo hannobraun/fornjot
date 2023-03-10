@@ -6,8 +6,8 @@ use fj_kernel::{
     insert::Insert,
     objects::{Objects, Sketch},
     partial::{
-        Partial, PartialCycle, PartialFace, PartialHalfEdge, PartialObject,
-        PartialSketch,
+        FullOrPartial, Partial, PartialCycle, PartialFace, PartialHalfEdge,
+        PartialObject, PartialSketch,
     },
     services::Service,
 };
@@ -63,7 +63,7 @@ impl Shape for fj::Sketch {
                         .circular_tuple_windows();
 
                     for ((start, route), (end, _)) in segments {
-                        let half_edge = match route {
+                        let half_edge: FullOrPartial<_> = match route {
                             fj::SketchSegmentRoute::Direct => {
                                 PartialHalfEdge::make_line_segment(
                                     [start, end],
@@ -72,6 +72,7 @@ impl Shape for fj::Sketch {
                                     None,
                                     objects,
                                 )
+                                .into()
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
                                 PartialHalfEdge::make_arc(
@@ -80,10 +81,11 @@ impl Shape for fj::Sketch {
                                     angle.rad(),
                                     objects,
                                 )
+                                .into()
                             }
                         };
 
-                        cycle.add_half_edge(half_edge.into());
+                        cycle.add_half_edge(half_edge);
                     }
 
                     Partial::from_partial(cycle)
