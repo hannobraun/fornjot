@@ -36,7 +36,7 @@ impl HalfEdgeBuilder {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge(curve, boundary, None, None, objects)
+        Self::build(curve, boundary, None, None, objects)
     }
 
     /// Create a circle
@@ -48,7 +48,7 @@ impl HalfEdgeBuilder {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge(curve, boundary, None, None, objects)
+        Self::build(curve, boundary, None, None, objects)
     }
 
     /// Create a line segment
@@ -65,17 +65,11 @@ impl HalfEdgeBuilder {
             boundary.zip_ext(points_surface),
         );
 
-        Self::make_half_edge(
-            curve,
-            boundary,
-            start_vertex,
-            global_form,
-            objects,
-        )
+        Self::build(curve, boundary, start_vertex, global_form, objects)
     }
 
     /// Create a half-edge
-    pub fn make_half_edge(
+    pub fn build(
         curve: Curve,
         boundary: [Point<1>; 2],
         start_vertex: Option<Handle<Vertex>>,
