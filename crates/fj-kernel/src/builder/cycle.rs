@@ -75,9 +75,7 @@ impl CycleBuilder for PartialCycle {
                 .build(objects)
                 .insert(objects);
 
-            self.add_half_edge(half_edge.clone());
-
-            half_edge
+            self.add_half_edge(half_edge)
         })
     }
 
