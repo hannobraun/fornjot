@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     geometry::curve::Curve,
     objects::{HalfEdge, Objects},
-    partial::{Partial, PartialCycle, PartialHalfEdge},
+    partial::{FullOrPartial, Partial, PartialCycle, PartialHalfEdge},
     services::Service,
 };
 
@@ -20,7 +20,7 @@ pub trait CycleBuilder {
     ///
     /// If this is the first half-edge being added, it is connected to itself,
     /// meaning its front and back vertices are the same.
-    fn add_half_edge(&mut self, half_edge: Partial<HalfEdge>);
+    fn add_half_edge(&mut self, half_edge: FullOrPartial<HalfEdge>);
 
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
@@ -48,8 +48,8 @@ pub trait CycleBuilder {
 }
 
 impl CycleBuilder for PartialCycle {
-    fn add_half_edge(&mut self, half_edge: Partial<HalfEdge>) {
-        self.half_edges.push(half_edge.into());
+    fn add_half_edge(&mut self, half_edge: FullOrPartial<HalfEdge>) {
+        self.half_edges.push(half_edge);
     }
 
     fn update_as_polygon_from_points<O, P>(
@@ -70,7 +70,7 @@ impl CycleBuilder for PartialCycle {
                 objects,
             );
 
-            self.add_half_edge(half_edge.clone());
+            self.add_half_edge(half_edge.clone().into());
 
             half_edge
         })
@@ -93,7 +93,7 @@ impl CycleBuilder for PartialCycle {
                 objects,
             );
 
-            self.add_half_edge(half_edge.clone());
+            self.add_half_edge(half_edge.clone().into());
 
             half_edge
         })

@@ -83,7 +83,7 @@ impl Shape for fj::Sketch {
                             }
                         };
 
-                        cycle.add_half_edge(half_edge);
+                        cycle.add_half_edge(half_edge.into());
                     }
 
                     Partial::from_partial(cycle)
