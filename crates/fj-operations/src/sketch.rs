@@ -75,9 +75,8 @@ impl Shape for fj::Sketch {
                             }
                         };
 
-                        let half_edge =
-                            half_edge.build(objects).insert(objects);
-                        cycle.add_half_edge(half_edge);
+                        let half_edge = half_edge.build(objects);
+                        cycle.add_half_edge(half_edge, objects);
                     }
 
                     Partial::from_partial(cycle)
