@@ -96,9 +96,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                     objects,
                 );
 
-                face.exterior
-                    .write()
-                    .add_half_edge(half_edge.clone().into());
+                face.exterior.write().add_half_edge(half_edge.clone());
 
                 half_edge
             });
