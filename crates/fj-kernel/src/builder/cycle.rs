@@ -5,6 +5,7 @@ use crate::{
     objects::{HalfEdge, Objects},
     partial::{FullOrPartial, Partial, PartialCycle, PartialHalfEdge},
     services::Service,
+    storage::Handle,
 };
 
 use super::{HalfEdgeBuilder, ObjectArgument};
@@ -27,7 +28,7 @@ pub trait CycleBuilder {
         &mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>;
@@ -56,7 +57,7 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>,
@@ -72,7 +73,7 @@ impl CycleBuilder for PartialCycle {
 
             self.add_half_edge(half_edge.clone().into());
 
-            half_edge
+            half_edge.build(objects)
         })
     }
 

@@ -93,7 +93,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.build(&mut services.objects)
+            half_edge
         };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -119,7 +119,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.build(&mut services.objects)
+            half_edge
         };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -145,7 +145,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.build(&mut services.objects)
+            half_edge
         };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -166,7 +166,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.build(&mut services.objects)
+            half_edge
         };
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);

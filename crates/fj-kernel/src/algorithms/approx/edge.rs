@@ -285,10 +285,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            let half_edge = half_edge.read().clone();
             half_edge
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
         };
 
         let tolerance = 1.;
@@ -314,10 +311,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            let half_edge = half_edge.read().clone();
             half_edge
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
         };
 
         let tolerance = 1.;
