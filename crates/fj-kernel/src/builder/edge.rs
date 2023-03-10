@@ -47,7 +47,7 @@ impl HalfEdgeBuilder {
     }
 
     /// Create a circle
-    pub fn circle(radius: impl Into<Scalar>, _: &mut Service<Objects>) -> Self {
+    pub fn circle(radius: impl Into<Scalar>) -> Self {
         let curve = Curve::circle_from_radius(radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
