@@ -91,6 +91,11 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                 let half_edge = HalfEdgeBuilder::line_segment(
                     [start, end],
                     Some(boundary),
+                    None,
+                    None,
+                    objects,
+                )
+                .build(
                     Some(start_vertex),
                     global_edge,
                     objects,
