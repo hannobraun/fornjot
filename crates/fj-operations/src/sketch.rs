@@ -67,9 +67,6 @@ impl Shape for fj::Sketch {
                                 HalfEdgeBuilder::line_segment(
                                     [start, end],
                                     None,
-                                    None,
-                                    None,
-                                    objects,
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {

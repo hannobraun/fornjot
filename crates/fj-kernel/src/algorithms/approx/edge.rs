@@ -335,9 +335,6 @@ mod tests {
         let half_edge = HalfEdgeBuilder::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
-            None,
-            None,
-            &mut services.objects,
         )
         .build(None, None, &mut services.objects);
 

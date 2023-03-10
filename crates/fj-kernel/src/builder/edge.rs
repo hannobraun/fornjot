@@ -59,9 +59,6 @@ impl HalfEdgeBuilder {
     pub fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        _: Option<Handle<Vertex>>,
-        _: Option<Handle<GlobalEdge>>,
-        _: &mut Service<Objects>,
     ) -> Self {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
