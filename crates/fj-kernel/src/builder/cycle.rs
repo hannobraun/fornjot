@@ -49,7 +49,7 @@ pub trait CycleBuilder {
 
 impl CycleBuilder for PartialCycle {
     fn add_half_edge(&mut self, half_edge: Partial<HalfEdge>) {
-        self.half_edges.push(half_edge);
+        self.half_edges.push(half_edge.into());
     }
 
     fn update_as_polygon_from_points<O, P>(
