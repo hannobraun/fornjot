@@ -16,7 +16,7 @@ pub trait HalfEdgeBuilder {
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 
     /// Create an arc
     ///
@@ -68,12 +68,12 @@ impl HalfEdgeBuilder for PartialHalfEdge {
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let curve = Curve::circle_from_radius(radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge(curve, boundary, None, None, objects)
+        Self::make_half_edge_2(curve, boundary, None, None, objects)
     }
 
     fn make_arc(
