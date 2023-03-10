@@ -73,7 +73,7 @@ impl Shape for fj::Sketch {
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                HalfEdgeBuilder::make_arc(
+                                HalfEdgeBuilder::arc(
                                     start,
                                     end,
                                     angle.rad(),

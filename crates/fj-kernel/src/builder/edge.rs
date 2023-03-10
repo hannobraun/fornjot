@@ -30,7 +30,7 @@ impl HalfEdgeBuilder {
     /// # Panics
     ///
     /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    pub fn make_arc(
+    pub fn arc(
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
