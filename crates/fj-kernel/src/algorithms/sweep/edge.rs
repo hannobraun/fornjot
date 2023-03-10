@@ -95,7 +95,13 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                     )
                     .with_start_vertex(start_vertex);
 
-                    builder.build(global_edge, objects)
+                    let builder = if let Some(global_edge) = global_edge {
+                        builder.with_global_form(global_edge)
+                    } else {
+                        builder
+                    };
+
+                    builder.build(objects)
                 };
 
                 face.exterior.write().add_half_edge(half_edge.clone());

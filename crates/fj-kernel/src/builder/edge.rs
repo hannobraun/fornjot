@@ -14,6 +14,7 @@ pub struct HalfEdgeBuilder {
     curve: Curve,
     boundary: [Point<1>; 2],
     start_vertex: Option<Handle<Vertex>>,
+    global_form: Option<Handle<GlobalEdge>>,
 }
 
 impl HalfEdgeBuilder {
@@ -23,6 +24,7 @@ impl HalfEdgeBuilder {
             curve,
             boundary,
             start_vertex: None,
+            global_form: None,
         }
     }
 
@@ -80,18 +82,21 @@ impl HalfEdgeBuilder {
         self
     }
 
+    /// Build the half-edge with a specific global form
+    pub fn with_global_form(mut self, global_form: Handle<GlobalEdge>) -> Self {
+        self.global_form = Some(global_form);
+        self
+    }
+
     /// Create a half-edge
-    pub fn build(
-        self,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
+    pub fn build(self, objects: &mut Service<Objects>) -> Handle<HalfEdge> {
         HalfEdge::new(
             self.curve,
             self.boundary,
             self.start_vertex
                 .unwrap_or_else(|| Vertex::new().insert(objects)),
-            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects)),
+            self.global_form
+                .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         )
         .insert(objects)
     }
