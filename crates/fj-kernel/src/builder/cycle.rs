@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     geometry::curve::Curve,
     objects::{HalfEdge, Objects},
-    partial::{Partial, PartialCycle},
+    partial::PartialCycle,
     services::Service,
     storage::Handle,
 };
@@ -45,7 +45,7 @@ pub trait CycleBuilder {
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Handle<HalfEdge>>
     where
-        O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>;
+        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
 }
 
 impl CycleBuilder for PartialCycle {
@@ -83,13 +83,13 @@ impl CycleBuilder for PartialCycle {
         objects: &mut Service<Objects>,
     ) -> O::SameSize<Handle<HalfEdge>>
     where
-        O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>,
+        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
     {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
             let half_edge = HalfEdge::make_half_edge(
                 curve,
                 boundary,
-                Some(prev.read().start_vertex.clone()),
+                Some(prev.start_vertex().clone()),
                 None,
                 objects,
             );

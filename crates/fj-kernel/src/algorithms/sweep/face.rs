@@ -78,7 +78,7 @@ impl Sweep for Handle<Face> {
                 faces.push(face);
 
                 top_edges.push((
-                    Partial::from(top_edge),
+                    top_edge,
                     half_edge.curve(),
                     half_edge.boundary(),
                 ));
