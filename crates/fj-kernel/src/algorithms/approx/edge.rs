@@ -319,11 +319,10 @@ mod tests {
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
         )
-        .build(&mut services.objects)
-        .insert(&mut services.objects);
+        .build(&mut services.objects);
 
         let tolerance = 1.;
-        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
@@ -344,12 +343,11 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdgeBuilder::circle(1.)
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let half_edge =
+            HalfEdgeBuilder::circle(1.).build(&mut services.objects);
 
         let tolerance = 1.;
-        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
             (&half_edge.curve(), RangeOnPath::from([[0.], [TAU]]))
