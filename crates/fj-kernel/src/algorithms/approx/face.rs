@@ -47,10 +47,8 @@ impl Approx for &FaceSet {
                         panic!(
                             "Invalid approximation: \
                             Distinct points are too close \
-                            (a: {:?}, b: {:?}, distance: {distance})\n\
-                            source of `a`: {:#?}\n\
-                            source of `b`: {:#?}\n",
-                            a.global_form, b.global_form, a.source, b.source
+                            (a: {:?}, b: {:?}, distance: {distance})",
+                            a.global_form, b.global_form,
                         );
                     }
                 }
