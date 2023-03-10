@@ -89,7 +89,7 @@ impl HalfEdgeBuilder {
     }
 
     /// Create a half-edge
-    pub fn build(self, objects: &mut Service<Objects>) -> Handle<HalfEdge> {
+    pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
         HalfEdge::new(
             self.curve,
             self.boundary,
@@ -98,6 +98,5 @@ impl HalfEdgeBuilder {
             self.global_form
                 .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         )
-        .insert(objects)
     }
 }

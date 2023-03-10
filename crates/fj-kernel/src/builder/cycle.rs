@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
+    insert::Insert,
     objects::{HalfEdge, Objects},
     partial::PartialCycle,
     services::Service,
@@ -64,7 +65,8 @@ impl CycleBuilder for PartialCycle {
     {
         points.map_with_next(|start, end| {
             let half_edge = HalfEdgeBuilder::line_segment([start, end], None)
-                .build(objects);
+                .build(objects)
+                .insert(objects);
 
             self.add_half_edge(half_edge.clone());
 
@@ -83,7 +85,8 @@ impl CycleBuilder for PartialCycle {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
             let half_edge = HalfEdgeBuilder::new(curve, boundary)
                 .with_start_vertex(prev.start_vertex().clone())
-                .build(objects);
+                .build(objects)
+                .insert(objects);
 
             self.add_half_edge(half_edge.clone());
 

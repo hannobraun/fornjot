@@ -101,7 +101,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                         builder
                     };
 
-                    builder.build(objects)
+                    builder.build(objects).insert(objects)
                 };
 
                 face.exterior.write().add_half_edge(half_edge.clone());
