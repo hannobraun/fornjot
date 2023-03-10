@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge, Objects},
-    partial::{FullOrPartial, FullToPartialCache, Partial, PartialObject},
+    partial::{FullOrPartial, FullToPartialCache, PartialObject},
     services::Service,
 };
 
@@ -20,12 +20,12 @@ impl PartialObject for PartialCycle {
         }
     }
 
-    fn from_full(cycle: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+    fn from_full(cycle: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
             half_edges: cycle
                 .half_edges()
                 .cloned()
-                .map(|half_edge| Partial::from_full(half_edge, cache).into())
+                .map(|half_edge| half_edge.into())
                 .collect(),
         }
     }
