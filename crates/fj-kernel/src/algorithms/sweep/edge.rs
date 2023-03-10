@@ -88,7 +88,7 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
             .zip_ext(vertices)
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
-                let half_edge = HalfEdge::make_line_segment(
+                let half_edge = HalfEdgeBuilder::make_line_segment(
                     [start, end],
                     Some(boundary),
                     Some(start_vertex),

@@ -10,46 +10,11 @@ use crate::{
 };
 
 /// Builder API for [`HalfEdge`]
-pub trait HalfEdgeBuilder {
+pub struct HalfEdgeBuilder {}
+
+impl HalfEdgeBuilder {
     /// Create a circle
-    fn make_circle(
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-
-    /// Create an arc
-    ///
-    /// # Panics
-    ///
-    /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
-    fn make_arc(
-        start: impl Into<Point<2>>,
-        end: impl Into<Point<2>>,
-        angle_rad: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-
-    /// Create a line segment
-    fn make_line_segment(
-        points_surface: [impl Into<Point<2>>; 2],
-        boundary: Option<[Point<1>; 2]>,
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-
-    /// Create a half-edge
-    fn make_half_edge(
-        curve: Curve,
-        boundary: [Point<1>; 2],
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge>;
-}
-
-impl HalfEdgeBuilder for HalfEdge {
-    fn make_circle(
+    pub fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Handle<HalfEdge> {
@@ -60,7 +25,12 @@ impl HalfEdgeBuilder for HalfEdge {
         Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
-    fn make_arc(
+    /// Create an arc
+    ///
+    /// # Panics
+    ///
+    /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
+    pub fn make_arc(
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
@@ -81,7 +51,8 @@ impl HalfEdgeBuilder for HalfEdge {
         Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
-    fn make_line_segment(
+    /// Create a line segment
+    pub fn make_line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         start_vertex: Option<Handle<Vertex>>,
@@ -103,7 +74,8 @@ impl HalfEdgeBuilder for HalfEdge {
         )
     }
 
-    fn make_half_edge(
+    /// Create a half-edge
+    pub fn make_half_edge(
         curve: Curve,
         boundary: [Point<1>; 2],
         start_vertex: Option<Handle<Vertex>>,
