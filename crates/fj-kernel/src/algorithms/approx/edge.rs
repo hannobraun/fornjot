@@ -275,19 +275,12 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[1., 1.], [2., 1.], [1., 2.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[1., 1.], [2., 1.]], None)
+                .build(&mut services.objects);
 
         let tolerance = 1.;
-        let approx = (half_edge.deref(), surface.deref()).approx(tolerance);
+        let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
