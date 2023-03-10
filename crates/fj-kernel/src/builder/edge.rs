@@ -47,6 +47,21 @@ pub trait HalfEdgeBuilder {
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Partial<HalfEdge>;
+
+    /// Create a half-edge
+    ///
+    /// # Implementation Note
+    ///
+    /// This is a temporary variant of `make_half_edge`, while the unification
+    /// of `HalfEdge` and `PartialHalfEdge` is still in progress. Issue:
+    /// <https://github.com/hannobraun/Fornjot/issues/1570>
+    fn make_half_edge_2(
+        curve: Curve,
+        boundary: [Point<1>; 2],
+        start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
+        objects: &mut Service<Objects>,
+    ) -> Handle<HalfEdge>;
 }
 
 impl HalfEdgeBuilder for PartialHalfEdge {
@@ -119,5 +134,21 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             global_form: global_form
                 .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
         })
+    }
+
+    fn make_half_edge_2(
+        curve: Curve,
+        boundary: [Point<1>; 2],
+        start_vertex: Option<Handle<Vertex>>,
+        global_form: Option<Handle<GlobalEdge>>,
+        objects: &mut Service<Objects>,
+    ) -> Handle<HalfEdge> {
+        HalfEdge::new(
+            curve,
+            boundary,
+            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects)),
+            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects)),
+        )
+        .insert(objects)
     }
 }
