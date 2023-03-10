@@ -43,7 +43,7 @@ pub trait CycleBuilder {
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>;
 }
@@ -81,12 +81,12 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>,
     {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
-            let half_edge = PartialHalfEdge::make_half_edge(
+            let half_edge = PartialHalfEdge::make_half_edge_2(
                 curve,
                 boundary,
                 Some(prev.read().start_vertex.clone()),
