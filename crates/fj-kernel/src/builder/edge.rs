@@ -14,7 +14,7 @@ pub struct HalfEdgeBuilder {}
 
 impl HalfEdgeBuilder {
     /// Create a circle
-    pub fn make_circle(
+    pub fn circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
     ) -> Handle<HalfEdge> {
