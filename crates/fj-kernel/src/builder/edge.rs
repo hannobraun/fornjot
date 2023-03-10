@@ -5,18 +5,17 @@ use crate::{
     geometry::curve::Curve,
     insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::{Partial, PartialHalfEdge},
     services::Service,
     storage::Handle,
 };
 
-/// Builder API for [`PartialHalfEdge`]
+/// Builder API for [`HalfEdge`]
 pub trait HalfEdgeBuilder {
     /// Create a circle
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 
     /// Create an arc
     ///
@@ -28,7 +27,7 @@ pub trait HalfEdgeBuilder {
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 
     /// Create a line segment
     fn make_line_segment(
@@ -37,7 +36,7 @@ pub trait HalfEdgeBuilder {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 
     /// Create a half-edge
     fn make_half_edge(
@@ -46,14 +45,14 @@ pub trait HalfEdgeBuilder {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 }
 
-impl HalfEdgeBuilder for PartialHalfEdge {
+impl HalfEdgeBuilder for HalfEdge {
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let curve = Curve::circle_from_radius(radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
@@ -66,7 +65,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -88,7 +87,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
         let curve = Curve::line_from_points_with_coords(
@@ -110,14 +109,13 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
-        Partial::from_partial(PartialHalfEdge {
+    ) -> Handle<HalfEdge> {
+        HalfEdge::new(
             curve,
             boundary,
-            start_vertex: start_vertex
-                .unwrap_or_else(|| Vertex::new().insert(objects)),
-            global_form: global_form
-                .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
-        })
+            start_vertex.unwrap_or_else(|| Vertex::new().insert(objects)),
+            global_form.unwrap_or_else(|| GlobalEdge::new().insert(objects)),
+        )
+        .insert(objects)
     }
 }

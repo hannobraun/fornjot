@@ -95,7 +95,7 @@ mod tests {
                 &mut services.objects,
             );
 
-            half_edge.build(&mut services.objects)
+            half_edge
         };
         let invalid = {
             let boundary = [Point::from([0.]); 2];

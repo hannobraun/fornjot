@@ -3,8 +3,9 @@ use fj_math::Point;
 use crate::{
     geometry::curve::Curve,
     objects::{HalfEdge, Objects},
-    partial::{Partial, PartialCycle, PartialHalfEdge},
+    partial::PartialCycle,
     services::Service,
+    storage::Handle,
 };
 
 use super::{HalfEdgeBuilder, ObjectArgument};
@@ -20,14 +21,14 @@ pub trait CycleBuilder {
     ///
     /// If this is the first half-edge being added, it is connected to itself,
     /// meaning its front and back vertices are the same.
-    fn add_half_edge(&mut self, half_edge: Partial<HalfEdge>);
+    fn add_half_edge(&mut self, half_edge: Handle<HalfEdge>);
 
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
         &mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>;
@@ -42,13 +43,13 @@ pub trait CycleBuilder {
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
-        O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>;
+        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
 }
 
 impl CycleBuilder for PartialCycle {
-    fn add_half_edge(&mut self, half_edge: Partial<HalfEdge>) {
+    fn add_half_edge(&mut self, half_edge: Handle<HalfEdge>) {
         self.half_edges.push(half_edge);
     }
 
@@ -56,13 +57,13 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>,
     {
         points.map_with_next(|start, end| {
-            let half_edge = PartialHalfEdge::make_line_segment(
+            let half_edge = HalfEdge::make_line_segment(
                 [start, end],
                 None,
                 None,
@@ -80,15 +81,15 @@ impl CycleBuilder for PartialCycle {
         &mut self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Partial<HalfEdge>>
+    ) -> O::SameSize<Handle<HalfEdge>>
     where
-        O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>,
+        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
     {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
-            let half_edge = PartialHalfEdge::make_half_edge(
+            let half_edge = HalfEdge::make_half_edge(
                 curve,
                 boundary,
-                Some(prev.read().start_vertex.clone()),
+                Some(prev.start_vertex().clone()),
                 None,
                 objects,
             );
