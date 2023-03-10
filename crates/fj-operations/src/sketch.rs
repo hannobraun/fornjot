@@ -4,10 +4,10 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Objects, Sketch},
+    objects::{HalfEdge, Objects, Sketch},
     partial::{
-        FullOrPartial, Partial, PartialCycle, PartialFace, PartialHalfEdge,
-        PartialObject, PartialSketch,
+        FullOrPartial, Partial, PartialCycle, PartialFace, PartialObject,
+        PartialSketch,
     },
     services::Service,
 };
@@ -28,8 +28,7 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge =
-                    PartialHalfEdge::make_circle(circle.radius(), objects);
+                let half_edge = HalfEdge::make_circle(circle.radius(), objects);
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
                     cycle.half_edges.push(half_edge.into());
@@ -65,7 +64,7 @@ impl Shape for fj::Sketch {
                     for ((start, route), (end, _)) in segments {
                         let half_edge: FullOrPartial<_> = match route {
                             fj::SketchSegmentRoute::Direct => {
-                                PartialHalfEdge::make_line_segment(
+                                HalfEdge::make_line_segment(
                                     [start, end],
                                     None,
                                     None,
@@ -75,7 +74,7 @@ impl Shape for fj::Sketch {
                                 .into()
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                PartialHalfEdge::make_arc(
+                                HalfEdge::make_arc(
                                     start,
                                     end,
                                     angle.rad(),

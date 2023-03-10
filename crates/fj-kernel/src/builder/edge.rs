@@ -5,12 +5,11 @@ use crate::{
     geometry::curve::Curve,
     insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::PartialHalfEdge,
     services::Service,
     storage::Handle,
 };
 
-/// Builder API for [`PartialHalfEdge`]
+/// Builder API for [`HalfEdge`]
 pub trait HalfEdgeBuilder {
     /// Create a circle
     fn make_circle(
@@ -49,7 +48,7 @@ pub trait HalfEdgeBuilder {
     ) -> Handle<HalfEdge>;
 }
 
-impl HalfEdgeBuilder for PartialHalfEdge {
+impl HalfEdgeBuilder for HalfEdge {
     fn make_circle(
         radius: impl Into<Scalar>,
         objects: &mut Service<Objects>,
