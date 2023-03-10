@@ -28,8 +28,6 @@ impl PartialObject for PartialCycle {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let half_edges = self.half_edges;
-
-        Cycle::new(half_edges)
+        Cycle::new(self.half_edges)
     }
 }
