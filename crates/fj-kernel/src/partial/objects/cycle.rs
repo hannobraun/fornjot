@@ -1,14 +1,15 @@
 use crate::{
     objects::{Cycle, HalfEdge, Objects},
-    partial::{FullOrPartial, FullToPartialCache, PartialObject},
+    partial::{FullToPartialCache, PartialObject},
     services::Service,
+    storage::Handle,
 };
 
 /// A partial [`Cycle`]
 #[derive(Clone, Debug)]
 pub struct PartialCycle {
     /// The half-edges that make up the cycle
-    pub half_edges: Vec<FullOrPartial<HalfEdge>>,
+    pub half_edges: Vec<Handle<HalfEdge>>,
 }
 
 impl PartialObject for PartialCycle {
@@ -22,24 +23,12 @@ impl PartialObject for PartialCycle {
 
     fn from_full(cycle: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            half_edges: cycle
-                .half_edges()
-                .cloned()
-                .map(|half_edge| half_edge.into())
-                .collect(),
+            half_edges: cycle.half_edges().cloned().collect(),
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let half_edges =
-            self.half_edges
-                .into_iter()
-                .map(|half_edge| match half_edge {
-                    FullOrPartial::Full(half_edge) => half_edge,
-                    FullOrPartial::Partial(half_edge) => {
-                        half_edge.build(objects)
-                    }
-                });
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
+        let half_edges = self.half_edges;
 
         Cycle::new(half_edges)
     }

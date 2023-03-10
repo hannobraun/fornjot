@@ -30,7 +30,7 @@ impl Shape for fj::Sketch {
                 let half_edge = HalfEdge::make_circle(circle.radius(), objects);
                 let exterior = {
                     let mut cycle = PartialCycle::new(objects);
-                    cycle.half_edges.push(half_edge.into());
+                    cycle.half_edges.push(half_edge);
                     Partial::from_partial(cycle)
                 };
 
