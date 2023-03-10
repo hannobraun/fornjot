@@ -46,7 +46,7 @@ pub trait HalfEdgeBuilder {
     /// This is a temporary variant of `make_half_edge`, while the unification
     /// of `HalfEdge` and `PartialHalfEdge` is still in progress. Issue:
     /// <https://github.com/hannobraun/Fornjot/issues/1570>
-    fn make_half_edge_2(
+    fn make_half_edge(
         curve: Curve,
         boundary: [Point<1>; 2],
         start_vertex: Option<Handle<Vertex>>,
@@ -64,7 +64,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge_2(curve, boundary, None, None, objects)
+        Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
     fn make_arc(
@@ -85,7 +85,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        Self::make_half_edge_2(curve, boundary, None, None, objects)
+        Self::make_half_edge(curve, boundary, None, None, objects)
     }
 
     fn make_line_segment(
@@ -101,7 +101,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        Self::make_half_edge_2(
+        Self::make_half_edge(
             curve,
             boundary,
             start_vertex,
@@ -110,7 +110,7 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         )
     }
 
-    fn make_half_edge_2(
+    fn make_half_edge(
         curve: Curve,
         boundary: [Point<1>; 2],
         start_vertex: Option<Handle<Vertex>>,

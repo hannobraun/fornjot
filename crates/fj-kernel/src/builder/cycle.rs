@@ -86,7 +86,7 @@ impl CycleBuilder for PartialCycle {
         O: ObjectArgument<(Partial<HalfEdge>, Curve, [Point<1>; 2])>,
     {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
-            let half_edge = PartialHalfEdge::make_half_edge_2(
+            let half_edge = PartialHalfEdge::make_half_edge(
                 curve,
                 boundary,
                 Some(prev.read().start_vertex.clone()),
