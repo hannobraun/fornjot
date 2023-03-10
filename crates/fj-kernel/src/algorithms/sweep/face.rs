@@ -68,7 +68,7 @@ impl Sweep for Handle<Face> {
                 cycle.half_edges().cloned().circular_tuple_windows()
             {
                 let (face, top_edge) = (
-                    half_edge.clone(),
+                    half_edge.deref(),
                     next.start_vertex(),
                     self.surface().deref(),
                     self.color(),
