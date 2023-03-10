@@ -106,7 +106,6 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
         // And we're done creating the face! All that's left to do is build our
         // return values.
         let face = face.build(objects).insert(objects);
-        let edge_top = edge_top.build(objects);
         (face, edge_top)
     }
 }

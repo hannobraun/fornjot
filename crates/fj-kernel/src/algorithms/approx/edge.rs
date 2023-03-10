@@ -338,8 +338,7 @@ mod tests {
             None,
             None,
             &mut services.objects,
-        )
-        .build(&mut services.objects);
+        );
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

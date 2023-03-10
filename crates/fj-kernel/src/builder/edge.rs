@@ -37,7 +37,7 @@ pub trait HalfEdgeBuilder {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
+    ) -> Handle<HalfEdge>;
 
     /// Create a half-edge
     fn make_half_edge(
@@ -103,14 +103,14 @@ impl HalfEdgeBuilder for PartialHalfEdge {
         start_vertex: Option<Handle<Vertex>>,
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
+    ) -> Handle<HalfEdge> {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
         let curve = Curve::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 
-        Self::make_half_edge(
+        Self::make_half_edge_2(
             curve,
             boundary,
             start_vertex,
