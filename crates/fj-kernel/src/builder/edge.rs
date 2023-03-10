@@ -5,7 +5,7 @@ use crate::{
     geometry::curve::Curve,
     insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Vertex},
-    partial::{Partial, PartialHalfEdge},
+    partial::PartialHalfEdge,
     services::Service,
     storage::Handle,
 };
@@ -38,15 +38,6 @@ pub trait HalfEdgeBuilder {
         global_form: Option<Handle<GlobalEdge>>,
         objects: &mut Service<Objects>,
     ) -> Handle<HalfEdge>;
-
-    /// Create a half-edge
-    fn make_half_edge(
-        curve: Curve,
-        boundary: [Point<1>; 2],
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge>;
 
     /// Create a half-edge
     ///
@@ -117,23 +108,6 @@ impl HalfEdgeBuilder for PartialHalfEdge {
             global_form,
             objects,
         )
-    }
-
-    fn make_half_edge(
-        curve: Curve,
-        boundary: [Point<1>; 2],
-        start_vertex: Option<Handle<Vertex>>,
-        global_form: Option<Handle<GlobalEdge>>,
-        objects: &mut Service<Objects>,
-    ) -> Partial<HalfEdge> {
-        Partial::from_partial(PartialHalfEdge {
-            curve,
-            boundary,
-            start_vertex: start_vertex
-                .unwrap_or_else(|| Vertex::new().insert(objects)),
-            global_form: global_form
-                .unwrap_or_else(|| GlobalEdge::new().insert(objects)),
-        })
     }
 
     fn make_half_edge_2(
