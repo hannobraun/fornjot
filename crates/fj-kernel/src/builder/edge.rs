@@ -30,7 +30,6 @@ impl HalfEdgeBuilder {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        _: &mut Service<Objects>,
     ) -> Self {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
