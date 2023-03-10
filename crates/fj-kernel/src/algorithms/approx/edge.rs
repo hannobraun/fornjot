@@ -332,7 +332,7 @@ mod tests {
             v: [0., 0., 1.].into(),
         })
         .insert(&mut services.objects);
-        let half_edge = HalfEdgeBuilder::make_line_segment(
+        let half_edge = HalfEdgeBuilder::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
             None,

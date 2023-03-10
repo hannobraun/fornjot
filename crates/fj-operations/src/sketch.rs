@@ -64,7 +64,7 @@ impl Shape for fj::Sketch {
                     for ((start, route), (end, _)) in segments {
                         let half_edge = match route {
                             fj::SketchSegmentRoute::Direct => {
-                                HalfEdgeBuilder::make_line_segment(
+                                HalfEdgeBuilder::line_segment(
                                     [start, end],
                                     None,
                                     None,

@@ -52,7 +52,7 @@ impl HalfEdgeBuilder {
     }
 
     /// Create a line segment
-    pub fn make_line_segment(
+    pub fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         start_vertex: Option<Handle<Vertex>>,

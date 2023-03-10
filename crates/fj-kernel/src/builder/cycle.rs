@@ -63,7 +63,7 @@ impl CycleBuilder for PartialCycle {
         P: Clone + Into<Point<2>>,
     {
         points.map_with_next(|start, end| {
-            let half_edge = HalfEdgeBuilder::make_line_segment(
+            let half_edge = HalfEdgeBuilder::line_segment(
                 [start, end],
                 None,
                 None,
