@@ -13,18 +13,6 @@ use crate::{
 pub struct HalfEdgeBuilder {}
 
 impl HalfEdgeBuilder {
-    /// Create a circle
-    pub fn circle(
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> Handle<HalfEdge> {
-        let curve = Curve::circle_from_radius(radius);
-        let boundary =
-            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
-
-        Self::make_half_edge(curve, boundary, None, None, objects)
-    }
-
     /// Create an arc
     ///
     /// # Panics
@@ -47,6 +35,18 @@ impl HalfEdgeBuilder {
             Curve::circle_from_center_and_radius(arc.center, arc.radius);
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
+
+        Self::make_half_edge(curve, boundary, None, None, objects)
+    }
+
+    /// Create a circle
+    pub fn circle(
+        radius: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) -> Handle<HalfEdge> {
+        let curve = Curve::circle_from_radius(radius);
+        let boundary =
+            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         Self::make_half_edge(curve, boundary, None, None, objects)
     }
