@@ -43,7 +43,7 @@ impl HalfEdgeBuilder {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        Self { curve, boundary }
+        Self::new(curve, boundary)
     }
 
     /// Create a circle
@@ -52,7 +52,7 @@ impl HalfEdgeBuilder {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        Self { curve, boundary }
+        Self::new(curve, boundary)
     }
 
     /// Create a line segment
@@ -66,7 +66,7 @@ impl HalfEdgeBuilder {
             boundary.zip_ext(points_surface),
         );
 
-        Self { curve, boundary }
+        Self::new(curve, boundary)
     }
 
     /// Create a half-edge
