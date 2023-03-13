@@ -12,7 +12,7 @@ categories.workspace = true
 
 [dependencies]
 bytemuck = "1.13.1"
-chrono = "0.4.23"
+chrono = "0.4.24"
 egui = "0.21.0"
 egui-wgpu = "0.21.0"
 fj-interop.workspace = true
