@@ -1,5 +1,47 @@
 # Fornjot - Changelog
 
+## v0.40.0 (2023-03-13)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+*None this week. Busy working on the kernel!*
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Unify `HalfEdge` and `PartialHalfEdge` ([#1660], [#1661], [#1662], [#1663], [#1664])
+- Rewrite `HalfEdgeBuilder` ([#1665])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1651], [#1652], [#1653], [#1654], [#1655], [#1656], [#1657], [#1658], [#1659])
+- Update list of sponsors in README ([#1667])
+
+[#1651]: https://github.com/hannobraun/Fornjot/pull/1651
+[#1652]: https://github.com/hannobraun/Fornjot/pull/1652
+[#1653]: https://github.com/hannobraun/Fornjot/pull/1653
+[#1654]: https://github.com/hannobraun/Fornjot/pull/1654
+[#1655]: https://github.com/hannobraun/Fornjot/pull/1655
+[#1656]: https://github.com/hannobraun/Fornjot/pull/1656
+[#1657]: https://github.com/hannobraun/Fornjot/pull/1657
+[#1658]: https://github.com/hannobraun/Fornjot/pull/1658
+[#1659]: https://github.com/hannobraun/Fornjot/pull/1659
+[#1660]: https://github.com/hannobraun/Fornjot/pull/1660
+[#1661]: https://github.com/hannobraun/Fornjot/pull/1661
+[#1662]: https://github.com/hannobraun/Fornjot/pull/1662
+[#1663]: https://github.com/hannobraun/Fornjot/pull/1663
+[#1664]: https://github.com/hannobraun/Fornjot/pull/1664
+[#1665]: https://github.com/hannobraun/Fornjot/pull/1665
+[#1667]: https://github.com/hannobraun/Fornjot/pull/1667
+
+
 ## v0.39.0 (2023-03-06)
 
 ### End-user improvements
