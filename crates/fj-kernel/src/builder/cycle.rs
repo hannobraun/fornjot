@@ -30,10 +30,10 @@ pub trait CycleBuilder: Sized {
 
     /// Update cycle as a polygon from the provided points
     fn update_as_polygon_from_points<O, P>(
-        &mut self,
+        self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Handle<HalfEdge>>
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>;
@@ -65,24 +65,26 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn update_as_polygon_from_points<O, P>(
-        &mut self,
+        mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Handle<HalfEdge>>
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>,
     {
-        points.map_with_next(|start, end| {
+        let half_edges = points.map_with_next(|start, end| {
             let half_edge = HalfEdgeBuilder::line_segment([start, end], None)
                 .build(objects);
 
             let (cycle, half_edge) =
                 self.clone().add_half_edge(half_edge, objects);
-            *self = cycle;
+            self = cycle;
 
             half_edge
-        })
+        });
+
+        (self, half_edges)
     }
 
     fn connect_to_edges<O>(
