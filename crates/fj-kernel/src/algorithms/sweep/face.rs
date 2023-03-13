@@ -89,7 +89,13 @@ impl Sweep for Handle<Face> {
             } else {
                 top_face.add_interior(objects)
             };
-            top_cycle.write().connect_to_edges(top_edges, objects);
+            {
+                let (updated, _) = top_cycle
+                    .read()
+                    .clone()
+                    .connect_to_edges(top_edges, objects);
+                *top_cycle.write() = updated;
+            }
         }
 
         let top_face = top_face.build(objects).insert(objects);

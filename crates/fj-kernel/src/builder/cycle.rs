@@ -45,10 +45,10 @@ pub trait CycleBuilder: Sized {
     ///
     /// Returns the local equivalents of the provided half-edges.
     fn connect_to_edges<O>(
-        &mut self,
+        self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Handle<HalfEdge>>
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
     where
         O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
 }
@@ -88,23 +88,26 @@ impl CycleBuilder for PartialCycle {
     }
 
     fn connect_to_edges<O>(
-        &mut self,
+        mut self,
         edges: O,
         objects: &mut Service<Objects>,
-    ) -> O::SameSize<Handle<HalfEdge>>
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
     where
         O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
     {
-        edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
-            let half_edge = HalfEdgeBuilder::new(curve, boundary)
-                .with_start_vertex(prev.start_vertex().clone())
-                .build(objects);
+        let edges =
+            edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
+                let half_edge = HalfEdgeBuilder::new(curve, boundary)
+                    .with_start_vertex(prev.start_vertex().clone())
+                    .build(objects);
 
-            let (cycle, half_edge) =
-                self.clone().add_half_edge(half_edge, objects);
-            *self = cycle;
+                let (cycle, half_edge) =
+                    self.clone().add_half_edge(half_edge, objects);
+                self = cycle;
 
-            half_edge
-        })
+                half_edge
+            });
+
+        (self, edges)
     }
 }
