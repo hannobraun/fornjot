@@ -72,10 +72,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::CycleBuilder,
-        geometry::curve::Curve,
-        partial::{PartialCycle, PartialObject},
-        services::Services,
+        builder::HalfEdgeBuilder, geometry::curve::Curve, services::Services,
     };
 
     use super::CurveEdgeIntersection;
@@ -85,16 +82,9 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[1., -1.], [1., 1.], [0., 1.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[1., -1.], [1., 1.]], None)
+                .build(&mut services.objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -111,16 +101,9 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[-1., -1.], [-1., 1.], [0., 1.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[-1., -1.], [-1., 1.]], None)
+                .build(&mut services.objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -137,16 +120,9 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[-1., -1.], [1., -1.]], None)
+                .build(&mut services.objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -158,16 +134,9 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[-1., 0.], [1., 0.], [1., 1.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[-1., 0.], [1., 0.]], None)
+                .build(&mut services.objects);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
