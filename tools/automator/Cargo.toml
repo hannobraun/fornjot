@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.69"
-chrono = "0.4.23"
+chrono = "0.4.24"
 map-macro = "0.2.5"
 octocrab = "0.18.1"
 semver = "1.0.17"
