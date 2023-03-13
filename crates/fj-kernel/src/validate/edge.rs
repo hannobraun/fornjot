@@ -76,9 +76,8 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::CycleBuilder,
+        builder::HalfEdgeBuilder,
         objects::HalfEdge,
-        partial::{PartialCycle, PartialObject},
         services::Services,
         validate::{HalfEdgeValidationError, Validate, ValidationError},
     };
@@ -87,16 +86,8 @@ mod tests {
     fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[0., 0.], [1., 0.], [1., 1.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let valid = HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
+            .build(&mut services.objects);
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 
