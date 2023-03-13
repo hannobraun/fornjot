@@ -17,7 +17,7 @@ use crate::{
 
 use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<HalfEdge>, &Surface) {
+impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
     type Cache = EdgeCache;
 
@@ -43,8 +43,7 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
             }
         };
 
-        let first = ApproxPoint::new(position_surface, position_global)
-            .with_source((half_edge.clone(), half_edge.boundary()[0]));
+        let first = ApproxPoint::new(position_surface, position_global);
 
         let points = {
             let approx =
@@ -74,7 +73,6 @@ impl Approx for (&Handle<HalfEdge>, &Surface) {
                         .point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
-                        .with_source((half_edge.clone(), point.local_form))
                 })
                 .collect()
         };
@@ -264,11 +262,10 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        builder::{CycleBuilder, HalfEdgeBuilder},
+        builder::HalfEdgeBuilder,
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
         insert::Insert,
         objects::Surface,
-        partial::{PartialCycle, PartialObject},
         services::Services,
     };
 
@@ -277,16 +274,9 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[1., 1.], [2., 1.], [1., 2.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[1., 1.], [2., 1.]], None)
+                .build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -303,16 +293,9 @@ mod tests {
             v: [0., 0., 1.].into(),
         })
         .insert(&mut services.objects);
-        let half_edge = {
-            let mut cycle = PartialCycle::new(&mut services.objects);
-
-            let [half_edge, _, _] = cycle.update_as_polygon_from_points(
-                [[1., 1.], [2., 1.], [1., 2.]],
-                &mut services.objects,
-            );
-
-            half_edge
-        };
+        let half_edge =
+            HalfEdgeBuilder::line_segment([[1., 1.], [2., 1.]], None)
+                .build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -336,8 +319,7 @@ mod tests {
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
         )
-        .build(&mut services.objects)
-        .insert(&mut services.objects);
+        .build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -361,9 +343,8 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdgeBuilder::circle(1.)
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let half_edge =
+            HalfEdgeBuilder::circle(1.).build(&mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

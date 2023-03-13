@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
+impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -101,12 +101,10 @@ impl Sweep for (Handle<HalfEdge>, &Handle<Vertex>, &Surface, Color) {
                         builder
                     };
 
-                    builder.build(objects).insert(objects)
+                    builder.build(objects)
                 };
 
-                face.exterior.write().add_half_edge(half_edge.clone());
-
-                half_edge
+                face.exterior.write().add_half_edge(half_edge, objects)
             });
 
         // And we're done creating the face! All that's left to do is build our

@@ -10,16 +10,12 @@ pub mod solid;
 pub mod tolerance;
 
 use std::{
-    any::Any,
     cmp::Ordering,
     fmt::Debug,
     hash::{Hash, Hasher},
-    rc::Rc,
 };
 
 use fj_math::Point;
-
-use crate::{objects::HalfEdge, storage::Handle};
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
@@ -59,9 +55,6 @@ pub struct ApproxPoint<const D: usize> {
 
     /// The global form of the points
     pub global_form: Point<3>,
-
-    /// The optional source of the point
-    pub source: Option<Rc<dyn Source>>,
 }
 
 impl<const D: usize> ApproxPoint<D> {
@@ -70,15 +63,6 @@ impl<const D: usize> ApproxPoint<D> {
         Self {
             local_form,
             global_form,
-            source: None,
-        }
-    }
-
-    /// Attach a source to the point
-    pub fn with_source(self, source: impl Source) -> Self {
-        Self {
-            source: Some(Rc::new(source)),
-            ..self
         }
     }
 }
@@ -114,8 +98,3 @@ impl<const D: usize> PartialOrd for ApproxPoint<D> {
         Some(self.cmp(other))
     }
 }
-
-/// The source of an [`ApproxPoint`]
-pub trait Source: Any + Debug {}
-
-impl Source for (Handle<HalfEdge>, Point<1>) {}
