@@ -104,7 +104,14 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                     builder.build(objects)
                 };
 
-                face.exterior.write().add_half_edge(half_edge, objects)
+                let (exterior, half_edge) = face
+                    .exterior
+                    .read()
+                    .clone()
+                    .add_half_edge(half_edge, objects);
+                *face.exterior.write() = exterior;
+
+                half_edge
             });
 
         // And we're done creating the face! All that's left to do is build our
