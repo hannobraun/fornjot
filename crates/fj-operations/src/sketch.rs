@@ -4,7 +4,7 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Objects, Sketch},
+    objects::{Cycle, Objects, Sketch},
     partial::{
         Partial, PartialCycle, PartialFace, PartialObject, PartialSketch,
     },
@@ -30,15 +30,11 @@ impl Shape for fj::Sketch {
                 let half_edge = HalfEdgeBuilder::circle(circle.radius())
                     .build(objects)
                     .insert(objects);
-                let exterior = {
-                    let mut cycle = PartialCycle::new(objects);
-                    cycle.half_edges.push(half_edge);
-                    Partial::from_partial(cycle)
-                };
+                let exterior = Cycle::new([half_edge]).insert(objects);
 
                 let mut face = PartialFace::new(objects);
                 face.surface = Some(surface);
-                face.exterior = exterior;
+                face.exterior = Partial::from(exterior);
                 face.color = Some(Color(self.color()));
 
                 face
