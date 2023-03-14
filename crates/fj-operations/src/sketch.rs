@@ -5,9 +5,7 @@ use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Objects, Sketch},
-    partial::{
-        Partial, PartialCycle, PartialFace, PartialObject, PartialSketch,
-    },
+    partial::{Partial, PartialFace, PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -47,7 +45,7 @@ impl Shape for fj::Sketch {
                 );
 
                 let exterior = {
-                    let mut cycle = PartialCycle::new(objects);
+                    let mut cycle = Cycle::new([]);
 
                     let segments = poly_chain
                         .to_segments()
@@ -75,7 +73,7 @@ impl Shape for fj::Sketch {
                         cycle = cycle.add_half_edge(half_edge, objects).0;
                     }
 
-                    Partial::from_partial(cycle)
+                    Partial::from(cycle.insert(objects))
                 };
 
                 let mut face = PartialFace::new(objects);
