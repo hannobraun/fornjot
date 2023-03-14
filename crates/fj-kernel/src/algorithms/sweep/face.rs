@@ -9,7 +9,9 @@ use crate::{
     geometry::curve::GlobalPath,
     insert::Insert,
     objects::{Face, Objects, Shell},
-    partial::{Partial, PartialFace, PartialObject, PartialShell},
+    partial::{
+        Partial, PartialCycle, PartialFace, PartialObject, PartialShell,
+    },
     services::Service,
     storage::Handle,
 };
@@ -84,18 +86,15 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let mut top_cycle = if i == 0 {
-                top_face.exterior.clone()
+            let (top_cycle, _) =
+                PartialCycle::new(objects).connect_to_edges(top_edges, objects);
+
+            if i == 0 {
+                *top_face.exterior.write() = top_cycle;
             } else {
-                top_face.add_interior(objects)
+                let mut interior = top_face.add_interior(objects);
+                *interior.write() = top_cycle;
             };
-            {
-                let (updated, _) = top_cycle
-                    .read()
-                    .clone()
-                    .connect_to_edges(top_edges, objects);
-                *top_cycle.write() = updated;
-            }
         }
 
         let top_face = top_face.build(objects).insert(objects);
