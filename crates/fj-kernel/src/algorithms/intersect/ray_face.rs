@@ -167,11 +167,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.yz_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -192,11 +192,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.yz_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -220,11 +220,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.yz_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -245,11 +245,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.yz_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -278,11 +278,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.yz_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -314,11 +314,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.xy_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
@@ -341,11 +341,11 @@ mod tests {
 
         face.surface = Some(services.objects.surfaces.xy_plane());
         {
-            let exterior = face.exterior.clone_object();
-            let (exterior, _) = exterior.update_as_polygon_from_points(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services.objects,
-            );
+            let (exterior, _) =
+                face.exterior.clone_object().update_as_polygon_from_points(
+                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                    &mut services.objects,
+                );
             face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face

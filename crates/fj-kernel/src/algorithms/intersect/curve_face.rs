@@ -185,11 +185,11 @@ mod tests {
 
             face.surface = Some(services.objects.surfaces.xy_plane());
             {
-                let exterior = face.exterior.clone_object();
-                let (exterior, _) = exterior.update_as_polygon_from_points(
-                    exterior_points,
-                    &mut services.objects,
-                );
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        exterior_points,
+                        &mut services.objects,
+                    );
                 face.exterior = exterior.insert(&mut services.objects);
             }
             {

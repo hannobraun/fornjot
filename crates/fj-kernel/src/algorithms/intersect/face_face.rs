@@ -91,11 +91,11 @@ mod tests {
 
             face.surface = Some(surface);
             {
-                let exterior = face.exterior.clone_object();
-                let (exterior, _) = exterior.update_as_polygon_from_points(
-                    points,
-                    &mut services.objects,
-                );
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        points,
+                        &mut services.objects,
+                    );
                 face.exterior = exterior.insert(&mut services.objects);
             }
 
@@ -127,11 +127,11 @@ mod tests {
 
             face.surface = Some(surface);
             {
-                let exterior = face.exterior.clone_object();
-                let (exterior, _) = exterior.update_as_polygon_from_points(
-                    points,
-                    &mut services.objects,
-                );
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        points,
+                        &mut services.objects,
+                    );
                 face.exterior = exterior.insert(&mut services.objects);
             }
 
