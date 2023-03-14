@@ -153,7 +153,7 @@ mod tests {
         builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
         insert::Insert,
-        partial::{PartialFace, PartialObject},
+        partial::{PartialCycle, PartialFace, PartialObject},
         services::Services,
     };
 
@@ -193,13 +193,12 @@ mod tests {
                 face.exterior = exterior.insert(&mut services.objects);
             }
             {
-                let mut interior = face.add_interior(&mut services.objects);
-                let (updated, _) =
-                    interior.read().clone().update_as_polygon_from_points(
+                let (interior, _) = PartialCycle::new(&mut services.objects)
+                    .update_as_polygon_from_points(
                         interior_points,
                         &mut services.objects,
                     );
-                *interior.write() = updated;
+                face.add_interior(interior, &mut services.objects);
             }
 
             face.build(&mut services.objects)

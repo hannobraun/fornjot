@@ -92,8 +92,7 @@ impl Sweep for Handle<Face> {
             if i == 0 {
                 top_face.exterior = top_cycle.build(objects).insert(objects);
             } else {
-                let mut interior = top_face.add_interior(objects);
-                *interior.write() = top_cycle;
+                top_face.add_interior(top_cycle, objects);
             };
         }
 
