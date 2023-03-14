@@ -81,6 +81,8 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
+        let mut exterior = Some(face.exterior.clone_object());
+
         // Armed with all of that, we're ready to create the edges.
         let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
             .zip_ext(surface_points)
@@ -104,8 +106,14 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                     builder.build(objects)
                 };
 
-                face.exterior.write().add_half_edge(half_edge, objects)
+                let (updated, half_edge) =
+                    exterior.take().unwrap().add_half_edge(half_edge, objects);
+                exterior = Some(updated);
+
+                half_edge
             });
+
+        face.exterior = exterior.unwrap().insert(objects);
 
         // And we're done creating the face! All that's left to do is build our
         // return values.

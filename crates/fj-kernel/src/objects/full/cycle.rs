@@ -13,22 +13,8 @@ pub struct Cycle {
 
 impl Cycle {
     /// Create an instance of `Cycle`
-    ///
-    /// # Panics
-    ///
-    /// Panics, if `half_edges` does not yield at least one half-edge.
     pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
-
-        // This is not a validation check, and thus not part of the validation
-        // infrastructure. The property being checked here is inherent to the
-        // validity of a `Cycle`, as methods of `Cycle` might assume that there
-        // is at least one edge.
-        assert!(
-            !half_edges.is_empty(),
-            "Cycle must contain at least one half-edge"
-        );
-
         Self { half_edges }
     }
 

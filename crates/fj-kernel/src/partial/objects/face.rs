@@ -1,6 +1,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
+    insert::Insert,
     objects::{Cycle, Face, Objects, Surface},
     partial::{FullToPartialCache, Partial, PartialObject},
     services::Service,
@@ -14,7 +15,7 @@ pub struct PartialFace {
     pub surface: Option<Handle<Surface>>,
 
     /// The cycle that bounds the face on the outside
-    pub exterior: Partial<Cycle>,
+    pub exterior: Handle<Cycle>,
 
     /// The cycles that bound the face on the inside
     ///
@@ -31,7 +32,7 @@ impl PartialObject for PartialFace {
     fn new(objects: &mut Service<Objects>) -> Self {
         Self {
             surface: None,
-            exterior: Partial::new(objects),
+            exterior: Cycle::new([]).insert(objects),
             interiors: Vec::new(),
             color: None,
         }
@@ -40,7 +41,7 @@ impl PartialObject for PartialFace {
     fn from_full(face: &Self::Full, cache: &mut FullToPartialCache) -> Self {
         Self {
             surface: Some(face.surface().clone()),
-            exterior: Partial::from_full(face.exterior().clone(), cache),
+            exterior: face.exterior().clone(),
             interiors: face
                 .interiors()
                 .map(|cycle| Partial::from_full(cycle.clone(), cache))
@@ -52,11 +53,10 @@ impl PartialObject for PartialFace {
     fn build(self, objects: &mut Service<Objects>) -> Self::Full {
         let surface = self.surface.expect("Need `Surface` to build `Face`");
 
-        let exterior = self.exterior.build(objects);
         let interiors =
             self.interiors.into_iter().map(|cycle| cycle.build(objects));
         let color = self.color.unwrap_or_default();
 
-        Face::new(surface, exterior, interiors, color)
+        Face::new(surface, self.exterior, interiors, color)
     }
 }

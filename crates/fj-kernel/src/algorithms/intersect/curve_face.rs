@@ -152,6 +152,7 @@ mod tests {
     use crate::{
         builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
+        insert::Insert,
         partial::{PartialFace, PartialObject},
         services::Services,
     };
@@ -165,14 +166,14 @@ mod tests {
         let (curve, _) = Curve::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
-        let exterior = [
+        let exterior_points = [
             [-2., -2.],
             [ 2., -2.],
             [ 2.,  2.],
             [-2.,  2.],
         ];
         #[rustfmt::skip]
-        let interior = [
+        let interior_points = [
             [-1., -1.],
             [-1.,  1.],
             [ 1.,  1.],
@@ -183,12 +184,23 @@ mod tests {
             let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Some(services.objects.surfaces.xy_plane());
-            face.exterior
-                .write()
-                .update_as_polygon_from_points(exterior, &mut services.objects);
-            face.add_interior(&mut services.objects)
-                .write()
-                .update_as_polygon_from_points(interior, &mut services.objects);
+            {
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        exterior_points,
+                        &mut services.objects,
+                    );
+                face.exterior = exterior.insert(&mut services.objects);
+            }
+            {
+                let mut interior = face.add_interior(&mut services.objects);
+                let (updated, _) =
+                    interior.read().clone().update_as_polygon_from_points(
+                        interior_points,
+                        &mut services.objects,
+                    );
+                *interior.write() = updated;
+            }
 
             face.build(&mut services.objects)
         };

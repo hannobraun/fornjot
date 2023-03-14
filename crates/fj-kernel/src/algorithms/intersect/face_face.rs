@@ -64,6 +64,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         builder::CycleBuilder,
         geometry::curve::Curve,
+        insert::Insert,
         partial::{PartialFace, PartialObject},
         services::Services,
     };
@@ -89,9 +90,14 @@ mod tests {
             let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Some(surface);
-            face.exterior
-                .write()
-                .update_as_polygon_from_points(points, &mut services.objects);
+            {
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        points,
+                        &mut services.objects,
+                    );
+                face.exterior = exterior.insert(&mut services.objects);
+            }
 
             face.build(&mut services.objects)
         });
@@ -120,9 +126,14 @@ mod tests {
             let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Some(surface);
-            face.exterior
-                .write()
-                .update_as_polygon_from_points(points, &mut services.objects);
+            {
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        points,
+                        &mut services.objects,
+                    );
+                face.exterior = exterior.insert(&mut services.objects);
+            }
 
             face.build(&mut services.objects)
         });

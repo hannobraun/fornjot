@@ -38,9 +38,20 @@ pub enum FaceValidationError {
 
 impl FaceValidationError {
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
+        if face.exterior().half_edges().count() == 0 {
+            // Can't determine winding, if the cycle has no half-edges. Sounds
+            // like a job for a different validation check.
+            return;
+        }
+
         let exterior_winding = face.exterior().winding();
 
         for interior in face.interiors() {
+            if interior.half_edges().count() == 0 {
+                // Can't determine winding, if the cycle has no half-edges.
+                // Sounds like a job for a different validation check.
+                continue;
+            }
             let interior_winding = interior.winding();
 
             if exterior_winding == interior_winding {
@@ -62,6 +73,7 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
+        insert::Insert,
         objects::Face,
         partial::{PartialFace, PartialObject},
         services::Services,
@@ -76,16 +88,23 @@ mod tests {
             let mut face = PartialFace::new(&mut services.objects);
 
             face.surface = Some(services.objects.surfaces.xy_plane());
-            face.exterior.write().update_as_polygon_from_points(
-                [[0., 0.], [3., 0.], [0., 3.]],
-                &mut services.objects,
-            );
-            face.add_interior(&mut services.objects)
-                .write()
-                .update_as_polygon_from_points(
-                    [[1., 1.], [1., 2.], [2., 1.]],
-                    &mut services.objects,
-                );
+            {
+                let (exterior, _) =
+                    face.exterior.clone_object().update_as_polygon_from_points(
+                        [[0., 0.], [3., 0.], [0., 3.]],
+                        &mut services.objects,
+                    );
+                face.exterior = exterior.insert(&mut services.objects);
+            }
+            {
+                let mut interior = face.add_interior(&mut services.objects);
+                let (updated, _) =
+                    interior.read().clone().update_as_polygon_from_points(
+                        [[1., 1.], [1., 2.], [2., 1.]],
+                        &mut services.objects,
+                    );
+                *interior.write() = updated;
+            }
             face.build(&mut services.objects)
         };
         let invalid = {
