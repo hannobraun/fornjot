@@ -104,12 +104,12 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                     builder.build(objects)
                 };
 
-                let (exterior, half_edge) = face
+                let (updated, half_edge) = face
                     .exterior
                     .read()
                     .clone()
                     .add_half_edge(half_edge, objects);
-                *face.exterior.write() = exterior;
+                *face.exterior.write() = updated;
 
                 half_edge
             });
