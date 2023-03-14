@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     geometry::curve::Curve,
     insert::Insert,
-    objects::{HalfEdge, Objects},
+    objects::{Cycle, HalfEdge, Objects},
     partial::PartialCycle,
     services::Service,
     storage::Handle,
@@ -51,6 +51,66 @@ pub trait CycleBuilder: Sized {
     ) -> (Self, O::SameSize<Handle<HalfEdge>>)
     where
         O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
+}
+
+impl CycleBuilder for Cycle {
+    fn add_half_edge(
+        self,
+        half_edge: HalfEdge,
+        objects: &mut Service<Objects>,
+    ) -> (Self, Handle<HalfEdge>) {
+        let half_edge = half_edge.insert(objects);
+        let cycle =
+            Cycle::new(self.half_edges().cloned().chain([half_edge.clone()]));
+        (cycle, half_edge)
+    }
+
+    fn update_as_polygon_from_points<O, P>(
+        mut self,
+        points: O,
+        objects: &mut Service<Objects>,
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
+    where
+        O: ObjectArgument<P>,
+        P: Clone + Into<Point<2>>,
+    {
+        let half_edges = points.map_with_next(|start, end| {
+            let half_edge = HalfEdgeBuilder::line_segment([start, end], None)
+                .build(objects);
+
+            let (cycle, half_edge) =
+                self.clone().add_half_edge(half_edge, objects);
+            self = cycle;
+
+            half_edge
+        });
+
+        (self, half_edges)
+    }
+
+    fn connect_to_edges<O>(
+        mut self,
+        edges: O,
+        objects: &mut Service<Objects>,
+    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
+    where
+        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+    {
+        let edges =
+            edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
+                let half_edge = HalfEdgeBuilder::new(curve, boundary)
+                    .with_start_vertex(prev.start_vertex().clone())
+                    .build(objects);
+
+                let (cycle, half_edge) =
+                    self.clone().add_half_edge(half_edge, objects);
+                self = cycle;
+
+                half_edge
+            });
+
+        (self, edges)
+    }
 }
 
 impl CycleBuilder for PartialCycle {
