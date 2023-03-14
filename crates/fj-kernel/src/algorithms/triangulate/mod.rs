@@ -99,12 +99,12 @@ mod tests {
         let mut face = PartialFace::new(&mut services.objects);
         face.surface = Some(services.objects.surfaces.xy_plane());
         {
-            let exterior = face.exterior.read().clone();
+            let exterior = face.exterior.clone_object();
             let (exterior, _) = exterior.update_as_polygon_from_points(
                 [a, b, c, d],
                 &mut services.objects,
             );
-            *face.exterior.write() = exterior;
+            face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
             .build(&mut services.objects)
@@ -144,12 +144,12 @@ mod tests {
         let mut face = PartialFace::new(&mut services.objects);
         face.surface = Some(surface.clone());
         {
-            let exterior = face.exterior.read().clone();
+            let exterior = face.exterior.clone_object();
             let (exterior, _) = exterior.update_as_polygon_from_points(
                 [a, b, c, d],
                 &mut services.objects,
             );
-            *face.exterior.write() = exterior;
+            face.exterior = exterior.insert(&mut services.objects);
         }
         {
             let mut interior = face.add_interior(&mut services.objects);
@@ -220,12 +220,12 @@ mod tests {
         let mut face = PartialFace::new(&mut services.objects);
         face.surface = Some(surface.clone());
         {
-            let exterior = face.exterior.read().clone();
+            let exterior = face.exterior.clone_object();
             let (exterior, _) = exterior.update_as_polygon_from_points(
                 [a, b, c, d, e],
                 &mut services.objects,
             );
-            *face.exterior.write() = exterior;
+            face.exterior = exterior.insert(&mut services.objects);
         }
         let face = face
             .build(&mut services.objects)

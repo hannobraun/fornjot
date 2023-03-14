@@ -32,7 +32,7 @@ impl Shape for fj::Sketch {
 
                 let mut face = PartialFace::new(objects);
                 face.surface = Some(surface);
-                face.exterior = Partial::from(exterior);
+                face.exterior = exterior;
                 face.color = Some(Color(self.color()));
 
                 face
@@ -73,7 +73,7 @@ impl Shape for fj::Sketch {
                         cycle = cycle.add_half_edge(half_edge, objects).0;
                     }
 
-                    Partial::from(cycle.insert(objects))
+                    cycle.insert(objects)
                 };
 
                 let mut face = PartialFace::new(objects);

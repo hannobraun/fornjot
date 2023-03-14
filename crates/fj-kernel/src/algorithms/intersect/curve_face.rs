@@ -152,6 +152,7 @@ mod tests {
     use crate::{
         builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
+        insert::Insert,
         partial::{PartialFace, PartialObject},
         services::Services,
     };
@@ -184,12 +185,12 @@ mod tests {
 
             face.surface = Some(services.objects.surfaces.xy_plane());
             {
-                let exterior = face.exterior.read().clone();
+                let exterior = face.exterior.clone_object();
                 let (exterior, _) = exterior.update_as_polygon_from_points(
                     exterior_points,
                     &mut services.objects,
                 );
-                *face.exterior.write() = exterior;
+                face.exterior = exterior.insert(&mut services.objects);
             }
             {
                 let mut interior = face.add_interior(&mut services.objects);

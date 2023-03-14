@@ -73,6 +73,7 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
+        insert::Insert,
         objects::Face,
         partial::{PartialFace, PartialObject},
         services::Services,
@@ -88,12 +89,12 @@ mod tests {
 
             face.surface = Some(services.objects.surfaces.xy_plane());
             {
-                let exterior = face.exterior.read().clone();
+                let exterior = face.exterior.clone_object();
                 let (exterior, _) = exterior.update_as_polygon_from_points(
                     [[0., 0.], [3., 0.], [0., 3.]],
                     &mut services.objects,
                 );
-                *face.exterior.write() = exterior;
+                face.exterior = exterior.insert(&mut services.objects);
             }
             {
                 let mut interior = face.add_interior(&mut services.objects);

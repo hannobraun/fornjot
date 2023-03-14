@@ -90,7 +90,7 @@ impl Sweep for Handle<Face> {
                 PartialCycle::new(objects).connect_to_edges(top_edges, objects);
 
             if i == 0 {
-                *top_face.exterior.write() = top_cycle;
+                top_face.exterior = top_cycle.build(objects).insert(objects);
             } else {
                 let mut interior = top_face.add_interior(objects);
                 *interior.write() = top_cycle;
