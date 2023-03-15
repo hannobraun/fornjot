@@ -98,7 +98,7 @@ impl Approx for &Face {
         FaceApprox {
             exterior,
             interiors,
-            color: Some(self.color()),
+            color: self.color(),
             coord_handedness: self.coord_handedness(),
         }
     }

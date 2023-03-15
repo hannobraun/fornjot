@@ -70,7 +70,7 @@ impl Sweep for Handle<Face> {
                     half_edge.deref(),
                     next.start_vertex(),
                     self.surface().deref(),
-                    Some(self.color()),
+                    self.color(),
                 )
                     .sweep_with_cache(path, cache, objects);
 
@@ -97,7 +97,7 @@ impl Sweep for Handle<Face> {
             surface: top_surface,
             exterior: exterior.unwrap(),
             interiors,
-            color: Some(self.color()),
+            color: self.color(),
         };
 
         let top_face = top_face.build(objects).insert(objects);

@@ -38,12 +38,12 @@ impl PartialObject for PartialFace {
             surface: face.surface().clone(),
             exterior: face.exterior().clone(),
             interiors: face.interiors().cloned().collect(),
-            color: Some(face.color()),
+            color: face.color(),
         }
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let color = self.color.unwrap_or_default();
+        let color = self.color;
 
         Face::new(self.surface, self.exterior, self.interiors, color)
     }
