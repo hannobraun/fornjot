@@ -56,10 +56,6 @@ impl Sweep for Handle<Face> {
         let top_surface =
             bottom_face.surface().clone().translate(path, objects);
 
-        let mut top_face = PartialFace::new(objects);
-        top_face.surface = Some(top_surface);
-        top_face.color = Some(self.color());
-
         let mut exterior = None;
         let mut interiors = Vec::new();
 
@@ -97,8 +93,12 @@ impl Sweep for Handle<Face> {
             };
         }
 
-        top_face.exterior = exterior.unwrap();
-        top_face.interiors = interiors;
+        let top_face = PartialFace {
+            surface: Some(top_surface),
+            exterior: exterior.unwrap(),
+            interiors,
+            color: Some(self.color()),
+        };
 
         let top_face = top_face.build(objects).insert(objects);
         faces.push(top_face);
