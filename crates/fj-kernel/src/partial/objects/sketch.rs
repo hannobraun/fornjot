@@ -26,7 +26,6 @@ impl PartialObject for PartialSketch {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let faces = self.faces;
-        Sketch::new(faces)
+        Sketch::new(self.faces)
     }
 }
