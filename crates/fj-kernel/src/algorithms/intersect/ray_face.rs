@@ -1,5 +1,7 @@
 //! Intersection between a ray and a face, in 3D
 
+use std::ops::Deref;
+
 use fj_math::{Plane, Point, Scalar};
 
 use crate::{
@@ -107,7 +109,7 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
         }
 
         let point = Point::from([u, v]);
-        let intersection = match (face, &point).intersect()? {
+        let intersection = match (face.deref(), &point).intersect()? {
             FacePointIntersection::PointIsInsideFace => {
                 RayFaceIntersection::RayHitsFace
             }

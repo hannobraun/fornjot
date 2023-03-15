@@ -12,7 +12,7 @@ use super::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
 };
 
-impl Intersect for (&Handle<Face>, &Point<2>) {
+impl Intersect for (&Face, &Point<2>) {
     type Intersection = FacePointIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {
@@ -161,8 +161,6 @@ mod tests {
             Vec::new(),
             None,
         );
-
-        let face = face.insert(&mut services.objects);
         let point = Point::from([2., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -186,7 +184,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -213,8 +210,6 @@ mod tests {
             Vec::new(),
             None,
         );
-
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 2.]);
 
         let intersection = (&face, &point).intersect();
@@ -241,7 +236,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -268,7 +262,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -295,7 +288,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -322,7 +314,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -355,7 +346,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
