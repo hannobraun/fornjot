@@ -186,8 +186,8 @@ mod tests {
 
             face.surface = Some(services.objects.surfaces.xy_plane());
             {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
                         exterior_points,
                         &mut services.objects,
                     );

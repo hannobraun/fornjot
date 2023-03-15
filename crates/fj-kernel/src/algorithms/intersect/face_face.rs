@@ -65,6 +65,7 @@ mod tests {
         builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
+        objects::Cycle,
         partial::{PartialFace, PartialObject},
         services::Services,
     };
@@ -91,8 +92,8 @@ mod tests {
 
             face.surface = Some(surface);
             {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
                         points,
                         &mut services.objects,
                     );
@@ -127,8 +128,8 @@ mod tests {
 
             face.surface = Some(surface);
             {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
                         points,
                         &mut services.objects,
                     );
