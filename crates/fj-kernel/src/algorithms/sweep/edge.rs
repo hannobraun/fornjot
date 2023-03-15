@@ -12,7 +12,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
+impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -107,7 +107,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                 .sweep_with_cache(path, cache, objects),
             exterior: exterior.unwrap().insert(objects),
             interiors: Vec::new(),
-            color: Some(color),
+            color,
         };
 
         // And we're done creating the face! All that's left to do is build our

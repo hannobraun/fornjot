@@ -70,7 +70,7 @@ impl Sweep for Handle<Face> {
                     half_edge.deref(),
                     next.start_vertex(),
                     self.surface().deref(),
-                    self.color(),
+                    Some(self.color()),
                 )
                     .sweep_with_cache(path, cache, objects);
 
