@@ -183,19 +183,17 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        exterior_points,
-                        &mut services.objects,
-                    );
+                let exterior = Cycle::new([]).update_as_polygon_from_points(
+                    exterior_points,
+                    &mut services.objects,
+                );
                 exterior.insert(&mut services.objects)
             },
             vec![{
-                let (interior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        interior_points,
-                        &mut services.objects,
-                    );
+                let interior = Cycle::new([]).update_as_polygon_from_points(
+                    interior_points,
+                    &mut services.objects,
+                );
                 interior.insert(&mut services.objects)
             }],
             None,

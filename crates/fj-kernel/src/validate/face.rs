@@ -86,19 +86,17 @@ mod tests {
         let valid = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [[0., 0.], [3., 0.], [0., 3.]],
-                        &mut services.objects,
-                    );
+                let exterior = Cycle::new([]).update_as_polygon_from_points(
+                    [[0., 0.], [3., 0.], [0., 3.]],
+                    &mut services.objects,
+                );
                 exterior.insert(&mut services.objects)
             },
             vec![{
-                let (interior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [[1., 1.], [1., 2.], [2., 1.]],
-                        &mut services.objects,
-                    );
+                let interior = Cycle::new([]).update_as_polygon_from_points(
+                    [[1., 1.], [1., 2.], [2., 1.]],
+                    &mut services.objects,
+                );
                 interior.insert(&mut services.objects)
             }],
             None,

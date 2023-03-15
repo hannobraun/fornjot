@@ -99,11 +99,10 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [a, b, c, d],
-                        &mut services.objects,
-                    );
+                let exterior = Cycle::new([]).update_as_polygon_from_points(
+                    [a, b, c, d],
+                    &mut services.objects,
+                );
                 exterior.insert(&mut services.objects)
             },
             Vec::new(),
@@ -144,19 +143,17 @@ mod tests {
         let face = Face::new(
             surface.clone(),
             {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [a, b, c, d],
-                        &mut services.objects,
-                    );
+                let exterior = Cycle::new([]).update_as_polygon_from_points(
+                    [a, b, c, d],
+                    &mut services.objects,
+                );
                 exterior.insert(&mut services.objects)
             },
             vec![{
-                let (interior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [e, f, g, h],
-                        &mut services.objects,
-                    );
+                let interior = Cycle::new([]).update_as_polygon_from_points(
+                    [e, f, g, h],
+                    &mut services.objects,
+                );
                 interior.insert(&mut services.objects)
             }],
             None,
@@ -218,11 +215,10 @@ mod tests {
         let face = Face::new(
             surface.clone(),
             {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [a, b, c, d, e],
-                        &mut services.objects,
-                    );
+                let exterior = Cycle::new([]).update_as_polygon_from_points(
+                    [a, b, c, d, e],
+                    &mut services.objects,
+                );
                 exterior.insert(&mut services.objects)
             },
             Vec::new(),

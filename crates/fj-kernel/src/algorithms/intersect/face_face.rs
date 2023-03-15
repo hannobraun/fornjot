@@ -90,7 +90,7 @@ mod tests {
             Face::new(
                 surface,
                 {
-                    let (exterior, _) = Cycle::new([])
+                    let exterior = Cycle::new([])
                         .update_as_polygon_from_points(
                             points,
                             &mut services.objects,
@@ -126,7 +126,7 @@ mod tests {
             Face::new(
                 surface,
                 {
-                    let (exterior, _) = Cycle::new([])
+                    let exterior = Cycle::new([])
                         .update_as_polygon_from_points(
                             points,
                             &mut services.objects,

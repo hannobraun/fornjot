@@ -32,7 +32,7 @@ pub trait CycleBuilder: Sized {
         self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
+    ) -> Self
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>;
@@ -68,12 +68,12 @@ impl CycleBuilder for Cycle {
         mut self,
         points: O,
         objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
+    ) -> Self
     where
         O: ObjectArgument<P>,
         P: Clone + Into<Point<2>>,
     {
-        let half_edges = points.map_with_next(|start, end| {
+        points.map_with_next(|start, end| {
             let half_edge = HalfEdgeBuilder::line_segment([start, end], None);
 
             let (cycle, half_edge) =
@@ -83,7 +83,7 @@ impl CycleBuilder for Cycle {
             half_edge
         });
 
-        (self, half_edges)
+        self
     }
 
     fn connect_to_edges<O>(
