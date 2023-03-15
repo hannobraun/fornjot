@@ -36,6 +36,5 @@ macro_rules! impl_trait {
 }
 
 impl_trait!(
-    Shell, PartialShell;
     Solid, PartialSolid;
 );
