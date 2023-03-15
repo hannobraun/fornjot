@@ -92,7 +92,6 @@ pub mod builder;
 pub mod geometry;
 pub mod insert;
 pub mod objects;
-pub mod partial;
 pub mod services;
 pub mod storage;
 pub mod validate;
