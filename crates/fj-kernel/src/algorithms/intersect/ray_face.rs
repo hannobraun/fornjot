@@ -165,16 +165,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -191,16 +189,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -220,16 +216,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -246,16 +240,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -280,16 +272,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -317,16 +307,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );
@@ -345,16 +333,14 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
-            {
-                CycleBuilder2::polygon([
-                    [-1., -1.],
-                    [1., -1.],
-                    [1., 1.],
-                    [-1., 1.],
-                ])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-            },
+            CycleBuilder2::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ])
+            .build(&mut services.objects)
+            .insert(&mut services.objects),
             Vec::new(),
             None,
         );

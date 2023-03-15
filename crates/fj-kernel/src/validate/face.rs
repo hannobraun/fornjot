@@ -85,16 +85,12 @@ mod tests {
 
         let valid = Face::new(
             services.objects.surfaces.xy_plane(),
-            {
-                CycleBuilder2::polygon([[0., 0.], [3., 0.], [0., 3.]])
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-            },
-            vec![{
-                CycleBuilder2::polygon([[1., 1.], [1., 2.], [2., 1.]])
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-            }],
+            CycleBuilder2::polygon([[0., 0.], [3., 0.], [0., 3.]])
+                .build(&mut services.objects)
+                .insert(&mut services.objects),
+            vec![CycleBuilder2::polygon([[1., 1.], [1., 2.], [2., 1.]])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)],
             None,
         );
         let invalid = {

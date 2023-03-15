@@ -86,11 +86,9 @@ mod tests {
         .map(|surface| {
             Face::new(
                 surface,
-                {
-                    CycleBuilder2::polygon(points)
-                        .build(&mut services.objects)
-                        .insert(&mut services.objects)
-                },
+                CycleBuilder2::polygon(points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects),
                 Vec::new(),
                 None,
             )
@@ -119,11 +117,9 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             Face::new(
                 surface,
-                {
-                    CycleBuilder2::polygon(points)
-                        .build(&mut services.objects)
-                        .insert(&mut services.objects)
-                },
+                CycleBuilder2::polygon(points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects),
                 Vec::new(),
                 None,
             )

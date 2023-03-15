@@ -179,16 +179,12 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
-            {
-                CycleBuilder2::polygon(exterior_points)
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-            },
-            vec![{
-                CycleBuilder2::polygon(interior_points)
-                    .build(&mut services.objects)
-                    .insert(&mut services.objects)
-            }],
+            CycleBuilder2::polygon(exterior_points)
+                .build(&mut services.objects)
+                .insert(&mut services.objects),
+            vec![CycleBuilder2::polygon(interior_points)
+                .build(&mut services.objects)
+                .insert(&mut services.objects)],
             None,
         );
 
