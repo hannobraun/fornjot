@@ -9,7 +9,7 @@ use crate::{
     geometry::curve::GlobalPath,
     insert::Insert,
     objects::{Cycle, Face, Objects, Shell},
-    partial::{Partial, PartialObject, PartialShell},
+    partial::{PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -99,7 +99,6 @@ impl Sweep for Handle<Face> {
         let top_face = top_face.insert(objects);
         faces.push(top_face);
 
-        let faces = faces.into_iter().map(Partial::from).collect();
         PartialShell { faces }.build(objects).insert(objects)
     }
 }

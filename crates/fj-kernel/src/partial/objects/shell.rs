@@ -1,14 +1,15 @@
 use crate::{
     objects::{Face, Objects, Shell},
-    partial::{FullToPartialCache, Partial, PartialObject},
+    partial::{FullToPartialCache, PartialObject},
     services::Service,
+    storage::Handle,
 };
 
 /// A partial [`Shell`]
 #[derive(Clone, Debug)]
 pub struct PartialShell {
     /// The faces that make up the shell
-    pub faces: Vec<Partial<Face>>,
+    pub faces: Vec<Handle<Face>>,
 }
 
 impl PartialObject for PartialShell {
@@ -18,18 +19,14 @@ impl PartialObject for PartialShell {
         Self { faces: Vec::new() }
     }
 
-    fn from_full(shell: &Self::Full, cache: &mut FullToPartialCache) -> Self {
+    fn from_full(shell: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            faces: shell
-                .faces()
-                .into_iter()
-                .map(|face| Partial::from_full(face.clone(), cache))
-                .collect(),
+            faces: shell.faces().into_iter().cloned().collect(),
         }
     }
 
-    fn build(self, objects: &mut Service<Objects>) -> Self::Full {
-        let faces = self.faces.into_iter().map(|face| face.build(objects));
+    fn build(self, _: &mut Service<Objects>) -> Self::Full {
+        let faces = self.faces;
         Shell::new(faces)
     }
 }
