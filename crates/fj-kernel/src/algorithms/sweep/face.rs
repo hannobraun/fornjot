@@ -8,10 +8,8 @@ use crate::{
     builder::{CycleBuilder, FaceBuilder},
     geometry::curve::GlobalPath,
     insert::Insert,
-    objects::{Face, Objects, Shell},
-    partial::{
-        Partial, PartialCycle, PartialFace, PartialObject, PartialShell,
-    },
+    objects::{Cycle, Face, Objects, Shell},
+    partial::{Partial, PartialFace, PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -87,13 +85,12 @@ impl Sweep for Handle<Face> {
             }
 
             let (top_cycle, _) =
-                PartialCycle::new(objects).connect_to_edges(top_edges, objects);
+                Cycle::new([]).connect_to_edges(top_edges, objects);
 
             if i == 0 {
-                top_face.exterior = top_cycle.build(objects).insert(objects);
+                top_face.exterior = top_cycle.insert(objects);
             } else {
-                let mut interior = top_face.add_interior(objects);
-                *interior.write() = top_cycle;
+                top_face.add_interior(top_cycle, objects);
             };
         }
 

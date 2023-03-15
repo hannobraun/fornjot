@@ -36,7 +36,6 @@ macro_rules! impl_trait {
 }
 
 impl_trait!(
-    Cycle, PartialCycle;
     Face, PartialFace;
     Shell, PartialShell;
     Sketch, PartialSketch;
