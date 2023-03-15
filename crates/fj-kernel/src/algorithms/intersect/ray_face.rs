@@ -13,7 +13,7 @@ use crate::{
 
 use super::{HorizontalRayToTheRight, Intersect};
 
-impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
+impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
     type Intersection = RayFaceIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {
@@ -178,9 +178,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([-1., 0., 0.], &mut services.objects);
+        let face = face.translate([-1., 0., 0.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -204,9 +202,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([1., 0., 0.], &mut services.objects);
+        let face = face.translate([1., 0., 0.], &mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -233,9 +229,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([0., 0., 2.], &mut services.objects);
+        let face = face.translate([0., 0., 2.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -259,9 +253,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([1., 1., 0.], &mut services.objects);
+        let face = face.translate([1., 1., 0.], &mut services.objects);
 
         let edge = face
             .exterior()
@@ -293,9 +285,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([1., 1., 1.], &mut services.objects);
+        let face = face.translate([1., 1., 1.], &mut services.objects);
 
         let vertex = face
             .exterior()
@@ -330,7 +320,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -357,9 +346,7 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face
-            .insert(&mut services.objects)
-            .translate([0., 0., 1.], &mut services.objects);
+        let face = face.translate([0., 0., 1.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
