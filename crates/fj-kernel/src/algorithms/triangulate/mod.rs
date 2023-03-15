@@ -83,7 +83,6 @@ mod tests {
         insert::Insert,
         objects::{Cycle, Face},
         services::Services,
-        storage::Handle,
     };
 
     use super::Triangulate;
@@ -110,7 +109,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -163,7 +161,6 @@ mod tests {
             }],
             None,
         );
-        let face = face.insert(&mut services.objects);
 
         let triangles = triangulate(face)?;
 
@@ -231,7 +228,6 @@ mod tests {
             Vec::new(),
             None,
         );
-        let face = face.insert(&mut services.objects);
 
         let triangles = triangulate(face)?;
 
@@ -248,7 +244,7 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: Handle<Face>) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
         Ok(face.approx(tolerance).triangulate())
     }
