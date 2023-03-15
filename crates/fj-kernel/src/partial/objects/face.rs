@@ -1,7 +1,6 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    insert::Insert,
     objects::{Cycle, Face, Objects, Surface},
     partial::{FullToPartialCache, PartialObject},
     services::Service,
@@ -29,13 +28,9 @@ pub struct PartialFace {
 impl PartialObject for PartialFace {
     type Full = Face;
 
-    fn new(objects: &mut Service<Objects>) -> Self {
-        Self {
-            surface: None,
-            exterior: Cycle::new([]).insert(objects),
-            interiors: Vec::new(),
-            color: None,
-        }
+    fn new(_: &mut Service<Objects>) -> Self {
+        // `PartialFace` is being phased out, and this method is no longer used.
+        unreachable!()
     }
 
     fn from_full(face: &Self::Full, _: &mut FullToPartialCache) -> Self {
