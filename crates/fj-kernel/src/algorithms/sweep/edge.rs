@@ -5,7 +5,6 @@ use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
-    partial::{PartialFace, PartialObject},
     services::Service,
     storage::Handle,
 };
@@ -102,17 +101,16 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                 half_edge
             });
 
-        let face = PartialFace {
-            surface: (edge.curve(), surface)
-                .sweep_with_cache(path, cache, objects),
-            exterior: exterior.unwrap().insert(objects),
-            interiors: Vec::new(),
+        let face = Face::new(
+            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
+            exterior.unwrap().insert(objects),
+            Vec::new(),
             color,
-        };
+        );
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
-        let face = face.build(objects).insert(objects);
+        let face = face.insert(objects);
         (face, edge_top)
     }
 }
