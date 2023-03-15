@@ -79,8 +79,8 @@ mod tests {
         algorithms::approx::{Approx, Tolerance},
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
-        objects::Face,
-        partial::{PartialCycle, PartialFace, PartialObject},
+        objects::{Cycle, Face},
+        partial::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
@@ -152,12 +152,10 @@ mod tests {
             face.exterior = exterior.insert(&mut services.objects);
         }
         {
-            let (interior, _) = PartialCycle::new(&mut services.objects)
-                .update_as_polygon_from_points(
-                    [e, f, g, h],
-                    &mut services.objects,
-                );
-            let interior = interior.build(&mut services.objects);
+            let (interior, _) = Cycle::new([]).update_as_polygon_from_points(
+                [e, f, g, h],
+                &mut services.objects,
+            );
             face.add_interior(interior, &mut services.objects);
         }
         let face = face

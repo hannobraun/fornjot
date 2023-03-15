@@ -74,8 +74,8 @@ mod tests {
         algorithms::reverse::Reverse,
         builder::{CycleBuilder, FaceBuilder},
         insert::Insert,
-        objects::Face,
-        partial::{PartialCycle, PartialFace, PartialObject},
+        objects::{Cycle, Face},
+        partial::{PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -97,12 +97,11 @@ mod tests {
                 face.exterior = exterior.insert(&mut services.objects);
             }
             {
-                let (interior, _) = PartialCycle::new(&mut services.objects)
+                let (interior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[1., 1.], [1., 2.], [2., 1.]],
                         &mut services.objects,
                     );
-                let interior = interior.build(&mut services.objects);
                 face.add_interior(interior, &mut services.objects);
             }
             face.build(&mut services.objects)
