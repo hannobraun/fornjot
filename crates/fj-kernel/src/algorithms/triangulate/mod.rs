@@ -63,7 +63,7 @@ impl Triangulate for FaceApprox {
                 .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
-        let color = self.color;
+        let color = self.color.unwrap_or_default();
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);

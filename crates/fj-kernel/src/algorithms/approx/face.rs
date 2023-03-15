@@ -98,7 +98,7 @@ impl Approx for &Face {
         FaceApprox {
             exterior,
             interiors,
-            color: self.color(),
+            color: Some(self.color()),
             coord_handedness: self.coord_handedness(),
         }
     }
@@ -114,7 +114,7 @@ pub struct FaceApprox {
     pub interiors: BTreeSet<CycleApprox>,
 
     /// The color of the approximated face
-    pub color: Color,
+    pub color: Option<Color>,
 
     /// The handedness of the approximated face's front-side coordinate system
     pub coord_handedness: Handedness,
