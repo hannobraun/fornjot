@@ -5,7 +5,6 @@ use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, Objects, Sketch},
-    partial::{PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -85,11 +84,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = PartialSketch {
-            faces: vec![face.insert(objects)],
-        }
-        .build(objects)
-        .insert(objects);
+        let sketch = Sketch::new(vec![face.insert(objects)]).insert(objects);
         sketch.deref().clone()
     }
 

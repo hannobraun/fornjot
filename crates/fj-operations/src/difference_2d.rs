@@ -5,7 +5,6 @@ use fj_kernel::{
     algorithms::reverse::Reverse,
     insert::Insert,
     objects::{Face, Objects, Sketch},
-    partial::{PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::Aabb;
@@ -87,7 +86,7 @@ impl Shape for fj::Difference2d {
             faces.push(face.insert(objects));
         }
 
-        let difference = PartialSketch { faces }.build(objects).insert(objects);
+        let difference = Sketch::new(faces).insert(objects);
         difference.deref().clone()
     }
 

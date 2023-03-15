@@ -3,7 +3,6 @@ use fj_math::Vector;
 use crate::{
     insert::Insert,
     objects::{Objects, Sketch, Solid},
-    partial::{Partial, PartialObject, PartialSolid},
     services::Service,
     storage::Handle,
 };
@@ -27,7 +26,6 @@ impl Sweep for Handle<Sketch> {
             shells.push(shell);
         }
 
-        let shells = shells.into_iter().map(Partial::from).collect();
-        PartialSolid { shells }.build(objects).insert(objects)
+        Solid::new(shells).insert(objects)
     }
 }
