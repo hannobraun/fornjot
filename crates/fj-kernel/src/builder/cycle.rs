@@ -114,3 +114,38 @@ impl CycleBuilder for Cycle {
         (self, edges)
     }
 }
+
+/// Builder API for [`Cycle`]
+pub struct CycleBuilder2 {
+    half_edges: Vec<HalfEdgeBuilder>,
+}
+
+impl CycleBuilder2 {
+    /// Create a polygon
+    pub fn polygon<P, Ps>(points: Ps) -> Self
+    where
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
+    {
+        let half_edges = points
+            .into_iter()
+            .map(Into::into)
+            .circular_tuple_windows()
+            .map(|(start, end)| {
+                HalfEdgeBuilder::line_segment([start, end], None)
+            })
+            .collect();
+
+        Self { half_edges }
+    }
+
+    /// Build the cycle
+    pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
+        let half_edges = self
+            .half_edges
+            .into_iter()
+            .map(|half_edge| half_edge.build(objects).insert(objects));
+        Cycle::new(half_edges)
+    }
+}

@@ -6,7 +6,10 @@ mod edge;
 
 use std::array;
 
-pub use self::{cycle::CycleBuilder, edge::HalfEdgeBuilder};
+pub use self::{
+    cycle::{CycleBuilder, CycleBuilder2},
+    edge::HalfEdgeBuilder,
+};
 
 /// Pass objects to a builder method
 ///
