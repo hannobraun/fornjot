@@ -24,17 +24,6 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
         let (edge, next_vertex, surface, color) = self;
         let path = path.into();
 
-        // The result of sweeping an edge is a face. Let's create that.
-        let mut face = PartialFace::new(objects);
-        face.color = Some(color);
-
-        // A face (and everything in it) is defined on a surface. A surface can
-        // be created by sweeping a curve, so let's sweep the curve of the edge
-        // we're sweeping.
-        face.surface = Some(
-            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
-        );
-
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, global_edges) = {
@@ -113,7 +102,14 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                 half_edge
             });
 
-        face.exterior = exterior.unwrap().insert(objects);
+        let face = PartialFace {
+            surface: Some(
+                (edge.curve(), surface).sweep_with_cache(path, cache, objects),
+            ),
+            exterior: exterior.unwrap().insert(objects),
+            interiors: Vec::new(),
+            color: Some(color),
+        };
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
