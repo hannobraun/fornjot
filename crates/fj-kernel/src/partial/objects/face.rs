@@ -43,8 +43,6 @@ impl PartialObject for PartialFace {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let color = self.color;
-
-        Face::new(self.surface, self.exterior, self.interiors, color)
+        Face::new(self.surface, self.exterior, self.interiors, self.color)
     }
 }
