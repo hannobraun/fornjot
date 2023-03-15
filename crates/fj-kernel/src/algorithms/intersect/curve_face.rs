@@ -198,6 +198,7 @@ mod tests {
                         interior_points,
                         &mut services.objects,
                     );
+                let interior = interior.build(&mut services.objects);
                 face.add_interior(interior, &mut services.objects);
             }
 

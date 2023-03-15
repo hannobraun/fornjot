@@ -157,6 +157,7 @@ mod tests {
                     [e, f, g, h],
                     &mut services.objects,
                 );
+            let interior = interior.build(&mut services.objects);
             face.add_interior(interior, &mut services.objects);
         }
         let face = face

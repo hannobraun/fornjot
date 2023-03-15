@@ -102,6 +102,7 @@ mod tests {
                         [[1., 1.], [1., 2.], [2., 1.]],
                         &mut services.objects,
                     );
+                let interior = interior.build(&mut services.objects);
                 face.add_interior(interior, &mut services.objects);
             }
             face.build(&mut services.objects)
