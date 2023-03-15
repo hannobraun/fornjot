@@ -15,9 +15,7 @@ mod traits;
 mod wrapper;
 
 pub use self::{
-    objects::{
-        shell::PartialShell, sketch::PartialSketch, solid::PartialSolid,
-    },
+    objects::{shell::PartialShell, solid::PartialSolid},
     traits::{HasPartial, PartialObject},
     wrapper::{FullToPartialCache, Partial},
 };
