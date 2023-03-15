@@ -30,12 +30,12 @@ impl Shape for fj::Sketch {
                     .insert(objects);
                 let exterior = Cycle::new([half_edge]).insert(objects);
 
-                let mut face = PartialFace::new(objects);
-                face.surface = Some(surface);
-                face.exterior = exterior;
-                face.color = Some(Color(self.color()));
-
-                face
+                PartialFace {
+                    surface: Some(surface),
+                    exterior,
+                    interiors: Vec::new(),
+                    color: Some(Color(self.color())),
+                }
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let segments = poly_chain.to_segments();
