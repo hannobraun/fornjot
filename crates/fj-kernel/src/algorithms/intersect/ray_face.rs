@@ -151,9 +151,9 @@ mod tests {
             },
             transform::TransformObject,
         },
-        builder::CycleBuilder,
+        builder::CycleBuilder2,
         insert::Insert,
-        objects::{Cycle, Face},
+        objects::Face,
         services::Services,
     };
 
@@ -166,11 +166,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -189,11 +192,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -215,11 +221,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -238,11 +247,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -269,11 +281,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.yz_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -303,11 +318,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -328,11 +346,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([
+                    [-1., -1.],
+                    [1., -1.],
+                    [1., 1.],
+                    [-1., 1.],
+                ])
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
             },
             Vec::new(),
             None,

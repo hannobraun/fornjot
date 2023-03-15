@@ -94,7 +94,7 @@ impl CycleValidationError {
 mod tests {
 
     use crate::{
-        builder::{CycleBuilder, HalfEdgeBuilder},
+        builder::{CycleBuilder, CycleBuilder2, HalfEdgeBuilder},
         objects::Cycle,
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
@@ -104,12 +104,9 @@ mod tests {
     fn half_edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = Cycle::new([])
-            .update_as_polygon_from_points(
-                [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-                &mut services.objects,
-            )
-            .0;
+        let valid =
+            CycleBuilder2::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]])
+                .build(&mut services.objects);
 
         valid.validate_and_return_first_error()?;
 

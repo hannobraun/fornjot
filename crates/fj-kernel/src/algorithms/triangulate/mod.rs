@@ -79,9 +79,9 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::CycleBuilder,
+        builder::CycleBuilder2,
         insert::Insert,
-        objects::{Cycle, Face},
+        objects::Face,
         services::Services,
     };
 
@@ -99,11 +99,9 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [a, b, c, d],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([a, b, c, d])
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             },
             Vec::new(),
             None,
@@ -143,18 +141,14 @@ mod tests {
         let face = Face::new(
             surface.clone(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [a, b, c, d],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([a, b, c, d])
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             },
             vec![{
-                let interior = Cycle::new([]).update_as_polygon_from_points(
-                    [e, f, g, h],
-                    &mut services.objects,
-                );
-                interior.insert(&mut services.objects)
+                CycleBuilder2::polygon([e, f, g, h])
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             }],
             None,
         );
@@ -215,11 +209,9 @@ mod tests {
         let face = Face::new(
             surface.clone(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    [a, b, c, d, e],
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon([a, b, c, d, e])
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             },
             Vec::new(),
             None,

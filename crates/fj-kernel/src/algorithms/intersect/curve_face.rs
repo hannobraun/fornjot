@@ -150,11 +150,8 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::CycleBuilder,
-        geometry::curve::Curve,
-        insert::Insert,
-        objects::{Cycle, Face},
-        services::Services,
+        builder::CycleBuilder2, geometry::curve::Curve, insert::Insert,
+        objects::Face, services::Services,
     };
 
     use super::CurveFaceIntersection;
@@ -183,18 +180,14 @@ mod tests {
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
             {
-                let exterior = Cycle::new([]).update_as_polygon_from_points(
-                    exterior_points,
-                    &mut services.objects,
-                );
-                exterior.insert(&mut services.objects)
+                CycleBuilder2::polygon(exterior_points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             },
             vec![{
-                let interior = Cycle::new([]).update_as_polygon_from_points(
-                    interior_points,
-                    &mut services.objects,
-                );
-                interior.insert(&mut services.objects)
+                CycleBuilder2::polygon(interior_points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects)
             }],
             None,
         );
