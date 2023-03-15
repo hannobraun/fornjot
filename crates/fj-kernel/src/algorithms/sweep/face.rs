@@ -5,7 +5,7 @@ use itertools::Itertools;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    builder::{CycleBuilder, FaceBuilder},
+    builder::CycleBuilder,
     geometry::curve::GlobalPath,
     insert::Insert,
     objects::{Cycle, Face, Objects, Shell},
@@ -60,6 +60,8 @@ impl Sweep for Handle<Face> {
         top_face.surface = Some(top_surface);
         top_face.color = Some(self.color());
 
+        let mut interiors = Vec::new();
+
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
             let cycle = cycle.reverse(objects);
 
@@ -90,9 +92,11 @@ impl Sweep for Handle<Face> {
             if i == 0 {
                 top_face.exterior = top_cycle.insert(objects);
             } else {
-                top_face.add_interior(top_cycle, objects);
+                interiors.push(top_cycle.insert(objects));
             };
         }
+
+        top_face.interiors = interiors;
 
         let top_face = top_face.build(objects).insert(objects);
         faces.push(top_face);
