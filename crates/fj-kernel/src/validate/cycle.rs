@@ -51,8 +51,15 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        // If there are less than two half edges
+        if cycle.half_edges().nth(1).is_none() {
+            errors.push(Self::NotEnoughHalfEdges.into());
+            return;
+        }
         for (first, second) in cycle
             .half_edges()
+            // Chain the first half_edge so that we make sure that the last connects to the first.
+            // This unwrap will never fail because we checked before that there are enough half_edges.
             .chain(std::iter::once(cycle.half_edges().next().unwrap()))
             .tuple_windows()
         {
