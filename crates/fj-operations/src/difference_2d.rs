@@ -4,8 +4,8 @@ use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
     insert::Insert,
-    objects::{Objects, Sketch},
-    partial::{Partial, PartialFace, PartialObject, PartialSketch},
+    objects::{Face, Objects, Sketch},
+    partial::{PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::Aabb;
@@ -78,13 +78,13 @@ impl Shape for fj::Difference2d {
                 "Can't construct face with multiple exteriors"
             );
 
-            let face = PartialFace {
-                surface: surface.clone(),
+            let face = Face::new(
+                surface.clone(),
                 exterior,
                 interiors,
-                color: Some(Color(self.color())),
-            };
-            faces.push(Partial::from_partial(face).build(objects));
+                Some(Color(self.color())),
+            );
+            faces.push(face.insert(objects));
         }
 
         let difference = PartialSketch { faces }.build(objects).insert(objects);
