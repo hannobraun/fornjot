@@ -4,8 +4,8 @@ use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Cycle, Objects, Sketch},
-    partial::{Partial, PartialFace, PartialObject, PartialSketch},
+    objects::{Cycle, Face, Objects, Sketch},
+    partial::{PartialObject, PartialSketch},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -30,12 +30,12 @@ impl Shape for fj::Sketch {
                     .insert(objects);
                 let exterior = Cycle::new([half_edge]).insert(objects);
 
-                let mut face = PartialFace::new(objects);
-                face.surface = Some(surface);
-                face.exterior = exterior;
-                face.color = Some(Color(self.color()));
-
-                face
+                Face::new(
+                    surface,
+                    exterior,
+                    Vec::new(),
+                    Some(Color(self.color())),
+                )
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let segments = poly_chain.to_segments();
@@ -76,17 +76,17 @@ impl Shape for fj::Sketch {
                     cycle.insert(objects)
                 };
 
-                let mut face = PartialFace::new(objects);
-                face.surface = Some(surface);
-                face.exterior = exterior;
-                face.color = Some(Color(self.color()));
-
-                face
+                Face::new(
+                    surface,
+                    exterior,
+                    Vec::new(),
+                    Some(Color(self.color())),
+                )
             }
         };
 
         let sketch = PartialSketch {
-            faces: vec![Partial::from_partial(face)],
+            faces: vec![face.insert(objects)],
         }
         .build(objects)
         .insert(objects);

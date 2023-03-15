@@ -150,11 +150,10 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, FaceBuilder},
+        builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
-        objects::Cycle,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -181,29 +180,26 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = {
-            let mut face = PartialFace::new(&mut services.objects);
-
-            face.surface = Some(services.objects.surfaces.xy_plane());
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
             {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
                         exterior_points,
                         &mut services.objects,
                     );
-                face.exterior = exterior.insert(&mut services.objects);
-            }
-            {
+                exterior.insert(&mut services.objects)
+            },
+            vec![{
                 let (interior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         interior_points,
                         &mut services.objects,
                     );
-                face.add_interior(interior, &mut services.objects);
-            }
-
-            face.build(&mut services.objects)
-        };
+                interior.insert(&mut services.objects)
+            }],
+            None,
+        );
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

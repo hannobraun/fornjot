@@ -65,7 +65,7 @@ mod tests {
         builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -87,19 +87,19 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            let mut face = PartialFace::new(&mut services.objects);
-
-            face.surface = Some(surface);
-            {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
-                        points,
-                        &mut services.objects,
-                    );
-                face.exterior = exterior.insert(&mut services.objects);
-            }
-
-            face.build(&mut services.objects)
+            Face::new(
+                surface,
+                {
+                    let (exterior, _) = Cycle::new([])
+                        .update_as_polygon_from_points(
+                            points,
+                            &mut services.objects,
+                        );
+                    exterior.insert(&mut services.objects)
+                },
+                Vec::new(),
+                None,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -123,19 +123,19 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            let mut face = PartialFace::new(&mut services.objects);
-
-            face.surface = Some(surface);
-            {
-                let (exterior, _) =
-                    face.exterior.clone_object().update_as_polygon_from_points(
-                        points,
-                        &mut services.objects,
-                    );
-                face.exterior = exterior.insert(&mut services.objects);
-            }
-
-            face.build(&mut services.objects)
+            Face::new(
+                surface,
+                {
+                    let (exterior, _) = Cycle::new([])
+                        .update_as_polygon_from_points(
+                            points,
+                            &mut services.objects,
+                        );
+                    exterior.insert(&mut services.objects)
+                },
+                Vec::new(),
+                None,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);

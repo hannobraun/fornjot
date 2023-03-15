@@ -1,29 +1,9 @@
-use crate::{
-    insert::Insert,
-    objects::{Cycle, Objects},
-    partial::PartialFace,
-    services::Service,
-    storage::Handle,
-};
+use crate::objects::Face;
 
-/// Builder API for [`PartialFace`]
+/// Builder API for [`Face`]
 pub trait FaceBuilder {
-    /// Add an interior cycle
-    fn add_interior(
-        &mut self,
-        cycle: Cycle,
-        objects: &mut Service<Objects>,
-    ) -> Handle<Cycle>;
+    // No methods are currently defined. This trait serves as a placeholder, to
+    // make it clear where to add such methods, once necessary.
 }
 
-impl FaceBuilder for PartialFace {
-    fn add_interior(
-        &mut self,
-        cycle: Cycle,
-        objects: &mut Service<Objects>,
-    ) -> Handle<Cycle> {
-        let cycle = cycle.insert(objects);
-        self.interiors.push(cycle.clone());
-        cycle
-    }
-}
+impl FaceBuilder for Face {}

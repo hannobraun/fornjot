@@ -11,7 +11,7 @@ use crate::{
 
 use super::{HorizontalRayToTheRight, Intersect};
 
-impl Intersect for (&HorizontalRayToTheRight<3>, &Handle<Face>) {
+impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
     type Intersection = RayFaceIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {
@@ -153,7 +153,7 @@ mod tests {
         },
         builder::CycleBuilder,
         insert::Insert,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -163,21 +163,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.yz_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([-1., 0., 0.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([-1., 0., 0.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -188,21 +187,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.yz_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([1., 0., 0.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([1., 0., 0.], &mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -216,21 +214,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.yz_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([0., 0., 2.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([0., 0., 2.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -241,21 +238,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.yz_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([1., 1., 0.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([1., 1., 0.], &mut services.objects);
 
         let edge = face
             .exterior()
@@ -274,21 +270,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.yz_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([1., 1., 1.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([1., 1., 1.], &mut services.objects);
 
         let vertex = face
             .exterior()
@@ -310,20 +305,19 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.xy_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -337,21 +331,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let mut face = PartialFace::new(&mut services.objects);
-
-        face.surface = Some(services.objects.surfaces.xy_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects)
-            .translate([0., 0., 1.], &mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
+        let face = face.translate([0., 0., 1.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
     }

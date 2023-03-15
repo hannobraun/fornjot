@@ -5,11 +5,11 @@ use itertools::Itertools;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    builder::{CycleBuilder, FaceBuilder},
+    builder::CycleBuilder,
     geometry::curve::GlobalPath,
     insert::Insert,
     objects::{Cycle, Face, Objects, Shell},
-    partial::{Partial, PartialFace, PartialObject, PartialShell},
+    partial::{PartialObject, PartialShell},
     services::Service,
     storage::Handle,
 };
@@ -56,9 +56,8 @@ impl Sweep for Handle<Face> {
         let top_surface =
             bottom_face.surface().clone().translate(path, objects);
 
-        let mut top_face = PartialFace::new(objects);
-        top_face.surface = Some(top_surface);
-        top_face.color = Some(self.color());
+        let mut exterior = None;
+        let mut interiors = Vec::new();
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
             let cycle = cycle.reverse(objects);
@@ -88,16 +87,18 @@ impl Sweep for Handle<Face> {
                 Cycle::new([]).connect_to_edges(top_edges, objects);
 
             if i == 0 {
-                top_face.exterior = top_cycle.insert(objects);
+                exterior = Some(top_cycle.insert(objects));
             } else {
-                top_face.add_interior(top_cycle, objects);
+                interiors.push(top_cycle.insert(objects));
             };
         }
 
-        let top_face = top_face.build(objects).insert(objects);
+        let top_face =
+            Face::new(top_surface, exterior.unwrap(), interiors, self.color());
+
+        let top_face = top_face.insert(objects);
         faces.push(top_face);
 
-        let faces = faces.into_iter().map(Partial::from).collect();
         PartialShell { faces }.build(objects).insert(objects)
     }
 }

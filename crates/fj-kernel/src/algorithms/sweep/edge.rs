@@ -4,15 +4,14 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
-    objects::{Face, HalfEdge, Objects, Surface, Vertex},
-    partial::{PartialFace, PartialObject},
+    objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
     services::Service,
     storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
+impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
     type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -23,17 +22,6 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
     ) -> Self::Swept {
         let (edge, next_vertex, surface, color) = self;
         let path = path.into();
-
-        // The result of sweeping an edge is a face. Let's create that.
-        let mut face = PartialFace::new(objects);
-        face.color = Some(color);
-
-        // A face (and everything in it) is defined on a surface. A surface can
-        // be created by sweeping a curve, so let's sweep the curve of the edge
-        // we're sweeping.
-        face.surface = Some(
-            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
-        );
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
@@ -81,7 +69,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
-        let mut exterior = Some(face.exterior.clone_object());
+        let mut exterior = Some(Cycle::new([]));
 
         // Armed with all of that, we're ready to create the edges.
         let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
@@ -113,11 +101,16 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
                 half_edge
             });
 
-        face.exterior = exterior.unwrap().insert(objects);
+        let face = Face::new(
+            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
+            exterior.unwrap().insert(objects),
+            Vec::new(),
+            color,
+        );
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
-        let face = face.build(objects).insert(objects);
+        let face = face.insert(objects);
         (face, edge_top)
     }
 }

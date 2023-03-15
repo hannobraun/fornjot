@@ -37,7 +37,7 @@ pub struct Face {
     surface: Handle<Surface>,
     exterior: Handle<Cycle>,
     interiors: Vec<Handle<Cycle>>,
-    color: Color,
+    color: Option<Color>,
 }
 
 impl Face {
@@ -46,7 +46,7 @@ impl Face {
         surface: Handle<Surface>,
         exterior: Handle<Cycle>,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
-        color: Color,
+        color: Option<Color>,
     ) -> Self {
         let interiors = interiors.into_iter().collect();
 
@@ -81,7 +81,7 @@ impl Face {
     }
 
     /// Access the color of the face
-    pub fn color(&self) -> Color {
+    pub fn color(&self) -> Option<Color> {
         self.color
     }
 

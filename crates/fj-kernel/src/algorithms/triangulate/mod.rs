@@ -63,9 +63,11 @@ impl Triangulate for FaceApprox {
                 .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
+        let color = self.color.unwrap_or_default();
+
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
-            mesh.push_triangle(points, self.color);
+            mesh.push_triangle(points, color);
         }
     }
 }
@@ -77,12 +79,10 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::{CycleBuilder, FaceBuilder},
+        builder::CycleBuilder,
         insert::Insert,
         objects::{Cycle, Face},
-        partial::{PartialFace, PartialObject},
         services::Services,
-        storage::Handle,
     };
 
     use super::Triangulate;
@@ -96,19 +96,19 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Some(services.objects.surfaces.xy_plane());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [a, b, c, d],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [a, b, c, d],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -141,26 +141,26 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Some(surface.clone());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [a, b, c, d],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        {
-            let (interior, _) = Cycle::new([]).update_as_polygon_from_points(
-                [e, f, g, h],
-                &mut services.objects,
-            );
-            face.add_interior(interior, &mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let face = Face::new(
+            surface.clone(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [a, b, c, d],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            vec![{
+                let (interior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [e, f, g, h],
+                        &mut services.objects,
+                    );
+                interior.insert(&mut services.objects)
+            }],
+            None,
+        );
 
         let triangles = triangulate(face)?;
 
@@ -215,19 +215,19 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let mut face = PartialFace::new(&mut services.objects);
-        face.surface = Some(surface.clone());
-        {
-            let (exterior, _) =
-                face.exterior.clone_object().update_as_polygon_from_points(
-                    [a, b, c, d, e],
-                    &mut services.objects,
-                );
-            face.exterior = exterior.insert(&mut services.objects);
-        }
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+        let face = Face::new(
+            surface.clone(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [a, b, c, d, e],
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            Vec::new(),
+            None,
+        );
 
         let triangles = triangulate(face)?;
 
@@ -244,7 +244,7 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: Handle<Face>) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
         Ok(face.approx(tolerance).triangulate())
     }
