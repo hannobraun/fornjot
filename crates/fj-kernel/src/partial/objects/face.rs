@@ -43,9 +43,8 @@ impl PartialObject for PartialFace {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface;
         let color = self.color.unwrap_or_default();
 
-        Face::new(surface, self.exterior, self.interiors, color)
+        Face::new(self.surface, self.exterior, self.interiors, color)
     }
 }
