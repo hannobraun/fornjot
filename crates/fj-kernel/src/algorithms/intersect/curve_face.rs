@@ -180,28 +180,26 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = {
-            Face::new(
-                services.objects.surfaces.xy_plane(),
-                {
-                    let (exterior, _) = Cycle::new([])
-                        .update_as_polygon_from_points(
-                            exterior_points,
-                            &mut services.objects,
-                        );
-                    exterior.insert(&mut services.objects)
-                },
-                vec![{
-                    let (interior, _) = Cycle::new([])
-                        .update_as_polygon_from_points(
-                            interior_points,
-                            &mut services.objects,
-                        );
-                    interior.insert(&mut services.objects)
-                }],
-                None,
-            )
-        };
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
+                let (exterior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        exterior_points,
+                        &mut services.objects,
+                    );
+                exterior.insert(&mut services.objects)
+            },
+            vec![{
+                let (interior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        interior_points,
+                        &mut services.objects,
+                    );
+                interior.insert(&mut services.objects)
+            }],
+            None,
+        );
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
