@@ -85,13 +85,11 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     )
                     .with_start_vertex(start_vertex);
 
-                    let builder = if let Some(global_edge) = global_edge {
+                    if let Some(global_edge) = global_edge {
                         builder.with_global_form(global_edge)
                     } else {
                         builder
-                    };
-
-                    builder.build(objects)
+                    }
                 };
 
                 let (updated, half_edge) =

@@ -115,11 +115,9 @@ mod tests {
 
         let disconnected = {
             let first =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-                    .build(&mut services.objects);
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
             let second =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-                    .build(&mut services.objects);
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
 
             Cycle::new([])
                 .add_half_edge(first, &mut services.objects)

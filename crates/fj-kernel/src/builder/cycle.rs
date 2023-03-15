@@ -23,7 +23,7 @@ pub trait CycleBuilder: Sized {
     /// meaning its front and back vertices are the same.
     fn add_half_edge(
         self,
-        half_edge: HalfEdge,
+        half_edge: HalfEdgeBuilder,
         objects: &mut Service<Objects>,
     ) -> (Self, Handle<HalfEdge>);
 
@@ -55,10 +55,10 @@ pub trait CycleBuilder: Sized {
 impl CycleBuilder for Cycle {
     fn add_half_edge(
         self,
-        half_edge: HalfEdge,
+        half_edge: HalfEdgeBuilder,
         objects: &mut Service<Objects>,
     ) -> (Self, Handle<HalfEdge>) {
-        let half_edge = half_edge.insert(objects);
+        let half_edge = half_edge.build(objects).insert(objects);
         let cycle =
             Cycle::new(self.half_edges().cloned().chain([half_edge.clone()]));
         (cycle, half_edge)
@@ -74,8 +74,7 @@ impl CycleBuilder for Cycle {
         P: Clone + Into<Point<2>>,
     {
         let half_edges = points.map_with_next(|start, end| {
-            let half_edge = HalfEdgeBuilder::line_segment([start, end], None)
-                .build(objects);
+            let half_edge = HalfEdgeBuilder::line_segment([start, end], None);
 
             let (cycle, half_edge) =
                 self.clone().add_half_edge(half_edge, objects);
@@ -98,8 +97,7 @@ impl CycleBuilder for Cycle {
         let edges =
             edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
                 let half_edge = HalfEdgeBuilder::new(curve, boundary)
-                    .with_start_vertex(prev.start_vertex().clone())
-                    .build(objects);
+                    .with_start_vertex(prev.start_vertex().clone());
 
                 let (cycle, half_edge) =
                     self.clone().add_half_edge(half_edge, objects);
