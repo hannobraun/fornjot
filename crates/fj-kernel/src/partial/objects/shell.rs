@@ -26,7 +26,6 @@ impl PartialObject for PartialShell {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let faces = self.faces;
-        Shell::new(faces)
+        Shell::new(self.faces)
     }
 }
