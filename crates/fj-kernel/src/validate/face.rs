@@ -85,17 +85,19 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut face = PartialFace::new(&mut services.objects);
-
-            face.surface = Some(services.objects.surfaces.xy_plane());
-            {
-                let (exterior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [[0., 0.], [3., 0.], [0., 3.]],
-                        &mut services.objects,
-                    );
-                face.exterior = exterior.insert(&mut services.objects);
-            }
+            let mut face = PartialFace {
+                surface: Some(services.objects.surfaces.xy_plane()),
+                exterior: {
+                    let (exterior, _) = Cycle::new([])
+                        .update_as_polygon_from_points(
+                            [[0., 0.], [3., 0.], [0., 3.]],
+                            &mut services.objects,
+                        );
+                    exterior.insert(&mut services.objects)
+                },
+                interiors: Vec::new(),
+                color: None,
+            };
             {
                 let (interior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
