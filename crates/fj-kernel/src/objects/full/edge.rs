@@ -86,6 +86,16 @@ impl HalfEdge {
         self.curve.point_from_path_coords(start)
     }
 
+    /// Compute the surface position where the half-edge ends
+    pub fn end_position(&self) -> Point<2> {
+        // Computing the surface position from the curve position is fine.
+        // `HalfEdge` "owns" its end position. There is no competing code that
+        // could compute the surface position from slightly different data.
+
+        let [_, end] = self.boundary;
+        self.curve.point_from_path_coords(end)
+    }
+
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<Vertex> {
         &self.start_vertex
