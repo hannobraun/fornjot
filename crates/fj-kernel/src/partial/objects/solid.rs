@@ -26,7 +26,6 @@ impl PartialObject for PartialSolid {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let shells = self.shells;
-        Solid::new(shells)
+        Solid::new(self.shells)
     }
 }
