@@ -84,7 +84,7 @@ impl Shape for fj::Difference2d {
                 interiors,
                 color: Some(Color(self.color())),
             };
-            faces.push(Partial::from_partial(face));
+            faces.push(Partial::from_partial(face).build(objects));
         }
 
         let difference = PartialSketch { faces }.build(objects).insert(objects);
