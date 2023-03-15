@@ -39,7 +39,7 @@ pub enum CycleValidationError {
         distance: Scalar,
 
         /// The half-edge
-        half_edges: (HalfEdge, HalfEdge),
+        half_edges: Box<(HalfEdge, HalfEdge)>,
     },
     #[error("Expected at least one `HalfEdge`\n")]
     NotEnoughHalfEdges,
@@ -67,10 +67,10 @@ impl CycleValidationError {
                         end_of_first,
                         start_of_second,
                         distance,
-                        half_edges: (
+                        half_edges: Box::new((
                             first.clone_object(),
                             second.clone_object(),
-                        ),
+                        )),
                     }
                     .into(),
                 );
@@ -81,16 +81,12 @@ impl CycleValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Point;
 
     use crate::{
         builder::{CycleBuilder, HalfEdgeBuilder},
-        objects::{Cycle, HalfEdge},
+        objects::Cycle,
         services::Services,
-        validate::{
-            cycle::CycleValidationError, HalfEdgeValidationError, Validate,
-            ValidationError,
-        },
+        validate::{cycle::CycleValidationError, Validate, ValidationError},
     };
 
     #[test]
