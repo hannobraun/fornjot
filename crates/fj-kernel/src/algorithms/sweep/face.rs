@@ -60,6 +60,7 @@ impl Sweep for Handle<Face> {
         top_face.surface = Some(top_surface);
         top_face.color = Some(self.color());
 
+        let mut exterior = None;
         let mut interiors = Vec::new();
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
@@ -90,12 +91,13 @@ impl Sweep for Handle<Face> {
                 Cycle::new([]).connect_to_edges(top_edges, objects);
 
             if i == 0 {
-                top_face.exterior = top_cycle.insert(objects);
+                exterior = Some(top_cycle.insert(objects));
             } else {
                 interiors.push(top_cycle.insert(objects));
             };
         }
 
+        top_face.exterior = exterior.unwrap();
         top_face.interiors = interiors;
 
         let top_face = top_face.build(objects).insert(objects);
