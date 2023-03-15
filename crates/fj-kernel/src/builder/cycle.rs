@@ -11,7 +11,7 @@ use crate::{
 
 use super::{HalfEdgeBuilder, ObjectArgument};
 
-/// Builder API for [`PartialCycle`]
+/// Builder API for [`Cycle`]
 pub trait CycleBuilder: Sized {
     /// Add a new half-edge to the cycle
     ///
