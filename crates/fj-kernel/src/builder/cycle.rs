@@ -1,4 +1,5 @@
 use fj_math::Point;
+use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
@@ -28,14 +29,15 @@ pub trait CycleBuilder: Sized {
     ) -> (Self, Handle<HalfEdge>);
 
     /// Update cycle as a polygon from the provided points
-    fn update_as_polygon_from_points<O, P>(
+    fn update_as_polygon_from_points<P, Ps>(
         self,
-        points: O,
+        points: Ps,
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        O: ObjectArgument<P>,
-        P: Clone + Into<Point<2>>;
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator;
 
     /// Connect the cycles to the provided half-edges
     ///
@@ -64,24 +66,27 @@ impl CycleBuilder for Cycle {
         (cycle, half_edge)
     }
 
-    fn update_as_polygon_from_points<O, P>(
+    fn update_as_polygon_from_points<P, Ps>(
         mut self,
-        points: O,
+        points: Ps,
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        O: ObjectArgument<P>,
-        P: Clone + Into<Point<2>>,
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        points.map_with_next(|start, end| {
-            let half_edge = HalfEdgeBuilder::line_segment([start, end], None);
+        points
+            .into_iter()
+            .map(Into::into)
+            .circular_tuple_windows()
+            .for_each(|(start, end)| {
+                let half_edge =
+                    HalfEdgeBuilder::line_segment([start, end], None);
 
-            let (cycle, half_edge) =
-                self.clone().add_half_edge(half_edge, objects);
-            self = cycle;
-
-            half_edge
-        });
+                let (cycle, _) = self.clone().add_half_edge(half_edge, objects);
+                self = cycle;
+            });
 
         self
     }
