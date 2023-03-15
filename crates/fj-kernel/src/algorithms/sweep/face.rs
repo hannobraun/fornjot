@@ -94,7 +94,7 @@ impl Sweep for Handle<Face> {
         }
 
         let top_face = PartialFace {
-            surface: Some(top_surface),
+            surface: top_surface,
             exterior: exterior.unwrap(),
             interiors,
             color: Some(self.color()),

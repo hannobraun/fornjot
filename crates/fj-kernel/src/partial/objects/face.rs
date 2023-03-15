@@ -11,7 +11,7 @@ use crate::{
 #[derive(Clone, Debug)]
 pub struct PartialFace {
     /// The surface that the face is defined in
-    pub surface: Option<Handle<Surface>>,
+    pub surface: Handle<Surface>,
 
     /// The cycle that bounds the face on the outside
     pub exterior: Handle<Cycle>,
@@ -35,7 +35,7 @@ impl PartialObject for PartialFace {
 
     fn from_full(face: &Self::Full, _: &mut FullToPartialCache) -> Self {
         Self {
-            surface: Some(face.surface().clone()),
+            surface: face.surface().clone(),
             exterior: face.exterior().clone(),
             interiors: face.interiors().cloned().collect(),
             color: Some(face.color()),
@@ -43,7 +43,7 @@ impl PartialObject for PartialFace {
     }
 
     fn build(self, _: &mut Service<Objects>) -> Self::Full {
-        let surface = self.surface.expect("Need `Surface` to build `Face`");
+        let surface = self.surface;
         let color = self.color.unwrap_or_default();
 
         Face::new(surface, self.exterior, self.interiors, color)

@@ -103,9 +103,8 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Color) {
             });
 
         let face = PartialFace {
-            surface: Some(
-                (edge.curve(), surface).sweep_with_cache(path, cache, objects),
-            ),
+            surface: (edge.curve(), surface)
+                .sweep_with_cache(path, cache, objects),
             exterior: exterior.unwrap().insert(objects),
             interiors: Vec::new(),
             color: Some(color),

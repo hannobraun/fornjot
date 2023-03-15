@@ -89,7 +89,7 @@ mod tests {
         ]
         .map(|surface| {
             let face = PartialFace {
-                surface: Some(surface),
+                surface,
                 exterior: {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
@@ -127,7 +127,7 @@ mod tests {
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             let face = PartialFace {
-                surface: Some(surface),
+                surface,
                 exterior: {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(

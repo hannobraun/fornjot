@@ -31,7 +31,7 @@ impl Shape for fj::Sketch {
                 let exterior = Cycle::new([half_edge]).insert(objects);
 
                 PartialFace {
-                    surface: Some(surface),
+                    surface,
                     exterior,
                     interiors: Vec::new(),
                     color: Some(Color(self.color())),
@@ -77,7 +77,7 @@ impl Shape for fj::Sketch {
                 };
 
                 PartialFace {
-                    surface: Some(surface),
+                    surface,
                     exterior,
                     interiors: Vec::new(),
                     color: Some(Color(self.color())),

@@ -86,7 +86,7 @@ mod tests {
 
         let valid = {
             let mut face = PartialFace {
-                surface: Some(services.objects.surfaces.xy_plane()),
+                surface: services.objects.surfaces.xy_plane(),
                 exterior: {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(

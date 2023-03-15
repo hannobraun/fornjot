@@ -165,7 +165,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.yz_plane()),
+            surface: services.objects.surfaces.yz_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -192,7 +192,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.yz_plane()),
+            surface: services.objects.surfaces.yz_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -222,7 +222,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.yz_plane()),
+            surface: services.objects.surfaces.yz_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -249,7 +249,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.yz_plane()),
+            surface: services.objects.surfaces.yz_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -284,7 +284,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.yz_plane()),
+            surface: services.objects.surfaces.yz_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -322,7 +322,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.xy_plane()),
+            surface: services.objects.surfaces.xy_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -351,7 +351,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.xy_plane()),
+            surface: services.objects.surfaces.xy_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(

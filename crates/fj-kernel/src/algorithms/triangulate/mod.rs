@@ -97,7 +97,7 @@ mod tests {
         let d = [0., 1.];
 
         let face = PartialFace {
-            surface: Some(services.objects.surfaces.xy_plane()),
+            surface: services.objects.surfaces.xy_plane(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -145,7 +145,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let mut face = PartialFace {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
@@ -222,7 +222,7 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let face = PartialFace {
-            surface: Some(surface.clone()),
+            surface: surface.clone(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
