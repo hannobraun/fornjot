@@ -153,8 +153,7 @@ mod tests {
         },
         builder::CycleBuilder,
         insert::Insert,
-        objects::Cycle,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -164,9 +163,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.yz_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -174,11 +173,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([-1., 0., 0.], &mut services.objects);
 
@@ -191,9 +189,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.yz_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -201,11 +199,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 0., 0.], &mut services.objects);
 
@@ -221,9 +218,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.yz_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -231,11 +228,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([0., 0., 2.], &mut services.objects);
 
@@ -248,9 +244,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.yz_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -258,11 +254,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 1., 0.], &mut services.objects);
 
@@ -283,9 +278,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.yz_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.yz_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -293,11 +288,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([1., 1., 1.], &mut services.objects);
 
@@ -321,9 +315,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.xy_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -331,12 +325,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+            Vec::new(),
+            None,
+        );
+        let face = face.insert(&mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -350,9 +342,9 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.xy_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
@@ -360,11 +352,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
+            Vec::new(),
+            None,
+        );
         let face = face
-            .build(&mut services.objects)
             .insert(&mut services.objects)
             .translate([0., 0., 1.], &mut services.objects);
 

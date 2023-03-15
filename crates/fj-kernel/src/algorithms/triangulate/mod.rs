@@ -82,7 +82,6 @@ mod tests {
         builder::CycleBuilder,
         insert::Insert,
         objects::{Cycle, Face},
-        partial::{PartialFace, PartialObject},
         services::Services,
         storage::Handle,
     };
@@ -98,9 +97,9 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = PartialFace {
-            surface: services.objects.surfaces.xy_plane(),
-            exterior: {
+        let face = Face::new(
+            services.objects.surfaces.xy_plane(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [a, b, c, d],
@@ -108,12 +107,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+            Vec::new(),
+            None,
+        );
+        let face = face.insert(&mut services.objects);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -146,9 +143,9 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = PartialFace {
-            surface: surface.clone(),
-            exterior: {
+        let face = Face::new(
+            surface.clone(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [a, b, c, d],
@@ -156,7 +153,7 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: vec![{
+            vec![{
                 let (interior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [e, f, g, h],
@@ -164,11 +161,9 @@ mod tests {
                     );
                 interior.insert(&mut services.objects)
             }],
-            color: None,
-        };
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+            None,
+        );
+        let face = face.insert(&mut services.objects);
 
         let triangles = triangulate(face)?;
 
@@ -223,9 +218,9 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = PartialFace {
-            surface: surface.clone(),
-            exterior: {
+        let face = Face::new(
+            surface.clone(),
+            {
                 let (exterior, _) = Cycle::new([])
                     .update_as_polygon_from_points(
                         [a, b, c, d, e],
@@ -233,12 +228,10 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
-            color: None,
-        };
-        let face = face
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
+            Vec::new(),
+            None,
+        );
+        let face = face.insert(&mut services.objects);
 
         let triangles = triangulate(face)?;
 

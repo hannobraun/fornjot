@@ -153,8 +153,7 @@ mod tests {
         builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
-        objects::Cycle,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -182,9 +181,9 @@ mod tests {
         ];
 
         let face = {
-            let face = PartialFace {
-                surface: services.objects.surfaces.xy_plane(),
-                exterior: {
+            Face::new(
+                services.objects.surfaces.xy_plane(),
+                {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             exterior_points,
@@ -192,7 +191,7 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: vec![{
+                vec![{
                     let (interior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             interior_points,
@@ -200,9 +199,8 @@ mod tests {
                         );
                     interior.insert(&mut services.objects)
                 }],
-                color: None,
-            };
-            face.build(&mut services.objects)
+                None,
+            )
         };
 
         let expected =

@@ -75,7 +75,6 @@ mod tests {
         builder::CycleBuilder,
         insert::Insert,
         objects::{Cycle, Face},
-        partial::{PartialFace, PartialObject},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -85,9 +84,9 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let face = PartialFace {
-                surface: services.objects.surfaces.xy_plane(),
-                exterior: {
+            Face::new(
+                services.objects.surfaces.xy_plane(),
+                {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             [[0., 0.], [3., 0.], [0., 3.]],
@@ -95,7 +94,7 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: vec![{
+                vec![{
                     let (interior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             [[1., 1.], [1., 2.], [2., 1.]],
@@ -103,9 +102,8 @@ mod tests {
                         );
                     interior.insert(&mut services.objects)
                 }],
-                color: None,
-            };
-            face.build(&mut services.objects)
+                None,
+            )
         };
         let invalid = {
             let interiors = valid

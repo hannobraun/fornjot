@@ -65,8 +65,7 @@ mod tests {
         builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
-        objects::Cycle,
-        partial::{PartialFace, PartialObject},
+        objects::{Cycle, Face},
         services::Services,
     };
 
@@ -88,9 +87,9 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            let face = PartialFace {
+            Face::new(
                 surface,
-                exterior: {
+                {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             points,
@@ -98,11 +97,9 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: Vec::new(),
-                color: None,
-            };
-
-            face.build(&mut services.objects)
+                Vec::new(),
+                None,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -126,9 +123,9 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            let face = PartialFace {
+            Face::new(
                 surface,
-                exterior: {
+                {
                     let (exterior, _) = Cycle::new([])
                         .update_as_polygon_from_points(
                             points,
@@ -136,11 +133,9 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: Vec::new(),
-                color: None,
-            };
-
-            face.build(&mut services.objects)
+                Vec::new(),
+                None,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
