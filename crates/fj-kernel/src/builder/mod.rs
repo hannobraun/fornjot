@@ -3,17 +3,10 @@
 // These are new-style builders that build on top of the partial object API.
 mod cycle;
 mod edge;
-mod face;
-mod shell;
-mod sketch;
-mod solid;
 
 use std::array;
 
-pub use self::{
-    cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder,
-    shell::ShellBuilder, sketch::SketchBuilder, solid::SolidBuilder,
-};
+pub use self::{cycle::CycleBuilder, edge::HalfEdgeBuilder};
 
 /// Pass objects to a builder method
 ///
