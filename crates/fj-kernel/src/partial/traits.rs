@@ -35,6 +35,4 @@ macro_rules! impl_trait {
     };
 }
 
-impl_trait!(
-    Solid, PartialSolid;
-);
+impl_trait!();

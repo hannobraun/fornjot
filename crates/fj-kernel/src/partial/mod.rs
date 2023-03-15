@@ -15,7 +15,6 @@ mod traits;
 mod wrapper;
 
 pub use self::{
-    objects::solid::PartialSolid,
     traits::{HasPartial, PartialObject},
     wrapper::{FullToPartialCache, Partial},
 };
