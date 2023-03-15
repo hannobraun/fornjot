@@ -72,7 +72,7 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         algorithms::reverse::Reverse,
-        builder::{CycleBuilder, FaceBuilder},
+        builder::CycleBuilder,
         insert::Insert,
         objects::{Cycle, Face},
         partial::{PartialFace, PartialObject},
@@ -85,7 +85,7 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let mut face = PartialFace {
+            let face = PartialFace {
                 surface: services.objects.surfaces.xy_plane(),
                 exterior: {
                     let (exterior, _) = Cycle::new([])
@@ -95,17 +95,16 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: Vec::new(),
+                interiors: vec![{
+                    let (interior, _) = Cycle::new([])
+                        .update_as_polygon_from_points(
+                            [[1., 1.], [1., 2.], [2., 1.]],
+                            &mut services.objects,
+                        );
+                    interior.insert(&mut services.objects)
+                }],
                 color: None,
             };
-            {
-                let (interior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        [[1., 1.], [1., 2.], [2., 1.]],
-                        &mut services.objects,
-                    );
-                face.add_interior(interior, &mut services.objects);
-            }
             face.build(&mut services.objects)
         };
         let invalid = {

@@ -150,7 +150,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, FaceBuilder},
+        builder::CycleBuilder,
         geometry::curve::Curve,
         insert::Insert,
         objects::Cycle,
@@ -182,7 +182,7 @@ mod tests {
         ];
 
         let face = {
-            let mut face = PartialFace {
+            let face = PartialFace {
                 surface: services.objects.surfaces.xy_plane(),
                 exterior: {
                     let (exterior, _) = Cycle::new([])
@@ -192,18 +192,16 @@ mod tests {
                         );
                     exterior.insert(&mut services.objects)
                 },
-                interiors: Vec::new(),
+                interiors: vec![{
+                    let (interior, _) = Cycle::new([])
+                        .update_as_polygon_from_points(
+                            interior_points,
+                            &mut services.objects,
+                        );
+                    interior.insert(&mut services.objects)
+                }],
                 color: None,
             };
-            {
-                let (interior, _) = Cycle::new([])
-                    .update_as_polygon_from_points(
-                        interior_points,
-                        &mut services.objects,
-                    );
-                face.add_interior(interior, &mut services.objects);
-            }
-
             face.build(&mut services.objects)
         };
 

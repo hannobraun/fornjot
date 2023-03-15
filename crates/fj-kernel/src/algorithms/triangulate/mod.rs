@@ -79,7 +79,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::{CycleBuilder, FaceBuilder},
+        builder::CycleBuilder,
         insert::Insert,
         objects::{Cycle, Face},
         partial::{PartialFace, PartialObject},
@@ -146,7 +146,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let mut face = PartialFace {
+        let face = PartialFace {
             surface: surface.clone(),
             exterior: {
                 let (exterior, _) = Cycle::new([])
@@ -156,16 +156,16 @@ mod tests {
                     );
                 exterior.insert(&mut services.objects)
             },
-            interiors: Vec::new(),
+            interiors: vec![{
+                let (interior, _) = Cycle::new([])
+                    .update_as_polygon_from_points(
+                        [e, f, g, h],
+                        &mut services.objects,
+                    );
+                interior.insert(&mut services.objects)
+            }],
             color: None,
         };
-        {
-            let (interior, _) = Cycle::new([]).update_as_polygon_from_points(
-                [e, f, g, h],
-                &mut services.objects,
-            );
-            face.add_interior(interior, &mut services.objects);
-        }
         let face = face
             .build(&mut services.objects)
             .insert(&mut services.objects);
