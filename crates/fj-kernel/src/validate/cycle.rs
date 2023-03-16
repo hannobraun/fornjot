@@ -51,8 +51,8 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        // If there are less than two half edges
-        if cycle.half_edges().nth(1).is_none() {
+        // If there are no half edges
+        if cycle.half_edges().next().is_none() {
             errors.push(Self::NotEnoughHalfEdges.into());
             return;
         }
