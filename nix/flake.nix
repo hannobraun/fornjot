@@ -77,7 +77,7 @@
           inherit buildInputs;
           nativeBuildInputs = [ rustToolchain ];
 
-          LD_LIBRARY_PATH = "${nixpkgs.lib.makeLibraryPath [ pkgs.vulkan-loader ]}";
+          LD_LIBRARY_PATH = "${nixpkgs.lib.makeLibraryPath [ pkgs.vulkan-loader pkgs.stdenv.cc.cc.lib pkgs.lib3mf]}";
         };
       });
 }
