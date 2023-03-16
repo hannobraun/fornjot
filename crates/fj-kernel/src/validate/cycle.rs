@@ -55,7 +55,6 @@ impl CycleValidationError {
         // If there are no half edges
         if cycle.half_edges().next().is_none() {
             errors.push(Self::NotEnoughHalfEdges.into());
-            return;
         }
     }
 
