@@ -31,7 +31,7 @@
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
         version = (builtins.fromTOML (builtins.readFile ../Cargo.toml)).workspace.package.version;
         # Only keeps assets in crates/ (currently shaders and fonts)
-        assetsFilter = path: _type: (builtins.match ".*(:?wgsl|ttf)$" path) != null;
+        assetsFilter = path: _type: (builtins.match ".*(:?wgsl|ttf|png|obj|fj.toml|mtl)$" path) != null;
         filter = path: type: (assetsFilter path type) || (craneLib.filterCargoSources path type);
         buildInputs = with pkgs; [
           pkg-config
