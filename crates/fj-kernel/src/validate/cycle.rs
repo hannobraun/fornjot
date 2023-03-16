@@ -14,7 +14,8 @@ impl Validate for Cycle {
     ) {
         CycleValidationError::check_half_edges_disconnected(
             self, config, errors,
-        )
+        );
+        CycleValidationError::check_enough_half_edges(self, config, errors);
     }
 }
 
@@ -46,9 +47,9 @@ pub enum CycleValidationError {
 }
 
 impl CycleValidationError {
-    fn check_half_edges_disconnected(
+    fn check_enough_half_edges(
         cycle: &Cycle,
-        config: &ValidationConfig,
+        _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
         // If there are no half edges
@@ -56,14 +57,18 @@ impl CycleValidationError {
             errors.push(Self::NotEnoughHalfEdges.into());
             return;
         }
-        for (first, second) in cycle
-            .half_edges()
-            // Chain the first half_edge so that we make sure that the last connects to the first.
-            // This unwrap will never fail because we checked before that there are enough half_edges.
-            .chain(std::iter::once(cycle.half_edges().next().unwrap()))
-            .tuple_windows()
-        {
-            let end_of_first = first.end_position();
+    }
+
+    fn check_half_edges_disconnected(
+        cycle: &Cycle,
+        config: &ValidationConfig,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        for (first, second) in cycle.half_edges().circular_tuple_windows() {
+            let end_of_first = {
+                let [_, end] = first.boundary();
+                first.curve().point_from_path_coords(end)
+            };
             let start_of_second = second.start_position();
 
             let distance = (end_of_first - start_of_second).magnitude();
@@ -109,21 +114,32 @@ mod tests {
 
         valid.validate_and_return_first_error()?;
 
-        let first = HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-            .build(&mut services.objects);
-        let second = HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-            .build(&mut services.objects);
+        let disconnected = {
+            let first =
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
+                    .build(&mut services.objects);
+            let second =
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
+                    .build(&mut services.objects);
 
-        let invalid = Cycle::new([])
-            .add_half_edge(first, &mut services.objects)
-            .0
-            .add_half_edge(second, &mut services.objects)
-            .0;
-
+            Cycle::new([])
+                .add_half_edge(first, &mut services.objects)
+                .0
+                .add_half_edge(second, &mut services.objects)
+                .0
+        };
         assert!(matches!(
-            invalid.validate_and_return_first_error(),
+            disconnected.validate_and_return_first_error(),
             Err(ValidationError::Cycle(
                 CycleValidationError::HalfEdgesDisconnected { .. }
+            ))
+        ));
+
+        let empty = Cycle::new([]);
+        assert!(matches!(
+            empty.validate_and_return_first_error(),
+            Err(ValidationError::Cycle(
+                CycleValidationError::NotEnoughHalfEdges
             ))
         ));
 
