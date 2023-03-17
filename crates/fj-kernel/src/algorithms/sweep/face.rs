@@ -5,10 +5,10 @@ use itertools::Itertools;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    builder::CycleBuilder,
+    builder::CycleBuilder2,
     geometry::curve::GlobalPath,
     insert::Insert,
-    objects::{Cycle, Face, Objects, Shell},
+    objects::{Face, Objects, Shell},
     services::Service,
     storage::Handle,
 };
@@ -82,7 +82,8 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let top_cycle = Cycle::new([]).connect_to_edges(top_edges, objects);
+            let top_cycle =
+                CycleBuilder2::connect_to_edges(top_edges).build(objects);
 
             if i == 0 {
                 exterior = Some(top_cycle.insert(objects));
