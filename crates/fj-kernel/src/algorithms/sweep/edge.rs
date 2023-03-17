@@ -2,7 +2,7 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    builder::{CycleBuilder, HalfEdgeBuilder},
+    builder::HalfEdgeBuilder,
     insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
     services::Service,
@@ -85,15 +85,23 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     )
                     .with_start_vertex(start_vertex);
 
-                    if let Some(global_edge) = global_edge {
+                    let builder = if let Some(global_edge) = global_edge {
                         builder.with_global_form(global_edge)
                     } else {
                         builder
-                    }
+                    };
+
+                    builder.build(objects).insert(objects)
                 };
 
-                let (updated, half_edge) =
-                    exterior.take().unwrap().add_half_edge(half_edge, objects);
+                let updated = {
+                    let exterior = exterior.take().unwrap();
+                    let half_edges = exterior
+                        .half_edges()
+                        .cloned()
+                        .chain([half_edge.clone()]);
+                    Cycle::new(half_edges)
+                };
                 exterior = Some(updated);
 
                 half_edge
