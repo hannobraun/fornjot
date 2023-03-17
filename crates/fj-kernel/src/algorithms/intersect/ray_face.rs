@@ -151,9 +151,7 @@ mod tests {
             },
             transform::TransformObject,
         },
-        builder::CycleBuilder,
-        insert::Insert,
-        objects::Face,
+        builder::{CycleBuilder, FaceBuilder},
         services::Services,
     };
 
@@ -163,14 +161,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.yz_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([-1., 0., 0.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -182,14 +180,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.yz_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([1., 0., 0.], &mut services.objects);
 
         assert_eq!(
@@ -204,14 +202,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.yz_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([0., 0., 2.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -223,14 +221,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.yz_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([1., 1., 0.], &mut services.objects);
 
         let edge = face
@@ -250,14 +248,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.yz_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([1., 1., 1.], &mut services.objects);
 
         let vertex = face
@@ -280,14 +278,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.xy_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -301,14 +299,14 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = Face::new(
-            services.objects.surfaces.xy_plane(),
-            CycleBuilder::polygon([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [-1., -1.],
+                [1., -1.],
+                [1., 1.],
+                [-1., 1.],
+            ]))
+            .build(&mut services.objects);
         let face = face.translate([0., 0., 1.], &mut services.objects);
 
         assert_eq!((&ray, &face).intersect(), None);

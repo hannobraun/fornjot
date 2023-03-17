@@ -72,8 +72,7 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         algorithms::reverse::Reverse,
-        builder::CycleBuilder,
-        insert::Insert,
+        builder::{CycleBuilder, FaceBuilder},
         objects::Face,
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
@@ -83,16 +82,18 @@ mod tests {
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = Face::new(
-            services.objects.surfaces.xy_plane(),
-            CycleBuilder::polygon([[0., 0.], [3., 0.], [0., 3.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            vec![CycleBuilder::polygon([[1., 1.], [1., 2.], [2., 1.]])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)],
-            None,
-        );
+        let valid = FaceBuilder::new(services.objects.surfaces.xy_plane())
+            .with_exterior(CycleBuilder::polygon([
+                [0., 0.],
+                [3., 0.],
+                [0., 3.],
+            ]))
+            .with_interior(CycleBuilder::polygon([
+                [1., 1.],
+                [1., 2.],
+                [2., 1.],
+            ]))
+            .build(&mut services.objects);
         let invalid = {
             let interiors = valid
                 .interiors()

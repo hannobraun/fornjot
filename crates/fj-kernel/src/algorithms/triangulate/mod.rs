@@ -79,8 +79,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::CycleBuilder,
-        insert::Insert,
+        builder::{CycleBuilder, FaceBuilder},
         objects::Face,
         services::Services,
     };
@@ -96,14 +95,9 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = Face::new(
-            services.objects.surfaces.xy_plane(),
-            CycleBuilder::polygon([a, b, c, d])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
+            .with_exterior(CycleBuilder::polygon([a, b, c, d]))
+            .build(&mut services.objects);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -136,16 +130,10 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = Face::new(
-            surface.clone(),
-            CycleBuilder::polygon([a, b, c, d])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            vec![CycleBuilder::polygon([e, f, g, h])
-                .build(&mut services.objects)
-                .insert(&mut services.objects)],
-            None,
-        );
+        let face = FaceBuilder::new(surface.clone())
+            .with_exterior(CycleBuilder::polygon([a, b, c, d]))
+            .with_interior(CycleBuilder::polygon([e, f, g, h]))
+            .build(&mut services.objects);
 
         let triangles = triangulate(face)?;
 
@@ -200,14 +188,9 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = Face::new(
-            surface.clone(),
-            CycleBuilder::polygon([a, b, c, d, e])
-                .build(&mut services.objects)
-                .insert(&mut services.objects),
-            Vec::new(),
-            None,
-        );
+        let face = FaceBuilder::new(surface.clone())
+            .with_exterior(CycleBuilder::polygon([a, b, c, d, e]))
+            .build(&mut services.objects);
 
         let triangles = triangulate(face)?;
 
