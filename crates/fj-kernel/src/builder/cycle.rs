@@ -9,7 +9,7 @@ use crate::{
     storage::Handle,
 };
 
-use super::{HalfEdgeBuilder, ObjectArgument};
+use super::HalfEdgeBuilder;
 
 /// Builder API for [`Cycle`]
 pub trait CycleBuilder: Sized {
@@ -40,7 +40,8 @@ pub trait CycleBuilder: Sized {
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        Es: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator;
 }
 
 impl CycleBuilder for Cycle {
@@ -61,15 +62,18 @@ impl CycleBuilder for Cycle {
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        Es: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator,
     {
-        edges.map_with_next(|(prev, _, _), (_, curve, boundary)| {
-            let half_edge = HalfEdgeBuilder::new(curve, boundary)
-                .with_start_vertex(prev.start_vertex().clone());
+        edges.into_iter().circular_tuple_windows().for_each(
+            |((prev, _, _), (_, curve, boundary))| {
+                let half_edge = HalfEdgeBuilder::new(curve, boundary)
+                    .with_start_vertex(prev.start_vertex().clone());
 
-            let (cycle, _) = self.clone().add_half_edge(half_edge, objects);
-            self = cycle;
-        });
+                let (cycle, _) = self.clone().add_half_edge(half_edge, objects);
+                self = cycle;
+            },
+        );
 
         self
     }
