@@ -4,4 +4,4 @@
 mod cycle;
 mod edge;
 
-pub use self::{cycle::CycleBuilder2, edge::HalfEdgeBuilder};
+pub use self::{cycle::CycleBuilder, edge::HalfEdgeBuilder};

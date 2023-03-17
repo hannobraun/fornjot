@@ -79,7 +79,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::CycleBuilder2,
+        builder::CycleBuilder,
         insert::Insert,
         objects::Face,
         services::Services,
@@ -98,7 +98,7 @@ mod tests {
 
         let face = Face::new(
             services.objects.surfaces.xy_plane(),
-            CycleBuilder2::polygon([a, b, c, d])
+            CycleBuilder::polygon([a, b, c, d])
                 .build(&mut services.objects)
                 .insert(&mut services.objects),
             Vec::new(),
@@ -138,10 +138,10 @@ mod tests {
 
         let face = Face::new(
             surface.clone(),
-            CycleBuilder2::polygon([a, b, c, d])
+            CycleBuilder::polygon([a, b, c, d])
                 .build(&mut services.objects)
                 .insert(&mut services.objects),
-            vec![CycleBuilder2::polygon([e, f, g, h])
+            vec![CycleBuilder::polygon([e, f, g, h])
                 .build(&mut services.objects)
                 .insert(&mut services.objects)],
             None,
@@ -202,7 +202,7 @@ mod tests {
 
         let face = Face::new(
             surface.clone(),
-            CycleBuilder2::polygon([a, b, c, d, e])
+            CycleBuilder::polygon([a, b, c, d, e])
                 .build(&mut services.objects)
                 .insert(&mut services.objects),
             Vec::new(),

@@ -13,11 +13,11 @@ use super::HalfEdgeBuilder;
 
 /// Builder API for [`Cycle`]
 #[derive(Default)]
-pub struct CycleBuilder2 {
+pub struct CycleBuilder {
     half_edges: Vec<HalfEdgeBuilder>,
 }
 
-impl CycleBuilder2 {
+impl CycleBuilder {
     /// Create an instance of `CycleBuilder`
     pub fn new() -> Self {
         Self::default()

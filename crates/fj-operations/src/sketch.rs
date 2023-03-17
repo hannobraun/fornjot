@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::{CycleBuilder2, HalfEdgeBuilder},
+    builder::{CycleBuilder, HalfEdgeBuilder},
     insert::Insert,
     objects::{Cycle, Face, Objects, Sketch},
     services::Service,
@@ -44,7 +44,7 @@ impl Shape for fj::Sketch {
                 );
 
                 let exterior = {
-                    let mut cycle = CycleBuilder2::new();
+                    let mut cycle = CycleBuilder::new();
 
                     let segments = poly_chain
                         .to_segments()
