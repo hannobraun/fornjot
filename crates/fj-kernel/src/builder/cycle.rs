@@ -27,21 +27,6 @@ pub trait CycleBuilder: Sized {
         half_edge: HalfEdgeBuilder,
         objects: &mut Service<Objects>,
     ) -> (Self, Handle<HalfEdge>);
-
-    /// Connect the cycles to the provided half-edges
-    ///
-    /// Assumes that the provided half-edges, once translated into local
-    /// equivalents of this cycle, form a cycle themselves.
-    ///
-    /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_edges<Es>(
-        self,
-        edges: Es,
-        objects: &mut Service<Objects>,
-    ) -> Self
-    where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
-        Es::IntoIter: Clone + ExactSizeIterator;
 }
 
 impl CycleBuilder for Cycle {
@@ -54,28 +39,6 @@ impl CycleBuilder for Cycle {
         let cycle =
             Cycle::new(self.half_edges().cloned().chain([half_edge.clone()]));
         (cycle, half_edge)
-    }
-
-    fn connect_to_edges<Es>(
-        mut self,
-        edges: Es,
-        objects: &mut Service<Objects>,
-    ) -> Self
-    where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
-        Es::IntoIter: Clone + ExactSizeIterator,
-    {
-        edges.into_iter().circular_tuple_windows().for_each(
-            |((prev, _, _), (_, curve, boundary))| {
-                let half_edge = HalfEdgeBuilder::new(curve, boundary)
-                    .with_start_vertex(prev.start_vertex().clone());
-
-                let (cycle, _) = self.clone().add_half_edge(half_edge, objects);
-                self = cycle;
-            },
-        );
-
-        self
     }
 }
 
