@@ -34,13 +34,13 @@ pub trait CycleBuilder: Sized {
     /// equivalents of this cycle, form a cycle themselves.
     ///
     /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_edges<O>(
+    fn connect_to_edges<Es>(
         self,
-        edges: O,
+        edges: Es,
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
+        Es: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
 }
 
 impl CycleBuilder for Cycle {
@@ -55,13 +55,13 @@ impl CycleBuilder for Cycle {
         (cycle, half_edge)
     }
 
-    fn connect_to_edges<O>(
+    fn connect_to_edges<Es>(
         mut self,
-        edges: O,
+        edges: Es,
         objects: &mut Service<Objects>,
     ) -> Self
     where
-        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
     {
         edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
             let half_edge = HalfEdgeBuilder::new(curve, boundary)
