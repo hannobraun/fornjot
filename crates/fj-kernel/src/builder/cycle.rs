@@ -85,6 +85,30 @@ pub struct CycleBuilder2 {
 }
 
 impl CycleBuilder2 {
+    /// Create a cycle whose half-edges are connected to the provided half-edges
+    ///
+    /// The half-edges of the new circle will be coincident with the provided
+    /// half-edges, but will point in the opposite direction.
+    ///
+    /// Assumes that the provided half-edges, once translated into local
+    /// equivalents of this cycle, form a cycle themselves.
+    pub fn connect_to_edges<Es>(edges: Es) -> Self
+    where
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator,
+    {
+        let half_edges = edges
+            .into_iter()
+            .circular_tuple_windows()
+            .map(|((prev, _, _), (_, curve, boundary))| {
+                HalfEdgeBuilder::new(curve, boundary)
+                    .with_start_vertex(prev.start_vertex().clone())
+            })
+            .collect();
+
+        Self { half_edges }
+    }
+
     /// Create a polygon
     pub fn polygon<P, Ps>(points: Ps) -> Self
     where
