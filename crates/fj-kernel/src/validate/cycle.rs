@@ -94,7 +94,7 @@ impl CycleValidationError {
 mod tests {
 
     use crate::{
-        builder::{CycleBuilder, CycleBuilder2, HalfEdgeBuilder},
+        builder::{CycleBuilder2, HalfEdgeBuilder},
         objects::Cycle,
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
@@ -116,11 +116,10 @@ mod tests {
             let second =
                 HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
 
-            Cycle::new([])
-                .add_half_edge(first, &mut services.objects)
-                .0
-                .add_half_edge(second, &mut services.objects)
-                .0
+            CycleBuilder2::new()
+                .add_half_edge(first)
+                .add_half_edge(second)
+                .build(&mut services.objects)
         };
         assert!(matches!(
             disconnected.validate_and_return_first_error(),
