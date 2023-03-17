@@ -12,37 +12,6 @@ use crate::{
 use super::HalfEdgeBuilder;
 
 /// Builder API for [`Cycle`]
-pub trait CycleBuilder: Sized {
-    /// Add a new half-edge to the cycle
-    ///
-    /// Creates a half-edge and adds it to the cycle. The new half-edge is
-    /// connected to the front vertex of the last half-edge , and the back
-    /// vertex of the first edge, making sure the half-edges actually form a
-    /// cycle.
-    ///
-    /// If this is the first half-edge being added, it is connected to itself,
-    /// meaning its front and back vertices are the same.
-    fn add_half_edge(
-        self,
-        half_edge: HalfEdgeBuilder,
-        objects: &mut Service<Objects>,
-    ) -> (Self, Handle<HalfEdge>);
-}
-
-impl CycleBuilder for Cycle {
-    fn add_half_edge(
-        self,
-        half_edge: HalfEdgeBuilder,
-        objects: &mut Service<Objects>,
-    ) -> (Self, Handle<HalfEdge>) {
-        let half_edge = half_edge.build(objects).insert(objects);
-        let cycle =
-            Cycle::new(self.half_edges().cloned().chain([half_edge.clone()]));
-        (cycle, half_edge)
-    }
-}
-
-/// Builder API for [`Cycle`]
 #[derive(Default)]
 pub struct CycleBuilder2 {
     half_edges: Vec<HalfEdgeBuilder>,
