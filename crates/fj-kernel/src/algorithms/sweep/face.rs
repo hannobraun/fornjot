@@ -8,7 +8,7 @@ use crate::{
     builder::CycleBuilder,
     geometry::curve::GlobalPath,
     insert::Insert,
-    objects::{Cycle, Face, Objects, Shell},
+    objects::{Face, Objects, Shell},
     services::Service,
     storage::Handle,
 };
@@ -82,8 +82,8 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let (top_cycle, _) =
-                Cycle::new([]).connect_to_edges(top_edges, objects);
+            let top_cycle =
+                CycleBuilder::connect_to_edges(top_edges).build(objects);
 
             if i == 0 {
                 exterior = Some(top_cycle.insert(objects));

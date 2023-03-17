@@ -104,28 +104,21 @@ mod tests {
     fn half_edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = Cycle::new([])
-            .update_as_polygon_from_points(
-                [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-                &mut services.objects,
-            )
-            .0;
+        let valid = CycleBuilder::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]])
+            .build(&mut services.objects);
 
         valid.validate_and_return_first_error()?;
 
         let disconnected = {
             let first =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-                    .build(&mut services.objects);
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
             let second =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-                    .build(&mut services.objects);
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
 
-            Cycle::new([])
-                .add_half_edge(first, &mut services.objects)
-                .0
-                .add_half_edge(second, &mut services.objects)
-                .0
+            CycleBuilder::new()
+                .add_half_edge(first)
+                .add_half_edge(second)
+                .build(&mut services.objects)
         };
         assert!(matches!(
             disconnected.validate_and_return_first_error(),

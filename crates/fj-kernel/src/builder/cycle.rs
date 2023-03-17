@@ -1,4 +1,5 @@
 use fj_math::Point;
+use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
@@ -8,106 +9,75 @@ use crate::{
     storage::Handle,
 };
 
-use super::{HalfEdgeBuilder, ObjectArgument};
+use super::HalfEdgeBuilder;
 
 /// Builder API for [`Cycle`]
-pub trait CycleBuilder: Sized {
-    /// Add a new half-edge to the cycle
-    ///
-    /// Creates a half-edge and adds it to the cycle. The new half-edge is
-    /// connected to the front vertex of the last half-edge , and the back
-    /// vertex of the first edge, making sure the half-edges actually form a
-    /// cycle.
-    ///
-    /// If this is the first half-edge being added, it is connected to itself,
-    /// meaning its front and back vertices are the same.
-    fn add_half_edge(
-        self,
-        half_edge: HalfEdge,
-        objects: &mut Service<Objects>,
-    ) -> (Self, Handle<HalfEdge>);
+#[derive(Default)]
+pub struct CycleBuilder {
+    half_edges: Vec<HalfEdgeBuilder>,
+}
 
-    /// Update cycle as a polygon from the provided points
-    fn update_as_polygon_from_points<O, P>(
-        self,
-        points: O,
-        objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
-    where
-        O: ObjectArgument<P>,
-        P: Clone + Into<Point<2>>;
+impl CycleBuilder {
+    /// Create an instance of `CycleBuilder`
+    pub fn new() -> Self {
+        Self::default()
+    }
 
-    /// Connect the cycles to the provided half-edges
+    /// Add a half-edge to the cycle
+    pub fn add_half_edge(mut self, half_edge: HalfEdgeBuilder) -> Self {
+        self.half_edges.push(half_edge);
+        self
+    }
+
+    /// Create a cycle whose half-edges are connected to the provided half-edges
+    ///
+    /// The half-edges of the new circle will be coincident with the provided
+    /// half-edges, but will point in the opposite direction.
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this cycle, form a cycle themselves.
-    ///
-    /// Returns the local equivalents of the provided half-edges.
-    fn connect_to_edges<O>(
-        self,
-        edges: O,
-        objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
+    pub fn connect_to_edges<Es>(edges: Es) -> Self
     where
-        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>;
-}
-
-impl CycleBuilder for Cycle {
-    fn add_half_edge(
-        self,
-        half_edge: HalfEdge,
-        objects: &mut Service<Objects>,
-    ) -> (Self, Handle<HalfEdge>) {
-        let half_edge = half_edge.insert(objects);
-        let cycle =
-            Cycle::new(self.half_edges().cloned().chain([half_edge.clone()]));
-        (cycle, half_edge)
-    }
-
-    fn update_as_polygon_from_points<O, P>(
-        mut self,
-        points: O,
-        objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
-    where
-        O: ObjectArgument<P>,
-        P: Clone + Into<Point<2>>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator,
     {
-        let half_edges = points.map_with_next(|start, end| {
-            let half_edge = HalfEdgeBuilder::line_segment([start, end], None)
-                .build(objects);
-
-            let (cycle, half_edge) =
-                self.clone().add_half_edge(half_edge, objects);
-            self = cycle;
-
-            half_edge
-        });
-
-        (self, half_edges)
-    }
-
-    fn connect_to_edges<O>(
-        mut self,
-        edges: O,
-        objects: &mut Service<Objects>,
-    ) -> (Self, O::SameSize<Handle<HalfEdge>>)
-    where
-        O: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
-    {
-        let edges =
-            edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
-                let half_edge = HalfEdgeBuilder::new(curve, boundary)
+        let half_edges = edges
+            .into_iter()
+            .circular_tuple_windows()
+            .map(|((prev, _, _), (_, curve, boundary))| {
+                HalfEdgeBuilder::new(curve, boundary)
                     .with_start_vertex(prev.start_vertex().clone())
-                    .build(objects);
+            })
+            .collect();
 
-                let (cycle, half_edge) =
-                    self.clone().add_half_edge(half_edge, objects);
-                self = cycle;
+        Self { half_edges }
+    }
 
-                half_edge
-            });
+    /// Create a polygon
+    pub fn polygon<P, Ps>(points: Ps) -> Self
+    where
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
+    {
+        let half_edges = points
+            .into_iter()
+            .map(Into::into)
+            .circular_tuple_windows()
+            .map(|(start, end)| {
+                HalfEdgeBuilder::line_segment([start, end], None)
+            })
+            .collect();
 
-        (self, edges)
+        Self { half_edges }
+    }
+
+    /// Build the cycle
+    pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
+        let half_edges = self
+            .half_edges
+            .into_iter()
+            .map(|half_edge| half_edge.build(objects).insert(objects));
+        Cycle::new(half_edges)
     }
 }

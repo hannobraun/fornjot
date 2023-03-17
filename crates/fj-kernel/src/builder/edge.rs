@@ -88,7 +88,7 @@ impl HalfEdgeBuilder {
         self
     }
 
-    /// Create a half-edge
+    /// Build the half-edge
     pub fn build(self, objects: &mut Service<Objects>) -> HalfEdge {
         HalfEdge::new(
             self.curve,

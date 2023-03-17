@@ -44,7 +44,7 @@ impl Shape for fj::Sketch {
                 );
 
                 let exterior = {
-                    let mut cycle = Cycle::new([]);
+                    let mut cycle = CycleBuilder::new();
 
                     let segments = poly_chain
                         .to_segments()
@@ -68,11 +68,10 @@ impl Shape for fj::Sketch {
                             }
                         };
 
-                        let half_edge = half_edge.build(objects);
-                        cycle = cycle.add_half_edge(half_edge, objects).0;
+                        cycle = cycle.add_half_edge(half_edge);
                     }
 
-                    cycle.insert(objects)
+                    cycle.build(objects).insert(objects)
                 };
 
                 Face::new(

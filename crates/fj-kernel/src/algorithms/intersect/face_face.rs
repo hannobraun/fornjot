@@ -61,11 +61,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::intersect::CurveFaceIntersection,
-        builder::CycleBuilder,
-        geometry::curve::Curve,
-        insert::Insert,
-        objects::{Cycle, Face},
+        algorithms::intersect::CurveFaceIntersection, builder::CycleBuilder,
+        geometry::curve::Curve, insert::Insert, objects::Face,
         services::Services,
     };
 
@@ -89,14 +86,9 @@ mod tests {
         .map(|surface| {
             Face::new(
                 surface,
-                {
-                    let (exterior, _) = Cycle::new([])
-                        .update_as_polygon_from_points(
-                            points,
-                            &mut services.objects,
-                        );
-                    exterior.insert(&mut services.objects)
-                },
+                CycleBuilder::polygon(points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects),
                 Vec::new(),
                 None,
             )
@@ -125,14 +117,9 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             Face::new(
                 surface,
-                {
-                    let (exterior, _) = Cycle::new([])
-                        .update_as_polygon_from_points(
-                            points,
-                            &mut services.objects,
-                        );
-                    exterior.insert(&mut services.objects)
-                },
+                CycleBuilder::polygon(points)
+                    .build(&mut services.objects)
+                    .insert(&mut services.objects),
                 Vec::new(),
                 None,
             )
