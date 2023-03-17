@@ -54,6 +54,12 @@ impl CycleBuilder2 {
         Self::default()
     }
 
+    /// Add a half-edge to the cycle
+    pub fn add_half_edge(mut self, half_edge: HalfEdgeBuilder) -> Self {
+        self.half_edges.push(half_edge);
+        self
+    }
+
     /// Create a cycle whose half-edges are connected to the provided half-edges
     ///
     /// The half-edges of the new circle will be coincident with the provided
