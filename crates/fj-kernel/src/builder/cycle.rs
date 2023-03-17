@@ -63,7 +63,7 @@ impl CycleBuilder for Cycle {
     where
         Es: ObjectArgument<(Handle<HalfEdge>, Curve, [Point<1>; 2])>,
     {
-        edges.map_with_prev(|(_, curve, boundary), (prev, _, _)| {
+        edges.map_with_next(|(prev, _, _), (_, curve, boundary)| {
             let half_edge = HalfEdgeBuilder::new(curve, boundary)
                 .with_start_vertex(prev.start_vertex().clone());
 
