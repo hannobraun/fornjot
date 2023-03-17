@@ -43,11 +43,17 @@ impl CycleBuilder for Cycle {
 }
 
 /// Builder API for [`Cycle`]
+#[derive(Default)]
 pub struct CycleBuilder2 {
     half_edges: Vec<HalfEdgeBuilder>,
 }
 
 impl CycleBuilder2 {
+    /// Create an instance of `CycleBuilder`
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     /// Create a cycle whose half-edges are connected to the provided half-edges
     ///
     /// The half-edges of the new circle will be coincident with the provided
