@@ -67,11 +67,8 @@ impl CycleBuilder for Cycle {
             let half_edge = HalfEdgeBuilder::new(curve, boundary)
                 .with_start_vertex(prev.start_vertex().clone());
 
-            let (cycle, half_edge) =
-                self.clone().add_half_edge(half_edge, objects);
+            let (cycle, _) = self.clone().add_half_edge(half_edge, objects);
             self = cycle;
-
-            half_edge
         });
 
         self
