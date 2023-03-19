@@ -9,7 +9,7 @@ mod solid;
 mod surface;
 mod vertex;
 
-use self::cycle::CycleValidationError;
+use self::{cycle::CycleValidationError, shell::ShellValidationError};
 pub use self::{edge::HalfEdgeValidationError, face::FaceValidationError};
 
 use std::convert::Infallible;
@@ -92,6 +92,10 @@ pub enum ValidationError {
     /// `Cycle` validation error
     #[error("`Cycle` validation error:\n{0}")]
     Cycle(#[from] CycleValidationError),
+
+    /// `Shell` validation error
+    #[error("`Shell` validation error:\n{0}")]
+    Shell(#[from] ShellValidationError),
 }
 
 impl From<Infallible> for ValidationError {
