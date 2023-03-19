@@ -5,7 +5,9 @@ use crate::{
     storage::Handle,
 };
 
-/// A 3-dimensional shape
+/// A 3-dimensional shape, built from [`Shell`]s. Many Solids will contains only
+/// one shell, but if the Solid contains cavities they will be reprented by a
+/// shell each, as well as a shell for the outside.
 ///
 /// # Implementation Note
 ///
