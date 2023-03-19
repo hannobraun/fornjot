@@ -1,42 +1,52 @@
 mod ffi;
 
-use std::{ffi::CString, fs, process::Command, ptr};
+use std::{env::args, ffi::CString, fs, process::Command, ptr};
 
 use anyhow::{anyhow, bail, Context as _};
 use tempfile::tempdir;
 
 fn main() -> anyhow::Result<()> {
-    for model in fs::read_dir("models")? {
-        let model = model?;
-        let model = model.file_name().into_string().map_err(|err| {
-            anyhow!("Failed to convert directory name to `String`: {:?}", err)
-        })?;
+    let model = args().nth(1);
+    if let Some(model) = model {
+        // If user passed model name, validate that model
+        handle_model(model)?;
+    } else {
+        // Otherwise validate all models in `models` directory
+        for model in fs::read_dir("models")? {
+            let model = model?;
+            let model = model.file_name().into_string().map_err(|err| {
+                anyhow!(
+                    "Failed to convert directory name to `String`: {:?}",
+                    err
+                )
+            })?;
 
-        let dir = tempdir()?;
-        let file_name = format!("{model}.3mf");
-        let export_file_path = dir.path().join(file_name);
-        let export_file_path_str = export_file_path.to_str().unwrap();
-
-        let exit_status = Command::new("cargo")
-            .arg("run")
-            .arg("--")
-            .arg(&model)
-            .args(["--export", export_file_path_str])
-            .status()?;
-
-        if !exit_status.success() {
-            bail!(
-                "Exporting model `{model}` failed with error code:\
-                {exit_status}"
-            );
+            handle_model(model)?;
         }
-
-        // Presumably we're using the library in the way it's intended, so this
-        // might be sound?
-        unsafe { validate_model(export_file_path_str) }
-            .with_context(|| format!("Could not validate model `{model}`"))?;
     }
 
+    Ok(())
+}
+
+fn handle_model(model: String) -> Result<(), anyhow::Error> {
+    let dir = tempdir()?;
+    let file_name = format!("{model}.3mf");
+    let export_file_path = dir.path().join(file_name);
+    let export_file_path_str = export_file_path.to_str().unwrap();
+    let exit_status = Command::new("cargo")
+        .arg("run")
+        .arg("--")
+        .arg(&model)
+        .args(["--export", export_file_path_str])
+        .status()?;
+    if !exit_status.success() {
+        bail!(
+            "Exporting model `{model}` failed with error code:\
+                {exit_status}"
+        );
+    }
+    unsafe { validate_model(export_file_path_str) }
+        .with_context(|| format!("Could not validate model `{model}`"))?;
     Ok(())
 }
 
