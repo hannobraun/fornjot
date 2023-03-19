@@ -75,7 +75,7 @@ impl Face {
         self.interiors.iter()
     }
 
-    /// Access all cycles of the face
+    /// Access all cycles of the face (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
         [self.exterior()].into_iter().chain(self.interiors())
     }
