@@ -23,4 +23,4 @@ thiserror = "1.0.39"
 type-map = "0.5.0"
 
 [dev-dependencies]
-anyhow = "1.0.69"
+anyhow = "1.0.70"
