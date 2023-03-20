@@ -19,7 +19,7 @@ The release announcement lives on the website, and needs to be created in the [w
 
 First, create the initial draft of the release announcement:
 
-```
+``` sh
 automator announcement
 ```
 
@@ -41,7 +41,7 @@ When done, deploy to the website.
 
 In the main Fornjot repository, do this:
 
-```
+``` sh
 git switch -c release
 ```
 
