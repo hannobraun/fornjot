@@ -1,5 +1,3 @@
-use std::any::Any;
-
 use crate::{
     objects::{
         Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
@@ -22,23 +20,6 @@ macro_rules! object {
                 #[doc = concat!("A ", $name)]
                 $ty(F::Form<$ty>),
             )*
-        }
-
-        impl<F: Form> Object<F> {
-            /// Convert the `Object` into the requested inner type
-            pub fn as_inner<T>(&self) -> Option<&F::Form<T>>
-                where
-                    Self: 'static,
-                    F::Form<T>: Any,
-            {
-                match self {
-                    $(
-                        Self::$ty(object) =>
-                            (object as &dyn Any).downcast_ref(),
-
-                    )*
-                }
-            }
         }
 
         impl Object<BehindHandle> {
