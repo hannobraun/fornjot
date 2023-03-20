@@ -106,7 +106,7 @@ impl Face {
     }
 }
 
-/// A collection of faces
+/// A collection of objects
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Set<T: PartialEq + Ord> {
     inner: BTreeSet<Handle<T>>,

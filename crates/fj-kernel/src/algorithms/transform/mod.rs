@@ -3,6 +3,7 @@
 mod cycle;
 mod edge;
 mod face;
+mod set;
 mod shell;
 mod sketch;
 mod solid;
