@@ -6,7 +6,7 @@ use crate::{
 };
 
 /// A 3-dimensional shape, built from [`Shell`]s. Many Solids will contains only
-/// one shell, but if the Solid contains cavities they will be reprented by a
+/// one shell, but if the Solid contains cavities they will be represented by a
 /// shell each, as well as a shell for the outside.
 ///
 /// # Implementation Note
