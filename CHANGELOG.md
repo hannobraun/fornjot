@@ -1,5 +1,65 @@
 # Fornjot - Changelog
 
+## v0.41.0 (2023-03-20)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+*None this week, busy working on the kernel!*
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Require `Handle<HalfEdge>` in fewer places ([#1680])
+- Simplify some tests ([#1681])
+- Unify remaining partial objects with their full variants ([#1682], [#1683], [#1684], [#1685])
+- Add `Cycle` validation ([#1686]; thank you, [@A-Walrus]!)
+- Update and fix Nix flake ([#1687], [#1690]; thank you, [@A-Walrus]!)
+- Clean up builder API ([#1692], [#1693])
+- Update docs for `Solid` ([#1696]; thank you, [@A-Walrus]!)
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1669], [#1670], [#1671], [#1672], [#1673], [#1674], [#1675], [#1676], [#1677], [#1678])
+- Upgrade to Rust 1.68.0 ([#1679])
+- Allow export-validator to receive model name ([#1698]; thank you, [@A-Walrus]!)
+- Update list of sponsors in README ([#1699])
+
+[#1669]: https://github.com/hannobraun/Fornjot/pull/1669
+[#1670]: https://github.com/hannobraun/Fornjot/pull/1670
+[#1671]: https://github.com/hannobraun/Fornjot/pull/1671
+[#1672]: https://github.com/hannobraun/Fornjot/pull/1672
+[#1673]: https://github.com/hannobraun/Fornjot/pull/1673
+[#1674]: https://github.com/hannobraun/Fornjot/pull/1674
+[#1675]: https://github.com/hannobraun/Fornjot/pull/1675
+[#1676]: https://github.com/hannobraun/Fornjot/pull/1676
+[#1677]: https://github.com/hannobraun/Fornjot/pull/1677
+[#1678]: https://github.com/hannobraun/Fornjot/pull/1678
+[#1679]: https://github.com/hannobraun/Fornjot/pull/1679
+[#1680]: https://github.com/hannobraun/Fornjot/pull/1680
+[#1681]: https://github.com/hannobraun/Fornjot/pull/1681
+[#1682]: https://github.com/hannobraun/Fornjot/pull/1682
+[#1683]: https://github.com/hannobraun/Fornjot/pull/1683
+[#1684]: https://github.com/hannobraun/Fornjot/pull/1684
+[#1685]: https://github.com/hannobraun/Fornjot/pull/1685
+[#1686]: https://github.com/hannobraun/Fornjot/pull/1686
+[#1687]: https://github.com/hannobraun/Fornjot/pull/1687
+[#1690]: https://github.com/hannobraun/Fornjot/pull/1690
+[#1692]: https://github.com/hannobraun/Fornjot/pull/1692
+[#1693]: https://github.com/hannobraun/Fornjot/pull/1693
+[#1696]: https://github.com/hannobraun/Fornjot/pull/1696
+[#1698]: https://github.com/hannobraun/Fornjot/pull/1698
+[#1699]: https://github.com/hannobraun/Fornjot/pull/1699
+
+[@A-Walrus]: https://github.com/A-Walrus
+
+
 ## v0.40.0 (2023-03-13)
 
 ### End-user improvements
