@@ -63,8 +63,12 @@ fn are_coincident(
         .distance_to(&sample(0.0, (&edge2, surface2)))
         > config.identical_max_distance;
 
-    for i in 0..config.sample_count {
-        let percent = i as f64 * (1.0 / config.sample_count as f64);
+    // Three samples (start, middle, end), are enough to detect weather lines
+    // and circles match. If we were to add more complicated curves, this might
+    // need to change.
+    let sample_count = 3;
+    for i in 0..sample_count {
+        let percent = i as f64 * (1.0 / sample_count as f64);
         let sample1 = sample(percent, (&edge1, surface1));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },

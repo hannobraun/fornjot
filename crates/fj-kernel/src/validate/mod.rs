@@ -75,11 +75,6 @@ pub struct ValidationConfig {
     /// that distance is less than the one defined in this field, can not be
     /// considered identical.
     pub identical_max_distance: Scalar,
-
-    /// How often to sample edges when checking if they coincide. This
-    /// represents the number of points we check on each Edge.
-    /// The higher this is the more precise our validation is, and the slower it is.
-    pub sample_count: usize,
 }
 
 impl Default for ValidationConfig {
@@ -92,9 +87,6 @@ impl Default for ValidationConfig {
             // false positives due to floating-point accuracy issues), we can
             // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
-
-            // This value is completely arbitrary, but seems good enough for now.
-            sample_count: 16,
         }
     }
 }
