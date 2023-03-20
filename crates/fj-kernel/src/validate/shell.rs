@@ -16,8 +16,8 @@ impl Validate for Shell {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        ShellValidationError::validate_watertight(self, config, errors);
         ShellValidationError::validate_coincident(self, config, errors);
+        ShellValidationError::validate_watertight(self, config, errors);
     }
 }
 
@@ -26,7 +26,7 @@ impl Validate for Shell {
 pub enum ShellValidationError {
     /// [`Shell`] contains global_edges not referred to by two half_edges
     #[error("Shell is not watertight")]
-    NotWaterTight,
+    NotWatertight,
     /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
     #[error(
         "Shell contains HalfEdges which are coinciendent but refer to different GlobalEdges\n
@@ -135,7 +135,105 @@ impl ShellValidationError {
 
         // Each global edge should have exactly two half edges that are part of the shell
         if half_edge_to_faces.iter().find(|(_, c)| **c != 2).is_some() {
-            errors.push(Self::NotWaterTight.into())
+            errors.push(Self::NotWatertight.into())
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::insert::Insert;
+
+    use crate::validate::shell::ShellValidationError;
+    use crate::{
+        builder::{CycleBuilder, FaceBuilder},
+        objects::Shell,
+        services::Services,
+        validate::{Validate, ValidationError},
+    };
+
+    #[test]
+    fn coincident_not_identical() -> anyhow::Result<()> {
+        let mut services = Services::new();
+        let invalid = {
+            // Shell with single face is not watertight
+            let face1 = FaceBuilder::new(services.objects.surfaces.xy_plane())
+                .with_exterior(CycleBuilder::polygon([
+                    [0., 0.],
+                    [0., 1.],
+                    [1., 1.],
+                    [1., 0.],
+                ]))
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+
+            let face2 = FaceBuilder::new(services.objects.surfaces.xz_plane())
+                .with_exterior(CycleBuilder::polygon([
+                    [0., 0.],
+                    [0., 1.],
+                    [1., 1.],
+                    [1., 0.],
+                ]))
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+
+            Shell::new([face1, face2])
+        };
+
+        assert!({
+            let mut errors = Vec::new();
+            invalid.validate(&mut errors);
+            errors
+                .iter()
+                .find(|e| {
+                    matches!(
+                        e,
+                        ValidationError::Shell(
+                            ShellValidationError::CoincidentEdgesNotIdentical(
+                                ..
+                            )
+                        )
+                    )
+                })
+                .is_some()
+        });
+
+        Ok(())
+    }
+    #[test]
+    fn shell_not_watertight() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let invalid = {
+            // Shell with single face is not watertight
+            let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
+                .with_exterior(CycleBuilder::polygon([
+                    [0., 0.],
+                    [0., 1.],
+                    [1., 1.],
+                    [1., 0.],
+                ]))
+                .build(&mut services.objects)
+                .insert(&mut services.objects);
+            Shell::new([face])
+        };
+
+        assert!({
+            let mut errors = Vec::new();
+            invalid.validate(&mut errors);
+            errors
+                .iter()
+                .find(|e| {
+                    matches!(
+                        e,
+                        ValidationError::Shell(
+                            ShellValidationError::NotWatertight
+                        )
+                    )
+                })
+                .is_some()
+        });
+
+        Ok(())
     }
 }
