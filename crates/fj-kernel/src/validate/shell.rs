@@ -34,7 +34,7 @@ pub enum ShellValidationError {
         Edge 2: {1:#?}
         "
     )]
-    CoincidentEdgesNotIdentical(HalfEdge, HalfEdge),
+    CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
 }
 
 /// Check whether to [`HalfEdge`]s are coincident. Along with the edges you
@@ -106,8 +106,8 @@ impl ShellValidationError {
                 {
                     errors.push(
                         Self::CoincidentEdgesNotIdentical(
-                            edge.0.clone_object(),
-                            other_edge.0.clone_object(),
+                            edge.0.clone(),
+                            other_edge.0.clone(),
                         )
                         .into(),
                     )
@@ -134,7 +134,7 @@ impl ShellValidationError {
         }
 
         // Each global edge should have exactly two half edges that are part of the shell
-        if half_edge_to_faces.iter().find(|(_, c)| **c != 2).is_some() {
+        if half_edge_to_faces.iter().any(|(_, c)| *c != 2) {
             errors.push(Self::NotWatertight.into())
         }
     }

@@ -24,7 +24,7 @@ macro_rules! assert_contains_err {
         assert!({
             let mut errors = Vec::new();
             $o.validate(&mut errors);
-            errors.iter().find(|e| matches!(e, $p)).is_some()
+            errors.iter().any(|e| matches!(e, $p))
         })
     };
 }
