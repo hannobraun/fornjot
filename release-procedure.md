@@ -70,7 +70,9 @@ Create a pull request:
 
 - Mention the version in the title (e.g. `Release v0.1.2`).
 - Label it as `release`.
-- Lock the pull request. Anything that updates this pull request (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
+- Lock the pull request.
+
+The pull request needs to be locked, as anything that updates it (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
 
 Once the CI build completed successfully, merge the pull request. The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
 
