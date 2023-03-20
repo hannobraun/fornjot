@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Face, FaceSet},
+    objects::{Face, Set},
     storage::Handle,
 };
 
@@ -11,7 +11,7 @@ use crate::{
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Shell {
-    faces: FaceSet,
+    faces: Set<Face>,
 }
 
 impl Shell {
@@ -23,7 +23,7 @@ impl Shell {
     }
 
     /// Access the faces of the shell
-    pub fn faces(&self) -> &FaceSet {
+    pub fn faces(&self) -> &Set<Face> {
         &self.faces
     }
 

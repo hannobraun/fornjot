@@ -1,18 +1,21 @@
 use fj_interop::debug::DebugInfo;
-use fj_kernel::{objects::FaceSet, services::Services};
+use fj_kernel::{
+    objects::{Face, Set},
+    services::Services,
+};
 use fj_math::Aabb;
 
 use super::Shape;
 
 impl Shape for fj::Group {
-    type Brep = FaceSet;
+    type Brep = Set<Face>;
 
     fn compute_brep(
         &self,
         services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
-        let mut faces = FaceSet::new();
+        let mut faces = Set::new();
 
         let a = self.a.compute_brep(services, debug_info);
         let b = self.b.compute_brep(services, debug_info);

@@ -1,4 +1,7 @@
-use std::collections::{btree_set, BTreeSet};
+use std::{
+    cmp::PartialEq,
+    collections::{btree_set, BTreeSet},
+};
 
 use fj_interop::mesh::Color;
 use fj_math::Winding;
@@ -104,21 +107,29 @@ impl Face {
 }
 
 /// A collection of faces
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct FaceSet {
-    inner: BTreeSet<Handle<Face>>,
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct Set<T: PartialEq + Ord> {
+    inner: BTreeSet<Handle<T>>,
 }
 
-impl FaceSet {
-    /// Create an empty instance of `Faces`
+impl<T: PartialEq + Ord> Default for Set<T> {
+    fn default() -> Self {
+        Self {
+            inner: BTreeSet::default(),
+        }
+    }
+}
+
+impl<T: PartialEq + Ord> Set<T> {
+    /// Create an empty instance of `Set`
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Find the given face
-    pub fn find(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
+    /// Find the given object
+    pub fn find(&self, other: &Handle<T>) -> Option<Handle<T>> {
         for f in self {
-            if f == face {
+            if f == other {
                 return Some(f.clone());
             }
         }
@@ -127,32 +138,32 @@ impl FaceSet {
     }
 }
 
-impl Extend<Handle<Face>> for FaceSet {
-    fn extend<T: IntoIterator<Item = Handle<Face>>>(&mut self, iter: T) {
+impl<T: PartialEq + Ord> Extend<Handle<T>> for Set<T> {
+    fn extend<I: IntoIterator<Item = Handle<T>>>(&mut self, iter: I) {
         self.inner.extend(iter);
     }
 }
 
-impl FromIterator<Handle<Face>> for FaceSet {
-    fn from_iter<T: IntoIterator<Item = Handle<Face>>>(iter: T) -> Self {
-        let mut faces = Self::new();
-        faces.extend(iter);
-        faces
+impl<T: PartialEq + Ord> FromIterator<Handle<T>> for Set<T> {
+    fn from_iter<I: IntoIterator<Item = Handle<T>>>(iter: I) -> Self {
+        let mut items = Self::new();
+        items.extend(iter);
+        items
     }
 }
 
-impl IntoIterator for FaceSet {
-    type Item = Handle<Face>;
-    type IntoIter = btree_set::IntoIter<Handle<Face>>;
+impl<T: PartialEq + Ord> IntoIterator for Set<T> {
+    type Item = Handle<T>;
+    type IntoIter = btree_set::IntoIter<Handle<T>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.into_iter()
     }
 }
 
-impl<'a> IntoIterator for &'a FaceSet {
-    type Item = &'a Handle<Face>;
-    type IntoIter = btree_set::Iter<'a, Handle<Face>>;
+impl<'a, T: PartialEq + Ord> IntoIterator for &'a Set<T> {
+    type Item = &'a Handle<T>;
+    type IntoIter = btree_set::Iter<'a, Handle<T>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.iter()

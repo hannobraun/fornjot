@@ -26,7 +26,7 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    objects::{FaceSet, Sketch},
+    objects::{Face, Set, Sketch},
     services::Services,
 };
 use fj_math::Aabb;
@@ -51,7 +51,7 @@ pub trait Shape {
 }
 
 impl Shape for fj::Shape {
-    type Brep = FaceSet;
+    type Brep = Set<Face>;
 
     fn compute_brep(
         &self,

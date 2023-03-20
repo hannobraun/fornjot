@@ -1,6 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::transform::TransformObject, objects::FaceSet,
+    algorithms::transform::TransformObject,
+    objects::{Face, Set},
     services::Services,
 };
 use fj_math::{Aabb, Transform, Vector};
@@ -8,7 +9,7 @@ use fj_math::{Aabb, Transform, Vector};
 use super::Shape;
 
 impl Shape for fj::Transform {
-    type Brep = FaceSet;
+    type Brep = Set<Face>;
 
     fn compute_brep(
         &self,
