@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{Objects, Vertex},
+    objects::{GlobalEdge, Objects, Vertex},
     services::Service,
     storage::{Handle, ObjectId},
 };
@@ -47,4 +47,6 @@ pub trait Sweep: Sized {
 pub struct SweepCache {
     /// Cache for global vertices
     pub global_vertex: BTreeMap<ObjectId, Handle<Vertex>>,
+    /// Cache for global edges
+    pub global_edge: BTreeMap<ObjectId, Handle<GlobalEdge>>,
 }

@@ -26,7 +26,11 @@ impl Sweep for Handle<Vertex> {
             .clone();
 
         let vertices = [a, b];
-        let global_edge = GlobalEdge::new().insert(objects);
+        let global_edge = cache
+            .global_edge
+            .entry(self.id())
+            .or_insert_with(|| GlobalEdge::new().insert(objects))
+            .clone();
 
         // The vertices of the returned `GlobalEdge` are in normalized order,
         // which means the order can't be relied upon by the caller. Return the
