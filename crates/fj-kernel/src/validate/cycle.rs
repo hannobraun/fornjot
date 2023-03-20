@@ -94,6 +94,7 @@ impl CycleValidationError {
 mod tests {
 
     use crate::{
+        assert_contains_err,
         builder::{CycleBuilder, HalfEdgeBuilder},
         objects::Cycle,
         services::Services,
@@ -120,21 +121,19 @@ mod tests {
                 .add_half_edge(second)
                 .build(&mut services.objects)
         };
-        assert!(matches!(
-            disconnected.validate_and_return_first_error(),
-            Err(ValidationError::Cycle(
+
+        assert_contains_err!(
+            disconnected,
+            ValidationError::Cycle(
                 CycleValidationError::HalfEdgesDisconnected { .. }
-            ))
-        ));
+            )
+        );
 
         let empty = Cycle::new([]);
-        assert!(matches!(
-            empty.validate_and_return_first_error(),
-            Err(ValidationError::Cycle(
-                CycleValidationError::NotEnoughHalfEdges
-            ))
-        ));
-
+        assert_contains_err!(
+            empty,
+            ValidationError::Cycle(CycleValidationError::NotEnoughHalfEdges)
+        );
         Ok(())
     }
 }

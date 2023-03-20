@@ -16,6 +16,19 @@ use std::convert::Infallible;
 
 use fj_math::Scalar;
 
+/// Assert that some object has a validation error which matches a specifc pattern.
+/// This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.
+#[macro_export]
+macro_rules! assert_contains_err {
+    ($o:tt,$p:pat) => {
+        assert!({
+            let mut errors = Vec::new();
+            $o.validate(&mut errors);
+            errors.iter().find(|e| matches!(e, $p)).is_some()
+        })
+    };
+}
+
 /// Validate an object
 ///
 /// This trait is used automatically when inserting an object into a store.

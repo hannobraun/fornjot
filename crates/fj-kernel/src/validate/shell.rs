@@ -142,6 +142,7 @@ impl ShellValidationError {
 
 #[cfg(test)]
 mod tests {
+    use crate::assert_contains_err;
     use crate::insert::Insert;
 
     use crate::validate::shell::ShellValidationError;
@@ -180,23 +181,12 @@ mod tests {
             Shell::new([face1, face2])
         };
 
-        assert!({
-            let mut errors = Vec::new();
-            invalid.validate(&mut errors);
-            errors
-                .iter()
-                .find(|e| {
-                    matches!(
-                        e,
-                        ValidationError::Shell(
-                            ShellValidationError::CoincidentEdgesNotIdentical(
-                                ..
-                            )
-                        )
-                    )
-                })
-                .is_some()
-        });
+        assert_contains_err!(
+            invalid,
+            ValidationError::Shell(
+                ShellValidationError::CoincidentEdgesNotIdentical(..)
+            )
+        );
 
         Ok(())
     }
@@ -218,21 +208,10 @@ mod tests {
             Shell::new([face])
         };
 
-        assert!({
-            let mut errors = Vec::new();
-            invalid.validate(&mut errors);
-            errors
-                .iter()
-                .find(|e| {
-                    matches!(
-                        e,
-                        ValidationError::Shell(
-                            ShellValidationError::NotWatertight
-                        )
-                    )
-                })
-                .is_some()
-        });
+        assert_contains_err!(
+            invalid,
+            ValidationError::Shell(ShellValidationError::NotWatertight)
+        );
 
         Ok(())
     }
