@@ -189,7 +189,6 @@ mod tests {
     fn coincident_not_identical() -> anyhow::Result<()> {
         let mut services = Services::new();
         let invalid = {
-            // Shell with single face is not watertight
             let face1 = FaceBuilder::new(services.objects.surfaces.xy_plane())
                 .with_exterior(CycleBuilder::polygon([
                     [0., 0.],
