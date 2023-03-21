@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{HalfEdge, Shell},
+    objects::{HalfEdge, Shell, Surface},
     storage::{Handle, ObjectId},
 };
 
@@ -27,22 +27,37 @@ pub enum ShellValidationError {
     /// [`Shell`] contains global_edges not referred to by two half_edges
     #[error("Shell is not watertight")]
     NotWatertight,
+
     /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
     #[error(
-        "Shell contains HalfEdges that are coinciendent but refer to different GlobalEdges\n
-        Edge 1: {0:#?}
-        Edge 2: {1:#?}
-        "
+        "`Shell` contains `HalfEdge`s that are coincident but refer to \
+        different `GlobalEdge`s\n\
+        Edge 1: {0:#?}\n\
+        Edge 2: {1:#?}"
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
+
     /// [`Shell`] contains half_edges that are identical, but do not coincide
     #[error(
-        "Shell contains HalfEdges that are identical but do not coincide\n
-        Edge 1: {0:#?}
-        Edge 2: {1:#?}
-        "
+        "Shell contains HalfEdges that are identical but do not coincide\n\
+        Edge 1: {edge_1:#?}\n\
+        Surface for edge 1: {surface_1:#?}\n\
+        Edge 2: {edge_2:#?}\n\
+        Surface for edge 2: {surface_2:#?}"
     )]
-    IdenticalEdgesNotCoincident(Handle<HalfEdge>, Handle<HalfEdge>),
+    IdenticalEdgesNotCoincident {
+        /// The first edge
+        edge_1: Handle<HalfEdge>,
+
+        /// The surface that the first edge is on
+        surface_1: Handle<Surface>,
+
+        /// The second edge
+        edge_2: Handle<HalfEdge>,
+
+        /// The surface that the second edge is on
+        surface_2: Handle<Surface>,
+    },
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -50,8 +65,8 @@ pub enum ShellValidationError {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     config: &ValidationConfig,
-    (edge1, surface1): (Handle<HalfEdge>, SurfaceGeometry),
-    (edge2, surface2): (Handle<HalfEdge>, SurfaceGeometry),
+    (edge1, surface1): (Handle<HalfEdge>, Handle<Surface>),
+    (edge2, surface2): (Handle<HalfEdge>, Handle<Surface>),
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -64,8 +79,8 @@ fn distances(
     }
 
     // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge1, surface1))
-        .distance_to(&sample(0.0, (&edge2, surface2)))
+    let flip = sample(0.0, (&edge1, surface1.geometry()))
+        .distance_to(&sample(0.0, (&edge2, surface2.geometry())))
         > config.identical_max_distance;
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -77,10 +92,10 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge1, surface1));
+        let sample1 = sample(percent, (&edge1, surface1.geometry()));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
-            (&edge2, surface2),
+            (&edge2, surface2.geometry()),
         );
         distances.push(sample1.distance_to(&sample2))
     }
@@ -93,21 +108,21 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let faces: Vec<(Handle<HalfEdge>, SurfaceGeometry)> = shell
+        let edges_and_surfaces: Vec<_> = shell
             .faces()
             .into_iter()
             .flat_map(|face| {
                 face.all_cycles()
                     .flat_map(|cycle| cycle.half_edges().cloned())
-                    .zip(repeat(face.surface().geometry()))
+                    .zip(repeat(face.surface().clone()))
             })
             .collect();
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for edge in &faces {
-            for other_edge in &faces {
+        for edge in &edges_and_surfaces {
+            for other_edge in &edges_and_surfaces {
                 let id = edge.0.global_form().id();
                 let other_id = other_edge.0.global_form().id();
                 let identical = id == other_id;
@@ -120,10 +135,12 @@ impl ShellValidationError {
                             .any(|d| d > config.identical_max_distance)
                         {
                             errors.push(
-                                Self::IdenticalEdgesNotCoincident(
-                                    edge.0.clone(),
-                                    other_edge.0.clone(),
-                                )
+                                Self::IdenticalEdgesNotCoincident {
+                                    edge_1: edge.0.clone(),
+                                    surface_1: edge.1.clone(),
+                                    edge_2: other_edge.0.clone(),
+                                    surface_2: other_edge.1.clone(),
+                                }
                                 .into(),
                             )
                         }
@@ -174,15 +191,13 @@ impl ShellValidationError {
 
 #[cfg(test)]
 mod tests {
-    use crate::assert_contains_err;
-    use crate::insert::Insert;
-
-    use crate::validate::shell::ShellValidationError;
     use crate::{
+        assert_contains_err,
         builder::{CycleBuilder, FaceBuilder},
+        insert::Insert,
         objects::Shell,
         services::Services,
-        validate::{Validate, ValidationError},
+        validate::{shell::ShellValidationError, Validate, ValidationError},
     };
 
     #[test]
