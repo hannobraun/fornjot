@@ -11,8 +11,7 @@ impl State for Objects {
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
         let Operation::InsertObject { object } = command;
-        let event = InsertObject { object };
-        events.push(event);
+        events.push(InsertObject { object });
     }
 
     fn evolve(&mut self, event: &Self::Event) {
