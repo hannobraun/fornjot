@@ -40,10 +40,16 @@ pub enum ShellValidationError {
     /// [`Shell`] contains half_edges that are identical, but do not coincide
     #[error(
         "Shell contains HalfEdges that are identical but do not coincide\n\
-        Edge 1: {0:#?}\n\
-        Edge 2: {1:#?}"
+        Edge 1: {edge_1:#?}\n\
+        Edge 2: {edge_2:#?}"
     )]
-    IdenticalEdgesNotCoincident(Handle<HalfEdge>, Handle<HalfEdge>),
+    IdenticalEdgesNotCoincident {
+        /// The first edge
+        edge_1: Handle<HalfEdge>,
+
+        /// The second edge
+        edge_2: Handle<HalfEdge>,
+    },
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -121,10 +127,10 @@ impl ShellValidationError {
                             .any(|d| d > config.identical_max_distance)
                         {
                             errors.push(
-                                Self::IdenticalEdgesNotCoincident(
-                                    edge.0.clone(),
-                                    other_edge.0.clone(),
-                                )
+                                Self::IdenticalEdgesNotCoincident {
+                                    edge_1: edge.0.clone(),
+                                    edge_2: other_edge.0.clone(),
+                                }
                                 .into(),
                             )
                         }
