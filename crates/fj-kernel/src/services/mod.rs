@@ -13,7 +13,7 @@ use parking_lot::Mutex;
 use crate::objects::Objects;
 
 pub use self::{
-    objects::ServiceObjectsExt,
+    objects::{InsertObject, ObjectToInsert, ServiceObjectsExt},
     service::{Service, State},
     validation::{Validation, ValidationFailed},
 };
