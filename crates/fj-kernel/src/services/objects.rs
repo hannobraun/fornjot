@@ -21,7 +21,7 @@ impl State for Objects {
 }
 
 /// Command for `Service<Objects>`
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub enum Operation {
     /// Insert an object into the stores
     ///
