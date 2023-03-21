@@ -100,21 +100,22 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let faces: Vec<(Handle<HalfEdge>, SurfaceGeometry)> = shell
-            .faces()
-            .into_iter()
-            .flat_map(|face| {
-                face.all_cycles()
-                    .flat_map(|cycle| cycle.half_edges().cloned())
-                    .zip(repeat(face.surface().geometry()))
-            })
-            .collect();
+        let edges_and_surfaces: Vec<(Handle<HalfEdge>, SurfaceGeometry)> =
+            shell
+                .faces()
+                .into_iter()
+                .flat_map(|face| {
+                    face.all_cycles()
+                        .flat_map(|cycle| cycle.half_edges().cloned())
+                        .zip(repeat(face.surface().geometry()))
+                })
+                .collect();
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for edge in &faces {
-            for other_edge in &faces {
+        for edge in &edges_and_surfaces {
+            for other_edge in &edges_and_surfaces {
                 let id = edge.0.global_form().id();
                 let other_id = other_edge.0.global_form().id();
                 let identical = id == other_id;
