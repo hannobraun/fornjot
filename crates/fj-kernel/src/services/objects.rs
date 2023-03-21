@@ -10,7 +10,7 @@ impl State for Objects {
     type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let object = command.object;
+        let Operation::InsertObject { object } = command;
         let event = InsertObject { object };
         events.push(event);
     }
@@ -21,13 +21,19 @@ impl State for Objects {
 }
 
 /// Command for `Service<Objects>`
-///
-/// You might prefer to use [`ServiceObjectsExt::insert`], which is a convenient
-/// wrapper around `Service<Objects>::execute`.
 #[derive(Clone, Debug)]
-pub struct Operation {
-    /// The object to insert
-    pub object: Object<WithHandle>,
+pub enum Operation {
+    /// Insert an object into the stores
+    ///
+    /// This is the one primitive operation that all other operations are built
+    /// upon.
+    ///
+    /// You might prefer to use [`ServiceObjectsExt::insert`], which is a
+    /// convenient wrapper around `Service<Objects>::execute`.
+    InsertObject {
+        /// The object to insert
+        object: Object<WithHandle>,
+    },
 }
 
 /// Event produced by `Service<Objects>`
@@ -50,7 +56,7 @@ impl ServiceObjectsExt for Service<Objects> {
     where
         (Handle<T>, T): Into<Object<WithHandle>>,
     {
-        self.execute(Operation {
+        self.execute(Operation::InsertObject {
             object: (handle, object).into(),
         });
     }
