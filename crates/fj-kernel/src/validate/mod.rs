@@ -97,6 +97,10 @@ impl Default for ValidationConfig {
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
+    /// `Cycle` validation error
+    #[error("`Cycle` validation error\n")]
+    Cycle(#[from] CycleValidationError),
+
     /// `Face` validation error
     #[error("`Face` validation error\n")]
     Face(#[from] FaceValidationError),
@@ -104,10 +108,6 @@ pub enum ValidationError {
     /// `HalfEdge` validation error
     #[error("`HalfEdge` validation error\n")]
     HalfEdge(#[from] HalfEdgeValidationError),
-
-    /// `Cycle` validation error
-    #[error("`Cycle` validation error\n")]
-    Cycle(#[from] CycleValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error\n")]
