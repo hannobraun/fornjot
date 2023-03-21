@@ -100,16 +100,15 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let edges_and_surfaces: Vec<(Handle<HalfEdge>, SurfaceGeometry)> =
-            shell
-                .faces()
-                .into_iter()
-                .flat_map(|face| {
-                    face.all_cycles()
-                        .flat_map(|cycle| cycle.half_edges().cloned())
-                        .zip(repeat(face.surface().geometry()))
-                })
-                .collect();
+        let edges_and_surfaces: Vec<_> = shell
+            .faces()
+            .into_iter()
+            .flat_map(|face| {
+                face.all_cycles()
+                    .flat_map(|cycle| cycle.half_edges().cloned())
+                    .zip(repeat(face.surface().geometry()))
+            })
+            .collect();
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
