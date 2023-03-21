@@ -1,7 +1,7 @@
 use std::slice;
 
-use fj_interop::ext::SliceExt;
 use fj_math::{Scalar, Winding};
+use itertools::Itertools;
 
 use crate::{geometry::curve::Curve, objects::HalfEdge, storage::Handle};
 
@@ -62,7 +62,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for [a, b] in self.half_edges.as_slice().array_windows_ext() {
+        for (a, b) in self.half_edges.iter().circular_tuple_windows() {
             let [a, b] = [a, b].map(|half_edge| half_edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);
