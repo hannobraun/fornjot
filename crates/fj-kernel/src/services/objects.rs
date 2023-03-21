@@ -6,7 +6,7 @@ use crate::{
 use super::{Service, State};
 
 impl State for Objects {
-    type Command = InsertObject;
+    type Command = Operation;
     type Event = ObjectToInsert;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
@@ -26,7 +26,7 @@ impl State for Objects {
 /// You might prefer to use [`ServiceObjectsExt::insert`], which is a convenient
 /// wrapper around `Service<Objects>::execute`.
 #[derive(Clone, Debug)]
-pub struct InsertObject {
+pub struct Operation {
     /// The object to insert
     pub object: Object<WithHandle>,
 }
@@ -51,7 +51,7 @@ impl ServiceObjectsExt for Service<Objects> {
     where
         (Handle<T>, T): Into<Object<WithHandle>>,
     {
-        self.execute(InsertObject {
+        self.execute(Operation {
             object: (handle, object).into(),
         });
     }
