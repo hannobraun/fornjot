@@ -9,8 +9,11 @@ mod solid;
 mod surface;
 mod vertex;
 
-use self::{cycle::CycleValidationError, shell::ShellValidationError};
-pub use self::{edge::HalfEdgeValidationError, face::FaceValidationError};
+pub use self::{
+    cycle::CycleValidationError, edge::HalfEdgeValidationError,
+    face::FaceValidationError, shell::ShellValidationError,
+    solid::SolidValidationError,
+};
 
 use std::convert::Infallible;
 
@@ -109,6 +112,10 @@ pub enum ValidationError {
     /// `Shell` validation error
     #[error("`Shell` validation error:\n{0}")]
     Shell(#[from] ShellValidationError),
+
+    /// `Solid` validation error
+    #[error("`Solid` validation error:\n{0}")]
+    Solid(#[from] SolidValidationError),
 }
 
 impl From<Infallible> for ValidationError {

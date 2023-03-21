@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{HalfEdge, Shell, Vertex},
+    objects::{HalfEdge, Shell},
     storage::{Handle, ObjectId},
 };
 
@@ -16,7 +16,7 @@ impl Validate for Shell {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        ShellValidationError::validate_coincident(self, config, errors);
+        ShellValidationError::validate_edges_coincident(self, config, errors);
         ShellValidationError::validate_watertight(self, config, errors);
     }
 }
@@ -43,24 +43,6 @@ pub enum ShellValidationError {
         "
     )]
     IdenticalEdgesNotCoincident(Handle<HalfEdge>, Handle<HalfEdge>),
-
-    /// [`Shell`] contains vertices that are coincident, but not identical
-    #[error(
-        "Shell contains Vertices that are coinciendent but not identical\n
-        Vertex 1: {:#?} {:#?}
-        Vertex 2: {:#?} {:#?}
-        ", .0[0].0, .0[0].1,.0[1].0,.0[1].1
-    )]
-    DistinctVertsCoincide([(Handle<Vertex>, Point<3>); 2]),
-
-    /// [`Shell`] contains vertices that are identical, but do not coincide
-    #[error(
-        "Shell contains Vertices that are identical but do not coincide\n
-        Vertex 1: {:#?} {:#?}
-        Vertex 2: {:#?} {:#?}
-        ", .0[0].0, .0[0].1,.0[1].0,.0[1].1
-    )]
-    IdenticalVertsNotCoincident([(Handle<Vertex>, Point<3>); 2]),
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -106,7 +88,7 @@ fn distances(
 }
 
 impl ShellValidationError {
-    fn validate_coincident(
+    fn validate_edges_coincident(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -157,56 +139,6 @@ impl ShellValidationError {
                                     edge.0.clone(),
                                     other_edge.0.clone(),
                                 )
-                                .into(),
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        let vertices: Vec<(Point<3>, Handle<Vertex>)> = shell
-            .faces()
-            .into_iter()
-            .flat_map(|face| {
-                face.all_cycles()
-                    .flat_map(|cycle| cycle.half_edges().cloned())
-                    .zip(repeat(face.surface().geometry()))
-            })
-            .map(|(h, s)| {
-                (
-                    s.point_from_surface_coords(h.start_position()),
-                    h.start_vertex().clone(),
-                )
-            })
-            .collect();
-
-        // This is O(N^2) which isn't great, but we can't use a HashMap since we
-        // need to deal with float inaccuracies. Maybe we could use some smarter
-        // data-structure like an octree.
-        for a in &vertices {
-            for b in &vertices {
-                match a.1.id() == b.1.id() {
-                    true => {
-                        if a.0.distance_to(&b.0) > config.identical_max_distance
-                        {
-                            errors.push(
-                                Self::IdenticalVertsNotCoincident([
-                                    (a.1.clone(), a.0),
-                                    (b.1.clone(), b.0),
-                                ])
-                                .into(),
-                            )
-                        }
-                    }
-                    false => {
-                        if a.0.distance_to(&b.0) < config.distinct_min_distance
-                        {
-                            errors.push(
-                                Self::DistinctVertsCoincide([
-                                    (a.1.clone(), a.0),
-                                    (b.1.clone(), b.0),
-                                ])
                                 .into(),
                             )
                         }
