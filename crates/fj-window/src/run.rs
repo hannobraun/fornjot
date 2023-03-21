@@ -6,6 +6,7 @@
 use std::{
     error,
     fmt::{self, Write},
+    thread,
 };
 
 use fj_host::{Host, Model, ModelEvent};
@@ -32,7 +33,21 @@ pub fn run(
 
     let egui_winit_state = egui_winit::State::new(&event_loop);
 
-    let mut host = Host::new(shape_processor, event_loop.create_proxy());
+    let (model_event_tx, model_event_rx) = crossbeam_channel::unbounded();
+    let event_proxy = event_loop.create_proxy();
+
+    let _event_relay_join_handle = thread::Builder::new()
+        .name("event_relay".to_string())
+        .spawn(move || {
+            for event in model_event_rx {
+                if event_proxy.send_event(event).is_err() {
+                    // Looks like the main window closed.
+                    break;
+                }
+            }
+        });
+
+    let mut host = Host::new(shape_processor, model_event_tx);
 
     if let Some(model) = model {
         host.load_model(model);

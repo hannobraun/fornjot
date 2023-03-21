@@ -3,7 +3,6 @@ use std::thread::{self, JoinHandle};
 use crossbeam_channel::{self, Receiver, Sender};
 use fj_interop::processed_shape::ProcessedShape;
 use fj_operations::shape_processor::ShapeProcessor;
-use winit::event_loop::EventLoopProxy;
 
 use crate::{Error, HostCommand, Model, Watcher};
 
@@ -14,7 +13,7 @@ pub(crate) struct EventLoopClosed;
 
 pub(crate) struct HostThread {
     shape_processor: ShapeProcessor,
-    event_loop_proxy: EventLoopProxy<ModelEvent>,
+    model_event_tx: Sender<ModelEvent>,
     command_tx: Sender<HostCommand>,
     command_rx: Receiver<HostCommand>,
 }
@@ -23,14 +22,14 @@ impl HostThread {
     // Spawn a background thread that will process models for an event loop.
     pub(crate) fn spawn(
         shape_processor: ShapeProcessor,
-        event_loop_proxy: EventLoopProxy<ModelEvent>,
+        event_loop_proxy: Sender<ModelEvent>,
     ) -> (Sender<HostCommand>, JoinHandle<Result<(), EventLoopClosed>>) {
         let (command_tx, command_rx) = crossbeam_channel::unbounded();
         let command_tx_2 = command_tx.clone();
 
         let host_thread = Self {
             shape_processor,
-            event_loop_proxy,
+            model_event_tx: event_loop_proxy,
             command_tx,
             command_rx,
         };
@@ -117,8 +116,8 @@ impl HostThread {
 
     // Send a message to the event loop.
     fn send_event(&mut self, event: ModelEvent) -> Result<(), EventLoopClosed> {
-        self.event_loop_proxy
-            .send_event(event)
+        self.model_event_tx
+            .send(event)
             .map_err(|_| EventLoopClosed)?;
 
         Ok(())
