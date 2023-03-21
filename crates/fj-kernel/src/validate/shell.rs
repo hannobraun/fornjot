@@ -1,10 +1,10 @@
 use std::{collections::HashMap, iter::repeat};
 
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{HalfEdge, Shell},
+    objects::{HalfEdge, Shell, Vertex},
     storage::{Handle, ObjectId},
 };
 
@@ -29,25 +29,48 @@ pub enum ShellValidationError {
     NotWatertight,
     /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
     #[error(
-        "Shell contains HalfEdges which are coinciendent but refer to different GlobalEdges\n
+        "Shell contains HalfEdges that are coinciendent but refer to different GlobalEdges\n
         Edge 1: {0:#?}
         Edge 2: {1:#?}
         "
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
+    /// [`Shell`] contains half_edges that are identical, but do not coincide
+    #[error(
+        "Shell contains HalfEdges that are identical but do not coincide\n
+        Edge 1: {0:#?}
+        Edge 2: {1:#?}
+        "
+    )]
+    IdenticalEdgesNotCoincident(Handle<HalfEdge>, Handle<HalfEdge>),
+
+    /// [`Shell`] contains vertices that are coincident, but not identical
+    #[error(
+        "Shell contains Vertices that are coinciendent but not identical\n
+        Vertex 1: {:#?} {:#?}
+        Vertex 2: {:#?} {:#?}
+        ", .0[0].0, .0[0].1,.0[1].0,.0[1].1
+    )]
+    DistinctVertsCoincide([(Handle<Vertex>, Point<3>); 2]),
+
+    /// [`Shell`] contains vertices that are identical, but do not coincide
+    #[error(
+        "Shell contains Vertices that are identical but do not coincide\n
+        Vertex 1: {:#?} {:#?}
+        Vertex 2: {:#?} {:#?}
+        ", .0[0].0, .0[0].1,.0[1].0,.0[1].1
+    )]
+    IdenticalVertsNotCoincident([(Handle<Vertex>, Point<3>); 2]),
 }
 
-/// Check whether to [`HalfEdge`]s are coincident. Along with the edges you
-/// provide the surface that they are on, so that we can check their positions
-/// in 3D space.
-/// We check whether they are coincident by comparing a configurable amount
-/// of points, and seeing whether they are further than the maximum distance for
-/// identical objects, see [`ValidationConfig`]
-fn are_coincident(
+/// Sample two edges at various (currently 3) points in 3D along them.
+///
+/// Returns an [`Iterator`] of the distance at each sample.
+fn distances(
     config: &ValidationConfig,
     (edge1, surface1): (Handle<HalfEdge>, SurfaceGeometry),
     (edge2, surface2): (Handle<HalfEdge>, SurfaceGeometry),
-) -> bool {
+) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
         (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
@@ -67,20 +90,19 @@ fn are_coincident(
     // and circles match. If we were to add more complicated curves, this might
     // need to change.
     let sample_count = 3;
+    let step = 1.0 / (sample_count as f64 - 1.0);
+
+    let mut distances = Vec::new();
     for i in 0..sample_count {
-        let percent = i as f64 * (1.0 / sample_count as f64);
+        let percent = i as f64 * step;
         let sample1 = sample(percent, (&edge1, surface1));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
             (&edge2, surface2),
         );
-        if sample1.distance_to(&sample2) > config.identical_max_distance {
-            // If corresponding points are further than the max distance than these HalfEdges are not coincident
-            return false;
-        }
+        distances.push(sample1.distance_to(&sample2))
     }
-
-    true
+    distances.into_iter()
 }
 
 impl ShellValidationError {
@@ -99,22 +121,96 @@ impl ShellValidationError {
             })
             .collect();
 
-        // This is O(N) which isn't great, but we can't use a HashMap since we need to deal with float inaccuracies.
-        #[allow(unreachable_code)]
+        // This is O(N^2) which isn't great, but we can't use a HashMap since we
+        // need to deal with float inaccuracies. Maybe we could use some smarter
+        // data-structure like an octree.
         for edge in &faces {
             for other_edge in &faces {
-                let identical = edge.0.global_form().id()
-                    == other_edge.0.global_form().id();
-                if are_coincident(config, edge.clone(), other_edge.clone())
-                    && !identical
-                {
-                    errors.push(
-                        Self::CoincidentEdgesNotIdentical(
-                            edge.0.clone(),
-                            other_edge.0.clone(),
-                        )
-                        .into(),
-                    )
+                let id = edge.0.global_form().id();
+                let other_id = other_edge.0.global_form().id();
+                let identical = id == other_id;
+                match identical {
+                    true => {
+                        // All points on identical curves should be within
+                        // identical_max_distance, so we shouldn't have any
+                        // greater than the max
+                        if distances(config, edge.clone(), other_edge.clone())
+                            .any(|d| d > config.identical_max_distance)
+                        {
+                            errors.push(
+                                Self::IdenticalEdgesNotCoincident(
+                                    edge.0.clone(),
+                                    other_edge.0.clone(),
+                                )
+                                .into(),
+                            )
+                        }
+                    }
+                    false => {
+                        // If all points on distinct curves are within
+                        // distinct_min_distance, that's a problem.
+                        if distances(config, edge.clone(), other_edge.clone())
+                            .all(|d| d < config.distinct_min_distance)
+                        {
+                            errors.push(
+                                Self::CoincidentEdgesNotIdentical(
+                                    edge.0.clone(),
+                                    other_edge.0.clone(),
+                                )
+                                .into(),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        let vertices: Vec<(Point<3>, Handle<Vertex>)> = shell
+            .faces()
+            .into_iter()
+            .flat_map(|face| {
+                face.all_cycles()
+                    .flat_map(|cycle| cycle.half_edges().cloned())
+                    .zip(repeat(face.surface().geometry()))
+            })
+            .map(|(h, s)| {
+                (
+                    s.point_from_surface_coords(h.start_position()),
+                    h.start_vertex().clone(),
+                )
+            })
+            .collect();
+
+        // This is O(N^2) which isn't great, but we can't use a HashMap since we
+        // need to deal with float inaccuracies. Maybe we could use some smarter
+        // data-structure like an octree.
+        for a in &vertices {
+            for b in &vertices {
+                match a.1.id() == b.1.id() {
+                    true => {
+                        if a.0.distance_to(&b.0) > config.identical_max_distance
+                        {
+                            errors.push(
+                                Self::IdenticalVertsNotCoincident([
+                                    (a.1.clone(), a.0),
+                                    (b.1.clone(), b.0),
+                                ])
+                                .into(),
+                            )
+                        }
+                    }
+                    false => {
+                        if a.0.distance_to(&b.0) < config.distinct_min_distance
+                        {
+                            errors.push(
+                                Self::DistinctVertsCoincide([
+                                    (a.1.clone(), a.0),
+                                    (b.1.clone(), b.0),
+                                ])
+                                .into(),
+                            )
+                        }
+                    }
                 }
             }
         }
