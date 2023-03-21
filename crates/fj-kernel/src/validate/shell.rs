@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::surface::SurfaceGeometry,
-    objects::{HalfEdge, Shell},
+    objects::{HalfEdge, Shell, Surface},
     storage::{Handle, ObjectId},
 };
 
@@ -57,8 +57,8 @@ pub enum ShellValidationError {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     config: &ValidationConfig,
-    (edge1, surface1): (Handle<HalfEdge>, SurfaceGeometry),
-    (edge2, surface2): (Handle<HalfEdge>, SurfaceGeometry),
+    (edge1, surface1): (Handle<HalfEdge>, Handle<Surface>),
+    (edge2, surface2): (Handle<HalfEdge>, Handle<Surface>),
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -71,8 +71,8 @@ fn distances(
     }
 
     // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge1, surface1))
-        .distance_to(&sample(0.0, (&edge2, surface2)))
+    let flip = sample(0.0, (&edge1, surface1.geometry()))
+        .distance_to(&sample(0.0, (&edge2, surface2.geometry())))
         > config.identical_max_distance;
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -84,10 +84,10 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge1, surface1));
+        let sample1 = sample(percent, (&edge1, surface1.geometry()));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
-            (&edge2, surface2),
+            (&edge2, surface2.geometry()),
         );
         distances.push(sample1.distance_to(&sample2))
     }
@@ -106,7 +106,7 @@ impl ShellValidationError {
             .flat_map(|face| {
                 face.all_cycles()
                     .flat_map(|cycle| cycle.half_edges().cloned())
-                    .zip(repeat(face.surface().geometry()))
+                    .zip(repeat(face.surface().clone()))
             })
             .collect();
 
