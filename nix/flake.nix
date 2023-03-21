@@ -25,7 +25,7 @@
           let toolchainToml = (builtins.fromTOML (builtins.readFile ../rust-toolchain.toml)).toolchain; in
           {
             channel = toolchainToml.channel;
-            components = toolchainToml.components ++ [ "rust-analyzer" ];
+            components = toolchainToml.components ++ [ "rust-analyzer" "rust-src" ];
           }
         );
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
