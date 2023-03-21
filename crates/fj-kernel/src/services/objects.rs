@@ -7,10 +7,10 @@ use super::{Service, State};
 
 impl State for Objects {
     type Command = Operation;
-    type Event = ObjectToInsert;
+    type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let event = ObjectToInsert {
+        let event = InsertObject {
             object: command.object,
         };
         events.push(event);
@@ -33,7 +33,7 @@ pub struct Operation {
 
 /// Event produced by `Service<Objects>`
 #[derive(Clone, Debug)]
-pub struct ObjectToInsert {
+pub struct InsertObject {
     /// The object to insert
     pub object: Object<WithHandle>,
 }
