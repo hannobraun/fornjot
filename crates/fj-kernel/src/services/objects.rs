@@ -10,9 +10,8 @@ impl State for Objects {
     type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let event = InsertObject {
-            object: command.object,
-        };
+        let object = command.object;
+        let event = InsertObject { object };
         events.push(event);
     }
 
