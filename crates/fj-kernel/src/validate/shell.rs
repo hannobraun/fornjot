@@ -29,7 +29,7 @@ pub enum ShellValidationError {
     NotWatertight,
     /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
     #[error(
-        "Shell contains HalfEdges that are coinciendent but refer to different GlobalEdges\n
+        "Shell contains HalfEdges that are coincident but refer to different GlobalEdges\n
         Edge 1: {0:#?}
         Edge 2: {1:#?}
         "
