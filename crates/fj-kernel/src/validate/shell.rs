@@ -174,15 +174,13 @@ impl ShellValidationError {
 
 #[cfg(test)]
 mod tests {
-    use crate::assert_contains_err;
-    use crate::insert::Insert;
-
-    use crate::validate::shell::ShellValidationError;
     use crate::{
+        assert_contains_err,
         builder::{CycleBuilder, FaceBuilder},
+        insert::Insert,
         objects::Shell,
         services::Services,
-        validate::{Validate, ValidationError},
+        validate::{shell::ShellValidationError, Validate, ValidationError},
     };
 
     #[test]
