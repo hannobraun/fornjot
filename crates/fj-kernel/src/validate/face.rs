@@ -72,6 +72,7 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         algorithms::reverse::Reverse,
+        assert_contains_err,
         builder::{CycleBuilder, FaceBuilder},
         objects::Face,
         services::Services,
@@ -110,12 +111,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(matches!(
-            invalid.validate_and_return_first_error(),
-            Err(ValidationError::Face(
+        assert_contains_err!(
+            invalid,
+            ValidationError::Face(
                 FaceValidationError::InvalidInteriorWinding { .. }
-            ))
-        ));
+            )
+        );
 
         Ok(())
     }

@@ -76,6 +76,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
+        assert_contains_err,
         builder::HalfEdgeBuilder,
         objects::HalfEdge,
         services::Services,
@@ -100,12 +101,12 @@ mod tests {
         };
 
         valid.validate_and_return_first_error()?;
-        assert!(matches!(
-            invalid.validate_and_return_first_error(),
-            Err(ValidationError::HalfEdge(
+        assert_contains_err!(
+            invalid,
+            ValidationError::HalfEdge(
                 HalfEdgeValidationError::VerticesAreCoincident { .. }
-            ))
-        ));
+            )
+        );
 
         Ok(())
     }

@@ -44,9 +44,10 @@ impl CycleBuilder {
         let half_edges = edges
             .into_iter()
             .circular_tuple_windows()
-            .map(|((prev, _, _), (_, curve, boundary))| {
+            .map(|((prev, _, _), (half_edge, curve, boundary))| {
                 HalfEdgeBuilder::new(curve, boundary)
                     .with_start_vertex(prev.start_vertex().clone())
+                    .with_global_form(half_edge.global_form().clone())
             })
             .collect();
 

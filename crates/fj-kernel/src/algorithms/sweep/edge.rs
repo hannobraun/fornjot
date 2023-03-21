@@ -37,8 +37,8 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                 [
                     Some(edge.global_form().clone()),
                     Some(edge_up),
-                    Some(edge_down),
                     None,
+                    Some(edge_down),
                 ],
             )
         };

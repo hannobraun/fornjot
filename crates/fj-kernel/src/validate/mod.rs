@@ -9,12 +9,28 @@ mod solid;
 mod surface;
 mod vertex;
 
-use self::cycle::CycleValidationError;
-pub use self::{edge::HalfEdgeValidationError, face::FaceValidationError};
+pub use self::{
+    cycle::CycleValidationError, edge::HalfEdgeValidationError,
+    face::FaceValidationError, shell::ShellValidationError,
+    solid::SolidValidationError,
+};
 
 use std::convert::Infallible;
 
 use fj_math::Scalar;
+
+/// Assert that some object has a validation error which matches a specifc pattern.
+/// This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.
+#[macro_export]
+macro_rules! assert_contains_err {
+    ($o:tt,$p:pat) => {
+        assert!({
+            let mut errors = Vec::new();
+            $o.validate(&mut errors);
+            errors.iter().any(|e| matches!(e, $p))
+        })
+    };
+}
 
 /// Validate an object
 ///
@@ -92,6 +108,14 @@ pub enum ValidationError {
     /// `Cycle` validation error
     #[error("`Cycle` validation error:\n{0}")]
     Cycle(#[from] CycleValidationError),
+
+    /// `Shell` validation error
+    #[error("`Shell` validation error:\n{0}")]
+    Shell(#[from] ShellValidationError),
+
+    /// `Solid` validation error
+    #[error("`Solid` validation error:\n{0}")]
+    Solid(#[from] SolidValidationError),
 }
 
 impl From<Infallible> for ValidationError {
