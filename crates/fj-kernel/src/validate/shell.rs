@@ -29,18 +29,17 @@ pub enum ShellValidationError {
     NotWatertight,
     /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
     #[error(
-        "Shell contains HalfEdges that are coincident but refer to different GlobalEdges\n
-        Edge 1: {0:#?}
-        Edge 2: {1:#?}
-        "
+        "`Shell` contains `HalfEdge`s that are coincident but refer to \
+        different `GlobalEdge`s\n\
+        Edge 1: {0:#?}\n\
+        Edge 2: {1:#?}"
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
     /// [`Shell`] contains half_edges that are identical, but do not coincide
     #[error(
-        "Shell contains HalfEdges that are identical but do not coincide\n
-        Edge 1: {0:#?}
-        Edge 2: {1:#?}
-        "
+        "Shell contains HalfEdges that are identical but do not coincide\n\
+        Edge 1: {0:#?}\n\
+        Edge 2: {1:#?}"
     )]
     IdenticalEdgesNotCoincident(Handle<HalfEdge>, Handle<HalfEdge>),
 }
