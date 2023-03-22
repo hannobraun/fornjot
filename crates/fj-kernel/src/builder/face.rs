@@ -1,4 +1,4 @@
-use fj_interop::mesh::Color;
+use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::Point;
 
 use crate::{
@@ -31,6 +31,7 @@ impl FaceBuilder {
     /// Create a triangle
     pub fn triangle(
         points: [impl Into<Point<3>>; 3],
+        edges: [Option<Handle<GlobalEdge>>; 3],
         objects: &mut Service<Objects>,
     ) -> (Handle<Face>, [Handle<GlobalEdge>; 3]) {
         let [a, b, c] = points.map(Into::into);
@@ -38,13 +39,20 @@ impl FaceBuilder {
         let surface =
             SurfaceBuilder::plane_from_points([a, b, c]).insert(objects);
         let (exterior, global_edges) = {
-            let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
-                HalfEdgeBuilder::line_segment_from_global_points(
-                    points, &surface, None,
-                )
-                .build(objects)
-                .insert(objects)
-            });
+            let half_edges = [[a, b], [b, c], [c, a]].zip_ext(edges).map(
+                |(points, global_form)| {
+                    let mut builder =
+                        HalfEdgeBuilder::line_segment_from_global_points(
+                            points, &surface, None,
+                        );
+
+                    if let Some(global_form) = global_form {
+                        builder = builder.with_global_form(global_form);
+                    }
+
+                    builder.build(objects).insert(objects)
+                },
+            );
 
             let cycle = Cycle::new(half_edges.clone()).insert(objects);
 

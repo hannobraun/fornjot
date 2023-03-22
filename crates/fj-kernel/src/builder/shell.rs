@@ -19,7 +19,8 @@ impl ShellBuilder {
     ) -> Shell {
         let [a, b, c, d] = points.map(Into::into);
 
-        let (bottom, [ab, bc, ca]) = FaceBuilder::triangle([a, b, c], objects);
+        let (bottom, [ab, bc, ca]) =
+            FaceBuilder::triangle([a, b, c], [None, None, None], objects);
         let (front, [_, bd, da]) = {
             let surface =
                 SurfaceBuilder::plane_from_points([a, b, d]).insert(objects);
