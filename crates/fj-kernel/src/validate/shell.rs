@@ -278,11 +278,11 @@ mod tests {
                 (face, global_edges)
             };
             let (left, [_, _, dc]) = {
-                let surface = SurfaceBuilder::plane_from_points([a, c, d])
+                let surface = SurfaceBuilder::plane_from_points([c, a, d])
                     .insert(&mut services.objects);
                 let (exterior, global_edges) = {
-                    let c = [1., 0.];
-                    let a = [0., 0.];
+                    let c = [0., 0.];
+                    let a = [1., 0.];
                     let d = [0., 1.];
 
                     let half_edges = [
