@@ -1,7 +1,4 @@
-use crate::{
-    objects::{Object, Objects, WithHandle},
-    storage::Handle,
-};
+use crate::objects::{Object, Objects, WithHandle};
 
 use super::{Service, State};
 
@@ -45,18 +42,11 @@ pub struct InsertObject {
 /// Convenient API for `Service<Objects>`
 pub trait ServiceObjectsExt {
     /// Insert an object
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>;
+    fn insert(&mut self, object: Object<WithHandle>);
 }
 
 impl ServiceObjectsExt for Service<Objects> {
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>,
-    {
-        self.execute(Operation::InsertObject {
-            object: (handle, object).into(),
-        });
+    fn insert(&mut self, object: Object<WithHandle>) {
+        self.execute(Operation::InsertObject { object });
     }
 }
