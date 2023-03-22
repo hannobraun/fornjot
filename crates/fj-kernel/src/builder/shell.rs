@@ -6,7 +6,7 @@ use crate::{
     services::Service,
 };
 
-use super::{HalfEdgeBuilder, SurfaceBuilder};
+use super::{FaceBuilder, HalfEdgeBuilder, SurfaceBuilder};
 
 /// Builder API for [`Shell`]
 pub struct ShellBuilder {}
@@ -19,30 +19,7 @@ impl ShellBuilder {
     ) -> Shell {
         let [a, b, c, d] = points.map(Into::into);
 
-        let (bottom, [ab, bc, ca]) = {
-            let surface =
-                SurfaceBuilder::plane_from_points([a, b, c]).insert(objects);
-            let (exterior, global_edges) = {
-                let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
-                    HalfEdgeBuilder::line_segment_from_global_points(
-                        points, &surface, None,
-                    )
-                    .build(objects)
-                    .insert(objects)
-                });
-
-                let cycle = Cycle::new(half_edges.clone()).insert(objects);
-
-                let global_edges =
-                    half_edges.map(|half_edge| half_edge.global_form().clone());
-
-                (cycle, global_edges)
-            };
-
-            let face = Face::new(surface, exterior, [], None).insert(objects);
-
-            (face, global_edges)
-        };
+        let (bottom, [ab, bc, ca]) = FaceBuilder::triangle([a, b, c], objects);
         let (front, [_, bd, da]) = {
             let surface =
                 SurfaceBuilder::plane_from_points([a, b, d]).insert(objects);
