@@ -4,5 +4,9 @@
 mod cycle;
 mod edge;
 mod face;
+mod surface;
 
-pub use self::{cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder};
+pub use self::{
+    cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder,
+    surface::SurfaceBuilder,
+};
