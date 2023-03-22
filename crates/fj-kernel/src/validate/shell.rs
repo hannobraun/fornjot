@@ -246,6 +246,10 @@ mod tests {
     fn shell_not_watertight() -> anyhow::Result<()> {
         let mut services = Services::new();
 
+        let valid = ShellBuilder::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut services.objects,
+        );
         let invalid = {
             // Shell with single face is not watertight
             let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
@@ -260,6 +264,7 @@ mod tests {
             Shell::new([face])
         };
 
+        valid.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)
