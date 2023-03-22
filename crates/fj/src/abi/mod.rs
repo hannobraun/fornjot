@@ -43,7 +43,7 @@ mod host;
 mod metadata;
 mod model;
 
-use std::any::Any;
+use std::{any::Any, fmt::Display, panic, sync::Mutex};
 
 pub use self::{
     context::Context,
@@ -118,15 +118,86 @@ pub type ModelMetadataResult =
 ///
 pub const INIT_FUNCTION_NAME: &str = "fj_model_init";
 
-fn on_panic(payload: Box<dyn Any + Send>) -> crate::abi::ffi_safe::String {
-    let msg: &str =
-        if let Some(s) = payload.downcast_ref::<std::string::String>() {
-            s.as_str()
-        } else if let Some(s) = payload.downcast_ref::<&str>() {
-            s
-        } else {
-            "A panic occurred"
-        };
+// Contains details about a panic that we need to pass back to the application from the panic hook.
+struct PanicInfo {
+    message: Option<String>,
+    location: Option<Location>,
+}
 
-    crate::abi::ffi_safe::String::from(msg.to_string())
+impl Display for PanicInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let message = self
+            .message
+            .as_ref()
+            .map_or("No error given", |message| message.as_str());
+
+        write!(f, "{}, ", message)?;
+
+        if let Some(location) = self.location.as_ref() {
+            write!(f, "{}", location)?;
+        } else {
+            write!(f, "No location given")?;
+        }
+
+        Ok(())
+    }
+}
+
+struct Location {
+    file: String,
+    line: u32,
+    column: u32,
+}
+
+impl Display for Location {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}:{}:{}", self.file, self.line, self.column)
+    }
+}
+
+static LAST_PANIC: Mutex<Option<PanicInfo>> = Mutex::new(None);
+
+/// Capturing panics is something Rust really doesn't want you to do, and as such, they make it convoluted.
+/// This sets up all the machinery in the background to pull it off.
+///
+/// It's okay to call this multiple times.
+pub fn initialize_panic_handling() {
+    panic::set_hook(Box::new(|panic_info| {
+        let mut last_panic =
+            LAST_PANIC.lock().expect("Panic queue was poisoned."); // FIXME that can probably overflow the stack.
+        let message = if let Some(s) =
+            panic_info.payload().downcast_ref::<std::string::String>()
+        {
+            Some(s.as_str())
+        } else {
+            panic_info.payload().downcast_ref::<&str>().copied()
+        }
+        .map(|s| s.to_string());
+
+        let location = panic_info.location().map(|location| Location {
+            file: location.file().to_string(),
+            line: location.line(),
+            column: location.column(),
+        });
+
+        *last_panic = Some(PanicInfo { message, location });
+    }));
+}
+
+fn on_panic(_payload: Box<dyn Any + Send>) -> crate::abi::ffi_safe::String {
+    // The payload is technically no longer needed, but I left it there just in case a change to `catch_unwind` made
+    // it useful again.
+    if let Ok(mut panic_info) = LAST_PANIC.lock() {
+        if let Some(panic_info) = panic_info.take() {
+            crate::abi::ffi_safe::String::from(format!("{}", panic_info))
+        } else {
+            crate::abi::ffi_safe::String::from(
+                "Panic in model: No details were given.".to_string(),
+            )
+        }
+    } else {
+        crate::abi::ffi_safe::String::from(
+            "Panic in model, but due to a poisoned panic queue the information could not be collected."
+        .to_string())
+    }
 }

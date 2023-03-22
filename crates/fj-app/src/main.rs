@@ -19,6 +19,7 @@ mod path;
 use std::{env, error::Error};
 
 use anyhow::{anyhow, Context};
+use fj::abi;
 use fj_export::export;
 use fj_host::Parameters;
 use fj_operations::shape_processor::ShapeProcessor;
@@ -35,6 +36,9 @@ fn main() -> anyhow::Result<()> {
         .with_env_filter(try_default_env_filter()?)
         .event_format(format().pretty())
         .init();
+
+    // We need to initialize panic handling before attempting to load a model.
+    abi::initialize_panic_handling();
 
     let args = Args::parse();
     let config = Config::load()?;
