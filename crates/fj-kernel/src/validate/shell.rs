@@ -195,10 +195,9 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder},
-        geometry::{curve::GlobalPath, surface::SurfaceGeometry},
+        builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
         insert::Insert,
-        objects::{Cycle, Face, Shell, Surface},
+        objects::{Cycle, Face, Shell},
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };
@@ -208,12 +207,13 @@ mod tests {
         let mut services = Services::new();
 
         let valid = {
-            let [_a, b, c, d] =
+            let [a, b, c, d] =
                 [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
                     .map(Point::from);
 
             let (bottom, [ab, bc, ca]) = {
-                let surface = services.objects.surfaces.xy_plane();
+                let surface = SurfaceBuilder::plane_from_points([a, b, c])
+                    .insert(&mut services.objects);
                 let (exterior, global_edges) = {
                     let a = [0., 0.];
                     let b = [1., 0.];
@@ -240,7 +240,8 @@ mod tests {
                 (face, global_edges)
             };
             let (front, [_, bd, da]) = {
-                let surface = services.objects.surfaces.xz_plane();
+                let surface = SurfaceBuilder::plane_from_points([a, b, d])
+                    .insert(&mut services.objects);
                 let (exterior, global_edges) = {
                     let a = [0., 0.];
                     let b = [1., 0.];
@@ -277,7 +278,8 @@ mod tests {
                 (face, global_edges)
             };
             let (left, [_, _, dc]) = {
-                let surface = services.objects.surfaces.yz_plane();
+                let surface = SurfaceBuilder::plane_from_points([a, c, d])
+                    .insert(&mut services.objects);
                 let (exterior, global_edges) = {
                     let c = [1., 0.];
                     let a = [0., 0.];
@@ -316,13 +318,8 @@ mod tests {
                 (face, global_edges)
             };
             let back_right = {
-                let surface = {
-                    let geometry = SurfaceGeometry {
-                        u: GlobalPath::line_from_points([b, c]).0,
-                        v: d - b,
-                    };
-                    Surface::new(geometry).insert(&mut services.objects)
-                };
+                let surface = SurfaceBuilder::plane_from_points([b, c, d])
+                    .insert(&mut services.objects);
                 let exterior = {
                     let b = [0., 0.];
                     let c = [1., 0.];
