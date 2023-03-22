@@ -6,7 +6,7 @@ use crate::{
     validate::ValidationError,
 };
 
-use super::{objects::ObjectToInsert, State};
+use super::{objects::InsertObject, State};
 
 /// Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
@@ -33,7 +33,7 @@ impl Drop for Validation {
 }
 
 impl State for Validation {
-    type Command = ObjectToInsert;
+    type Command = InsertObject;
     type Event = ValidationFailed;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {

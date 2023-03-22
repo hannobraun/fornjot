@@ -1,19 +1,14 @@
-use crate::{
-    objects::{Object, Objects, WithHandle},
-    storage::Handle,
-};
+use crate::objects::{Object, Objects, WithHandle};
 
 use super::{Service, State};
 
 impl State for Objects {
-    type Command = InsertObject;
-    type Event = ObjectToInsert;
+    type Command = Operation;
+    type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let event = ObjectToInsert {
-            object: command.object,
-        };
-        events.push(event);
+        let Operation::InsertObject { object } = command;
+        events.push(InsertObject { object });
     }
 
     fn evolve(&mut self, event: &Self::Event) {
@@ -22,18 +17,24 @@ impl State for Objects {
 }
 
 /// Command for `Service<Objects>`
-///
-/// You might prefer to use [`ServiceObjectsExt::insert`], which is a convenient
-/// wrapper around `Service<Objects>::execute`.
-#[derive(Clone, Debug)]
-pub struct InsertObject {
-    /// The object to insert
-    pub object: Object<WithHandle>,
+#[derive(Debug)]
+pub enum Operation {
+    /// Insert an object into the stores
+    ///
+    /// This is the one primitive operation that all other operations are built
+    /// upon.
+    ///
+    /// You might prefer to use [`ServiceObjectsExt::insert`], which is a
+    /// convenient wrapper around `Service<Objects>::execute`.
+    InsertObject {
+        /// The object to insert
+        object: Object<WithHandle>,
+    },
 }
 
 /// Event produced by `Service<Objects>`
 #[derive(Clone, Debug)]
-pub struct ObjectToInsert {
+pub struct InsertObject {
     /// The object to insert
     pub object: Object<WithHandle>,
 }
@@ -41,18 +42,11 @@ pub struct ObjectToInsert {
 /// Convenient API for `Service<Objects>`
 pub trait ServiceObjectsExt {
     /// Insert an object
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>;
+    fn insert(&mut self, object: Object<WithHandle>);
 }
 
 impl ServiceObjectsExt for Service<Objects> {
-    fn insert<T>(&mut self, handle: Handle<T>, object: T)
-    where
-        (Handle<T>, T): Into<Object<WithHandle>>,
-    {
-        self.execute(InsertObject {
-            object: (handle, object).into(),
-        });
+    fn insert(&mut self, object: Object<WithHandle>) {
+        self.execute(Operation::InsertObject { object });
     }
 }
