@@ -118,8 +118,8 @@ mod tests {
                 HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
 
             CycleBuilder::new()
-                .add_half_edge(first)
-                .add_half_edge(second)
+                .add_half_edges([first])
+                .add_half_edges([second])
                 .build(&mut services.objects)
         };
 
