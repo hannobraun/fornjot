@@ -2,7 +2,6 @@ use std::thread::JoinHandle;
 
 use crossbeam_channel::Sender;
 use fj_operations::shape_processor::ShapeProcessor;
-use winit::event_loop::EventLoopProxy;
 
 use crate::{EventLoopClosed, HostThread, Model, ModelEvent};
 
@@ -18,10 +17,10 @@ impl Host {
     /// loop.
     pub fn new(
         shape_processor: ShapeProcessor,
-        event_loop_proxy: EventLoopProxy<ModelEvent>,
+        model_event_tx: Sender<ModelEvent>,
     ) -> Self {
         let (command_tx, host_thread) =
-            HostThread::spawn(shape_processor, event_loop_proxy);
+            HostThread::spawn(shape_processor, model_event_tx);
 
         Self {
             command_tx,
