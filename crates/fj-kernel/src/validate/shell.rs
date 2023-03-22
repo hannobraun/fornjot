@@ -191,13 +191,11 @@ impl ShellValidationError {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Point;
-
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder, HalfEdgeBuilder, SurfaceBuilder},
+        builder::{CycleBuilder, FaceBuilder, ShellBuilder},
         insert::Insert,
-        objects::{Cycle, Face, Shell},
+        objects::Shell,
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };
@@ -206,134 +204,10 @@ mod tests {
     fn coincident_not_identical() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = {
-            let [a, b, c, d] =
-                [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]]
-                    .map(Point::from);
-
-            let (bottom, [ab, bc, ca]) = {
-                let surface = SurfaceBuilder::plane_from_points([a, b, c])
-                    .insert(&mut services.objects);
-                let (exterior, global_edges) = {
-                    let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
-                        HalfEdgeBuilder::line_segment_from_global_points(
-                            points, &surface, None,
-                        )
-                        .build(&mut services.objects)
-                        .insert(&mut services.objects)
-                    });
-
-                    let cycle = Cycle::new(half_edges.clone())
-                        .insert(&mut services.objects);
-
-                    let global_edges = half_edges
-                        .map(|half_edge| half_edge.global_form().clone());
-
-                    (cycle, global_edges)
-                };
-
-                let face = Face::new(surface, exterior, [], None)
-                    .insert(&mut services.objects);
-
-                (face, global_edges)
-            };
-            let (front, [_, bd, da]) = {
-                let surface = SurfaceBuilder::plane_from_points([a, b, d])
-                    .insert(&mut services.objects);
-                let (exterior, global_edges) = {
-                    let half_edges =
-                        [([a, b], Some(ab)), ([b, d], None), ([d, a], None)]
-                            .map(|(points, global_form)| {
-                                let mut builder =
-                            HalfEdgeBuilder::line_segment_from_global_points(
-                                points, &surface, None,
-                            );
-
-                                if let Some(global_form) = global_form {
-                                    builder =
-                                        builder.with_global_form(global_form);
-                                }
-
-                                builder
-                                    .build(&mut services.objects)
-                                    .insert(&mut services.objects)
-                            });
-
-                    let cycle = Cycle::new(half_edges.clone())
-                        .insert(&mut services.objects);
-
-                    let global_edges = half_edges
-                        .map(|half_edges| half_edges.global_form().clone());
-
-                    (cycle, global_edges)
-                };
-
-                let face = Face::new(surface, exterior, [], None)
-                    .insert(&mut services.objects);
-
-                (face, global_edges)
-            };
-            let (left, [_, _, dc]) = {
-                let surface = SurfaceBuilder::plane_from_points([c, a, d])
-                    .insert(&mut services.objects);
-                let (exterior, global_edges) = {
-                    let half_edges = [
-                        ([c, a], Some(ca)),
-                        ([a, d], Some(da)),
-                        ([d, c], None),
-                    ]
-                    .map(|(points, global_form)| {
-                        let mut builder =
-                            HalfEdgeBuilder::line_segment_from_global_points(
-                                points, &surface, None,
-                            );
-
-                        if let Some(global_form) = global_form {
-                            builder = builder.with_global_form(global_form);
-                        }
-
-                        builder
-                            .build(&mut services.objects)
-                            .insert(&mut services.objects)
-                    });
-
-                    let cycle = Cycle::new(half_edges.clone())
-                        .insert(&mut services.objects);
-
-                    let global_edges = half_edges
-                        .map(|half_edge| half_edge.global_form().clone());
-
-                    (cycle, global_edges)
-                };
-
-                let face = Face::new(surface, exterior, [], None)
-                    .insert(&mut services.objects);
-
-                (face, global_edges)
-            };
-            let back_right = {
-                let surface = SurfaceBuilder::plane_from_points([b, c, d])
-                    .insert(&mut services.objects);
-                let exterior = {
-                    let half_edges = [([b, c], bc), ([c, d], dc), ([d, b], bd)]
-                        .map(|(points, global_form)| {
-                            HalfEdgeBuilder::line_segment_from_global_points(
-                                points, &surface, None,
-                            )
-                            .with_global_form(global_form)
-                            .build(&mut services.objects)
-                            .insert(&mut services.objects)
-                        });
-
-                    Cycle::new(half_edges).insert(&mut services.objects)
-                };
-
-                Face::new(surface, exterior, [], None)
-                    .insert(&mut services.objects)
-            };
-
-            Shell::new([bottom, front, left, back_right])
-        };
+        let valid = ShellBuilder::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut services.objects,
+        );
         let invalid = {
             let face1 = FaceBuilder::new(services.objects.surfaces.xy_plane())
                 .with_exterior(CycleBuilder::polygon([
