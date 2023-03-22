@@ -215,14 +215,12 @@ mod tests {
                 let surface = SurfaceBuilder::plane_from_points([a, b, c])
                     .insert(&mut services.objects);
                 let (exterior, global_edges) = {
-                    let a = [0., 0.];
-                    let b = [1., 0.];
-                    let c = [0., 1.];
-
                     let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
-                        HalfEdgeBuilder::line_segment(points, None)
-                            .build(&mut services.objects)
-                            .insert(&mut services.objects)
+                        HalfEdgeBuilder::line_segment_from_global_points(
+                            points, &surface, None,
+                        )
+                        .build(&mut services.objects)
+                        .insert(&mut services.objects)
                     });
 
                     let cycle = Cycle::new(half_edges.clone())
@@ -243,15 +241,13 @@ mod tests {
                 let surface = SurfaceBuilder::plane_from_points([a, b, d])
                     .insert(&mut services.objects);
                 let (exterior, global_edges) = {
-                    let a = [0., 0.];
-                    let b = [1., 0.];
-                    let d = [0., 1.];
-
                     let half_edges =
                         [([a, b], Some(ab)), ([b, d], None), ([d, a], None)]
                             .map(|(points, global_form)| {
                                 let mut builder =
-                                    HalfEdgeBuilder::line_segment(points, None);
+                            HalfEdgeBuilder::line_segment_from_global_points(
+                                points, &surface, None,
+                            );
 
                                 if let Some(global_form) = global_form {
                                     builder =
@@ -281,10 +277,6 @@ mod tests {
                 let surface = SurfaceBuilder::plane_from_points([c, a, d])
                     .insert(&mut services.objects);
                 let (exterior, global_edges) = {
-                    let c = [0., 0.];
-                    let a = [1., 0.];
-                    let d = [0., 1.];
-
                     let half_edges = [
                         ([c, a], Some(ca)),
                         ([a, d], Some(da)),
@@ -292,7 +284,9 @@ mod tests {
                     ]
                     .map(|(points, global_form)| {
                         let mut builder =
-                            HalfEdgeBuilder::line_segment(points, None);
+                            HalfEdgeBuilder::line_segment_from_global_points(
+                                points, &surface, None,
+                            );
 
                         if let Some(global_form) = global_form {
                             builder = builder.with_global_form(global_form);
@@ -321,16 +315,14 @@ mod tests {
                 let surface = SurfaceBuilder::plane_from_points([b, c, d])
                     .insert(&mut services.objects);
                 let exterior = {
-                    let b = [0., 0.];
-                    let c = [1., 0.];
-                    let d = [0., 1.];
-
                     let half_edges = [([b, c], bc), ([c, d], dc), ([d, b], bd)]
                         .map(|(points, global_form)| {
-                            HalfEdgeBuilder::line_segment(points, None)
-                                .with_global_form(global_form)
-                                .build(&mut services.objects)
-                                .insert(&mut services.objects)
+                            HalfEdgeBuilder::line_segment_from_global_points(
+                                points, &surface, None,
+                            )
+                            .with_global_form(global_form)
+                            .build(&mut services.objects)
+                            .insert(&mut services.objects)
                         });
 
                     Cycle::new(half_edges).insert(&mut services.objects)
