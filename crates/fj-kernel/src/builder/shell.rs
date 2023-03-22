@@ -18,21 +18,21 @@ impl ShellBuilder {
     ) -> Shell {
         let [a, b, c, d] = points.map(Into::into);
 
-        let (bottom, [ab, bc, ca]) =
+        let (base, [ab, bc, ca]) =
             FaceBuilder::triangle([a, b, c], [None, None, None], objects);
-        let (front, [_, bd, da]) =
+        let (side_a, [_, bd, da]) =
             FaceBuilder::triangle([a, b, d], [Some(ab), None, None], objects);
-        let (left, [_, _, dc]) = FaceBuilder::triangle(
+        let (side_b, [_, _, dc]) = FaceBuilder::triangle(
             [c, a, d],
             [Some(ca), Some(da), None],
             objects,
         );
-        let (back_right, _) = FaceBuilder::triangle(
+        let (side_c, _) = FaceBuilder::triangle(
             [b, c, d],
             [Some(bc), Some(dc), Some(bd)],
             objects,
         );
 
-        Shell::new([bottom, front, left, back_right])
+        Shell::new([base, side_a, side_b, side_c])
     }
 }
