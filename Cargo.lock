@@ -1039,6 +1039,7 @@ name = "fj"
 version = "0.41.0"
 dependencies = [
  "anyhow",
+ "backtrace",
  "fj-proc",
  "serde",
  "serde_json",
