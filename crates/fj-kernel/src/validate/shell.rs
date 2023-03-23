@@ -193,7 +193,7 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder},
+        builder::{CycleBuilder, FaceBuilder, ShellBuilder},
         insert::Insert,
         objects::Shell,
         services::Services,
@@ -203,6 +203,11 @@ mod tests {
     #[test]
     fn coincident_not_identical() -> anyhow::Result<()> {
         let mut services = Services::new();
+
+        let valid = ShellBuilder::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut services.objects,
+        );
         let invalid = {
             let face1 = FaceBuilder::new(services.objects.surfaces.xy_plane())
                 .with_exterior(CycleBuilder::polygon([
@@ -227,6 +232,7 @@ mod tests {
             Shell::new([face1, face2])
         };
 
+        valid.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
@@ -240,6 +246,10 @@ mod tests {
     fn shell_not_watertight() -> anyhow::Result<()> {
         let mut services = Services::new();
 
+        let valid = ShellBuilder::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut services.objects,
+        );
         let invalid = {
             // Shell with single face is not watertight
             let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
@@ -254,6 +264,7 @@ mod tests {
             Shell::new([face])
         };
 
+        valid.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)

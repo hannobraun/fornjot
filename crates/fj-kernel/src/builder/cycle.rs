@@ -24,8 +24,11 @@ impl CycleBuilder {
     }
 
     /// Add a half-edge to the cycle
-    pub fn add_half_edge(mut self, half_edge: HalfEdgeBuilder) -> Self {
-        self.half_edges.push(half_edge);
+    pub fn add_half_edges(
+        mut self,
+        half_edges: impl IntoIterator<Item = HalfEdgeBuilder>,
+    ) -> Self {
+        self.half_edges.extend(half_edges);
         self
     }
 
