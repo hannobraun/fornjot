@@ -18,22 +18,22 @@ pub trait BuildShell {
         let [a, b, c, d] = points.map(Into::into);
 
         let Triangle {
-            face: base,
+            face: face_abc,
             edges: [ab, bc, ca],
         } = Face::triangle([a, b, c], [None, None, None], objects);
         let Triangle {
-            face: side_a,
+            face: face_abd,
             edges: [_, bd, da],
         } = Face::triangle([a, b, d], [Some(ab), None, None], objects);
         let Triangle {
-            face: side_b,
+            face: face_cad,
             edges: [_, _, dc],
         } = Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
-        let Triangle { face: side_c, .. } =
+        let Triangle { face: face_bcd, .. } =
             Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
 
-        let faces =
-            [base, side_a, side_b, side_c].map(|face| face.insert(objects));
+        let faces = [face_abc, face_abd, face_cad, face_bcd]
+            .map(|face| face.insert(objects));
         Shell::new(faces)
     }
 }
