@@ -25,7 +25,8 @@ pub trait BuildShell {
         let (side_c, _) =
             Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
 
-        Shell::new([base, side_a, side_b, side_c])
+        let faces = [base, side_a, side_b, side_c];
+        Shell::new(faces)
     }
 }
 
