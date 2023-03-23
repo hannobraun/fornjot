@@ -5,14 +5,13 @@ use crate::{
     },
     services::{Service, ServiceObjectsExt},
     storage::Handle,
-    validate::Validate,
 };
 
 /// Insert an object into its respective store
 ///
 /// This is the only primitive operation that is directly understood by
 /// `Service<Objects>`. All other operations are built on top of it.
-pub trait Insert: Sized + Validate {
+pub trait Insert: Sized {
     /// Insert the object into its respective store
     fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>;
 }
