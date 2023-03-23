@@ -18,7 +18,7 @@ pub trait BuildFace {
         points: [impl Into<Point<3>>; 3],
         edges: [Option<Handle<GlobalEdge>>; 3],
         objects: &mut Service<Objects>,
-    ) -> (Face, [Handle<GlobalEdge>; 3]) {
+    ) -> Triangle {
         let [a, b, c] = points.map(Into::into);
 
         let surface = Surface::plane_from_points([a, b, c]).insert(objects);
@@ -48,8 +48,22 @@ pub trait BuildFace {
 
         let face = Face::new(surface, exterior, [], None);
 
-        (face, global_edges)
+        Triangle {
+            face,
+            edges: global_edges,
+        }
     }
 }
 
 impl BuildFace for Face {}
+
+/// A triangle
+///
+/// Returned by [`BuildFace::triangle`].
+pub struct Triangle {
+    /// The face that forms the triangle
+    pub face: Face,
+
+    /// The edges of the triangle
+    pub edges: [Handle<GlobalEdge>; 3],
+}

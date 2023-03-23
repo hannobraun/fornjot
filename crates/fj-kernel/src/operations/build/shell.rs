@@ -6,7 +6,7 @@ use crate::{
     services::Service,
 };
 
-use super::BuildFace;
+use super::{BuildFace, Triangle};
 
 /// Build a [`Shell`]
 pub trait BuildShell {
@@ -17,13 +17,19 @@ pub trait BuildShell {
     ) -> Shell {
         let [a, b, c, d] = points.map(Into::into);
 
-        let (base, [ab, bc, ca]) =
-            Face::triangle([a, b, c], [None, None, None], objects);
-        let (side_a, [_, bd, da]) =
-            Face::triangle([a, b, d], [Some(ab), None, None], objects);
-        let (side_b, [_, _, dc]) =
-            Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
-        let (side_c, _) =
+        let Triangle {
+            face: base,
+            edges: [ab, bc, ca],
+        } = Face::triangle([a, b, c], [None, None, None], objects);
+        let Triangle {
+            face: side_a,
+            edges: [_, bd, da],
+        } = Face::triangle([a, b, d], [Some(ab), None, None], objects);
+        let Triangle {
+            face: side_b,
+            edges: [_, _, dc],
+        } = Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
+        let Triangle { face: side_c, .. } =
             Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
 
         let faces =
