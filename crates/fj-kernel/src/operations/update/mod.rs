@@ -1,3 +1,4 @@
+mod face;
 mod shell;
 
-pub use self::shell::UpdateShell;
+pub use self::{face::UpdateFace, shell::UpdateShell};
