@@ -131,12 +131,12 @@ impl Display for PanicInfo {
             .as_ref()
             .map_or("No error given", |message| message.as_str());
 
-        write!(f, "{}, ", message)?;
+        write!(f, "\"{}\", ", message)?;
 
         if let Some(location) = self.location.as_ref() {
             write!(f, "{}", location)?;
         } else {
-            write!(f, "No location given")?;
+            write!(f, "no location given")?;
         }
 
         Ok(())
@@ -189,7 +189,10 @@ fn on_panic(_payload: Box<dyn Any + Send>) -> crate::abi::ffi_safe::String {
     // it useful again.
     if let Ok(mut panic_info) = LAST_PANIC.lock() {
         if let Some(panic_info) = panic_info.take() {
-            crate::abi::ffi_safe::String::from(format!("{}", panic_info))
+            crate::abi::ffi_safe::String::from(format!(
+                "Panic in model: {}",
+                panic_info
+            ))
         } else {
             crate::abi::ffi_safe::String::from(
                 "Panic in model: No details were given.".to_string(),
