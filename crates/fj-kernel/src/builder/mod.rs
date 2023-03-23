@@ -5,9 +5,8 @@ mod cycle;
 mod edge;
 mod face;
 mod shell;
-mod surface;
 
 pub use self::{
     cycle::CycleBuilder, edge::HalfEdgeBuilder, face::FaceBuilder,
-    shell::ShellBuilder, surface::SurfaceBuilder,
+    shell::ShellBuilder,
 };

@@ -3,12 +3,12 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, GlobalEdge, Objects, Surface},
-    operations::Insert,
+    operations::{BuildSurface, Insert},
     services::Service,
     storage::Handle,
 };
 
-use super::{CycleBuilder, HalfEdgeBuilder, SurfaceBuilder};
+use super::{CycleBuilder, HalfEdgeBuilder};
 
 /// Builder API for [`Face`]
 pub struct FaceBuilder {
@@ -36,8 +36,7 @@ impl FaceBuilder {
     ) -> (Handle<Face>, [Handle<GlobalEdge>; 3]) {
         let [a, b, c] = points.map(Into::into);
 
-        let surface =
-            SurfaceBuilder::plane_from_points([a, b, c]).insert(objects);
+        let surface = Surface::plane_from_points([a, b, c]).insert(objects);
         let (exterior, global_edges) = {
             let half_edges = [[a, b], [b, c], [c, a]].zip_ext(edges).map(
                 |(points, global_form)| {
