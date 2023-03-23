@@ -232,7 +232,7 @@ mod tests {
             Shell::new([face1, face2])
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
@@ -264,7 +264,7 @@ mod tests {
             Shell::new([face])
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)

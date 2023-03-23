@@ -4,6 +4,6 @@ mod build;
 mod insert;
 
 pub use self::{
-    build::{BuildFace, BuildShell, BuildSurface, Triangle},
+    build::{BuildFace, BuildShell, BuildSurface, Tetrahedron, Triangle},
     insert::Insert,
 };
