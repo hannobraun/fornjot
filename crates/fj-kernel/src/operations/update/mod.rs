@@ -1,5 +1,9 @@
 mod cycle;
+mod edge;
 mod face;
 mod shell;
 
-pub use self::{cycle::UpdateCycle, face::UpdateFace, shell::UpdateShell};
+pub use self::{
+    cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
+    shell::UpdateShell,
+};
