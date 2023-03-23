@@ -23,7 +23,8 @@ macro_rules! impl_insert {
                 fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>
                 {
                     let handle = objects.$store.reserve();
-                    objects.insert((handle.clone(), self).into());
+                    let object = (handle.clone(), self).into();
+                    objects.insert(object);
                     handle
                 }
             }
