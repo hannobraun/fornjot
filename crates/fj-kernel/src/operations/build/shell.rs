@@ -2,6 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Objects, Shell},
+    operations::Insert,
     services::Service,
 };
 
@@ -25,7 +26,8 @@ pub trait BuildShell {
         let (side_c, _) =
             Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
 
-        let faces = [base, side_a, side_b, side_c];
+        let faces =
+            [base, side_a, side_b, side_c].map(|face| face.insert(objects));
         Shell::new(faces)
     }
 }

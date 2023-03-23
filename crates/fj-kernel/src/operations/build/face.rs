@@ -18,7 +18,7 @@ pub trait BuildFace {
         points: [impl Into<Point<3>>; 3],
         edges: [Option<Handle<GlobalEdge>>; 3],
         objects: &mut Service<Objects>,
-    ) -> (Handle<Face>, [Handle<GlobalEdge>; 3]) {
+    ) -> (Face, [Handle<GlobalEdge>; 3]) {
         let [a, b, c] = points.map(Into::into);
 
         let surface = Surface::plane_from_points([a, b, c]).insert(objects);
@@ -46,7 +46,7 @@ pub trait BuildFace {
             (cycle, global_edges)
         };
 
-        let face = Face::new(surface, exterior, [], None).insert(objects);
+        let face = Face::new(surface, exterior, [], None);
 
         (face, global_edges)
     }
