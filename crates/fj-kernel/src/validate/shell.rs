@@ -193,7 +193,6 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder},
         objects::{GlobalEdge, Shell},
         operations::{
             BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
@@ -244,19 +243,7 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
-        let invalid = {
-            // Shell with single face is not watertight
-            let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-                .with_exterior(CycleBuilder::polygon([
-                    [0., 0.],
-                    [0., 1.],
-                    [1., 1.],
-                    [1., 0.],
-                ]))
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
-            Shell::new([face])
-        };
+        let invalid = valid.shell.remove_face(&valid.face_abc);
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
