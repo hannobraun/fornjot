@@ -22,7 +22,7 @@ pub trait BuildFace {
         let [a, b, c] = points.map(Into::into);
 
         let surface = Surface::plane_from_points([a, b, c]).insert(objects);
-        let (exterior, global_edges) = {
+        let (exterior, edges) = {
             let half_edges = [[a, b], [b, c], [c, a]].zip_ext(edges).map(
                 |(points, global_form)| {
                     let mut builder =
@@ -48,10 +48,7 @@ pub trait BuildFace {
 
         let face = Face::new(surface, exterior, [], None);
 
-        Triangle {
-            face,
-            edges: global_edges,
-        }
+        Triangle { face, edges }
     }
 }
 
