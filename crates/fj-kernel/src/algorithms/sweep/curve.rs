@@ -5,8 +5,8 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    insert::Insert,
     objects::{Objects, Surface},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

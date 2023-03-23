@@ -194,8 +194,8 @@ mod tests {
     use crate::{
         assert_contains_err,
         builder::{CycleBuilder, FaceBuilder, ShellBuilder},
-        insert::Insert,
         objects::Shell,
+        operations::Insert,
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };

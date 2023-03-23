@@ -13,7 +13,7 @@ use parking_lot::Mutex;
 use crate::objects::Objects;
 
 pub use self::{
-    objects::{InsertObject, Operation, ServiceObjectsExt},
+    objects::{InsertObject, Operation},
     service::{Service, State},
     validation::{Validation, ValidationFailed},
 };
@@ -23,9 +23,6 @@ pub struct Services {
     /// The objects service
     ///
     /// Allows for inserting objects into a store after they were created.
-    ///
-    /// [`ServiceObjectsExt`] is available to provide a convenient API around
-    /// this service.
     pub objects: Service<Objects>,
 
     /// The validation service

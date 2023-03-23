@@ -1,6 +1,6 @@
 use crate::objects::{Object, Objects, WithHandle};
 
-use super::{Service, State};
+use super::State;
 
 impl State for Objects {
     type Command = Operation;
@@ -23,9 +23,6 @@ pub enum Operation {
     ///
     /// This is the one primitive operation that all other operations are built
     /// upon.
-    ///
-    /// You might prefer to use [`ServiceObjectsExt::insert`], which is a
-    /// convenient wrapper around `Service<Objects>::execute`.
     InsertObject {
         /// The object to insert
         object: Object<WithHandle>,
@@ -37,16 +34,4 @@ pub enum Operation {
 pub struct InsertObject {
     /// The object to insert
     pub object: Object<WithHandle>,
-}
-
-/// Convenient API for `Service<Objects>`
-pub trait ServiceObjectsExt {
-    /// Insert an object
-    fn insert(&mut self, object: Object<WithHandle>);
-}
-
-impl ServiceObjectsExt for Service<Objects> {
-    fn insert(&mut self, object: Object<WithHandle>) {
-        self.execute(Operation::InsertObject { object });
-    }
 }

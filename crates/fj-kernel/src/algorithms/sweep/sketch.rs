@@ -1,8 +1,8 @@
 use fj_math::Vector;
 
 use crate::{
-    insert::Insert,
     objects::{Objects, Sketch, Solid},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

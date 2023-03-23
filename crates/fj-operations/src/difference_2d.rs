@@ -3,8 +3,8 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
-    insert::Insert,
     objects::{Face, Objects, Sketch},
+    operations::Insert,
     services::Service,
 };
 use fj_math::Aabb;

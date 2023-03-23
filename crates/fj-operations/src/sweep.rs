@@ -3,8 +3,8 @@ use std::ops::Deref;
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
     algorithms::sweep::Sweep,
-    insert::Insert,
     objects::{Objects, Solid},
+    operations::Insert,
     services::Service,
 };
 use fj_math::{Aabb, Vector};
