@@ -108,7 +108,10 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
             let tokens = quote::quote! {
                 #item
                 #init
+
             };
+
+            eprintln!("TOKENS: {}", tokens);
 
             tokens.into()
         }

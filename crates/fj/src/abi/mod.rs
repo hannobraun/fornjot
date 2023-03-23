@@ -43,9 +43,8 @@ mod host;
 mod metadata;
 mod model;
 
-use std::{any::Any, fmt::Display, panic, sync::Mutex};
-
 use backtrace::Backtrace;
+use std::{any::Any, fmt::Display, panic, sync::Mutex};
 
 pub use self::{
     context::Context,

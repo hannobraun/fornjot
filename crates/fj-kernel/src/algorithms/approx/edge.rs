@@ -264,8 +264,8 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::HalfEdgeBuilder,
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
-        insert::Insert,
         objects::Surface,
+        operations::Insert,
         services::Services,
     };
 

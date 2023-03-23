@@ -15,8 +15,8 @@ use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
-    insert::Insert,
     objects::Objects,
+    operations::Insert,
     services::Service,
     storage::{Handle, ObjectId},
 };

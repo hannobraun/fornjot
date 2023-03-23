@@ -5,12 +5,10 @@ use crate::{
     objects::Surface,
 };
 
-/// Builder API for [`Surface`]
-pub struct SurfaceBuilder {}
-
-impl SurfaceBuilder {
-    /// Create a plane from the provided points
-    pub fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Surface {
+/// Build a [`Surface`]
+pub trait BuildSurface {
+    /// Build a plane from the provided points
+    fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Surface {
         let [a, b, c] = points.map(Into::into);
 
         let geometry = SurfaceGeometry {
@@ -21,3 +19,5 @@ impl SurfaceBuilder {
         Surface::new(geometry)
     }
 }
+
+impl BuildSurface for Surface {}

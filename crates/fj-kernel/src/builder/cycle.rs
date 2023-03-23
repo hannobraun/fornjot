@@ -3,8 +3,8 @@ use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
-    insert::Insert,
     objects::{Cycle, HalfEdge, Objects},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };
