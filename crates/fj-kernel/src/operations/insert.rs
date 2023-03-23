@@ -8,7 +8,10 @@ use crate::{
     validate::Validate,
 };
 
-/// Convenience trait to insert objects into their respective stores
+/// Insert an object into its respective store
+///
+/// This is the only primitive operation that is directly understood by
+/// `Service<Objects>`. All other operations are built on top of it.
 pub trait Insert: Sized + Validate {
     /// Insert the object into its respective store
     fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>;
