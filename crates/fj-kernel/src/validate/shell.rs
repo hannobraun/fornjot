@@ -193,9 +193,11 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder},
-        objects::Shell,
-        operations::{BuildShell, Insert},
+        objects::{GlobalEdge, Shell},
+        operations::{
+            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
+            UpdateShell,
+        },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };
@@ -208,31 +210,22 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
-        let invalid = {
-            let face1 = FaceBuilder::new(services.objects.surfaces.xy_plane())
-                .with_exterior(CycleBuilder::polygon([
-                    [0., 0.],
-                    [0., 1.],
-                    [1., 1.],
-                    [1., 0.],
-                ]))
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
+        let invalid = valid.shell.update_face(&valid.face_abc, |face| {
+            face.update_exterior(|cycle| {
+                cycle
+                    .update_half_edge(0, |half_edge| {
+                        let global_form =
+                            GlobalEdge::new().insert(&mut services.objects);
+                        half_edge
+                            .update_global_form(global_form)
+                            .insert(&mut services.objects)
+                    })
+                    .insert(&mut services.objects)
+            })
+            .insert(&mut services.objects)
+        });
 
-            let face2 = FaceBuilder::new(services.objects.surfaces.xz_plane())
-                .with_exterior(CycleBuilder::polygon([
-                    [0., 0.],
-                    [0., 1.],
-                    [1., 1.],
-                    [1., 0.],
-                ]))
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
-
-            Shell::new([face1, face2])
-        };
-
-        valid.validate_and_return_first_error()?;
+        valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
@@ -250,21 +243,9 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
-        let invalid = {
-            // Shell with single face is not watertight
-            let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-                .with_exterior(CycleBuilder::polygon([
-                    [0., 0.],
-                    [0., 1.],
-                    [1., 1.],
-                    [1., 0.],
-                ]))
-                .build(&mut services.objects)
-                .insert(&mut services.objects);
-            Shell::new([face])
-        };
+        let invalid = valid.shell.remove_face(&valid.face_abc);
 
-        valid.validate_and_return_first_error()?;
+        valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)

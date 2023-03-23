@@ -4,6 +4,6 @@ mod surface;
 
 pub use self::{
     face::{BuildFace, Triangle},
-    shell::BuildShell,
+    shell::{BuildShell, Tetrahedron},
     surface::BuildSurface,
 };
