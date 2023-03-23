@@ -1,7 +1,3 @@
-//! Convenience trait to insert objects into their respective stores
-//!
-//! See [`Insert`].
-
 use crate::{
     objects::{
         Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
