@@ -23,7 +23,7 @@ impl Validate for Solid {
 pub enum SolidValidationError {
     /// [`Solid`] contains vertices that are coincident, but not identical
     #[error(
-        "Solid contains Vertices that are coinciendent but not identical\n
+        "Solid contains Vertices that are coincident but not identical\n
         Vertex 1: {:#?} {:#?}
         Vertex 2: {:#?} {:#?}
         ", .0[0].0, .0[0].1,.0[1].0,.0[1].1
