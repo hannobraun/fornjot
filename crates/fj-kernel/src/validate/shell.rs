@@ -193,9 +193,9 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder, ShellBuilder},
+        builder::{CycleBuilder, FaceBuilder},
         objects::Shell,
-        operations::Insert,
+        operations::{BuildShell, Insert},
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };
@@ -204,7 +204,7 @@ mod tests {
     fn coincident_not_identical() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = ShellBuilder::tetrahedron(
+        let valid = Shell::tetrahedron(
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
@@ -246,7 +246,7 @@ mod tests {
     fn shell_not_watertight() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = ShellBuilder::tetrahedron(
+        let valid = Shell::tetrahedron(
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
