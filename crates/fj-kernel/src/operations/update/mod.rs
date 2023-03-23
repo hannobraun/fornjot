@@ -1,4 +1,5 @@
+mod cycle;
 mod face;
 mod shell;
 
-pub use self::{face::UpdateFace, shell::UpdateShell};
+pub use self::{cycle::UpdateCycle, face::UpdateFace, shell::UpdateShell};

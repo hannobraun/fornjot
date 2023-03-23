@@ -7,5 +7,5 @@ mod update;
 pub use self::{
     build::{BuildFace, BuildShell, BuildSurface, Tetrahedron, Triangle},
     insert::Insert,
-    update::{UpdateFace, UpdateShell},
+    update::{UpdateCycle, UpdateFace, UpdateShell},
 };
