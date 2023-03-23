@@ -2,16 +2,15 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Objects, Shell},
-    operations::BuildFace,
     services::Service,
 };
 
-/// Builder API for [`Shell`]
-pub struct ShellBuilder {}
+use super::BuildFace;
 
-impl ShellBuilder {
-    /// Create a tetrahedron from the provided points
-    pub fn tetrahedron(
+/// Build a [`Shell`]
+pub trait BuildShell {
+    /// Build a tetrahedron from the provided points
+    fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
         objects: &mut Service<Objects>,
     ) -> Shell {
@@ -29,3 +28,5 @@ impl ShellBuilder {
         Shell::new([base, side_a, side_b, side_c])
     }
 }
+
+impl BuildShell for Shell {}
