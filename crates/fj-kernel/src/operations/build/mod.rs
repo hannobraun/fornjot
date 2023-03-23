@@ -1,3 +1,4 @@
+mod face;
 mod surface;
 
-pub use self::surface::BuildSurface;
+pub use self::{face::BuildFace, surface::BuildSurface};

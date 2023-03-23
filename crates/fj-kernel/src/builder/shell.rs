@@ -1,11 +1,10 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Objects, Shell},
+    objects::{Face, Objects, Shell},
+    operations::BuildFace,
     services::Service,
 };
-
-use super::FaceBuilder;
 
 /// Builder API for [`Shell`]
 pub struct ShellBuilder {}
@@ -19,19 +18,13 @@ impl ShellBuilder {
         let [a, b, c, d] = points.map(Into::into);
 
         let (base, [ab, bc, ca]) =
-            FaceBuilder::triangle([a, b, c], [None, None, None], objects);
+            Face::triangle([a, b, c], [None, None, None], objects);
         let (side_a, [_, bd, da]) =
-            FaceBuilder::triangle([a, b, d], [Some(ab), None, None], objects);
-        let (side_b, [_, _, dc]) = FaceBuilder::triangle(
-            [c, a, d],
-            [Some(ca), Some(da), None],
-            objects,
-        );
-        let (side_c, _) = FaceBuilder::triangle(
-            [b, c, d],
-            [Some(bc), Some(dc), Some(bd)],
-            objects,
-        );
+            Face::triangle([a, b, d], [Some(ab), None, None], objects);
+        let (side_b, [_, _, dc]) =
+            Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
+        let (side_c, _) =
+            Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
 
         Shell::new([base, side_a, side_b, side_c])
     }

@@ -3,4 +3,7 @@
 mod build;
 mod insert;
 
-pub use self::{build::BuildSurface, insert::Insert};
+pub use self::{
+    build::{BuildFace, BuildSurface},
+    insert::Insert,
+};
