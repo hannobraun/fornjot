@@ -3,8 +3,8 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
-    insert::Insert,
     objects::{Cycle, Face, Objects, Sketch},
+    operations::Insert,
     services::Service,
 };
 use fj_math::{Aabb, Point};

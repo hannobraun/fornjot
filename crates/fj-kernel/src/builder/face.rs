@@ -2,8 +2,8 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::Point;
 
 use crate::{
-    insert::Insert,
     objects::{Cycle, Face, GlobalEdge, Objects, Surface},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

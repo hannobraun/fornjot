@@ -3,8 +3,8 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     builder::HalfEdgeBuilder,
-    insert::Insert,
     objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

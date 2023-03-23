@@ -1,8 +1,8 @@
 use itertools::Itertools;
 
 use crate::{
-    insert::Insert,
     objects::{Cycle, HalfEdge, Objects},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

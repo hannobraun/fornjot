@@ -7,8 +7,8 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     builder::CycleBuilder,
     geometry::curve::GlobalPath,
-    insert::Insert,
     objects::{Face, Objects, Shell},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

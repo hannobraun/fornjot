@@ -3,8 +3,8 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
-    insert::Insert,
     objects::{GlobalEdge, HalfEdge, Objects, Surface, Vertex},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };

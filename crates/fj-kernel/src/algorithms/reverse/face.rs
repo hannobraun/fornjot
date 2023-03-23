@@ -1,6 +1,6 @@
 use crate::{
-    insert::Insert,
     objects::{Face, Objects},
+    operations::Insert,
     services::Service,
     storage::Handle,
 };
