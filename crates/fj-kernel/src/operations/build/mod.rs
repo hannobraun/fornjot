@@ -2,6 +2,7 @@ mod cycle;
 mod edge;
 mod face;
 mod shell;
+mod solid;
 mod surface;
 
 pub use self::{
@@ -9,5 +10,6 @@ pub use self::{
     edge::BuildHalfEdge,
     face::{BuildFace, Polygon},
     shell::{BuildShell, TetrahedronShell},
+    solid::BuildSolid,
     surface::BuildSurface,
 };
