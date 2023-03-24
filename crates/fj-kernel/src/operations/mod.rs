@@ -12,5 +12,7 @@ pub use self::{
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
-    update::{UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell},
+    update::{
+        UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell, UpdateSolid,
+    },
 };
