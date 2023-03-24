@@ -36,8 +36,7 @@ pub use self::{
 pub use fj_proc::*;
 
 /// A shape
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub enum Shape {
     /// A group of two 3-dimensional shapes

@@ -9,6 +9,8 @@ use std::{
 
 use crate::models::Error;
 
+// TODO with the new serialization focused approach to our FFI, is this module really necessary anymore?
+
 /// A FFI-safe version of `Vec<T>`.
 #[repr(C)]
 pub(crate) struct Vec<T> {
@@ -133,7 +135,6 @@ impl<T> Drop for Vec<T> {
 unsafe impl<T: Send> Send for Vec<T> {}
 unsafe impl<T: Sync> Sync for Vec<T> {}
 
-#[cfg(feature = "serde")]
 impl<T> serde::ser::Serialize for Vec<T>
 where
     T: serde::ser::Serialize,
@@ -149,7 +150,6 @@ where
     }
 }
 
-#[cfg(feature = "serde")]
 impl<'de, T> serde::de::Deserialize<'de> for Vec<T>
 where
     T: serde::de::Deserialize<'de>,

@@ -21,8 +21,7 @@ use crate::Shape;
 /// # Limitations
 ///
 /// Whether the shapes in the group touch or overlap is not currently checked.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Group {
     /// The first of the shapes

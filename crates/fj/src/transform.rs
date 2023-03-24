@@ -22,8 +22,7 @@ use crate::{Angle, Shape};
 ///
 /// See issue:
 /// <https://github.com/hannobraun/Fornjot/issues/101>
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Transform {
     /// The shape being transformed

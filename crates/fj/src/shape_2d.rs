@@ -1,8 +1,7 @@
 use crate::{abi::ffi_safe, Angle, Shape};
 
 /// A 2-dimensional shape
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub enum Shape2d {
     /// A difference between two shapes
@@ -36,8 +35,7 @@ impl Shape2d {
 /// // `a` and `b` can be anything that converts to `fj::Shape2d`
 /// let difference = a.difference(&b);
 /// ```
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Difference2d {
     shapes: [Shape2d; 2],
@@ -92,8 +90,7 @@ impl From<Difference2d> for Shape2d {
 /// // `a` and `b` can be anything that converts to `fj::Shape`
 /// let sketch = [[0., 0.], [1., 0.], [0., 1.]].sketch();
 /// ```
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Sketch {
     chain: Chain,
@@ -165,8 +162,7 @@ impl From<Sketch> for Shape2d {
 }
 
 /// A chain of elements that is part of a [`Sketch`]
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub enum Chain {
     /// The chain is a circle
@@ -177,8 +173,7 @@ pub enum Chain {
 }
 
 /// A circle that is part of a [`Sketch`]
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Circle {
     /// The radius of the circle
@@ -198,8 +193,7 @@ impl Circle {
 }
 
 /// A polygonal chain that is part of a [`Sketch`]
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct PolyChain {
     segments: ffi_safe::Vec<SketchSegment>,
@@ -234,8 +228,7 @@ impl PolyChain {
 /// A segment of a sketch
 ///
 /// Each segment starts at the previous point of the sketch.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct SketchSegment {
     /// The destination point of the segment
@@ -245,8 +238,7 @@ pub struct SketchSegment {
 }
 
 /// Possible paths that a [`SketchSegment`] can take to the next endpoint
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub enum SketchSegmentRoute {
     /// A straight line to the endpoint

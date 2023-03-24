@@ -13,8 +13,7 @@ use crate::{Shape, Shape2d};
 /// // `shape` can be anything that converts to `fj::Shape2d`
 /// let group = shape.sweep([0., 0., 1.]);
 /// ```
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 #[repr(C)]
 pub struct Sweep {
     /// The 2-dimensional shape being swept
