@@ -22,5 +22,9 @@ fj-proc.workspace = true
 version = "1.0.158"
 features = ["derive"]
 
+[dependencies.postcard]
+version = "1.0.4"
+features = [ "alloc" ]
+
 [dev-dependencies]
 serde_json = "1.0.94"

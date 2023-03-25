@@ -1,5 +1,5 @@
 use proc_macro2::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{format_ident, quote, ToTokens};
 
 use crate::parse::{
     ArgumentMetadata, Constraint, ConstraintKind, ExtractedArgument,
@@ -7,20 +7,89 @@ use crate::parse::{
 };
 
 impl Initializer {
-    fn register() -> TokenStream {
+    fn register(&self) -> TokenStream {
+        let model_name = format_ident!("{}", self.model.metadata.name);
+
+        // pub(crate) ident: Ident,
+        // pub(crate) ty: Type,
+        // pub(crate) default_value: Option<Expr>,
+
+        let arguments = self.model.geometry.arguments.iter().map(|argument| {
+            let name = argument.ident.to_string();
+
+            let default_value = &argument.default_value;
+
+            if let Some(default_value) = default_value {
+                quote::quote! { arguments.get(#name).map(|argument| argument.unpack()).unwrap_or(#default_value) }
+            } else {
+                let error_message = format!(
+                    "Host did not provide value for parameter \"{}\".",
+                    name
+                );
+                quote::quote! { arguments.get(#name).expect(#error_message).unpack() }
+            }
+        });
+
         quote! {
             const _: () = {
-                fj::register_model!(|host| {
-                    fj::models::HostExt::register_model(host, Model);
+                #[no_mangle]
+                unsafe extern "C" fn fj_model_construct(
+                    payload_pointer: *mut *mut u8,
+                    arguments_pointer: *const u8,
+                    arguments_length: usize,
+                ) -> usize {
+                    use fj::abi::{SelfSerializing, UnpackParameter};
 
-                    Ok(
-                        fj::models::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
-                            .with_short_description(env!("CARGO_PKG_DESCRIPTION"))
-                            .with_homepage(env!("CARGO_PKG_HOMEPAGE"))
-                            .with_repository(env!("CARGO_PKG_REPOSITORY"))
-                            .with_license(env!("CARGO_PKG_LICENSE")),
-                    )
-                });
+                    fj::abi::initialize_panic_handling();
+
+                    let arguments = std::slice::from_raw_parts(arguments_pointer, arguments_length);
+                    let arguments = fj::abi::ArgumentTable::deserialize(arguments);
+
+                    let model_result = match arguments {
+                        Ok(arguments) => {
+                            match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                                #model_name(#(#arguments),*)
+                            })) {
+                                Ok(shape) => fj::abi::ModelResult::Ok(
+                                    fj::abi::Model {
+                                        metadata: fj::models::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+                                            .with_short_description(env!("CARGO_PKG_DESCRIPTION"))
+                                            .with_homepage(env!("CARGO_PKG_HOMEPAGE"))
+                                            .with_repository(env!("CARGO_PKG_REPOSITORY"))
+                                            .with_license(env!("CARGO_PKG_LICENSE")),
+                                        shape,
+                                    }
+                                ),
+                                Err(payload) => {
+                                    fj::abi::ModelResult::Panic(fj::abi::on_panic(payload))
+                                }
+                            }
+                        },
+                        Err(error) => {
+                            fj::abi::ModelResult::Error("Failed to deserialize parameters from host.".to_string())
+                        }
+                    };
+
+                    match model_result.serialize() {
+                        Ok(model_result) => {
+                            let length = model_result.len();
+                            let boxed = model_result.into_boxed_slice();
+
+                            *payload_pointer = Box::into_raw(boxed) as *mut u8;
+                            length
+                        },
+                        Err(_error) => {
+                            *payload_pointer = std::ptr::null_mut();
+                            0
+                        }
+                    }
+                }
+
+                #[no_mangle]
+                unsafe extern "C" fn fj_model_free(ptr: *mut u8) {
+                    // We just take it back and then immediately drop it.
+                    let _ = Box::from_raw(ptr);
+                }
             };
         }
     }
@@ -28,10 +97,7 @@ impl Initializer {
 
 impl ToTokens for Initializer {
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let Self { model } = self;
-
-        tokens.extend(Self::register());
-        model.to_tokens(tokens);
+        tokens.extend(self.register());
     }
 }
 

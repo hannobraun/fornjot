@@ -1,6 +1,6 @@
 /// Information about a particular module that can be used by the host for
 /// things like introspection and search.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Metadata {
     /// A short, human-friendly name used to identify this module.
     pub name: String,
@@ -122,7 +122,7 @@ impl Metadata {
 }
 
 /// Metadata about a [`crate::models::Model`].
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct ModelMetadata {
     /// A short, human-friendly name used to identify this model.
     pub name: String,
@@ -175,7 +175,7 @@ impl ModelMetadata {
 }
 
 /// Metadata describing a model's argument.
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct ArgumentMetadata {
     /// The name used to refer to this argument.
     pub name: String,

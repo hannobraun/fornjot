@@ -1,23 +1,13 @@
-use crate::{
-    models::{Context, Error, ModelMetadata},
-    Shape,
-};
+use crate::Shape;
 
-/// A model.
-pub trait Model: Send + Sync {
-    /// Calculate this model's concrete geometry.
-    fn shape(&self, ctx: &dyn Context) -> Result<Shape, Error>;
+use super::Metadata;
 
-    /// Get metadata for the model.
-    fn metadata(&self) -> Result<ModelMetadata, Error>;
-}
+/// A serialized model that can be passed from client code to a host.
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct Model {
+    /// This model's concrete geometry.
+    pub metadata: Metadata,
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn model_is_object_safe() {
-        let _: &dyn Model;
-    }
+    /// Metadata for the model.
+    pub shape: Shape,
 }
