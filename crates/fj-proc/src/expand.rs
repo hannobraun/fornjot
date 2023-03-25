@@ -20,7 +20,11 @@ impl Initializer {
             let default_value = &argument.default_value;
 
             if let Some(default_value) = default_value {
-                quote::quote! { arguments.get(#name).map(|argument| argument.unpack()).unwrap_or(#default_value) }
+                let error_message = format!(
+                    "Failed to parse input from host for parameter \"{}\".",
+                    name
+                );
+                quote::quote! { arguments.get(#name).map(|value| value.parse().expect(#error_message)).unwrap_or(#default_value) }
             } else {
                 let error_message = format!(
                     "Host did not provide value for parameter \"{}\".",
@@ -38,7 +42,7 @@ impl Initializer {
                     arguments_pointer: *const u8,
                     arguments_length: usize,
                 ) -> usize {
-                    use fj::abi::{SelfSerializing, UnpackParameter};
+                    use fj::abi::SelfSerializing;
 
                     fj::abi::initialize_panic_handling();
 
