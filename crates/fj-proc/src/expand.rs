@@ -9,11 +9,6 @@ use crate::parse::{
 impl Initializer {
     fn register(&self) -> TokenStream {
         let model_name = format_ident!("{}", self.model.metadata.name);
-
-        // pub(crate) ident: Ident,
-        // pub(crate) ty: Type,
-        // pub(crate) default_value: Option<Expr>,
-
         let arguments = self.model.geometry.arguments.iter().map(|argument| {
             let name = argument.ident.to_string();
 

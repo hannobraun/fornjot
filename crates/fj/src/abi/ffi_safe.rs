@@ -7,8 +7,6 @@ use std::{
     ptr::NonNull,
 };
 
-use crate::models::Error;
-
 // TODO with the new serialization focused approach to our FFI, is this module really necessary anymore?
 
 /// A FFI-safe version of `Vec<T>`.
@@ -243,121 +241,6 @@ impl<T, E> From<Result<T, E>> for std::result::Result<T, E> {
         match result {
             Result::Ok(ok) => Self::Ok(ok),
             Result::Err(err) => Self::Err(err),
-        }
-    }
-}
-
-#[repr(C)]
-pub(crate) struct Slice<T> {
-    ptr: NonNull<T>,
-    len: usize,
-}
-
-impl<T> Slice<T> {
-    /// Create a new [`Slice`] from a slice.
-    ///
-    /// # Safety
-    ///
-    /// It is the caller's responsibility to make sure this [`Slice`] doesn't
-    /// outlive the slice that was passed in.
-    pub unsafe fn from_slice(items: &[T]) -> Self {
-        let ptr = items.as_ptr();
-        let len = items.len();
-        Self {
-            // Safety: It's okay to cast away the const because you can't mutate
-            // a slice.
-            ptr: NonNull::new(ptr as *mut T).unwrap(),
-            len,
-        }
-    }
-
-    pub unsafe fn into_slice<'a>(self) -> &'a [T] {
-        let Self { ptr, len } = self;
-        std::slice::from_raw_parts(ptr.as_ptr(), len)
-    }
-}
-
-impl<T: Debug> Debug for Slice<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Debug::fmt(&**self, f)
-    }
-}
-
-impl<T: PartialEq> PartialEq for Slice<T> {
-    fn eq(&self, other: &Self) -> bool {
-        **self == **other
-    }
-}
-
-impl<T> Deref for Slice<T> {
-    type Target = [T];
-
-    fn deref(&self) -> &Self::Target {
-        // Safety: We control both "ptr" and "len", so the array is always
-        // initialized and within bounds.
-        //
-        // The lifetime of the &[T] is also bound to the lifetime of &self, so
-        // this should be safe as long as people can never get a Slice<T> that
-        // outlives the data it points to.
-        unsafe {
-            let Self { ptr, len, .. } = *self;
-            std::slice::from_raw_parts(ptr.as_ptr(), len)
-        }
-    }
-}
-
-#[repr(transparent)]
-pub(crate) struct StringSlice(Slice<u8>);
-
-impl StringSlice {
-    /// Create a new [`StringSlice`].
-    ///
-    /// # Safety
-    ///
-    /// It is the caller's responsibility to make sure this [`Slice`] doesn't
-    /// outlive the slice that was passed in.
-    pub unsafe fn from_str(s: &str) -> Self {
-        Self(Slice::from_slice(s.as_bytes()))
-    }
-
-    pub unsafe fn into_str<'a>(self) -> &'a str {
-        let bytes = self.0.into_slice();
-        std::str::from_utf8_unchecked(bytes)
-    }
-}
-
-impl Deref for StringSlice {
-    type Target = str;
-
-    fn deref(&self) -> &Self::Target {
-        // Safety: the only way you can construct a StringSlice is via a string.
-        unsafe { std::str::from_utf8_unchecked(&self.0) }
-    }
-}
-
-#[derive(Debug)]
-#[repr(C)]
-pub struct BoxedError {
-    pub(crate) msg: String,
-}
-
-impl Display for BoxedError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        Display::fmt(&self.msg, f)
-    }
-}
-
-impl std::error::Error for BoxedError {}
-
-impl From<Error> for BoxedError {
-    fn from(err: Error) -> Self {
-        // Open question: is it worth capturing the message from each source
-        // error, too? We could have some sort of `sources: Vec<Source>` field
-        // where `Source` is a private wrapper around String that implements
-        // std::error::Error, however then people will see what *looks* like a
-        // particular error type, but they won't be able to downcast to it.
-        Self {
-            msg: err.to_string().into(),
         }
     }
 }

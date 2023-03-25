@@ -2,10 +2,14 @@ use std::{
     io,
     path::{Path, PathBuf},
     process::Command,
+    ptr::NonNull,
     str,
 };
 
-use fj::{abi, version::Version};
+use fj::{
+    abi::{self, SelfSerializing},
+    version::Version,
+};
 use fj_operations::shape_processor;
 use tracing::debug;
 
@@ -146,22 +150,55 @@ impl Model {
                     Some(format!("{}", Error::VersionMismatch { host, model }));
             }
 
-            let init: libloading::Symbol<abi::InitFunction> = lib
-                .get(abi::INIT_FUNCTION_NAME.as_bytes())
+            let construct: libloading::Symbol<abi::ConstructModelFunction> =
+                lib.get(abi::CONSTRUCT_FUNCTION_NAME.as_bytes())
+                    .map_err(Error::LoadingInit)?;
+
+            let free: libloading::Symbol<abi::FreeModelFunction> = lib
+                .get(abi::FREE_FUNCTION_NAME.as_bytes())
                 .map_err(Error::LoadingInit)?;
 
-            let mut host = Host::new(&self.parameters);
+            let parameters = self
+                .parameters
+                .0
+                .serialize()
+                .map_err(Error::ParameterSerialization)?;
 
-            match init(&mut abi::Host::from(&mut host)) {
-                abi::ffi_safe::Result::Ok(_metadata) => {}
-                abi::ffi_safe::Result::Err(e) => {
-                    return Err(Error::InitializeModel(e.into()));
+            let parameter_length = parameters.len();
+            let parameters_ptr = parameters.as_ptr();
+
+            let mut shape_data: *mut u8 = std::ptr::null_mut();
+            let shape_length = construct(
+                &mut shape_data as *mut _,
+                parameters_ptr,
+                parameter_length,
+            );
+
+            let model_result = {
+                let shape_data =
+                    NonNull::new(shape_data).ok_or(Error::NoModel)?;
+                let shape_payload = std::slice::from_raw_parts(
+                    shape_data.as_ptr(),
+                    shape_length,
+                );
+
+                fj::abi::ModelResult::deserialize(shape_payload)
+            };
+
+            // Free the payload before we check for an error.
+            free(shape_data);
+
+            let model_result =
+                model_result.map_err(Error::ModelDeserialization)?;
+            match model_result {
+                abi::ModelResult::Panic(panic) => {
+                    return Err(Error::Shape(panic))
                 }
+                abi::ModelResult::Error(error) => {
+                    return Err(Error::Shape(error))
+                }
+                abi::ModelResult::Ok(model) => model.shape,
             }
-
-            let model = host.take_model().ok_or(Error::NoModelRegistered)?;
-
-            model.shape(&host).map_err(Error::Shape)?
         };
 
         Ok(Evaluation {
@@ -185,36 +222,6 @@ pub struct Evaluation {
 
     /// Warnings
     pub warning: Option<String>,
-}
-
-pub struct Host<'a> {
-    args: &'a Parameters,
-    model: Option<Box<dyn fj::models::Model>>,
-}
-
-impl<'a> Host<'a> {
-    pub fn new(parameters: &'a Parameters) -> Self {
-        Self {
-            args: parameters,
-            model: None,
-        }
-    }
-
-    pub fn take_model(&mut self) -> Option<Box<dyn fj::models::Model>> {
-        self.model.take()
-    }
-}
-
-impl<'a> fj::models::Host for Host<'a> {
-    fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) {
-        self.model = Some(model);
-    }
-}
-
-impl<'a> fj::models::Context for Host<'a> {
-    fn get_argument(&self, name: &str) -> Option<&str> {
-        self.args.get(name).map(String::as_str)
-    }
 }
 
 fn package_associated_with_directory<'m>(
@@ -308,10 +315,6 @@ pub enum Error {
     #[error("I/O error while loading model")]
     Io(#[from] io::Error),
 
-    /// Initializing a model failed.
-    #[error("Unable to initialize the model")]
-    InitializeModel(#[source] fj::models::Error),
-
     /// The user forgot to register a model when calling
     /// [`fj::register_model!()`].
     #[error("No model was registered")]
@@ -319,7 +322,7 @@ pub enum Error {
 
     /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
-    Shape(#[source] fj::models::Error),
+    Shape(String),
 
     /// An error was returned from
     /// [`fj_operations::shape_processor::ShapeProcessor::process()`].
@@ -351,4 +354,19 @@ pub enum Error {
         /// workspace root.
         possible_paths: Vec<PathBuf>,
     },
+
+    /// This should never happen but we need a fail safe.
+    /// Something about our parameter hash map couldn't be serialized.
+    #[error("Failed to serialize parameters for model")]
+    ParameterSerialization(postcard::Error),
+
+    /// This error actually is very possible.
+    /// If the client serialized its model incorrectly.
+    #[error("Failed to deserialize model from client")]
+    ModelDeserialization(postcard::Error),
+
+    /// The model function gave us a null pointer. There's
+    /// literally nothing for us to work with here.
+    #[error("Client returned nothing")]
+    NoModel,
 }

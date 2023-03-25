@@ -79,10 +79,12 @@ pub type ConstructModelFunction =
     unsafe extern "C" fn(*mut *mut u8, *const u8, usize) -> usize;
 
 /// The signature of the function to free our model.
-pub type DestroyModelFunction = unsafe extern "C" fn(*mut u8);
+pub type FreeModelFunction = unsafe extern "C" fn(*const u8);
+
+// TODO the function names should be moved to a common crate or generated from a common file
+// so that we don't need a second copy of them in the fj-proc crate.
 
 /// The name of the function to construct our model.
-///
 pub const CONSTRUCT_FUNCTION_NAME: &str = "fj_model_construct";
 
 /// The name of the function to free our model.
