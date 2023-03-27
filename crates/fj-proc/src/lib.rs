@@ -2,11 +2,7 @@ mod expand;
 mod parse;
 
 use proc_macro::TokenStream;
-use proc_macro2::{Ident, Span};
-use syn::{
-    parse_macro_input, punctuated::Punctuated, token::Paren, Expr, ExprCall,
-    ExprPath, FnArg, ItemFn, PathArguments, PathSegment, Stmt,
-};
+use syn::{parse_macro_input, FnArg, ItemFn};
 
 /// Define a function-based model.
 ///
@@ -95,66 +91,25 @@ pub fn model(_: TokenStream, input: TokenStream) -> TokenStream {
 
     match parse::parse(&item) {
         Ok(init) => {
-            let mut item = without_param_attrs(item);
+            let item = without_param_attrs(item);
 
-            // Yes, all of this is to add `fj::abi::initialize_panic_handling();` to the top of the function.
-            item.block.stmts.insert(
-                0,
-                Stmt::Semi(
-                    Expr::Call(ExprCall {
-                        attrs: vec![],
-                        func: Box::new(Expr::Path(ExprPath {
-                            attrs: vec![],
-                            qself: None,
-                            path: syn::Path {
-                                leading_colon: None,
-                                segments: {
-                                    let mut segments = Punctuated::new();
+            let attrs = item.attrs;
+            let vis = item.vis;
+            let sig = item.sig;
+            let statements = item.block.stmts;
 
-                                    segments.push(PathSegment {
-                                        ident: Ident::new(
-                                            "fj",
-                                            Span::call_site(),
-                                        ),
-                                        arguments: PathArguments::None,
-                                    });
-
-                                    segments.push(PathSegment {
-                                        ident: Ident::new(
-                                            "abi",
-                                            Span::call_site(),
-                                        ),
-                                        arguments: PathArguments::None,
-                                    });
-
-                                    segments.push(PathSegment {
-                                        ident: Ident::new(
-                                            "initialize_panic_handling",
-                                            Span::call_site(),
-                                        ),
-                                        arguments: PathArguments::None,
-                                    });
-
-                                    segments
-                                },
-                            },
-                        })),
-                        paren_token: Paren {
-                            span: Span::call_site(),
-                        },
-                        args: Punctuated::new(),
-                    }),
-                    syn::token::Semi::default(),
-                ),
-            );
+            let item = quote::quote! {
+                #(#attrs)* #vis #sig {
+                    fj::abi::initialize_panic_handling();
+                    #(#statements)*
+                }
+            };
 
             let tokens = quote::quote! {
                 #item
                 #init
 
             };
-
-            eprintln!("TOKENS: {}", tokens);
 
             tokens.into()
         }

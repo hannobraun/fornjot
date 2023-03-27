@@ -43,6 +43,7 @@ mod host;
 mod metadata;
 mod model;
 
+use backtrace::Backtrace;
 use std::{any::Any, fmt::Display, panic, sync::Mutex};
 
 pub use self::{
@@ -122,6 +123,7 @@ pub const INIT_FUNCTION_NAME: &str = "fj_model_init";
 struct PanicInfo {
     message: Option<String>,
     location: Option<Location>,
+    backtrace: Backtrace,
 }
 
 impl Display for PanicInfo {
@@ -138,6 +140,8 @@ impl Display for PanicInfo {
         } else {
             write!(f, "no location given")?;
         }
+
+        writeln!(f, "\nBacktrace:\n{:?}", self.backtrace)?;
 
         Ok(())
     }
@@ -180,7 +184,12 @@ pub fn initialize_panic_handling() {
             column: location.column(),
         });
 
-        *last_panic = Some(PanicInfo { message, location });
+        let backtrace = backtrace::Backtrace::new();
+        *last_panic = Some(PanicInfo {
+            message,
+            location,
+            backtrace,
+        });
     }));
 }
 
