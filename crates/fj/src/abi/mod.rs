@@ -4,39 +4,6 @@
 //! versions of common `std` types (e.g. `Vec`, `String`, and `Box<dyn Error>`),
 //! or FFI-safe trait objects.
 //!
-/// If the macro generated the wrong code, this doctest would fail.
-///
-/// ```rust
-/// use fj::{abi::INIT_FUNCTION_NAME, models::Metadata};
-///
-/// fj::register_model!(|_| {
-///     Ok(Metadata::new("My Model", "1.2.3"))
-/// });
-///
-/// mod x {
-///     extern "C" {
-///         pub fn fj_model_init(_: *mut fj::abi::Host<'_>) -> fj::abi::InitResult;
-///     }
-/// }
-///
-/// // make sure our function has the right signature
-/// let func: fj::abi::InitFunction = fj_model_init;
-///
-/// // We can also make sure the unmangled name is correct by calling it.
-///
-/// let metadata: fj::models::Metadata = unsafe {
-///     let mut host = Host;
-///     let mut host = fj::abi::Host::from(&mut host);
-///     x::fj_model_init(&mut host).unwrap().into()
-/// };
-///
-/// assert_eq!(metadata.name, "My Model");
-///
-/// struct Host;
-/// impl fj::models::Host for Host {
-///     fn register_boxed_model(&mut self, model: Box<dyn fj::models::Model>) { todo!() }
-/// }
-/// ```
 pub mod ffi_safe;
 use std::{any::Any, fmt::Display, panic, sync::Mutex};
 

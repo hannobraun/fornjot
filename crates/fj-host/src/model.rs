@@ -315,11 +315,6 @@ pub enum Error {
     #[error("I/O error while loading model")]
     Io(#[from] io::Error),
 
-    /// The user forgot to register a model when calling
-    /// [`fj::register_model!()`].
-    #[error("No model was registered")]
-    NoModelRegistered,
-
     /// An error was returned from [`fj::models::Model::shape()`].
     #[error("Unable to determine the model's geometry")]
     Shape(String),
