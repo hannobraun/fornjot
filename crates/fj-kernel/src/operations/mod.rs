@@ -6,8 +6,8 @@ mod update;
 
 pub use self::{
     build::{
-        BuildFace, BuildHalfEdge, BuildShell, BuildSurface, Tetrahedron,
-        Triangle,
+        BuildCycle, BuildFace, BuildHalfEdge, BuildShell, BuildSurface,
+        Tetrahedron, Triangle,
     },
     insert::Insert,
     update::{UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell},
