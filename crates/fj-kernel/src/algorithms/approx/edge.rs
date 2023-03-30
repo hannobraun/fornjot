@@ -264,8 +264,8 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         builder::HalfEdgeBuilder,
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
-        objects::Surface,
-        operations::Insert,
+        objects::{HalfEdge, Surface},
+        operations::{BuildHalfEdge, Insert},
         services::Services,
     };
 
@@ -343,8 +343,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge =
-            HalfEdgeBuilder::circle(1.).build(&mut services.objects);
+        let half_edge = HalfEdge::circle(1., &mut services.objects);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

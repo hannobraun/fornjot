@@ -3,8 +3,8 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
     builder::{CycleBuilder, HalfEdgeBuilder},
-    objects::{Cycle, Face, Objects, Sketch},
-    operations::Insert,
+    objects::{Cycle, Face, HalfEdge, Objects, Sketch},
+    operations::{BuildHalfEdge, Insert},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -24,9 +24,8 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge = HalfEdgeBuilder::circle(circle.radius())
-                    .build(objects)
-                    .insert(objects);
+                let half_edge =
+                    HalfEdge::circle(circle.radius(), objects).insert(objects);
                 let exterior = Cycle::new([half_edge]).insert(objects);
 
                 Face::new(
