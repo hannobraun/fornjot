@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::{
     geometry::curve::Curve,
     objects::{Cycle, HalfEdge, Objects},
-    operations::{BuildHalfEdge, Insert},
+    operations::{BuildHalfEdge, Insert, UpdateHalfEdge},
     services::Service,
     storage::Handle,
 };
@@ -42,7 +42,10 @@ impl CycleBuilder {
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this cycle, form a cycle themselves.
-    pub fn connect_to_edges<Es>(edges: Es) -> Self
+    pub fn connect_to_edges<Es>(
+        edges: Es,
+        objects: &mut Service<Objects>,
+    ) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
         Es::IntoIter: Clone + ExactSizeIterator,
@@ -51,11 +54,11 @@ impl CycleBuilder {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdgeBuilder::new(curve, boundary)
-                    .with_start_vertex(prev.start_vertex().clone())
-                    .with_global_form(half_edge.global_form().clone())
+                HalfEdge::unjoined(curve, boundary, objects)
+                    .update_start_vertex(prev.start_vertex().clone())
+                    .update_global_form(half_edge.global_form().clone())
             })
-            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder)
+            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdge)
             .collect();
 
         Self { half_edges }
