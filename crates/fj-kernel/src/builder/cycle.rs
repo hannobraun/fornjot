@@ -23,18 +23,6 @@ impl CycleBuilder {
         Self::default()
     }
 
-    /// Add a half-edge to the cycle
-    pub fn add_half_edges(
-        mut self,
-        half_edges: impl IntoIterator<Item = HalfEdgeBuilder>,
-    ) -> Self {
-        let half_edges = half_edges
-            .into_iter()
-            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder);
-        self.half_edges.extend(half_edges);
-        self
-    }
-
     /// Create a cycle whose half-edges are connected to the provided half-edges
     ///
     /// The half-edges of the new circle will be coincident with the provided
@@ -100,7 +88,7 @@ impl CycleBuilder {
 }
 
 enum HalfEdgeOrHalfEdgeBuilder {
-    #[allow(unused)]
     HalfEdge(HalfEdge),
+    #[allow(unused)]
     HalfEdgeBuilder(HalfEdgeBuilder),
 }
