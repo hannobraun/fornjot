@@ -112,13 +112,13 @@ mod tests {
         valid.validate_and_return_first_error()?;
 
         let disconnected = {
-            let first =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
-            let second =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
+            let half_edges = [
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None),
+                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None),
+            ];
 
             CycleBuilder::new()
-                .add_half_edges([first, second])
+                .add_half_edges(half_edges)
                 .build(&mut services.objects)
         };
 
