@@ -1,3 +1,4 @@
+use fj_interop::ext::ArrayExt;
 use fj_math::{Point, Scalar};
 
 use crate::{
@@ -29,6 +30,21 @@ pub trait BuildHalfEdge {
         let curve = Curve::circle_from_radius(radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
+
+        HalfEdge::unjoined(curve, boundary, objects)
+    }
+
+    /// Create a line segment
+    fn line_segment(
+        points_surface: [impl Into<Point<2>>; 2],
+        boundary: Option<[Point<1>; 2]>,
+        objects: &mut Service<Objects>,
+    ) -> HalfEdge {
+        let boundary =
+            boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
+        let curve = Curve::line_from_points_with_coords(
+            boundary.zip_ext(points_surface),
+        );
 
         HalfEdge::unjoined(curve, boundary, objects)
     }
