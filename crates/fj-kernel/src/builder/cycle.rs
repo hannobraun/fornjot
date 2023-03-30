@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::{
     geometry::curve::Curve,
     objects::{Cycle, HalfEdge, Objects},
-    operations::Insert,
+    operations::{BuildHalfEdge, Insert},
     services::Service,
     storage::Handle,
 };
@@ -62,7 +62,7 @@ impl CycleBuilder {
     }
 
     /// Create a polygon
-    pub fn polygon<P, Ps>(points: Ps) -> Self
+    pub fn polygon<P, Ps>(points: Ps, objects: &mut Service<Objects>) -> Self
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
@@ -73,9 +73,9 @@ impl CycleBuilder {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdgeBuilder::line_segment([start, end], None)
+                HalfEdge::line_segment([start, end], None, objects)
             })
-            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder)
+            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdge)
             .collect();
 
         Self { half_edges }

@@ -107,8 +107,11 @@ mod tests {
     fn half_edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = CycleBuilder::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]])
-            .build(&mut services.objects);
+        let valid = CycleBuilder::polygon(
+            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
+            &mut services.objects,
+        )
+        .build(&mut services.objects);
 
         valid.validate_and_return_first_error()?;
 

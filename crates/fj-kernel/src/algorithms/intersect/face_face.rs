@@ -86,7 +86,10 @@ mod tests {
         ]
         .map(|surface| {
             FaceBuilder::new(surface)
-                .with_exterior(CycleBuilder::polygon(points))
+                .with_exterior(CycleBuilder::polygon(
+                    points,
+                    &mut services.objects,
+                ))
                 .build(&mut services.objects)
         });
 
@@ -112,7 +115,10 @@ mod tests {
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             FaceBuilder::new(surface)
-                .with_exterior(CycleBuilder::polygon(points))
+                .with_exterior(CycleBuilder::polygon(
+                    points,
+                    &mut services.objects,
+                ))
                 .build(&mut services.objects)
         });
 

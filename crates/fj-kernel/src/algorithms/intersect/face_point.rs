@@ -147,11 +147,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [1., 1.],
-                [0., 2.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [1., 1.], [0., 2.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([2., 1.]);
 
@@ -164,11 +163,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [2., 1.],
-                [0., 2.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [2., 1.], [0., 2.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 1.]);
 
@@ -184,11 +182,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [4., 2.],
-                [0., 4.],
-                [0., 0.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[4., 2.], [0., 4.], [0., 0.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 2.]);
 
@@ -204,12 +201,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [2., 1.],
-                [3., 0.],
-                [3., 4.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 1.]);
 
@@ -225,12 +220,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [2., 1.],
-                [3., 1.],
-                [0., 2.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 1.]);
 
@@ -246,13 +239,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [2., 1.],
-                [3., 1.],
-                [4., 0.],
-                [4., 5.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 1.]);
 
@@ -268,11 +258,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [2., 0.],
-                [0., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [2., 0.], [0., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 0.]);
 
@@ -294,11 +283,10 @@ mod tests {
         let mut services = Services::new();
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [0., 0.],
-                [1., 0.],
-                [0., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[0., 0.], [1., 0.], [0., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let point = Point::from([1., 0.]);
 
