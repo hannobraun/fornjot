@@ -1,5 +1,5 @@
 use fj_interop::ext::ArrayExt;
-use fj_math::{Point, Scalar};
+use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
@@ -20,6 +20,32 @@ pub trait BuildHalfEdge {
         let global_form = GlobalEdge::new().insert(objects);
 
         HalfEdge::new(curve, boundary, start_vertex, global_form)
+    }
+
+    /// Create an arc
+    ///
+    /// # Panics
+    ///
+    /// Panics if the given angle is not within the range (-2pi, 2pi) radians.
+    fn arc(
+        start: impl Into<Point<2>>,
+        end: impl Into<Point<2>>,
+        angle_rad: impl Into<Scalar>,
+        objects: &mut Service<Objects>,
+    ) -> HalfEdge {
+        let angle_rad = angle_rad.into();
+        if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
+            panic!("arc angle must be in the range (-2pi, 2pi) radians");
+        }
+
+        let arc = Arc::from_endpoints_and_angle(start, end, angle_rad);
+
+        let curve =
+            Curve::circle_from_center_and_radius(arc.center, arc.radius);
+        let boundary =
+            [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
+
+        HalfEdge::unjoined(curve, boundary, objects)
     }
 
     /// Create a circle
