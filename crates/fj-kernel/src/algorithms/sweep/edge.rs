@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     builder::HalfEdgeBuilder,
     objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
-    operations::Insert,
+    operations::{Insert, UpdateCycle},
     services::Service,
     storage::Handle,
 };
@@ -94,15 +94,12 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     builder.build(objects).insert(objects)
                 };
 
-                let updated = {
-                    let exterior = exterior.take().unwrap();
-                    let half_edges = exterior
-                        .half_edges()
-                        .cloned()
-                        .chain([half_edge.clone()]);
-                    Cycle::new(half_edges)
-                };
-                exterior = Some(updated);
+                exterior = Some(
+                    exterior
+                        .take()
+                        .unwrap()
+                        .add_half_edges([half_edge.clone()]),
+                );
 
                 half_edge
             });
