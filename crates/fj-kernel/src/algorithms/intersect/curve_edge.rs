@@ -72,7 +72,8 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        builder::HalfEdgeBuilder, geometry::curve::Curve, services::Services,
+        geometry::curve::Curve, objects::HalfEdge, operations::BuildHalfEdge,
+        services::Services,
     };
 
     use super::CurveEdgeIntersection;
@@ -82,9 +83,11 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge =
-            HalfEdgeBuilder::line_segment([[1., -1.], [1., 1.]], None)
-                .build(&mut services.objects);
+        let half_edge = HalfEdge::line_segment(
+            [[1., -1.], [1., 1.]],
+            None,
+            &mut services.objects,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -101,9 +104,11 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge =
-            HalfEdgeBuilder::line_segment([[-1., -1.], [-1., 1.]], None)
-                .build(&mut services.objects);
+        let half_edge = HalfEdge::line_segment(
+            [[-1., -1.], [-1., 1.]],
+            None,
+            &mut services.objects,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -120,9 +125,11 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge =
-            HalfEdgeBuilder::line_segment([[-1., -1.], [1., -1.]], None)
-                .build(&mut services.objects);
+        let half_edge = HalfEdge::line_segment(
+            [[-1., -1.], [1., -1.]],
+            None,
+            &mut services.objects,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -134,9 +141,11 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge =
-            HalfEdgeBuilder::line_segment([[-1., 0.], [1., 0.]], None)
-                .build(&mut services.objects);
+        let half_edge = HalfEdge::line_segment(
+            [[-1., 0.], [1., 0.]],
+            None,
+            &mut services.objects,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 

@@ -162,12 +162,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([-1., 0., 0.], &mut services.objects);
 
@@ -181,12 +179,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([1., 0., 0.], &mut services.objects);
 
@@ -203,12 +199,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([0., 0., 2.], &mut services.objects);
 
@@ -222,12 +216,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([1., 1., 0.], &mut services.objects);
 
@@ -249,12 +241,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([1., 1., 1.], &mut services.objects);
 
@@ -279,12 +269,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
 
         assert_eq!(
@@ -300,12 +288,10 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon([
-                [-1., -1.],
-                [1., -1.],
-                [1., 1.],
-                [-1., 1.],
-            ]))
+            .with_exterior(CycleBuilder::polygon(
+                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                &mut services.objects,
+            ))
             .build(&mut services.objects);
         let face = face.translate([0., 0., 1.], &mut services.objects);
 
