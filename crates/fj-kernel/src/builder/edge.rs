@@ -3,7 +3,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::curve::Curve,
-    objects::{GlobalEdge, HalfEdge, Objects, Surface, Vertex},
+    objects::{GlobalEdge, HalfEdge, Objects, Vertex},
     operations::Insert,
     services::Service,
     storage::Handle,
@@ -40,17 +40,6 @@ impl HalfEdgeBuilder {
         );
 
         Self::new(curve, boundary)
-    }
-
-    /// Create a line segment from global points
-    pub fn line_segment_from_global_points(
-        points_global: [impl Into<Point<3>>; 2],
-        surface: &Surface,
-        boundary: Option<[Point<1>; 2]>,
-    ) -> Self {
-        let points_surface = points_global
-            .map(|point| surface.geometry().project_global_point(point));
-        Self::line_segment(points_surface, boundary)
     }
 
     /// Build the half-edge with a specific start vertex
