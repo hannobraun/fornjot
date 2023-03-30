@@ -2,9 +2,8 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    builder::{CycleBuilder, HalfEdgeBuilder},
     objects::{Cycle, Face, HalfEdge, Objects, Sketch},
-    operations::{BuildHalfEdge, Insert},
+    operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
     services::Service,
 };
 use fj_math::{Aabb, Point};
@@ -43,7 +42,7 @@ impl Shape for fj::Sketch {
                 );
 
                 let exterior = {
-                    let mut cycle = CycleBuilder::new();
+                    let mut cycle = Cycle::empty();
 
                     let segments = poly_chain
                         .to_segments()
@@ -57,20 +56,22 @@ impl Shape for fj::Sketch {
                     for ((start, route), (end, _)) in segments {
                         let half_edge = match route {
                             fj::SketchSegmentRoute::Direct => {
-                                HalfEdgeBuilder::line_segment(
+                                HalfEdge::line_segment(
                                     [start, end],
                                     None,
+                                    objects,
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                HalfEdgeBuilder::arc(start, end, angle.rad())
+                                HalfEdge::arc(start, end, angle.rad(), objects)
                             }
                         };
+                        let half_edge = half_edge.insert(objects);
 
                         cycle = cycle.add_half_edges([half_edge]);
                     }
 
-                    cycle.build(objects).insert(objects)
+                    cycle.insert(objects)
                 };
 
                 Face::new(
