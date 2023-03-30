@@ -9,12 +9,10 @@ use crate::{
     storage::Handle,
 };
 
-use super::HalfEdgeBuilder;
-
 /// Builder API for [`Cycle`]
 #[derive(Default)]
 pub struct CycleBuilder {
-    half_edges: Vec<HalfEdgeOrHalfEdgeBuilder>,
+    half_edges: Vec<HalfEdge>,
 }
 
 impl CycleBuilder {
@@ -46,7 +44,6 @@ impl CycleBuilder {
                     .update_start_vertex(prev.start_vertex().clone())
                     .update_global_form(half_edge.global_form().clone())
             })
-            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdge)
             .collect();
 
         Self { half_edges }
@@ -66,7 +63,6 @@ impl CycleBuilder {
             .map(|(start, end)| {
                 HalfEdge::line_segment([start, end], None, objects)
             })
-            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdge)
             .collect();
 
         Self { half_edges }
@@ -74,21 +70,10 @@ impl CycleBuilder {
 
     /// Build the cycle
     pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
-        let half_edges = self.half_edges.into_iter().map(|half_edge| {
-            let half_edge = match half_edge {
-                HalfEdgeOrHalfEdgeBuilder::HalfEdge(half_edge) => half_edge,
-                HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder(half_edge) => {
-                    half_edge.build(objects)
-                }
-            };
-            half_edge.insert(objects)
-        });
+        let half_edges = self
+            .half_edges
+            .into_iter()
+            .map(|half_edge| half_edge.insert(objects));
         Cycle::new(half_edges)
     }
-}
-
-enum HalfEdgeOrHalfEdgeBuilder {
-    HalfEdge(HalfEdge),
-    #[allow(unused)]
-    HalfEdgeBuilder(HalfEdgeBuilder),
 }
