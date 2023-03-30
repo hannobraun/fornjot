@@ -53,15 +53,6 @@ impl HalfEdgeBuilder {
         Self::new(curve, boundary)
     }
 
-    /// Create a circle
-    pub fn circle(radius: impl Into<Scalar>) -> Self {
-        let curve = Curve::circle_from_radius(radius);
-        let boundary =
-            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
-
-        Self::new(curve, boundary)
-    }
-
     /// Create a line segment
     pub fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
