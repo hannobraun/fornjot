@@ -96,8 +96,9 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, HalfEdgeBuilder},
-        objects::Cycle,
+        builder::CycleBuilder,
+        objects::{Cycle, HalfEdge},
+        operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
     };
@@ -113,13 +114,21 @@ mod tests {
 
         let disconnected = {
             let half_edges = [
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None),
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None),
+                HalfEdge::line_segment(
+                    [[0., 0.], [1., 0.]],
+                    None,
+                    &mut services.objects,
+                ),
+                HalfEdge::line_segment(
+                    [[0., 0.], [1., 0.]],
+                    None,
+                    &mut services.objects,
+                ),
             ];
+            let half_edges = half_edges
+                .map(|half_edge| half_edge.insert(&mut services.objects));
 
-            CycleBuilder::new()
-                .add_half_edges(half_edges)
-                .build(&mut services.objects)
+            Cycle::empty().add_half_edges(half_edges)
         };
 
         assert_contains_err!(
