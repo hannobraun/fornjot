@@ -316,7 +316,7 @@ pub enum Error {
     Io(#[from] io::Error),
 
     /// An error was returned from [`fj::models::Model::shape()`].
-    #[error("Unable to determine the model's geometry")]
+    #[error("Unable to determine the model's geometry: {0}")]
     Shape(String),
 
     /// An error was returned from

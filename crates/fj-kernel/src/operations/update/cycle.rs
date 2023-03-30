@@ -5,6 +5,12 @@ use crate::{
 
 /// Update a [`Cycle`]
 pub trait UpdateCycle {
+    /// Add half-edges to the cycle
+    fn add_half_edges(
+        &self,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+    ) -> Cycle;
+
     /// Update a half-edge of the cycle
     fn update_half_edge(
         &self,
@@ -14,6 +20,14 @@ pub trait UpdateCycle {
 }
 
 impl UpdateCycle for Cycle {
+    fn add_half_edges(
+        &self,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+    ) -> Cycle {
+        let half_edges = self.half_edges().cloned().chain(half_edges);
+        Cycle::new(half_edges)
+    }
+
     fn update_half_edge(
         &self,
         index: usize,

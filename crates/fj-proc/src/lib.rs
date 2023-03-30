@@ -111,7 +111,7 @@ fn without_param_attrs(mut item: ItemFn) -> ItemFn {
             FnArg::Receiver(r) => &mut r.attrs,
             FnArg::Typed(t) => &mut t.attrs,
         };
-        attrs.retain(|attr| !attr.path.is_ident("param"));
+        attrs.retain(|attr| !attr.path().is_ident("param"));
     }
 
     item

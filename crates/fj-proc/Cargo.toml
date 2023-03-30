@@ -14,7 +14,7 @@ categories.workspace = true
 proc-macro = true
 
 [dependencies]
-proc-macro2 = "1.0.52"
+proc-macro2 = "1.0.54"
 quote = "1.0.23"
 
 [dependencies.serde]
@@ -22,5 +22,5 @@ version = "1.0.158"
 optional = true
 
 [dependencies.syn]
-version = "1.0.109"
+version = "2.0.10"
 features = ["full", "extra-traits"]

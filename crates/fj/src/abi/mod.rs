@@ -62,6 +62,7 @@ pub const FREE_FUNCTION_NAME: &str = "fj_model_free";
 pub struct PanicInfo {
     message: Option<String>,
     location: Option<Location>,
+    backtrace: String,
 }
 
 impl Display for PanicInfo {
@@ -78,6 +79,8 @@ impl Display for PanicInfo {
         } else {
             write!(f, "no location given")?;
         }
+
+        writeln!(f, "\nBacktrace:\n{}", self.backtrace)?;
 
         Ok(())
     }
@@ -121,7 +124,12 @@ pub fn initialize_panic_handling() {
             column: location.column(),
         });
 
-        *last_panic = Some(PanicInfo { message, location });
+        let backtrace = backtrace::Backtrace::new();
+        *last_panic = Some(PanicInfo {
+            message,
+            location,
+            backtrace: format!("{:?}", backtrace),
+        });
     }));
 }
 

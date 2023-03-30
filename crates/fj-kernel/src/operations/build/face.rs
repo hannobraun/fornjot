@@ -2,14 +2,13 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    builder::HalfEdgeBuilder,
-    objects::{Cycle, Face, GlobalEdge, Objects, Surface},
-    operations::Insert,
+    objects::{Cycle, Face, GlobalEdge, HalfEdge, Objects, Surface},
+    operations::{Insert, UpdateHalfEdge},
     services::Service,
     storage::Handle,
 };
 
-use super::BuildSurface;
+use super::{BuildHalfEdge, BuildSurface};
 
 /// Build a [`Face`]
 pub trait BuildFace {
@@ -25,16 +24,16 @@ pub trait BuildFace {
         let (exterior, edges) = {
             let half_edges = [[a, b], [b, c], [c, a]].zip_ext(edges).map(
                 |(points, global_form)| {
-                    let mut builder =
-                        HalfEdgeBuilder::line_segment_from_global_points(
-                            points, &surface, None,
+                    let mut half_edge =
+                        HalfEdge::line_segment_from_global_points(
+                            points, &surface, None, objects,
                         );
 
                     if let Some(global_form) = global_form {
-                        builder = builder.with_global_form(global_form);
+                        half_edge = half_edge.update_global_form(global_form);
                     }
 
-                    builder.build(objects).insert(objects)
+                    half_edge.insert(objects)
                 },
             );
 

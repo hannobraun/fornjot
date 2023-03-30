@@ -17,6 +17,7 @@ anyhow = "1.0.70"
 
 [dependencies]
 fj-proc.workspace = true
+backtrace = "0.3.67"
 
 [dependencies.serde]
 version = "1.0.158"

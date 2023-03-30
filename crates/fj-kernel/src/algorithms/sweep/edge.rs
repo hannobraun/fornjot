@@ -2,9 +2,8 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    builder::HalfEdgeBuilder,
     objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
-    operations::Insert,
+    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Service,
     storage::Handle,
 };
@@ -79,30 +78,28 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
                 let half_edge = {
-                    let builder = HalfEdgeBuilder::line_segment(
+                    let half_edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
+                        objects,
                     )
-                    .with_start_vertex(start_vertex);
+                    .update_start_vertex(start_vertex);
 
-                    let builder = if let Some(global_edge) = global_edge {
-                        builder.with_global_form(global_edge)
+                    let half_edge = if let Some(global_edge) = global_edge {
+                        half_edge.update_global_form(global_edge)
                     } else {
-                        builder
+                        half_edge
                     };
 
-                    builder.build(objects).insert(objects)
+                    half_edge.insert(objects)
                 };
 
-                let updated = {
-                    let exterior = exterior.take().unwrap();
-                    let half_edges = exterior
-                        .half_edges()
-                        .cloned()
-                        .chain([half_edge.clone()]);
-                    Cycle::new(half_edges)
-                };
-                exterior = Some(updated);
+                exterior = Some(
+                    exterior
+                        .take()
+                        .unwrap()
+                        .add_half_edges([half_edge.clone()]),
+                );
 
                 half_edge
             });

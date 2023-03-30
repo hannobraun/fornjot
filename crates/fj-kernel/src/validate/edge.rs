@@ -77,8 +77,8 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        builder::HalfEdgeBuilder,
         objects::HalfEdge,
+        operations::BuildHalfEdge,
         services::Services,
         validate::{HalfEdgeValidationError, Validate, ValidationError},
     };
@@ -87,8 +87,11 @@ mod tests {
     fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None)
-            .build(&mut services.objects);
+        let valid = HalfEdge::line_segment(
+            [[0., 0.], [1., 0.]],
+            None,
+            &mut services.objects,
+        );
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 

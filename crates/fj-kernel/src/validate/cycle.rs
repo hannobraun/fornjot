@@ -96,8 +96,9 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        builder::{CycleBuilder, HalfEdgeBuilder},
-        objects::Cycle,
+        builder::CycleBuilder,
+        objects::{Cycle, HalfEdge},
+        operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
     };
@@ -106,20 +107,31 @@ mod tests {
     fn half_edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = CycleBuilder::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]])
-            .build(&mut services.objects);
+        let valid = CycleBuilder::polygon(
+            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
+            &mut services.objects,
+        )
+        .build(&mut services.objects);
 
         valid.validate_and_return_first_error()?;
 
         let disconnected = {
-            let first =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
-            let second =
-                HalfEdgeBuilder::line_segment([[0., 0.], [1., 0.]], None);
+            let half_edges = [
+                HalfEdge::line_segment(
+                    [[0., 0.], [1., 0.]],
+                    None,
+                    &mut services.objects,
+                ),
+                HalfEdge::line_segment(
+                    [[0., 0.], [1., 0.]],
+                    None,
+                    &mut services.objects,
+                ),
+            ];
+            let half_edges = half_edges
+                .map(|half_edge| half_edge.insert(&mut services.objects));
 
-            CycleBuilder::new()
-                .add_half_edges([first, second])
-                .build(&mut services.objects)
+            Cycle::empty().add_half_edges(half_edges)
         };
 
         assert_contains_err!(

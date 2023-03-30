@@ -82,8 +82,8 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let top_cycle =
-                CycleBuilder::connect_to_edges(top_edges).build(objects);
+            let top_cycle = CycleBuilder::connect_to_edges(top_edges, objects)
+                .build(objects);
 
             if i == 0 {
                 exterior = Some(top_cycle.insert(objects));
