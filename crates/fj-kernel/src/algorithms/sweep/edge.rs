@@ -78,7 +78,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(global_edges)
             .map(|((((boundary, start), end), start_vertex), global_edge)| {
                 let half_edge = {
-                    let builder = HalfEdge::line_segment(
+                    let half_edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
                         objects,
@@ -86,9 +86,9 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     .update_start_vertex(start_vertex);
 
                     let builder = if let Some(global_edge) = global_edge {
-                        builder.update_global_form(global_edge)
+                        half_edge.update_global_form(global_edge)
                     } else {
-                        builder
+                        half_edge
                     };
 
                     builder.insert(objects)
