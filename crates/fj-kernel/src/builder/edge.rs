@@ -1,4 +1,3 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
@@ -26,20 +25,6 @@ impl HalfEdgeBuilder {
             start_vertex: None,
             global_form: None,
         }
-    }
-
-    /// Create a line segment
-    pub fn line_segment(
-        points_surface: [impl Into<Point<2>>; 2],
-        boundary: Option<[Point<1>; 2]>,
-    ) -> Self {
-        let boundary =
-            boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
-        let curve = Curve::line_from_points_with_coords(
-            boundary.zip_ext(points_surface),
-        );
-
-        Self::new(curve, boundary)
     }
 
     /// Build the half-edge with a specific start vertex
