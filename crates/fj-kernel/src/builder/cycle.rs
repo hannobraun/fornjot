@@ -14,7 +14,7 @@ use super::HalfEdgeBuilder;
 /// Builder API for [`Cycle`]
 #[derive(Default)]
 pub struct CycleBuilder {
-    half_edges: Vec<HalfEdgeBuilder>,
+    half_edges: Vec<HalfEdgeOrHalfEdgeBuilder>,
 }
 
 impl CycleBuilder {
@@ -28,6 +28,9 @@ impl CycleBuilder {
         mut self,
         half_edges: impl IntoIterator<Item = HalfEdgeBuilder>,
     ) -> Self {
+        let half_edges = half_edges
+            .into_iter()
+            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder);
         self.half_edges.extend(half_edges);
         self
     }
@@ -52,6 +55,7 @@ impl CycleBuilder {
                     .with_start_vertex(prev.start_vertex().clone())
                     .with_global_form(half_edge.global_form().clone())
             })
+            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder)
             .collect();
 
         Self { half_edges }
@@ -71,6 +75,7 @@ impl CycleBuilder {
             .map(|(start, end)| {
                 HalfEdgeBuilder::line_segment([start, end], None)
             })
+            .map(HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder)
             .collect();
 
         Self { half_edges }
@@ -78,10 +83,21 @@ impl CycleBuilder {
 
     /// Build the cycle
     pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
-        let half_edges = self
-            .half_edges
-            .into_iter()
-            .map(|half_edge| half_edge.build(objects).insert(objects));
+        let half_edges = self.half_edges.into_iter().map(|half_edge| {
+            let half_edge = match half_edge {
+                HalfEdgeOrHalfEdgeBuilder::HalfEdge(half_edge) => half_edge,
+                HalfEdgeOrHalfEdgeBuilder::HalfEdgeBuilder(half_edge) => {
+                    half_edge.build(objects)
+                }
+            };
+            half_edge.insert(objects)
+        });
         Cycle::new(half_edges)
     }
+}
+
+enum HalfEdgeOrHalfEdgeBuilder {
+    #[allow(unused)]
+    HalfEdge(HalfEdge),
+    HalfEdgeBuilder(HalfEdgeBuilder),
 }
