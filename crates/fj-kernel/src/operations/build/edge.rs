@@ -3,7 +3,7 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
-    objects::{GlobalEdge, HalfEdge, Objects, Vertex},
+    objects::{GlobalEdge, HalfEdge, Objects, Surface, Vertex},
     operations::Insert,
     services::Service,
 };
@@ -73,6 +73,18 @@ pub trait BuildHalfEdge {
         );
 
         HalfEdge::unjoined(curve, boundary, objects)
+    }
+
+    /// Create a line segment from global points
+    fn line_segment_from_global_points(
+        points_global: [impl Into<Point<3>>; 2],
+        surface: &Surface,
+        boundary: Option<[Point<1>; 2]>,
+        objects: &mut Service<Objects>,
+    ) -> HalfEdge {
+        let points_surface = points_global
+            .map(|point| surface.geometry().project_global_point(point));
+        HalfEdge::line_segment(points_surface, boundary, objects)
     }
 }
 
