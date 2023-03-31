@@ -14,7 +14,7 @@
 
 #![warn(missing_docs)]
 
-use std::{fs::File, path::Path};
+use std::{fs::File, io::Write, path::Path};
 
 use thiserror::Error;
 
@@ -34,6 +34,9 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         }
         Some(extension) if extension.to_ascii_uppercase() == "STL" => {
             export_stl(mesh, path)
+        }
+        Some(extension) if extension.to_ascii_uppercase() == "OBJ" => {
+            export_obj(mesh, path)
         }
         Some(extension) => Err(Error::InvalidExtension(
             extension.to_string_lossy().into_owned(),
@@ -119,6 +122,53 @@ fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     Ok(())
 }
 
+fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
+    let mut f = File::create(path)?;
+
+    for (cnt, t) in mesh.triangles().enumerate() {
+        // write each point of the triangle
+        for v in t.inner.points() {
+            wavefront_rs::obj::writer::Writer::write(
+                &mut f,
+                &wavefront_rs::obj::entity::Entity::Vertex {
+                    x: v.x.into_f64(),
+                    y: v.y.into_f64(),
+                    z: v.z.into_f64(),
+                    w: None,
+                },
+            )?;
+            f.write_all(b"\n")?;
+        }
+
+        // write the triangle
+        wavefront_rs::obj::writer::Writer::write(
+            &mut f,
+            &wavefront_rs::obj::entity::Entity::Face {
+                vertices: vec![
+                    wavefront_rs::obj::entity::FaceVertex {
+                        vertex: (cnt * 3 + 1) as i64,
+                        texture: None,
+                        normal: None,
+                    },
+                    wavefront_rs::obj::entity::FaceVertex {
+                        vertex: (cnt * 3 + 2) as i64,
+                        texture: None,
+                        normal: None,
+                    },
+                    wavefront_rs::obj::entity::FaceVertex {
+                        vertex: (cnt * 3 + 3) as i64,
+                        texture: None,
+                        normal: None,
+                    },
+                ],
+            },
+        )?;
+        f.write_all(b"\n")?;
+    }
+
+    Ok(())
+}
+
 /// An error that can occur while exporting
 #[derive(Debug, Error)]
 pub enum Error {
@@ -141,4 +191,8 @@ pub enum Error {
     /// Threemf error whilst exporting to 3MF file
     #[error("threemf error whilst exporting to 3MF file")]
     ThreeMF(#[from] threemf::Error),
+
+    /// Threemf error whilst exporting to OBJ file
+    #[error("obj error whilst exporting to OBJ file")]
+    OBJ(#[from] Box<dyn std::error::Error>),
 }
