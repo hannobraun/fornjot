@@ -1,8 +1,10 @@
+use crate::models::Error;
+
 /// Contextual information passed to a [`Model`][crate::models::Model] when it
 /// is being initialized.
 pub trait Context {
     /// Get an argument that was passed to this model.
-    fn get_argument(&self, name: &str) -> Option<&str>;
+    fn get_argument(&self, name: &str) -> Result<Option<&str>, Error>;
 }
 
 #[cfg(test)]
