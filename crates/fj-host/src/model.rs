@@ -212,8 +212,14 @@ impl<'a> fj::models::Host for Host<'a> {
 }
 
 impl<'a> fj::models::Context for Host<'a> {
-    fn get_argument(&self, name: &str) -> Option<&str> {
-        self.args.get(name).map(String::as_str)
+    fn get_argument(
+        &self,
+        name: &str,
+    ) -> crate::model::abi::ffi_safe::Result<Option<&str>, fj::models::Error>
+    {
+        crate::model::abi::ffi_safe::Result::Ok(
+            self.args.get(name).map(String::as_str),
+        )
     }
 }
 
