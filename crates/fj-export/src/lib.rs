@@ -194,7 +194,7 @@ pub enum Error {
     #[error("threemf error whilst exporting to 3MF file")]
     ThreeMF(#[from] threemf::Error),
 
-    /// Threemf error whilst exporting to OBJ file
+    /// OBJ exporter error whilst exporting to OBJ file
     #[error("obj error whilst exporting to OBJ file")]
     OBJ,
 }
