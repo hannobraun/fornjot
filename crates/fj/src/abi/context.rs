@@ -1,6 +1,6 @@
 use std::{marker::PhantomData, os::raw::c_void, panic::AssertUnwindSafe};
 
-use crate::abi::ffi_safe::StringSlice;
+use crate::{abi::ffi_safe::StringSlice, models::Error};
 
 #[repr(C)]
 pub struct Context<'a> {
@@ -29,12 +29,25 @@ impl<'a> From<&'a &dyn crate::models::Context> for Context<'a> {
             match std::panic::catch_unwind(AssertUnwindSafe(|| {
                 ctx.get_argument(&name)
             })) {
-                Ok(Some(arg)) => {
-                    crate::abi::ffi_safe::Result::Ok(StringSlice::from_str(arg))
-                }
-                Ok(None) => {
-                    crate::abi::ffi_safe::Result::Ok(StringSlice::from_str(""))
-                }
+                Ok(result) => match result {
+                    crate::abi::ffi_safe::Result::Ok(option) => match option {
+                        Some(arg) => crate::abi::ffi_safe::Result::Ok(
+                            StringSlice::from_str(arg),
+                        ),
+                        None => crate::abi::ffi_safe::Result::Ok(
+                            StringSlice::from_str(""),
+                        ),
+                    },
+                    crate::abi::ffi_safe::Result::Err(_) => {
+                        crate::abi::ffi_safe::Result::Err(
+                            String::from("Problem handling model arguments")
+                                .into(),
+                        )
+                    }
+                    //TODO: I'm not familiar enough with the codebase yet to know the best way to
+                    // handle this error, but it will almost certainly need to be handled better
+                    // than this in the future
+                },
                 Err(payload) => crate::abi::ffi_safe::Result::Err(
                     crate::abi::on_panic(payload),
                 ),
@@ -51,7 +64,10 @@ impl<'a> From<&'a &dyn crate::models::Context> for Context<'a> {
 }
 
 impl crate::models::Context for Context<'_> {
-    fn get_argument(&self, name: &str) -> Option<&str> {
+    fn get_argument(
+        &self,
+        name: &str,
+    ) -> super::ffi_safe::Result<Option<&str>, Error> {
         unsafe {
             let Context {
                 user_data,
@@ -62,15 +78,15 @@ impl crate::models::Context for Context<'_> {
             let name = StringSlice::from_str(name);
 
             match name.trim().is_empty() {
-                true => None,
+                true => super::ffi_safe::Result::Ok(None),
                 false => match get_argument(user_data, name) {
                     super::ffi_safe::Result::Ok(other) => {
                         match other.is_empty() {
-                            true => None,
-                            false => Some(other.into_str()),
+                            true => Ok(None).into(),
+                            false => Ok(Some(other.into_str())).into(),
                         }
                     }
-                    super::ffi_safe::Result::Err(_) => None,
+                    _ => Err("Problem handling model arguments".into()).into(),
                 },
             }
         }
