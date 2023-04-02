@@ -136,7 +136,8 @@ fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
                     z: v.z.into_f64(),
                     w: None,
                 },
-            )?;
+            )
+            .or(Err(Error::OBJ))?;
             f.write_all(b"\n")?;
         }
 
@@ -162,7 +163,8 @@ fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
                     },
                 ],
             },
-        )?;
+        )
+        .or(Err(Error::OBJ))?;
         f.write_all(b"\n")?;
     }
 
@@ -194,5 +196,5 @@ pub enum Error {
 
     /// Threemf error whilst exporting to OBJ file
     #[error("obj error whilst exporting to OBJ file")]
-    OBJ(#[from] Box<dyn std::error::Error>),
+    OBJ,
 }
