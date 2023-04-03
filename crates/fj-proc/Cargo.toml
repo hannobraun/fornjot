@@ -14,7 +14,7 @@ categories.workspace = true
 proc-macro = true
 
 [dependencies]
-proc-macro2 = "1.0.54"
+proc-macro2 = "1.0.56"
 quote = "1.0.23"
 
 [dependencies.serde]
