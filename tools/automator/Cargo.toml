@@ -22,5 +22,5 @@ version = "4.1.11"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.26.0"
+version = "1.27.0"
 features = ["full"]
