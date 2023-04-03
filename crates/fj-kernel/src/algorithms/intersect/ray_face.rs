@@ -36,9 +36,10 @@ impl Intersect for (&HorizontalRayToTheRight<3>, &Face) {
 
             let [a, b, c, d] = [a, b, c, d]
                 .map(|point| [point.x, point.y, point.z])
-                .map(|point| point.map(Scalar::into_f64));
+                .map(|point| point.map(Scalar::into_f64))
+                .map(|[x, y, z]| robust::Coord3D { x, y, z });
 
-            if fj_math::robust::orient3d(a, b, c, d) == 0. {
+            if robust::orient3d(a, b, c, d) == 0. {
                 return Some(RayFaceIntersection::RayHitsFaceAndAreParallel);
             } else {
                 return None;
