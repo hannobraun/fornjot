@@ -22,5 +22,5 @@ version = "1.0.158"
 optional = true
 
 [dependencies.syn]
-version = "2.0.10"
+version = "2.0.12"
 features = ["full", "extra-traits"]
