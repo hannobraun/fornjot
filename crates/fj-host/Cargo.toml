@@ -13,7 +13,7 @@ categories.workspace = true
 
 [dependencies]
 cargo_metadata = "0.15.3"
-crossbeam-channel = "0.5.7"
+crossbeam-channel = "0.5.8"
 fj.workspace = true
 fj-interop.workspace = true
 fj-operations.workspace = true
