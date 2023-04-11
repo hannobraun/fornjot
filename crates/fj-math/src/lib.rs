@@ -35,8 +35,6 @@
 
 #![warn(missing_docs)]
 
-pub mod robust;
-
 mod aabb;
 mod arc;
 mod circle;
