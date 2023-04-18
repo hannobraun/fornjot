@@ -1,5 +1,47 @@
 # Fornjot - Changelog
 
+## v0.43.0 (2023-04-18)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Add support for exporting `.obj` format ([#1739]; thank you, [@replicadse]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Make minor cleanups in `Solid` validation code ([#1737])
+- Expand operations API; replace `HalfEdgeBuilder` ([#1738])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1733], [#1753], [#1760], [#1762], [#1770])
+- Upgrade to latest Rust version ([#1734], [#1752])
+- Replace custom code with new features from `robust` ([#1761])
+- Update list of sponsors in README ([#1771])
+
+[#1733]: https://github.com/hannobraun/Fornjot/pull/1733
+[#1734]: https://github.com/hannobraun/Fornjot/pull/1734
+[#1737]: https://github.com/hannobraun/Fornjot/pull/1737
+[#1738]: https://github.com/hannobraun/Fornjot/pull/1738
+[#1739]: https://github.com/hannobraun/Fornjot/pull/1739
+[#1752]: https://github.com/hannobraun/Fornjot/pull/1752
+[#1753]: https://github.com/hannobraun/Fornjot/pull/1753
+[#1760]: https://github.com/hannobraun/Fornjot/pull/1760
+[#1761]: https://github.com/hannobraun/Fornjot/pull/1761
+[#1762]: https://github.com/hannobraun/Fornjot/pull/1762
+[#1770]: https://github.com/hannobraun/Fornjot/pull/1770
+[#1771]: https://github.com/hannobraun/Fornjot/pull/1771
+
+[@replicadse]: https://github.com/replicadse
+
+
 ## v0.42.0 (2023-03-27)
 
 ### End-user improvements
