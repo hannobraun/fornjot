@@ -14,7 +14,7 @@
 
 #![warn(missing_docs)]
 
-use std::{fs::File, io::Write, path::Path};
+use std::{fs::File, path::Path};
 
 use thiserror::Error;
 
@@ -128,44 +128,44 @@ fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     for (cnt, t) in mesh.triangles().enumerate() {
         // write each point of the triangle
         for v in t.inner.points() {
-            wavefront_rs::obj::writer::Writer::write(
-                &mut f,
-                &wavefront_rs::obj::entity::Entity::Vertex {
-                    x: v.x.into_f64(),
-                    y: v.y.into_f64(),
-                    z: v.z.into_f64(),
-                    w: None,
-                },
-            )
-            .or(Err(Error::OBJ))?;
-            f.write_all(b"\n")?;
+            wavefront_rs::obj::writer::Writer { auto_newline: true }
+                .write(
+                    &mut f,
+                    &wavefront_rs::obj::entity::Entity::Vertex {
+                        x: v.x.into_f64(),
+                        y: v.y.into_f64(),
+                        z: v.z.into_f64(),
+                        w: None,
+                    },
+                )
+                .or(Err(Error::OBJ))?;
         }
 
         // write the triangle
-        wavefront_rs::obj::writer::Writer::write(
-            &mut f,
-            &wavefront_rs::obj::entity::Entity::Face {
-                vertices: vec![
-                    wavefront_rs::obj::entity::FaceVertex {
-                        vertex: (cnt * 3 + 1) as i64,
-                        texture: None,
-                        normal: None,
-                    },
-                    wavefront_rs::obj::entity::FaceVertex {
-                        vertex: (cnt * 3 + 2) as i64,
-                        texture: None,
-                        normal: None,
-                    },
-                    wavefront_rs::obj::entity::FaceVertex {
-                        vertex: (cnt * 3 + 3) as i64,
-                        texture: None,
-                        normal: None,
-                    },
-                ],
-            },
-        )
-        .or(Err(Error::OBJ))?;
-        f.write_all(b"\n")?;
+        wavefront_rs::obj::writer::Writer { auto_newline: true }
+            .write(
+                &mut f,
+                &wavefront_rs::obj::entity::Entity::Face {
+                    vertices: vec![
+                        wavefront_rs::obj::entity::FaceVertex {
+                            vertex: (cnt * 3 + 1) as i64,
+                            texture: None,
+                            normal: None,
+                        },
+                        wavefront_rs::obj::entity::FaceVertex {
+                            vertex: (cnt * 3 + 2) as i64,
+                            texture: None,
+                            normal: None,
+                        },
+                        wavefront_rs::obj::entity::FaceVertex {
+                            vertex: (cnt * 3 + 3) as i64,
+                            texture: None,
+                            normal: None,
+                        },
+                    ],
+                },
+            )
+            .or(Err(Error::OBJ))?;
     }
 
     Ok(())

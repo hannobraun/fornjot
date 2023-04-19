@@ -4098,9 +4098,9 @@ checksum = "0046fef7e28c3804e5e38bfa31ea2a0f73905319b677e57ebe37e49358989b5d"
 
 [[package]]
 name = "wavefront_rs"
-version = "2.0.0-alpha.1"
+version = "2.0.0-beta.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad6ae8f49ee35d8afba6b30d1714f9043bfd2d1ef650897cb6405a600609e9a1"
+checksum = "c2f237e2271c3f9ccc633ee16918789514fd5a823bf62ddce21f8a730a1d9930"
 
 [[package]]
 name = "wayland-client"
