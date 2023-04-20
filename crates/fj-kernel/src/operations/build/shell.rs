@@ -12,6 +12,23 @@ use super::{BuildFace, Triangle};
 /// Build a [`Shell`]
 pub trait BuildShell {
     /// Build a tetrahedron from the provided points
+    ///
+    /// Accepts 4 points, naturally. For the purposes of the following
+    /// discussion, let's call those `a`, `b`, `c`, and `d`, and assume that the
+    /// order they are listed in here matches the order they are provided in
+    /// within the array.
+    ///
+    /// Assumes that `a`, `b`, and `c` form a triangle in counter-clockwise
+    /// order, when arranging the viewpoint such that it is on the opposite side
+    /// of the triangle from `d`. If this assumption is met, the orientation of
+    /// all faces of the tetrahedron will be valid, meaning their
+    /// counter-clockwise sides are outside.
+    ///
+    /// # Implementation Note
+    ///
+    /// In principle, this method doesn't need to make assumptions about the
+    /// order of the points provided. It could, given some extra effort, just
+    /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
         objects: &mut Service<Objects>,
@@ -24,14 +41,14 @@ pub trait BuildShell {
         } = Face::triangle([a, b, c], [None, None, None], objects);
         let Triangle {
             face: face_abd,
-            edges: [_, bd, da],
-        } = Face::triangle([a, b, d], [Some(ab), None, None], objects);
+            edges: [_, ad, db],
+        } = Face::triangle([b, a, d], [Some(ab), None, None], objects);
         let Triangle {
             face: face_cad,
-            edges: [_, _, dc],
-        } = Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
+            edges: [_, _, cd],
+        } = Face::triangle([d, a, c], [Some(ad), Some(ca), None], objects);
         let Triangle { face: face_bcd, .. } =
-            Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
+            Face::triangle([c, b, d], [Some(bc), Some(db), Some(cd)], objects);
 
         let faces = [face_abc, face_abd, face_cad, face_bcd]
             .map(|face| face.insert(objects));

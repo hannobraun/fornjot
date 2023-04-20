@@ -207,7 +207,7 @@ mod tests {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
         let invalid = valid.shell.update_face(&valid.face_abc, |face| {
@@ -240,7 +240,7 @@ mod tests {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
         let invalid = valid.shell.remove_face(&valid.face_abc);
