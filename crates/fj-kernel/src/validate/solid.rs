@@ -90,12 +90,13 @@ impl SolidValidationError {
         for (position_a, vertex_a) in &vertices {
             for (position_b, vertex_b) in &vertices {
                 let vertices_are_identical = vertex_a.id() == vertex_b.id();
+                let too_far_to_be_identical = position_a
+                    .distance_to(position_b)
+                    > config.identical_max_distance;
 
                 match vertices_are_identical {
                     true => {
-                        if position_a.distance_to(position_b)
-                            > config.identical_max_distance
-                        {
+                        if too_far_to_be_identical {
                             errors.push(
                                 Self::IdenticalVerticesNotCoincident {
                                     vertex_a: vertex_a.clone(),
