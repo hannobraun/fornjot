@@ -24,8 +24,8 @@ pub enum SolidValidationError {
     /// [`Solid`] contains vertices that are coincident, but not identical
     #[error(
         "Solid contains Vertices that are coincident but not identical\n
-        Vertex 1: {:#?} {:#?}
-        Vertex 2: {:#?} {:#?}",
+        Vertex 1: {:#?} ({:?})
+        Vertex 2: {:#?} ({:?})",
         .0[0].0, .0[0].1,.0[1].0,.0[1].1
     )]
     DistinctVerticesCoincide([(Handle<Vertex>, Point<3>); 2]),
@@ -33,8 +33,8 @@ pub enum SolidValidationError {
     /// [`Solid`] contains vertices that are identical, but do not coincide
     #[error(
         "Solid contains Vertices that are identical but do not coincide\n
-        Vertex 1: {:#?} {:#?}
-        Vertex 2: {:#?} {:#?}",
+        Vertex 1: {:#?} ({:?})
+        Vertex 2: {:#?} ({:?})",
         .0[0].0, .0[0].1,.0[1].0,.0[1].1
     )]
     IdenticalVerticesNotCoincident([(Handle<Vertex>, Point<3>); 2]),
