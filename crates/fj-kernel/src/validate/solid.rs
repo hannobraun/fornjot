@@ -93,6 +93,9 @@ impl SolidValidationError {
                 let too_far_to_be_identical = position_a
                     .distance_to(position_b)
                     > config.identical_max_distance;
+                let too_close_to_be_distinct = position_a
+                    .distance_to(position_b)
+                    < config.distinct_min_distance;
 
                 match vertices_are_identical {
                     true => {
@@ -109,9 +112,7 @@ impl SolidValidationError {
                         }
                     }
                     false => {
-                        if position_a.distance_to(position_b)
-                            < config.distinct_min_distance
-                        {
+                        if too_close_to_be_distinct {
                             errors.push(
                                 Self::DistinctVerticesCoincide {
                                     vertex_a: vertex_a.clone(),
