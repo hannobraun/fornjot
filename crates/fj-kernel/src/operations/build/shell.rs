@@ -12,6 +12,23 @@ use super::{BuildFace, Triangle};
 /// Build a [`Shell`]
 pub trait BuildShell {
     /// Build a tetrahedron from the provided points
+    ///
+    /// Accepts 4 points, naturally. For the purposes of the following
+    /// discussion, let's call those `a`, `b`, `c`, and `d`, and assume that the
+    /// order they are listed in here matches the order they are provided in
+    /// within the array.
+    ///
+    /// Assumes that `a`, `b`, and `c` form a triangle in counter-clockwise
+    /// order, when arranging the viewpoint such that it is on the opposite side
+    /// of the triangle from `d`. If this assumption is met, the orientation of
+    /// all faces of the tetrahedron will be valid, meaning their
+    /// counter-clockwise sides are outside.
+    ///
+    /// # Implementation Note
+    ///
+    /// In principle, this method doesn't need to make assumptions about the
+    /// order of the points provided. It could, given some extra effort, just
+    /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
         objects: &mut Service<Objects>,
