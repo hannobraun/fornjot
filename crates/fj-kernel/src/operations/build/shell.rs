@@ -47,10 +47,10 @@ pub trait BuildShell {
             face: face_dac,
             edges: [_, _, cd],
         } = Face::triangle([d, a, c], [Some(ad), Some(ca), None], objects);
-        let Triangle { face: face_bcd, .. } =
+        let Triangle { face: face_cbd, .. } =
             Face::triangle([c, b, d], [Some(bc), Some(db), Some(cd)], objects);
 
-        let faces = [face_abc, face_bad, face_dac, face_bcd]
+        let faces = [face_abc, face_bad, face_dac, face_cbd]
             .map(|face| face.insert(objects));
         let shell = Shell::new(faces.clone());
 
