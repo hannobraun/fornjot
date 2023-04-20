@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Objects, Shell},
-    operations::Insert,
+    operations::{Insert, UpdateCycle, UpdateFace, UpdateHalfEdge},
     services::Service,
     storage::Handle,
 };
@@ -38,36 +38,57 @@ pub trait BuildShell {
         let Triangle {
             face: face_abc,
             edges: [ab, bc, ca],
-        } = Face::triangle([a, b, c], [None, None, None], objects);
+        } = Face::triangle([a, b, c], objects);
         let Triangle {
             face: face_bad,
-            edges: [_, ad, db],
-        } = Face::triangle(
-            [b, a, d],
-            [Some(ab.global_form().clone()), None, None],
-            objects,
-        );
+            edges: [ba, ad, db],
+        } = Face::triangle([b, a, d], objects);
         let Triangle {
             face: face_dac,
-            edges: [_, _, cd],
-        } = Face::triangle(
-            [d, a, c],
-            [
-                Some(ad.global_form().clone()),
-                Some(ca.global_form().clone()),
-                None,
-            ],
-            objects,
-        );
-        let Triangle { face: face_cbd, .. } = Face::triangle(
-            [c, b, d],
-            [
-                Some(bc.global_form().clone()),
-                Some(db.global_form().clone()),
-                Some(cd.global_form().clone()),
-            ],
-            objects,
-        );
+            edges: [da, ac, cd],
+        } = Face::triangle([d, a, c], objects);
+        let Triangle {
+            face: face_cbd,
+            edges: [cb, bd, dc],
+        } = Face::triangle([c, b, d], objects);
+
+        let face_bad = face_bad.update_exterior(|cycle| {
+            let ba_joined = ba
+                .replace_global_form(ab.global_form().clone())
+                .insert(objects);
+
+            cycle.replace_half_edge(&ba, ba_joined).insert(objects)
+        });
+        let face_dac = face_dac.update_exterior(|cycle| {
+            let da_joined = da
+                .replace_global_form(ad.global_form().clone())
+                .insert(objects);
+            let ac_joined = ac
+                .replace_global_form(ca.global_form().clone())
+                .insert(objects);
+
+            cycle
+                .replace_half_edge(&da, da_joined)
+                .replace_half_edge(&ac, ac_joined)
+                .insert(objects)
+        });
+        let face_cbd = face_cbd.update_exterior(|cycle| {
+            let cb_joined = cb
+                .replace_global_form(bc.global_form().clone())
+                .insert(objects);
+            let bd_joined = bd
+                .replace_global_form(db.global_form().clone())
+                .insert(objects);
+            let dc_joined = dc
+                .replace_global_form(cd.global_form().clone())
+                .insert(objects);
+
+            cycle
+                .replace_half_edge(&cb, cb_joined)
+                .replace_half_edge(&bd, bd_joined)
+                .replace_half_edge(&dc, dc_joined)
+                .insert(objects)
+        });
 
         let faces = [face_abc, face_bad, face_dac, face_cbd]
             .map(|face| face.insert(objects));
