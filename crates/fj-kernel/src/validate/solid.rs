@@ -24,11 +24,22 @@ pub enum SolidValidationError {
     /// [`Solid`] contains vertices that are coincident, but not identical
     #[error(
         "Solid contains Vertices that are coincident but not identical\n
-        Vertex 1: {:#?} ({:?})
-        Vertex 2: {:#?} ({:?})",
-        .0[0].0, .0[0].1,.0[1].0,.0[1].1
+        Vertex 1: {vertex_a:#?} ({position_a:?})
+        Vertex 2: {vertex_b:#?} ({position_b:?})"
     )]
-    DistinctVerticesCoincide([(Handle<Vertex>, Point<3>); 2]),
+    DistinctVerticesCoincide {
+        /// The first vertex
+        vertex_a: Handle<Vertex>,
+
+        /// The second vertex
+        vertex_b: Handle<Vertex>,
+
+        /// Position of first vertex
+        position_a: Point<3>,
+
+        /// Position of second vertex
+        position_b: Point<3>,
+    },
 
     /// [`Solid`] contains vertices that are identical, but do not coincide
     #[error(
@@ -84,10 +95,12 @@ impl SolidValidationError {
                         if a.0.distance_to(&b.0) < config.distinct_min_distance
                         {
                             errors.push(
-                                Self::DistinctVerticesCoincide([
-                                    (a.1.clone(), a.0),
-                                    (b.1.clone(), b.0),
-                                ])
+                                Self::DistinctVerticesCoincide {
+                                    vertex_a: a.1.clone(),
+                                    vertex_b: b.1.clone(),
+                                    position_a: a.0,
+                                    position_b: b.0,
+                                }
                                 .into(),
                             )
                         }
