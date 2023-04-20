@@ -87,17 +87,18 @@ impl SolidValidationError {
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for a in &vertices {
+        for (position_a, vertex_a) in &vertices {
             for b in &vertices {
-                match a.1.id() == b.1.id() {
+                match vertex_a.id() == b.1.id() {
                     true => {
-                        if a.0.distance_to(&b.0) > config.identical_max_distance
+                        if position_a.distance_to(&b.0)
+                            > config.identical_max_distance
                         {
                             errors.push(
                                 Self::IdenticalVerticesNotCoincident {
-                                    vertex_a: a.1.clone(),
+                                    vertex_a: vertex_a.clone(),
                                     vertex_b: b.1.clone(),
-                                    position_a: a.0,
+                                    position_a: *position_a,
                                     position_b: b.0,
                                 }
                                 .into(),
@@ -105,13 +106,14 @@ impl SolidValidationError {
                         }
                     }
                     false => {
-                        if a.0.distance_to(&b.0) < config.distinct_min_distance
+                        if position_a.distance_to(&b.0)
+                            < config.distinct_min_distance
                         {
                             errors.push(
                                 Self::DistinctVerticesCoincide {
-                                    vertex_a: a.1.clone(),
+                                    vertex_a: vertex_a.clone(),
                                     vertex_b: b.1.clone(),
-                                    position_a: a.0,
+                                    position_a: *position_a,
                                     position_b: b.0,
                                 }
                                 .into(),
