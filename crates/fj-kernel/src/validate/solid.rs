@@ -88,33 +88,33 @@ impl SolidValidationError {
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
         for (position_a, vertex_a) in &vertices {
-            for b in &vertices {
-                match vertex_a.id() == b.1.id() {
+            for (position_b, vertex_b) in &vertices {
+                match vertex_a.id() == vertex_b.id() {
                     true => {
-                        if position_a.distance_to(&b.0)
+                        if position_a.distance_to(position_b)
                             > config.identical_max_distance
                         {
                             errors.push(
                                 Self::IdenticalVerticesNotCoincident {
                                     vertex_a: vertex_a.clone(),
-                                    vertex_b: b.1.clone(),
+                                    vertex_b: vertex_b.clone(),
                                     position_a: *position_a,
-                                    position_b: b.0,
+                                    position_b: *position_b,
                                 }
                                 .into(),
                             )
                         }
                     }
                     false => {
-                        if position_a.distance_to(&b.0)
+                        if position_a.distance_to(position_b)
                             < config.distinct_min_distance
                         {
                             errors.push(
                                 Self::DistinctVerticesCoincide {
                                     vertex_a: vertex_a.clone(),
-                                    vertex_b: b.1.clone(),
+                                    vertex_b: vertex_b.clone(),
                                     position_a: *position_a,
-                                    position_b: b.0,
+                                    position_b: *position_b,
                                 }
                                 .into(),
                             )
