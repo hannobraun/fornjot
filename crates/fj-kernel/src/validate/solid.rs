@@ -97,33 +97,28 @@ impl SolidValidationError {
                     .distance_to(position_b)
                     < config.distinct_min_distance;
 
-                match vertices_are_identical {
-                    true => {
-                        if too_far_to_be_identical {
-                            errors.push(
-                                Self::IdenticalVerticesNotCoincident {
-                                    vertex_a: vertex_a.clone(),
-                                    vertex_b: vertex_b.clone(),
-                                    position_a: *position_a,
-                                    position_b: *position_b,
-                                }
-                                .into(),
-                            )
+                if vertices_are_identical && too_far_to_be_identical {
+                    errors.push(
+                        Self::IdenticalVerticesNotCoincident {
+                            vertex_a: vertex_a.clone(),
+                            vertex_b: vertex_b.clone(),
+                            position_a: *position_a,
+                            position_b: *position_b,
                         }
-                    }
-                    false => {
-                        if too_close_to_be_distinct {
-                            errors.push(
-                                Self::DistinctVerticesCoincide {
-                                    vertex_a: vertex_a.clone(),
-                                    vertex_b: vertex_b.clone(),
-                                    position_a: *position_a,
-                                    position_b: *position_b,
-                                }
-                                .into(),
-                            )
+                        .into(),
+                    )
+                }
+
+                if !vertices_are_identical && too_close_to_be_distinct {
+                    errors.push(
+                        Self::DistinctVerticesCoincide {
+                            vertex_a: vertex_a.clone(),
+                            vertex_b: vertex_b.clone(),
+                            position_a: *position_a,
+                            position_b: *position_b,
                         }
-                    }
+                        .into(),
+                    )
                 }
             }
         }
