@@ -89,7 +89,9 @@ impl SolidValidationError {
         // data-structure like an octree.
         for (position_a, vertex_a) in &vertices {
             for (position_b, vertex_b) in &vertices {
-                match vertex_a.id() == vertex_b.id() {
+                let vertices_are_identical = vertex_a.id() == vertex_b.id();
+
+                match vertices_are_identical {
                     true => {
                         if position_a.distance_to(position_b)
                             > config.identical_max_distance
