@@ -11,7 +11,7 @@ pub trait UpdateCycle {
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Cycle;
 
-    /// Update a half-edge of the cycle
+    /// Replace the half-edge at the given index
     fn replace_nth_half_edge(
         &self,
         index: usize,
