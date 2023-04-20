@@ -41,14 +41,14 @@ pub trait BuildShell {
         } = Face::triangle([a, b, c], [None, None, None], objects);
         let Triangle {
             face: face_abd,
-            edges: [_, bd, da],
-        } = Face::triangle([a, b, d], [Some(ab), None, None], objects);
+            edges: [_, da, bd],
+        } = Face::triangle([b, a, d], [Some(ab), None, None], objects);
         let Triangle {
             face: face_cad,
             edges: [_, _, dc],
-        } = Face::triangle([c, a, d], [Some(ca), Some(da), None], objects);
+        } = Face::triangle([d, a, c], [Some(da), Some(ca), None], objects);
         let Triangle { face: face_bcd, .. } =
-            Face::triangle([b, c, d], [Some(bc), Some(dc), Some(bd)], objects);
+            Face::triangle([c, b, d], [Some(bc), Some(bd), Some(dc)], objects);
 
         let faces = [face_abc, face_abd, face_cad, face_bcd]
             .map(|face| face.insert(objects));
