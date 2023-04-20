@@ -33,11 +33,11 @@ impl UpdateCycle for Cycle {
         index: usize,
         mut f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Cycle {
-        let half_edges = self.half_edges().enumerate().map(|(i, cycle)| {
+        let half_edges = self.half_edges().enumerate().map(|(i, half_edge)| {
             if i == index {
-                f(cycle)
+                f(half_edge)
             } else {
-                cycle.clone()
+                half_edge.clone()
             }
         });
 
