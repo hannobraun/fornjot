@@ -90,6 +90,8 @@ impl SolidValidationError {
         for (position_a, vertex_a) in &vertices {
             for (position_b, vertex_b) in &vertices {
                 let vertices_are_identical = vertex_a.id() == vertex_b.id();
+                let vertices_are_not_identical = !vertices_are_identical;
+
                 let too_far_to_be_identical = position_a
                     .distance_to(position_b)
                     > config.identical_max_distance;
@@ -109,7 +111,7 @@ impl SolidValidationError {
                     )
                 }
 
-                if !vertices_are_identical && too_close_to_be_distinct {
+                if vertices_are_not_identical && too_close_to_be_distinct {
                     errors.push(
                         Self::DistinctVerticesCoincide {
                             vertex_a: vertex_a.clone(),
