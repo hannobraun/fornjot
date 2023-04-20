@@ -11,8 +11,15 @@ pub trait UpdateCycle {
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Cycle;
 
-    /// Update a half-edge of the cycle
-    fn update_half_edge(
+    /// Replace the provided half-edge
+    fn replace_half_edge(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacement: Handle<HalfEdge>,
+    ) -> Cycle;
+
+    /// Replace the half-edge at the given index
+    fn replace_nth_half_edge(
         &self,
         index: usize,
         f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
@@ -28,16 +35,32 @@ impl UpdateCycle for Cycle {
         Cycle::new(half_edges)
     }
 
-    fn update_half_edge(
+    fn replace_half_edge(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacement: Handle<HalfEdge>,
+    ) -> Cycle {
+        let half_edges = self.half_edges().map(|half_edge| {
+            if half_edge.id() == original.id() {
+                replacement.clone()
+            } else {
+                half_edge.clone()
+            }
+        });
+
+        Cycle::new(half_edges)
+    }
+
+    fn replace_nth_half_edge(
         &self,
         index: usize,
         mut f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Cycle {
-        let half_edges = self.half_edges().enumerate().map(|(i, cycle)| {
+        let half_edges = self.half_edges().enumerate().map(|(i, half_edge)| {
             if i == index {
-                f(cycle)
+                f(half_edge)
             } else {
-                cycle.clone()
+                half_edge.clone()
             }
         });
 
