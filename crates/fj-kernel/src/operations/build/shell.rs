@@ -45,10 +45,10 @@ pub trait BuildShell {
         } = Face::triangle([b, a, d], [Some(ab), None, None], objects);
         let Triangle {
             face: face_cad,
-            edges: [_, _, dc],
+            edges: [_, _, cd],
         } = Face::triangle([d, a, c], [Some(ad), Some(ca), None], objects);
         let Triangle { face: face_bcd, .. } =
-            Face::triangle([c, b, d], [Some(bc), Some(db), Some(dc)], objects);
+            Face::triangle([c, b, d], [Some(bc), Some(db), Some(cd)], objects);
 
         let faces = [face_abc, face_abd, face_cad, face_bcd]
             .map(|face| face.insert(objects));
