@@ -39,10 +39,7 @@ pub trait BuildFace {
 
             let cycle = Cycle::new(half_edges.clone()).insert(objects);
 
-            let global_edges =
-                half_edges.map(|half_edge| half_edge.global_form().clone());
-
-            (cycle, global_edges)
+            (cycle, half_edges)
         };
 
         let face = Face::new(surface, exterior, [], None);
@@ -61,5 +58,5 @@ pub struct Triangle {
     pub face: Face,
 
     /// The edges of the triangle
-    pub edges: [Handle<GlobalEdge>; 3],
+    pub edges: [Handle<HalfEdge>; 3],
 }

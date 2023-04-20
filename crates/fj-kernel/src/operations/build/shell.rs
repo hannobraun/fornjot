@@ -42,13 +42,32 @@ pub trait BuildShell {
         let Triangle {
             face: face_bad,
             edges: [_, ad, db],
-        } = Face::triangle([b, a, d], [Some(ab), None, None], objects);
+        } = Face::triangle(
+            [b, a, d],
+            [Some(ab.global_form().clone()), None, None],
+            objects,
+        );
         let Triangle {
             face: face_dac,
             edges: [_, _, cd],
-        } = Face::triangle([d, a, c], [Some(ad), Some(ca), None], objects);
-        let Triangle { face: face_cbd, .. } =
-            Face::triangle([c, b, d], [Some(bc), Some(db), Some(cd)], objects);
+        } = Face::triangle(
+            [d, a, c],
+            [
+                Some(ad.global_form().clone()),
+                Some(ca.global_form().clone()),
+                None,
+            ],
+            objects,
+        );
+        let Triangle { face: face_cbd, .. } = Face::triangle(
+            [c, b, d],
+            [
+                Some(bc.global_form().clone()),
+                Some(db.global_form().clone()),
+                Some(cd.global_form().clone()),
+            ],
+            objects,
+        );
 
         let faces = [face_abc, face_bad, face_dac, face_cbd]
             .map(|face| face.insert(objects));
