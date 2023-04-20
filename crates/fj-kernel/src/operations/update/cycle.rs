@@ -11,6 +11,13 @@ pub trait UpdateCycle {
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Cycle;
 
+    /// Replace the provided half-edge
+    fn replace_half_edge(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacement: Handle<HalfEdge>,
+    ) -> Cycle;
+
     /// Replace the half-edge at the given index
     fn replace_nth_half_edge(
         &self,
@@ -25,6 +32,22 @@ impl UpdateCycle for Cycle {
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Cycle {
         let half_edges = self.half_edges().cloned().chain(half_edges);
+        Cycle::new(half_edges)
+    }
+
+    fn replace_half_edge(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacement: Handle<HalfEdge>,
+    ) -> Cycle {
+        let half_edges = self.half_edges().map(|half_edge| {
+            if half_edge.id() == original.id() {
+                replacement.clone()
+            } else {
+                half_edge.clone()
+            }
+        });
+
         Cycle::new(half_edges)
     }
 
