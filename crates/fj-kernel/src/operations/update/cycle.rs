@@ -12,7 +12,7 @@ pub trait UpdateCycle {
     ) -> Cycle;
 
     /// Update a half-edge of the cycle
-    fn replace_half_edge(
+    fn replace_nth_half_edge(
         &self,
         index: usize,
         f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
@@ -28,7 +28,7 @@ impl UpdateCycle for Cycle {
         Cycle::new(half_edges)
     }
 
-    fn replace_half_edge(
+    fn replace_nth_half_edge(
         &self,
         index: usize,
         mut f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
