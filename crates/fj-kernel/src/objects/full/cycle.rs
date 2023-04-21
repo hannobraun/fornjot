@@ -23,6 +23,11 @@ impl Cycle {
         self.half_edges.iter()
     }
 
+    /// Access the half-edge with the provided index
+    pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<HalfEdge>> {
+        self.half_edges.get(index)
+    }
+
     /// Access the half-edge after the provided one
     ///
     /// # Panics
