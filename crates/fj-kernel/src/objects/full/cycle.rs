@@ -23,6 +23,13 @@ impl Cycle {
         self.half_edges.iter()
     }
 
+    /// Return the index of the provided half-edge, if it is in this cycle
+    pub fn index_of(&self, half_edge: &Handle<HalfEdge>) -> Option<usize> {
+        self.half_edges
+            .iter()
+            .position(|edge| edge.id() == half_edge.id())
+    }
+
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
     ///
     /// Please note that this is not *the* winding of the cycle, only one of the
