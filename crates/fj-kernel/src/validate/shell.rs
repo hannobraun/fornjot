@@ -213,7 +213,7 @@ mod tests {
         let invalid = valid.shell.update_face(&valid.face_abc, |face| {
             face.update_exterior(|cycle| {
                 cycle
-                    .replace_nth_half_edge(0, |half_edge| {
+                    .update_nth_half_edge(0, |half_edge| {
                         let global_form =
                             GlobalEdge::new().insert(&mut services.objects);
                         half_edge
