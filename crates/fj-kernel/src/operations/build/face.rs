@@ -49,16 +49,14 @@ pub trait BuildFace {
 
 impl BuildFace for Face {}
 
-/// A triangle
-///
-/// Returned by [`BuildFace::triangle`].
+/// A polygon
 pub struct Polygon<const D: usize> {
-    /// The face that forms the triangle
+    /// The face that forms the polygon
     pub face: Face,
 
-    /// The edges of the triangle
+    /// The edges of the polygon
     pub edges: [Handle<HalfEdge>; D],
 
-    /// The vertices of the triangle
+    /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],
 }
