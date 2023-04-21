@@ -2,6 +2,7 @@
 
 mod build;
 mod insert;
+mod join;
 mod update;
 
 pub use self::{
@@ -10,5 +11,6 @@ pub use self::{
         Polygon, Tetrahedron,
     },
     insert::Insert,
+    join::JoinCycle,
     update::{UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell},
 };
