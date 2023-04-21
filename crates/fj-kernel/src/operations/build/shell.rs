@@ -38,18 +38,22 @@ pub trait BuildShell {
         let Triangle {
             face: face_abc,
             edges: [ab, bc, ca],
+            ..
         } = Face::triangle([a, b, c], objects);
         let Triangle {
             face: face_bad,
             edges: [ba, ad, db],
+            ..
         } = Face::triangle([b, a, d], objects);
         let Triangle {
             face: face_dac,
             edges: [da, ac, cd],
+            ..
         } = Face::triangle([d, a, c], objects);
         let Triangle {
             face: face_cbd,
             edges: [cb, bd, dc],
+            ..
         } = Face::triangle([c, b, d], objects);
 
         let face_bad = face_bad.update_exterior(|cycle| {
