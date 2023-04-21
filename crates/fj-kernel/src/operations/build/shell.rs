@@ -38,11 +38,11 @@ pub trait BuildShell {
         let [Triangle {
             face: face_abc,
             edges: [ab, bc, ca],
-            ..
+            vertices: [a, b, c],
         }, Triangle {
             face: face_bad,
             edges: [ba, ad, db],
-            ..
+            vertices: [_, _, d],
         }, Triangle {
             face: face_dac,
             edges: [da, ac, cd],
@@ -60,32 +60,44 @@ pub trait BuildShell {
 
         let face_bad = face_bad.update_exterior(|cycle| {
             let ba_joined = ba
+                .replace_start_vertex(b.clone())
                 .replace_global_form(ab.global_form().clone())
                 .insert(objects);
+            let ad_joined = ad.replace_start_vertex(a.clone()).insert(objects);
 
-            cycle.replace_half_edge(&ba, ba_joined).insert(objects)
+            cycle
+                .replace_half_edge(&ba, ba_joined)
+                .replace_half_edge(&ad, ad_joined)
+                .insert(objects)
         });
         let face_dac = face_dac.update_exterior(|cycle| {
             let da_joined = da
+                .replace_start_vertex(d.clone())
                 .replace_global_form(ad.global_form().clone())
                 .insert(objects);
             let ac_joined = ac
+                .replace_start_vertex(a)
                 .replace_global_form(ca.global_form().clone())
                 .insert(objects);
+            let cd_joined = cd.replace_start_vertex(c.clone()).insert(objects);
 
             cycle
                 .replace_half_edge(&da, da_joined)
                 .replace_half_edge(&ac, ac_joined)
+                .replace_half_edge(&cd, cd_joined)
                 .insert(objects)
         });
         let face_cbd = face_cbd.update_exterior(|cycle| {
             let cb_joined = cb
+                .replace_start_vertex(c)
                 .replace_global_form(bc.global_form().clone())
                 .insert(objects);
             let bd_joined = bd
+                .replace_start_vertex(b)
                 .replace_global_form(db.global_form().clone())
                 .insert(objects);
             let dc_joined = dc
+                .replace_start_vertex(d)
                 .replace_global_form(cd.global_form().clone())
                 .insert(objects);
 
