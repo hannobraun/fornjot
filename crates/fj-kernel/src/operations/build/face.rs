@@ -30,7 +30,7 @@ pub trait BuildFace {
                         );
 
                     if let Some(global_form) = global_form {
-                        half_edge = half_edge.update_global_form(global_form);
+                        half_edge = half_edge.replace_global_form(global_form);
                     }
 
                     half_edge.insert(objects)

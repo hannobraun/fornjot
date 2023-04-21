@@ -12,6 +12,10 @@ pub trait UpdateCycle {
     ) -> Cycle;
 
     /// Replace the provided half-edge
+    ///
+    /// # Panics
+    ///
+    /// Panics, unless this operation replaces exactly one half-edge.
     fn replace_half_edge(
         &self,
         original: &Handle<HalfEdge>,
@@ -19,7 +23,11 @@ pub trait UpdateCycle {
     ) -> Cycle;
 
     /// Replace the half-edge at the given index
-    fn replace_nth_half_edge(
+    ///
+    /// # Panics
+    ///
+    /// Panics, unless this operation replaces exactly one half-edge.
+    fn update_nth_half_edge(
         &self,
         index: usize,
         f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
@@ -40,30 +48,50 @@ impl UpdateCycle for Cycle {
         original: &Handle<HalfEdge>,
         replacement: Handle<HalfEdge>,
     ) -> Cycle {
+        let mut num_replacements = 0;
+
         let half_edges = self.half_edges().map(|half_edge| {
             if half_edge.id() == original.id() {
+                num_replacements += 1;
                 replacement.clone()
             } else {
                 half_edge.clone()
             }
         });
 
-        Cycle::new(half_edges)
+        let cycle = Cycle::new(half_edges);
+
+        assert_eq!(
+            num_replacements, 1,
+            "Expected operation to replace exactly one half-edge"
+        );
+
+        cycle
     }
 
-    fn replace_nth_half_edge(
+    fn update_nth_half_edge(
         &self,
         index: usize,
         mut f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Cycle {
+        let mut num_replacements = 0;
+
         let half_edges = self.half_edges().enumerate().map(|(i, half_edge)| {
             if i == index {
+                num_replacements += 1;
                 f(half_edge)
             } else {
                 half_edge.clone()
             }
         });
 
-        Cycle::new(half_edges)
+        let cycle = Cycle::new(half_edges);
+
+        assert_eq!(
+            num_replacements, 1,
+            "Expected operation to replace exactly one half-edge"
+        );
+
+        cycle
     }
 }
