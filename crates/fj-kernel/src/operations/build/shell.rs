@@ -122,12 +122,12 @@ pub struct Tetrahedron {
     /// The face formed by the points `a`, `b`, and `c`.
     pub face_abc: Handle<Face>,
 
-    /// The face formed by the points `a`, `b`, and `d`.
+    /// The face formed by the points `b`, `a`, and `d`.
     pub face_bad: Handle<Face>,
 
-    /// The face formed by the points `c`, `a`, and `d`.
+    /// The face formed by the points `d`, `a`, and `c`.
     pub face_dac: Handle<Face>,
 
-    /// The face formed by the points `b`, `c`, and `d`.
+    /// The face formed by the points `c`, `b`, and `d`.
     pub face_cbd: Handle<Face>,
 }
