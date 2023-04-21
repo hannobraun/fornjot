@@ -16,7 +16,7 @@ pub trait BuildFace {
     fn triangle(
         points: [impl Into<Point<3>>; 3],
         objects: &mut Service<Objects>,
-    ) -> Triangle {
+    ) -> Polygon<3> {
         let [a, b, c] = points.map(Into::into);
 
         let surface = Surface::plane_from_points([a, b, c]).insert(objects);
@@ -39,7 +39,7 @@ pub trait BuildFace {
 
         let face = Face::new(surface, exterior, [], None);
 
-        Triangle {
+        Polygon {
             face,
             edges,
             vertices,
@@ -52,13 +52,13 @@ impl BuildFace for Face {}
 /// A triangle
 ///
 /// Returned by [`BuildFace::triangle`].
-pub struct Triangle {
+pub struct Polygon<const D: usize> {
     /// The face that forms the triangle
     pub face: Face,
 
     /// The edges of the triangle
-    pub edges: [Handle<HalfEdge>; 3],
+    pub edges: [Handle<HalfEdge>; D],
 
     /// The vertices of the triangle
-    pub vertices: [Handle<Vertex>; 3],
+    pub vertices: [Handle<Vertex>; D],
 }

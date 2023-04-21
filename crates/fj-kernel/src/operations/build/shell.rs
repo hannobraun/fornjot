@@ -7,7 +7,7 @@ use crate::{
     storage::Handle,
 };
 
-use super::{BuildFace, Triangle};
+use super::{BuildFace, Polygon};
 
 /// Build a [`Shell`]
 pub trait BuildShell {
@@ -35,19 +35,19 @@ pub trait BuildShell {
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let [Triangle {
+        let [Polygon {
             face: face_abc,
             edges: [ab, bc, ca],
             vertices: [a, b, c],
-        }, Triangle {
+        }, Polygon {
             face: face_bad,
             edges: [ba, ad, db],
             vertices: [_, _, d],
-        }, Triangle {
+        }, Polygon {
             face: face_dac,
             edges: [da, ac, cd],
             ..
-        }, Triangle {
+        }, Polygon {
             face: face_cbd,
             edges: [cb, bd, dc],
             ..
