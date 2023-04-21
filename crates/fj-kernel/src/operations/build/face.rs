@@ -50,6 +50,12 @@ pub trait BuildFace {
 impl BuildFace for Face {}
 
 /// A polygon
+///
+/// # Implementation Note
+///
+/// Currently code that deals with `Polygon` might assume that the polygon has
+/// no holes. Unless you create a `Polygon` yourself, or modify a `Polygon`'s
+/// `face` field to have interior cycles, this should not affect you.
 pub struct Polygon<const D: usize> {
     /// The face that forms the polygon
     pub face: Face,
