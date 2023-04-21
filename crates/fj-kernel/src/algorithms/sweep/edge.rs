@@ -86,7 +86,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     .replace_start_vertex(start_vertex);
 
                     let half_edge = if let Some(global_edge) = global_edge {
-                        half_edge.update_global_form(global_edge)
+                        half_edge.replace_global_form(global_edge)
                     } else {
                         half_edge
                     };

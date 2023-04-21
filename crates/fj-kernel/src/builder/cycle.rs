@@ -42,7 +42,7 @@ impl CycleBuilder {
             .map(|((prev, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, objects)
                     .replace_start_vertex(prev.start_vertex().clone())
-                    .update_global_form(half_edge.global_form().clone())
+                    .replace_global_form(half_edge.global_form().clone())
             })
             .collect();
 

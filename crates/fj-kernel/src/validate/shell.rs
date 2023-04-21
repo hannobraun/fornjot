@@ -217,7 +217,7 @@ mod tests {
                         let global_form =
                             GlobalEdge::new().insert(&mut services.objects);
                         half_edge
-                            .update_global_form(global_form)
+                            .replace_global_form(global_form)
                             .insert(&mut services.objects)
                     })
                     .insert(&mut services.objects)

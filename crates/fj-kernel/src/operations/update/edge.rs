@@ -9,7 +9,7 @@ pub trait UpdateHalfEdge {
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> HalfEdge;
 
     /// Update the global form of the half-edge
-    fn update_global_form(&self, global_form: Handle<GlobalEdge>) -> HalfEdge;
+    fn replace_global_form(&self, global_form: Handle<GlobalEdge>) -> HalfEdge;
 }
 
 impl UpdateHalfEdge for HalfEdge {
@@ -22,7 +22,7 @@ impl UpdateHalfEdge for HalfEdge {
         )
     }
 
-    fn update_global_form(&self, global_form: Handle<GlobalEdge>) -> HalfEdge {
+    fn replace_global_form(&self, global_form: Handle<GlobalEdge>) -> HalfEdge {
         HalfEdge::new(
             self.curve(),
             self.boundary(),
