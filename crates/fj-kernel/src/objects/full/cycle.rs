@@ -23,6 +23,33 @@ impl Cycle {
         self.half_edges.iter()
     }
 
+    /// Access the half-edge with the provided index
+    pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<HalfEdge>> {
+        self.half_edges.get(index)
+    }
+
+    /// Access the half-edge after the provided one
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the provided half-edge is not part of this cycle.
+    pub fn half_edge_after(
+        &self,
+        half_edge: &Handle<HalfEdge>,
+    ) -> Option<&Handle<HalfEdge>> {
+        self.index_of(half_edge).map(|index| {
+            let next_index = (index + 1) % self.half_edges.len();
+            &self.half_edges[next_index]
+        })
+    }
+
+    /// Return the index of the provided half-edge, if it is in this cycle
+    pub fn index_of(&self, half_edge: &Handle<HalfEdge>) -> Option<usize> {
+        self.half_edges
+            .iter()
+            .position(|edge| edge.id() == half_edge.id())
+    }
+
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
     ///
     /// Please note that this is not *the* winding of the cycle, only one of the
