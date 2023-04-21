@@ -7,7 +7,7 @@ mod surface;
 pub use self::{
     cycle::BuildCycle,
     edge::BuildHalfEdge,
-    face::{BuildFace, Triangle},
+    face::{BuildFace, Polygon},
     shell::{BuildShell, Tetrahedron},
     surface::BuildSurface,
 };
