@@ -35,13 +35,13 @@ pub trait BuildShell {
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let face_abc = Face::triangle([a, b, c], objects).face;
+        let abc = Face::triangle([a, b, c], objects).face;
         let face_bad =
             Face::triangle([b, a, d], objects)
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(face_abc.exterior(), 0..=0, 0..=0, objects)
+                        .join_to(abc.exterior(), 0..=0, 0..=0, objects)
                         .insert(objects)
                 });
         let face_dac =
@@ -49,7 +49,7 @@ pub trait BuildShell {
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(face_abc.exterior(), 1..=1, 2..=2, objects)
+                        .join_to(abc.exterior(), 1..=1, 2..=2, objects)
                         .join_to(face_bad.exterior(), 0..=0, 1..=1, objects)
                         .insert(objects)
                 });
@@ -58,13 +58,13 @@ pub trait BuildShell {
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(face_abc.exterior(), 0..=0, 1..=1, objects)
+                        .join_to(abc.exterior(), 0..=0, 1..=1, objects)
                         .join_to(face_bad.exterior(), 1..=1, 2..=2, objects)
                         .join_to(face_dac.exterior(), 2..=2, 2..=2, objects)
                         .insert(objects)
                 });
 
-        let faces = [face_abc, face_bad, face_dac, face_cbd]
+        let faces = [abc, face_bad, face_dac, face_cbd]
             .map(|face| face.insert(objects));
         let shell = Shell::new(faces.clone());
 
