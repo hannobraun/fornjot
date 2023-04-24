@@ -53,7 +53,7 @@ pub trait BuildShell {
                         .join_to(bad.exterior(), 0..=0, 1..=1, objects)
                         .insert(objects)
                 });
-        let face_cbd =
+        let cbd =
             Face::triangle([c, b, d], objects)
                 .face
                 .update_exterior(|cycle| {
@@ -64,7 +64,7 @@ pub trait BuildShell {
                         .insert(objects)
                 });
 
-        let faces = [abc, bad, dac, face_cbd].map(|face| face.insert(objects));
+        let faces = [abc, bad, dac, cbd].map(|face| face.insert(objects));
         let shell = Shell::new(faces.clone());
 
         let [face_abc, face_bad, face_dac, face_cbd] = faces;
