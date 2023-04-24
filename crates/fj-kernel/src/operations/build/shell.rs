@@ -67,14 +67,14 @@ pub trait BuildShell {
         let faces = [abc, bad, dac, cbd].map(|face| face.insert(objects));
         let shell = Shell::new(faces.clone());
 
-        let [face_abc, face_bad, face_dac, face_cbd] = faces;
+        let [abc, bad, dac, cbd] = faces;
 
         Tetrahedron {
             shell,
-            face_abc,
-            face_bad,
-            face_dac,
-            face_cbd,
+            abc,
+            bad,
+            dac,
+            cbd,
         }
     }
 }
@@ -93,14 +93,14 @@ pub struct Tetrahedron {
     pub shell: Shell,
 
     /// The face formed by the points `a`, `b`, and `c`.
-    pub face_abc: Handle<Face>,
+    pub abc: Handle<Face>,
 
     /// The face formed by the points `b`, `a`, and `d`.
-    pub face_bad: Handle<Face>,
+    pub bad: Handle<Face>,
 
     /// The face formed by the points `d`, `a`, and `c`.
-    pub face_dac: Handle<Face>,
+    pub dac: Handle<Face>,
 
     /// The face formed by the points `c`, `b`, and `d`.
-    pub face_cbd: Handle<Face>,
+    pub cbd: Handle<Face>,
 }

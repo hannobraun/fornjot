@@ -210,7 +210,7 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
-        let invalid = valid.shell.update_face(&valid.face_abc, |face| {
+        let invalid = valid.shell.update_face(&valid.abc, |face| {
             face.update_exterior(|cycle| {
                 cycle
                     .update_nth_half_edge(0, |half_edge| {
@@ -243,7 +243,7 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services.objects,
         );
-        let invalid = valid.shell.remove_face(&valid.face_abc);
+        let invalid = valid.shell.remove_face(&valid.abc);
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
