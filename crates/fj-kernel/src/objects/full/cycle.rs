@@ -50,6 +50,16 @@ impl Cycle {
             .position(|edge| edge.id() == half_edge.id())
     }
 
+    /// Return the number of half-edges in the cycle
+    pub fn len(&self) -> usize {
+        self.half_edges.len()
+    }
+
+    /// Indicate whether the cycle is empty
+    pub fn is_empty(&self) -> bool {
+        self.half_edges.is_empty()
+    }
+
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
     ///
     /// Please note that this is not *the* winding of the cycle, only one of the
