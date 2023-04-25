@@ -2,7 +2,7 @@ use std::{collections::HashSet, fmt::Write, path::PathBuf};
 
 use anyhow::Context;
 use chrono::{Datelike, Utc};
-use map_macro::set;
+use map_macro::hash_set;
 use octocrab::Octocrab;
 use tokio::{
     fs::{self, File},
@@ -87,7 +87,7 @@ async fn generate_announcement(
     let mut pull_request_links = String::new();
     let mut author_links = String::new();
 
-    let author_blacklist = set! {
+    let author_blacklist = hash_set! {
         "hannobraun",
         "dependabot[bot]"
     };
