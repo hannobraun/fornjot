@@ -1,5 +1,48 @@
 # Fornjot - Changelog
 
+## v0.44.0 (2023-04-25)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+*None this week. Busy working on the kernel!*
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Clean up `Solid` validation code ([#1774])
+- Update and expand operations API ([#1775], [#1776], [#1777], [#1778], [#1779], [#1783])
+- Add some useful methods to `Cycle` ([#1780])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Update dependencies ([#1773], [#1790]; thank you, [@dzvon]!)
+- Turn `pretty_assertions` into a `dev` dependency ([#1781]; thank you, [@therealprof]!)
+- Upgrade to Rust 1.69.0 ([#1782])
+
+[#1773]: https://github.com/hannobraun/Fornjot/pull/1773
+[#1774]: https://github.com/hannobraun/Fornjot/pull/1774
+[#1775]: https://github.com/hannobraun/Fornjot/pull/1775
+[#1776]: https://github.com/hannobraun/Fornjot/pull/1776
+[#1777]: https://github.com/hannobraun/Fornjot/pull/1777
+[#1778]: https://github.com/hannobraun/Fornjot/pull/1778
+[#1779]: https://github.com/hannobraun/Fornjot/pull/1779
+[#1780]: https://github.com/hannobraun/Fornjot/pull/1780
+[#1781]: https://github.com/hannobraun/Fornjot/pull/1781
+[#1782]: https://github.com/hannobraun/Fornjot/pull/1782
+[#1783]: https://github.com/hannobraun/Fornjot/pull/1783
+[#1790]: https://github.com/hannobraun/Fornjot/pull/1790
+
+[@dzvon]: https://github.com/dzvon
+[@therealprof]: https://github.com/therealprof
+
+
 ## v0.43.0 (2023-04-18)
 
 ### End-user improvements
