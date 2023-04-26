@@ -8,10 +8,16 @@ use crate::{
     storage::Handle,
 };
 
-use super::{BuildHalfEdge, BuildSurface};
+use super::{BuildCycle, BuildHalfEdge, BuildSurface};
 
 /// Build a [`Face`]
 pub trait BuildFace {
+    /// Build a face with an empty exterior, no interiors, and no color
+    fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {
+        let exterior = Cycle::empty().insert(services);
+        Face::new(surface, exterior, [], None)
+    }
+
     /// Build a triangle
     fn triangle(
         points: [impl Into<Point<3>>; 3],
