@@ -41,12 +41,7 @@ pub trait BuildShell {
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(
-                            abc.exterior(),
-                            0..=0,
-                            0..=0,
-                            &mut services.objects,
-                        )
+                        .join_to(abc.exterior(), 0..=0, 0..=0, services)
                         .insert(&mut services.objects)
                 });
         let dac =
@@ -54,18 +49,8 @@ pub trait BuildShell {
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(
-                            abc.exterior(),
-                            1..=1,
-                            2..=2,
-                            &mut services.objects,
-                        )
-                        .join_to(
-                            bad.exterior(),
-                            0..=0,
-                            1..=1,
-                            &mut services.objects,
-                        )
+                        .join_to(abc.exterior(), 1..=1, 2..=2, services)
+                        .join_to(bad.exterior(), 0..=0, 1..=1, services)
                         .insert(&mut services.objects)
                 });
         let cbd =
@@ -73,24 +58,9 @@ pub trait BuildShell {
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(
-                            abc.exterior(),
-                            0..=0,
-                            1..=1,
-                            &mut services.objects,
-                        )
-                        .join_to(
-                            bad.exterior(),
-                            1..=1,
-                            2..=2,
-                            &mut services.objects,
-                        )
-                        .join_to(
-                            dac.exterior(),
-                            2..=2,
-                            2..=2,
-                            &mut services.objects,
-                        )
+                        .join_to(abc.exterior(), 0..=0, 1..=1, services)
+                        .join_to(bad.exterior(), 1..=1, 2..=2, services)
+                        .join_to(dac.exterior(), 2..=2, 2..=2, services)
                         .insert(&mut services.objects)
                 });
 

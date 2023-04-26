@@ -1,9 +1,9 @@
 use std::ops::RangeInclusive;
 
 use crate::{
-    objects::{Cycle, Objects},
+    objects::Cycle,
     operations::{Insert, UpdateCycle, UpdateHalfEdge},
-    services::Service,
+    services::Services,
 };
 
 /// Join a [`Cycle`] to another
@@ -42,7 +42,7 @@ pub trait JoinCycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         other_range: RangeInclusive<usize>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self;
 }
 
@@ -52,7 +52,7 @@ impl JoinCycle for Cycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         range_other: RangeInclusive<usize>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self {
         assert_eq!(
             range.end() - range.start(),
@@ -86,9 +86,10 @@ impl JoinCycle for Cycle {
             let this_joined = half_edge
                 .replace_start_vertex(vertex_a)
                 .replace_global_form(half_edge_other.global_form().clone())
-                .insert(objects);
-            let next_joined =
-                next_edge.replace_start_vertex(vertex_b).insert(objects);
+                .insert(&mut services.objects);
+            let next_joined = next_edge
+                .replace_start_vertex(vertex_b)
+                .insert(&mut services.objects);
 
             cycle = cycle
                 .replace_half_edge(half_edge, this_joined)
