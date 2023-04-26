@@ -1,9 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Objects, Shell},
+    objects::{Face, Shell},
     operations::{Insert, JoinCycle, UpdateFace},
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -31,40 +31,68 @@ pub trait BuildShell {
     /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], objects).face;
-        let bad =
-            Face::triangle([b, a, d], objects)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 0..=0, objects)
-                        .insert(objects)
-                });
-        let dac =
-            Face::triangle([d, a, c], objects)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 1..=1, 2..=2, objects)
-                        .join_to(bad.exterior(), 0..=0, 1..=1, objects)
-                        .insert(objects)
-                });
-        let cbd =
-            Face::triangle([c, b, d], objects)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 1..=1, objects)
-                        .join_to(bad.exterior(), 1..=1, 2..=2, objects)
-                        .join_to(dac.exterior(), 2..=2, 2..=2, objects)
-                        .insert(objects)
-                });
+        let abc = Face::triangle([a, b, c], &mut services.objects).face;
+        let bad = Face::triangle([b, a, d], &mut services.objects)
+            .face
+            .update_exterior(|cycle| {
+                cycle
+                    .join_to(
+                        abc.exterior(),
+                        0..=0,
+                        0..=0,
+                        &mut services.objects,
+                    )
+                    .insert(&mut services.objects)
+            });
+        let dac = Face::triangle([d, a, c], &mut services.objects)
+            .face
+            .update_exterior(|cycle| {
+                cycle
+                    .join_to(
+                        abc.exterior(),
+                        1..=1,
+                        2..=2,
+                        &mut services.objects,
+                    )
+                    .join_to(
+                        bad.exterior(),
+                        0..=0,
+                        1..=1,
+                        &mut services.objects,
+                    )
+                    .insert(&mut services.objects)
+            });
+        let cbd = Face::triangle([c, b, d], &mut services.objects)
+            .face
+            .update_exterior(|cycle| {
+                cycle
+                    .join_to(
+                        abc.exterior(),
+                        0..=0,
+                        1..=1,
+                        &mut services.objects,
+                    )
+                    .join_to(
+                        bad.exterior(),
+                        1..=1,
+                        2..=2,
+                        &mut services.objects,
+                    )
+                    .join_to(
+                        dac.exterior(),
+                        2..=2,
+                        2..=2,
+                        &mut services.objects,
+                    )
+                    .insert(&mut services.objects)
+            });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(objects));
+        let faces =
+            [abc, bad, dac, cbd].map(|face| face.insert(&mut services.objects));
         let shell = Shell::new(faces.clone());
 
         let [abc, bad, dac, cbd] = faces;
