@@ -1,9 +1,9 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{GlobalEdge, Objects, Vertex},
+    objects::{GlobalEdge, Vertex},
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -16,20 +16,20 @@ impl Sweep for Handle<Vertex> {
         self,
         _: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let a = self.clone();
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| Vertex::new().insert(objects))
+            .or_insert_with(|| Vertex::new().insert(&mut services.objects))
             .clone();
 
         let vertices = [a, b];
         let global_edge = cache
             .global_edge
             .entry(self.id())
-            .or_insert_with(|| GlobalEdge::new().insert(objects))
+            .or_insert_with(|| GlobalEdge::new().insert(&mut services.objects))
             .clone();
 
         // The vertices of the returned `GlobalEdge` are in normalized order,

@@ -7,9 +7,9 @@ use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     builder::CycleBuilder,
     geometry::curve::GlobalPath,
-    objects::{Face, Objects, Shell},
+    objects::{Face, Shell},
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -22,7 +22,7 @@ impl Sweep for Handle<Face> {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let path = path.into();
 
@@ -47,19 +47,21 @@ impl Sweep for Handle<Face> {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse(objects)
+                self.clone().reverse(&mut services.objects)
             }
         };
         faces.push(bottom_face.clone());
 
-        let top_surface =
-            bottom_face.surface().clone().translate(path, objects);
+        let top_surface = bottom_face
+            .surface()
+            .clone()
+            .translate(path, &mut services.objects);
 
         let mut exterior = None;
         let mut interiors = Vec::new();
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
-            let cycle = cycle.reverse(objects);
+            let cycle = cycle.reverse(&mut services.objects);
 
             let mut top_edges = Vec::new();
             for (half_edge, next) in
@@ -71,7 +73,7 @@ impl Sweep for Handle<Face> {
                     self.surface().deref(),
                     self.color(),
                 )
-                    .sweep_with_cache(path, cache, objects);
+                    .sweep_with_cache(path, cache, services);
 
                 faces.push(face);
 
@@ -82,22 +84,25 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let top_cycle = CycleBuilder::connect_to_edges(top_edges, objects)
-                .build(objects);
+            let top_cycle = CycleBuilder::connect_to_edges(
+                top_edges,
+                &mut services.objects,
+            )
+            .build(&mut services.objects);
 
             if i == 0 {
-                exterior = Some(top_cycle.insert(objects));
+                exterior = Some(top_cycle.insert(&mut services.objects));
             } else {
-                interiors.push(top_cycle.insert(objects));
+                interiors.push(top_cycle.insert(&mut services.objects));
             };
         }
 
         let top_face =
             Face::new(top_surface, exterior.unwrap(), interiors, self.color());
 
-        let top_face = top_face.insert(objects);
+        let top_face = top_face.insert(&mut services.objects);
         faces.push(top_face);
 
-        Shell::new(faces).insert(objects)
+        Shell::new(faces).insert(&mut services.objects)
     }
 }

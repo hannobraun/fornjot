@@ -5,9 +5,9 @@ use crate::{
         curve::{Curve, GlobalPath},
         surface::SurfaceGeometry,
     },
-    objects::{Objects, Surface},
+    objects::Surface,
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -20,7 +20,7 @@ impl Sweep for (Curve, &Surface) {
         self,
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let (curve, surface) = self;
 
@@ -75,6 +75,7 @@ impl Sweep for (Curve, &Surface) {
             }
         };
 
-        Surface::new(SurfaceGeometry { u, v: path.into() }).insert(objects)
+        Surface::new(SurfaceGeometry { u, v: path.into() })
+            .insert(&mut services.objects)
     }
 }

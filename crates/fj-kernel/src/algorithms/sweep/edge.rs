@@ -2,9 +2,9 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
+    objects::{Cycle, Face, HalfEdge, Surface, Vertex},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -17,7 +17,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let (edge, next_vertex, surface, color) = self;
         let path = path.into();
@@ -27,9 +27,9 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         let (vertices, global_edges) = {
             let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
             let (edge_up, [_, c]) =
-                b.clone().sweep_with_cache(path, cache, objects);
+                b.clone().sweep_with_cache(path, cache, services);
             let (edge_down, [_, d]) =
-                a.clone().sweep_with_cache(path, cache, objects);
+                a.clone().sweep_with_cache(path, cache, services);
 
             (
                 [a, b, c, d],
@@ -81,7 +81,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     let half_edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
-                        objects,
+                        &mut services.objects,
                     )
                     .replace_start_vertex(start_vertex);
 
@@ -91,7 +91,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                         half_edge
                     };
 
-                    half_edge.insert(objects)
+                    half_edge.insert(&mut services.objects)
                 };
 
                 exterior = Some(
@@ -105,15 +105,15 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             });
 
         let face = Face::new(
-            (edge.curve(), surface).sweep_with_cache(path, cache, objects),
-            exterior.unwrap().insert(objects),
+            (edge.curve(), surface).sweep_with_cache(path, cache, services),
+            exterior.unwrap().insert(&mut services.objects),
             Vec::new(),
             color,
         );
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
-        let face = face.insert(objects);
+        let face = face.insert(&mut services.objects);
         (face, edge_top)
     }
 }
