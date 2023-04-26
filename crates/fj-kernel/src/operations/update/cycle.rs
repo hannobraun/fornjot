@@ -22,11 +22,11 @@ pub trait UpdateCycle {
         replacement: Handle<HalfEdge>,
     ) -> Cycle;
 
-    /// Replace the half-edge at the given index
+    /// Update the half-edge at the given index
     ///
     /// # Panics
     ///
-    /// Panics, unless this operation replaces exactly one half-edge.
+    /// Panics, unless this operation updates exactly one half-edge.
     fn update_nth_half_edge(
         &self,
         index: usize,

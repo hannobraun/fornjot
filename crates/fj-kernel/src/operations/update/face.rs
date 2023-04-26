@@ -9,14 +9,14 @@ pub trait UpdateFace {
     fn update_exterior(
         &self,
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Face;
+    ) -> Self;
 }
 
 impl UpdateFace for Face {
     fn update_exterior(
         &self,
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Face {
+    ) -> Self {
         let exterior = f(self.exterior());
 
         Face::new(
