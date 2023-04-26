@@ -20,8 +20,7 @@ macro_rules! impl_insert {
     ($($ty:ty, $store:ident;)*) => {
         $(
             impl Insert for $ty {
-                fn insert(self, services: &mut Services,) -> Handle<Self>
-                {
+                fn insert(self, services: &mut Services) -> Handle<Self> {
                     let handle = services.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
                     services.objects
