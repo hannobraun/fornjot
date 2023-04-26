@@ -1,6 +1,4 @@
-use std::{ops::Deref, sync::Arc};
-
-use parking_lot::Mutex;
+use std::ops::Deref;
 
 /// A service that controls access to some state
 ///
@@ -23,24 +21,12 @@ use parking_lot::Mutex;
 /// <https://thinkbeforecoding.com/post/2021/12/17/functional-event-sourcing-decider>
 pub struct Service<S: State> {
     state: S,
-    subscribers: Vec<Arc<Mutex<dyn Subscriber<S::Event>>>>,
 }
 
 impl<S: State> Service<S> {
     /// Create an instance of `Service`
     pub fn new(state: S) -> Self {
-        Self {
-            state,
-            subscribers: Vec::new(),
-        }
-    }
-
-    /// Add a subscriber
-    pub fn subscribe(
-        &mut self,
-        subscriber: Arc<Mutex<dyn Subscriber<S::Event>>>,
-    ) {
-        self.subscribers.push(subscriber);
+        Self { state }
     }
 
     /// Execute a command
@@ -52,11 +38,6 @@ impl<S: State> Service<S> {
 
         for event in events {
             self.state.evolve(event);
-
-            for subscriber in &self.subscribers {
-                let mut subscriber = subscriber.lock();
-                subscriber.handle_event(event);
-            }
         }
     }
 
@@ -90,15 +71,6 @@ where
     }
 }
 
-impl<S: State> Subscriber<S::Command> for Service<S>
-where
-    S::Command: Clone,
-{
-    fn handle_event(&mut self, event: &S::Command) {
-        self.execute(event.clone(), &mut Vec::new());
-    }
-}
-
 /// Implemented for state that can be wrapped by a [`Service`]
 ///
 /// See [`Service`] for a detailed explanation.
@@ -129,8 +101,4 @@ pub trait State {
     /// decisions that go into updating the state should be made in
     /// [`State::decide`], and encoded into the event.
     fn evolve(&mut self, event: &Self::Event);
-}
-
-pub trait Subscriber<T> {
-    fn handle_event(&mut self, event: &T);
 }

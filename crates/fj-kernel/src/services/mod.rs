@@ -34,10 +34,8 @@ pub struct Services {
 impl Services {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
-        let mut objects = Service::<Objects>::default();
+        let objects = Service::<Objects>::default();
         let validation = Arc::new(Mutex::new(Service::default()));
-
-        objects.subscribe(validation.clone());
 
         Self {
             objects,
@@ -50,6 +48,12 @@ impl Services {
         let mut object_events = Vec::new();
         self.objects
             .execute(Operation::InsertObject { object }, &mut object_events);
+
+        for object_event in object_events {
+            self.validation
+                .lock()
+                .execute(object_event, &mut Vec::new());
+        }
     }
 }
 
