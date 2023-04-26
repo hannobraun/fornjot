@@ -65,12 +65,7 @@ impl Shape for fj::Sketch {
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                HalfEdge::arc(
-                                    start,
-                                    end,
-                                    angle.rad(),
-                                    &mut services.objects,
-                                )
+                                HalfEdge::arc(start, end, angle.rad(), services)
                             }
                         };
                         let half_edge = half_edge.insert(&mut services.objects);
