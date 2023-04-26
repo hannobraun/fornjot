@@ -35,61 +35,64 @@ pub trait BuildShell {
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], &mut services.objects).face;
-        let bad = Face::triangle([b, a, d], &mut services.objects)
-            .face
-            .update_exterior(|cycle| {
-                cycle
-                    .join_to(
-                        abc.exterior(),
-                        0..=0,
-                        0..=0,
-                        &mut services.objects,
-                    )
-                    .insert(&mut services.objects)
-            });
-        let dac = Face::triangle([d, a, c], &mut services.objects)
-            .face
-            .update_exterior(|cycle| {
-                cycle
-                    .join_to(
-                        abc.exterior(),
-                        1..=1,
-                        2..=2,
-                        &mut services.objects,
-                    )
-                    .join_to(
-                        bad.exterior(),
-                        0..=0,
-                        1..=1,
-                        &mut services.objects,
-                    )
-                    .insert(&mut services.objects)
-            });
-        let cbd = Face::triangle([c, b, d], &mut services.objects)
-            .face
-            .update_exterior(|cycle| {
-                cycle
-                    .join_to(
-                        abc.exterior(),
-                        0..=0,
-                        1..=1,
-                        &mut services.objects,
-                    )
-                    .join_to(
-                        bad.exterior(),
-                        1..=1,
-                        2..=2,
-                        &mut services.objects,
-                    )
-                    .join_to(
-                        dac.exterior(),
-                        2..=2,
-                        2..=2,
-                        &mut services.objects,
-                    )
-                    .insert(&mut services.objects)
-            });
+        let abc = Face::triangle([a, b, c], services).face;
+        let bad =
+            Face::triangle([b, a, d], services)
+                .face
+                .update_exterior(|cycle| {
+                    cycle
+                        .join_to(
+                            abc.exterior(),
+                            0..=0,
+                            0..=0,
+                            &mut services.objects,
+                        )
+                        .insert(&mut services.objects)
+                });
+        let dac =
+            Face::triangle([d, a, c], services)
+                .face
+                .update_exterior(|cycle| {
+                    cycle
+                        .join_to(
+                            abc.exterior(),
+                            1..=1,
+                            2..=2,
+                            &mut services.objects,
+                        )
+                        .join_to(
+                            bad.exterior(),
+                            0..=0,
+                            1..=1,
+                            &mut services.objects,
+                        )
+                        .insert(&mut services.objects)
+                });
+        let cbd =
+            Face::triangle([c, b, d], services)
+                .face
+                .update_exterior(|cycle| {
+                    cycle
+                        .join_to(
+                            abc.exterior(),
+                            0..=0,
+                            1..=1,
+                            &mut services.objects,
+                        )
+                        .join_to(
+                            bad.exterior(),
+                            1..=1,
+                            2..=2,
+                            &mut services.objects,
+                        )
+                        .join_to(
+                            dac.exterior(),
+                            2..=2,
+                            2..=2,
+                            &mut services.objects,
+                        )
+                        .insert(&mut services.objects)
+                });
 
         let faces =
             [abc, bad, dac, cbd].map(|face| face.insert(&mut services.objects));
