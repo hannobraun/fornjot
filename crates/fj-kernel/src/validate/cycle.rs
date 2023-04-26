@@ -96,7 +96,6 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        builder::CycleBuilder,
         objects::{Cycle, HalfEdge},
         operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
         services::Services,
@@ -107,11 +106,8 @@ mod tests {
     fn half_edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = CycleBuilder::polygon(
-            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-            &mut services,
-        )
-        .build(&mut services);
+        let valid =
+            Cycle::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]], &mut services);
 
         valid.validate_and_return_first_error()?;
 
