@@ -3,9 +3,9 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
-    objects::{Face, Objects, Sketch},
+    objects::{Face, Sketch},
     operations::Insert,
-    services::Service,
+    services::Services,
 };
 use fj_math::Aabb;
 
@@ -16,7 +16,7 @@ impl Shape for fj::Difference2d {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         // This method assumes that `b` is fully contained within `a`:
@@ -30,7 +30,7 @@ impl Shape for fj::Difference2d {
         let [a, b] = self
             .shapes()
             .each_ref_ext()
-            .map(|shape| shape.compute_brep(objects, debug_info));
+            .map(|shape| shape.compute_brep(services, debug_info));
 
         if let Some(face) = a.faces().into_iter().next() {
             // If there's at least one face to subtract from, we can proceed.
@@ -46,7 +46,8 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors.push(cycle.clone().reverse(objects));
+                    interiors
+                        .push(cycle.clone().reverse(&mut services.objects));
                 }
             }
 
@@ -57,7 +58,9 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(face.exterior().clone().reverse(objects));
+                interiors.push(
+                    face.exterior().clone().reverse(&mut services.objects),
+                );
             }
 
             // Faces only support one exterior, while the code here comes from
@@ -83,10 +86,10 @@ impl Shape for fj::Difference2d {
                 interiors,
                 Some(Color(self.color())),
             );
-            faces.push(face.insert(objects));
+            faces.push(face.insert(&mut services.objects));
         }
 
-        let difference = Sketch::new(faces).insert(objects);
+        let difference = Sketch::new(faces).insert(&mut services.objects);
         difference.deref().clone()
     }
 

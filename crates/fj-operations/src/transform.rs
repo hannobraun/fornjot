@@ -1,8 +1,7 @@
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::transform::TransformObject,
-    objects::{FaceSet, Objects},
-    services::Service,
+    algorithms::transform::TransformObject, objects::FaceSet,
+    services::Services,
 };
 use fj_math::{Aabb, Transform, Vector};
 
@@ -13,12 +12,12 @@ impl Shape for fj::Transform {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         self.shape
-            .compute_brep(objects, debug_info)
-            .transform(&make_transform(self), objects)
+            .compute_brep(services, debug_info)
+            .transform(&make_transform(self), &mut services.objects)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {

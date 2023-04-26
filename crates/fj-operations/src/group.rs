@@ -1,8 +1,5 @@
 use fj_interop::debug::DebugInfo;
-use fj_kernel::{
-    objects::{FaceSet, Objects},
-    services::Service,
-};
+use fj_kernel::{objects::FaceSet, services::Services};
 use fj_math::Aabb;
 
 use super::Shape;
@@ -12,13 +9,13 @@ impl Shape for fj::Group {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         let mut faces = FaceSet::new();
 
-        let a = self.a.compute_brep(objects, debug_info);
-        let b = self.b.compute_brep(objects, debug_info);
+        let a = self.a.compute_brep(services, debug_info);
+        let b = self.b.compute_brep(services, debug_info);
 
         faces.extend(a);
         faces.extend(b);

@@ -2,10 +2,8 @@ use std::ops::Deref;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    algorithms::sweep::Sweep,
-    objects::{Objects, Solid},
-    operations::Insert,
-    services::Service,
+    algorithms::sweep::Sweep, objects::Solid, operations::Insert,
+    services::Services,
 };
 use fj_math::{Aabb, Vector};
 
@@ -16,15 +14,15 @@ impl Shape for fj::Sweep {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
-        let sketch = self.shape().compute_brep(objects, debug_info);
-        let sketch = sketch.insert(objects);
+        let sketch = self.shape().compute_brep(services, debug_info);
+        let sketch = sketch.insert(&mut services.objects);
 
         let path = Vector::from(self.path());
 
-        let solid = sketch.sweep(path, objects);
+        let solid = sketch.sweep(path, &mut services.objects);
         solid.deref().clone()
     }
 
