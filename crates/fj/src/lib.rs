@@ -46,7 +46,7 @@ pub enum Shape {
     /// A 2D shape
     Shape2d(Shape2d),
 
-    /// A sweep of 2-dimensional shape along the z-axis
+    /// A sweep of 2-dimensional shape along a straight path
     Sweep(Sweep),
 
     /// A transformed 3-dimensional shape
