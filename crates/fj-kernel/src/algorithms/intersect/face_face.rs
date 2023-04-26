@@ -62,8 +62,9 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
+        objects::{Cycle, Face},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
     };
 
@@ -85,14 +86,15 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            FaceBuilder::new(surface)
-                .with_exterior(CycleBuilder::polygon(points, &mut services))
-                .build(&mut services)
+            Face::unbound(surface, &mut services).update_exterior(|_| {
+                Cycle::polygon(points, &mut services).insert(&mut services)
+            })
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
-
         assert!(intersection.is_none());
+
+        services.only_validate([a, b]);
     }
 
     #[test]
@@ -111,9 +113,9 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            FaceBuilder::new(surface)
-                .with_exterior(CycleBuilder::polygon(points, &mut services))
-                .build(&mut services)
+            Face::unbound(surface, &mut services).update_exterior(|_| {
+                Cycle::polygon(points, &mut services).insert(&mut services)
+            })
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -131,5 +133,7 @@ mod tests {
                 intersection_intervals: expected_intervals
             })
         );
+
+        services.only_validate([a, b]);
     }
 }
