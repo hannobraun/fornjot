@@ -23,7 +23,6 @@ use parking_lot::Mutex;
 /// <https://thinkbeforecoding.com/post/2021/12/17/functional-event-sourcing-decider>
 pub struct Service<S: State> {
     state: S,
-    events: Vec<S::Event>,
     subscribers: Vec<Arc<Mutex<dyn Subscriber<S::Event>>>>,
 }
 
@@ -32,7 +31,6 @@ impl<S: State> Service<S> {
     pub fn new(state: S) -> Self {
         Self {
             state,
-            events: Vec::new(),
             subscribers: Vec::new(),
         }
     }
@@ -61,13 +59,6 @@ impl<S: State> Service<S> {
                 subscriber.handle_event(event);
             }
         }
-
-        self.events.extend(events);
-    }
-
-    /// Access the events
-    pub fn events(&self) -> impl Iterator<Item = &S::Event> {
-        self.events.iter()
     }
 
     /// Replay the provided events on the given state
