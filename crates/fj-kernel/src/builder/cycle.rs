@@ -37,7 +37,7 @@ impl CycleBuilder {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, &mut services.objects)
+                HalfEdge::unjoined(curve, boundary, services)
                     .replace_start_vertex(prev.start_vertex().clone())
                     .replace_global_form(half_edge.global_form().clone())
             })

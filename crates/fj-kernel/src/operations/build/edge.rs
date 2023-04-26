@@ -3,9 +3,9 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
-    objects::{GlobalEdge, HalfEdge, Objects, Surface, Vertex},
+    objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     operations::Insert,
-    services::{Service, Services},
+    services::Services,
 };
 
 /// Build a [`HalfEdge`]
@@ -14,10 +14,10 @@ pub trait BuildHalfEdge {
     fn unjoined(
         curve: Curve,
         boundary: [Point<1>; 2],
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
-        let start_vertex = Vertex::new().insert(objects);
-        let global_form = GlobalEdge::new().insert(objects);
+        let start_vertex = Vertex::new().insert(&mut services.objects);
+        let global_form = GlobalEdge::new().insert(&mut services.objects);
 
         HalfEdge::new(curve, boundary, start_vertex, global_form)
     }
@@ -45,7 +45,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, &mut services.objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a circle
@@ -54,7 +54,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, &mut services.objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a line segment
@@ -69,7 +69,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(curve, boundary, &mut services.objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a line segment from global points
