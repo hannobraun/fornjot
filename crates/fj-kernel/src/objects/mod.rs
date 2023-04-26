@@ -81,7 +81,8 @@ pub use self::{
     full::{
         cycle::{Cycle, HalfEdgesOfCycle},
         edge::{GlobalEdge, HalfEdge},
-        face::{Face, Handedness, Set},
+        face::{Face, Handedness},
+        set::Set,
         shell::Shell,
         sketch::Sketch,
         solid::Solid,
