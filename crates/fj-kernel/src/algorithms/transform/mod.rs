@@ -15,9 +15,8 @@ use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
-    objects::Objects,
     operations::Insert,
-    services::{Service, Services},
+    services::Services,
     storage::{Handle, ObjectId},
 };
 
@@ -34,14 +33,14 @@ pub trait TransformObject: Sized {
     /// Transform the object
     fn transform(self, transform: &Transform, services: &mut Services) -> Self {
         let mut cache = TransformCache::default();
-        self.transform_with_cache(transform, &mut services.objects, &mut cache)
+        self.transform_with_cache(transform, services, &mut cache)
     }
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
         self,
         transform: &Transform,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self;
 
@@ -75,7 +74,7 @@ where
     fn transform_with_cache(
         self,
         transform: &Transform,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
         if let Some(object) = cache.get(&self) {
@@ -84,8 +83,8 @@ where
 
         let transformed = self
             .clone_object()
-            .transform_with_cache(transform, objects, cache)
-            .insert(objects);
+            .transform_with_cache(transform, services, cache)
+            .insert(&mut services.objects);
 
         cache.insert(self.clone(), transformed.clone());
 
