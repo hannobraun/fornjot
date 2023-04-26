@@ -22,7 +22,7 @@ impl Shape for fj::Sweep {
 
         let path = Vector::from(self.path());
 
-        let solid = sketch.sweep(path, &mut services.objects);
+        let solid = sketch.sweep(path, services);
         solid.deref().clone()
     }
 

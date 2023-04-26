@@ -12,7 +12,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{GlobalEdge, Objects, Vertex},
-    services::Service,
+    services::{Service, Services},
     storage::{Handle, ObjectId},
 };
 
@@ -25,10 +25,10 @@ pub trait Sweep: Sized {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let mut cache = SweepCache::default();
-        self.sweep_with_cache(path, &mut cache, objects)
+        self.sweep_with_cache(path, &mut cache, &mut services.objects)
     }
 
     /// Sweep the object along the given path, using the provided cache
