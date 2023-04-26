@@ -1,9 +1,9 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{Face, Objects, Surface},
+    objects::{Face, Surface},
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -46,12 +46,16 @@ impl FaceBuilder {
     }
 
     /// Build the face
-    pub fn build(self, objects: &mut Service<Objects>) -> Face {
-        let exterior = self.exterior.build(objects).insert(objects);
-        let interiors = self
-            .interiors
-            .into_iter()
-            .map(|cycle| cycle.build(objects).insert(objects));
+    pub fn build(self, services: &mut Services) -> Face {
+        let exterior = self
+            .exterior
+            .build(&mut services.objects)
+            .insert(&mut services.objects);
+        let interiors = self.interiors.into_iter().map(|cycle| {
+            cycle
+                .build(&mut services.objects)
+                .insert(&mut services.objects)
+        });
 
         Face::new(self.surface, exterior, interiors, self.color)
     }

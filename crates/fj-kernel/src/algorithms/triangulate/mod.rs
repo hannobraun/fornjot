@@ -97,7 +97,7 @@ mod tests {
 
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
             .with_exterior(CycleBuilder::polygon([a, b, c, d], &mut services))
-            .build(&mut services.objects);
+            .build(&mut services);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -133,7 +133,7 @@ mod tests {
         let face = FaceBuilder::new(surface.clone())
             .with_exterior(CycleBuilder::polygon([a, b, c, d], &mut services))
             .with_interior(CycleBuilder::polygon([e, f, g, h], &mut services))
-            .build(&mut services.objects);
+            .build(&mut services);
 
         let triangles = triangulate(face)?;
 
@@ -193,7 +193,7 @@ mod tests {
                 [a, b, c, d, e],
                 &mut services,
             ))
-            .build(&mut services.objects);
+            .build(&mut services);
 
         let triangles = triangulate(face)?;
 

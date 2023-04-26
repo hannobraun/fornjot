@@ -87,7 +87,7 @@ mod tests {
         .map(|surface| {
             FaceBuilder::new(surface)
                 .with_exterior(CycleBuilder::polygon(points, &mut services))
-                .build(&mut services.objects)
+                .build(&mut services)
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -113,7 +113,7 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             FaceBuilder::new(surface)
                 .with_exterior(CycleBuilder::polygon(points, &mut services))
-                .build(&mut services.objects)
+                .build(&mut services)
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);

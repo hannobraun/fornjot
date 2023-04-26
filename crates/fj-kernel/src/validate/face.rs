@@ -92,7 +92,7 @@ mod tests {
                 [[1., 1.], [1., 2.], [2., 1.]],
                 &mut services,
             ))
-            .build(&mut services.objects);
+            .build(&mut services);
         let invalid = {
             let interiors = valid
                 .interiors()

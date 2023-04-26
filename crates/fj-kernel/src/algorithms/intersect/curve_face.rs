@@ -187,7 +187,7 @@ mod tests {
                 interior_points,
                 &mut services,
             ))
-            .build(&mut services.objects);
+            .build(&mut services);
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
