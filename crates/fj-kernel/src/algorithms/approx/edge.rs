@@ -290,7 +290,7 @@ mod tests {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
         })
-        .insert(&mut services.objects);
+        .insert(&mut services);
         let half_edge =
             HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
@@ -311,7 +311,7 @@ mod tests {
             u: path,
             v: [0., 0., 1.].into(),
         })
-        .insert(&mut services.objects);
+        .insert(&mut services);
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),

@@ -91,7 +91,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                         half_edge
                     };
 
-                    half_edge.insert(&mut services.objects)
+                    half_edge.insert(services)
                 };
 
                 exterior = Some(
@@ -106,14 +106,14 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         let face = Face::new(
             (edge.curve(), surface).sweep_with_cache(path, cache, services),
-            exterior.unwrap().insert(&mut services.objects),
+            exterior.unwrap().insert(services),
             Vec::new(),
             color,
         );
 
         // And we're done creating the face! All that's left to do is build our
         // return values.
-        let face = face.insert(&mut services.objects);
+        let face = face.insert(services);
         (face, edge_top)
     }
 }

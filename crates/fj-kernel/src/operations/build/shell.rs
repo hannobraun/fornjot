@@ -42,7 +42,7 @@ pub trait BuildShell {
                 .update_exterior(|cycle| {
                     cycle
                         .join_to(abc.exterior(), 0..=0, 0..=0, services)
-                        .insert(&mut services.objects)
+                        .insert(services)
                 });
         let dac =
             Face::triangle([d, a, c], services)
@@ -51,7 +51,7 @@ pub trait BuildShell {
                     cycle
                         .join_to(abc.exterior(), 1..=1, 2..=2, services)
                         .join_to(bad.exterior(), 0..=0, 1..=1, services)
-                        .insert(&mut services.objects)
+                        .insert(services)
                 });
         let cbd =
             Face::triangle([c, b, d], services)
@@ -61,11 +61,10 @@ pub trait BuildShell {
                         .join_to(abc.exterior(), 0..=0, 1..=1, services)
                         .join_to(bad.exterior(), 1..=1, 2..=2, services)
                         .join_to(dac.exterior(), 2..=2, 2..=2, services)
-                        .insert(&mut services.objects)
+                        .insert(services)
                 });
 
-        let faces =
-            [abc, bad, dac, cbd].map(|face| face.insert(&mut services.objects));
+        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
         let shell = Shell::new(faces.clone());
 
         let [abc, bad, dac, cbd] = faces;

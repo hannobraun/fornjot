@@ -75,7 +75,6 @@ impl Sweep for (Curve, &Surface) {
             }
         };
 
-        Surface::new(SurfaceGeometry { u, v: path.into() })
-            .insert(&mut services.objects)
+        Surface::new(SurfaceGeometry { u, v: path.into() }).insert(services)
     }
 }

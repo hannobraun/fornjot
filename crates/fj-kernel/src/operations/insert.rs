@@ -1,9 +1,9 @@
 use crate::{
     objects::{
-        Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
-        Surface, Vertex,
+        Cycle, Face, GlobalEdge, HalfEdge, Shell, Sketch, Solid, Surface,
+        Vertex,
     },
-    services::{Operation, Service},
+    services::{Operation, Services},
     storage::Handle,
 };
 
@@ -13,18 +13,19 @@ use crate::{
 /// `Service<Objects>`. All other operations are built on top of it.
 pub trait Insert: Sized {
     /// Insert the object into its respective store
-    fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>;
+    fn insert(self, services: &mut Services) -> Handle<Self>;
 }
 
 macro_rules! impl_insert {
     ($($ty:ty, $store:ident;)*) => {
         $(
             impl Insert for $ty {
-                fn insert(self, objects: &mut Service<Objects>) -> Handle<Self>
+                fn insert(self, services: &mut Services,) -> Handle<Self>
                 {
-                    let handle = objects.$store.reserve();
+                    let handle = services.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
-                    objects.execute(Operation::InsertObject { object });
+                    services.objects
+                        .execute(Operation::InsertObject { object });
                     handle
                 }
             }

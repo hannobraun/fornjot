@@ -20,7 +20,7 @@ impl Shape for fj::Sweep {
         let sketch = self
             .shape()
             .compute_brep(services, debug_info)
-            .insert(&mut services.objects);
+            .insert(services);
 
         let path = Vector::from(self.path());
 

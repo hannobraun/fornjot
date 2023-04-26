@@ -215,14 +215,14 @@ mod tests {
                 cycle
                     .update_nth_half_edge(0, |half_edge| {
                         let global_form =
-                            GlobalEdge::new().insert(&mut services.objects);
+                            GlobalEdge::new().insert(&mut services);
                         half_edge
                             .replace_global_form(global_form)
-                            .insert(&mut services.objects)
+                            .insert(&mut services)
                     })
-                    .insert(&mut services.objects)
+                    .insert(&mut services)
             })
-            .insert(&mut services.objects)
+            .insert(&mut services)
         });
 
         valid.shell.validate_and_return_first_error()?;

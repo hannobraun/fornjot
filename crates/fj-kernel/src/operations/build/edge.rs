@@ -16,8 +16,8 @@ pub trait BuildHalfEdge {
         boundary: [Point<1>; 2],
         services: &mut Services,
     ) -> HalfEdge {
-        let start_vertex = Vertex::new().insert(&mut services.objects);
-        let global_form = GlobalEdge::new().insert(&mut services.objects);
+        let start_vertex = Vertex::new().insert(services);
+        let global_form = GlobalEdge::new().insert(services);
 
         HalfEdge::new(curve, boundary, start_vertex, global_form)
     }

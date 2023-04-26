@@ -22,14 +22,14 @@ impl Sweep for Handle<Vertex> {
         let b = cache
             .global_vertex
             .entry(self.id())
-            .or_insert_with(|| Vertex::new().insert(&mut services.objects))
+            .or_insert_with(|| Vertex::new().insert(services))
             .clone();
 
         let vertices = [a, b];
         let global_edge = cache
             .global_edge
             .entry(self.id())
-            .or_insert_with(|| GlobalEdge::new().insert(&mut services.objects))
+            .or_insert_with(|| GlobalEdge::new().insert(services))
             .clone();
 
         // The vertices of the returned `GlobalEdge` are in normalized order,

@@ -83,10 +83,10 @@ impl Shape for fj::Difference2d {
                 interiors,
                 Some(Color(self.color())),
             );
-            faces.push(face.insert(&mut services.objects));
+            faces.push(face.insert(services));
         }
 
-        let difference = Sketch::new(faces).insert(&mut services.objects);
+        let difference = Sketch::new(faces).insert(services);
         difference.deref().clone()
     }
 

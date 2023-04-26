@@ -84,7 +84,7 @@ where
         let transformed = self
             .clone_object()
             .transform_with_cache(transform, services, cache)
-            .insert(&mut services.objects);
+            .insert(services);
 
         cache.insert(self.clone(), transformed.clone());
 

@@ -86,18 +86,18 @@ impl Sweep for Handle<Face> {
                 .build(services);
 
             if i == 0 {
-                exterior = Some(top_cycle.insert(&mut services.objects));
+                exterior = Some(top_cycle.insert(services));
             } else {
-                interiors.push(top_cycle.insert(&mut services.objects));
+                interiors.push(top_cycle.insert(services));
             };
         }
 
         let top_face =
             Face::new(top_surface, exterior.unwrap(), interiors, self.color());
 
-        let top_face = top_face.insert(&mut services.objects);
+        let top_face = top_face.insert(services);
         faces.push(top_face);
 
-        Shell::new(faces).insert(&mut services.objects)
+        Shell::new(faces).insert(services)
     }
 }

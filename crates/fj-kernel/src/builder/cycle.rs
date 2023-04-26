@@ -70,7 +70,7 @@ impl CycleBuilder {
         let half_edges = self
             .half_edges
             .into_iter()
-            .map(|half_edge| half_edge.insert(&mut services.objects));
+            .map(|half_edge| half_edge.insert(services));
         Cycle::new(half_edges)
     }
 }

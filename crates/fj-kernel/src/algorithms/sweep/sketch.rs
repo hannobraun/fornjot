@@ -26,6 +26,6 @@ impl Sweep for Handle<Sketch> {
             shells.push(shell);
         }
 
-        Solid::new(shells).insert(&mut services.objects)
+        Solid::new(shells).insert(services)
     }
 }

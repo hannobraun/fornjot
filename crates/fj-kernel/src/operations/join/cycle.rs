@@ -86,10 +86,9 @@ impl JoinCycle for Cycle {
             let this_joined = half_edge
                 .replace_start_vertex(vertex_a)
                 .replace_global_form(half_edge_other.global_form().clone())
-                .insert(&mut services.objects);
-            let next_joined = next_edge
-                .replace_start_vertex(vertex_b)
-                .insert(&mut services.objects);
+                .insert(services);
+            let next_joined =
+                next_edge.replace_start_vertex(vertex_b).insert(services);
 
             cycle = cycle
                 .replace_half_edge(half_edge, this_joined)

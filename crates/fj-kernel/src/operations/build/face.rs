@@ -19,22 +19,20 @@ pub trait BuildFace {
     ) -> Polygon<3> {
         let [a, b, c] = points.map(Into::into);
 
-        let surface =
-            Surface::plane_from_points([a, b, c]).insert(&mut services.objects);
+        let surface = Surface::plane_from_points([a, b, c]).insert(services);
         let (exterior, edges, vertices) = {
             let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
                 let half_edge = HalfEdge::line_segment_from_global_points(
                     points, &surface, None, services,
                 );
 
-                half_edge.insert(&mut services.objects)
+                half_edge.insert(services)
             });
             let vertices = half_edges
                 .each_ref_ext()
                 .map(|half_edge| half_edge.start_vertex().clone());
 
-            let cycle =
-                Cycle::new(half_edges.clone()).insert(&mut services.objects);
+            let cycle = Cycle::new(half_edges.clone()).insert(services);
 
             (cycle, half_edges, vertices)
         };

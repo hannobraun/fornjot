@@ -128,8 +128,8 @@ mod tests {
                     &mut services,
                 ),
             ];
-            let half_edges = half_edges
-                .map(|half_edge| half_edge.insert(&mut services.objects));
+            let half_edges =
+                half_edges.map(|half_edge| half_edge.insert(&mut services));
 
             Cycle::empty().add_half_edges(half_edges)
         };

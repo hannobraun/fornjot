@@ -27,12 +27,12 @@ impl Reverse for Handle<Cycle> {
                     next.start_vertex().clone(),
                     current.global_form().clone(),
                 )
-                .insert(&mut services.objects)
+                .insert(services)
             })
             .collect::<Vec<_>>();
 
         edges.reverse();
 
-        Cycle::new(edges).insert(&mut services.objects)
+        Cycle::new(edges).insert(services)
     }
 }

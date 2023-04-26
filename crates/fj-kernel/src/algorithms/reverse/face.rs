@@ -13,6 +13,6 @@ impl Reverse for Handle<Face> {
             .collect::<Vec<_>>();
 
         Face::new(self.surface().clone(), exterior, interiors, self.color())
-            .insert(&mut services.objects)
+            .insert(services)
     }
 }
