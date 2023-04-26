@@ -61,7 +61,7 @@ pub trait BuildHalfEdge {
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
@@ -69,7 +69,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(curve, boundary, objects)
+        HalfEdge::unjoined(curve, boundary, &mut services.objects)
     }
 
     /// Create a line segment from global points
@@ -81,7 +81,7 @@ pub trait BuildHalfEdge {
     ) -> HalfEdge {
         let points_surface = points_global
             .map(|point| surface.geometry().project_global_point(point));
-        HalfEdge::line_segment(points_surface, boundary, &mut services.objects)
+        HalfEdge::line_segment(points_surface, boundary, services)
     }
 }
 

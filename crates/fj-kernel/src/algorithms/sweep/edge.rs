@@ -81,7 +81,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     let half_edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
-                        &mut services.objects,
+                        services,
                     )
                     .replace_start_vertex(start_vertex);
 

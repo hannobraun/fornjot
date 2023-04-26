@@ -83,11 +83,8 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = HalfEdge::line_segment(
-            [[1., -1.], [1., 1.]],
-            None,
-            &mut services.objects,
-        );
+        let half_edge =
+            HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 
@@ -107,7 +104,7 @@ mod tests {
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [-1., 1.]],
             None,
-            &mut services.objects,
+            &mut services,
         );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -128,7 +125,7 @@ mod tests {
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [1., -1.]],
             None,
-            &mut services.objects,
+            &mut services,
         );
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
@@ -141,11 +138,8 @@ mod tests {
         let mut services = Services::new();
 
         let curve = Curve::u_axis();
-        let half_edge = HalfEdge::line_segment(
-            [[-1., 0.], [1., 0.]],
-            None,
-            &mut services.objects,
-        );
+        let half_edge =
+            HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
 
         let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
 

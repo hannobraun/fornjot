@@ -120,12 +120,12 @@ mod tests {
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services.objects,
+                    &mut services,
                 ),
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services.objects,
+                    &mut services,
                 ),
             ];
             let half_edges = half_edges

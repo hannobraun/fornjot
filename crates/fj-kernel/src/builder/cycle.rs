@@ -58,11 +58,7 @@ impl CycleBuilder {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment(
-                    [start, end],
-                    None,
-                    &mut services.objects,
-                )
+                HalfEdge::line_segment([start, end], None, services)
             })
             .collect();
 

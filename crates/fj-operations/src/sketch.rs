@@ -60,7 +60,7 @@ impl Shape for fj::Sketch {
                                 HalfEdge::line_segment(
                                     [start, end],
                                     None,
-                                    &mut services.objects,
+                                    services,
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {

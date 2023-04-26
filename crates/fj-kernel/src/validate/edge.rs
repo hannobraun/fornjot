@@ -87,11 +87,8 @@ mod tests {
     fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = HalfEdge::line_segment(
-            [[0., 0.], [1., 0.]],
-            None,
-            &mut services.objects,
-        );
+        let valid =
+            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 
