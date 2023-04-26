@@ -17,7 +17,7 @@ use type_map::TypeMap;
 use crate::{
     objects::Objects,
     operations::Insert,
-    services::Service,
+    services::{Service, Services},
     storage::{Handle, ObjectId},
 };
 
@@ -66,9 +66,9 @@ pub trait TransformObject: Sized {
     fn rotate(
         self,
         axis_angle: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self {
-        self.transform(&Transform::rotation(axis_angle), objects)
+        self.transform(&Transform::rotation(axis_angle), &mut services.objects)
     }
 }
 
