@@ -77,11 +77,11 @@ pub trait BuildHalfEdge {
         points_global: [impl Into<Point<3>>; 2],
         surface: &Surface,
         boundary: Option<[Point<1>; 2]>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
         let points_surface = points_global
             .map(|point| surface.geometry().project_global_point(point));
-        HalfEdge::line_segment(points_surface, boundary, objects)
+        HalfEdge::line_segment(points_surface, boundary, &mut services.objects)
     }
 }
 

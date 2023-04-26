@@ -24,10 +24,7 @@ pub trait BuildFace {
         let (exterior, edges, vertices) = {
             let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
                 let half_edge = HalfEdge::line_segment_from_global_points(
-                    points,
-                    &surface,
-                    None,
-                    &mut services.objects,
+                    points, &surface, None, services,
                 );
 
                 half_edge.insert(&mut services.objects)
