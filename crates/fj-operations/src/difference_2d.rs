@@ -46,8 +46,7 @@ impl Shape for fj::Difference2d {
 
                 exteriors.push(face.exterior().clone());
                 for cycle in face.interiors() {
-                    interiors
-                        .push(cycle.clone().reverse(&mut services.objects));
+                    interiors.push(cycle.clone().reverse(services));
                 }
             }
 
@@ -58,9 +57,7 @@ impl Shape for fj::Difference2d {
                     "Trying to subtract faces with different surfaces.",
                 );
 
-                interiors.push(
-                    face.exterior().clone().reverse(&mut services.objects),
-                );
+                interiors.push(face.exterior().clone().reverse(services));
             }
 
             // Faces only support one exterior, while the code here comes from

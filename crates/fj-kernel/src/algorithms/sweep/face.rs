@@ -47,7 +47,7 @@ impl Sweep for Handle<Face> {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse(&mut services.objects)
+                self.clone().reverse(services)
             }
         };
         faces.push(bottom_face.clone());
@@ -61,7 +61,7 @@ impl Sweep for Handle<Face> {
         let mut interiors = Vec::new();
 
         for (i, cycle) in bottom_face.all_cycles().cloned().enumerate() {
-            let cycle = cycle.reverse(&mut services.objects);
+            let cycle = cycle.reverse(services);
 
             let mut top_edges = Vec::new();
             for (half_edge, next) in

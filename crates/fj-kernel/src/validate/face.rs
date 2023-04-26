@@ -97,7 +97,7 @@ mod tests {
             let interiors = valid
                 .interiors()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut services.objects))
+                .map(|cycle| cycle.reverse(&mut services))
                 .collect::<Vec<_>>();
 
             Face::new(
