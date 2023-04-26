@@ -23,9 +23,8 @@ impl Shape for fj::Sketch {
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge =
-                    HalfEdge::circle(circle.radius(), &mut services.objects)
-                        .insert(&mut services.objects);
+                let half_edge = HalfEdge::circle(circle.radius(), services)
+                    .insert(&mut services.objects);
                 let exterior =
                     Cycle::new([half_edge]).insert(&mut services.objects);
 
