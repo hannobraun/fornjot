@@ -168,7 +168,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([-1., 0., 0.], &mut services.objects);
+        let face = face.translate([-1., 0., 0.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -185,7 +185,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([1., 0., 0.], &mut services.objects);
+        let face = face.translate([1., 0., 0.], &mut services);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -205,7 +205,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([0., 0., 2.], &mut services.objects);
+        let face = face.translate([0., 0., 2.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
@@ -222,7 +222,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([1., 1., 0.], &mut services.objects);
+        let face = face.translate([1., 1., 0.], &mut services);
 
         let edge = face
             .exterior()
@@ -247,7 +247,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([1., 1., 1.], &mut services.objects);
+        let face = face.translate([1., 1., 1.], &mut services);
 
         let vertex = face
             .exterior()
@@ -294,7 +294,7 @@ mod tests {
                 &mut services.objects,
             ))
             .build(&mut services.objects);
-        let face = face.translate([0., 0., 1.], &mut services.objects);
+        let face = face.translate([0., 0., 1.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }

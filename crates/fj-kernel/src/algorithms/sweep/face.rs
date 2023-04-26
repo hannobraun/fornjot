@@ -52,10 +52,8 @@ impl Sweep for Handle<Face> {
         };
         faces.push(bottom_face.clone());
 
-        let top_surface = bottom_face
-            .surface()
-            .clone()
-            .translate(path, &mut services.objects);
+        let top_surface =
+            bottom_face.surface().clone().translate(path, services);
 
         let mut exterior = None;
         let mut interiors = Vec::new();

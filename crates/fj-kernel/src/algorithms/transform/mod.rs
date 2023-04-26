@@ -55,9 +55,9 @@ pub trait TransformObject: Sized {
     fn translate(
         self,
         offset: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self {
-        self.transform(&Transform::translation(offset), objects)
+        self.transform(&Transform::translation(offset), &mut services.objects)
     }
 
     /// Rotate the object
