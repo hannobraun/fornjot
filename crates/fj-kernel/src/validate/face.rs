@@ -86,18 +86,18 @@ mod tests {
         let valid = FaceBuilder::new(services.objects.surfaces.xy_plane())
             .with_exterior(CycleBuilder::polygon(
                 [[0., 0.], [3., 0.], [0., 3.]],
-                &mut services.objects,
+                &mut services,
             ))
             .with_interior(CycleBuilder::polygon(
                 [[1., 1.], [1., 2.], [2., 1.]],
-                &mut services.objects,
+                &mut services,
             ))
-            .build(&mut services.objects);
+            .build(&mut services);
         let invalid = {
             let interiors = valid
                 .interiors()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut services.objects))
+                .map(|cycle| cycle.reverse(&mut services))
                 .collect::<Vec<_>>();
 
             Face::new(

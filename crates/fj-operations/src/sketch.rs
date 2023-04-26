@@ -2,9 +2,9 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    objects::{Cycle, Face, HalfEdge, Objects, Sketch},
+    objects::{Cycle, Face, HalfEdge, Sketch},
     operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
-    services::Service,
+    services::Services,
 };
 use fj_math::{Aabb, Point};
 use itertools::Itertools;
@@ -16,16 +16,16 @@ impl Shape for fj::Sketch {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         _: &mut DebugInfo,
     ) -> Self::Brep {
-        let surface = objects.surfaces.xy_plane();
+        let surface = services.objects.surfaces.xy_plane();
 
         let face = match self.chain() {
             fj::Chain::Circle(circle) => {
-                let half_edge =
-                    HalfEdge::circle(circle.radius(), objects).insert(objects);
-                let exterior = Cycle::new([half_edge]).insert(objects);
+                let half_edge = HalfEdge::circle(circle.radius(), services)
+                    .insert(services);
+                let exterior = Cycle::new([half_edge]).insert(services);
 
                 Face::new(
                     surface,
@@ -59,19 +59,19 @@ impl Shape for fj::Sketch {
                                 HalfEdge::line_segment(
                                     [start, end],
                                     None,
-                                    objects,
+                                    services,
                                 )
                             }
                             fj::SketchSegmentRoute::Arc { angle } => {
-                                HalfEdge::arc(start, end, angle.rad(), objects)
+                                HalfEdge::arc(start, end, angle.rad(), services)
                             }
                         };
-                        let half_edge = half_edge.insert(objects);
+                        let half_edge = half_edge.insert(services);
 
                         cycle = cycle.add_half_edges([half_edge]);
                     }
 
-                    cycle.insert(objects)
+                    cycle.insert(services)
                 };
 
                 Face::new(
@@ -83,7 +83,7 @@ impl Shape for fj::Sketch {
             }
         };
 
-        let sketch = Sketch::new(vec![face.insert(objects)]).insert(objects);
+        let sketch = Sketch::new(vec![face.insert(services)]).insert(services);
         sketch.deref().clone()
     }
 

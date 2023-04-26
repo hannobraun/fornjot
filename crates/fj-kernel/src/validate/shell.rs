@@ -208,21 +208,21 @@ mod tests {
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services.objects,
+            &mut services,
         );
         let invalid = valid.shell.update_face(&valid.abc, |face| {
             face.update_exterior(|cycle| {
                 cycle
                     .update_nth_half_edge(0, |half_edge| {
                         let global_form =
-                            GlobalEdge::new().insert(&mut services.objects);
+                            GlobalEdge::new().insert(&mut services);
                         half_edge
                             .replace_global_form(global_form)
-                            .insert(&mut services.objects)
+                            .insert(&mut services)
                     })
-                    .insert(&mut services.objects)
+                    .insert(&mut services)
             })
-            .insert(&mut services.objects)
+            .insert(&mut services)
         });
 
         valid.shell.validate_and_return_first_error()?;
@@ -241,7 +241,7 @@ mod tests {
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services.objects,
+            &mut services,
         );
         let invalid = valid.shell.remove_face(&valid.abc);
 

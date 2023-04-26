@@ -1,6 +1,6 @@
 //! Reverse the direction/orientation of objects
 
-use crate::{objects::Objects, services::Service};
+use crate::services::Services;
 
 mod cycle;
 mod face;
@@ -8,5 +8,5 @@ mod face;
 /// Reverse the direction/orientation of an object
 pub trait Reverse: Sized {
     /// Reverse the direction/orientation of the object
-    fn reverse(self, objects: &mut Service<Objects>) -> Self;
+    fn reverse(self, services: &mut Services) -> Self;
 }

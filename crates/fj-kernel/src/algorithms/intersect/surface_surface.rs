@@ -94,7 +94,7 @@ mod tests {
                 xy.clone(),
                 xy.clone().transform(
                     &Transform::translation([0., 0., 1.],),
-                    &mut services.objects
+                    &mut services
                 )
             ],),
             None,

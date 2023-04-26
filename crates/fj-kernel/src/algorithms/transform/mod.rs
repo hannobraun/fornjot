@@ -15,9 +15,8 @@ use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
-    objects::Objects,
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::{Handle, ObjectId},
 };
 
@@ -32,20 +31,16 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    fn transform(
-        self,
-        transform: &Transform,
-        objects: &mut Service<Objects>,
-    ) -> Self {
+    fn transform(self, transform: &Transform, services: &mut Services) -> Self {
         let mut cache = TransformCache::default();
-        self.transform_with_cache(transform, objects, &mut cache)
+        self.transform_with_cache(transform, services, &mut cache)
     }
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
         self,
         transform: &Transform,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self;
 
@@ -55,9 +50,9 @@ pub trait TransformObject: Sized {
     fn translate(
         self,
         offset: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self {
-        self.transform(&Transform::translation(offset), objects)
+        self.transform(&Transform::translation(offset), services)
     }
 
     /// Rotate the object
@@ -66,9 +61,9 @@ pub trait TransformObject: Sized {
     fn rotate(
         self,
         axis_angle: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self {
-        self.transform(&Transform::rotation(axis_angle), objects)
+        self.transform(&Transform::rotation(axis_angle), services)
     }
 }
 
@@ -79,7 +74,7 @@ where
     fn transform_with_cache(
         self,
         transform: &Transform,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
         if let Some(object) = cache.get(&self) {
@@ -88,8 +83,8 @@ where
 
         let transformed = self
             .clone_object()
-            .transform_with_cache(transform, objects, cache)
-            .insert(objects);
+            .transform_with_cache(transform, services, cache)
+            .insert(services);
 
         cache.insert(self.clone(), transformed.clone());
 

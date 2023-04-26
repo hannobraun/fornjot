@@ -2,9 +2,9 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Objects, Surface, Vertex},
+    objects::{Cycle, Face, HalfEdge, Surface, Vertex},
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -15,24 +15,24 @@ pub trait BuildFace {
     /// Build a triangle
     fn triangle(
         points: [impl Into<Point<3>>; 3],
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Polygon<3> {
         let [a, b, c] = points.map(Into::into);
 
-        let surface = Surface::plane_from_points([a, b, c]).insert(objects);
+        let surface = Surface::plane_from_points([a, b, c]).insert(services);
         let (exterior, edges, vertices) = {
             let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
                 let half_edge = HalfEdge::line_segment_from_global_points(
-                    points, &surface, None, objects,
+                    points, &surface, None, services,
                 );
 
-                half_edge.insert(objects)
+                half_edge.insert(services)
             });
             let vertices = half_edges
                 .each_ref_ext()
                 .map(|half_edge| half_edge.start_vertex().clone());
 
-            let cycle = Cycle::new(half_edges.clone()).insert(objects);
+            let cycle = Cycle::new(half_edges.clone()).insert(services);
 
             (cycle, half_edges, vertices)
         };

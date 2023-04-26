@@ -11,8 +11,8 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{GlobalEdge, Objects, Vertex},
-    services::Service,
+    objects::{GlobalEdge, Vertex},
+    services::Services,
     storage::{Handle, ObjectId},
 };
 
@@ -25,10 +25,10 @@ pub trait Sweep: Sized {
     fn sweep(
         self,
         path: impl Into<Vector<3>>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept {
         let mut cache = SweepCache::default();
-        self.sweep_with_cache(path, &mut cache, objects)
+        self.sweep_with_cache(path, &mut cache, services)
     }
 
     /// Sweep the object along the given path, using the provided cache
@@ -36,7 +36,7 @@ pub trait Sweep: Sized {
         self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Self::Swept;
 }
 

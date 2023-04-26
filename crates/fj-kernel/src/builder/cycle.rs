@@ -3,9 +3,9 @@ use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
-    objects::{Cycle, HalfEdge, Objects},
+    objects::{Cycle, HalfEdge},
     operations::{BuildHalfEdge, Insert, UpdateHalfEdge},
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -28,10 +28,7 @@ impl CycleBuilder {
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this cycle, form a cycle themselves.
-    pub fn connect_to_edges<Es>(
-        edges: Es,
-        objects: &mut Service<Objects>,
-    ) -> Self
+    pub fn connect_to_edges<Es>(edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
         Es::IntoIter: Clone + ExactSizeIterator,
@@ -40,7 +37,7 @@ impl CycleBuilder {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, objects)
+                HalfEdge::unjoined(curve, boundary, services)
                     .replace_start_vertex(prev.start_vertex().clone())
                     .replace_global_form(half_edge.global_form().clone())
             })
@@ -50,7 +47,7 @@ impl CycleBuilder {
     }
 
     /// Create a polygon
-    pub fn polygon<P, Ps>(points: Ps, objects: &mut Service<Objects>) -> Self
+    pub fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Self
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
@@ -61,7 +58,7 @@ impl CycleBuilder {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, objects)
+                HalfEdge::line_segment([start, end], None, services)
             })
             .collect();
 
@@ -69,11 +66,11 @@ impl CycleBuilder {
     }
 
     /// Build the cycle
-    pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
+    pub fn build(self, services: &mut Services) -> Cycle {
         let half_edges = self
             .half_edges
             .into_iter()
-            .map(|half_edge| half_edge.insert(objects));
+            .map(|half_edge| half_edge.insert(services));
         Cycle::new(half_edges)
     }
 }

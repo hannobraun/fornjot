@@ -1,9 +1,9 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Objects, Shell},
+    objects::{Face, Shell},
     operations::{Insert, JoinCycle, UpdateFace},
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
@@ -31,40 +31,40 @@ pub trait BuildShell {
     /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], objects).face;
+        let abc = Face::triangle([a, b, c], services).face;
         let bad =
-            Face::triangle([b, a, d], objects)
+            Face::triangle([b, a, d], services)
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(abc.exterior(), 0..=0, 0..=0, objects)
-                        .insert(objects)
+                        .join_to(abc.exterior(), 0..=0, 0..=0, services)
+                        .insert(services)
                 });
         let dac =
-            Face::triangle([d, a, c], objects)
+            Face::triangle([d, a, c], services)
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(abc.exterior(), 1..=1, 2..=2, objects)
-                        .join_to(bad.exterior(), 0..=0, 1..=1, objects)
-                        .insert(objects)
+                        .join_to(abc.exterior(), 1..=1, 2..=2, services)
+                        .join_to(bad.exterior(), 0..=0, 1..=1, services)
+                        .insert(services)
                 });
         let cbd =
-            Face::triangle([c, b, d], objects)
+            Face::triangle([c, b, d], services)
                 .face
                 .update_exterior(|cycle| {
                     cycle
-                        .join_to(abc.exterior(), 0..=0, 1..=1, objects)
-                        .join_to(bad.exterior(), 1..=1, 2..=2, objects)
-                        .join_to(dac.exterior(), 2..=2, 2..=2, objects)
-                        .insert(objects)
+                        .join_to(abc.exterior(), 0..=0, 1..=1, services)
+                        .join_to(bad.exterior(), 1..=1, 2..=2, services)
+                        .join_to(dac.exterior(), 2..=2, 2..=2, services)
+                        .insert(services)
                 });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(objects));
+        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
         let shell = Shell::new(faces.clone());
 
         let [abc, bad, dac, cbd] = faces;

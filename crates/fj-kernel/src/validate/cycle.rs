@@ -109,9 +109,9 @@ mod tests {
 
         let valid = CycleBuilder::polygon(
             [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-            &mut services.objects,
+            &mut services,
         )
-        .build(&mut services.objects);
+        .build(&mut services);
 
         valid.validate_and_return_first_error()?;
 
@@ -120,16 +120,16 @@ mod tests {
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services.objects,
+                    &mut services,
                 ),
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services.objects,
+                    &mut services,
                 ),
             ];
-            let half_edges = half_edges
-                .map(|half_edge| half_edge.insert(&mut services.objects));
+            let half_edges =
+                half_edges.map(|half_edge| half_edge.insert(&mut services));
 
             Cycle::empty().add_half_edges(half_edges)
         };

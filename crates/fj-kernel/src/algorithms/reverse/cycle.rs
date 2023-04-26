@@ -1,16 +1,16 @@
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, HalfEdge, Objects},
+    objects::{Cycle, HalfEdge},
     operations::Insert,
-    services::Service,
+    services::Services,
     storage::Handle,
 };
 
 use super::Reverse;
 
 impl Reverse for Handle<Cycle> {
-    fn reverse(self, objects: &mut Service<Objects>) -> Self {
+    fn reverse(self, services: &mut Services) -> Self {
         let mut edges = self
             .half_edges()
             .cloned()
@@ -27,12 +27,12 @@ impl Reverse for Handle<Cycle> {
                     next.start_vertex().clone(),
                     current.global_form().clone(),
                 )
-                .insert(objects)
+                .insert(services)
             })
             .collect::<Vec<_>>();
 
         edges.reverse();
 
-        Cycle::new(edges).insert(objects)
+        Cycle::new(edges).insert(services)
     }
 }

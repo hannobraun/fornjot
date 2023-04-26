@@ -26,8 +26,8 @@ mod transform;
 
 use fj_interop::debug::DebugInfo;
 use fj_kernel::{
-    objects::{FaceSet, Objects, Sketch},
-    services::Service,
+    objects::{FaceSet, Sketch},
+    services::Services,
 };
 use fj_math::Aabb;
 
@@ -39,7 +39,7 @@ pub trait Shape {
     /// Compute the boundary representation of the shape
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep;
 
@@ -55,16 +55,16 @@ impl Shape for fj::Shape {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         match self {
             Self::Shape2d(shape) => {
-                shape.compute_brep(objects, debug_info).faces().clone()
+                shape.compute_brep(services, debug_info).faces().clone()
             }
-            Self::Group(shape) => shape.compute_brep(objects, debug_info),
+            Self::Group(shape) => shape.compute_brep(services, debug_info),
             Self::Sweep(shape) => shape
-                .compute_brep(objects, debug_info)
+                .compute_brep(services, debug_info)
                 .shells()
                 .map(|shell| shell.faces().clone())
                 .reduce(|mut a, b| {
@@ -72,7 +72,7 @@ impl Shape for fj::Shape {
                     a
                 })
                 .unwrap_or_default(),
-            Self::Transform(shape) => shape.compute_brep(objects, debug_info),
+            Self::Transform(shape) => shape.compute_brep(services, debug_info),
         }
     }
 
@@ -91,12 +91,12 @@ impl Shape for fj::Shape2d {
 
     fn compute_brep(
         &self,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         match self {
-            Self::Difference(shape) => shape.compute_brep(objects, debug_info),
-            Self::Sketch(shape) => shape.compute_brep(objects, debug_info),
+            Self::Difference(shape) => shape.compute_brep(services, debug_info),
+            Self::Sketch(shape) => shape.compute_brep(services, debug_info),
         }
     }
 

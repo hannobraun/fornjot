@@ -1,9 +1,6 @@
 use fj_math::Transform;
 
-use crate::{
-    objects::{Objects, Surface},
-    services::Service,
-};
+use crate::{objects::Surface, services::Services};
 
 use super::{TransformCache, TransformObject};
 
@@ -11,7 +8,7 @@ impl TransformObject for Surface {
     fn transform_with_cache(
         self,
         transform: &Transform,
-        _: &mut Service<Objects>,
+        _: &mut Services,
         _: &mut TransformCache,
     ) -> Self {
         let geometry = self.geometry().transform(transform);

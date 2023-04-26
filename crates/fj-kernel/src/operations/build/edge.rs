@@ -3,9 +3,9 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::curve::Curve,
-    objects::{GlobalEdge, HalfEdge, Objects, Surface, Vertex},
+    objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     operations::Insert,
-    services::Service,
+    services::Services,
 };
 
 /// Build a [`HalfEdge`]
@@ -14,10 +14,10 @@ pub trait BuildHalfEdge {
     fn unjoined(
         curve: Curve,
         boundary: [Point<1>; 2],
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
-        let start_vertex = Vertex::new().insert(objects);
-        let global_form = GlobalEdge::new().insert(objects);
+        let start_vertex = Vertex::new().insert(services);
+        let global_form = GlobalEdge::new().insert(services);
 
         HalfEdge::new(curve, boundary, start_vertex, global_form)
     }
@@ -31,7 +31,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
@@ -45,26 +45,23 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a circle
-    fn circle(
-        radius: impl Into<Scalar>,
-        objects: &mut Service<Objects>,
-    ) -> HalfEdge {
+    fn circle(radius: impl Into<Scalar>, services: &mut Services) -> HalfEdge {
         let curve = Curve::circle_from_radius(radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a line segment
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
@@ -72,7 +69,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(curve, boundary, objects)
+        HalfEdge::unjoined(curve, boundary, services)
     }
 
     /// Create a line segment from global points
@@ -80,11 +77,11 @@ pub trait BuildHalfEdge {
         points_global: [impl Into<Point<3>>; 2],
         surface: &Surface,
         boundary: Option<[Point<1>; 2]>,
-        objects: &mut Service<Objects>,
+        services: &mut Services,
     ) -> HalfEdge {
         let points_surface = points_global
             .map(|point| surface.geometry().project_global_point(point));
-        HalfEdge::line_segment(points_surface, boundary, objects)
+        HalfEdge::line_segment(points_surface, boundary, services)
     }
 }
 
