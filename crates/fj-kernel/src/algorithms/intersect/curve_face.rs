@@ -181,11 +181,11 @@ mod tests {
         let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
             .with_exterior(CycleBuilder::polygon(
                 exterior_points,
-                &mut services.objects,
+                &mut services,
             ))
             .with_interior(CycleBuilder::polygon(
                 interior_points,
-                &mut services.objects,
+                &mut services,
             ))
             .build(&mut services.objects);
 

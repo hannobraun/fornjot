@@ -109,7 +109,7 @@ mod tests {
 
         let valid = CycleBuilder::polygon(
             [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-            &mut services.objects,
+            &mut services,
         )
         .build(&mut services.objects);
 

@@ -47,7 +47,7 @@ impl CycleBuilder {
     }
 
     /// Create a polygon
-    pub fn polygon<P, Ps>(points: Ps, objects: &mut Service<Objects>) -> Self
+    pub fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Self
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
@@ -58,7 +58,11 @@ impl CycleBuilder {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, objects)
+                HalfEdge::line_segment(
+                    [start, end],
+                    None,
+                    &mut services.objects,
+                )
             })
             .collect();
 
