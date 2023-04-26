@@ -10,7 +10,7 @@ use std::sync::Arc;
 
 use parking_lot::Mutex;
 
-use crate::objects::Objects;
+use crate::objects::{Object, Objects, WithHandle};
 
 pub use self::{
     objects::{InsertObject, Operation},
@@ -43,6 +43,11 @@ impl Services {
             objects,
             validation,
         }
+    }
+
+    /// Insert an object into the stores
+    pub fn insert_object(&mut self, object: Object<WithHandle>) {
+        self.objects.execute(Operation::InsertObject { object });
     }
 }
 

@@ -3,7 +3,7 @@ use crate::{
         Cycle, Face, GlobalEdge, HalfEdge, Shell, Sketch, Solid, Surface,
         Vertex,
     },
-    services::{Operation, Services},
+    services::Services,
     storage::Handle,
 };
 
@@ -23,8 +23,7 @@ macro_rules! impl_insert {
                 fn insert(self, services: &mut Services) -> Handle<Self> {
                     let handle = services.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
-                    services.objects
-                        .execute(Operation::InsertObject { object });
+                    services.insert_object(object);
                     handle
                 }
             }
