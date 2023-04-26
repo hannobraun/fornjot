@@ -82,11 +82,8 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let top_cycle = CycleBuilder::connect_to_edges(
-                top_edges,
-                &mut services.objects,
-            )
-            .build(&mut services.objects);
+            let top_cycle = CycleBuilder::connect_to_edges(top_edges, services)
+                .build(&mut services.objects);
 
             if i == 0 {
                 exterior = Some(top_cycle.insert(&mut services.objects));

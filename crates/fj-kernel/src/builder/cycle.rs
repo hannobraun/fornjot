@@ -5,7 +5,7 @@ use crate::{
     geometry::curve::Curve,
     objects::{Cycle, HalfEdge, Objects},
     operations::{BuildHalfEdge, Insert, UpdateHalfEdge},
-    services::Service,
+    services::{Service, Services},
     storage::Handle,
 };
 
@@ -28,10 +28,7 @@ impl CycleBuilder {
     ///
     /// Assumes that the provided half-edges, once translated into local
     /// equivalents of this cycle, form a cycle themselves.
-    pub fn connect_to_edges<Es>(
-        edges: Es,
-        objects: &mut Service<Objects>,
-    ) -> Self
+    pub fn connect_to_edges<Es>(edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
         Es::IntoIter: Clone + ExactSizeIterator,
@@ -40,7 +37,7 @@ impl CycleBuilder {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, objects)
+                HalfEdge::unjoined(curve, boundary, &mut services.objects)
                     .replace_start_vertex(prev.start_vertex().clone())
                     .replace_global_form(half_edge.global_form().clone())
             })
