@@ -17,7 +17,7 @@ impl Shape for fj::Transform {
     ) -> Self::Brep {
         self.shape
             .compute_brep(services, debug_info)
-            .transform(&make_transform(self), &mut services.objects)
+            .transform(&make_transform(self), services)
     }
 
     fn bounding_volume(&self) -> Aabb<3> {
