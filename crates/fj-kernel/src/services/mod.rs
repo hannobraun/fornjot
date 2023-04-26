@@ -6,10 +6,6 @@ mod objects;
 mod service;
 mod validation;
 
-use std::sync::Arc;
-
-use parking_lot::Mutex;
-
 use crate::objects::{Object, Objects, WithHandle};
 
 pub use self::{
@@ -28,14 +24,14 @@ pub struct Services {
     /// The validation service
     ///
     /// Validates objects that are inserted using the objects service.
-    pub validation: Arc<Mutex<Service<Validation>>>,
+    pub validation: Service<Validation>,
 }
 
 impl Services {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
         let objects = Service::<Objects>::default();
-        let validation = Arc::new(Mutex::new(Service::default()));
+        let validation = Service::default();
 
         Self {
             objects,
@@ -50,9 +46,7 @@ impl Services {
             .execute(Operation::InsertObject { object }, &mut object_events);
 
         for object_event in object_events {
-            self.validation
-                .lock()
-                .execute(object_event, &mut Vec::new());
+            self.validation.execute(object_event, &mut Vec::new());
         }
     }
 }
