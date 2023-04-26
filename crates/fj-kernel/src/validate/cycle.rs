@@ -111,7 +111,7 @@ mod tests {
             [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
             &mut services,
         )
-        .build(&mut services.objects);
+        .build(&mut services);
 
         valid.validate_and_return_first_error()?;
 

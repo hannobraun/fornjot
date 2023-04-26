@@ -47,15 +47,12 @@ impl FaceBuilder {
 
     /// Build the face
     pub fn build(self, services: &mut Services) -> Face {
-        let exterior = self
-            .exterior
-            .build(&mut services.objects)
-            .insert(&mut services.objects);
-        let interiors = self.interiors.into_iter().map(|cycle| {
-            cycle
-                .build(&mut services.objects)
-                .insert(&mut services.objects)
-        });
+        let exterior =
+            self.exterior.build(services).insert(&mut services.objects);
+        let interiors = self
+            .interiors
+            .into_iter()
+            .map(|cycle| cycle.build(services).insert(&mut services.objects));
 
         Face::new(self.surface, exterior, interiors, self.color)
     }

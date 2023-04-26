@@ -3,9 +3,9 @@ use itertools::Itertools;
 
 use crate::{
     geometry::curve::Curve,
-    objects::{Cycle, HalfEdge, Objects},
+    objects::{Cycle, HalfEdge},
     operations::{BuildHalfEdge, Insert, UpdateHalfEdge},
-    services::{Service, Services},
+    services::Services,
     storage::Handle,
 };
 
@@ -70,11 +70,11 @@ impl CycleBuilder {
     }
 
     /// Build the cycle
-    pub fn build(self, objects: &mut Service<Objects>) -> Cycle {
+    pub fn build(self, services: &mut Services) -> Cycle {
         let half_edges = self
             .half_edges
             .into_iter()
-            .map(|half_edge| half_edge.insert(objects));
+            .map(|half_edge| half_edge.insert(&mut services.objects));
         Cycle::new(half_edges)
     }
 }
