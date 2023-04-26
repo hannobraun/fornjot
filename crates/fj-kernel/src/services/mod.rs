@@ -47,7 +47,9 @@ impl Services {
 
     /// Insert an object into the stores
     pub fn insert_object(&mut self, object: Object<WithHandle>) {
-        self.objects.execute(Operation::InsertObject { object });
+        let mut object_events = Vec::new();
+        self.objects
+            .execute(Operation::InsertObject { object }, &mut object_events);
     }
 }
 
