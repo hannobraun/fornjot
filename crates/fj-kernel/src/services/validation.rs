@@ -1,7 +1,7 @@
 use std::{collections::BTreeMap, thread};
 
 use crate::{
-    objects::{BehindHandle, Object},
+    objects::{BehindHandle, Object, ObjectSet},
     storage::ObjectId,
     validate::ValidationError,
 };
@@ -39,16 +39,33 @@ impl State for Validation {
     type Event = ValidationEvent;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let ValidationCommand::ValidateObject { object } = command;
-
         let mut errors = Vec::new();
-        object.validate(&mut errors);
 
-        for err in errors {
-            events.push(ValidationEvent::ValidationFailed {
-                object: object.clone(),
-                err,
-            });
+        match command {
+            ValidationCommand::ValidateObject { object } => {
+                object.validate(&mut errors);
+
+                for err in errors {
+                    events.push(ValidationEvent::ValidationFailed {
+                        object: object.clone(),
+                        err,
+                    });
+                }
+            }
+            ValidationCommand::OnlyValidate { objects } => {
+                events.push(ValidationEvent::ClearErrors);
+
+                for object in objects {
+                    object.validate(&mut errors);
+
+                    for err in errors.drain(..) {
+                        events.push(ValidationEvent::ValidationFailed {
+                            object: object.clone(),
+                            err,
+                        });
+                    }
+                }
+            }
         }
     }
 
@@ -68,6 +85,12 @@ pub enum ValidationCommand {
     ValidateObject {
         /// The object to validate
         object: Object<BehindHandle>,
+    },
+
+    /// Validate the provided objects, discard all other validation errors
+    OnlyValidate {
+        /// The objects to validate
+        objects: ObjectSet,
     },
 }
 
