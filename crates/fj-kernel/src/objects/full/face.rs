@@ -4,7 +4,7 @@ use fj_interop::mesh::Color;
 use fj_math::Winding;
 
 use crate::{
-    objects::{Cycle, Surface},
+    objects::{Cycle, Region, Surface},
     storage::Handle,
 };
 
@@ -35,9 +35,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Handle<Surface>,
-    exterior: Handle<Cycle>,
-    interiors: Vec<Handle<Cycle>>,
-    color: Option<Color>,
+    region: Region,
 }
 
 impl Face {
@@ -52,9 +50,7 @@ impl Face {
 
         Self {
             surface,
-            exterior,
-            interiors,
-            color,
+            region: Region::new(exterior, interiors, color),
         }
     }
 
@@ -65,24 +61,29 @@ impl Face {
 
     /// Access the cycle that bounds the face on the outside
     pub fn exterior(&self) -> &Handle<Cycle> {
-        &self.exterior
+        self.region.exterior()
+    }
+
+    /// Access the region that bounds the face
+    pub fn region(&self) -> &Region {
+        &self.region
     }
 
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
     pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        self.interiors.iter()
+        self.region.interiors()
     }
 
     /// Access all cycles of the face (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        [self.exterior()].into_iter().chain(self.interiors())
+        self.region.all_cycles()
     }
 
     /// Access the color of the face
     pub fn color(&self) -> Option<Color> {
-        self.color
+        self.region.color()
     }
 
     /// Determine handed-ness of the face's front-side coordinate system

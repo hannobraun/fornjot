@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use fj_interop::{debug::DebugInfo, mesh::Color};
 use fj_kernel::{
-    objects::{Cycle, Face, HalfEdge, Sketch},
+    objects::{Cycle, HalfEdge, Region, Sketch},
     operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
     services::Services,
 };
@@ -19,20 +19,13 @@ impl Shape for fj::Sketch {
         services: &mut Services,
         _: &mut DebugInfo,
     ) -> Self::Brep {
-        let surface = services.objects.surfaces.xy_plane();
-
-        let face = match self.chain() {
+        let region = match self.chain() {
             fj::Chain::Circle(circle) => {
                 let half_edge = HalfEdge::circle(circle.radius(), services)
                     .insert(services);
                 let exterior = Cycle::new([half_edge]).insert(services);
 
-                Face::new(
-                    surface,
-                    exterior,
-                    Vec::new(),
-                    Some(Color(self.color())),
-                )
+                Region::new(exterior, Vec::new(), Some(Color(self.color())))
             }
             fj::Chain::PolyChain(poly_chain) => {
                 let segments = poly_chain.to_segments();
@@ -74,16 +67,12 @@ impl Shape for fj::Sketch {
                     cycle.insert(services)
                 };
 
-                Face::new(
-                    surface,
-                    exterior,
-                    Vec::new(),
-                    Some(Color(self.color())),
-                )
+                Region::new(exterior, Vec::new(), Some(Color(self.color())))
             }
         };
 
-        let sketch = Sketch::new(vec![face.insert(services)]).insert(services);
+        let sketch =
+            Sketch::new(vec![region.insert(services)]).insert(services);
         sketch.deref().clone()
     }
 

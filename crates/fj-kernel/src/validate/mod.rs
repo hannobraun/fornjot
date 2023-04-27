@@ -3,6 +3,7 @@
 mod cycle;
 mod edge;
 mod face;
+mod region;
 mod shell;
 mod sketch;
 mod solid;
@@ -11,7 +12,7 @@ mod vertex;
 
 pub use self::{
     cycle::CycleValidationError, edge::HalfEdgeValidationError,
-    face::FaceValidationError, shell::ShellValidationError,
+    region::RegionValidationError, shell::ShellValidationError,
     solid::SolidValidationError,
 };
 
@@ -102,8 +103,8 @@ pub enum ValidationError {
     Cycle(#[from] CycleValidationError),
 
     /// `Face` validation error
-    #[error("`Face` validation error\n    {0}")]
-    Face(#[from] FaceValidationError),
+    #[error("`Region` validation error\n    {0}")]
+    Face(#[from] RegionValidationError),
 
     /// `HalfEdge` validation error
     #[error("`HalfEdge` validation error\n    {0}")]

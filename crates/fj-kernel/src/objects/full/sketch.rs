@@ -1,29 +1,24 @@
 use crate::{
-    objects::{Face, Set},
+    objects::{Region, Set},
     storage::Handle,
 };
 
 /// A 2-dimensional shape
-///
-/// # Implementation Note
-///
-/// The faces that make up the sketch must be in the same surface. This is not
-/// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    faces: Set<Face>,
+    regions: Set<Region>,
 }
 
 impl Sketch {
     /// Construct an empty instance of `Sketch`
-    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+    pub fn new(regions: impl IntoIterator<Item = Handle<Region>>) -> Self {
         Self {
-            faces: faces.into_iter().collect(),
+            regions: regions.into_iter().collect(),
         }
     }
 
     /// Access the faces of the sketch
-    pub fn faces(&self) -> &Set<Face> {
-        &self.faces
+    pub fn regions(&self) -> &Set<Region> {
+        &self.regions
     }
 }

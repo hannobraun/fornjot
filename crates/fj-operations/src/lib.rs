@@ -59,8 +59,8 @@ impl Shape for fj::Shape {
         debug_info: &mut DebugInfo,
     ) -> Self::Brep {
         match self {
-            Self::Shape2d(shape) => {
-                shape.compute_brep(services, debug_info).faces().clone()
+            Self::Shape2d(_shape) => {
+                todo!()
             }
             Self::Group(shape) => shape.compute_brep(services, debug_info),
             Self::Sweep(shape) => shape

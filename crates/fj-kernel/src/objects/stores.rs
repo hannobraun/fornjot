@@ -6,7 +6,8 @@ use crate::{
 };
 
 use super::{
-    Cycle, Face, GlobalEdge, HalfEdge, Shell, Sketch, Solid, Surface, Vertex,
+    Cycle, Face, GlobalEdge, HalfEdge, Region, Shell, Sketch, Solid, Surface,
+    Vertex,
 };
 
 /// The available object stores
@@ -38,6 +39,9 @@ pub struct Objects {
 
     /// Store for [`Vertex`] objects
     pub vertices: Store<Vertex>,
+
+    /// Store for [`Region`] objects
+    pub regions: Store<Region>,
 }
 
 impl Objects {

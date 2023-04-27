@@ -24,7 +24,9 @@ impl Shape for fj::Sweep {
 
         let path = Vector::from(self.path());
 
-        let solid = sketch.sweep(path, services);
+        // TODO no hardcoding to xy_plane
+        let solid = (sketch, services.objects.surfaces.xy_plane())
+            .sweep(path, services);
         solid.deref().clone()
     }
 

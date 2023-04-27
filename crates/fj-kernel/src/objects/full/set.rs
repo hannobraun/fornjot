@@ -3,9 +3,7 @@ use std::{
     collections::{btree_set, BTreeSet},
 };
 
-use crate::{
-    storage::Handle,
-};
+use crate::storage::Handle;
 
 /// A collection of objects
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

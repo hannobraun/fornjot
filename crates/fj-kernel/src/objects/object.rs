@@ -1,7 +1,7 @@
 use crate::{
     objects::{
-        Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
-        Surface, Vertex,
+        Cycle, Face, GlobalEdge, HalfEdge, Objects, Region, Shell, Sketch,
+        Solid, Surface, Vertex,
     },
     storage::{Handle, ObjectId},
     validate::{Validate, ValidationError},
@@ -98,6 +98,7 @@ object!(
     Solid, "solid", solids;
     Surface, "surface", surfaces;
     Vertex, "vertex", vertices;
+    Region, "region", regions;
 );
 
 /// The form that an object can take

@@ -3,7 +3,7 @@ use std::ops::Deref;
 use fj_interop::{debug::DebugInfo, ext::ArrayExt, mesh::Color};
 use fj_kernel::{
     algorithms::reverse::Reverse,
-    objects::{Face, Sketch},
+    objects::{Region, Sketch},
     operations::Insert,
     services::Services,
 };
@@ -22,7 +22,7 @@ impl Shape for fj::Difference2d {
         // This method assumes that `b` is fully contained within `a`:
         // https://github.com/hannobraun/Fornjot/issues/92
 
-        let mut faces = Vec::new();
+        let mut regions = Vec::new();
 
         let mut exteriors = Vec::new();
         let mut interiors = Vec::new();
@@ -32,32 +32,18 @@ impl Shape for fj::Difference2d {
             .each_ref_ext()
             .map(|shape| shape.compute_brep(services, debug_info));
 
-        if let Some(face) = a.faces().into_iter().next() {
-            // If there's at least one face to subtract from, we can proceed.
+        if a.regions().into_iter().next().is_some() {
+            // If there's at least one region to subtract from, we can proceed.
 
-            let surface = face.surface();
-
-            for face in a.faces() {
-                assert_eq!(
-                    surface,
-                    face.surface(),
-                    "Trying to subtract faces with different surfaces.",
-                );
-
-                exteriors.push(face.exterior().clone());
-                for cycle in face.interiors() {
+            for region in a.regions() {
+                exteriors.push(region.exterior().clone());
+                for cycle in region.interiors() {
                     interiors.push(cycle.clone().reverse(services));
                 }
             }
 
-            for face in b.faces() {
-                assert_eq!(
-                    surface,
-                    face.surface(),
-                    "Trying to subtract faces with different surfaces.",
-                );
-
-                interiors.push(face.exterior().clone().reverse(services));
+            for region in b.regions() {
+                interiors.push(region.exterior().clone().reverse(services));
             }
 
             // Faces only support one exterior, while the code here comes from
@@ -77,16 +63,12 @@ impl Shape for fj::Difference2d {
                 "Can't construct face with multiple exteriors"
             );
 
-            let face = Face::new(
-                surface.clone(),
-                exterior,
-                interiors,
-                Some(Color(self.color())),
-            );
-            faces.push(face.insert(services));
+            let region =
+                Region::new(exterior, interiors, Some(Color(self.color())));
+            regions.push(region.insert(services));
         }
 
-        let difference = Sketch::new(faces).insert(services);
+        let difference = Sketch::new(regions).insert(services);
         difference.deref().clone()
     }
 
