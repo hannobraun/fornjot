@@ -53,7 +53,7 @@ impl State for Validation {
     }
 }
 
-/// An event produced by the validation service
+/// The event produced by the validation service
 #[derive(Clone)]
 pub struct ValidationFailed {
     /// The object for which validation failed
