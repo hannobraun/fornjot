@@ -47,7 +47,7 @@ impl Services {
 
         for object_event in object_events {
             let command = ValidationCommand::ValidateObject {
-                object: object_event.object,
+                object: object_event.object.into(),
             };
             self.validation.execute(command, &mut Vec::new());
         }

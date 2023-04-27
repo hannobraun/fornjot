@@ -31,6 +31,15 @@ macro_rules! object {
                     )*
                 }
             }
+
+            /// Validate the object
+            pub fn validate(&self, errors: &mut Vec<ValidationError>) {
+                match self {
+                    $(
+                        Self::$ty(object) => object.validate(errors),
+                    )*
+                }
+            }
         }
 
         impl Object<WithHandle> {
@@ -44,15 +53,6 @@ macro_rules! object {
                             );
                             handle.0.into()
                         }
-                    )*
-                }
-            }
-
-            /// Validate the object
-            pub fn validate(&self, errors: &mut Vec<ValidationError>) {
-                match self {
-                    $(
-                        Self::$ty((_, object)) => object.validate(errors),
                     )*
                 }
             }
