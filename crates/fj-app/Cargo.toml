@@ -11,7 +11,7 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-anyhow = "1.0.70"
+anyhow = "1.0.71"
 fj.workspace = true
 fj-export.workspace = true
 fj-host.workspace = true
@@ -23,7 +23,7 @@ fj-viewer.workspace = true
 fj-window.workspace = true
 
 [dependencies.clap]
-version = "4.2.4"
+version = "4.2.5"
 features = ["derive", "string"]
 
 [dependencies.figment]
