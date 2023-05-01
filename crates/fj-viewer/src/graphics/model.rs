@@ -95,7 +95,10 @@ pub fn load_model(
 
     let mut materials = Vec::new();
     for m in obj_materials? {
-        let texture_data: &[u8] = assets.get_asset(m.diffuse_texture.as_str());
+        let texture_data: &[u8] = match m.diffuse_texture {
+            Some(diffuse_texture) => assets.get_asset(diffuse_texture.as_str()),
+            None => continue,
+        };
 
         let diffuse_texture = texture::Texture::from_bytes(
             device,
