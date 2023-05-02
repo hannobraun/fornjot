@@ -10,7 +10,7 @@ use super::State;
 
 /// Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
-pub struct Validation(pub BTreeMap<ObjectId, ValidationError>);
+pub struct Validation(BTreeMap<ObjectId, ValidationError>);
 
 impl Drop for Validation {
     fn drop(&mut self) {
