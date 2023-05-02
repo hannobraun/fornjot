@@ -3,7 +3,7 @@ use crate::{
         Cycle, Face, GlobalEdge, HalfEdge, Objects, Shell, Sketch, Solid,
         Surface, Vertex,
     },
-    storage::{Handle, ObjectId},
+    storage::{Handle, HandleWrapper, ObjectId},
     validate::{Validate, ValidationError},
 };
 
@@ -39,8 +39,10 @@ macro_rules! object {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
-                            objects.$store.insert(handle.clone(), object);
-                            handle.into()
+                            objects.$store.insert(
+                                handle.clone().into(), object
+                            );
+                            handle.0.into()
                         }
                     )*
                 }
@@ -60,7 +62,7 @@ macro_rules! object {
             fn from(object: Object<WithHandle>) -> Self {
                 match object {
                     $(
-                        Object::$ty((handle, _)) => Self::$ty(handle),
+                        Object::$ty((handle, _)) => Self::$ty(handle.into()),
                     )*
                 }
             }
@@ -75,13 +77,13 @@ macro_rules! object {
 
             impl From<Handle<$ty>> for Object<BehindHandle> {
                 fn from(object: Handle<$ty>) -> Self {
-                    Self::$ty(object)
+                    Self::$ty(object.into())
                 }
             }
 
             impl From<(Handle<$ty>, $ty)> for Object<WithHandle> {
                 fn from((handle, object): (Handle<$ty>, $ty)) -> Self {
-                    Self::$ty((handle, object))
+                    Self::$ty((handle.into(), object))
                 }
             }
         )*
@@ -122,7 +124,7 @@ impl Form for Bare {
 pub struct BehindHandle;
 
 impl Form for BehindHandle {
-    type Form<T> = Handle<T>;
+    type Form<T> = HandleWrapper<T>;
 }
 
 /// Implementation of [`Form`] for objects that are paired with their handle
@@ -130,5 +132,5 @@ impl Form for BehindHandle {
 pub struct WithHandle;
 
 impl Form for WithHandle {
-    type Form<T> = (Handle<T>, T);
+    type Form<T> = (HandleWrapper<T>, T);
 }
