@@ -57,6 +57,7 @@ impl State for Validation {
             ValidationEvent::ValidationFailed { object, err } => {
                 self.errors.insert(object.id(), err.clone());
             }
+            ValidationEvent::ClearErrors => self.errors.clear(),
         }
     }
 }
@@ -81,4 +82,7 @@ pub enum ValidationEvent {
         /// The validation error
         err: ValidationError,
     },
+
+    /// All stored validation errors are being cleared
+    ClearErrors,
 }
