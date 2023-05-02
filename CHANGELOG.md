@@ -1,5 +1,43 @@
 # Fornjot - Changelog
 
+## v0.45.0 (2023-05-02)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+- Fix sweep docs ([#1800]; thank you, [@A-Walrus]!)
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Clean up and expand operations API ([#1794], [#1797])
+- Clean up in-kernel services API ([#1795])
+- Add missing information to error messages ([#1796])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+- Fix warning; make sure warnings can't slip through CI again ([#1793])
+- Update list of sponsors in README ([#1798])
+- Update dependencies ([#1808])
+
+[#1793]: https://github.com/hannobraun/Fornjot/pull/1793
+[#1794]: https://github.com/hannobraun/Fornjot/pull/1794
+[#1795]: https://github.com/hannobraun/Fornjot/pull/1795
+[#1796]: https://github.com/hannobraun/Fornjot/pull/1796
+[#1797]: https://github.com/hannobraun/Fornjot/pull/1797
+[#1798]: https://github.com/hannobraun/Fornjot/pull/1798
+[#1800]: https://github.com/hannobraun/Fornjot/pull/1800
+[#1808]: https://github.com/hannobraun/Fornjot/pull/1808
+
+[@A-Walrus]: https://github.com/A-Walrus
+
+
 ## v0.44.0 (2023-04-25)
 
 ### End-user improvements
