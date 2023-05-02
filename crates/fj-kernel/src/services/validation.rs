@@ -10,18 +10,20 @@ use super::State;
 
 /// Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
-pub struct Validation(BTreeMap<ObjectId, ValidationError>);
+pub struct Validation {
+    errors: BTreeMap<ObjectId, ValidationError>,
+}
 
 impl Drop for Validation {
     fn drop(&mut self) {
-        let num_errors = self.0.len();
+        let num_errors = self.errors.len();
         if num_errors > 0 {
             println!(
                 "Dropping `Validation` with {num_errors} unhandled validation \
                 errors:"
             );
 
-            for err in self.0.values() {
+            for err in self.errors.values() {
                 println!("{}", err);
             }
 
@@ -51,7 +53,7 @@ impl State for Validation {
     }
 
     fn evolve(&mut self, event: &Self::Event) {
-        self.0.insert(event.object.id(), event.err.clone());
+        self.errors.insert(event.object.id(), event.err.clone());
     }
 }
 
