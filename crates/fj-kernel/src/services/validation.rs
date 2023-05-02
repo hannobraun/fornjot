@@ -21,8 +21,8 @@ impl Drop for Validation {
                 errors:"
             );
 
-            for event in self.0.values() {
-                println!("{}", event);
+            for err in self.0.values() {
+                println!("{}", err);
             }
 
             if !thread::panicking() {
