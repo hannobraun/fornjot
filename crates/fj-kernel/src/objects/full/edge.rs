@@ -105,6 +105,20 @@ impl HalfEdge {
 ///
 /// See [`HalfEdge`]'s documentation for more information on the relationship
 /// between [`HalfEdge`] and `GlobalEdge`.
+///
+/// # Equality
+///
+/// `GlobalEdge` contains no data and exists purely to be used within a
+/// `Handle`, where `Handle::id` can be used to compare different instances of
+/// `GlobalEdge`.
+///
+/// If `GlobalEdge` had `Eq`/`PartialEq` implementations, it containing no data
+/// would mean that all instances of `GlobalEdge` would be considered equal.
+/// This would be very error-prone.
+///
+/// If you need to reference a `GlobalEdge` from a struct that needs to derive
+/// `Eq`/`Ord`/..., you can use `HandleWrapper<GlobalEdge>` to do that. It will
+/// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 #[derive(Clone, Debug, Default, Hash)]
 pub struct GlobalEdge {}
 

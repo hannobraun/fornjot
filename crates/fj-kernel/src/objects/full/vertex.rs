@@ -15,6 +15,19 @@
 /// between distinct vertices can be configured using the respective field in
 /// [`ValidationConfig`].
 ///
+/// # Equality
+///
+/// `Vertex` contains no data and exists purely to be used within a `Handle`,
+/// where `Handle::id` can be used to compare different instances of `Vertex`.
+///
+/// If `Vertex` had `Eq`/`PartialEq` implementations, it containing no data
+/// would mean that all instances of `Vertex` would be considered equal. This
+/// would be very error-prone.
+///
+/// If you need to reference a `Vertex` from a struct that needs to derive
+/// `Eq`/`Ord`/..., you can use `HandleWrapper<Vertex>` to do that. It will
+/// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
+///
 /// [`ValidationConfig`]: crate::validate::ValidationConfig
 #[derive(Clone, Copy, Debug, Default, Hash)]
 pub struct Vertex {}
