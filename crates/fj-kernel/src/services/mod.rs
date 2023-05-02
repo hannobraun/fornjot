@@ -11,7 +11,7 @@ use crate::objects::{Object, Objects, WithHandle};
 pub use self::{
     objects::{InsertObject, Operation},
     service::{Service, State},
-    validation::{Validation, ValidationCommand, ValidationFailed},
+    validation::{Validation, ValidationCommand, ValidationEvent},
 };
 
 /// The kernel services

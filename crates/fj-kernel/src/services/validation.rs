@@ -36,7 +36,7 @@ impl Drop for Validation {
 
 impl State for Validation {
     type Command = ValidationCommand;
-    type Event = ValidationFailed;
+    type Event = ValidationEvent;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
         let ValidationCommand::ValidateObject { object } = command;
@@ -45,7 +45,7 @@ impl State for Validation {
         object.validate(&mut errors);
 
         for err in errors {
-            events.push(ValidationFailed {
+            events.push(ValidationEvent::ValidationFailed {
                 object: object.clone(),
                 err,
             });
@@ -53,7 +53,11 @@ impl State for Validation {
     }
 
     fn evolve(&mut self, event: &Self::Event) {
-        self.errors.insert(event.object.id(), event.err.clone());
+        match event {
+            ValidationEvent::ValidationFailed { object, err } => {
+                self.errors.insert(object.id(), err.clone());
+            }
+        }
     }
 }
 
@@ -68,10 +72,13 @@ pub enum ValidationCommand {
 
 /// The event produced by the validation service
 #[derive(Clone)]
-pub struct ValidationFailed {
-    /// The object for which validation failed
-    pub object: Object<BehindHandle>,
+pub enum ValidationEvent {
+    /// Validation of an object failed
+    ValidationFailed {
+        /// The object for which validation failed
+        object: Object<BehindHandle>,
 
-    /// The validation error
-    pub err: ValidationError,
+        /// The validation error
+        err: ValidationError,
+    },
 }
