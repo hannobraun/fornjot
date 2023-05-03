@@ -16,11 +16,6 @@ pub struct CycleBuilder {
 }
 
 impl CycleBuilder {
-    /// Create an instance of `CycleBuilder`
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Create a cycle whose half-edges are connected to the provided half-edges
     ///
     /// The half-edges of the new circle will be coincident with the provided
@@ -40,25 +35,6 @@ impl CycleBuilder {
                 HalfEdge::unjoined(curve, boundary, services)
                     .replace_start_vertex(prev.start_vertex().clone())
                     .replace_global_form(half_edge.global_form().clone())
-            })
-            .collect();
-
-        Self { half_edges }
-    }
-
-    /// Create a polygon
-    pub fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Self
-    where
-        P: Into<Point<2>>,
-        Ps: IntoIterator<Item = P>,
-        Ps::IntoIter: Clone + ExactSizeIterator,
-    {
-        let half_edges = points
-            .into_iter()
-            .map(Into::into)
-            .circular_tuple_windows()
-            .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, services)
             })
             .collect();
 
