@@ -152,7 +152,8 @@ mod tests {
             },
             transform::TransformObject,
         },
-        builder::{CycleBuilder, FaceBuilder},
+        objects::{Cycle, Face},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
     };
 
@@ -162,15 +163,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([-1., 0., 0.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -179,18 +185,23 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([1., 0., 0.], &mut services);
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFace)
         );
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -199,15 +210,20 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([0., 0., 2.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -216,12 +232,15 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([1., 1., 0.], &mut services);
 
         let edge = face
@@ -233,6 +252,8 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsEdge(edge.clone()))
         );
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -241,12 +262,15 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.yz_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([1., 1., 1.], &mut services);
 
         let vertex = face
@@ -261,6 +285,8 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex))
         );
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -269,17 +295,22 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
 
         assert_eq!(
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFaceAndAreParallel)
         );
+
+        services.only_validate(face);
     }
 
     #[test]
@@ -288,14 +319,19 @@ mod tests {
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                });
         let face = face.translate([0., 0., 1.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
+
+        services.only_validate(face);
     }
 }
