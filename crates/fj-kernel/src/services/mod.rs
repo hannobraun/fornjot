@@ -11,7 +11,7 @@ use crate::objects::{Object, Objects, WithHandle};
 pub use self::{
     objects::{InsertObject, Operation},
     service::{Service, State},
-    validation::{Validation, ValidationFailed},
+    validation::{Validation, ValidationCommand, ValidationEvent},
 };
 
 /// The kernel services
@@ -46,7 +46,10 @@ impl Services {
             .execute(Operation::InsertObject { object }, &mut object_events);
 
         for object_event in object_events {
-            self.validation.execute(object_event, &mut Vec::new());
+            let command = ValidationCommand::ValidateObject {
+                object: object_event.object.into(),
+            };
+            self.validation.execute(command, &mut Vec::new());
         }
     }
 }
