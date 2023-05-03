@@ -73,8 +73,8 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         assert_contains_err,
-        builder::{CycleBuilder, FaceBuilder},
-        objects::Face,
+        objects::{Cycle, Face},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -83,16 +83,20 @@ mod tests {
     fn face_invalid_interior_winding() -> anyhow::Result<()> {
         let mut services = Services::new();
 
-        let valid = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon(
-                [[0., 0.], [3., 0.], [0., 3.]],
-                &mut services,
-            ))
-            .with_interior(CycleBuilder::polygon(
-                [[1., 1.], [1., 2.], [2., 1.]],
-                &mut services,
-            ))
-            .build(&mut services);
+        let valid =
+            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [3., 0.], [0., 3.]],
+                        &mut services,
+                    )
+                    .insert(&mut services)
+                })
+                .add_interiors([Cycle::polygon(
+                    [[1., 1.], [1., 2.], [2., 1.]],
+                    &mut services,
+                )
+                .insert(&mut services)]);
         let invalid = {
             let interiors = valid
                 .interiors()
@@ -115,6 +119,8 @@ mod tests {
                 FaceValidationError::InvalidInteriorWinding { .. }
             )
         );
+
+        services.only_validate(valid);
 
         Ok(())
     }
