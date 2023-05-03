@@ -9,6 +9,18 @@ pub struct ObjectSet {
     inner: BTreeSet<Object<BehindHandle>>,
 }
 
+impl From<Face> for ObjectSet {
+    fn from(face: Face) -> Self {
+        let mut self_ = Self {
+            inner: BTreeSet::new(),
+        };
+
+        face.insert_into_set(&mut self_);
+
+        self_
+    }
+}
+
 impl<Faces> From<Faces> for ObjectSet
 where
     Faces: IntoIterator<Item = Face>,
