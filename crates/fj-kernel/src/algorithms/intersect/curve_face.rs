@@ -150,8 +150,9 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        builder::{CycleBuilder, FaceBuilder},
         geometry::curve::Curve,
+        objects::{Cycle, Face},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
     };
 
@@ -178,20 +179,23 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = FaceBuilder::new(services.objects.surfaces.xy_plane())
-            .with_exterior(CycleBuilder::polygon(
-                exterior_points,
-                &mut services,
-            ))
-            .with_interior(CycleBuilder::polygon(
-                interior_points,
-                &mut services,
-            ))
-            .build(&mut services);
+        let face =
+            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
+                .update_exterior(|_| {
+                    Cycle::polygon(exterior_points, &mut services)
+                        .insert(&mut services)
+                })
+                .add_interiors([Cycle::polygon(
+                    interior_points,
+                    &mut services,
+                )
+                .insert(&mut services)]);
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
         assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
+
+        services.only_validate(face);
     }
 
     #[test]

@@ -79,7 +79,6 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        builder::{CycleBuilder, FaceBuilder},
         objects::{Cycle, Face},
         operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
@@ -135,10 +134,14 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = FaceBuilder::new(surface.clone())
-            .with_exterior(CycleBuilder::polygon([a, b, c, d], &mut services))
-            .with_interior(CycleBuilder::polygon([e, f, g, h], &mut services))
-            .build(&mut services);
+        let face = Face::unbound(surface.clone(), &mut services)
+            .update_exterior(|_| {
+                Cycle::polygon([a, b, c, d], &mut services)
+                    .insert(&mut services)
+            })
+            .add_interiors([Cycle::polygon([e, f, g, h], &mut services)
+                .insert(&mut services)]);
+        services.only_validate(&face);
 
         let triangles = triangulate(face)?;
 
