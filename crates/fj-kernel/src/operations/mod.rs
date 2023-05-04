@@ -7,8 +7,12 @@ mod update;
 
 pub use self::{
     build::{
-        BuildCycle, BuildFace, BuildHalfEdge, BuildShell, BuildSolid,
-        BuildSurface, Polygon, Tetrahedron, TetrahedronShell,
+        cycle::BuildCycle,
+        edge::BuildHalfEdge,
+        face::{BuildFace, Polygon},
+        shell::{BuildShell, TetrahedronShell},
+        solid::{BuildSolid, Tetrahedron},
+        surface::BuildSurface,
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
