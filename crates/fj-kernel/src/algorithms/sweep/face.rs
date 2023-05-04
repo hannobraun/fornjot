@@ -83,12 +83,13 @@ impl Sweep for Handle<Face> {
             }
 
             let top_cycle = CycleBuilder::connect_to_edges(top_edges, services)
-                .build(services);
+                .build(services)
+                .insert(services);
 
             if i == 0 {
-                exterior = Some(top_cycle.insert(services));
+                exterior = Some(top_cycle);
             } else {
-                interiors.push(top_cycle.insert(services));
+                interiors.push(top_cycle);
             };
         }
 
