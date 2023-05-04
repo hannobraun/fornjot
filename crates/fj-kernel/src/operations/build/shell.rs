@@ -2,12 +2,11 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Shell},
-    operations::{Insert, JoinCycle, UpdateFace},
+    operations::{Insert, IsInsertedYes, JoinCycle, UpdateFace},
     services::Services,
-    storage::Handle,
 };
 
-use super::BuildFace;
+use super::{BuildFace, Polygon};
 
 /// Build a [`Shell`]
 pub trait BuildShell {
@@ -35,39 +34,35 @@ pub trait BuildShell {
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], services).face;
+        let abc = Face::triangle([a, b, c], services);
         let bad =
-            Face::triangle([b, a, d], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 0..=0, services)
-                        .insert(services)
-                });
+            Face::triangle([b, a, d], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 0..=0, 0..=0, services)
+                    .insert(services)
+            });
         let dac =
-            Face::triangle([d, a, c], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 1..=1, 2..=2, services)
-                        .join_to(bad.exterior(), 0..=0, 1..=1, services)
-                        .insert(services)
-                });
+            Face::triangle([d, a, c], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 1..=1, 2..=2, services)
+                    .join_to(bad.face.exterior(), 0..=0, 1..=1, services)
+                    .insert(services)
+            });
         let cbd =
-            Face::triangle([c, b, d], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 1..=1, services)
-                        .join_to(bad.exterior(), 1..=1, 2..=2, services)
-                        .join_to(dac.exterior(), 2..=2, 2..=2, services)
-                        .insert(services)
-                });
+            Face::triangle([c, b, d], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 0..=0, 1..=1, services)
+                    .join_to(bad.face.exterior(), 1..=1, 2..=2, services)
+                    .join_to(dac.face.exterior(), 2..=2, 2..=2, services)
+                    .insert(services)
+            });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
-        let shell = Shell::new(faces.clone());
+        let triangles =
+            [abc, bad, dac, cbd].map(|triangle| triangle.insert(services));
+        let shell =
+            Shell::new(triangles.iter().map(|triangle| triangle.face.clone()));
 
-        let [abc, bad, dac, cbd] = faces;
+        let [abc, bad, dac, cbd] = triangles;
 
         Tetrahedron {
             shell,
@@ -93,14 +88,14 @@ pub struct Tetrahedron {
     pub shell: Shell,
 
     /// The face formed by the points `a`, `b`, and `c`.
-    pub abc: Handle<Face>,
+    pub abc: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `b`, `a`, and `d`.
-    pub bad: Handle<Face>,
+    pub bad: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `d`, `a`, and `c`.
-    pub dac: Handle<Face>,
+    pub dac: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `c`, `b`, and `d`.
-    pub cbd: Handle<Face>,
+    pub cbd: Polygon<3, IsInsertedYes>,
 }

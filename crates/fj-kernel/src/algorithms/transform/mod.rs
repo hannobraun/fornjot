@@ -69,7 +69,7 @@ pub trait TransformObject: Sized {
 
 impl<T> TransformObject for Handle<T>
 where
-    T: Clone + Insert + TransformObject + 'static,
+    T: Clone + Insert<Inserted = Handle<T>> + TransformObject + 'static,
 {
     fn transform_with_cache(
         self,
