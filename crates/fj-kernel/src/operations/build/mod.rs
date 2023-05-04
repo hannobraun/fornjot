@@ -8,6 +8,6 @@ pub use self::{
     cycle::BuildCycle,
     edge::BuildHalfEdge,
     face::{BuildFace, Polygon},
-    shell::{BuildShell, Tetrahedron},
+    shell::{BuildShell, TetrahedronShell},
     surface::BuildSurface,
 };

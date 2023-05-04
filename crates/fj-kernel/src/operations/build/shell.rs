@@ -33,7 +33,7 @@ pub trait BuildShell {
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
         services: &mut Services,
-    ) -> Tetrahedron {
+    ) -> TetrahedronShell {
         let [a, b, c, d] = points.map(Into::into);
 
         let abc = Face::triangle([a, b, c], services);
@@ -66,7 +66,7 @@ pub trait BuildShell {
 
         let [abc, bad, dac, cbd] = triangles;
 
-        Tetrahedron {
+        TetrahedronShell {
             shell,
             abc,
             bad,
@@ -85,7 +85,7 @@ impl BuildShell for Shell {}
 /// `d`, in the order in which they are passed.
 ///
 /// Returned by [`BuildShell::tetrahedron`].
-pub struct Tetrahedron<I: IsInserted = IsInsertedNo> {
+pub struct TetrahedronShell<I: IsInserted = IsInsertedNo> {
     /// The shell that forms the tetrahedron
     pub shell: I::T<Shell>,
 
