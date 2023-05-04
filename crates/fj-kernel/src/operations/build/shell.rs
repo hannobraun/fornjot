@@ -35,36 +35,30 @@ pub trait BuildShell {
     ) -> Tetrahedron {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], services).face;
+        let abc = Face::triangle([a, b, c], services);
         let bad =
-            Face::triangle([b, a, d], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 0..=0, services)
-                        .insert(services)
-                });
+            Face::triangle([b, a, d], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 0..=0, 0..=0, services)
+                    .insert(services)
+            });
         let dac =
-            Face::triangle([d, a, c], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 1..=1, 2..=2, services)
-                        .join_to(bad.exterior(), 0..=0, 1..=1, services)
-                        .insert(services)
-                });
+            Face::triangle([d, a, c], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 1..=1, 2..=2, services)
+                    .join_to(bad.face.exterior(), 0..=0, 1..=1, services)
+                    .insert(services)
+            });
         let cbd =
-            Face::triangle([c, b, d], services)
-                .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .join_to(abc.exterior(), 0..=0, 1..=1, services)
-                        .join_to(bad.exterior(), 1..=1, 2..=2, services)
-                        .join_to(dac.exterior(), 2..=2, 2..=2, services)
-                        .insert(services)
-                });
+            Face::triangle([c, b, d], services).update_exterior(|cycle| {
+                cycle
+                    .join_to(abc.face.exterior(), 0..=0, 1..=1, services)
+                    .join_to(bad.face.exterior(), 1..=1, 2..=2, services)
+                    .join_to(dac.face.exterior(), 2..=2, 2..=2, services)
+                    .insert(services)
+            });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
+        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services).face);
         let shell = Shell::new(faces.clone());
 
         let [abc, bad, dac, cbd] = faces;
