@@ -235,6 +235,7 @@ mod tests {
 
         Ok(())
     }
+
     #[test]
     fn shell_not_watertight() -> anyhow::Result<()> {
         let mut services = Services::new();
