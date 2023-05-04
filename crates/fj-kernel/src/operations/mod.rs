@@ -7,10 +7,12 @@ mod update;
 
 pub use self::{
     build::{
-        BuildCycle, BuildFace, BuildHalfEdge, BuildShell, BuildSurface,
-        Polygon, Tetrahedron,
+        BuildCycle, BuildFace, BuildHalfEdge, BuildShell, BuildSolid,
+        BuildSurface, Polygon, Tetrahedron, TetrahedronShell,
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
-    update::{UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell},
+    update::{
+        UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell, UpdateSolid,
+    },
 };
