@@ -10,7 +10,7 @@ pub use self::{
         BuildCycle, BuildFace, BuildHalfEdge, BuildShell, BuildSurface,
         Polygon, Tetrahedron,
     },
-    insert::Insert,
+    insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
     update::{UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell},
 };
