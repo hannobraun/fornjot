@@ -9,7 +9,7 @@ pub trait UpdateShell {
     fn update_face(
         &self,
         handle: &Handle<Face>,
-        f: impl FnMut(&Handle<Face>) -> Handle<Face>,
+        replacement: Handle<Face>,
     ) -> Shell;
 
     /// Remove a face from the shell
@@ -20,11 +20,11 @@ impl UpdateShell for Shell {
     fn update_face(
         &self,
         handle: &Handle<Face>,
-        mut f: impl FnMut(&Handle<Face>) -> Handle<Face>,
+        replacement: Handle<Face>,
     ) -> Shell {
         let faces = self.faces().into_iter().map(|face| {
             if face.id() == handle.id() {
-                f(face)
+                replacement.clone()
             } else {
                 face.clone()
             }
