@@ -1,13 +1,24 @@
 use std::ops::RangeInclusive;
 
+use fj_math::Point;
+use itertools::Itertools;
+
 use crate::{
-    objects::Cycle,
-    operations::{Insert, UpdateCycle, UpdateHalfEdge},
+    geometry::curve::Curve,
+    objects::{Cycle, HalfEdge},
+    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
+    storage::Handle,
 };
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
+    /// Create a cycle that is joined to the provided edges
+    fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
+    where
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator;
+
     /// Join the cycle to another
     ///
     /// Joins the cycle to the other at the provided ranges. The ranges specify
@@ -47,6 +58,21 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
+    fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
+    where
+        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es::IntoIter: Clone + ExactSizeIterator,
+    {
+        self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
+            |((prev, _, _), (half_edge, curve, boundary))| {
+                HalfEdge::unjoined(curve, boundary, services)
+                    .replace_start_vertex(prev.start_vertex().clone())
+                    .replace_global_form(half_edge.global_form().clone())
+                    .insert(services)
+            },
+        ))
+    }
+
     fn join_to(
         &self,
         other: &Cycle,

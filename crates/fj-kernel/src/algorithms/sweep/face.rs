@@ -5,10 +5,9 @@ use itertools::Itertools;
 
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
-    builder::CycleBuilder,
     geometry::curve::GlobalPath,
-    objects::{Face, Shell},
-    operations::Insert,
+    objects::{Cycle, Face, Shell},
+    operations::{BuildCycle, Insert, JoinCycle},
     services::Services,
     storage::Handle,
 };
@@ -82,13 +81,14 @@ impl Sweep for Handle<Face> {
                 ));
             }
 
-            let top_cycle = CycleBuilder::connect_to_edges(top_edges, services)
-                .build(services);
+            let top_cycle = Cycle::empty()
+                .add_joined_edges(top_edges, services)
+                .insert(services);
 
             if i == 0 {
-                exterior = Some(top_cycle.insert(services));
+                exterior = Some(top_cycle);
             } else {
-                interiors.push(top_cycle.insert(services));
+                interiors.push(top_cycle);
             };
         }
 

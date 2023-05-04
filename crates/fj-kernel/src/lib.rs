@@ -88,7 +88,6 @@
 #![warn(missing_docs)]
 
 pub mod algorithms;
-pub mod builder;
 pub mod geometry;
 pub mod objects;
 pub mod operations;
