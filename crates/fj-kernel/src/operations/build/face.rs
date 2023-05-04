@@ -3,12 +3,13 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Surface, Vertex},
-    operations::{Insert, IsInserted, IsInsertedNo},
+    operations::{
+        BuildCycle, BuildHalfEdge, BuildSurface, Insert, IsInserted,
+        IsInsertedNo,
+    },
     services::Services,
     storage::Handle,
 };
-
-use super::{BuildCycle, BuildHalfEdge, BuildSurface};
 
 /// Build a [`Face`]
 pub trait BuildFace {

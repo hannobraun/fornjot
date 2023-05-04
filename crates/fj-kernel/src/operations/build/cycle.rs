@@ -3,11 +3,9 @@ use itertools::Itertools;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::Insert,
+    operations::{BuildHalfEdge, Insert},
     services::Services,
 };
-
-use super::BuildHalfEdge;
 
 /// Build a [`Cycle`]
 pub trait BuildCycle {
