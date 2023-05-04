@@ -15,7 +15,7 @@ pub use self::{
         surface::BuildSurface,
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
-    join::JoinCycle,
+    join::cycle::JoinCycle,
     update::{
         UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell, UpdateSolid,
     },
