@@ -7,7 +7,7 @@ use crate::{
     storage::Handle,
 };
 
-use super::Polygon;
+use super::{Polygon, Tetrahedron};
 
 /// Insert an object into its respective store
 ///
@@ -88,6 +88,20 @@ impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
             face: self.face.insert(services),
             edges: self.edges,
             vertices: self.vertices,
+        }
+    }
+}
+
+impl Insert for Tetrahedron<IsInsertedNo> {
+    type Inserted = Tetrahedron<IsInsertedYes>;
+
+    fn insert(self, services: &mut Services) -> Self::Inserted {
+        Tetrahedron {
+            shell: self.shell.insert(services),
+            abc: self.abc,
+            bad: self.bad,
+            dac: self.dac,
+            cbd: self.cbd,
         }
     }
 }
