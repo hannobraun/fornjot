@@ -2,7 +2,9 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Shell},
-    operations::{Insert, IsInsertedYes, JoinCycle, UpdateFace},
+    operations::{
+        Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle, UpdateFace,
+    },
     services::Services,
 };
 
@@ -83,9 +85,9 @@ impl BuildShell for Shell {}
 /// `d`, in the order in which they are passed.
 ///
 /// Returned by [`BuildShell::tetrahedron`].
-pub struct Tetrahedron {
+pub struct Tetrahedron<I: IsInserted = IsInsertedNo> {
     /// The shell that forms the tetrahedron
-    pub shell: Shell,
+    pub shell: I::T<Shell>,
 
     /// The face formed by the points `a`, `b`, and `c`.
     pub abc: Polygon<3, IsInsertedYes>,
