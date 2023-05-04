@@ -10,6 +10,6 @@ pub use self::{
     edge::BuildHalfEdge,
     face::{BuildFace, Polygon},
     shell::{BuildShell, TetrahedronShell},
-    solid::BuildSolid,
+    solid::{BuildSolid, Tetrahedron},
     surface::BuildSurface,
 };
