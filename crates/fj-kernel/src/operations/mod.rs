@@ -17,6 +17,7 @@ pub use self::{
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::cycle::JoinCycle,
     update::{
-        UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateShell, UpdateSolid,
+        cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
+        shell::UpdateShell, solid::UpdateSolid,
     },
 };
