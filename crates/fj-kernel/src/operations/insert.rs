@@ -7,6 +7,8 @@ use crate::{
     storage::Handle,
 };
 
+use super::Polygon;
+
 /// Insert an object into its respective store
 ///
 /// This is the only primitive operation that is directly understood by
@@ -76,4 +78,16 @@ pub struct IsInsertedNo;
 
 impl IsInserted for IsInsertedNo {
     type T<T> = T;
+}
+
+impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
+    type Inserted = Polygon<D, IsInsertedYes>;
+
+    fn insert(self, services: &mut Services) -> Self::Inserted {
+        Polygon {
+            face: self.face.insert(services),
+            edges: self.edges,
+            vertices: self.vertices,
+        }
+    }
 }
