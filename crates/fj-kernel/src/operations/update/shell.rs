@@ -8,7 +8,7 @@ pub trait UpdateShell {
     /// Update a face of the shell
     fn replace_face(
         &self,
-        handle: &Handle<Face>,
+        original: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Shell;
 
@@ -19,11 +19,11 @@ pub trait UpdateShell {
 impl UpdateShell for Shell {
     fn replace_face(
         &self,
-        handle: &Handle<Face>,
+        original: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Shell {
         let faces = self.faces().into_iter().map(|face| {
-            if face.id() == handle.id() {
+            if face.id() == original.id() {
                 replacement.clone()
             } else {
                 face.clone()
