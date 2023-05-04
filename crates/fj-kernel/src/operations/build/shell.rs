@@ -2,12 +2,11 @@ use fj_math::Point;
 
 use crate::{
     objects::{Face, Shell},
-    operations::{Insert, JoinCycle, UpdateFace},
+    operations::{Insert, IsInsertedYes, JoinCycle, UpdateFace},
     services::Services,
-    storage::Handle,
 };
 
-use super::BuildFace;
+use super::{BuildFace, Polygon};
 
 /// Build a [`Shell`]
 pub trait BuildShell {
@@ -58,8 +57,9 @@ pub trait BuildShell {
                     .insert(services)
             });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services).face);
-        let shell = Shell::new(faces.clone());
+        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
+        let shell =
+            Shell::new(faces.iter().map(|triangle| triangle.face.clone()));
 
         let [abc, bad, dac, cbd] = faces;
 
@@ -87,14 +87,14 @@ pub struct Tetrahedron {
     pub shell: Shell,
 
     /// The face formed by the points `a`, `b`, and `c`.
-    pub abc: Handle<Face>,
+    pub abc: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `b`, `a`, and `d`.
-    pub bad: Handle<Face>,
+    pub bad: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `d`, `a`, and `c`.
-    pub dac: Handle<Face>,
+    pub dac: Polygon<3, IsInsertedYes>,
 
     /// The face formed by the points `c`, `b`, and `d`.
-    pub cbd: Handle<Face>,
+    pub cbd: Polygon<3, IsInsertedYes>,
 }
