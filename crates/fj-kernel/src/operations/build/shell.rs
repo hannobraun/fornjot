@@ -57,11 +57,11 @@ pub trait BuildShell {
                     .insert(services)
             });
 
-        let faces = [abc, bad, dac, cbd].map(|face| face.insert(services));
+        let triangles = [abc, bad, dac, cbd].map(|face| face.insert(services));
         let shell =
-            Shell::new(faces.iter().map(|triangle| triangle.face.clone()));
+            Shell::new(triangles.iter().map(|triangle| triangle.face.clone()));
 
-        let [abc, bad, dac, cbd] = faces;
+        let [abc, bad, dac, cbd] = triangles;
 
         Tetrahedron {
             shell,
