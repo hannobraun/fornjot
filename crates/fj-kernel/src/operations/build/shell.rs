@@ -57,7 +57,8 @@ pub trait BuildShell {
                     .insert(services)
             });
 
-        let triangles = [abc, bad, dac, cbd].map(|face| face.insert(services));
+        let triangles =
+            [abc, bad, dac, cbd].map(|triangle| triangle.insert(services));
         let shell =
             Shell::new(triangles.iter().map(|triangle| triangle.face.clone()));
 
