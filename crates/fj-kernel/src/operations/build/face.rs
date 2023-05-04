@@ -3,7 +3,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Surface, Vertex},
-    operations::Insert,
+    operations::{Insert, IsInserted, IsInsertedNo},
     services::Services,
     storage::Handle,
 };
@@ -62,9 +62,9 @@ impl BuildFace for Face {}
 /// Currently code that deals with `Polygon` might assume that the polygon has
 /// no holes. Unless you create a `Polygon` yourself, or modify a `Polygon`'s
 /// `face` field to have interior cycles, this should not affect you.
-pub struct Polygon<const D: usize> {
+pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     /// The face that forms the polygon
-    pub face: Face,
+    pub face: I::T<Face>,
 
     /// The edges of the polygon
     pub edges: [Handle<HalfEdge>; D],
