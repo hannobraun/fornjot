@@ -6,7 +6,7 @@ use crate::{
 /// Update a [`Shell`]
 pub trait UpdateShell {
     /// Update a face of the shell
-    fn update_face(
+    fn replace_face(
         &self,
         handle: &Handle<Face>,
         replacement: Handle<Face>,
@@ -17,7 +17,7 @@ pub trait UpdateShell {
 }
 
 impl UpdateShell for Shell {
-    fn update_face(
+    fn replace_face(
         &self,
         handle: &Handle<Face>,
         replacement: Handle<Face>,

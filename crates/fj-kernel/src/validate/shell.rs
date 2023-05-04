@@ -210,7 +210,7 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.update_face(
+        let invalid = valid.shell.replace_face(
             &valid.abc.face,
             valid
                 .abc
