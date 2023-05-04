@@ -3,12 +3,11 @@ use fj_math::Point;
 use crate::{
     objects::{Face, Shell},
     operations::{
-        Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle, UpdateFace,
+        BuildFace, Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle,
+        Polygon, UpdateFace,
     },
     services::Services,
 };
-
-use super::{BuildFace, Polygon};
 
 /// Build a [`Shell`]
 pub trait BuildShell {

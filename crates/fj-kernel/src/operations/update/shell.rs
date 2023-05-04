@@ -6,10 +6,10 @@ use crate::{
 /// Update a [`Shell`]
 pub trait UpdateShell {
     /// Update a face of the shell
-    fn update_face(
+    fn replace_face(
         &self,
-        handle: &Handle<Face>,
-        f: impl FnMut(&Handle<Face>) -> Handle<Face>,
+        original: &Handle<Face>,
+        replacement: Handle<Face>,
     ) -> Shell;
 
     /// Remove a face from the shell
@@ -17,14 +17,14 @@ pub trait UpdateShell {
 }
 
 impl UpdateShell for Shell {
-    fn update_face(
+    fn replace_face(
         &self,
-        handle: &Handle<Face>,
-        mut f: impl FnMut(&Handle<Face>) -> Handle<Face>,
+        original: &Handle<Face>,
+        replacement: Handle<Face>,
     ) -> Shell {
         let faces = self.faces().into_iter().map(|face| {
-            if face.id() == handle.id() {
-                f(face)
+            if face.id() == original.id() {
+                replacement.clone()
             } else {
                 face.clone()
             }

@@ -210,20 +210,24 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            face.update_exterior(|cycle| {
-                cycle
-                    .update_nth_half_edge(0, |half_edge| {
-                        let global_form =
-                            GlobalEdge::new().insert(&mut services);
-                        half_edge
-                            .replace_global_form(global_form)
-                            .insert(&mut services)
-                    })
-                    .insert(&mut services)
-            })
-            .insert(&mut services)
-        });
+        let invalid = valid.shell.replace_face(
+            &valid.abc.face,
+            valid
+                .abc
+                .face
+                .update_exterior(|cycle| {
+                    cycle
+                        .update_nth_half_edge(0, |half_edge| {
+                            let global_form =
+                                GlobalEdge::new().insert(&mut services);
+                            half_edge
+                                .replace_global_form(global_form)
+                                .insert(&mut services)
+                        })
+                        .insert(&mut services)
+                })
+                .insert(&mut services),
+        );
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
