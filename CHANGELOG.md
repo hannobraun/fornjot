@@ -1,5 +1,38 @@
 # Fornjot - Changelog
 
+## v0.46.0 (2023-05-08)
+
+### End-user improvements
+
+Improvements to Fornjot and its documentation that are visible to end users.
+
+*None this week! Busy working on the kernel.*
+
+### Ecosystem improvements
+
+Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
+
+#### `fj-kernel`
+
+- Derive `Eq`/`Ord` for `Object` ([#1810])
+- Clean up validation service ([#1811])
+- Replace remaining parts of obsolete builder API with operations API ([#1812], [#1813])
+
+### Internal Improvements
+
+Improvements that are relevant to developers working on Fornjot itself.
+
+*None this week.*
+
+[#1810]: https://github.com/hannobraun/Fornjot/pull/1810
+[#1811]: https://github.com/hannobraun/Fornjot/pull/1811
+[#1812]: https://github.com/hannobraun/Fornjot/pull/1812
+[#1813]: https://github.com/hannobraun/Fornjot/pull/1813
+[#1814]: https://github.com/hannobraun/Fornjot/pull/1814
+[#1815]: https://github.com/hannobraun/Fornjot/pull/1815
+[#1816]: https://github.com/hannobraun/Fornjot/pull/1816
+
+
 ## v0.45.0 (2023-05-02)
 
 ### End-user improvements
