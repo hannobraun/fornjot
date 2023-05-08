@@ -20,7 +20,7 @@ fj-proc.workspace = true
 backtrace = "0.3.67"
 
 [dependencies.serde]
-version = "1.0.159"
+version = "1.0.162"
 features = ["derive"]
 optional = true
 
