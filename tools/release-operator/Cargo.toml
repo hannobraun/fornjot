@@ -24,10 +24,10 @@ version = "0.11.17"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.2.5"
+version = "4.2.7"
 features = ["std", "derive", "env"]
 default_features = false
 
 [dependencies.serde]
-version = "1.0.159"
+version = "1.0.162"
 features = ["derive"]
