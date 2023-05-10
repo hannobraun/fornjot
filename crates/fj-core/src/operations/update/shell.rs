@@ -9,7 +9,7 @@ pub trait UpdateShell {
     #[must_use]
     fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
 
-    /// Update a face of the shell
+    /// Replace a face of the shell
     #[must_use]
     fn replace_face(
         &self,
