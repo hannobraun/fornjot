@@ -10,7 +10,7 @@ chrono = "0.4.24"
 map-macro = "0.2.6"
 octocrab = "0.21.0"
 semver = "1.0.17"
-serde = "1.0.162"
+serde = "1.0.163"
 serde_json = "1.0.96"
 url = "2.3.0"
 
@@ -22,5 +22,5 @@ version = "4.2.7"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.28.0"
+version = "1.28.1"
 features = ["full"]

@@ -29,5 +29,5 @@ features = ["std", "derive", "env"]
 default_features = false
 
 [dependencies.serde]
-version = "1.0.162"
+version = "1.0.163"
 features = ["derive"]
