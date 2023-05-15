@@ -7,10 +7,6 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
-  # Name of the crate from Cargo.toml
-  # used to rename and upload the binaries
-  PROJ_NAME: fj-app
-
 defaults:
   run:
     shell: bash
@@ -42,64 +38,11 @@ jobs:
           # Run release operator
           cargo run -p release-operator -- detect
 
-  binaries:
-    name: Binaries
-    needs: calculate-release-flags
-    strategy:
-      matrix:
-        include:
-          - { target: x86_64-unknown-linux-gnu, os: ubuntu-latest }
-          - { target: x86_64-apple-darwin, os: macOS-latest }
-          - { target: aarch64-apple-darwin, os: macOS-latest }
-          - { target: x86_64-pc-windows-msvc, os: windows-latest }
-
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Install target
-        run: rustup target add ${{ matrix.target }}
-
-      - name: Cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.target }}
-
-      - name: Binaries | Compile
-        run: cargo build --release --target ${{ matrix.target }}
-        env:
-          # This lets our app know it's an "official" release. Otherwise we would get
-          # a version number like "fj-app 0.8.0 (8cb928bb, unreleased)"
-          RELEASE_DETECTED: ${{ needs.calculate-release-flags.outputs.release-detected }}
-
-      - name: Binaries | Prepare upload
-        run: |
-          # Include compile target in binary name
-
-          src="target/${{ matrix.target }}/release/${PROJ_NAME}"
-          dst="${GITHUB_WORKSPACE}/${PROJ_NAME}-${{ matrix.target }}"
-
-          if [[ "${RUNNER_OS}" == "Windows" ]]; then
-            src="${src}.exe"
-            dst="${dst}.exe"
-          fi
-
-          mv -v "${src}" "${dst}"
-          chmod -v +x "${dst}"
-
-      - name: Binaries | Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.PROJ_NAME }}-${{ matrix.target }}
-          path: ${{ env.PROJ_NAME }}-*
-
   release:
     name: Release
     if: ${{ needs.calculate-release-flags.outputs.release-detected == 'true' }}
     needs:
       - calculate-release-flags
-      - binaries
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -110,24 +53,11 @@ jobs:
         with:
           key: release-operator-01
 
-      - name: Binaries | Download
-        uses: actions/download-artifact@v3
-
-      - name: Binaries | Checksums
-        run: |
-          # Build binary checksums
-          for file in "${PROJ_NAME}"-*/"${PROJ_NAME}"-*; do
-            echo "Calculating checksum for: $(basename "${file}")"
-            openssl dgst -sha256 -r "${file}" \
-              | awk '{print $1}' > "${file}.sha256"
-          done
-
       - name: Release | GitHub
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.calculate-release-flags.outputs.tag-name }}
           name: ${{ needs.calculate-release-flags.outputs.tag-name }}
-          files: ${{ env.PROJ_NAME }}-*/${{ env.PROJ_NAME }}-*
 
       - name: Release | Crates.io
         env:
@@ -137,13 +67,7 @@ jobs:
           cargo run -p release-operator -- publish \
             --token ${{ secrets.CARGO_REGISTRY_TOKEN }} \
             --crate crates/fj-math \
-            --crate crates/fj-proc \
-            --crate crates/fj \
             --crate crates/fj-interop \
             --crate crates/fj-kernel \
-            --crate crates/fj-operations \
-            --crate crates/fj-host \
             --crate crates/fj-export \
-            --crate crates/fj-viewer \
-            --crate crates/fj-window \
-            --crate crates/fj-app
+            --crate crates/fj-viewer
