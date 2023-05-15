@@ -26,10 +26,7 @@ default-members = [
 version = "0.46.0"
 edition = "2021"
 
-description = """\
-Early-stage, next-generation, code-first CAD application. Because the world \
-needs another CAD program.\
-"""
+description = "Early-stage b-rep CAD kernel."
 readme = "README.md"
 homepage = "https://www.fornjot.app/"
 repository = "https://github.com/hannobraun/fornjot"
