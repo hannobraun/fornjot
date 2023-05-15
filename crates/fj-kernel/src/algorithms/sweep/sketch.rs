@@ -21,7 +21,7 @@ impl Sweep for (Handle<Sketch>, Handle<Surface>) {
         let path = path.into();
 
         let mut shells = Vec::new();
-        for face in self.0.faces(self.1, services).clone() {
+        for face in self.0.faces(self.1, services) {
             let shell = face.sweep_with_cache(path, cache, services);
             shells.push(shell);
         }

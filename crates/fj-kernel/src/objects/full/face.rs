@@ -62,7 +62,7 @@ impl Face {
 
     /// Access the cycle that bounds the face on the outside
     pub fn exterior(&self) -> &Handle<Cycle> {
-        &self.region.exterior()
+        self.region.exterior()
     }
 
     /// Access the cycles that bound the face on the inside
