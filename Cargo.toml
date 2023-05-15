@@ -6,7 +6,6 @@ members = [
     "crates/fj-kernel",
     "crates/fj-math",
     "crates/fj-viewer",
-    # "crates/fj-window",
 
     "tools/autolib",
     "tools/automator",
@@ -20,7 +19,6 @@ default-members = [
     "crates/fj-kernel",
     "crates/fj-math",
     "crates/fj-viewer",
-    # "crates/fj-window",
 ]
 
 
@@ -28,10 +26,7 @@ default-members = [
 version = "0.46.0"
 edition = "2021"
 
-description = """\
-Early-stage, next-generation, code-first CAD application. Because the world \
-needs another CAD program.\
-"""
+description = "Early-stage b-rep CAD kernel."
 readme = "README.md"
 homepage = "https://www.fornjot.app/"
 repository = "https://github.com/hannobraun/fornjot"
@@ -75,7 +70,3 @@ path = "crates/fj-proc"
 [workspace.dependencies.fj-viewer]
 version = "0.46.0"
 path = "crates/fj-viewer"
-
-[workspace.dependencies.fj-window]
-version = "0.46.0"
-path = "crates/fj-window"
