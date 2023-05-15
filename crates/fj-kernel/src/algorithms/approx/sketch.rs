@@ -12,9 +12,9 @@ impl Approx for &Sketch {
 
     fn approx_with_cache(
         self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
+        _tolerance: impl Into<Tolerance>,
+        _cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        self.faces().approx_with_cache(tolerance, cache)
+        todo!()
     }
 }
