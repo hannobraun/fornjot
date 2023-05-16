@@ -1,5 +1,9 @@
+use std::collections::BTreeSet;
+
 use crate::{
-    objects::{Face, FaceSet},
+    geometry::region::Region,
+    objects::{FaceSet, Surface},
+    services::Services,
     storage::Handle,
 };
 
@@ -11,19 +15,26 @@ use crate::{
 /// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    faces: FaceSet,
+    regions: BTreeSet<Region>,
 }
 
 impl Sketch {
     /// Construct an empty instance of `Sketch`
-    pub fn new(faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+    pub fn new(regions: impl IntoIterator<Item = Region>) -> Self {
         Self {
-            faces: faces.into_iter().collect(),
+            regions: regions.into_iter().collect(),
         }
     }
 
-    /// Access the faces of the sketch
-    pub fn faces(&self) -> &FaceSet {
-        &self.faces
+    /// Apply the regions of the sketch to some [`Surface`]
+    pub fn faces(
+        &self,
+        surface: Handle<Surface>,
+        services: &mut Services,
+    ) -> FaceSet {
+        self.regions
+            .iter()
+            .map(|r| r.face(surface.clone(), services))
+            .collect()
     }
 }
