@@ -12,8 +12,6 @@ categories.workspace = true
 
 [dependencies]
 chrono = "0.4.24"
-egui = "0.21.0"
-egui-wgpu = "0.21.0"
 fj-interop.workspace = true
 fj-math.workspace = true
 nalgebra = "0.32.2"
@@ -30,11 +28,6 @@ features = ["derive"]
 version = "0.24"
 default-features = false
 features = ["png", "jpeg"]
-
-[dependencies.rfd]
-version = "0.11.3"
-default_features = false
-features = ["xdg-portal"]
 
 [dependencies.wgpu]
 version = "0.15.1"
