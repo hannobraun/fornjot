@@ -28,12 +28,12 @@ impl Region {
     /// Construct an instance of `Region`
     pub fn new(
         exterior: Handle<Cycle>,
-        interiors: Vec<Handle<Cycle>>,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Option<Color>,
     ) -> Self {
         Self {
             exterior,
-            interiors,
+            interiors: interiors.into_iter().collect(),
             color,
         }
     }

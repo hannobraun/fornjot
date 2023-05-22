@@ -47,8 +47,6 @@ impl Face {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Option<Color>,
     ) -> Self {
-        let interiors = interiors.into_iter().collect();
-
         Self {
             surface,
             region: Region::new(exterior, interiors, color),
@@ -110,17 +108,6 @@ impl FaceSet {
     /// Create an empty instance of `Faces`
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// Find the given face
-    pub fn find(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
-        for f in self {
-            if f == face {
-                return Some(f.clone());
-            }
-        }
-
-        None
     }
 }
 
