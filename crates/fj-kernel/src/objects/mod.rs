@@ -73,13 +73,13 @@
 //! [`Handle`]: crate::storage::Handle
 //! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
-mod full;
+mod kinds;
 mod object;
 mod set;
 mod stores;
 
 pub use self::{
-    full::{
+    kinds::{
         cycle::{Cycle, HalfEdgesOfCycle},
         edge::{GlobalEdge, HalfEdge},
         face::{Face, FaceSet, Handedness},
