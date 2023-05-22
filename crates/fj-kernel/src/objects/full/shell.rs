@@ -26,9 +26,4 @@ impl Shell {
     pub fn faces(&self) -> &FaceSet {
         &self.faces
     }
-
-    /// Find the given face in the shell
-    pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
-        self.faces().find(face)
-    }
 }

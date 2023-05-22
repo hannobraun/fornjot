@@ -1,9 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::{
-    objects::{Face, Shell},
-    storage::Handle,
-};
+use crate::{objects::Shell, storage::Handle};
 
 /// A 3-dimensional shape, built from [`Shell`]s. Many Solids will contains only
 /// one shell, but if the Solid contains cavities they will be represented by a
@@ -29,16 +26,5 @@ impl Solid {
     /// Access the solid's shells
     pub fn shells(&self) -> impl Iterator<Item = &Handle<Shell>> {
         self.shells.iter()
-    }
-
-    /// Find the given face in the solid
-    pub fn find_face(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
-        for shell in self.shells() {
-            if let Some(face) = shell.find_face(face) {
-                return Some(face);
-            }
-        }
-
-        None
     }
 }

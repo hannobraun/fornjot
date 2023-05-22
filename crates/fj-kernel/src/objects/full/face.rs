@@ -109,17 +109,6 @@ impl FaceSet {
     pub fn new() -> Self {
         Self::default()
     }
-
-    /// Find the given face
-    pub fn find(&self, face: &Handle<Face>) -> Option<Handle<Face>> {
-        for f in self {
-            if f == face {
-                return Some(f.clone());
-            }
-        }
-
-        None
-    }
 }
 
 impl Extend<Handle<Face>> for FaceSet {
