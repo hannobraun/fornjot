@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use fj_interop::processed_shape::ProcessedShape;
 use fj_math::Aabb;
 use tracing::warn;
@@ -119,7 +117,7 @@ impl Viewer {
         pixels_per_point: f32,
         egui_input: egui::RawInput,
         gui_state: GuiState,
-    ) -> Option<PathBuf> {
+    ) {
         let aabb = self
             .shape
             .as_ref()
@@ -128,7 +126,7 @@ impl Viewer {
 
         self.camera.update_planes(&aabb);
 
-        let new_model_path = self.gui.update(
+        self.gui.update(
             pixels_per_point,
             egui_input,
             &mut self.draw_config,
@@ -145,7 +143,5 @@ impl Viewer {
         ) {
             warn!("Draw error: {}", err);
         }
-
-        new_model_path
     }
 }
