@@ -47,8 +47,6 @@ impl Face {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
         color: Option<Color>,
     ) -> Self {
-        let interiors = interiors.into_iter().collect();
-
         Self {
             surface,
             region: Region::new(exterior, interiors, color),
