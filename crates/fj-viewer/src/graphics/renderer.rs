@@ -6,7 +6,6 @@ use wgpu::util::DeviceExt as _;
 
 use crate::{
     camera::Camera,
-    gui::Gui,
     screen::{Screen, ScreenSize},
 };
 
@@ -213,10 +212,6 @@ impl Renderer {
         })
     }
 
-    pub(crate) fn init_gui(&self) -> Gui {
-        Gui::new(&self.device, self.surface_config.format)
-    }
-
     /// Updates the geometry of the model being rendered.
     pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
         self.geometries = Geometries::new(&self.device, &mesh, &lines);
@@ -243,8 +238,6 @@ impl Renderer {
         &mut self,
         camera: &Camera,
         config: &DrawConfig,
-        scale_factor: f32,
-        gui: &mut Gui,
     ) -> Result<(), DrawError> {
         let aspect_ratio = f64::from(self.surface_config.width)
             / f64::from(self.surface_config.height);
@@ -279,20 +272,6 @@ impl Renderer {
 
         let mut encoder = self.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
-        );
-
-        let screen_descriptor = egui_wgpu::renderer::ScreenDescriptor {
-            size_in_pixels: [
-                self.surface_config.width,
-                self.surface_config.height,
-            ],
-            pixels_per_point: scale_factor,
-        };
-        let clipped_primitives = gui.prepare_draw(
-            &self.device,
-            &self.queue,
-            &mut encoder,
-            &screen_descriptor,
         );
 
         // Need this block here, as a render pass only takes effect once it's
@@ -339,8 +318,6 @@ impl Renderer {
                     drawables.lines.draw(&mut render_pass);
                 }
             }
-
-            gui.draw(&mut render_pass, &clipped_primitives, &screen_descriptor);
         }
 
         self.navigation_cube_renderer.draw(

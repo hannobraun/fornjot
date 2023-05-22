@@ -3,9 +3,8 @@ use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
-    camera::FocusPoint, gui::Gui, Camera, DrawConfig, GuiState, InputEvent,
-    InputHandler, NormalizedScreenPosition, Renderer, RendererInitError,
-    Screen, ScreenSize,
+    camera::FocusPoint, Camera, DrawConfig, InputEvent, InputHandler,
+    NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
 };
 
 /// The Fornjot model viewer
@@ -22,9 +21,6 @@ pub struct Viewer {
     /// The focus point
     pub focus_point: Option<FocusPoint>,
 
-    /// The GUI
-    pub gui: Gui,
-
     /// The input handler
     pub input_handler: InputHandler,
 
@@ -39,14 +35,12 @@ impl Viewer {
     /// Construct a new instance of `Viewer`
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let renderer = Renderer::new(screen).await?;
-        let gui = renderer.init_gui();
 
         Ok(Self {
             camera: Camera::default(),
             cursor: None,
             draw_config: DrawConfig::default(),
             focus_point: None,
-            gui,
             input_handler: InputHandler::default(),
             renderer,
             shape: None,
@@ -112,12 +106,7 @@ impl Viewer {
     }
 
     /// Draw the graphics
-    pub fn draw(
-        &mut self,
-        pixels_per_point: f32,
-        egui_input: egui::RawInput,
-        gui_state: GuiState,
-    ) {
+    pub fn draw(&mut self) {
         let aabb = self
             .shape
             .as_ref()
@@ -126,21 +115,7 @@ impl Viewer {
 
         self.camera.update_planes(&aabb);
 
-        self.gui.update(
-            pixels_per_point,
-            egui_input,
-            &mut self.draw_config,
-            &aabb,
-            self.renderer.is_line_drawing_available(),
-            gui_state,
-        );
-
-        if let Err(err) = self.renderer.draw(
-            &self.camera,
-            &self.draw_config,
-            pixels_per_point,
-            &mut self.gui,
-        ) {
+        if let Err(err) = self.renderer.draw(&self.camera, &self.draw_config) {
             warn!("Draw error: {}", err);
         }
     }

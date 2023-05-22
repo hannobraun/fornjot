@@ -17,7 +17,6 @@
 mod assets;
 mod camera;
 mod graphics;
-mod gui;
 mod input;
 mod screen;
 mod status_report;
@@ -26,7 +25,6 @@ mod viewer;
 pub use self::{
     camera::Camera,
     graphics::{DrawConfig, Renderer, RendererInitError},
-    gui::{Gui, GuiState},
     input::{InputEvent, InputHandler},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     status_report::StatusReport,
