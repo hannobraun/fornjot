@@ -8,6 +8,8 @@ members = [
     "crates/fj-viewer",
     "crates/fj-window",
 
+    "models/cuboid",
+
     "tools/autolib",
     "tools/automator",
     "tools/cross-compiler",

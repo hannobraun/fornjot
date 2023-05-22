@@ -613,6 +613,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "cuboid"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fj-kernel",
+ "fj-math",
+ "fj-window",
+ "itertools",
+]
+
+[[package]]
 name = "d3d12"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
