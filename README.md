@@ -19,6 +19,7 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@re
 ## Table of Contents
 
 - [**Status**](#status)
+- [**Overview**](#overview)
 - [**Usage**](#usage)
 - [**Community**](#community)
 - [**Get Involved**](#get-involved)
@@ -28,6 +29,23 @@ Fornjot is supported by [**@webtrax-oz**](https://github.com/webtrax-oz), [**@re
 ## Status
 
 Fornjot is usable for some toy examples, but currently lacks the features for something more advanced. Work to change that is underway.
+
+
+## Overview
+
+This is a list of the crates that make up Fornjot, along with a short description for each, starting with the most basic ones and leading up to the high-level ones:
+
+- [`fj-math`]: Math primitives used by the rest of the Fornjot ecosystem.
+- [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
+- [`fj-kernel`]: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
+- [`fj-export`]: Exports Fornjot models to external data formats.
+- [`fj-viewer`]: Displays Fornjot models.
+
+[`fj-export`]: https://crates.io/crates/fj-export
+[`fj-interop`]: https://crates.io/crates/fj-interop
+[`fj-kernel`]: https://crates.io/crates/fj-kernel
+[`fj-math`]: https://crates.io/crates/fj-math
+[`fj-viewer`]: https://crates.io/crates/fj-viewer
 
 
 ## Usage
