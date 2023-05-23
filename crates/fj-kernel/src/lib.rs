@@ -1,15 +1,11 @@
 //! # Fornjot CAD Kernel
 //!
-//! This library is part of the [Fornjot] ecosystem. Fornjot is an open-source,
-//! code-first CAD application; and collection of libraries that make up the CAD
-//! application, but can be used independently.
+//! [Fornjot] is an early-stage b-rep CAD kernel written in Rust. The kernel is
+//! split into multiple libraries that can be used semi-independently, and this
+//! is one of those.
 //!
-//! This library is an internal component of Fornjot. It is not relevant to end
-//! users that just want to create CAD models.
-//!
-//! The CAD kernel is the core of Fornjot: the geometry, the topology, and the
-//! algorithms that handle them. It is separate from the CAD application, and
-//! could be used in other applications.
+//! This library defines geometric and topological primitives, and the
+//! algorithms that operate on them.
 //!
 //!
 //! ## Design Principle
