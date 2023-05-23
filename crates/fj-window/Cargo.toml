@@ -1,0 +1,19 @@
+[package]
+name = "fj-window"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+readme.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+fj-interop.workspace = true
+fj-math.workspace = true
+fj-viewer.workspace = true
+futures = "0.3.28"
+thiserror = "1.0.40"
+winit = "0.28.6"
