@@ -624,6 +624,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "fj-export",
  "fj-kernel",
  "fj-math",
  "fj-window",

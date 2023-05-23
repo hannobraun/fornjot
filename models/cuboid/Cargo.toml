@@ -12,6 +12,9 @@ itertools = "0.10.5"
 version = "4.3.0"
 features = ["derive"]
 
+[dependencies.fj-export]
+path = "../../crates/fj-export"
+
 [dependencies.fj-kernel]
 path = "../../crates/fj-kernel"
 
