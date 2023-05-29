@@ -795,7 +795,7 @@ dependencies = [
  "itertools",
  "parking_lot",
  "pretty_assertions",
- "robust 1.0.0",
+ "robust 1.1.0",
  "spade",
  "thiserror",
  "type-map",
@@ -811,7 +811,7 @@ dependencies = [
  "num-traits",
  "parry2d-f64",
  "parry3d-f64",
- "robust 1.0.0",
+ "robust 1.1.0",
 ]
 
 [[package]]
@@ -2340,9 +2340,9 @@ checksum = "e5864e7ef1a6b7bcf1d6ca3f655e65e724ed3b52546a0d0a663c991522f552ea"
 
 [[package]]
 name = "robust"
-version = "1.0.0"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0645daad36a94b33c6c90d830fc00e4e7c8415bbb604dfca79b5c371c9ff1d4d"
+checksum = "cbf4a6aa5f6d6888f39e980649f3ad6b666acdce1d78e95b8a2cb076e687ae30"
 
 [[package]]
 name = "rustc-demangle"
