@@ -11,6 +11,7 @@ pub use self::{
         edge::BuildHalfEdge,
         face::{BuildFace, Polygon},
         shell::{BuildShell, TetrahedronShell},
+        sketch::BuildSketch,
         solid::{BuildSolid, Tetrahedron},
         surface::BuildSurface,
     },
