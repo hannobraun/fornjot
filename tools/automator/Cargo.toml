@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.71"
-chrono = "0.4.24"
+chrono = "0.4.25"
 map-macro = "0.2.6"
 octocrab = "0.23.0"
 semver = "1.0.17"
@@ -22,5 +22,5 @@ version = "4.3.0"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.28.1"
+version = "1.28.2"
 features = ["full"]
