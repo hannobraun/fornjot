@@ -1,6 +1,6 @@
 use std::{ops::Deref, path::PathBuf};
 
-use fj_kernel::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj_core::algorithms::{approx::Tolerance, triangulate::Triangulate};
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();

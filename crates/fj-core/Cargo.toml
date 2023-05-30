@@ -1,5 +1,5 @@
 [package]
-name = "fj-kernel"
+name = "fj-core"
 version.workspace = true
 edition.workspace = true
 description.workspace = true

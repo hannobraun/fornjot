@@ -1,4 +1,4 @@
-use fj_kernel::{
+use fj_core::{
     algorithms::sweep::Sweep,
     objects::{Sketch, Solid},
     operations::{BuildSketch, Insert},

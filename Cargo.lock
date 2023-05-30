@@ -630,8 +630,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "fj-core",
  "fj-export",
- "fj-kernel",
  "fj-math",
  "fj-window",
  "itertools",
@@ -780,6 +780,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "fj-core"
+version = "0.46.0"
+dependencies = [
+ "anyhow",
+ "fj-interop",
+ "fj-math",
+ "iter_fixed",
+ "itertools",
+ "parking_lot",
+ "pretty_assertions",
+ "robust 1.1.0",
+ "spade",
+ "thiserror",
+ "type-map",
+]
+
+[[package]]
 name = "fj-export"
 version = "0.46.0"
 dependencies = [
@@ -796,23 +813,6 @@ name = "fj-interop"
 version = "0.46.0"
 dependencies = [
  "fj-math",
-]
-
-[[package]]
-name = "fj-kernel"
-version = "0.46.0"
-dependencies = [
- "anyhow",
- "fj-interop",
- "fj-math",
- "iter_fixed",
- "itertools",
- "parking_lot",
- "pretty_assertions",
- "robust 1.1.0",
- "spade",
- "thiserror",
- "type-map",
 ]
 
 [[package]]
