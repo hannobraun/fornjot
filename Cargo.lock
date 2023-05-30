@@ -630,10 +630,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "fj-core",
- "fj-export",
- "fj-math",
- "fj-window",
+ "fj",
  "itertools",
 ]
 
@@ -777,6 +774,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d329bdeac514ee06249dabc27877490f17f5d371ec693360768b838e19f3ae10"
 dependencies = [
  "simd-adler32",
+]
+
+[[package]]
+name = "fj"
+version = "0.46.0"
+dependencies = [
+ "fj-core",
+ "fj-export",
+ "fj-interop",
+ "fj-math",
+ "fj-viewer",
+ "fj-window",
 ]
 
 [[package]]
