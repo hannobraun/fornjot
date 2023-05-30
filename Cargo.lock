@@ -780,6 +780,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fj"
+version = "0.46.0"
+dependencies = [
+ "fj-core",
+ "fj-export",
+ "fj-interop",
+ "fj-math",
+ "fj-viewer",
+ "fj-window",
+]
+
+[[package]]
 name = "fj-core"
 version = "0.46.0"
 dependencies = [

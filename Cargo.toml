@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/fj",
     "crates/fj-core",
     "crates/fj-export",
     "crates/fj-interop",
@@ -17,6 +18,7 @@ members = [
     "tools/release-operator",
 ]
 default-members = [
+    "crates/fj",
     "crates/fj-core",
     "crates/fj-export",
     "crates/fj-interop",
@@ -74,3 +76,7 @@ path = "crates/fj-proc"
 [workspace.dependencies.fj-viewer]
 version = "0.46.0"
 path = "crates/fj-viewer"
+
+[workspace.dependencies.fj-window]
+version = "0.46.0"
+path = "crates/fj-window"
