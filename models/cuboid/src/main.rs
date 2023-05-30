@@ -1,6 +1,9 @@
-use std::{ops::Deref, path::PathBuf};
+use std::ops::Deref;
 
-use fj::core::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj::{
+    core::algorithms::{approx::Tolerance, triangulate::Triangulate},
+    Args,
+};
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
@@ -20,22 +23,4 @@ fn main() -> anyhow::Result<()> {
     }
 
     Ok(())
-}
-
-/// Standardized CLI for Fornjot models
-#[derive(clap::Parser)]
-pub struct Args {
-    /// Export model to this path
-    #[arg(short, long, value_name = "PATH")]
-    pub export: Option<PathBuf>,
-}
-
-impl Args {
-    /// Parse the command-line arguments
-    ///
-    /// Convenience method that saves the caller from having to import the
-    /// `clap::Parser` trait.
-    pub fn parse() -> Self {
-        <Self as clap::Parser>::parse()
-    }
 }
