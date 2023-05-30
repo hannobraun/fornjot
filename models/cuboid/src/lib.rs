@@ -1,11 +1,13 @@
-use fj::core::{
-    algorithms::sweep::Sweep,
-    objects::{Sketch, Solid},
-    operations::{BuildSketch, Insert},
-    services::Services,
-    storage::Handle,
+use fj::{
+    core::{
+        algorithms::sweep::Sweep,
+        objects::{Sketch, Solid},
+        operations::{BuildSketch, Insert},
+        services::Services,
+        storage::Handle,
+    },
+    math::Vector,
 };
-use fj::math::Vector;
 
 pub fn cuboid(x: f64, y: f64, z: f64) -> Handle<Solid> {
     let mut services = Services::new();
