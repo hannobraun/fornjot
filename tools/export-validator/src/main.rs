@@ -35,8 +35,8 @@ fn handle_model(model: String) -> Result<(), anyhow::Error> {
     let export_file_path_str = export_file_path.to_str().unwrap();
     let exit_status = Command::new("cargo")
         .arg("run")
+        .args(["-p", &model])
         .arg("--")
-        .arg(&model)
         .args(["--export", export_file_path_str])
         .status()?;
     if !exit_status.success() {
