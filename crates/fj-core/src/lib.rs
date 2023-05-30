@@ -1,4 +1,4 @@
-//! # Fornjot CAD Kernel
+//! # Fornjot Core
 //!
 //! [Fornjot] is an early-stage b-rep CAD kernel written in Rust. The kernel is
 //! split into multiple libraries that can be used semi-independently, and this
