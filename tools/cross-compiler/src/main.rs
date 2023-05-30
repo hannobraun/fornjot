@@ -13,18 +13,18 @@ fn main() -> anyhow::Result<()> {
     let targets = [
         Target {
             triple: "aarch64-apple-ios",
-            crates: &["fj-export", "fj-interop", "fj-kernel", "fj-math"],
+            crates: &["fj-core", "fj-export", "fj-interop", "fj-math"],
         },
         Target {
             triple: "aarch64-linux-android",
-            crates: &["fj-export", "fj-interop", "fj-kernel", "fj-math"],
+            crates: &["fj-core", "fj-export", "fj-interop", "fj-math"],
         },
         Target {
             triple: "wasm32-unknown-unknown",
             crates: &[
+                "fj-core",
                 "fj-export",
                 "fj-interop",
-                "fj-kernel",
                 "fj-math",
                 "fj-viewer",
             ],
