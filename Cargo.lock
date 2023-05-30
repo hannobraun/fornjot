@@ -630,10 +630,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "fj-core",
- "fj-export",
- "fj-math",
- "fj-window",
+ "fj",
  "itertools",
 ]
 

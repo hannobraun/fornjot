@@ -1,6 +1,6 @@
 use std::{ops::Deref, path::PathBuf};
 
-use fj_core::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj::core::algorithms::{approx::Tolerance, triangulate::Triangulate};
 
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
@@ -14,9 +14,9 @@ fn main() -> anyhow::Result<()> {
     let mesh = (cuboid.deref(), tolerance).triangulate();
 
     if let Some(path) = args.export {
-        fj_export::export(&mesh, &path)?;
+        fj::export::export(&mesh, &path)?;
     } else {
-        fj_window::run(mesh, false)?;
+        fj::window::run(mesh, false)?;
     }
 
     Ok(())
