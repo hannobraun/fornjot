@@ -9,7 +9,7 @@ export RUSTDOCFLAGS := "-D warnings"
 # For a full build that mirrors the CI build, see `just ci`.
 test:
     cargo test --all-features
-    # cargo run --package export-validator
+    cargo run --package export-validator
 
 # Run a full build that mirrors the CI build
 #
