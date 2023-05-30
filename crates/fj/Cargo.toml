@@ -10,6 +10,7 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+
 [dependencies]
 fj-core.workspace = true
 fj-export.workspace = true
@@ -17,3 +18,7 @@ fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
 fj-window.workspace = true
+
+[dependencies.clap]
+version = "4.3.1"
+features = ["derive"]
