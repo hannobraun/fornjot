@@ -6,19 +6,19 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.71"
-chrono = "0.4.25"
+chrono = "0.4.26"
 map-macro = "0.2.6"
-octocrab = "0.23.0"
+octocrab = "0.25.0"
 semver = "1.0.17"
 serde = "1.0.163"
 serde_json = "1.0.96"
-url = "2.3.0"
+url = "2.4.0"
 
 [dependencies.autolib]
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.3.0"
+version = "4.3.1"
 features = ["derive"]
 
 [dependencies.tokio]
