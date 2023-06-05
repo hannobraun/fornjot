@@ -12,7 +12,7 @@ octocrab = "0.23.0"
 semver = "1.0.17"
 serde = "1.0.163"
 serde_json = "1.0.96"
-url = "2.3.0"
+url = "2.4.0"
 
 [dependencies.autolib]
 path = "../autolib"
