@@ -1,6 +1,8 @@
 use std::ops::Deref;
 
 use fj_core::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj_interop::model::Model;
+use fj_math::Aabb;
 
 use crate::Args;
 
@@ -27,7 +29,10 @@ where
         return Ok(());
     }
 
-    crate::window::display(mesh, false)?;
+    let aabb = Aabb::<3>::from_points(mesh.vertices());
+    let model = Model { mesh, aabb };
+
+    crate::window::display(model, false)?;
 
     Ok(())
 }
