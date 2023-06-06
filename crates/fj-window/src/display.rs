@@ -73,9 +73,6 @@ pub fn display(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
                 VirtualKeyCode::Key2 => {
                     viewer.toggle_draw_mesh();
                 }
-                VirtualKeyCode::Key3 => {
-                    viewer.toggle_draw_debug();
-                }
                 _ => {}
             },
             Event::WindowEvent {
