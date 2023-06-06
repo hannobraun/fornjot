@@ -16,12 +16,12 @@ use winit::{
 use crate::window::{self, Window};
 
 /// Display the provided mesh in a window that processes input
-pub fn display(mesh: Model, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_model_update(mesh);
+    viewer.handle_model_update(model);
 
     let mut held_mouse_button = None;
     let mut new_size = None;
