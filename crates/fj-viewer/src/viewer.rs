@@ -28,7 +28,7 @@ pub struct Viewer {
     pub renderer: Renderer,
 
     /// The shape
-    pub shape: Option<Model>,
+    pub model: Option<Model>,
 }
 
 impl Viewer {
@@ -43,7 +43,7 @@ impl Viewer {
             focus_point: None,
             input_handler: InputHandler::default(),
             renderer,
-            shape: None,
+            model: None,
         })
     }
 
@@ -64,7 +64,7 @@ impl Viewer {
         self.renderer.update_geometry((&shape.mesh).into());
 
         let aabb = shape.aabb;
-        if self.shape.replace(shape).is_none() {
+        if self.model.replace(shape).is_none() {
             self.camera.init_planes(&aabb);
         }
     }
@@ -84,7 +84,7 @@ impl Viewer {
     /// Compute and store a focus point, unless one is already stored
     pub fn add_focus_point(&mut self) {
         // Don't recompute the focus point unnecessarily.
-        if let Some(shape) = &self.shape {
+        if let Some(shape) = &self.model {
             if self.focus_point.is_none() {
                 self.focus_point =
                     Some(self.camera.focus_point(self.cursor, shape));
@@ -100,7 +100,7 @@ impl Viewer {
     /// Draw the graphics
     pub fn draw(&mut self) {
         let aabb = self
-            .shape
+            .model
             .as_ref()
             .map(|shape| shape.aabb)
             .unwrap_or_else(Aabb::default);
