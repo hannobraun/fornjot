@@ -18,8 +18,8 @@ use winit::{
 
 use crate::window::{self, Window};
 
-/// Initializes a model viewer for a given model and enters its process loop.
-pub fn run(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
+/// Display the provided mesh in a window that processes input
+pub fn display(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;

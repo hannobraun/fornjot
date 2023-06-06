@@ -25,7 +25,7 @@ where
     if let Some(path) = args.export {
         crate::export::export(&mesh, &path)?;
     } else {
-        crate::window::run(mesh, false)?;
+        crate::window::display(mesh, false)?;
     }
 
     Ok(())

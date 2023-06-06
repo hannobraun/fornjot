@@ -1,4 +1,4 @@
-//! # Fornjot Model Viewer
+//! # Fornjot Window Abstraction
 //!
 //! [Fornjot] is an early-stage b-rep CAD kernel written in Rust. The kernel is
 //! split into multiple libraries that can be used semi-independently, and this
@@ -10,7 +10,7 @@
 
 #![warn(missing_docs)]
 
-mod run;
+mod display;
 mod window;
 
-pub use self::run::{run, Error};
+pub use self::display::{display, Error};
