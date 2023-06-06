@@ -13,4 +13,4 @@
 mod run;
 mod window;
 
-pub use self::run::run;
+pub use self::run::{run, Error};

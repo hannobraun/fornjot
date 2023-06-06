@@ -629,10 +629,7 @@ dependencies = [
 name = "cuboid"
 version = "0.1.0"
 dependencies = [
- "anyhow",
- "clap",
  "fj",
- "itertools",
 ]
 
 [[package]]
@@ -781,12 +778,14 @@ dependencies = [
 name = "fj"
 version = "0.46.0"
 dependencies = [
+ "clap",
  "fj-core",
  "fj-export",
  "fj-interop",
  "fj-math",
  "fj-viewer",
  "fj-window",
+ "thiserror",
 ]
 
 [[package]]
