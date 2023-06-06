@@ -1,6 +1,8 @@
 use std::ops::Deref;
 
 use fj_core::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj_interop::model::Model;
+use fj_math::Aabb;
 
 use crate::Args;
 
@@ -12,21 +14,25 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<Model>(
-    model: impl Deref<Target = Model>,
+pub fn handle_model<M>(
+    model: impl Deref<Target = M>,
     tolerance: impl Into<Tolerance>,
 ) -> Result
 where
-    for<'r> (&'r Model, Tolerance): Triangulate,
+    for<'r> (&'r M, Tolerance): Triangulate,
 {
     let mesh = (model.deref(), tolerance.into()).triangulate();
 
     let args = Args::parse();
     if let Some(path) = args.export {
         crate::export::export(&mesh, &path)?;
-    } else {
-        crate::window::display(mesh, false)?;
+        return Ok(());
     }
+
+    let aabb = Aabb::<3>::from_points(mesh.vertices());
+    let model = Model { mesh, aabb };
+
+    crate::window::display(model, false)?;
 
     Ok(())
 }

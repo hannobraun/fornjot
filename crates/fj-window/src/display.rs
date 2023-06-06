@@ -1,5 +1,4 @@
-use fj_interop::{mesh::Mesh, model::Model};
-use fj_math::{Aabb, Point};
+use fj_interop::model::Model;
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize, Viewer,
@@ -17,15 +16,12 @@ use winit::{
 use crate::window::{self, Window};
 
 /// Display the provided mesh in a window that processes input
-pub fn display(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
+pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new();
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_model_update(Model {
-        aabb: Aabb::<3>::from_points(mesh.vertices()),
-        mesh,
-    });
+    viewer.handle_model_update(model);
 
     let mut held_mouse_button = None;
     let mut new_size = None;
