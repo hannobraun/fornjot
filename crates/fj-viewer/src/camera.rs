@@ -82,10 +82,10 @@ impl Camera {
     pub fn focus_point(
         &self,
         cursor: Option<NormalizedScreenPosition>,
-        shape: &Model,
+        model: &Model,
     ) -> FocusPoint {
-        self.calculate_focus_point(cursor, &shape.mesh)
-            .unwrap_or_else(|| FocusPoint(shape.aabb.center()))
+        self.calculate_focus_point(cursor, &model.mesh)
+            .unwrap_or_else(|| FocusPoint(model.aabb.center()))
     }
 
     fn calculate_focus_point(
