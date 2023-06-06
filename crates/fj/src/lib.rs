@@ -12,8 +12,13 @@
 #![warn(missing_docs)]
 
 mod args;
+mod handle_model;
 
-pub use self::args::Args;
+pub use self::{
+    args::Args,
+    handle_model::{handle_model, Error},
+};
+
 pub use fj_core as core;
 pub use fj_export as export;
 pub use fj_interop as interop;
