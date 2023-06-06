@@ -59,7 +59,7 @@ impl Viewer {
         }
     }
 
-    /// Handle the shape being updated
+    /// Handle the model being updated
     pub fn handle_model_update(&mut self, model: Model) {
         self.renderer.update_geometry((&model.mesh).into());
 
