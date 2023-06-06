@@ -788,6 +788,7 @@ dependencies = [
  "fj-math",
  "fj-viewer",
  "fj-window",
+ "thiserror",
 ]
 
 [[package]]
