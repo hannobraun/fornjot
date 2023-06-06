@@ -1,11 +1,12 @@
 use std::ops::Deref;
 
 use fj_core::algorithms::{
-    approx::Tolerance, bounding_volume::BoundingVolume,
+    approx::{InvalidTolerance, Tolerance},
+    bounding_volume::BoundingVolume,
     triangulate::Triangulate,
 };
 use fj_interop::model::Model;
-use fj_math::{Aabb, Point};
+use fj_math::{Aabb, Point, Scalar};
 
 use crate::Args;
 
@@ -19,17 +20,39 @@ use crate::Args;
 /// beyond that, when using Fornjot directly to define a model.
 pub fn handle_model<M>(
     model: impl Deref<Target = M>,
-    tolerance: impl Into<Tolerance>,
+    tolerance: Option<impl Into<Tolerance>>,
 ) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
 {
+    let tolerance = tolerance.map(Into::into);
+
     let aabb = model.aabb().unwrap_or(Aabb {
         min: Point::origin(),
         max: Point::origin(),
     });
-    let mesh = (model.deref(), tolerance.into()).triangulate();
+
+    let tolerance = match tolerance {
+        None => {
+            // Compute a reasonable default for the tolerance value. To do
+            // this, we just look at the smallest non-zero extent of the
+            // bounding box and divide that by some value.
+
+            let mut min_extent = Scalar::MAX;
+            for extent in aabb.size().components {
+                if extent > Scalar::ZERO && extent < min_extent {
+                    min_extent = extent;
+                }
+            }
+
+            let tolerance = min_extent / Scalar::from_f64(1000.);
+            Tolerance::from_scalar(tolerance)?
+        }
+        Some(user_defined_tolerance) => user_defined_tolerance,
+    };
+
+    let mesh = (model.deref(), tolerance).triangulate();
 
     let args = Args::parse();
     if let Some(path) = args.export {
@@ -57,4 +80,8 @@ pub enum Error {
     /// Error exporting model
     #[error("Error exporting model")]
     Export(#[from] crate::export::Error),
+
+    /// Invalid tolerance
+    #[error(transparent)]
+    Tolerance(#[from] InvalidTolerance),
 }
