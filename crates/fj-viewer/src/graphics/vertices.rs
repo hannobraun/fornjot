@@ -1,8 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::{
-    debug::DebugInfo,
-    mesh::{Index, Mesh},
-};
+use fj_interop::mesh::{Index, Mesh};
 use fj_math::{Point, Vector};
 
 #[derive(Debug)]
@@ -99,36 +96,6 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
         let indices = m.indices().collect();
 
         Self { vertices, indices }
-    }
-}
-
-impl From<&DebugInfo> for Vertices {
-    fn from(debug_info: &DebugInfo) -> Self {
-        let mut self_ = Self::empty();
-
-        for triangle_edge_check in &debug_info.triangle_edge_checks {
-            let normal = [0.; 3];
-
-            let red = [1., 0., 0., 1.];
-            let green = [0., 1., 0., 1.];
-
-            let color = if triangle_edge_check.hits.len() % 2 == 0 {
-                red
-            } else {
-                green
-            };
-
-            self_.push_cross(triangle_edge_check.origin, normal, color);
-
-            for &hit in &triangle_edge_check.hits {
-                let line = hit.points();
-                let color = [0., 0., 0., 1.];
-
-                self_.push_line(line, normal, color);
-            }
-        }
-
-        self_
     }
 }
 

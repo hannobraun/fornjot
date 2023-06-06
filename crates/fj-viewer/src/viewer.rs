@@ -59,17 +59,9 @@ impl Viewer {
         }
     }
 
-    /// Toggle the "draw debug" setting
-    pub fn toggle_draw_debug(&mut self) {
-        if self.renderer.is_line_drawing_available() {
-            self.draw_config.draw_debug = !self.draw_config.draw_debug;
-        }
-    }
-
     /// Handle the shape being updated
     pub fn handle_shape_update(&mut self, shape: ProcessedShape) {
-        self.renderer
-            .update_geometry((&shape.mesh).into(), (&shape.debug_info).into());
+        self.renderer.update_geometry((&shape.mesh).into());
 
         let aabb = shape.aabb;
         if self.shape.replace(shape).is_none() {
