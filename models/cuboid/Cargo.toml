@@ -3,14 +3,5 @@ name = "cuboid"
 version = "0.1.0"
 edition = "2021"
 
-
-[dependencies]
-anyhow = "1.0.71"
-itertools = "0.10.5"
-
-[dependencies.clap]
-version = "4.3.1"
-features = ["derive"]
-
 [dependencies.fj]
 path = "../../crates/fj"

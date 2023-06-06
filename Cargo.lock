@@ -629,10 +629,7 @@ dependencies = [
 name = "cuboid"
 version = "0.1.0"
 dependencies = [
- "anyhow",
- "clap",
  "fj",
- "itertools",
 ]
 
 [[package]]
