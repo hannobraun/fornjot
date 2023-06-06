@@ -1,4 +1,4 @@
-use fj_interop::processed_shape::ProcessedShape;
+use fj_interop::processed_shape::Model;
 use fj_math::Aabb;
 use tracing::warn;
 
@@ -28,7 +28,7 @@ pub struct Viewer {
     pub renderer: Renderer,
 
     /// The shape
-    pub shape: Option<ProcessedShape>,
+    pub shape: Option<Model>,
 }
 
 impl Viewer {
@@ -60,7 +60,7 @@ impl Viewer {
     }
 
     /// Handle the shape being updated
-    pub fn handle_shape_update(&mut self, shape: ProcessedShape) {
+    pub fn handle_shape_update(&mut self, shape: Model) {
         self.renderer.update_geometry((&shape.mesh).into());
 
         let aabb = shape.aabb;

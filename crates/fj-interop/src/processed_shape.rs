@@ -6,7 +6,7 @@ use crate::mesh::Mesh;
 
 /// A processed shape
 #[derive(Clone, Debug)]
-pub struct ProcessedShape {
+pub struct Model {
     /// The axis-aligned bounding box of the shape
     pub aabb: Aabb<3>,
 
