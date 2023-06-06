@@ -1,6 +1,4 @@
-use fj_interop::{
-    debug::DebugInfo, mesh::Mesh, processed_shape::ProcessedShape,
-};
+use fj_interop::{mesh::Mesh, model::Model};
 use fj_math::{Aabb, Point};
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
@@ -24,10 +22,9 @@ pub fn display(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_shape_update(ProcessedShape {
+    viewer.handle_shape_update(Model {
         aabb: Aabb::<3>::from_points(mesh.vertices()),
         mesh,
-        debug_info: DebugInfo::new(),
     });
 
     let mut held_mouse_button = None;
