@@ -60,11 +60,11 @@ impl Viewer {
     }
 
     /// Handle the shape being updated
-    pub fn handle_shape_update(&mut self, shape: Model) {
-        self.renderer.update_geometry((&shape.mesh).into());
+    pub fn handle_shape_update(&mut self, model: Model) {
+        self.renderer.update_geometry((&model.mesh).into());
 
-        let aabb = shape.aabb;
-        if self.model.replace(shape).is_none() {
+        let aabb = model.aabb;
+        if self.model.replace(model).is_none() {
             self.camera.init_planes(&aabb);
         }
     }
