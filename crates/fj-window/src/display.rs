@@ -1,4 +1,4 @@
-use fj_interop::{mesh::Mesh, processed_shape::Model};
+use fj_interop::{mesh::Mesh, model::Model};
 use fj_math::{Aabb, Point};
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,

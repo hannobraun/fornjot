@@ -13,4 +13,4 @@
 
 pub mod ext;
 pub mod mesh;
-pub mod processed_shape;
+pub mod model;

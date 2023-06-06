@@ -1,4 +1,4 @@
-use fj_interop::processed_shape::Model;
+use fj_interop::model::Model;
 use fj_math::Aabb;
 use tracing::warn;
 
