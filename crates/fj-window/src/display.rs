@@ -22,7 +22,7 @@ pub fn display(mesh: Mesh<Point<3>>, invert_zoom: bool) -> Result<(), Error> {
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_shape_update(Model {
+    viewer.handle_model_update(Model {
         aabb: Aabb::<3>::from_points(mesh.vertices()),
         mesh,
     });

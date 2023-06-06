@@ -60,7 +60,7 @@ impl Viewer {
     }
 
     /// Handle the shape being updated
-    pub fn handle_shape_update(&mut self, model: Model) {
+    pub fn handle_model_update(&mut self, model: Model) {
         self.renderer.update_geometry((&model.mesh).into());
 
         let aabb = model.aabb;
