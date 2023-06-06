@@ -12,12 +12,12 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<Model>(
-    model: impl Deref<Target = Model>,
+pub fn handle_model<M>(
+    model: impl Deref<Target = M>,
     tolerance: impl Into<Tolerance>,
 ) -> Result
 where
-    for<'r> (&'r Model, Tolerance): Triangulate,
+    for<'r> (&'r M, Tolerance): Triangulate,
 {
     let mesh = (model.deref(), tolerance.into()).triangulate();
 
