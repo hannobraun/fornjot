@@ -24,9 +24,10 @@ where
     let args = Args::parse();
     if let Some(path) = args.export {
         crate::export::export(&mesh, &path)?;
-    } else {
-        crate::window::display(mesh, false)?;
+        return Ok(());
     }
+
+    crate::window::display(mesh, false)?;
 
     Ok(())
 }
