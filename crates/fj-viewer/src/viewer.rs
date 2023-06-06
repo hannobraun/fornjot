@@ -27,7 +27,7 @@ pub struct Viewer {
     /// The renderer
     pub renderer: Renderer,
 
-    /// The shape
+    /// The model
     pub model: Option<Model>,
 }
 
