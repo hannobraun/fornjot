@@ -1,6 +1,6 @@
 use fj::handle_model;
 
-fn main() -> Result<(), fj::Error> {
+fn main() -> fj::Result {
     let cuboid = cuboid::cuboid(3., 2., 1.);
 
     // The tolerance makes no difference for this model, as there aren't any

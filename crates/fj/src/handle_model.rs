@@ -15,7 +15,7 @@ use crate::Args;
 pub fn handle_model<Model>(
     model: impl Deref<Target = Model>,
     tolerance: impl Into<Tolerance>,
-) -> Result<(), Error>
+) -> Result
 where
     for<'r> (&'r Model, Tolerance): Triangulate,
 {
@@ -30,6 +30,9 @@ where
 
     Ok(())
 }
+
+/// Return value of [`handle_model`]
+pub type Result = std::result::Result<(), Error>;
 
 /// Error returned by [`handle_model`]
 #[derive(Debug, thiserror::Error)]

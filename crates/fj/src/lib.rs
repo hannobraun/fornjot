@@ -16,7 +16,7 @@ mod handle_model;
 
 pub use self::{
     args::Args,
-    handle_model::{handle_model, Error},
+    handle_model::{handle_model, Error, Result},
 };
 
 pub use fj_core as core;
