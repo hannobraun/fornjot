@@ -10,7 +10,7 @@
 
 #![warn(missing_docs)]
 
-mod run;
+mod display;
 mod window;
 
-pub use self::run::{display, Error};
+pub use self::display::{display, Error};
