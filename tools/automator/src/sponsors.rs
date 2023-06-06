@@ -1,5 +1,6 @@
 use std::{cmp::Ordering, fmt::Write};
 
+use anyhow::Context;
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
 
@@ -42,7 +43,8 @@ impl Sponsors {
                     }
                 }",
             )
-            .await?;
+            .await
+            .context("GraphQL query failed")?;
 
         let mut sponsors = response
             .data
