@@ -68,8 +68,7 @@ impl Viewer {
 
     /// Handle the shape being updated
     pub fn handle_shape_update(&mut self, shape: ProcessedShape) {
-        self.renderer
-            .update_geometry((&shape.mesh).into(), (&shape.debug_info).into());
+        self.renderer.update_geometry((&shape.mesh).into());
 
         let aabb = shape.aabb;
         if self.shape.replace(shape).is_none() {

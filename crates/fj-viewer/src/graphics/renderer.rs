@@ -184,8 +184,7 @@ impl Renderer {
             label: None,
         });
 
-        let geometries =
-            Geometries::new(&device, &Vertices::empty(), &Vertices::empty());
+        let geometries = Geometries::new(&device, &Vertices::empty());
         let pipelines =
             Pipelines::new(&device, &bind_group_layout, color_format);
 
@@ -213,8 +212,8 @@ impl Renderer {
     }
 
     /// Updates the geometry of the model being rendered.
-    pub fn update_geometry(&mut self, mesh: Vertices, lines: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh, &lines);
+    pub fn update_geometry(&mut self, mesh: Vertices) {
+        self.geometries = Geometries::new(&self.device, &mesh);
     }
 
     /// Resizes the render surface.
@@ -310,13 +309,8 @@ impl Renderer {
                 drawables.model.draw(&mut render_pass);
             }
 
-            if self.is_line_drawing_available() {
-                if config.draw_mesh {
-                    drawables.mesh.draw(&mut render_pass);
-                }
-                if config.draw_debug {
-                    drawables.lines.draw(&mut render_pass);
-                }
+            if self.is_line_drawing_available() && config.draw_mesh {
+                drawables.mesh.draw(&mut render_pass);
             }
         }
 
