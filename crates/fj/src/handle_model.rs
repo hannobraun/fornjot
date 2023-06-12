@@ -1,8 +1,11 @@
 use std::ops::Deref;
 
-use fj_core::algorithms::{approx::Tolerance, triangulate::Triangulate};
+use fj_core::algorithms::{
+    approx::Tolerance, bounding_volume::BoundingVolume,
+    triangulate::Triangulate,
+};
 use fj_interop::model::Model;
-use fj_math::Aabb;
+use fj_math::{Aabb, Point};
 
 use crate::Args;
 
@@ -20,7 +23,12 @@ pub fn handle_model<M>(
 ) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
+    M: BoundingVolume<3>,
 {
+    let aabb = model.aabb().unwrap_or(Aabb {
+        min: Point::origin(),
+        max: Point::origin(),
+    });
     let mesh = (model.deref(), tolerance.into()).triangulate();
 
     let args = Args::parse();
@@ -29,7 +37,6 @@ where
         return Ok(());
     }
 
-    let aabb = Aabb::<3>::from_points(mesh.vertices());
     let model = Model { mesh, aabb };
 
     crate::window::display(model, false)?;
