@@ -67,6 +67,14 @@ impl Aabb<2> {
             max: aabb.maxs.into(),
         }
     }
+
+    /// Convert the AABB to a Parry AABB
+    pub fn to_parry(self) -> parry2d_f64::bounding_volume::Aabb {
+        parry2d_f64::bounding_volume::Aabb {
+            mins: self.min.to_na(),
+            maxs: self.max.to_na(),
+        }
+    }
 }
 
 impl Aabb<3> {
