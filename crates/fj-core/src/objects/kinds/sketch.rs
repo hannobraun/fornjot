@@ -8,11 +8,6 @@ use crate::{
 };
 
 /// A 2-dimensional shape
-///
-/// # Implementation Note
-///
-/// The faces that make up the sketch must be in the same surface. This is not
-/// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
     regions: BTreeSet<Region>,
