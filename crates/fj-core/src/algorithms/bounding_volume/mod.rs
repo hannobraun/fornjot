@@ -2,6 +2,7 @@
 
 mod cycle;
 mod edge;
+mod face;
 
 use fj_math::Aabb;
 
