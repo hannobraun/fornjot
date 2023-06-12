@@ -18,16 +18,11 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(
-    model: impl Deref<Target = M>,
-    tolerance: Option<impl Into<Tolerance>>,
-) -> Result
+pub fn handle_model<M>(model: impl Deref<Target = M>) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
 {
-    let tolerance = tolerance.map(Into::into);
-
     let args = Args::parse();
 
     let aabb = model.aabb().unwrap_or(Aabb {
@@ -35,7 +30,7 @@ where
         max: Point::origin(),
     });
 
-    let tolerance = match tolerance {
+    let tolerance = match args.tolerance {
         None => {
             // Compute a reasonable default for the tolerance value. To do
             // this, we just look at the smallest non-zero extent of the
