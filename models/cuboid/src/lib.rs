@@ -9,7 +9,7 @@ use fj::{
     math::Vector,
 };
 
-pub fn cuboid(x: f64, y: f64, z: f64) -> Handle<Solid> {
+pub fn model(x: f64, y: f64, z: f64) -> Handle<Solid> {
     let mut services = Services::new();
 
     let sketch = Sketch::empty()
