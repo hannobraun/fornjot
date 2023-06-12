@@ -21,6 +21,11 @@ impl Sketch {
         }
     }
 
+    /// Access the regions of the sketch
+    pub fn regions(&self) -> impl Iterator<Item = &Region> {
+        self.regions.iter()
+    }
+
     /// Apply the regions of the sketch to some [`Surface`]
     pub fn faces(
         &self,
