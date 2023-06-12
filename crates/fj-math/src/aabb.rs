@@ -1,3 +1,4 @@
+use parry2d_f64::bounding_volume::BoundingVolume as _;
 use parry3d_f64::bounding_volume::BoundingVolume as _;
 
 use super::{Point, Vector};
@@ -74,6 +75,11 @@ impl Aabb<2> {
             mins: self.min.to_na(),
             maxs: self.max.to_na(),
         }
+    }
+
+    /// Merge this AABB with another
+    pub fn merged(&self, other: &Self) -> Self {
+        self.to_parry().merged(&other.to_parry()).into()
     }
 }
 
