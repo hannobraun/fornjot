@@ -51,7 +51,13 @@ This is a list of the crates that make up Fornjot, along with a short descriptio
 
 ## Usage
 
-This repository is currently [in flux](https://www.fornjot.app/blog/a-new-direction/) and the documentation previously available here no longer applies. This section will be updated in due time.
+Fornjot is a set of Rust libraries (see list above). The definitive documentation on how to use those is their reference documentation. The `crates.io` pages of each library (see list above) link to those.
+
+If you want to use Fornjot to create a specific model in Rust, the best starting point are the [example models](models/) in this repository:
+
+- To display a model, run `cargo run -p cuboid` (replace `cuboid` with name of model you want to display).
+- To export a model, run `cargo run -p cuboid -- --export model.3mf` (replace `cuboid` with name of model you want to export; optionally replace `3mf` with another supported file format).
+- To see full set of CLI options, run `cargo run -p cuboid -- --help` (all models have the same CLI interface, so this shouldn't differ much between them).
 
 
 ## Community
