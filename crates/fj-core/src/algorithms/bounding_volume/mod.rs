@@ -1,5 +1,7 @@
 //! Compute a bounding volume for an object
 
+mod edge;
+
 use fj_math::Aabb;
 
 /// Compute a bounding volume for an object
