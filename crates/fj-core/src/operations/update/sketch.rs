@@ -9,6 +9,9 @@ use crate::{
 
 /// Update a [`Sketch`]
 pub trait UpdateSketch {
+    /// Add a region to the sketch
+    fn add_region(&self, region: Region) -> Self;
+
     /// Add a polygon to the sketch
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
     where
@@ -18,6 +21,10 @@ pub trait UpdateSketch {
 }
 
 impl UpdateSketch for Sketch {
+    fn add_region(&self, region: Region) -> Self {
+        Sketch::new(self.regions().cloned().chain([region]))
+    }
+
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
     where
         P: Into<Point<2>>,
@@ -25,8 +32,6 @@ impl UpdateSketch for Sketch {
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
         let exterior = Cycle::polygon(points, services).insert(services);
-        let region = Region::new(exterior, Vec::new(), None);
-
-        Sketch::new(self.regions().cloned().chain([region]))
+        self.add_region(Region::new(exterior, Vec::new(), None))
     }
 }
