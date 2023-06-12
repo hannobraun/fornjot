@@ -4,6 +4,7 @@
 //! on their respective purpose.
 
 pub mod approx;
+pub mod bounding_volume;
 pub mod intersect;
 pub mod reverse;
 pub mod sweep;
