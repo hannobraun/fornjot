@@ -49,8 +49,12 @@ pub trait BuildHalfEdge {
     }
 
     /// Create a circle
-    fn circle(radius: impl Into<Scalar>, services: &mut Services) -> HalfEdge {
-        let curve = Curve::circle_from_radius(radius);
+    fn circle(
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+        services: &mut Services,
+    ) -> HalfEdge {
+        let curve = Curve::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 

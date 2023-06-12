@@ -1,9 +1,9 @@
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::{BuildHalfEdge, Insert},
+    operations::{BuildHalfEdge, Insert, UpdateCycle},
     services::Services,
 };
 
@@ -12,6 +12,17 @@ pub trait BuildCycle {
     /// Build an empty cycle
     fn empty() -> Cycle {
         Cycle::new([])
+    }
+
+    /// Build a circle
+    fn circle(
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+        services: &mut Services,
+    ) -> Cycle {
+        let circle =
+            HalfEdge::circle(center, radius, services).insert(services);
+        Cycle::empty().add_half_edges([circle])
     }
 
     /// Build a polygon

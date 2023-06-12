@@ -16,11 +16,6 @@ pub enum Curve {
 
 impl Curve {
     /// Build a circle from the given radius
-    pub fn circle_from_radius(radius: impl Into<Scalar>) -> Self {
-        Self::circle_from_center_and_radius(Point::origin(), radius)
-    }
-
-    /// Build a circle from the given radius
     pub fn circle_from_center_and_radius(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
