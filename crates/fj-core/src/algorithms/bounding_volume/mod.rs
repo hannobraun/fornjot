@@ -4,6 +4,7 @@ mod cycle;
 mod edge;
 mod face;
 mod shell;
+mod solid;
 
 use fj_math::Aabb;
 
