@@ -32,6 +32,6 @@ impl UpdateSketch for Sketch {
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
         let exterior = Cycle::polygon(points, services).insert(services);
-        self.add_region(Region::new(exterior, Vec::new(), None))
+        self.add_region(Region::new(exterior, [], None))
     }
 }
