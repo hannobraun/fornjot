@@ -1,5 +1,6 @@
-use std::{cmp::Ordering, fmt::Write};
+use std::{cmp::Ordering, collections::HashMap, fmt::Write};
 
+use anyhow::Context;
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
 
@@ -10,39 +11,44 @@ pub struct Sponsors {
 
 impl Sponsors {
     pub async fn query(octocrab: &Octocrab) -> anyhow::Result<Self> {
-        let response: QueryResult = octocrab
-            .graphql(
-                "query {
-                    viewer {
-                        sponsors(first: 100) {
-                            nodes {
-                                __typename
-                                ... on User {
-                                    login
-                                    sponsorshipForViewerAsSponsorable {
-                                        createdAt
-                                        tier {
-                                            monthlyPriceInDollars
-                                        }
-                                        isOneTimePayment
+        let graphql_query = "\
+            query {
+                viewer {
+                    sponsors(first: 100) {
+                        nodes {
+                            __typename
+                            ... on User {
+                                login
+                                sponsorshipForViewerAsSponsorable {
+                                    createdAt
+                                    tier {
+                                        monthlyPriceInDollars
                                     }
+                                    isOneTimePayment
                                 }
-                                ... on Organization {
-                                    login
-                                    sponsorshipForViewerAsSponsorable {
-                                        createdAt
-                                        tier {
-                                            monthlyPriceInDollars
-                                        }
-                                        isOneTimePayment
+                            }
+                            ... on Organization {
+                                login
+                                sponsorshipForViewerAsSponsorable {
+                                    createdAt
+                                    tier {
+                                        monthlyPriceInDollars
                                     }
+                                    isOneTimePayment
                                 }
                             }
                         }
                     }
-                }",
-            )
-            .await?;
+                }
+            }";
+
+        let mut json_object = HashMap::new();
+        json_object.insert("query", graphql_query);
+
+        let response: QueryResult = octocrab
+            .graphql(&json_object)
+            .await
+            .context("GraphQL query failed")?;
 
         let mut sponsors = response
             .data
