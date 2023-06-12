@@ -1,6 +1,9 @@
 {
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
+    "[markdown]": {
+        "editor.formatOnSave": false,
+    },
     "rust-analyzer.diagnostics.disabled": [
         "mismatched-arg-count"
     ],

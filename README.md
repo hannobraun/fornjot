@@ -35,22 +35,29 @@ Fornjot is usable for some toy examples, but currently lacks the features for so
 
 This is a list of the crates that make up Fornjot, along with a short description for each, starting with the most basic ones and leading up to the high-level ones:
 
-- [`fj-math`]: Math primitives used by the rest of the Fornjot ecosystem.
+- `fj` (not published yet; crate on `crates.io` is not the same library): All-in-one API that re-exports all of the following crates.
+- [`fj-math`]: Math primitives used by the rest of Fornjot.
 - [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
-- [`fj-kernel`]: CAD kernel of Fornjot. Defines geometric and topological primitives, and algorithms that operate on those primitives.
+- `fj-core` (not published yet): Core primitives and code operating on those primitives.
 - [`fj-export`]: Exports Fornjot models to external data formats.
 - [`fj-viewer`]: Displays Fornjot models.
+- `fj-window` (not published yet; crate on `crates.io` is not the same library): Simple windowing abstraction for use with `fj-viewer`.
 
 [`fj-export`]: https://crates.io/crates/fj-export
 [`fj-interop`]: https://crates.io/crates/fj-interop
-[`fj-kernel`]: https://crates.io/crates/fj-kernel
 [`fj-math`]: https://crates.io/crates/fj-math
 [`fj-viewer`]: https://crates.io/crates/fj-viewer
 
 
 ## Usage
 
-This repository is currently [in flux](https://www.fornjot.app/blog/a-new-direction/) and the documentation previously available here no longer applies. This section will be updated in due time.
+Fornjot is a set of Rust libraries (see list above). The definitive documentation on how to use those is their reference documentation. The `crates.io` pages of each library (see list above) link to those.
+
+If you want to use Fornjot to create a specific model in Rust, the best starting point are the [example models](models/) in this repository:
+
+- To display a model, run `cargo run -p cuboid` (replace `cuboid` with name of model you want to display).
+- To export a model, run `cargo run -p cuboid -- --export model.3mf` (replace `cuboid` with name of model you want to export; optionally replace `3mf` with another supported file format).
+- To see full set of CLI options, run `cargo run -p cuboid -- --help` (all models have the same CLI interface, so this shouldn't differ much between them).
 
 
 ## Community
