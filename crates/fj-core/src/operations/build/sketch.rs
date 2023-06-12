@@ -9,6 +9,11 @@ use crate::{
 
 /// Build a [`Sketch`]
 pub trait BuildSketch {
+    /// Create a sketch with no regions
+    fn empty() -> Sketch {
+        Sketch::new([])
+    }
+
     /// Build a polygon
     fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Sketch
     where
