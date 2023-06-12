@@ -28,6 +28,8 @@ where
 {
     let tolerance = tolerance.map(Into::into);
 
+    let args = Args::parse();
+
     let aabb = model.aabb().unwrap_or(Aabb {
         min: Point::origin(),
         max: Point::origin(),
@@ -54,7 +56,6 @@ where
 
     let mesh = (model.deref(), tolerance).triangulate();
 
-    let args = Args::parse();
     if let Some(path) = args.export {
         crate::export::export(&mesh, &path)?;
         return Ok(());
