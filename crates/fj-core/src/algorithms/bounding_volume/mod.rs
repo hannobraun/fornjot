@@ -3,6 +3,7 @@
 mod cycle;
 mod edge;
 mod face;
+mod shell;
 
 use fj_math::Aabb;
 
