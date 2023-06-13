@@ -65,13 +65,7 @@
 //! If you have two [`Handle`]s, you can compare the identity of the objects
 //! they point to using the `id` method.
 //!
-//! ## Implementation Note
-//!
-//! As of this writing, most objects are not managed in the centralized object
-//! storage. Changing this is an ongoing effort ([#1021]).
-//!
 //! [`Handle`]: crate::storage::Handle
-//! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
 mod kinds;
 mod object;
