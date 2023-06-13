@@ -35,12 +35,8 @@ use crate::{
 ///
 /// # Implementation Note
 ///
-/// There is no validation code that verifies whether coincident `HalfEdge`s
-/// refer to the same [`GlobalEdge`] or not:
-/// <https://github.com/hannobraun/Fornjot/issues/1594>
-///
-/// Conversely, there is no validation code to verify that coincident
-/// `HalfEdge`s are congruent:
+/// There is currently no validation code to verify that coincident `HalfEdge`s
+/// are congruent:
 /// <https://github.com/hannobraun/Fornjot/issues/1608>
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
