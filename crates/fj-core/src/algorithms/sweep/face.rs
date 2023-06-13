@@ -4,10 +4,10 @@ use fj_math::{Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    algorithms::{reverse::Reverse, transform::TransformObject},
+    algorithms::transform::TransformObject,
     geometry::curve::GlobalPath,
     objects::{Cycle, Face, Region, Shell},
-    operations::{BuildCycle, Insert, JoinCycle},
+    operations::{BuildCycle, Insert, JoinCycle, Reverse},
     services::Services,
     storage::Handle,
 };

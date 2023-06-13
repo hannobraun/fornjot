@@ -71,10 +71,11 @@ impl FaceValidationError {
 #[cfg(test)]
 mod tests {
     use crate::{
-        algorithms::reverse::Reverse,
         assert_contains_err,
         objects::{Cycle, Face, Region},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
+        operations::{
+            BuildCycle, BuildFace, Insert, Reverse, UpdateFace, UpdateRegion,
+        },
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
