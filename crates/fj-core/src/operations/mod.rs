@@ -10,6 +10,7 @@ pub use self::{
         cycle::BuildCycle,
         edge::BuildHalfEdge,
         face::{BuildFace, Polygon},
+        region::BuildRegion,
         shell::{BuildShell, TetrahedronShell},
         sketch::BuildSketch,
         solid::{BuildSolid, Tetrahedron},
