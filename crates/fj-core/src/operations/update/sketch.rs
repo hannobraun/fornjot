@@ -30,7 +30,7 @@ pub trait UpdateSketch {
 
 impl UpdateSketch for Sketch {
     fn add_region(&self, region: Handle<Region>) -> Self {
-        Sketch::new(self.regions().cloned().chain([region.clone_object()]))
+        Sketch::new(self.regions().cloned().chain([region]))
     }
 
     fn add_circle(
