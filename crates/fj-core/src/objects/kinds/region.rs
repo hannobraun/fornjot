@@ -8,8 +8,7 @@ use crate::{
     storage::Handle,
 };
 
-/// A single, continuous 2d region, may contain holes. Once applied to a
-/// [`Surface`] becomes a [`Face`]
+/// A single, continuous 2d region, may contain holes
 ///
 /// Interior cycles must have the opposite winding of the exterior cycle,
 /// meaning on the front side of the region, they must appear clockwise. This
