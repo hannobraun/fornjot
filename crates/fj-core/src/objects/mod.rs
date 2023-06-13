@@ -1,50 +1,35 @@
-//! Objects of a shape
+//! # Objects of a shape
 //!
-//! Objects, in Fornjot parlance, are the elements that make up shapes. An
-//! object can be simple and just contain data (like [`Vertex`], for example),
-//! or they can be quite complex and refer to other objects (which is actually
-//! most of them).
+//! Objects, in Fornjot parlance, are the elements that make up shapes. Objects
+//! can reference each other, forming a directed acyclic graph (DAG).
 //!
-//! # Object Identity vs Object Equality
+//! There are two top-level objects ([`Sketch`] and [`Solid`]) which represent
+//! whole shapes (2D and 3D, respectively), while all other objects are
+//! referenced (directly or indirectly) by these top-level objects.
 //!
-//! Two objects are *equal*, if they contain the same data. For example, two
-//! instances of [`Vertex`] are equal, if they have the same position. This
-//! doesn't mean those objects are *identical*. They might have been created by
-//! different pieces of code. Or maybe by the same piece of code, but at
-//! different times, maybe even based on different inputs.
+//! All objects are stored in centralized storage (see [`Objects`]) and referred
+//! to through a [`Handle`].
+//!
+//!
+//! ## Object Equality vs Object Identity
+//!
+//! Most objects have [`Eq`]/[`PartialEq`] implementations that can be used to
+//! determine equality. Those implementations are derived, meaning two objects
+//! are equal, if all of their fields are equal. This can be used to compare
+//! objects structurally. [`Handle`]'s own [`Eq`]/[`PartialEq`] implementations
+//! defer to those of the object it references.
+//!
+//! However, that two objects are *equal* does not mean they are *identical*.
+//! See [`Handle`]'s documentation for an explanation of this distinction.
 //!
 //! This distinction is relevant, because non-identical objects that are
 //! *supposed* to be equal can end up being equal, if they are created based on
 //! simple input data (as you might have in a unit test). But they might end up
 //! slightly different, if they are created based on complex input data (as you
-//! might have in the real world).
+//! might have in the real world). This situation would most likely result in a
+//! bug that is not easily caught in testing.
 //!
-//! ## An Example
-//!
-//! Let's talk about a specific example: two simple curves (straight lines that
-//! are coincident with coordinate system axes) which are intersecting at a
-//! simple point. Let's say the intersection point sits at the global origin
-//! (`[0, 0, 0]`), and its local coordinate on each line also happens to be `0`.
-//!
-//! If you compute the global coordinates from each of the line-local
-//! coordinates, you'll end up with the same result for sure. If we create two
-//! [`Vertex`] instances from these global coordinates, any validation code that
-//! expects those two instances to be equal, will be happy.
-//!
-//! But what if the situation is not so simple? Let's say the curves are circles
-//! instead of lines, and instead of being all neat, they are at some arbitrary
-//! location in space, oriented at weird angles. The local coordinates of their
-//! intersection point are not `0`, but different values that are not neatly
-//! represented by floating point values.
-//!
-//! In such a situation, you have an excellent chance of ending up with slightly
-//! different global coordinates, if you compute them from each local
-//! coordinate. If you're building a [`Cycle`], and this intersection point is
-//! where the two curves connect, you could end up with a gap (or self-
-//! intersection) in the cycle. If that ends up exported to a triangle mesh,
-//! that mesh will be invalid.
-//!
-//! ## Validation Must Use Identity
+//! ### Validation Must Use Identity
 //!
 //! To prevent such situations, where everything looked fine during development,
 //! but you end up with a bug in production, any validation code that compares
@@ -52,26 +37,7 @@
 //! identity, not equality. That way, this problem can never happen, because we
 //! never expect non-identical objects to be the same.
 //!
-//! For our example, this would mean we compute *one* [`Vertex`] from *one* of
-//! the local coordinates.
-//!
-//! ## How Identity Works
-//!
-//! We can exactly determine the identity of an object, thanks to [centralized
-//! object storage][`Objects`]. If objects are created at different times,
-//! potentially by different code, they end up being stored at different memory
-//! locations, regardless of their (non-)equality.
-//!
-//! If you have two [`Handle`]s, you can compare the identity of the objects
-//! they point to using the `id` method.
-//!
-//! ## Implementation Note
-//!
-//! As of this writing, most objects are not managed in the centralized object
-//! storage. Changing this is an ongoing effort ([#1021]).
-//!
 //! [`Handle`]: crate::storage::Handle
-//! [#1021]: https://github.com/hannobraun/Fornjot/issues/1021
 
 mod kinds;
 mod object;
