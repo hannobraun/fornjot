@@ -33,7 +33,7 @@ impl Sketch {
     ) -> FaceSet {
         self.regions
             .iter()
-            .map(|r| r.face(surface.clone(), services))
+            .map(|region| region.face(surface.clone(), services))
             .collect()
     }
 }
