@@ -155,7 +155,7 @@ mod tests {
     use crate::{
         geometry::curve::Curve,
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
     };
 
@@ -184,8 +184,12 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(exterior_points, &mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(exterior_points, &mut services)
+                                .insert(&mut services)
+                        })
                         .insert(&mut services)
                 })
                 .add_interiors([Cycle::polygon(

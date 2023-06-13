@@ -197,7 +197,7 @@ mod tests {
         objects::{GlobalEdge, Shell},
         operations::{
             BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
-            UpdateShell,
+            UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -216,13 +216,17 @@ mod tests {
             valid
                 .abc
                 .face
-                .update_exterior(|cycle| {
-                    cycle
-                        .update_nth_half_edge(0, |half_edge| {
-                            let global_form =
-                                GlobalEdge::new().insert(&mut services);
-                            half_edge
-                                .replace_global_form(global_form)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|cycle| {
+                            cycle
+                                .update_nth_half_edge(0, |half_edge| {
+                                    let global_form =
+                                        GlobalEdge::new().insert(&mut services);
+                                    half_edge
+                                        .replace_global_form(global_form)
+                                        .insert(&mut services)
+                                })
                                 .insert(&mut services)
                         })
                         .insert(&mut services)

@@ -80,7 +80,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, Tolerance},
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
     };
 
@@ -97,8 +97,12 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon([a, b, c, d], &mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon([a, b, c, d], &mut services)
+                                .insert(&mut services)
+                        })
                         .insert(&mut services)
                 });
         services.only_validate(&face);
@@ -135,8 +139,12 @@ mod tests {
         let surface = services.objects.surfaces.xy_plane();
 
         let face = Face::unbound(surface.clone(), &mut services)
-            .update_exterior(|_| {
-                Cycle::polygon([a, b, c, d], &mut services)
+            .update_region(|region| {
+                region
+                    .update_exterior(|_| {
+                        Cycle::polygon([a, b, c, d], &mut services)
+                            .insert(&mut services)
+                    })
                     .insert(&mut services)
             })
             .add_interiors([Cycle::polygon([e, f, g, h], &mut services)
@@ -196,11 +204,16 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut services)
-            .update_exterior(|_| {
-                Cycle::polygon([a, b, c, d, e], &mut services)
+        let face = Face::unbound(surface.clone(), &mut services).update_region(
+            |region| {
+                region
+                    .update_exterior(|_| {
+                        Cycle::polygon([a, b, c, d, e], &mut services)
+                            .insert(&mut services)
+                    })
                     .insert(&mut services)
-            });
+            },
+        );
         services.only_validate(&face);
 
         let triangles = triangulate(face)?;

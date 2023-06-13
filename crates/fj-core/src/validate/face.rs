@@ -74,7 +74,7 @@ mod tests {
         algorithms::reverse::Reverse,
         assert_contains_err,
         objects::{Cycle, Face, Region},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -85,12 +85,16 @@ mod tests {
 
         let valid =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [3., 0.], [0., 3.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[0., 0.], [3., 0.], [0., 3.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 })
                 .add_interiors([Cycle::polygon(
                     [[1., 1.], [1., 2.], [2., 1.]],
