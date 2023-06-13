@@ -46,7 +46,7 @@ impl FaceValidationError {
 
         let exterior_winding = face.region().exterior().winding();
 
-        for interior in face.interiors() {
+        for interior in face.region().interiors() {
             if interior.half_edges().count() == 0 {
                 // Can't determine winding, if the cycle has no half-edges.
                 // Sounds like a job for a different validation check.
@@ -99,6 +99,7 @@ mod tests {
                 .insert(&mut services)]);
         let invalid = {
             let interiors = valid
+                .region()
                 .interiors()
                 .cloned()
                 .map(|cycle| cycle.reverse(&mut services))

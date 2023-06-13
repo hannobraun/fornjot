@@ -90,7 +90,7 @@ impl Approx for &Face {
                 .approx_with_cache(tolerance, cache);
 
         let mut interiors = BTreeSet::new();
-        for cycle in self.interiors() {
+        for cycle in self.region().interiors() {
             let cycle = (cycle.deref(), self.surface().deref())
                 .approx_with_cache(tolerance, cache);
             interiors.insert(cycle);

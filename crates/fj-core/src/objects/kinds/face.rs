@@ -54,13 +54,6 @@ impl Face {
         &self.region
     }
 
-    /// Access the cycles that bound the face on the inside
-    ///
-    /// Each of these cycles defines a hole in the face.
-    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        self.region.interiors()
-    }
-
     /// Access all cycles of the face (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
         self.region.all_cycles()

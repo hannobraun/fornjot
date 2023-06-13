@@ -11,6 +11,7 @@ impl Reverse for Handle<Face> {
     fn reverse(self, services: &mut Services) -> Self {
         let exterior = self.region().exterior().clone().reverse(services);
         let interiors = self
+            .region()
             .interiors()
             .map(|cycle| cycle.clone().reverse(services))
             .collect::<Vec<_>>();
