@@ -22,7 +22,7 @@ impl Intersect for (&Face, &Point<2>) {
 
         let mut num_hits = 0;
 
-        for cycle in face.all_cycles() {
+        for cycle in face.region().all_cycles() {
             // We need to properly detect the ray passing the boundary at the
             // "seam" of the polygon, i.e. the vertex between the last and the
             // first segment. The logic in the loop properly takes care of that,

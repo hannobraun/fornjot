@@ -29,7 +29,10 @@ impl CurveFaceIntersection {
 
     /// Compute the intersection
     pub fn compute(curve: &Curve, face: &Face) -> Self {
-        let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
+        let half_edges = face
+            .region()
+            .all_cycles()
+            .flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
 

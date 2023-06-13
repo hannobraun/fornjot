@@ -4,7 +4,7 @@ use fj_interop::mesh::Color;
 use fj_math::Winding;
 
 use crate::{
-    objects::{Cycle, Region, Surface},
+    objects::{Region, Surface},
     storage::Handle,
 };
 
@@ -52,11 +52,6 @@ impl Face {
     /// Access the region of the face
     pub fn region(&self) -> &Region {
         &self.region
-    }
-
-    /// Access all cycles of the face (both exterior and interior)
-    pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        self.region.all_cycles()
     }
 
     /// Access the color of the face

@@ -112,7 +112,8 @@ impl ShellValidationError {
             .faces()
             .into_iter()
             .flat_map(|face| {
-                face.all_cycles()
+                face.region()
+                    .all_cycles()
                     .flat_map(|cycle| cycle.half_edges().cloned())
                     .zip(repeat(face.surface().clone()))
             })
@@ -173,7 +174,7 @@ impl ShellValidationError {
         let faces = shell.faces();
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
         for face in faces {
-            for cycle in face.all_cycles() {
+            for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let id = half_edge.global_form().id();
                     let entry = half_edge_to_faces.entry(id);
