@@ -27,7 +27,6 @@ impl UpdateFace for Face {
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
         let exterior = f(self.exterior());
-
         let region =
             Region::new(exterior, self.interiors().cloned(), self.color());
         Face::new(self.surface().clone(), region)
@@ -38,7 +37,6 @@ impl UpdateFace for Face {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
         let interiors = self.interiors().cloned().chain(interiors);
-
         let region =
             Region::new(self.exterior().clone(), interiors, self.color());
         Face::new(self.surface().clone(), region)
