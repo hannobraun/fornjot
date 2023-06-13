@@ -10,6 +10,7 @@ members = [
     "crates/fj-window",
 
     "models/cuboid",
+    "models/spacer",
 
     "tools/autolib",
     "tools/automator",
