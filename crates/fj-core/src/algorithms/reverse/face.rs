@@ -8,7 +8,7 @@ use crate::{
 use super::Reverse;
 
 impl Reverse for Handle<Face> {
-    fn reverse(self, services: &mut Services) -> Self {
+    fn reverse(&self, services: &mut Services) -> Self {
         let exterior = self.region().exterior().clone().reverse(services);
         let interiors = self
             .region()

@@ -10,7 +10,7 @@ use crate::{
 use super::Reverse;
 
 impl Reverse for Handle<Cycle> {
-    fn reverse(self, services: &mut Services) -> Self {
+    fn reverse(&self, services: &mut Services) -> Self {
         let mut edges = self
             .half_edges()
             .cloned()
