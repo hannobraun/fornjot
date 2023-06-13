@@ -9,18 +9,27 @@ use crate::{
 /// Update a [`Face`]
 pub trait UpdateFace {
     /// Replace the region of the face
-    fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self;
+    fn update_region(
+        &self,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+    ) -> Self;
 }
 
 impl UpdateFace for Face {
-    fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self {
+    fn update_region(
+        &self,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+    ) -> Self {
         let region = f(self.region());
         Face::new(self.surface().clone(), region)
     }
 }
 
 impl<const D: usize> UpdateFace for Polygon<D> {
-    fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self {
+    fn update_region(
+        &self,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+    ) -> Self {
         let face = self.face.update_region(f);
         let edges = array::from_fn(|i| {
             face.region()
