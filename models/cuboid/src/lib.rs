@@ -28,7 +28,6 @@ pub fn model(x: f64, y: f64, z: f64) -> Handle<Solid> {
         .insert(&mut services);
 
     let surface = services.objects.surfaces.xy_plane();
-
     let path = Vector::from([0., 0., z]);
     (sketch, surface).sweep(path, &mut services)
 }
