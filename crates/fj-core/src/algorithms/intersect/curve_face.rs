@@ -190,13 +190,13 @@ mod tests {
                             Cycle::polygon(exterior_points, &mut services)
                                 .insert(&mut services)
                         })
+                        .add_interiors([Cycle::polygon(
+                            interior_points,
+                            &mut services,
+                        )
+                        .insert(&mut services)])
                         .insert(&mut services)
-                })
-                .add_interiors([Cycle::polygon(
-                    interior_points,
-                    &mut services,
-                )
-                .insert(&mut services)]);
+                });
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

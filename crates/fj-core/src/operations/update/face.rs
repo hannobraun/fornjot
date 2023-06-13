@@ -1,8 +1,8 @@
 use std::array;
 
 use crate::{
-    objects::{Cycle, Face, Region},
-    operations::{Polygon, UpdateRegion},
+    objects::{Face, Region},
+    operations::Polygon,
     storage::Handle,
 };
 
@@ -10,26 +10,12 @@ use crate::{
 pub trait UpdateFace {
     /// Replace the region of the face
     fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self;
-
-    /// Add the provides interiors to the face
-    fn add_interiors(
-        &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-    ) -> Self;
 }
 
 impl UpdateFace for Face {
     fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self {
         let region = f(self.region());
         Face::new(self.surface().clone(), region.clone_object())
-    }
-
-    fn add_interiors(
-        &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-    ) -> Self {
-        let region = self.region().add_interiors(interiors);
-        Face::new(self.surface().clone(), region)
     }
 }
 
@@ -60,12 +46,5 @@ impl<const D: usize> UpdateFace for Polygon<D> {
             edges,
             vertices,
         }
-    }
-
-    fn add_interiors(
-        &self,
-        _: impl IntoIterator<Item = Handle<Cycle>>,
-    ) -> Self {
-        panic!("Adding interiors to `Polygon` is not supported.")
     }
 }

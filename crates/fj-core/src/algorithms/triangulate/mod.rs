@@ -138,17 +138,21 @@ mod tests {
 
         let surface = services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut services)
-            .update_region(|region| {
+        let face = Face::unbound(surface.clone(), &mut services).update_region(
+            |region| {
                 region
                     .update_exterior(|_| {
                         Cycle::polygon([a, b, c, d], &mut services)
                             .insert(&mut services)
                     })
+                    .add_interiors([Cycle::polygon(
+                        [e, f, g, h],
+                        &mut services,
+                    )
+                    .insert(&mut services)])
                     .insert(&mut services)
-            })
-            .add_interiors([Cycle::polygon([e, f, g, h], &mut services)
-                .insert(&mut services)]);
+            },
+        );
         services.only_validate(&face);
 
         let triangles = triangulate(face)?;

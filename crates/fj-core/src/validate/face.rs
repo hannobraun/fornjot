@@ -94,13 +94,13 @@ mod tests {
                             )
                             .insert(&mut services)
                         })
+                        .add_interiors([Cycle::polygon(
+                            [[1., 1.], [1., 2.], [2., 1.]],
+                            &mut services,
+                        )
+                        .insert(&mut services)])
                         .insert(&mut services)
-                })
-                .add_interiors([Cycle::polygon(
-                    [[1., 1.], [1., 2.], [2., 1.]],
-                    &mut services,
-                )
-                .insert(&mut services)]);
+                });
         let invalid = {
             let interiors = valid
                 .region()
