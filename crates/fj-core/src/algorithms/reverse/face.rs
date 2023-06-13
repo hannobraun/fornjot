@@ -16,7 +16,9 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(services))
             .collect::<Vec<_>>();
 
-        let region = Region::new(exterior, interiors, self.region().color());
+        let region = Region::new(exterior, interiors, self.region().color())
+            .insert(services);
+
         Face::new(self.surface().clone(), region).insert(services)
     }
 }

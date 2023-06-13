@@ -35,8 +35,7 @@ impl Sketch {
         self.regions
             .iter()
             .map(|region| {
-                Face::new(surface.clone(), region.clone_object())
-                    .insert(services)
+                Face::new(surface.clone(), region.clone()).insert(services)
             })
             .collect()
     }

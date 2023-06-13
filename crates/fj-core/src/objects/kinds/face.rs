@@ -34,12 +34,12 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Handle<Surface>,
-    region: Region,
+    region: Handle<Region>,
 }
 
 impl Face {
     /// Construct an instance of `Face`
-    pub fn new(surface: Handle<Surface>, region: Region) -> Self {
+    pub fn new(surface: Handle<Surface>, region: Handle<Region>) -> Self {
         Self { surface, region }
     }
 
@@ -49,7 +49,7 @@ impl Face {
     }
 
     /// Access the region of the face
-    pub fn region(&self) -> &Region {
+    pub fn region(&self) -> &Handle<Region> {
         &self.region
     }
 

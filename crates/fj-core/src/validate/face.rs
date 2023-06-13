@@ -113,7 +113,9 @@ mod tests {
                 valid.region().exterior().clone(),
                 interiors,
                 valid.region().color(),
-            );
+            )
+            .insert(&mut services);
+
             Face::new(valid.surface().clone(), region)
         };
 

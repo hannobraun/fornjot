@@ -16,7 +16,7 @@ pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {
         let exterior = Cycle::empty().insert(services);
-        let region = Region::new(exterior, [], None);
+        let region = Region::new(exterior, [], None).insert(services);
         Face::new(surface, region)
     }
 
@@ -45,7 +45,8 @@ pub trait BuildFace {
             (cycle, half_edges, vertices)
         };
 
-        let region = Region::new(exterior, [], None);
+        let region = Region::new(exterior, [], None).insert(services);
+
         let face = Face::new(surface, region);
 
         Polygon {

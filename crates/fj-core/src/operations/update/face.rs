@@ -15,7 +15,7 @@ pub trait UpdateFace {
 impl UpdateFace for Face {
     fn update_region(&self, f: impl FnOnce(&Region) -> Handle<Region>) -> Self {
         let region = f(self.region());
-        Face::new(self.surface().clone(), region.clone_object())
+        Face::new(self.surface().clone(), region)
     }
 }
 

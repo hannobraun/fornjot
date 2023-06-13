@@ -107,7 +107,9 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                 half_edge
             });
 
-        let region = Region::new(exterior.unwrap().insert(services), [], color);
+        let region = Region::new(exterior.unwrap().insert(services), [], color)
+            .insert(services);
+
         let face = Face::new(surface, region);
 
         // And we're done creating the face! All that's left to do is build our
