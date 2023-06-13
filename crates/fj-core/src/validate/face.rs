@@ -73,7 +73,7 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         assert_contains_err,
-        objects::{Cycle, Face},
+        objects::{Cycle, Face, Region},
         operations::{BuildCycle, BuildFace, Insert, UpdateFace},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
@@ -104,12 +104,9 @@ mod tests {
                 .map(|cycle| cycle.reverse(&mut services))
                 .collect::<Vec<_>>();
 
-            Face::new(
-                valid.surface().clone(),
-                valid.exterior().clone(),
-                interiors,
-                valid.color(),
-            )
+            let region =
+                Region::new(valid.exterior().clone(), interiors, valid.color());
+            Face::new(valid.surface().clone(), region)
         };
 
         valid.validate_and_return_first_error()?;

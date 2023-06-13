@@ -66,12 +66,7 @@ impl Region {
         surface: Handle<Surface>,
         services: &mut Services,
     ) -> Handle<Face> {
-        let face: Face = Face::new(
-            surface,
-            self.exterior().clone(),
-            self.interiors().cloned(),
-            self.color,
-        );
+        let face: Face = Face::new(surface, self.clone());
         face.insert(services)
     }
 }

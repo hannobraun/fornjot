@@ -6,7 +6,7 @@ use itertools::Itertools;
 use crate::{
     algorithms::{reverse::Reverse, transform::TransformObject},
     geometry::curve::GlobalPath,
-    objects::{Cycle, Face, Shell},
+    objects::{Cycle, Face, Region, Shell},
     operations::{BuildCycle, Insert, JoinCycle},
     services::Services,
     storage::Handle,
@@ -92,8 +92,8 @@ impl Sweep for Handle<Face> {
             };
         }
 
-        let top_face =
-            Face::new(top_surface, exterior.unwrap(), interiors, self.color());
+        let region = Region::new(exterior.unwrap(), interiors, self.color());
+        let top_face = Face::new(top_surface, region);
 
         let top_face = top_face.insert(services);
         faces.push(top_face);

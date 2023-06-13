@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Face, FaceSet},
+    objects::{Face, FaceSet, Region},
     services::Services,
 };
 
@@ -29,7 +29,8 @@ impl TransformObject for Face {
             interior.transform_with_cache(transform, services, cache)
         });
 
-        Self::new(surface, exterior, interiors, color)
+        let region = Region::new(exterior, interiors, color);
+        Self::new(surface, region)
     }
 }
 

@@ -1,7 +1,7 @@
 use std::array;
 
 use crate::{
-    objects::{Cycle, Face},
+    objects::{Cycle, Face, Region},
     operations::Polygon,
     storage::Handle,
 };
@@ -28,12 +28,9 @@ impl UpdateFace for Face {
     ) -> Self {
         let exterior = f(self.exterior());
 
-        Face::new(
-            self.surface().clone(),
-            exterior,
-            self.interiors().cloned(),
-            self.color(),
-        )
+        let region =
+            Region::new(exterior, self.interiors().cloned(), self.color());
+        Face::new(self.surface().clone(), region)
     }
 
     fn add_interiors(
@@ -42,12 +39,9 @@ impl UpdateFace for Face {
     ) -> Self {
         let interiors = self.interiors().cloned().chain(interiors);
 
-        Face::new(
-            self.surface().clone(),
-            self.exterior().clone(),
-            interiors,
-            self.color(),
-        )
+        let region =
+            Region::new(self.exterior().clone(), interiors, self.color());
+        Face::new(self.surface().clone(), region)
     }
 }
 

@@ -1,5 +1,8 @@
 use crate::{
-    objects::Face, operations::Insert, services::Services, storage::Handle,
+    objects::{Face, Region},
+    operations::Insert,
+    services::Services,
+    storage::Handle,
 };
 
 use super::Reverse;
@@ -12,7 +15,7 @@ impl Reverse for Handle<Face> {
             .map(|cycle| cycle.clone().reverse(services))
             .collect::<Vec<_>>();
 
-        Face::new(self.surface().clone(), exterior, interiors, self.color())
-            .insert(services)
+        let region = Region::new(exterior, interiors, self.color());
+        Face::new(self.surface().clone(), region).insert(services)
     }
 }

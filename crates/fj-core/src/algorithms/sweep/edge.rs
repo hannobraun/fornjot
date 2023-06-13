@@ -2,7 +2,7 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Surface, Vertex},
+    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
     storage::Handle,
@@ -107,8 +107,8 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                 half_edge
             });
 
-        let face =
-            Face::new(surface, exterior.unwrap().insert(services), [], color);
+        let region = Region::new(exterior.unwrap().insert(services), [], color);
+        let face = Face::new(surface, region);
 
         // And we're done creating the face! All that's left to do is build our
         // return values.

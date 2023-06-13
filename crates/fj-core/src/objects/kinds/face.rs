@@ -40,16 +40,8 @@ pub struct Face {
 
 impl Face {
     /// Construct an instance of `Face`
-    pub fn new(
-        surface: Handle<Surface>,
-        exterior: Handle<Cycle>,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-        color: Option<Color>,
-    ) -> Self {
-        Self {
-            surface,
-            region: Region::new(exterior, interiors, color),
-        }
+    pub fn new(surface: Handle<Surface>, region: Region) -> Self {
+        Self { surface, region }
     }
 
     /// Access the surface of the face
