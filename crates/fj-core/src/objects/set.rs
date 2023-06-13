@@ -71,8 +71,10 @@ impl InsertIntoSet for Face {
         objects.inner.insert(self.surface().clone().into());
         self.surface().insert_into_set(objects);
 
-        objects.inner.insert(self.exterior().clone().into());
-        self.exterior().insert_into_set(objects);
+        objects
+            .inner
+            .insert(self.region().exterior().clone().into());
+        self.region().exterior().insert_into_set(objects);
 
         for interior in self.interiors() {
             objects.inner.insert(interior.clone().into());

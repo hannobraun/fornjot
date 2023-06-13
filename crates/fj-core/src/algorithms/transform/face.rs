@@ -22,6 +22,7 @@ impl TransformObject for Face {
             .clone()
             .transform_with_cache(transform, services, cache);
         let exterior = self
+            .region()
             .exterior()
             .clone()
             .transform_with_cache(transform, services, cache);

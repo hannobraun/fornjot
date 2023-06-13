@@ -54,11 +54,6 @@ impl Face {
         &self.region
     }
 
-    /// Access the cycle that bounds the face on the outside
-    pub fn exterior(&self) -> &Handle<Cycle> {
-        self.region.exterior()
-    }
-
     /// Access the cycles that bound the face on the inside
     ///
     /// Each of these cycles defines a hole in the face.
@@ -87,7 +82,7 @@ impl Face {
     /// back sides. The front side is the side, where the face's exterior cycle
     /// is wound counter-clockwise.
     pub fn coord_handedness(&self) -> Handedness {
-        match self.exterior().winding() {
+        match self.region.exterior().winding() {
             Winding::Ccw => Handedness::RightHanded,
             Winding::Cw => Handedness::LeftHanded,
         }

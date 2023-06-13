@@ -26,7 +26,7 @@ impl UpdateFace for Face {
         &self,
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
-        let exterior = f(self.exterior());
+        let exterior = f(self.region().exterior());
         let region =
             Region::new(exterior, self.interiors().cloned(), self.color());
         Face::new(self.surface().clone(), region)
@@ -37,8 +37,11 @@ impl UpdateFace for Face {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
         let interiors = self.interiors().cloned().chain(interiors);
-        let region =
-            Region::new(self.exterior().clone(), interiors, self.color());
+        let region = Region::new(
+            self.region().exterior().clone(),
+            interiors,
+            self.color(),
+        );
         Face::new(self.surface().clone(), region)
     }
 }
@@ -50,7 +53,8 @@ impl<const D: usize> UpdateFace for Polygon<D> {
     ) -> Self {
         let face = self.face.update_exterior(f);
         let edges = array::from_fn(|i| {
-            face.exterior()
+            face.region()
+                .exterior()
                 .nth_half_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .clone()
@@ -59,7 +63,8 @@ impl<const D: usize> UpdateFace for Polygon<D> {
             // The duplicated code here is unfortunate, but unless we get a
             // stable `array::each_ref` and something like `array::unzip`, I'm
             // not sure how to avoid it.
-            face.exterior()
+            face.region()
+                .exterior()
                 .nth_half_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .start_vertex()

@@ -244,6 +244,7 @@ mod tests {
         let face = face.translate([1., 1., 0.], &mut services);
 
         let edge = face
+            .region()
             .exterior()
             .half_edges()
             .find(|edge| edge.start_position() == Point::from([-1., 1.]))
@@ -274,6 +275,7 @@ mod tests {
         let face = face.translate([1., 1., 1.], &mut services);
 
         let vertex = face
+            .region()
             .exterior()
             .half_edges()
             .find(|half_edge| {

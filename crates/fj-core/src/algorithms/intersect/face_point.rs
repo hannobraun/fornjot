@@ -302,6 +302,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
 
         let edge = face
+            .region()
             .exterior()
             .half_edges()
             .find(|edge| edge.start_position() == Point::from([0., 0.]))
@@ -332,6 +333,7 @@ mod tests {
         let intersection = (&face, &point).intersect();
 
         let vertex = face
+            .region()
             .exterior()
             .half_edges()
             .find(|half_edge| {

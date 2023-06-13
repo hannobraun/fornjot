@@ -39,22 +39,52 @@ pub trait BuildShell {
         let bad =
             Face::triangle([b, a, d], services).update_exterior(|cycle| {
                 cycle
-                    .join_to(abc.face.exterior(), 0..=0, 0..=0, services)
+                    .join_to(
+                        abc.face.region().exterior(),
+                        0..=0,
+                        0..=0,
+                        services,
+                    )
                     .insert(services)
             });
         let dac =
             Face::triangle([d, a, c], services).update_exterior(|cycle| {
                 cycle
-                    .join_to(abc.face.exterior(), 1..=1, 2..=2, services)
-                    .join_to(bad.face.exterior(), 0..=0, 1..=1, services)
+                    .join_to(
+                        abc.face.region().exterior(),
+                        1..=1,
+                        2..=2,
+                        services,
+                    )
+                    .join_to(
+                        bad.face.region().exterior(),
+                        0..=0,
+                        1..=1,
+                        services,
+                    )
                     .insert(services)
             });
         let cbd =
             Face::triangle([c, b, d], services).update_exterior(|cycle| {
                 cycle
-                    .join_to(abc.face.exterior(), 0..=0, 1..=1, services)
-                    .join_to(bad.face.exterior(), 1..=1, 2..=2, services)
-                    .join_to(dac.face.exterior(), 2..=2, 2..=2, services)
+                    .join_to(
+                        abc.face.region().exterior(),
+                        0..=0,
+                        1..=1,
+                        services,
+                    )
+                    .join_to(
+                        bad.face.region().exterior(),
+                        1..=1,
+                        2..=2,
+                        services,
+                    )
+                    .join_to(
+                        dac.face.region().exterior(),
+                        2..=2,
+                        2..=2,
+                        services,
+                    )
                     .insert(services)
             });
 
