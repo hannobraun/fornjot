@@ -1,8 +1,8 @@
-use fj_math::{Point, Scalar};
+use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Region, Sketch},
-    operations::{BuildCycle, BuildRegion, Insert},
+    operations::{BuildCycle, Insert},
     services::Services,
     storage::Handle,
 };
@@ -11,14 +11,6 @@ use crate::{
 pub trait UpdateSketch {
     /// Add a region to the sketch
     fn add_region(&self, region: Handle<Region>) -> Self;
-
-    /// Add a circle to the sketch
-    fn add_circle(
-        &self,
-        center: impl Into<Point<2>>,
-        radius: impl Into<Scalar>,
-        services: &mut Services,
-    ) -> Self;
 
     /// Add a polygon to the sketch
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
@@ -31,16 +23,6 @@ pub trait UpdateSketch {
 impl UpdateSketch for Sketch {
     fn add_region(&self, region: Handle<Region>) -> Self {
         Sketch::new(self.regions().cloned().chain([region]))
-    }
-
-    fn add_circle(
-        &self,
-        center: impl Into<Point<2>>,
-        radius: impl Into<Scalar>,
-        services: &mut Services,
-    ) -> Self {
-        let region = Region::circle(center, radius, services).insert(services);
-        self.add_region(region)
     }
 
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
