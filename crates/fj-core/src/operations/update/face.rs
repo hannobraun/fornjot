@@ -2,7 +2,7 @@ use std::array;
 
 use crate::{
     objects::{Cycle, Face, Region},
-    operations::Polygon,
+    operations::{Polygon, UpdateRegion},
     storage::Handle,
 };
 
@@ -34,12 +34,7 @@ impl UpdateFace for Face {
         &self,
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
-        let exterior = f(self.region().exterior());
-        let region = Region::new(
-            exterior,
-            self.region().interiors().cloned(),
-            self.region().color(),
-        );
+        let region = self.region().update_exterior(f);
         Face::new(self.surface().clone(), region)
     }
 
@@ -47,12 +42,7 @@ impl UpdateFace for Face {
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
-        let interiors = self.region().interiors().cloned().chain(interiors);
-        let region = Region::new(
-            self.region().exterior().clone(),
-            interiors,
-            self.region().color(),
-        );
+        let region = self.region().add_interiors(interiors);
         Face::new(self.surface().clone(), region)
     }
 }
