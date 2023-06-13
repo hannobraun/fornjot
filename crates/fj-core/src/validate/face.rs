@@ -38,15 +38,15 @@ pub enum FaceValidationError {
 
 impl FaceValidationError {
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
-        if face.exterior().half_edges().count() == 0 {
+        if face.region().exterior().half_edges().count() == 0 {
             // Can't determine winding, if the cycle has no half-edges. Sounds
             // like a job for a different validation check.
             return;
         }
 
-        let exterior_winding = face.exterior().winding();
+        let exterior_winding = face.region().exterior().winding();
 
-        for interior in face.interiors() {
+        for interior in face.region().interiors() {
             if interior.half_edges().count() == 0 {
                 // Can't determine winding, if the cycle has no half-edges.
                 // Sounds like a job for a different validation check.
@@ -73,8 +73,8 @@ mod tests {
     use crate::{
         algorithms::reverse::Reverse,
         assert_contains_err,
-        objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        objects::{Cycle, Face, Region},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
@@ -85,31 +85,38 @@ mod tests {
 
         let valid =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [3., 0.], [0., 3.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
-                })
-                .add_interiors([Cycle::polygon(
-                    [[1., 1.], [1., 2.], [2., 1.]],
-                    &mut services,
-                )
-                .insert(&mut services)]);
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[0., 0.], [3., 0.], [0., 3.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .add_interiors([Cycle::polygon(
+                            [[1., 1.], [1., 2.], [2., 1.]],
+                            &mut services,
+                        )
+                        .insert(&mut services)])
+                        .insert(&mut services)
+                });
         let invalid = {
             let interiors = valid
+                .region()
                 .interiors()
                 .cloned()
                 .map(|cycle| cycle.reverse(&mut services))
                 .collect::<Vec<_>>();
 
-            Face::new(
-                valid.surface().clone(),
-                valid.exterior().clone(),
+            let region = Region::new(
+                valid.region().exterior().clone(),
                 interiors,
-                valid.color(),
+                valid.region().color(),
             )
+            .insert(&mut services);
+
+            Face::new(valid.surface().clone(), region)
         };
 
         valid.validate_and_return_first_error()?;

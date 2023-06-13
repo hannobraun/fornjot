@@ -1,64 +1,39 @@
 use std::array;
 
 use crate::{
-    objects::{Cycle, Face},
+    objects::{Face, Region},
     operations::Polygon,
     storage::Handle,
 };
 
 /// Update a [`Face`]
 pub trait UpdateFace {
-    /// Update the exterior of the face
-    fn update_exterior(
+    /// Replace the region of the face
+    fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Self;
-
-    /// Add the provides interiors to the face
-    fn add_interiors(
-        &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self;
 }
 
 impl UpdateFace for Face {
-    fn update_exterior(
+    fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        let exterior = f(self.exterior());
-
-        Face::new(
-            self.surface().clone(),
-            exterior,
-            self.interiors().cloned(),
-            self.color(),
-        )
-    }
-
-    fn add_interiors(
-        &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-    ) -> Self {
-        let interiors = self.interiors().cloned().chain(interiors);
-
-        Face::new(
-            self.surface().clone(),
-            self.exterior().clone(),
-            interiors,
-            self.color(),
-        )
+        let region = f(self.region());
+        Face::new(self.surface().clone(), region)
     }
 }
 
 impl<const D: usize> UpdateFace for Polygon<D> {
-    fn update_exterior(
+    fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        let face = self.face.update_exterior(f);
+        let face = self.face.update_region(f);
         let edges = array::from_fn(|i| {
-            face.exterior()
+            face.region()
+                .exterior()
                 .nth_half_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .clone()
@@ -67,7 +42,8 @@ impl<const D: usize> UpdateFace for Polygon<D> {
             // The duplicated code here is unfortunate, but unless we get a
             // stable `array::each_ref` and something like `array::unzip`, I'm
             // not sure how to avoid it.
-            face.exterior()
+            face.region()
+                .exterior()
                 .nth_half_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .start_vertex()
@@ -79,12 +55,5 @@ impl<const D: usize> UpdateFace for Polygon<D> {
             edges,
             vertices,
         }
-    }
-
-    fn add_interiors(
-        &self,
-        _: impl IntoIterator<Item = Handle<Cycle>>,
-    ) -> Self {
-        panic!("Adding interiors to `Polygon` is not supported.")
     }
 }

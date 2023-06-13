@@ -1,8 +1,8 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    geometry::region::Region,
-    objects::{FaceSet, Surface},
+    objects::{Face, FaceSet, Region, Surface},
+    operations::Insert,
     services::Services,
     storage::Handle,
 };
@@ -10,19 +10,19 @@ use crate::{
 /// A 2-dimensional shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    regions: BTreeSet<Region>,
+    regions: BTreeSet<Handle<Region>>,
 }
 
 impl Sketch {
     /// Construct an empty instance of `Sketch`
-    pub fn new(regions: impl IntoIterator<Item = Region>) -> Self {
+    pub fn new(regions: impl IntoIterator<Item = Handle<Region>>) -> Self {
         Self {
             regions: regions.into_iter().collect(),
         }
     }
 
     /// Access the regions of the sketch
-    pub fn regions(&self) -> impl Iterator<Item = &Region> {
+    pub fn regions(&self) -> impl Iterator<Item = &Handle<Region>> {
         self.regions.iter()
     }
 
@@ -34,7 +34,9 @@ impl Sketch {
     ) -> FaceSet {
         self.regions
             .iter()
-            .map(|r| r.face(surface.clone(), services))
+            .map(|region| {
+                Face::new(surface.clone(), region.clone()).insert(services)
+            })
             .collect()
     }
 }

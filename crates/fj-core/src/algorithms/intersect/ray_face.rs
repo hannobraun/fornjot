@@ -153,7 +153,7 @@ mod tests {
             transform::TransformObject,
         },
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
     };
 
@@ -165,12 +165,16 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([-1., 0., 0.], &mut services);
 
@@ -187,12 +191,16 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([1., 0., 0.], &mut services);
 
@@ -212,12 +220,16 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([0., 0., 2.], &mut services);
 
@@ -234,16 +246,21 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([1., 1., 0.], &mut services);
 
         let edge = face
+            .region()
             .exterior()
             .half_edges()
             .find(|edge| edge.start_position() == Point::from([-1., 1.]))
@@ -264,16 +281,21 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([1., 1., 1.], &mut services);
 
         let vertex = face
+            .region()
             .exterior()
             .half_edges()
             .find(|half_edge| {
@@ -297,12 +319,16 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
 
         assert_eq!(
@@ -321,12 +347,16 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut services,
-                    )
-                    .insert(&mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                                &mut services,
+                            )
+                            .insert(&mut services)
+                        })
+                        .insert(&mut services)
                 });
         let face = face.translate([0., 0., 1.], &mut services);
 

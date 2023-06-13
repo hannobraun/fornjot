@@ -1,11 +1,9 @@
 use std::collections::{btree_set, BTreeSet};
 
-use fj_interop::mesh::Color;
 use fj_math::Winding;
 
 use crate::{
-    geometry::region::Region,
-    objects::{Cycle, Surface},
+    objects::{Region, Surface},
     storage::Handle,
 };
 
@@ -36,21 +34,13 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
     surface: Handle<Surface>,
-    region: Region,
+    region: Handle<Region>,
 }
 
 impl Face {
     /// Construct an instance of `Face`
-    pub fn new(
-        surface: Handle<Surface>,
-        exterior: Handle<Cycle>,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-        color: Option<Color>,
-    ) -> Self {
-        Self {
-            surface,
-            region: Region::new(exterior, interiors, color),
-        }
+    pub fn new(surface: Handle<Surface>, region: Handle<Region>) -> Self {
+        Self { surface, region }
     }
 
     /// Access the surface of the face
@@ -58,26 +48,9 @@ impl Face {
         &self.surface
     }
 
-    /// Access the cycle that bounds the face on the outside
-    pub fn exterior(&self) -> &Handle<Cycle> {
-        self.region.exterior()
-    }
-
-    /// Access the cycles that bound the face on the inside
-    ///
-    /// Each of these cycles defines a hole in the face.
-    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        self.region.interiors()
-    }
-
-    /// Access all cycles of the face (both exterior and interior)
-    pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
-        self.region.all_cycles()
-    }
-
-    /// Access the color of the face
-    pub fn color(&self) -> Option<Color> {
-        self.region.color()
+    /// Access the region of the face
+    pub fn region(&self) -> &Handle<Region> {
+        &self.region
     }
 
     /// Determine handed-ness of the face's front-side coordinate system
@@ -91,7 +64,7 @@ impl Face {
     /// back sides. The front side is the side, where the face's exterior cycle
     /// is wound counter-clockwise.
     pub fn coord_handedness(&self) -> Handedness {
-        match self.exterior().winding() {
+        match self.region.exterior().winding() {
             Winding::Ccw => Handedness::RightHanded,
             Winding::Cw => Handedness::LeftHanded,
         }

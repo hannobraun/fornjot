@@ -29,7 +29,10 @@ impl CurveFaceIntersection {
 
     /// Compute the intersection
     pub fn compute(curve: &Curve, face: &Face) -> Self {
-        let half_edges = face.all_cycles().flat_map(|cycle| cycle.half_edges());
+        let half_edges = face
+            .region()
+            .all_cycles()
+            .flat_map(|cycle| cycle.half_edges());
 
         let mut intersections = Vec::new();
 
@@ -152,7 +155,7 @@ mod tests {
     use crate::{
         geometry::curve::Curve,
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
     };
 
@@ -181,15 +184,19 @@ mod tests {
 
         let face =
             Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_exterior(|_| {
-                    Cycle::polygon(exterior_points, &mut services)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(exterior_points, &mut services)
+                                .insert(&mut services)
+                        })
+                        .add_interiors([Cycle::polygon(
+                            interior_points,
+                            &mut services,
+                        )
+                        .insert(&mut services)])
                         .insert(&mut services)
-                })
-                .add_interiors([Cycle::polygon(
-                    interior_points,
-                    &mut services,
-                )
-                .insert(&mut services)]);
+                });
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

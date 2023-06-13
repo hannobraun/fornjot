@@ -19,6 +19,7 @@ pub use self::{
     join::cycle::JoinCycle,
     update::{
         cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
-        shell::UpdateShell, sketch::UpdateSketch, solid::UpdateSolid,
+        region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
+        solid::UpdateSolid,
     },
 };

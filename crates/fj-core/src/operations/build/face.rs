@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Surface, Vertex},
+    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
         BuildCycle, BuildHalfEdge, BuildSurface, Insert, IsInserted,
         IsInsertedNo,
@@ -16,7 +16,8 @@ pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {
         let exterior = Cycle::empty().insert(services);
-        Face::new(surface, exterior, [], None)
+        let region = Region::new(exterior, [], None).insert(services);
+        Face::new(surface, region)
     }
 
     /// Build a triangle
@@ -44,7 +45,9 @@ pub trait BuildFace {
             (cycle, half_edges, vertices)
         };
 
-        let face = Face::new(surface, exterior, [], None);
+        let region = Region::new(exterior, [], None).insert(services);
+
+        let face = Face::new(surface, region);
 
         Polygon {
             face,

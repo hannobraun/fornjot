@@ -64,7 +64,7 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         geometry::curve::Curve,
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace},
+        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
     };
 
@@ -86,8 +86,13 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            Face::unbound(surface, &mut services).update_exterior(|_| {
-                Cycle::polygon(points, &mut services).insert(&mut services)
+            Face::unbound(surface, &mut services).update_region(|region| {
+                region
+                    .update_exterior(|_| {
+                        Cycle::polygon(points, &mut services)
+                            .insert(&mut services)
+                    })
+                    .insert(&mut services)
             })
         });
 
@@ -113,8 +118,13 @@ mod tests {
             services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::unbound(surface, &mut services).update_exterior(|_| {
-                Cycle::polygon(points, &mut services).insert(&mut services)
+            Face::unbound(surface, &mut services).update_region(|region| {
+                region
+                    .update_exterior(|_| {
+                        Cycle::polygon(points, &mut services)
+                            .insert(&mut services)
+                    })
+                    .insert(&mut services)
             })
         });
 

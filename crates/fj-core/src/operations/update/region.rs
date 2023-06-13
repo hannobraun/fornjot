@@ -1,0 +1,37 @@
+use crate::{
+    objects::{Cycle, Region},
+    storage::Handle,
+};
+
+/// Update a [`Region`]
+pub trait UpdateRegion {
+    /// Update the exterior of the region
+    fn update_exterior(
+        &self,
+        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self;
+
+    /// Add the provides interiors to the region
+    fn add_interiors(
+        &self,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+    ) -> Self;
+}
+
+impl UpdateRegion for Region {
+    fn update_exterior(
+        &self,
+        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self {
+        let exterior = f(self.exterior());
+        Region::new(exterior, self.interiors().cloned(), self.color())
+    }
+
+    fn add_interiors(
+        &self,
+        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+    ) -> Self {
+        let interiors = self.interiors().cloned().chain(interiors);
+        Region::new(self.exterior().clone(), interiors, self.color())
+    }
+}

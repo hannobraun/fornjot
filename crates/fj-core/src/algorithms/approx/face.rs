@@ -85,11 +85,12 @@ impl Approx for &Face {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let exterior = (self.exterior().deref(), self.surface().deref())
-            .approx_with_cache(tolerance, cache);
+        let exterior =
+            (self.region().exterior().deref(), self.surface().deref())
+                .approx_with_cache(tolerance, cache);
 
         let mut interiors = BTreeSet::new();
-        for cycle in self.interiors() {
+        for cycle in self.region().interiors() {
             let cycle = (cycle.deref(), self.surface().deref())
                 .approx_with_cache(tolerance, cache);
             interiors.insert(cycle);
@@ -98,7 +99,7 @@ impl Approx for &Face {
         FaceApprox {
             exterior,
             interiors,
-            color: self.color(),
+            color: self.region().color(),
             coord_handedness: self.coord_handedness(),
         }
     }

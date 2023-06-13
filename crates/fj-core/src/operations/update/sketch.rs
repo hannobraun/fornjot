@@ -1,16 +1,16 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::region::Region,
-    objects::{Cycle, Sketch},
+    objects::{Cycle, Region, Sketch},
     operations::{BuildCycle, Insert},
     services::Services,
+    storage::Handle,
 };
 
 /// Update a [`Sketch`]
 pub trait UpdateSketch {
     /// Add a region to the sketch
-    fn add_region(&self, region: Region) -> Self;
+    fn add_region(&self, region: Handle<Region>) -> Self;
 
     /// Add a circle to the sketch
     fn add_circle(
@@ -29,7 +29,7 @@ pub trait UpdateSketch {
 }
 
 impl UpdateSketch for Sketch {
-    fn add_region(&self, region: Region) -> Self {
+    fn add_region(&self, region: Handle<Region>) -> Self {
         Sketch::new(self.regions().cloned().chain([region]))
     }
 
@@ -40,7 +40,8 @@ impl UpdateSketch for Sketch {
         services: &mut Services,
     ) -> Self {
         let exterior = Cycle::circle(center, radius, services).insert(services);
-        self.add_region(Region::new(exterior, [], None))
+        let region = Region::new(exterior, [], None).insert(services);
+        self.add_region(region)
     }
 
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
@@ -50,6 +51,7 @@ impl UpdateSketch for Sketch {
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
         let exterior = Cycle::polygon(points, services).insert(services);
-        self.add_region(Region::new(exterior, [], None))
+        let region = Region::new(exterior, [], None).insert(services);
+        self.add_region(region)
     }
 }

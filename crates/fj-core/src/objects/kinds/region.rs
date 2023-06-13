@@ -1,15 +1,9 @@
 //! A single, continues 2d region
 use fj_interop::mesh::Color;
 
-use crate::{
-    objects::{Cycle, Face, Surface},
-    operations::Insert,
-    services::Services,
-    storage::Handle,
-};
+use crate::{objects::Cycle, storage::Handle};
 
-/// A single, continuous 2d region, may contain holes. Once applied to a
-/// [`Surface`] becomes a [`Face`]
+/// A single, continuous 2d region, may contain holes
 ///
 /// Interior cycles must have the opposite winding of the exterior cycle,
 /// meaning on the front side of the region, they must appear clockwise. This
@@ -58,20 +52,5 @@ impl Region {
     /// Access the color of the region
     pub fn color(&self) -> Option<Color> {
         self.color
-    }
-
-    /// Convert the 2D region to a 3D face, by applying it to a surface.
-    pub fn face(
-        &self,
-        surface: Handle<Surface>,
-        services: &mut Services,
-    ) -> Handle<Face> {
-        let face: Face = Face::new(
-            surface,
-            self.exterior().clone(),
-            self.interiors().cloned(),
-            self.color,
-        );
-        face.insert(services)
     }
 }
