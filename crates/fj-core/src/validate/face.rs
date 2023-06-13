@@ -108,7 +108,7 @@ mod tests {
             let region = Region::new(
                 valid.region().exterior().clone(),
                 interiors,
-                valid.color(),
+                valid.region().color(),
             );
             Face::new(valid.surface().clone(), region)
         };

@@ -15,7 +15,7 @@ impl TransformObject for Face {
         cache: &mut TransformCache,
     ) -> Self {
         // Color does not need to be transformed.
-        let color = self.color();
+        let color = self.region().color();
 
         let surface = self
             .surface()

@@ -30,7 +30,7 @@ impl UpdateFace for Face {
         let region = Region::new(
             exterior,
             self.region().interiors().cloned(),
-            self.color(),
+            self.region().color(),
         );
         Face::new(self.surface().clone(), region)
     }
@@ -43,7 +43,7 @@ impl UpdateFace for Face {
         let region = Region::new(
             self.region().exterior().clone(),
             interiors,
-            self.color(),
+            self.region().color(),
         );
         Face::new(self.surface().clone(), region)
     }

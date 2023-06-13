@@ -1,6 +1,5 @@
 use std::collections::{btree_set, BTreeSet};
 
-use fj_interop::mesh::Color;
 use fj_math::Winding;
 
 use crate::{
@@ -52,11 +51,6 @@ impl Face {
     /// Access the region of the face
     pub fn region(&self) -> &Region {
         &self.region
-    }
-
-    /// Access the color of the face
-    pub fn color(&self) -> Option<Color> {
-        self.region.color()
     }
 
     /// Determine handed-ness of the face's front-side coordinate system
