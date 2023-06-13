@@ -49,6 +49,11 @@ impl Face {
         &self.surface
     }
 
+    /// Access the region of the face
+    pub fn region(&self) -> &Region {
+        &self.region
+    }
+
     /// Access the cycle that bounds the face on the outside
     pub fn exterior(&self) -> &Handle<Cycle> {
         self.region.exterior()
