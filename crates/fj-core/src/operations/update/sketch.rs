@@ -39,7 +39,8 @@ impl UpdateSketch for Sketch {
         services: &mut Services,
     ) -> Self {
         let exterior = Cycle::circle(center, radius, services).insert(services);
-        self.add_region(Region::new(exterior, [], None))
+        let region = Region::new(exterior, [], None);
+        self.add_region(region)
     }
 
     fn add_polygon<P, Ps>(&self, points: Ps, services: &mut Services) -> Self
@@ -49,6 +50,7 @@ impl UpdateSketch for Sketch {
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
         let exterior = Cycle::polygon(points, services).insert(services);
-        self.add_region(Region::new(exterior, [], None))
+        let region = Region::new(exterior, [], None);
+        self.add_region(region)
     }
 }
