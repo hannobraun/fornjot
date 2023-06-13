@@ -1,7 +1,8 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    objects::{FaceSet, Region, Surface},
+    objects::{Face, FaceSet, Region, Surface},
+    operations::Insert,
     services::Services,
     storage::Handle,
 };
@@ -33,7 +34,9 @@ impl Sketch {
     ) -> FaceSet {
         self.regions
             .iter()
-            .map(|region| region.face(surface.clone(), services))
+            .map(|region| {
+                Face::new(surface.clone(), region.clone()).insert(services)
+            })
             .collect()
     }
 }
