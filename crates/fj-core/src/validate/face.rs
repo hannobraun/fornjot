@@ -106,7 +106,7 @@ mod tests {
                 .region()
                 .interiors()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut services))
+                .map(|cycle| cycle.reverse(&mut services).insert(&mut services))
                 .collect::<Vec<_>>();
 
             let region = Region::new(
