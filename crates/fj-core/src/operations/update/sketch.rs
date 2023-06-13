@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{Cycle, Region, Sketch},
-    operations::{BuildCycle, Insert},
+    operations::{BuildCycle, BuildRegion, Insert},
     services::Services,
     storage::Handle,
 };
@@ -39,8 +39,7 @@ impl UpdateSketch for Sketch {
         radius: impl Into<Scalar>,
         services: &mut Services,
     ) -> Self {
-        let exterior = Cycle::circle(center, radius, services).insert(services);
-        let region = Region::new(exterior, [], None).insert(services);
+        let region = Region::circle(center, radius, services).insert(services);
         self.add_region(region)
     }
 
