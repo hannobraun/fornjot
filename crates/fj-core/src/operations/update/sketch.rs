@@ -1,8 +1,8 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Region, Sketch},
-    operations::{BuildCycle, Insert},
+    objects::{Region, Sketch},
+    operations::{BuildRegion, Insert},
     services::Services,
     storage::Handle,
 };
@@ -31,8 +31,7 @@ impl UpdateSketch for Sketch {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let exterior = Cycle::polygon(points, services).insert(services);
-        let region = Region::new(exterior, [], None).insert(services);
+        let region = Region::polygon(points, services).insert(services);
         self.add_region(region)
     }
 }

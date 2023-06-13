@@ -17,6 +17,17 @@ pub trait BuildRegion {
         let exterior = Cycle::circle(center, radius, services).insert(services);
         Region::new(exterior, [], None)
     }
+
+    /// Build a polygon
+    fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Region
+    where
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
+    {
+        let exterior = Cycle::polygon(points, services).insert(services);
+        Region::new(exterior, [], None)
+    }
 }
 
 impl BuildRegion for Region {}
