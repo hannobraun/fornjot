@@ -4,13 +4,12 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::Insert,
     services::Services,
-    storage::Handle,
 };
 
 use super::Reverse;
 
-impl Reverse for Handle<Cycle> {
-    fn reverse(self, services: &mut Services) -> Self {
+impl Reverse for Cycle {
+    fn reverse(&self, services: &mut Services) -> Self {
         let mut edges = self
             .half_edges()
             .cloned()
@@ -33,6 +32,6 @@ impl Reverse for Handle<Cycle> {
 
         edges.reverse();
 
-        Cycle::new(edges).insert(services)
+        Cycle::new(edges)
     }
 }

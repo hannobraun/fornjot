@@ -6,7 +6,7 @@ mod cycle;
 mod face;
 
 /// Reverse the direction/orientation of an object
-pub trait Reverse: Sized {
+pub trait Reverse {
     /// Reverse the direction/orientation of the object
-    fn reverse(self, services: &mut Services) -> Self;
+    fn reverse(&self, services: &mut Services) -> Self;
 }

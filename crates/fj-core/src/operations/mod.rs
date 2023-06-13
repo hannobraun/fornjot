@@ -3,6 +3,7 @@
 mod build;
 mod insert;
 mod join;
+mod reverse;
 mod update;
 
 pub use self::{
@@ -18,6 +19,7 @@ pub use self::{
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::cycle::JoinCycle,
+    reverse::Reverse,
     update::{
         cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
         region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
