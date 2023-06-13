@@ -22,6 +22,9 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         let (edge, next_vertex, surface, color) = self;
         let path = path.into();
 
+        let surface =
+            (edge.curve(), surface).sweep_with_cache(path, cache, services);
+
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, global_edges) = {
@@ -105,7 +108,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             });
 
         let face = Face::new(
-            (edge.curve(), surface).sweep_with_cache(path, cache, services),
+            surface,
             exterior.unwrap().insert(services),
             Vec::new(),
             color,
