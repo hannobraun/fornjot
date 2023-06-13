@@ -19,7 +19,7 @@ use std::convert::Infallible;
 
 use fj_math::Scalar;
 
-/// Assert that some object has a validation error which matches a specifc pattern.
+/// Assert that some object has a validation error which matches a specific pattern.
 /// This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.
 #[macro_export]
 macro_rules! assert_contains_err {
