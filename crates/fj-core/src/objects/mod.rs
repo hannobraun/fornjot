@@ -19,31 +19,6 @@
 //! slightly different, if they are created based on complex input data (as you
 //! might have in the real world).
 //!
-//! ## An Example
-//!
-//! Let's talk about a specific example: two simple curves (straight lines that
-//! are coincident with coordinate system axes) which are intersecting at a
-//! simple point. Let's say the intersection point sits at the global origin
-//! (`[0, 0, 0]`), and its local coordinate on each line also happens to be `0`.
-//!
-//! If you compute the global coordinates from each of the line-local
-//! coordinates, you'll end up with the same result for sure. If we create two
-//! [`Vertex`] instances from these global coordinates, any validation code that
-//! expects those two instances to be equal, will be happy.
-//!
-//! But what if the situation is not so simple? Let's say the curves are circles
-//! instead of lines, and instead of being all neat, they are at some arbitrary
-//! location in space, oriented at weird angles. The local coordinates of their
-//! intersection point are not `0`, but different values that are not neatly
-//! represented by floating point values.
-//!
-//! In such a situation, you have an excellent chance of ending up with slightly
-//! different global coordinates, if you compute them from each local
-//! coordinate. If you're building a [`Cycle`], and this intersection point is
-//! where the two curves connect, you could end up with a gap (or self-
-//! intersection) in the cycle. If that ends up exported to a triangle mesh,
-//! that mesh will be invalid.
-//!
 //! ## Validation Must Use Identity
 //!
 //! To prevent such situations, where everything looked fine during development,
@@ -51,9 +26,6 @@
 //! objects and expects them to be the same, must do that comparison based on
 //! identity, not equality. That way, this problem can never happen, because we
 //! never expect non-identical objects to be the same.
-//!
-//! For our example, this would mean we compute *one* [`Vertex`] from *one* of
-//! the local coordinates.
 //!
 //! ## How Identity Works
 //!
