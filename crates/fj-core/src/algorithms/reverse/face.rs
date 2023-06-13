@@ -2,12 +2,11 @@ use crate::{
     objects::{Face, Region},
     operations::Insert,
     services::Services,
-    storage::Handle,
 };
 
 use super::Reverse;
 
-impl Reverse for Handle<Face> {
+impl Reverse for Face {
     fn reverse(&self, services: &mut Services) -> Self {
         let exterior = self
             .region()
@@ -24,6 +23,6 @@ impl Reverse for Handle<Face> {
         let region = Region::new(exterior, interiors, self.region().color())
             .insert(services);
 
-        Face::new(self.surface().clone(), region).insert(services)
+        Face::new(self.surface().clone(), region)
     }
 }

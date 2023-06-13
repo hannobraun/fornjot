@@ -46,7 +46,7 @@ impl Sweep for Handle<Face> {
             if is_negative_sweep {
                 self.clone()
             } else {
-                self.clone().reverse(services)
+                self.clone().reverse(services).insert(services)
             }
         };
         faces.push(bottom_face.clone());
