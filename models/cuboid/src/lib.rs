@@ -1,8 +1,8 @@
 use fj::{
     core::{
         algorithms::sweep::Sweep,
-        objects::{Sketch, Solid},
-        operations::{BuildSketch, Insert, UpdateSketch},
+        objects::{Region, Sketch, Solid},
+        operations::{BuildRegion, BuildSketch, Insert, UpdateSketch},
         services::Services,
         storage::Handle,
     },
@@ -13,14 +13,17 @@ pub fn cuboid(x: f64, y: f64, z: f64) -> Handle<Solid> {
     let mut services = Services::new();
 
     let sketch = Sketch::empty()
-        .add_polygon(
-            [
-                [-x / 2., -y / 2.],
-                [x / 2., -y / 2.],
-                [x / 2., y / 2.],
-                [-x / 2., y / 2.],
-            ],
-            &mut services,
+        .add_region(
+            Region::polygon(
+                [
+                    [-x / 2., -y / 2.],
+                    [x / 2., -y / 2.],
+                    [x / 2., y / 2.],
+                    [-x / 2., y / 2.],
+                ],
+                &mut services,
+            )
+            .insert(&mut services),
         )
         .insert(&mut services);
 
