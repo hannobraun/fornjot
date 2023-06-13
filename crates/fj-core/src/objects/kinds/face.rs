@@ -4,8 +4,7 @@ use fj_interop::mesh::Color;
 use fj_math::Winding;
 
 use crate::{
-    geometry::region::Region,
-    objects::{Cycle, Surface},
+    objects::{Cycle, Region, Surface},
     storage::Handle,
 };
 

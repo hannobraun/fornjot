@@ -49,6 +49,7 @@ pub use self::{
         cycle::{Cycle, HalfEdgesOfCycle},
         edge::{GlobalEdge, HalfEdge},
         face::{Face, FaceSet, Handedness},
+        region::Region,
         shell::Shell,
         sketch::Sketch,
         solid::Solid,

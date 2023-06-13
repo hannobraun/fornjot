@@ -1,8 +1,7 @@
 use std::collections::BTreeSet;
 
 use crate::{
-    geometry::region::Region,
-    objects::{FaceSet, Surface},
+    objects::{FaceSet, Region, Surface},
     services::Services,
     storage::Handle,
 };

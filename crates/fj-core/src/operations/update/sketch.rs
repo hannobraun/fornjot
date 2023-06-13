@@ -1,8 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::region::Region,
-    objects::{Cycle, Sketch},
+    objects::{Cycle, Region, Sketch},
     operations::{BuildCycle, Insert},
     services::Services,
 };
