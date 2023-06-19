@@ -43,6 +43,11 @@ impl Viewer {
         })
     }
 
+    /// Access the cursor
+    pub fn cursor(&self) -> Option<NormalizedScreenPosition> {
+        self.cursor
+    }
+
     /// Toggle the "draw model" setting
     pub fn toggle_draw_model(&mut self) {
         self.draw_config.draw_model = !self.draw_config.draw_model;

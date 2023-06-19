@@ -32,7 +32,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             &event,
             &window,
             &held_mouse_button,
-            &mut viewer.cursor,
+            &mut viewer.cursor(),
             invert_zoom,
         );
         if let Some(input_event) = input_event {
