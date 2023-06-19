@@ -17,12 +17,6 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
-    /// Construct a `Vector` from an nalgebra vector
-    pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
-        let components: [f64; D] = vector.into();
-        Self::from(components)
-    }
-
     /// Convert the vector into an nalgebra vector
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.components.map(Scalar::into_f64).into()
@@ -239,7 +233,8 @@ impl<S: Into<Scalar>, const D: usize> From<[S; D]> for Vector<D> {
 
 impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
     fn from(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_na(vector)
+        let components: [f64; D] = vector.into();
+        Vector::from(components)
     }
 }
 
