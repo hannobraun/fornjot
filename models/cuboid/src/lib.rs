@@ -9,9 +9,7 @@ use fj::{
     math::Vector,
 };
 
-pub fn model(x: f64, y: f64, z: f64) -> Handle<Solid> {
-    let mut services = Services::new();
-
+pub fn model(x: f64, y: f64, z: f64, services: &mut Services) -> Handle<Solid> {
     let sketch = Sketch::empty()
         .add_region(
             Region::polygon(
@@ -21,13 +19,13 @@ pub fn model(x: f64, y: f64, z: f64) -> Handle<Solid> {
                     [x / 2., y / 2.],
                     [-x / 2., y / 2.],
                 ],
-                &mut services,
+                services,
             )
-            .insert(&mut services),
+            .insert(services),
         )
-        .insert(&mut services);
+        .insert(services);
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., z]);
-    (sketch, surface).sweep(path, &mut services)
+    (sketch, surface).sweep(path, services)
 }

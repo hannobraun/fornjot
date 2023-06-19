@@ -14,9 +14,13 @@ use fj::{
     math::Vector,
 };
 
-pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> Handle<Solid> {
-    let mut services = Services::new();
-
+pub fn model(
+    num_points: u64,
+    r1: f64,
+    r2: f64,
+    h: f64,
+    services: &mut Services,
+) -> Handle<Solid> {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
         let angle_rad = 2. * PI / num_vertices as f64 * i as f64;
@@ -39,15 +43,15 @@ pub fn model(num_points: u64, r1: f64, r2: f64, h: f64) -> Handle<Solid> {
 
     let sketch = Sketch::empty()
         .add_region(
-            Region::polygon(outer_points, &mut services)
-                .add_interiors([Cycle::polygon(inner_points, &mut services)
-                    .reverse(&mut services)
-                    .insert(&mut services)])
-                .insert(&mut services),
+            Region::polygon(outer_points, services)
+                .add_interiors([Cycle::polygon(inner_points, services)
+                    .reverse(services)
+                    .insert(services)])
+                .insert(services),
         )
-        .insert(&mut services);
+        .insert(services);
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., h]);
-    (sketch, surface).sweep(path, &mut services)
+    (sketch, surface).sweep(path, services)
 }
