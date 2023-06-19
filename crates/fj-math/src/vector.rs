@@ -240,15 +240,11 @@ impl<const D: usize> Default for Vector<D> {
     }
 }
 
-impl<const D: usize> From<[Scalar; D]> for Vector<D> {
-    fn from(components: [Scalar; D]) -> Self {
-        Self { components }
-    }
-}
-
-impl<const D: usize> From<[f64; D]> for Vector<D> {
-    fn from(components: [f64; D]) -> Self {
-        Self::from_components_f64(components)
+impl<S: Into<Scalar>, const D: usize> From<[S; D]> for Vector<D> {
+    fn from(components: [S; D]) -> Self {
+        Self {
+            components: components.map(Into::into),
+        }
     }
 }
 
