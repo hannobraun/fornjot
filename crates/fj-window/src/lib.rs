@@ -13,4 +13,7 @@
 mod display;
 mod window;
 
-pub use self::display::{display, Error};
+pub use self::{
+    display::{display, Error},
+    window::WindowError,
+};
