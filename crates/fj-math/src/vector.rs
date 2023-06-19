@@ -17,21 +17,11 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
-    /// Construct a `Vector` from `f64` components
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the components can not be converted to [`Scalar`]. See
-    /// [`Scalar::from_f64`], which this method uses internally.
-    pub fn from_components_f64(components: [f64; D]) -> Self {
+    /// Create a vector whose components are all equal
+    pub fn from_component(scalar: impl Into<Scalar>) -> Self {
         Self {
-            components: components.map(Scalar::from_f64),
+            components: [scalar.into(); D],
         }
-    }
-
-    /// Construct a `Vector` from an nalgebra vector
-    pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_components_f64(vector.into())
     }
 
     /// Convert the vector into an nalgebra vector
@@ -240,21 +230,18 @@ impl<const D: usize> Default for Vector<D> {
     }
 }
 
-impl<const D: usize> From<[Scalar; D]> for Vector<D> {
-    fn from(components: [Scalar; D]) -> Self {
-        Self { components }
-    }
-}
-
-impl<const D: usize> From<[f64; D]> for Vector<D> {
-    fn from(components: [f64; D]) -> Self {
-        Self::from_components_f64(components)
+impl<S: Into<Scalar>, const D: usize> From<[S; D]> for Vector<D> {
+    fn from(components: [S; D]) -> Self {
+        Self {
+            components: components.map(Into::into),
+        }
     }
 }
 
 impl<const D: usize> From<nalgebra::SVector<f64, D>> for Vector<D> {
     fn from(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_na(vector)
+        let components: [f64; D] = vector.into();
+        Vector::from(components)
     }
 }
 

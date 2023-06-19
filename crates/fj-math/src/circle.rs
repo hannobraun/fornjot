@@ -1,6 +1,6 @@
 use approx::AbsDiffEq;
 
-use crate::{Point, Scalar, Vector};
+use crate::{Aabb, Point, Scalar, Vector};
 
 /// An n-dimensional circle
 ///
@@ -150,6 +150,16 @@ impl<const D: usize> Circle<D> {
         let (sin, cos) = angle.sin_cos();
 
         self.a * cos + self.b * sin
+    }
+
+    /// Calculate an AABB for the circle
+    pub fn aabb(&self) -> Aabb<D> {
+        let center_to_min_max = Vector::from_component(self.radius());
+
+        Aabb {
+            min: self.center() - center_to_min_max,
+            max: self.center() + center_to_min_max,
+        }
     }
 }
 
