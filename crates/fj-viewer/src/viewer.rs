@@ -9,23 +9,12 @@ use crate::{
 
 /// The Fornjot model viewer
 pub struct Viewer {
-    /// The camera
-    pub camera: Camera,
-
-    /// The cursor
-    pub cursor: Option<NormalizedScreenPosition>,
-
-    /// The draw config
-    pub draw_config: DrawConfig,
-
-    /// The focus point
-    pub focus_point: Option<FocusPoint>,
-
-    /// The renderer
-    pub renderer: Renderer,
-
-    /// The model
-    pub model: Option<Model>,
+    camera: Camera,
+    cursor: Option<NormalizedScreenPosition>,
+    draw_config: DrawConfig,
+    focus_point: Option<FocusPoint>,
+    renderer: Renderer,
+    model: Option<Model>,
 }
 
 impl Viewer {
