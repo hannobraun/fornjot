@@ -8,6 +8,15 @@ use crate::{
 
 /// Build a [`Region`]
 pub trait BuildRegion {
+    /// Build an empty region
+    fn empty(services: &mut Services) -> Region {
+        let exterior = Cycle::empty().insert(services);
+        let interiors = [];
+        let color = None;
+
+        Region::new(exterior, interiors, color)
+    }
+
     /// Build a circle
     fn circle(
         center: impl Into<Point<2>>,
