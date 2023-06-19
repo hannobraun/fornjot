@@ -21,9 +21,6 @@ pub struct Viewer {
     /// The focus point
     pub focus_point: Option<FocusPoint>,
 
-    /// The input handler
-    pub input_handler: InputHandler,
-
     /// The renderer
     pub renderer: Renderer,
 
@@ -41,7 +38,6 @@ impl Viewer {
             cursor: None,
             draw_config: DrawConfig::default(),
             focus_point: None,
-            input_handler: InputHandler::default(),
             renderer,
             model: None,
         })
