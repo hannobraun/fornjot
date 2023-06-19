@@ -79,7 +79,7 @@ impl<const D: usize> Line<D> {
     /// Access the direction of the line
     ///
     /// The length of this vector defines the unit of the line's curve
-    /// coordinate system. The coordinate `1.` is always were the direction
+    /// coordinate system. The coordinate `1.` is always where the direction
     /// vector points, from `origin`.
     pub fn direction(&self) -> Vector<D> {
         self.direction
