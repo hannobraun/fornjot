@@ -413,8 +413,4 @@ pub enum DrawError {
     /// See - [wgpu::SurfaceError](https://docs.rs/wgpu/latest/wgpu/enum.SurfaceError.html)
     #[error("Error acquiring output surface: {0}")]
     Surface(#[from] wgpu::SurfaceError),
-
-    /// Text rasterisation error.
-    #[error("Error drawing text: {0}")]
-    Text(String),
 }
