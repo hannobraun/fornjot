@@ -852,7 +852,6 @@ name = "fj-viewer"
 version = "0.46.0"
 dependencies = [
  "bytemuck",
- "chrono",
  "fj-interop",
  "fj-math",
  "getrandom",
