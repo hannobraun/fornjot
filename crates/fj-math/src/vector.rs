@@ -17,18 +17,6 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
-    /// Construct a `Vector` from `f64` components
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the components can not be converted to [`Scalar`]. See
-    /// [`Scalar::from_f64`], which this method uses internally.
-    pub fn from_components_f64(components: [f64; D]) -> Self {
-        Self {
-            components: components.map(Scalar::from_f64),
-        }
-    }
-
     /// Construct a `Vector` from an nalgebra vector
     pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
         let components: [f64; D] = vector.into();
