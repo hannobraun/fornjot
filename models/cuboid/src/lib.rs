@@ -9,7 +9,7 @@ use fj::{
     math::Vector,
 };
 
-pub fn cuboid(x: f64, y: f64, z: f64) -> Handle<Solid> {
+pub fn model(x: f64, y: f64, z: f64) -> Handle<Solid> {
     let mut services = Services::new();
 
     let sketch = Sketch::empty()
@@ -28,7 +28,6 @@ pub fn cuboid(x: f64, y: f64, z: f64) -> Handle<Solid> {
         .insert(&mut services);
 
     let surface = services.objects.surfaces.xy_plane();
-
     let path = Vector::from([0., 0., z]);
     (sketch, surface).sweep(path, &mut services)
 }
