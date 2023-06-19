@@ -1,6 +1,5 @@
 use bytemuck::{Pod, Zeroable};
 use fj_interop::mesh::{Index, Mesh};
-use fj_math::{Point, Vector};
 
 #[derive(Debug)]
 pub struct Vertices {
@@ -22,50 +21,6 @@ impl Vertices {
 
     pub fn indices(&self) -> &[Index] {
         self.indices.as_slice()
-    }
-
-    pub fn push_line(
-        &mut self,
-        line: [Point<3>; 2],
-        normal: [f32; 3],
-        color: [f32; 4],
-    ) {
-        let line = line.into_iter().map(|point| Vertex {
-            position: point.coords.components.map(|scalar| scalar.into_f32()),
-            normal,
-            color,
-        });
-
-        self.vertices.extend(line);
-
-        self.indices.push(self.indices.len() as u32);
-        self.indices.push(self.indices.len() as u32);
-    }
-
-    pub fn push_cross(
-        &mut self,
-        position: Point<3>,
-        normal: [f32; 3],
-        color: [f32; 4],
-    ) {
-        let d = 0.05;
-
-        self.push_line(
-            [
-                position - Vector::from([d, 0., 0.]),
-                position + Vector::from([d, 0., 0.]),
-            ],
-            normal,
-            color,
-        );
-        self.push_line(
-            [
-                position - Vector::from([0., d, 0.]),
-                position + Vector::from([0., d, 0.]),
-            ],
-            normal,
-            color,
-        );
     }
 }
 

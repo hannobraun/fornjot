@@ -3,32 +3,21 @@ use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
-    camera::FocusPoint, Camera, DrawConfig, InputEvent, InputHandler,
-    NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
+    camera::{Camera, FocusPoint},
+    graphics::{DrawConfig, Renderer},
+    input::InputHandler,
+    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    ScreenSize,
 };
 
 /// The Fornjot model viewer
 pub struct Viewer {
-    /// The camera
-    pub camera: Camera,
-
-    /// The cursor
-    pub cursor: Option<NormalizedScreenPosition>,
-
-    /// The draw config
-    pub draw_config: DrawConfig,
-
-    /// The focus point
-    pub focus_point: Option<FocusPoint>,
-
-    /// The input handler
-    pub input_handler: InputHandler,
-
-    /// The renderer
-    pub renderer: Renderer,
-
-    /// The model
-    pub model: Option<Model>,
+    camera: Camera,
+    cursor: Option<NormalizedScreenPosition>,
+    draw_config: DrawConfig,
+    focus_point: Option<FocusPoint>,
+    renderer: Renderer,
+    model: Option<Model>,
 }
 
 impl Viewer {
@@ -41,10 +30,14 @@ impl Viewer {
             cursor: None,
             draw_config: DrawConfig::default(),
             focus_point: None,
-            input_handler: InputHandler::default(),
             renderer,
             model: None,
         })
+    }
+
+    /// Access the cursor
+    pub fn cursor(&self) -> Option<NormalizedScreenPosition> {
+        self.cursor
     }
 
     /// Toggle the "draw model" setting

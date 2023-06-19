@@ -15,14 +15,11 @@ mod camera;
 mod graphics;
 mod input;
 mod screen;
-mod status_report;
 mod viewer;
 
 pub use self::{
-    camera::Camera,
-    graphics::{DrawConfig, Renderer, RendererInitError},
-    input::{InputEvent, InputHandler},
+    graphics::RendererInitError,
+    input::InputEvent,
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
-    status_report::StatusReport,
     viewer::Viewer,
 };

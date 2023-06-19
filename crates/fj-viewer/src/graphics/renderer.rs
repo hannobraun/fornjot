@@ -403,18 +403,9 @@ pub enum RendererInitError {
     RequestDevice(#[from] wgpu::RequestDeviceError),
 }
 
-/// Graphics rendering error
+/// Draw error
 ///
-/// Describes errors related to non initialization graphics errors.
+/// Returned by [`Renderer::draw`].
 #[derive(Error, Debug)]
-pub enum DrawError {
-    /// Surface drawing error.
-    ///
-    /// See - [wgpu::SurfaceError](https://docs.rs/wgpu/latest/wgpu/enum.SurfaceError.html)
-    #[error("Error acquiring output surface: {0}")]
-    Surface(#[from] wgpu::SurfaceError),
-
-    /// Text rasterisation error.
-    #[error("Error drawing text: {0}")]
-    Text(String),
-}
+#[error("Error acquiring output surface: {0}")]
+pub struct DrawError(#[from] wgpu::SurfaceError);
