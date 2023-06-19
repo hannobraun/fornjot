@@ -31,7 +31,8 @@ impl<const D: usize> Vector<D> {
 
     /// Construct a `Vector` from an nalgebra vector
     pub fn from_na(vector: nalgebra::SVector<f64, D>) -> Self {
-        Self::from_components_f64(vector.into())
+        let components: [f64; D] = vector.into();
+        Self::from(components)
     }
 
     /// Convert the vector into an nalgebra vector
