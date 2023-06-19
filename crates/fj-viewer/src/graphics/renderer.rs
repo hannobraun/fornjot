@@ -407,10 +407,5 @@ pub enum RendererInitError {
 ///
 /// Describes errors related to non initialization graphics errors.
 #[derive(Error, Debug)]
-pub enum DrawError {
-    /// Surface drawing error.
-    ///
-    /// See - [wgpu::SurfaceError](https://docs.rs/wgpu/latest/wgpu/enum.SurfaceError.html)
-    #[error("Error acquiring output surface: {0}")]
-    Surface(#[from] wgpu::SurfaceError),
-}
+#[error("Error acquiring output surface: {0}")]
+pub struct DrawError(#[from] wgpu::SurfaceError);
