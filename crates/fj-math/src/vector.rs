@@ -17,6 +17,13 @@ pub struct Vector<const D: usize> {
 }
 
 impl<const D: usize> Vector<D> {
+    /// Create a vector whose components are all equal
+    pub fn from_component(scalar: impl Into<Scalar>) -> Self {
+        Self {
+            components: [scalar.into(); D],
+        }
+    }
+
     /// Convert the vector into an nalgebra vector
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.components.map(Scalar::into_f64).into()
