@@ -9,6 +9,7 @@ members = [
     "crates/fj-viewer",
     "crates/fj-window",
 
+    "models/all",
     "models/cuboid",
     "models/spacer",
     "models/star",

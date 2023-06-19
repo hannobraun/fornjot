@@ -1,0 +1,16 @@
+[package]
+name = "all"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.fj]
+path = "../../crates/fj"
+
+[dependencies.cuboid]
+path = "../cuboid"
+
+[dependencies.spacer]
+path = "../spacer"
+
+[dependencies.star]
+path = "../star"

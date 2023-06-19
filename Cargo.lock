@@ -66,6 +66,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "all"
+version = "0.1.0"
+dependencies = [
+ "cuboid",
+ "fj",
+ "spacer",
+ "star",
+]
+
+[[package]]
 name = "android-activity"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
