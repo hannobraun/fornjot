@@ -4,6 +4,16 @@ use fj_core::algorithms::approx::{InvalidTolerance, Tolerance};
 use fj_math::Scalar;
 
 /// Standardized CLI for Fornjot models
+///
+/// This is completely optional, as models are just Rust code and don't need any
+/// kind of CLI interface. It is useful, however, to provide a standardized
+/// interface for viewing and exporting models, and is used for Fornjot's
+/// example models and the testing infrastructure they are part of.
+///
+/// You might not want to use this struct directly. [`handle_model`] Provides a
+/// more high-level and convenient interface.
+///
+/// [`handle_model`]: crate::handle_model()
 #[derive(clap::Parser)]
 pub struct Args {
     /// Export model to this path

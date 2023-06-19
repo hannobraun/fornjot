@@ -6,7 +6,7 @@ pub struct Window(winit::window::Window);
 
 impl Window {
     /// Create an instance of `Window` from the given `EventLoop`
-    pub fn new<T>(event_loop: &EventLoop<T>) -> Result<Self, Error> {
+    pub fn new<T>(event_loop: &EventLoop<T>) -> Result<Self, WindowError> {
         let window = WindowBuilder::new()
             .with_title("Fornjot")
             .with_maximized(true)
@@ -57,4 +57,4 @@ impl Screen for Window {
 /// Error initializing window
 #[derive(Debug, thiserror::Error)]
 #[error("Error initializing window")]
-pub struct Error(#[from] pub winit::error::OsError);
+pub struct WindowError(#[from] pub winit::error::OsError);
