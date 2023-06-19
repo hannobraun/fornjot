@@ -11,6 +11,7 @@ members = [
 
     "models/cuboid",
     "models/spacer",
+    "models/star",
 
     "tools/autolib",
     "tools/automator",
