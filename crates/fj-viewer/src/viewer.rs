@@ -3,8 +3,11 @@ use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
-    camera::FocusPoint, Camera, DrawConfig, InputEvent, InputHandler,
-    NormalizedScreenPosition, Renderer, RendererInitError, Screen, ScreenSize,
+    camera::{Camera, FocusPoint},
+    graphics::{DrawConfig, Renderer},
+    input::InputHandler,
+    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
+    ScreenSize,
 };
 
 /// The Fornjot model viewer
