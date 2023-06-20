@@ -20,7 +20,6 @@ pub async fn create_release_announcement(
     let now = Utc::now();
 
     let year = now.year();
-    let week = format!("{:02}", now.iso_week().week());
     let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
@@ -29,12 +28,13 @@ pub async fn create_release_announcement(
     let pull_requests =
         pull_requests_since_last_release.pull_requests.into_values();
 
-    // For now, it's good enough to just release a new minor version every week.
+    // For now, it's good enough to just release a new minor version every time.
     // We could also determine whether there were breaking changes to make sure
-    // we actually need it, but as of now, breaking changes every week are
-    // pretty much a given.
+    // we actually need it, but as of now, breaking changes are pretty much a
+    // given.
     let mut version = pull_requests_since_last_release.version_of_last_release;
     version.minor += 1;
+    let version = version.to_string();
 
     let min_dollars = 32;
     let for_readme = false;
@@ -42,23 +42,15 @@ pub async fn create_release_announcement(
         .await?
         .as_markdown(min_dollars, for_readme)?;
 
-    let mut file = create_file(year, &week).await?;
-    generate_announcement(
-        &week,
-        date,
-        version.to_string(),
-        sponsors,
-        pull_requests,
-        &mut file,
-    )
-    .await?;
+    let mut file = create_file(&version).await?;
+    generate_announcement(date, version, sponsors, pull_requests, &mut file)
+        .await?;
 
     Ok(())
 }
 
-async fn create_file(year: i32, week: &str) -> anyhow::Result<File> {
-    let dir =
-        PathBuf::from(format!("content/blog/weekly-release/{year}-w{week}"));
+async fn create_file(version: &str) -> anyhow::Result<File> {
+    let dir = PathBuf::from(format!("content/blog/release/{version}"));
     let file = dir.join("index.md");
 
     // VS Code (and probably other editors/IDEs) renders the path in the output
@@ -76,7 +68,6 @@ async fn create_file(year: i32, week: &str) -> anyhow::Result<File> {
 }
 
 async fn generate_announcement(
-    week: &str,
     date: String,
     version: String,
     sponsors: String,
@@ -134,8 +125,7 @@ async fn generate_announcement(
         buf,
         "\
 +++
-# TASK: Replace the calendar week with a descriptive title.
-title = \"Weekly Release - 2022-W{week}\"
+title = \"Fornjot {version}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
 
@@ -162,20 +152,13 @@ subtitle = \"This is a subtitle\"
 </strong>
 
 
-### End-user improvements
+### Library improvements
 
-Improvements to Fornjot and its documentation that are visible to end users.
+Improvements to Fornjot libraries.
 
-**TASK: Add end-user improvements.**
+#### `fj-core`
 
-
-### Ecosystem improvements
-
-Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
-
-#### `fj-kernel`
-
-**TASK: Add ecosystem improvements.**
+**TASK: Add library improvements.**
 
 
 ### Internal Improvements

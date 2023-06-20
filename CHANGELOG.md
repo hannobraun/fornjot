@@ -1,5 +1,116 @@
 # Fornjot - Changelog
 
+## v0.47.0 (2023-06-20)
+
+### Library improvements
+
+Improvements to Fornjot libraries.
+
+#### `fj`
+
+- Add new `fj` crate as all-in-one interface to the whole kernel ([#1853])
+- Add standardized CLI for models ([#1860])
+- Compute tolerance manually, if not provided via CLI ([#1872])
+
+#### `fj-core`
+
+- Add `Region` to share code between `Sketch` and `Face` ([#1828], [#1883]; thank you, [@A-Walrus]!)
+- Make various cleanups ([#1830], [#1831])
+- Expand and update operations API ([#1850], [#1879], [#1884], [#1891])
+- Rename `fj-kernel` to `fj-core` ([#1852])
+- Compute AABB from boundary representation ([#1871], [#1886], [#1888])
+- Clean up `Reverse` ([#1885])
+
+#### `fj-interop`
+
+- Clean up model-related code in `fj-interop` ([#1863], [#1864])
+
+#### `fj-math`
+
+- Expand `Aabb` API ([#1870])
+- Add `Vector::from_component` and `Circle::aabb` ([#1887])
+
+#### `fj-viewer`
+
+- Remove GUI code ([#1829])
+- Remove vestigial debug rendering code ([#1862])
+- Make more cleanups ([#1893], [#1898])
+
+#### `fj-window`
+
+- Re-add `fj-window` crate ([#1837])
+- Work around crash when opening window ([#1849])
+- Rename `window::run` to `display` ([#1861])
+- Expect `Model` in `fj_window::display` ([#1865])
+
+### Other changes
+
+Improvements that are not associated with a specific Fornjot library.
+
+- Update dependencies ([#1821], [#1827], [#1835], [#1845], [#1847], [#1858], [#1880], [#1897])
+- Execute the change in focus, towards building only a CAD kernel ([#1822], [#1823], [#1824], [#1836], [#1838], [#1846], [#1851], [#1889], [#1890], [#1892])
+- Upgrade to Rust 1.70.0 ([#1859])
+- Update README ([#1869], [#1881])
+- Update documentation ([#1882], [#1894], [#1899])
+- Determine crates to publish automatically ([#1900])
+
+[#1821]: https://github.com/hannobraun/fornjot/pull/1821
+[#1822]: https://github.com/hannobraun/fornjot/pull/1822
+[#1823]: https://github.com/hannobraun/fornjot/pull/1823
+[#1824]: https://github.com/hannobraun/fornjot/pull/1824
+[#1827]: https://github.com/hannobraun/fornjot/pull/1827
+[#1828]: https://github.com/hannobraun/fornjot/pull/1828
+[#1829]: https://github.com/hannobraun/fornjot/pull/1829
+[#1830]: https://github.com/hannobraun/fornjot/pull/1830
+[#1831]: https://github.com/hannobraun/fornjot/pull/1831
+[#1835]: https://github.com/hannobraun/fornjot/pull/1835
+[#1836]: https://github.com/hannobraun/fornjot/pull/1836
+[#1837]: https://github.com/hannobraun/fornjot/pull/1837
+[#1838]: https://github.com/hannobraun/fornjot/pull/1838
+[#1845]: https://github.com/hannobraun/fornjot/pull/1845
+[#1846]: https://github.com/hannobraun/fornjot/pull/1846
+[#1847]: https://github.com/hannobraun/fornjot/pull/1847
+[#1849]: https://github.com/hannobraun/fornjot/pull/1849
+[#1850]: https://github.com/hannobraun/fornjot/pull/1850
+[#1851]: https://github.com/hannobraun/fornjot/pull/1851
+[#1852]: https://github.com/hannobraun/fornjot/pull/1852
+[#1853]: https://github.com/hannobraun/fornjot/pull/1853
+[#1858]: https://github.com/hannobraun/fornjot/pull/1858
+[#1859]: https://github.com/hannobraun/fornjot/pull/1859
+[#1860]: https://github.com/hannobraun/fornjot/pull/1860
+[#1861]: https://github.com/hannobraun/fornjot/pull/1861
+[#1862]: https://github.com/hannobraun/fornjot/pull/1862
+[#1863]: https://github.com/hannobraun/fornjot/pull/1863
+[#1864]: https://github.com/hannobraun/fornjot/pull/1864
+[#1865]: https://github.com/hannobraun/fornjot/pull/1865
+[#1869]: https://github.com/hannobraun/fornjot/pull/1869
+[#1870]: https://github.com/hannobraun/fornjot/pull/1870
+[#1871]: https://github.com/hannobraun/fornjot/pull/1871
+[#1872]: https://github.com/hannobraun/fornjot/pull/1872
+[#1879]: https://github.com/hannobraun/fornjot/pull/1879
+[#1880]: https://github.com/hannobraun/fornjot/pull/1880
+[#1881]: https://github.com/hannobraun/fornjot/pull/1881
+[#1882]: https://github.com/hannobraun/fornjot/pull/1882
+[#1883]: https://github.com/hannobraun/fornjot/pull/1883
+[#1884]: https://github.com/hannobraun/fornjot/pull/1884
+[#1885]: https://github.com/hannobraun/fornjot/pull/1885
+[#1886]: https://github.com/hannobraun/fornjot/pull/1886
+[#1887]: https://github.com/hannobraun/fornjot/pull/1887
+[#1888]: https://github.com/hannobraun/fornjot/pull/1888
+[#1889]: https://github.com/hannobraun/fornjot/pull/1889
+[#1890]: https://github.com/hannobraun/fornjot/pull/1890
+[#1891]: https://github.com/hannobraun/fornjot/pull/1891
+[#1892]: https://github.com/hannobraun/fornjot/pull/1892
+[#1893]: https://github.com/hannobraun/fornjot/pull/1893
+[#1894]: https://github.com/hannobraun/fornjot/pull/1894
+[#1897]: https://github.com/hannobraun/fornjot/pull/1897
+[#1898]: https://github.com/hannobraun/fornjot/pull/1898
+[#1899]: https://github.com/hannobraun/fornjot/pull/1899
+[#1900]: https://github.com/hannobraun/fornjot/pull/1900
+
+[@A-Walrus]: https://github.com/A-Walrus
+
+
 ## v0.46.0 (2023-05-08)
 
 ### End-user improvements

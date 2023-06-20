@@ -786,7 +786,7 @@ dependencies = [
 
 [[package]]
 name = "fj"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "clap",
  "fj-core",
@@ -800,7 +800,7 @@ dependencies = [
 
 [[package]]
 name = "fj-core"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "anyhow",
  "fj-interop",
@@ -817,7 +817,7 @@ dependencies = [
 
 [[package]]
 name = "fj-export"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "fj-interop",
  "fj-math",
@@ -829,14 +829,14 @@ dependencies = [
 
 [[package]]
 name = "fj-interop"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "fj-math",
 ]
 
 [[package]]
 name = "fj-math"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "approx 0.5.1",
  "decorum",
@@ -849,7 +849,7 @@ dependencies = [
 
 [[package]]
 name = "fj-viewer"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "bytemuck",
  "fj-interop",
@@ -866,7 +866,7 @@ dependencies = [
 
 [[package]]
 name = "fj-window"
-version = "0.46.0"
+version = "0.47.0"
 dependencies = [
  "fj-interop",
  "fj-math",
