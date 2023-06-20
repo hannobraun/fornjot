@@ -32,7 +32,7 @@ Now, edit this file to finish the release announcement:
 2. Write introduction
    - Summarize the week's development.
    - Highlight contributions.
-3. Choose title and subtitle.
+3. Choose subtitle.
 
 When done, deploy to the website.
 
