@@ -14,8 +14,8 @@
 //! explicitness**. This means that geometrical relationships must be expressed
 //! explicitly, or they are not accepted.
 //!
-//! It is important to understand that this principle defines the destination of
-//! CAD kernel development. It does not reflect the current reality.
+//! This principle is not fully implemented yet. There are quite a few
+//! validation checks that enforce part of it, but many are still missing.
 //!
 //! ### Motivation
 //!
