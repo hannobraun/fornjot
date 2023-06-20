@@ -20,7 +20,6 @@ pub async fn create_release_announcement(
     let now = Utc::now();
 
     let year = now.year();
-    let week = format!("{:02}", now.iso_week().week());
     let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
 
     let pull_requests_since_last_release =
@@ -44,15 +43,8 @@ pub async fn create_release_announcement(
         .as_markdown(min_dollars, for_readme)?;
 
     let mut file = create_file(&version).await?;
-    generate_announcement(
-        &week,
-        date,
-        version,
-        sponsors,
-        pull_requests,
-        &mut file,
-    )
-    .await?;
+    generate_announcement(date, version, sponsors, pull_requests, &mut file)
+        .await?;
 
     Ok(())
 }
@@ -76,7 +68,6 @@ async fn create_file(version: &str) -> anyhow::Result<File> {
 }
 
 async fn generate_announcement(
-    week: &str,
     date: String,
     version: String,
     sponsors: String,
@@ -134,8 +125,7 @@ async fn generate_announcement(
         buf,
         "\
 +++
-# TASK: Replace the calendar week with a descriptive title.
-title = \"Weekly Release - 2022-W{week}\"
+title = \"Fornjot {version}\"
 # TASK: Uncomment this date, once the announcement is ready to be published.
 # date = {date}
 
@@ -162,20 +152,13 @@ subtitle = \"This is a subtitle\"
 </strong>
 
 
-### End-user improvements
+### Library improvements
 
-Improvements to Fornjot and its documentation that are visible to end users.
+Improvements to Fornjot libraries.
 
-**TASK: Add end-user improvements.**
+#### `fj-core`
 
-
-### Ecosystem improvements
-
-Improvements to Fornjot components that are relevant to developers building on top of those. These have an indirect effect on end users, through fixed bugs and improved robustness.
-
-#### `fj-kernel`
-
-**TASK: Add ecosystem improvements.**
+**TASK: Add library improvements.**
 
 
 ### Internal Improvements
