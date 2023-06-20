@@ -43,7 +43,7 @@ pub async fn create_release_announcement(
         .await?
         .as_markdown(min_dollars, for_readme)?;
 
-    let mut file = create_file(year, &week).await?;
+    let mut file = create_file(&version).await?;
     generate_announcement(
         &week,
         date,
@@ -57,9 +57,8 @@ pub async fn create_release_announcement(
     Ok(())
 }
 
-async fn create_file(year: i32, week: &str) -> anyhow::Result<File> {
-    let dir =
-        PathBuf::from(format!("content/blog/weekly-release/{year}-w{week}"));
+async fn create_file(version: &str) -> anyhow::Result<File> {
+    let dir = PathBuf::from(format!("content/blog/release/{version}"));
     let file = dir.join("index.md");
 
     // VS Code (and probably other editors/IDEs) renders the path in the output
