@@ -4,7 +4,7 @@ mod release;
 
 use crate::github::{Actions, GitHub};
 
-use crate::registry::{Crate, Registry};
+use crate::registry::Registry;
 use crate::release::Release;
 use clap::{Args, Parser, Subcommand};
 use secstr::SecUtf8;
@@ -41,10 +41,6 @@ struct PublishArgs {
     /// Token to access crates.io for publishing
     #[clap(short, long, env = "CARGO_REGISTRY_TOKEN")]
     token: SecUtf8,
-
-    /// Repeatable option to provide a list of paths to crates
-    #[clap(short, long = "crate")]
-    crates: Vec<Crate>,
 
     /// Perform all checks without uploading
     #[clap(long)]
