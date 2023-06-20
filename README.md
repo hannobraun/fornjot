@@ -35,18 +35,21 @@ Fornjot is usable for some toy examples, but currently lacks the features for so
 
 This is a list of the crates that make up Fornjot, along with a short description for each, starting with the most basic ones and leading up to the high-level ones:
 
-- `fj` (not published yet; crate on `crates.io` is not the same library): All-in-one API that re-exports all of the following crates.
+- [`fj`]: All-in-one API that re-exports all of the following crates.
 - [`fj-math`]: Math primitives used by the rest of Fornjot.
 - [`fj-interop`]: Basic types that allow other crates to interoperate, without depending on each other.
-- `fj-core` (not published yet): Core primitives and code operating on those primitives.
+- [`fj-core`]: Core primitives and code operating on those primitives.
 - [`fj-export`]: Exports Fornjot models to external data formats.
 - [`fj-viewer`]: Displays Fornjot models.
-- `fj-window` (not published yet; crate on `crates.io` is not the same library): Simple windowing abstraction for use with `fj-viewer`.
+- [`fj-window`]: Simple windowing abstraction for use with `fj-viewer`.
 
+[`fj`]: https://crates.io/crates/fj
+[`fj-core`]: https://crates.io/crates/fj-core
 [`fj-export`]: https://crates.io/crates/fj-export
 [`fj-interop`]: https://crates.io/crates/fj-interop
 [`fj-math`]: https://crates.io/crates/fj-math
 [`fj-viewer`]: https://crates.io/crates/fj-viewer
+[`fj-window`]: https://crates.io/crates/fj-window
 
 
 ## Usage
