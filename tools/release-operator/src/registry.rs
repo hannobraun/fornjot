@@ -19,7 +19,6 @@ enum Error {
 
 pub struct Registry {
     token: SecUtf8,
-    _crates: Vec<Crate>,
     dry_run: bool,
 }
 
@@ -40,10 +39,9 @@ enum CrateState {
 }
 
 impl Registry {
-    pub fn new(token: &SecUtf8, crates: &[Crate], dry_run: bool) -> Self {
+    pub fn new(token: &SecUtf8, dry_run: bool) -> Self {
         Self {
             token: token.to_owned(),
-            _crates: crates.to_vec(),
             dry_run,
         }
     }
