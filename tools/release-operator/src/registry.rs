@@ -1,7 +1,10 @@
 use anyhow::{anyhow, bail, Context};
+use cargo_metadata::MetadataCommand;
 use secstr::SecUtf8;
 use serde::Deserialize;
+use std::collections::{BTreeSet, VecDeque};
 use std::fmt::{Display, Formatter};
+use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
@@ -16,7 +19,7 @@ enum Error {
 
 pub struct Registry {
     token: SecUtf8,
-    crates: Vec<Crate>,
+    _crates: Vec<Crate>,
     dry_run: bool,
 }
 
@@ -40,13 +43,66 @@ impl Registry {
     pub fn new(token: &SecUtf8, crates: &[Crate], dry_run: bool) -> Self {
         Self {
             token: token.to_owned(),
-            crates: crates.to_vec(),
+            _crates: crates.to_vec(),
             dry_run,
         }
     }
 
     pub fn publish_crates(&self) -> anyhow::Result<()> {
-        for c in &self.crates {
+        let mut crates = VecDeque::new();
+
+        for dir_entry in fs::read_dir("crates")? {
+            let dir_entry = dir_entry?;
+            let name = dir_entry
+                .file_name()
+                .into_string()
+                .map_err(|err| anyhow!("Error converting string: {err:?}"))?;
+
+            let mut command = MetadataCommand::new();
+            command.manifest_path(dir_entry.path().join("Cargo.toml"));
+
+            let metadata = command.exec()?;
+
+            crates.push_back((name, metadata));
+        }
+
+        let mut crates_ordered = Vec::new();
+        let mut processed_dependencies = BTreeSet::new();
+
+        while let Some((name, metadata)) = crates.pop_front() {
+            let mut package = None;
+            for p in &metadata.packages {
+                if p.name == name {
+                    package = Some(p.clone());
+                }
+            }
+
+            let package = package.expect("Could not find package");
+
+            let mut unmet_dependencies = false;
+
+            for dependency in &package.dependencies {
+                let unmet_dependency = dependency.path.is_some()
+                    && !processed_dependencies.contains(&dependency.name);
+
+                if unmet_dependency {
+                    unmet_dependencies = true;
+                    break;
+                }
+            }
+
+            if unmet_dependencies {
+                crates.push_back((name, metadata));
+            } else {
+                let mut path = package.manifest_path.into_std_path_buf();
+                path.pop();
+
+                processed_dependencies.insert(name);
+                crates_ordered.push(Crate { path });
+            }
+        }
+
+        for c in crates_ordered {
             c.validate()?;
 
             match c.determine_state()? {
