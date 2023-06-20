@@ -35,6 +35,7 @@ pub async fn create_release_announcement(
     // given.
     let mut version = pull_requests_since_last_release.version_of_last_release;
     version.minor += 1;
+    let version = version.to_string();
 
     let min_dollars = 32;
     let for_readme = false;
@@ -46,7 +47,7 @@ pub async fn create_release_announcement(
     generate_announcement(
         &week,
         date,
-        version.to_string(),
+        version,
         sponsors,
         pull_requests,
         &mut file,
