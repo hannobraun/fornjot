@@ -56,10 +56,6 @@ path = "crates/fj-core"
 version = "0.46.0"
 path = "crates/fj-export"
 
-[workspace.dependencies.fj-host]
-version = "0.46.0"
-path = "crates/fj-host"
-
 [workspace.dependencies.fj-interop]
 version = "0.46.0"
 path = "crates/fj-interop"
@@ -67,14 +63,6 @@ path = "crates/fj-interop"
 [workspace.dependencies.fj-math]
 version = "0.46.0"
 path = "crates/fj-math"
-
-[workspace.dependencies.fj-operations]
-version = "0.46.0"
-path = "crates/fj-operations"
-
-[workspace.dependencies.fj-proc]
-version = "0.46.0"
-path = "crates/fj-proc"
 
 [workspace.dependencies.fj-viewer]
 version = "0.46.0"
