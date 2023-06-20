@@ -130,7 +130,7 @@ title = \"Fornjot {version}\"
 # date = {date}
 
 # Uncomment to generate the HTML for the email newsletter.
-# template = \"newsletter/weekly-release.html\"
+# template = \"newsletter/release.html\"
 
 [extra]
 version = \"{version}\"
@@ -161,9 +161,9 @@ Improvements to Fornjot libraries.
 **TASK: Add library improvements.**
 
 
-### Internal Improvements
+### Other changes
 
-Improvements that are relevant to developers working on Fornjot itself.
+Improvements that are not associated with a specific Fornjot library.
 
 **TASK: Add internal improvements.**
 
