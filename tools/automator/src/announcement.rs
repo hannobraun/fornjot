@@ -29,10 +29,10 @@ pub async fn create_release_announcement(
     let pull_requests =
         pull_requests_since_last_release.pull_requests.into_values();
 
-    // For now, it's good enough to just release a new minor version every week.
+    // For now, it's good enough to just release a new minor version every time.
     // We could also determine whether there were breaking changes to make sure
-    // we actually need it, but as of now, breaking changes every week are
-    // pretty much a given.
+    // we actually need it, but as of now, breaking changes are pretty much a
+    // given.
     let mut version = pull_requests_since_last_release.version_of_last_release;
     version.minor += 1;
 
