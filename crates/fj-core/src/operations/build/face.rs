@@ -27,7 +27,7 @@ pub trait BuildFace {
     ) -> Polygon<3> {
         let [a, b, c] = points.map(Into::into);
 
-        let surface = Surface::plane_from_points([a, b, c]);
+        let (surface, _) = Surface::plane_from_points([a, b, c]);
         let surface = surface.insert(services);
 
         let (exterior, edges, vertices) = {
