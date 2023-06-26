@@ -1,3 +1,5 @@
+use std::array;
+
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
@@ -33,16 +35,15 @@ pub trait BuildFace {
             let mut half_edges = face.region().exterior().half_edges().cloned();
             assert_eq!(half_edges.clone().count(), 3);
 
-            [half_edges.next(), half_edges.next(), half_edges.next()].map(
-                |half_edge| {
-                    half_edge
-                        .expect("Just asserted that there are three half-edges")
-                },
-            )
+            array::from_fn(|_| half_edges.next()).map(|half_edge| {
+                half_edge
+                    .expect("Just asserted that there are three half-edges")
+            })
         };
-        let vertices = edges
-            .each_ref_ext()
-            .map(|half_edge| half_edge.start_vertex().clone());
+        let vertices =
+            edges.each_ref_ext().map(|half_edge: &Handle<HalfEdge>| {
+                half_edge.start_vertex().clone()
+            });
 
         Polygon {
             face,
