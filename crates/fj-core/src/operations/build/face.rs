@@ -24,9 +24,7 @@ pub trait BuildFace {
         points: [impl Into<Point<3>>; 3],
         services: &mut Services,
     ) -> Polygon<3> {
-        let [a, b, c] = points.map(Into::into);
-
-        let (surface, points_surface) = Surface::plane_from_points([a, b, c]);
+        let (surface, points_surface) = Surface::plane_from_points(points);
         let surface = surface.insert(services);
 
         let region = Region::polygon(points_surface, services).insert(services);
