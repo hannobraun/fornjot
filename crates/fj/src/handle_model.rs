@@ -7,6 +7,7 @@ use fj_core::{
         triangulate::Triangulate,
     },
     services::Services,
+    validate::ValidationErrors,
 };
 use fj_interop::model::Model;
 use fj_math::{Aabb, Point, Scalar};
@@ -31,10 +32,7 @@ where
 {
     let args = Args::parse();
 
-    // Dropping `Services` will cause a panic, if there are any unhandled
-    // validation errors. It would be better to return an error, but this will
-    // do for now.
-    drop(services);
+    services.drop_and_validate()?;
 
     let aabb = model.aabb().unwrap_or(Aabb {
         min: Point::origin(),
@@ -91,4 +89,8 @@ pub enum Error {
     /// Invalid tolerance
     #[error(transparent)]
     Tolerance(#[from] InvalidTolerance),
+
+    /// Unhandled validation errors
+    #[error(transparent)]
+    Validation(#[from] ValidationErrors),
 }
