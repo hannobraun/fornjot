@@ -11,7 +11,8 @@ use super::State;
 /// Errors that occurred while validating the objects inserted into the stores
 #[derive(Default)]
 pub struct Validation {
-    errors: BTreeMap<ObjectId, ValidationError>,
+    /// All unhandled validation errors
+    pub errors: BTreeMap<ObjectId, ValidationError>,
 }
 
 impl Drop for Validation {

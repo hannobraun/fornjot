@@ -6,7 +6,10 @@ mod objects;
 mod service;
 mod validation;
 
-use crate::objects::{Object, ObjectSet, Objects, WithHandle};
+use crate::{
+    objects::{Object, ObjectSet, Objects, WithHandle},
+    validate::ValidationErrors,
+};
 
 pub use self::{
     objects::{InsertObject, Operation},
@@ -60,6 +63,19 @@ impl Services {
         let mut events = Vec::new();
         self.validation
             .execute(ValidationCommand::OnlyValidate { objects }, &mut events);
+    }
+
+    /// Drop `Services`; return any unhandled validation error
+    pub fn drop_and_validate(self) -> Result<(), ValidationErrors> {
+        let errors = ValidationErrors(
+            self.validation.errors.values().cloned().collect(),
+        );
+
+        if errors.0.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
     }
 }
 
