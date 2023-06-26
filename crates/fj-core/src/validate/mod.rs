@@ -16,7 +16,7 @@ pub use self::{
     solid::SolidValidationError,
 };
 
-use std::convert::Infallible;
+use std::{convert::Infallible, fmt};
 
 use fj_math::Scalar;
 
@@ -122,5 +122,23 @@ pub enum ValidationError {
 impl From<Infallible> for ValidationError {
     fn from(infallible: Infallible) -> Self {
         match infallible {}
+    }
+}
+
+/// A collection of validation errors
+#[derive(Debug, thiserror::Error)]
+pub struct ValidationErrors(pub Vec<ValidationError>);
+
+impl fmt::Display for ValidationErrors {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let num_errors = self.0.len();
+
+        writeln!(f, "{num_errors} unhandled validation errors:")?;
+
+        for err in &self.0 {
+            writeln!(f, "{err}")?;
+        }
+
+        Ok(())
     }
 }
