@@ -11,11 +11,10 @@ pub trait BuildSurface {
     fn plane_from_points(points: [impl Into<Point<3>>; 3]) -> Surface {
         let [a, b, c] = points.map(Into::into);
 
-        let geometry = SurfaceGeometry {
-            u: GlobalPath::line_from_points([a, b]).0,
-            v: c - a,
-        };
+        let u = GlobalPath::line_from_points([a, b]).0;
+        let v = c - a;
 
+        let geometry = SurfaceGeometry { u, v };
         Surface::new(geometry)
     }
 }
