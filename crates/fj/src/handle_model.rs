@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{mem, ops::Deref};
 
 use fj_core::{
     algorithms::{
@@ -32,7 +32,11 @@ where
 {
     let args = Args::parse();
 
-    services.drop_and_validate()?;
+    if args.ignore_validation {
+        mem::forget(services);
+    } else {
+        services.drop_and_validate()?;
+    }
 
     let aabb = model.aabb().unwrap_or(Aabb {
         min: Point::origin(),

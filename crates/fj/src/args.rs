@@ -23,6 +23,10 @@ pub struct Args {
     /// How much the export can deviate from the original model
     #[arg(short, long, value_parser = parse_tolerance)]
     pub tolerance: Option<Tolerance>,
+
+    /// Ignore validation errors
+    #[arg(short, long)]
+    pub ignore_validation: bool,
 }
 
 impl Args {
