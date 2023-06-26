@@ -1,9 +1,12 @@
 use std::ops::Deref;
 
-use fj_core::algorithms::{
-    approx::{InvalidTolerance, Tolerance},
-    bounding_volume::BoundingVolume,
-    triangulate::Triangulate,
+use fj_core::{
+    algorithms::{
+        approx::{InvalidTolerance, Tolerance},
+        bounding_volume::BoundingVolume,
+        triangulate::Triangulate,
+    },
+    services::Services,
 };
 use fj_interop::model::Model;
 use fj_math::{Aabb, Point, Scalar};
@@ -18,12 +21,20 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(model: impl Deref<Target = M>) -> Result
+pub fn handle_model<M>(
+    model: impl Deref<Target = M>,
+    services: Services,
+) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
 {
     let args = Args::parse();
+
+    // Dropping `Services` will cause a panic, if there are any unhandled
+    // validation errors. It would be better to return an error, but this will
+    // do for now.
+    drop(services);
 
     let aabb = model.aabb().unwrap_or(Aabb {
         min: Point::origin(),
