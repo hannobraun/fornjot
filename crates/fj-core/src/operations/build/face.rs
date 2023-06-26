@@ -27,7 +27,9 @@ pub trait BuildFace {
     ) -> Polygon<3> {
         let [a, b, c] = points.map(Into::into);
 
-        let surface = Surface::plane_from_points([a, b, c]).insert(services);
+        let surface = Surface::plane_from_points([a, b, c]);
+        let surface = surface.insert(services);
+
         let (exterior, edges, vertices) = {
             let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
                 let half_edge = HalfEdge::line_segment_from_global_points(
