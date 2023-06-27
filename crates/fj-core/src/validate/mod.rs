@@ -99,23 +99,23 @@ impl Default for ValidationConfig {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
     /// `Cycle` validation error
-    #[error("`Cycle` validation error:\n    {0}")]
+    #[error("`Cycle` validation error")]
     Cycle(#[from] CycleValidationError),
 
     /// `Face` validation error
-    #[error("`Face` validation error\n    {0}")]
+    #[error("`Face` validation error")]
     Face(#[from] FaceValidationError),
 
     /// `HalfEdge` validation error
-    #[error("`HalfEdge` validation error\n    {0}")]
+    #[error("`HalfEdge` validation error")]
     HalfEdge(#[from] HalfEdgeValidationError),
 
     /// `Shell` validation error
-    #[error("`Shell` validation error\n    {0}")]
+    #[error("`Shell` validation error")]
     Shell(#[from] ShellValidationError),
 
     /// `Solid` validation error
-    #[error("`Solid` validation error\n    {0}")]
+    #[error("`Solid` validation error")]
     Solid(#[from] SolidValidationError),
 }
 

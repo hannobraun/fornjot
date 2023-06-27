@@ -1,11 +1,12 @@
+use std::array;
+
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
-        BuildCycle, BuildHalfEdge, BuildSurface, Insert, IsInserted,
-        IsInsertedNo,
+        BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
     },
     services::Services,
     storage::Handle,
@@ -25,35 +26,45 @@ pub trait BuildFace {
         points: [impl Into<Point<3>>; 3],
         services: &mut Services,
     ) -> Polygon<3> {
-        let [a, b, c] = points.map(Into::into);
+        let (surface, points_surface) = Surface::plane_from_points(points);
+        let surface = surface.insert(services);
 
-        let surface = Surface::plane_from_points([a, b, c]).insert(services);
-        let (exterior, edges, vertices) = {
-            let half_edges = [[a, b], [b, c], [c, a]].map(|points| {
-                let half_edge = HalfEdge::line_segment_from_global_points(
-                    points, &surface, None, services,
-                );
+        let face = Face::polygon(surface, points_surface, services);
 
-                half_edge.insert(services)
-            });
-            let vertices = half_edges
-                .each_ref_ext()
-                .map(|half_edge| half_edge.start_vertex().clone());
+        let edges = {
+            let mut half_edges = face.region().exterior().half_edges().cloned();
+            assert_eq!(half_edges.clone().count(), 3);
 
-            let cycle = Cycle::new(half_edges.clone()).insert(services);
-
-            (cycle, half_edges, vertices)
+            array::from_fn(|_| half_edges.next()).map(|half_edge| {
+                half_edge
+                    .expect("Just asserted that there are three half-edges")
+            })
         };
-
-        let region = Region::new(exterior, [], None).insert(services);
-
-        let face = Face::new(surface, region);
+        let vertices =
+            edges.each_ref_ext().map(|half_edge: &Handle<HalfEdge>| {
+                half_edge.start_vertex().clone()
+            });
 
         Polygon {
             face,
             edges,
             vertices,
         }
+    }
+
+    /// Build a polygon
+    fn polygon<P, Ps>(
+        surface: Handle<Surface>,
+        points: Ps,
+        services: &mut Services,
+    ) -> Face
+    where
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
+    {
+        let region = Region::polygon(points, services).insert(services);
+        Face::new(surface, region)
     }
 }
 
