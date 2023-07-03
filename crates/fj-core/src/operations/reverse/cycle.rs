@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 use crate::{
     objects::{Cycle, HalfEdge},
     operations::Insert,
@@ -11,9 +9,7 @@ use super::Reverse;
 impl Reverse for Cycle {
     fn reverse(&self, services: &mut Services) -> Self {
         let mut edges = self
-            .half_edges()
-            .cloned()
-            .circular_tuple_windows()
+            .half_edge_pairs()
             .map(|(current, next)| {
                 let boundary = {
                     let [a, b] = current.boundary();

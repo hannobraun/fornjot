@@ -23,6 +23,13 @@ impl Cycle {
         self.half_edges.iter()
     }
 
+    /// Access the half-edges in pairs
+    pub fn half_edge_pairs(
+        &self,
+    ) -> impl Iterator<Item = (&Handle<HalfEdge>, &Handle<HalfEdge>)> {
+        self.half_edges.iter().circular_tuple_windows()
+    }
+
     /// Access the half-edge with the provided index
     pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<HalfEdge>> {
         self.half_edges.get(index)
@@ -99,7 +106,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for (a, b) in self.half_edges.iter().circular_tuple_windows() {
+        for (a, b) in self.half_edge_pairs() {
             let [a, b] = [a, b].map(|half_edge| half_edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);
