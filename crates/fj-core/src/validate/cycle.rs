@@ -1,8 +1,7 @@
-use crate::objects::Cycle;
-use crate::objects::HalfEdge;
-use fj_math::Point;
-use fj_math::Scalar;
+use fj_math::{Point, Scalar};
 use itertools::Itertools;
+
+use crate::objects::{Cycle, HalfEdge};
 
 use super::{Validate, ValidationConfig, ValidationError};
 

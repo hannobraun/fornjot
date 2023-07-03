@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, thread};
+use std::{collections::BTreeMap, error::Error, thread};
 
 use crate::{
     objects::{BehindHandle, Object, ObjectSet},
@@ -26,6 +26,14 @@ impl Drop for Validation {
 
             for err in self.errors.values() {
                 println!("{}", err);
+
+                // Once `Report` is stable, we can replace this:
+                // https://doc.rust-lang.org/std/error/struct.Report.html
+                let mut source = err.source();
+                while let Some(err) = source {
+                    println!("Caused by:\n\t{err}");
+                    source = err.source();
+                }
             }
 
             if !thread::panicking() {
