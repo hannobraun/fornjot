@@ -11,6 +11,11 @@ use crate::{
 
 /// Build a [`Shell`]
 pub trait BuildShell {
+    /// Build an empty shell
+    fn empty() -> Shell {
+        Shell::new([])
+    }
+
     /// Build a tetrahedron from the provided points
     ///
     /// Accepts 4 points, naturally. For the purposes of the following

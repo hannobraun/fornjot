@@ -5,23 +5,31 @@ use crate::{
 
 /// Update a [`Shell`]
 pub trait UpdateShell {
+    /// Add faces to the shell
+    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
+
     /// Update a face of the shell
     fn replace_face(
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
-    ) -> Shell;
+    ) -> Self;
 
     /// Remove a face from the shell
-    fn remove_face(&self, handle: &Handle<Face>) -> Shell;
+    fn remove_face(&self, handle: &Handle<Face>) -> Self;
 }
 
 impl UpdateShell for Shell {
+    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+        let faces = self.faces().into_iter().cloned().chain(faces);
+        Shell::new(faces)
+    }
+
     fn replace_face(
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
-    ) -> Shell {
+    ) -> Self {
         let faces = self.faces().into_iter().map(|face| {
             if face.id() == original.id() {
                 replacement.clone()
@@ -33,7 +41,7 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn remove_face(&self, handle: &Handle<Face>) -> Shell {
+    fn remove_face(&self, handle: &Handle<Face>) -> Self {
         let faces = self
             .faces()
             .into_iter()
