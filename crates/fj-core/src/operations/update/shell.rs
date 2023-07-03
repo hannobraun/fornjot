@@ -10,10 +10,10 @@ pub trait UpdateShell {
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
-    ) -> Shell;
+    ) -> Self;
 
     /// Remove a face from the shell
-    fn remove_face(&self, handle: &Handle<Face>) -> Shell;
+    fn remove_face(&self, handle: &Handle<Face>) -> Self;
 }
 
 impl UpdateShell for Shell {
@@ -21,7 +21,7 @@ impl UpdateShell for Shell {
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
-    ) -> Shell {
+    ) -> Self {
         let faces = self.faces().into_iter().map(|face| {
             if face.id() == original.id() {
                 replacement.clone()
@@ -33,7 +33,7 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn remove_face(&self, handle: &Handle<Face>) -> Shell {
+    fn remove_face(&self, handle: &Handle<Face>) -> Self {
         let faces = self
             .faces()
             .into_iter()

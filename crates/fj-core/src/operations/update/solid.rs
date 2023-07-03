@@ -9,14 +9,14 @@ pub trait UpdateSolid {
     fn add_shells(
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,
-    ) -> Solid;
+    ) -> Self;
 }
 
 impl UpdateSolid for Solid {
     fn add_shells(
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,
-    ) -> Solid {
+    ) -> Self {
         let shells = self.shells().cloned().chain(shells);
         Solid::new(shells)
     }
