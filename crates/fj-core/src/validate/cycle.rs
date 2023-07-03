@@ -1,5 +1,4 @@
 use fj_math::{Point, Scalar};
-use itertools::Itertools;
 
 use crate::objects::{Cycle, HalfEdge};
 
@@ -63,7 +62,7 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        for (first, second) in cycle.half_edges().circular_tuple_windows() {
+        for (first, second) in cycle.half_edge_pairs() {
             let end_of_first = {
                 let [_, end] = first.boundary();
                 first.curve().point_from_path_coords(end)
