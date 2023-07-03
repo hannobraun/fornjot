@@ -5,6 +5,9 @@ use crate::{
 
 /// Update a [`Shell`]
 pub trait UpdateShell {
+    /// Add faces to the shell
+    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
+
     /// Update a face of the shell
     fn replace_face(
         &self,
@@ -17,6 +20,11 @@ pub trait UpdateShell {
 }
 
 impl UpdateShell for Shell {
+    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+        let faces = self.faces().into_iter().cloned().chain(faces);
+        Shell::new(faces)
+    }
+
     fn replace_face(
         &self,
         original: &Handle<Face>,
