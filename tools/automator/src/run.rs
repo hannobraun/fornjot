@@ -4,7 +4,9 @@ use anyhow::Context;
 use octocrab::Octocrab;
 
 use crate::{
-    announcement::create_release_announcement, args::Args, sponsors::Sponsors,
+    announcement::create_release_announcement,
+    args::{Args, Blog},
+    sponsors::Sponsors,
 };
 
 pub async fn run() -> anyhow::Result<()> {
@@ -13,7 +15,7 @@ pub async fn run() -> anyhow::Result<()> {
     let octocrab = Octocrab::builder().personal_token(token).build()?;
 
     match Args::parse() {
-        Args::Announcement => {
+        Args::Blog(Blog::Announcement) => {
             create_release_announcement(&octocrab)
                 .await
                 .context("Failed to create release announcement")?;
