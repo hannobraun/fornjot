@@ -1,7 +1,6 @@
 use std::{collections::HashSet, fmt::Write, path::PathBuf};
 
 use anyhow::Context;
-use chrono::{Datelike, Utc};
 use map_macro::hash_set;
 use octocrab::Octocrab;
 use tokio::{
@@ -14,13 +13,12 @@ use crate::{
     sponsors::Sponsors,
 };
 
+use super::util;
+
 pub async fn create_release_announcement(
     octocrab: &Octocrab,
 ) -> anyhow::Result<()> {
-    let now = Utc::now();
-
-    let year = now.year();
-    let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
+    let date = util::date();
 
     let pull_requests_since_last_release =
         PullRequestsSinceLastRelease::fetch(octocrab).await?;
