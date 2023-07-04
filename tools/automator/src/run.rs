@@ -5,7 +5,7 @@ use octocrab::Octocrab;
 
 use crate::{
     args::{Args, Blog},
-    blog::release::create_release_announcement,
+    blog::create_release_announcement,
     sponsors::Sponsors,
 };
 
