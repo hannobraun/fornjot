@@ -56,7 +56,7 @@ async fn create_blog_post_file(
 
     // VS Code (and probably other editors/IDEs) renders the path in the output
     // as a clickable link, so the user can open the file easily.
-    println!("Generating release announcement at {}", file.display());
+    println!("Generating `{category}` blog post at {}", file.display());
 
     fs::create_dir_all(&dir).await.with_context(|| {
         format!("Failed to create directory `{}`", dir.display())
