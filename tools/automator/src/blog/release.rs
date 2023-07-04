@@ -1,12 +1,8 @@
-use std::{collections::HashSet, fmt::Write, path::PathBuf};
+use std::{collections::HashSet, fmt::Write};
 
-use anyhow::Context;
 use map_macro::hash_set;
 use octocrab::Octocrab;
-use tokio::{
-    fs::{self, File},
-    io::AsyncWriteExt,
-};
+use tokio::{fs::File, io::AsyncWriteExt};
 
 use crate::{
     pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease},
@@ -40,32 +36,11 @@ pub async fn create_release_announcement(
         .await?
         .as_markdown(min_dollars, for_readme)?;
 
-    let mut file = create_blog_post_file("release", &version).await?;
+    let mut file = util::create_blog_post_file("release", &version).await?;
     generate_announcement(date, version, sponsors, pull_requests, &mut file)
         .await?;
 
     Ok(())
-}
-
-async fn create_blog_post_file(
-    category: &str,
-    version: &str,
-) -> anyhow::Result<File> {
-    let dir = PathBuf::from(format!("content/blog/{category}/{version}"));
-    let file = dir.join("index.md");
-
-    // VS Code (and probably other editors/IDEs) renders the path in the output
-    // as a clickable link, so the user can open the file easily.
-    println!("Generating `{category}` blog post at {}", file.display());
-
-    fs::create_dir_all(&dir).await.with_context(|| {
-        format!("Failed to create directory `{}`", dir.display())
-    })?;
-    let file = File::create(&file).await.with_context(|| {
-        format!("Failed to create file `{}`", file.display())
-    })?;
-
-    Ok(file)
 }
 
 async fn generate_announcement(
