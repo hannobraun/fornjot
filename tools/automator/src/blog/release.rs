@@ -14,7 +14,7 @@ use super::util;
 pub async fn create_release_announcement(
     octocrab: &Octocrab,
 ) -> anyhow::Result<()> {
-    let date = util::date();
+    let date = util::now_ymd();
 
     let pull_requests_since_last_release =
         PullRequestsSinceLastRelease::fetch(octocrab).await?;
