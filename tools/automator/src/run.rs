@@ -5,7 +5,7 @@ use octocrab::Octocrab;
 
 use crate::{
     args::{Args, Blog},
-    blog::create_release_announcement,
+    blog,
     sponsors::Sponsors,
 };
 
@@ -16,7 +16,7 @@ pub async fn run() -> anyhow::Result<()> {
 
     match Args::parse() {
         Args::Blog(Blog::Release) => {
-            create_release_announcement(&octocrab)
+            blog::create_release_announcement(&octocrab)
                 .await
                 .context("Failed to create release announcement")?;
         }
