@@ -13,7 +13,7 @@ impl Args {
 
 #[derive(clap::Subcommand)]
 pub enum Blog {
-    Announcement,
+    Release,
 }
 
 #[derive(clap::Parser)]
