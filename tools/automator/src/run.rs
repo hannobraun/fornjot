@@ -20,6 +20,11 @@ pub async fn run() -> anyhow::Result<()> {
                 .await
                 .context("Failed to create release announcement")?;
         }
+        Args::Blog(Blog::SponsorUpdate) => {
+            blog::create_sponsor_update()
+                .await
+                .context("Failed to create sponsor update")?;
+        }
         Args::Sponsors(args) => {
             let min_dollars = 8;
             let sponsors = Sponsors::query(&octocrab)

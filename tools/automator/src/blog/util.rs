@@ -4,6 +4,11 @@ use anyhow::Context;
 use chrono::{Datelike, Utc};
 use tokio::fs::{self, File};
 
+pub fn now_ym() -> String {
+    let now = Utc::now();
+    format!("{}-{:02}", now.year(), now.month())
+}
+
 pub fn now_ymd() -> String {
     let now = Utc::now();
     format!("{}-{:02}-{:02}", now.year(), now.month(), now.day())
