@@ -12,9 +12,9 @@ pub fn date() -> String {
 
 pub async fn create_blog_post_file(
     category: &str,
-    version: &str,
+    title: &str,
 ) -> anyhow::Result<File> {
-    let dir = PathBuf::from(format!("content/blog/{category}/{version}"));
+    let dir = PathBuf::from(format!("content/blog/{category}/{title}"));
     let file = dir.join("index.md");
 
     // VS Code (and probably other editors/IDEs) renders the path in the output
