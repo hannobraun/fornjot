@@ -4,8 +4,8 @@ use anyhow::Context;
 use octocrab::Octocrab;
 
 use crate::{
-    release::create_release_announcement,
     args::{Args, Blog},
+    blog::release::create_release_announcement,
     sponsors::Sponsors,
 };
 

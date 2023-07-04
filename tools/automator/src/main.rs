@@ -1,6 +1,6 @@
 mod args;
+mod blog;
 mod pull_requests;
-mod release;
 mod run;
 mod sponsors;
 
