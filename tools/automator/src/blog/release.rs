@@ -1,26 +1,20 @@
-use std::{collections::HashSet, fmt::Write, path::PathBuf};
+use std::{collections::HashSet, fmt::Write};
 
-use anyhow::Context;
-use chrono::{Datelike, Utc};
 use map_macro::hash_set;
 use octocrab::Octocrab;
-use tokio::{
-    fs::{self, File},
-    io::AsyncWriteExt,
-};
+use tokio::{fs::File, io::AsyncWriteExt};
 
 use crate::{
     pull_requests::{Author, PullRequest, PullRequestsSinceLastRelease},
     sponsors::Sponsors,
 };
 
+use super::util;
+
 pub async fn create_release_announcement(
     octocrab: &Octocrab,
 ) -> anyhow::Result<()> {
-    let now = Utc::now();
-
-    let year = now.year();
-    let date = format!("{year}-{:02}-{:02}", now.month(), now.day());
+    let date = util::now_ymd();
 
     let pull_requests_since_last_release =
         PullRequestsSinceLastRelease::fetch(octocrab).await?;
@@ -42,29 +36,11 @@ pub async fn create_release_announcement(
         .await?
         .as_markdown(min_dollars, for_readme)?;
 
-    let mut file = create_file(&version).await?;
+    let mut file = util::create_blog_post_file("release", &version).await?;
     generate_announcement(date, version, sponsors, pull_requests, &mut file)
         .await?;
 
     Ok(())
-}
-
-async fn create_file(version: &str) -> anyhow::Result<File> {
-    let dir = PathBuf::from(format!("content/blog/release/{version}"));
-    let file = dir.join("index.md");
-
-    // VS Code (and probably other editors/IDEs) renders the path in the output
-    // as a clickable link, so the user can open the file easily.
-    println!("Generating release announcement at {}", file.display());
-
-    fs::create_dir_all(&dir).await.with_context(|| {
-        format!("Failed to create directory `{}`", dir.display())
-    })?;
-    let file = File::create(&file).await.with_context(|| {
-        format!("Failed to create file `{}`", file.display())
-    })?;
-
-    Ok(file)
 }
 
 async fn generate_announcement(

@@ -1,5 +1,5 @@
-mod announcement;
 mod args;
+mod blog;
 mod pull_requests;
 mod run;
 mod sponsors;
