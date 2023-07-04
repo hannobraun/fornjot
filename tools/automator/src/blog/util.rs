@@ -6,8 +6,7 @@ use tokio::fs::{self, File};
 
 pub fn date() -> String {
     let now = Utc::now();
-    let year = now.year();
-    format!("{year}-{:02}-{:02}", now.month(), now.day())
+    format!("{}-{:02}-{:02}", now.year(), now.month(), now.day())
 }
 
 pub async fn create_blog_post_file(
