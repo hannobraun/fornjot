@@ -10,7 +10,7 @@ chrono = "0.4.26"
 map-macro = "0.2.6"
 octocrab = "0.25.1"
 semver = "1.0.17"
-serde = "1.0.165"
+serde = "1.0.171"
 serde_json = "1.0.100"
 url = "2.4.0"
 
