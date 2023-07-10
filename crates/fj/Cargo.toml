@@ -18,8 +18,8 @@ fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
 fj-window.workspace = true
-thiserror = "1.0.40"
+thiserror = "1.0.43"
 
 [dependencies.clap]
-version = "4.3.10"
+version = "4.3.11"
 features = ["derive"]
