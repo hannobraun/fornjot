@@ -6,9 +6,11 @@ use crate::{
 /// Update a [`Shell`]
 pub trait UpdateShell {
     /// Add faces to the shell
+    #[must_use]
     fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
 
     /// Update a face of the shell
+    #[must_use]
     fn replace_face(
         &self,
         original: &Handle<Face>,
@@ -16,6 +18,7 @@ pub trait UpdateShell {
     ) -> Self;
 
     /// Remove a face from the shell
+    #[must_use]
     fn remove_face(&self, handle: &Handle<Face>) -> Self;
 }
 

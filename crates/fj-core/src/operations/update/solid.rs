@@ -6,6 +6,7 @@ use crate::{
 /// Update a [`Solid`]
 pub trait UpdateSolid {
     /// Add a shell to the solid
+    #[must_use]
     fn add_shells(
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,

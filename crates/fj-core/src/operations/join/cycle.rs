@@ -14,6 +14,7 @@ use crate::{
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
     /// Create a cycle that is joined to the provided edges
+    #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
@@ -48,6 +49,7 @@ pub trait JoinCycle {
     ///
     /// Maybe a custom trait that is implemented for `usize` and all range types
     /// would be the best solution.
+    #[must_use]
     fn join_to(
         &self,
         other: &Cycle,

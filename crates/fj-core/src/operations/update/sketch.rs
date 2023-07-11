@@ -6,6 +6,7 @@ use crate::{
 /// Update a [`Sketch`]
 pub trait UpdateSketch {
     /// Add a region to the sketch
+    #[must_use]
     fn add_region(&self, region: Handle<Region>) -> Self;
 }
 

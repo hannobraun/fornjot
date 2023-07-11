@@ -9,6 +9,7 @@ use crate::{
 /// Update a [`Face`]
 pub trait UpdateFace {
     /// Replace the region of the face
+    #[must_use]
     fn update_region(
         &self,
         f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
