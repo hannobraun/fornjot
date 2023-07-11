@@ -6,12 +6,14 @@ use crate::{
 /// Update a [`Region`]
 pub trait UpdateRegion {
     /// Update the exterior of the region
+    #[must_use]
     fn update_exterior(
         &self,
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self;
 
     /// Add the provides interiors to the region
+    #[must_use]
     fn add_interiors(
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,

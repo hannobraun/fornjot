@@ -6,6 +6,7 @@ use crate::{
 /// Update a [`Cycle`]
 pub trait UpdateCycle {
     /// Add half-edges to the cycle
+    #[must_use]
     fn add_half_edges(
         &self,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
@@ -16,6 +17,7 @@ pub trait UpdateCycle {
     /// # Panics
     ///
     /// Panics, unless this operation replaces exactly one half-edge.
+    #[must_use]
     fn replace_half_edge(
         &self,
         original: &Handle<HalfEdge>,
@@ -27,6 +29,7 @@ pub trait UpdateCycle {
     /// # Panics
     ///
     /// Panics, unless this operation updates exactly one half-edge.
+    #[must_use]
     fn update_nth_half_edge(
         &self,
         index: usize,
