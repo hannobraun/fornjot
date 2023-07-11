@@ -21,6 +21,7 @@ pub trait Insert: Sized {
     type Inserted;
 
     /// Insert the object into its respective store
+    #[must_use]
     fn insert(self, services: &mut Services) -> Self::Inserted;
 }
 
