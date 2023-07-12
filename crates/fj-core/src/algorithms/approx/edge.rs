@@ -46,23 +46,65 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(position_surface, position_global);
 
         let points = {
-            let approx =
-                match cache.get_edge(half_edge.global_form().clone(), range) {
-                    Some(approx) => approx,
-                    None => {
-                        let approx = approx_edge(
-                            &half_edge.curve(),
-                            surface,
-                            range,
-                            tolerance,
-                        );
-                        cache.insert_edge(
-                            half_edge.global_form().clone(),
-                            range,
-                            approx,
-                        )
-                    }
-                };
+            // We cache approximated `HalfEdge`s using the `GlobalEdge`s they
+            // reference as the key. That bakes in the undesirable assumption
+            // that all coincident `HalfEdge`s are also congruent. Let me
+            // explain.
+            //
+            // When two `HalfEdge`s are coincident, we need to make sure their
+            // approximations are identical where they overlap. Otherwise, we'll
+            // get an invalid triangle mesh in the end. Hence, we cache
+            // approximations.
+            //
+            // Caching works like this: We check whether there already is a
+            // cache entry for the `GlobalEdge`. If there isn't we create the 3D
+            // approximation from the 2D `HalfEdge`. Next time we check for a
+            // coincident `HalfEdge`, we'll find the cache and use that, getting
+            // the exact same 3D approximation, instead of generating a slightly
+            // different one from the different 2D `HalfEdge`.
+            //
+            // So what if we had two coincident `HalfEdge`s that aren't
+            // congruent? Meaning, they overlap partially, but not fully. Then
+            // obviously, they wouldn't refer to the same `GlobalEdge`, because
+            // they are not the same edge, in global coordinates. And since the
+            // `GlobalEdge` is the key in our cache, those `HalfEdge`s would not
+            // share an approximation where they overlap, leading to exactly the
+            // problems that the cache is supposed to avoid.
+            //
+            // As of this writing, it is a documented (but not validated)
+            // limitation, that coincident `HalfEdge`s must always be congruent.
+            // However, we're going to need to lift this limitation going
+            // forward, as it is, well, too limiting. This means things here
+            // will need to change.
+            //
+            // Basically, we're missing two things:
+            //
+            // 1. A "global curve" object that is referenced by `HalfEdge`s and
+            //    can be used as the cache key, in combination with the range.
+            // 2. More intelligent caching, that can deliver partial results for
+            //    the range given, while generating (and then caching) any
+            //    unavailable parts of the range on the fly.
+            //
+            // Only item 2. is something we can do right here. Item 1. requires
+            // a change to the object graph.
+            let cached_approx =
+                cache.get_edge(half_edge.global_form().clone(), range);
+            let approx = match cached_approx {
+                Some(approx) => approx,
+                None => {
+                    let approx = approx_edge(
+                        &half_edge.curve(),
+                        surface,
+                        range,
+                        tolerance,
+                    );
+                    cache.insert_edge(
+                        half_edge.global_form().clone(),
+                        range,
+                        approx,
+                    )
+                }
+            };
 
             approx
                 .points
@@ -264,7 +306,7 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
         objects::{HalfEdge, Surface},
-        operations::{BuildHalfEdge, Insert},
+        operations::BuildHalfEdge,
         services::Services,
     };
 
@@ -289,13 +331,12 @@ mod tests {
         let surface = Surface::new(SurfaceGeometry {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
-        })
-        .insert(&mut services);
+        });
         let half_edge =
             HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&half_edge, &surface).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -310,8 +351,7 @@ mod tests {
         let surface = Surface::new(SurfaceGeometry {
             u: path,
             v: [0., 0., 1.].into(),
-        })
-        .insert(&mut services);
+        });
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
@@ -319,7 +359,7 @@ mod tests {
         );
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&half_edge, &surface).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
