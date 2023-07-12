@@ -264,7 +264,7 @@ mod tests {
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
         geometry::{curve::GlobalPath, surface::SurfaceGeometry},
         objects::{HalfEdge, Surface},
-        operations::{BuildHalfEdge, Insert},
+        operations::BuildHalfEdge,
         services::Services,
     };
 
@@ -289,13 +289,12 @@ mod tests {
         let surface = Surface::new(SurfaceGeometry {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
-        })
-        .insert(&mut services);
+        });
         let half_edge =
             HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&half_edge, &surface).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -310,8 +309,7 @@ mod tests {
         let surface = Surface::new(SurfaceGeometry {
             u: path,
             v: [0., 0., 1.].into(),
-        })
-        .insert(&mut services);
+        });
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(range.boundary),
@@ -319,7 +317,7 @@ mod tests {
         );
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&half_edge, &surface).approx(tolerance);
 
         let expected_approx = (path, range)
             .approx(tolerance)
