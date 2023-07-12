@@ -46,23 +46,24 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(position_surface, position_global);
 
         let points = {
-            let approx =
-                match cache.get_edge(half_edge.global_form().clone(), range) {
-                    Some(approx) => approx,
-                    None => {
-                        let approx = approx_edge(
-                            &half_edge.curve(),
-                            surface,
-                            range,
-                            tolerance,
-                        );
-                        cache.insert_edge(
-                            half_edge.global_form().clone(),
-                            range,
-                            approx,
-                        )
-                    }
-                };
+            let cached_approx =
+                cache.get_edge(half_edge.global_form().clone(), range);
+            let approx = match cached_approx {
+                Some(approx) => approx,
+                None => {
+                    let approx = approx_edge(
+                        &half_edge.curve(),
+                        surface,
+                        range,
+                        tolerance,
+                    );
+                    cache.insert_edge(
+                        half_edge.global_form().clone(),
+                        range,
+                        approx,
+                    )
+                }
+            };
 
             approx
                 .points
