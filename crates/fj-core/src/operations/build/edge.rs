@@ -40,12 +40,12 @@ pub trait BuildHalfEdge {
 
         let arc = Arc::from_endpoints_and_angle(start, end, angle_rad);
 
-        let curve =
+        let path =
             SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, services)
+        HalfEdge::unjoined(path, boundary, services)
     }
 
     /// Create a circle
@@ -54,11 +54,11 @@ pub trait BuildHalfEdge {
         radius: impl Into<Scalar>,
         services: &mut Services,
     ) -> HalfEdge {
-        let curve = SurfacePath::circle_from_center_and_radius(center, radius);
+        let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(curve, boundary, services)
+        HalfEdge::unjoined(path, boundary, services)
     }
 
     /// Create a line segment
@@ -69,11 +69,11 @@ pub trait BuildHalfEdge {
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
-        let curve = SurfacePath::line_from_points_with_coords(
+        let path = SurfacePath::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(curve, boundary, services)
+        HalfEdge::unjoined(path, boundary, services)
     }
 }
 
