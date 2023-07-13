@@ -165,7 +165,7 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let (curve, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
+        let (path, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior_points = [
@@ -200,7 +200,7 @@ mod tests {
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
-        assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
+        assert_eq!(CurveFaceIntersection::compute(&path, &face), expected);
 
         services.only_validate(face);
     }
