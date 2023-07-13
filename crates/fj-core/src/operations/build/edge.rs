@@ -12,14 +12,14 @@ use crate::{
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to another
     fn unjoined(
-        curve: SurfacePath,
+        path: SurfacePath,
         boundary: [Point<1>; 2],
         services: &mut Services,
     ) -> HalfEdge {
         let start_vertex = Vertex::new().insert(services);
         let global_form = GlobalEdge::new().insert(services);
 
-        HalfEdge::new(curve, boundary, start_vertex, global_form)
+        HalfEdge::new(path, boundary, start_vertex, global_form)
     }
 
     /// Create an arc
