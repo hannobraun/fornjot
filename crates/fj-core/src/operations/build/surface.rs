@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{curve::GlobalPath, surface::SurfaceGeometry},
+    geometry::{GlobalPath, SurfaceGeometry},
     objects::Surface,
 };
 

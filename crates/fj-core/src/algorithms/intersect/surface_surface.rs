@@ -1,7 +1,7 @@
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
-    geometry::curve::{Curve, GlobalPath},
+    geometry::{GlobalPath, SurfacePath},
     objects::Surface,
     storage::Handle,
 };
@@ -10,7 +10,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceSurfaceIntersection {
     /// The intersection curves
-    pub intersection_curves: [Curve; 2],
+    pub intersection_curves: [SurfacePath; 2],
 }
 
 impl SurfaceSurfaceIntersection {
@@ -48,7 +48,8 @@ impl SurfaceSurfaceIntersection {
 
         let line = Line::from_origin_and_direction(origin, direction);
 
-        let curves = planes.map(|plane| Curve::Line(plane.project_line(&line)));
+        let curves =
+            planes.map(|plane| SurfacePath::Line(plane.project_line(&line)));
 
         Some(Self {
             intersection_curves: curves,
@@ -75,7 +76,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject, geometry::curve::Curve,
+        algorithms::transform::TransformObject, geometry::SurfacePath,
         services::Services,
     };
 
@@ -100,8 +101,8 @@ mod tests {
             None,
         );
 
-        let expected_xy = Curve::u_axis();
-        let expected_xz = Curve::u_axis();
+        let expected_xy = SurfacePath::u_axis();
+        let expected_xz = SurfacePath::u_axis();
 
         assert_eq!(
             SurfaceSurfaceIntersection::compute([xy, xz],),

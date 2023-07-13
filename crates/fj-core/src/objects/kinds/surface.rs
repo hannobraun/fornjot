@@ -1,4 +1,4 @@
-use crate::geometry::surface::SurfaceGeometry;
+use crate::geometry::SurfaceGeometry;
 
 /// A two-dimensional shape
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

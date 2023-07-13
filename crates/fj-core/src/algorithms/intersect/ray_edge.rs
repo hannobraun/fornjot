@@ -4,7 +4,7 @@ use fj_math::Segment;
 
 use crate::{
     algorithms::intersect::{HorizontalRayToTheRight, Intersect},
-    geometry::curve::Curve,
+    geometry::SurfacePath,
     objects::HalfEdge,
     storage::Handle,
 };
@@ -17,9 +17,9 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, edge) = self;
 
-        let line = match edge.curve() {
-            Curve::Line(line) => line,
-            Curve::Circle(_) => {
+        let line = match edge.path() {
+            SurfacePath::Line(line) => line,
+            SurfacePath::Circle(_) => {
                 todo!("Casting rays against circles is not supported yet")
             }
         };

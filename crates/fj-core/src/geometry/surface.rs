@@ -2,7 +2,7 @@
 
 use fj_math::{Line, Plane, Point, Transform, Vector};
 
-use super::curve::GlobalPath;
+use super::GlobalPath;
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -64,7 +64,7 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{curve::GlobalPath, surface::SurfaceGeometry};
+    use crate::geometry::{GlobalPath, SurfaceGeometry};
 
     #[test]
     fn point_from_surface_coords() {

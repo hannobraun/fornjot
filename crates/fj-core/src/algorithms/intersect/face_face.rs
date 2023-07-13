@@ -1,7 +1,7 @@
 use fj_interop::ext::ArrayExt;
 use iter_fixed::IntoIteratorFixed;
 
-use crate::{geometry::curve::Curve, objects::Face};
+use crate::{geometry::SurfacePath, objects::Face};
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
 
@@ -14,7 +14,7 @@ pub struct FaceFaceIntersection {
     /// representation of the intersection on the respective face's surface.
     ///
     /// They both represent the same global curve.
-    pub intersection_curves: [Curve; 2],
+    pub intersection_curves: [SurfacePath; 2],
 
     /// The interval of this intersection, in curve coordinates
     ///
@@ -62,7 +62,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        geometry::curve::Curve,
+        geometry::SurfacePath,
         objects::{Cycle, Face},
         operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
@@ -131,7 +131,7 @@ mod tests {
         let intersection = FaceFaceIntersection::compute([&a, &b]);
 
         let expected_curves = surfaces.map(|_| {
-            let (path, _) = Curve::line_from_points([[0., 0.], [1., 0.]]);
+            let (path, _) = SurfacePath::line_from_points([[0., 0.], [1., 0.]]);
             path
         });
         let expected_intervals =

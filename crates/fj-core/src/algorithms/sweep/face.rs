@@ -4,7 +4,7 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::transform::TransformObject,
-    geometry::curve::GlobalPath,
+    geometry::GlobalPath,
     objects::{Cycle, Face, Region, Shell},
     operations::{BuildCycle, Insert, JoinCycle, Reverse},
     services::Services,
@@ -74,7 +74,7 @@ impl Sweep for Handle<Face> {
 
                 top_edges.push((
                     top_edge,
-                    half_edge.curve(),
+                    half_edge.path(),
                     half_edge.boundary(),
                 ));
             }

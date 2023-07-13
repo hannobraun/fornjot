@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::{Curve, GlobalPath},
+    geometry::{GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
@@ -93,7 +93,7 @@ impl Approx for (&HalfEdge, &Surface) {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
-                        &half_edge.curve(),
+                        &half_edge.path(),
                         surface,
                         range,
                         tolerance,
@@ -111,7 +111,7 @@ impl Approx for (&HalfEdge, &Surface) {
                 .into_iter()
                 .map(|point| {
                     let point_surface = half_edge
-                        .curve()
+                        .path()
                         .point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
@@ -146,7 +146,7 @@ impl HalfEdgeApprox {
 }
 
 fn approx_edge(
-    curve: &Curve,
+    path: &SurfacePath,
     surface: &Surface,
     range: RangeOnPath,
     tolerance: impl Into<Tolerance>,
@@ -157,14 +157,14 @@ fn approx_edge(
     // This will probably all be unified eventually, as `SurfacePath` and
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
-    let points = match (curve, surface.geometry().u) {
-        (Curve::Circle(_), GlobalPath::Circle(_)) => {
+    let points = match (path, surface.geometry().u) {
+        (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             todo!(
                 "Approximating a circle on a curved surface not supported yet."
             )
         }
-        (Curve::Circle(_), GlobalPath::Line(_)) => {
-            (curve, range)
+        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
+            (path, range)
                 .approx_with_cache(tolerance, &mut ())
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
@@ -190,10 +190,10 @@ fn approx_edge(
                 })
                 .collect()
         }
-        (Curve::Line(line), _) => {
+        (SurfacePath::Line(line), _) => {
             let range_u =
                 RangeOnPath::from(range.boundary.map(|point_curve| {
-                    [curve.point_from_path_coords(point_curve).u]
+                    [path.point_from_path_coords(point_curve).u]
                 }));
 
             let approx_u = (surface.geometry().u, range_u)
@@ -202,7 +202,7 @@ fn approx_edge(
             let mut points = Vec::new();
             for (u, _) in approx_u {
                 let t = (u.t - line.origin().u) / line.direction().u;
-                let point_surface = curve.point_from_path_coords([t]);
+                let point_surface = path.point_from_path_coords([t]);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 points.push((u, point_global));
@@ -304,7 +304,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        geometry::{curve::GlobalPath, surface::SurfaceGeometry},
+        geometry::{GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
         operations::BuildHalfEdge,
         services::Services,
@@ -366,7 +366,7 @@ mod tests {
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
-                    half_edge.curve().point_from_path_coords(point_local);
+                    half_edge.path().point_from_path_coords(point_local);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
@@ -386,7 +386,7 @@ mod tests {
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.curve(), RangeOnPath::from([[0.], [TAU]]))
+            (&half_edge.path(), RangeOnPath::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {

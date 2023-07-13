@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::Curve,
+    geometry::SurfacePath,
     objects::Vertex,
     storage::{Handle, HandleWrapper},
 };
@@ -40,7 +40,7 @@ use crate::{
 /// <https://github.com/hannobraun/Fornjot/issues/1608>
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    curve: Curve,
+    path: SurfacePath,
     boundary: [Point<1>; 2],
     start_vertex: HandleWrapper<Vertex>,
     global_form: HandleWrapper<GlobalEdge>,
@@ -49,13 +49,13 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
-        curve: Curve,
+        path: SurfacePath,
         boundary: [Point<1>; 2],
         start_vertex: Handle<Vertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
-            curve,
+            path,
             boundary,
             start_vertex: start_vertex.into(),
             global_form: global_form.into(),
@@ -63,8 +63,8 @@ impl HalfEdge {
     }
 
     /// Access the curve that defines the half-edge's geometry
-    pub fn curve(&self) -> Curve {
-        self.curve
+    pub fn path(&self) -> SurfacePath {
+        self.path
     }
 
     /// Access the boundary points of the half-edge on the curve
@@ -79,7 +79,7 @@ impl HalfEdge {
         // could compute the surface position from slightly different data.
 
         let [start, _] = self.boundary;
-        self.curve.point_from_path_coords(start)
+        self.path.point_from_path_coords(start)
     }
 
     /// Access the vertex from where this half-edge starts

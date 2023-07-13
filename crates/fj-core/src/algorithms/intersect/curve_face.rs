@@ -3,7 +3,7 @@ use std::vec;
 use fj_interop::ext::SliceExt;
 use fj_math::Point;
 
-use crate::{geometry::curve::Curve, objects::Face};
+use crate::{geometry::SurfacePath, objects::Face};
 
 use super::CurveEdgeIntersection;
 
@@ -28,7 +28,7 @@ impl CurveFaceIntersection {
     }
 
     /// Compute the intersection
-    pub fn compute(curve: &Curve, face: &Face) -> Self {
+    pub fn compute(path: &SurfacePath, face: &Face) -> Self {
         let half_edges = face
             .region()
             .all_cycles()
@@ -37,7 +37,7 @@ impl CurveFaceIntersection {
         let mut intersections = Vec::new();
 
         for half_edge in half_edges {
-            let intersection = CurveEdgeIntersection::compute(curve, half_edge);
+            let intersection = CurveEdgeIntersection::compute(path, half_edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
@@ -153,7 +153,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        geometry::curve::Curve,
+        geometry::SurfacePath,
         objects::{Cycle, Face},
         operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,
@@ -165,7 +165,7 @@ mod tests {
     fn compute() {
         let mut services = Services::new();
 
-        let (curve, _) = Curve::line_from_points([[-3., 0.], [-2., 0.]]);
+        let (path, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 
         #[rustfmt::skip]
         let exterior_points = [
@@ -200,7 +200,7 @@ mod tests {
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
-        assert_eq!(CurveFaceIntersection::compute(&curve, &face), expected);
+        assert_eq!(CurveFaceIntersection::compute(&path, &face), expected);
 
         services.only_validate(face);
     }

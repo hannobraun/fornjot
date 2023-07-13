@@ -1,11 +1,11 @@
 use fj_math::{Aabb, Vector};
 
-use crate::{geometry::curve::Curve, objects::HalfEdge};
+use crate::{geometry::SurfacePath, objects::HalfEdge};
 
 impl super::BoundingVolume<2> for HalfEdge {
     fn aabb(&self) -> Option<Aabb<2>> {
-        match self.curve() {
-            Curve::Circle(circle) => {
+        match self.path() {
+            SurfacePath::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the
                 // most precise, but it should do for now.
 
@@ -17,9 +17,9 @@ impl super::BoundingVolume<2> for HalfEdge {
                     max: circle.center() + center_to_min_max,
                 })
             }
-            Curve::Line(_) => {
+            SurfacePath::Line(_) => {
                 let points = self.boundary().map(|point_curve| {
-                    self.curve().point_from_path_coords(point_curve)
+                    self.path().point_from_path_coords(point_curve)
                 });
 
                 Some(Aabb::<2>::from_points(points))
