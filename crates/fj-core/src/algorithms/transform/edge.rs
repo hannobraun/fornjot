@@ -14,7 +14,7 @@ impl TransformObject for HalfEdge {
         services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
-        // Don't need to transform curve, as that's defined in surface
+        // Don't need to transform the path, as that's defined in surface
         // coordinates.
         let path = self.path();
         let boundary = self.boundary();
