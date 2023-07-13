@@ -4,7 +4,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::curve::SurfacePath,
+    geometry::SurfacePath,
     objects::{Cycle, HalfEdge},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,

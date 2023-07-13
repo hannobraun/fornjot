@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::SurfacePath,
+    geometry::SurfacePath,
     objects::Vertex,
     storage::{Handle, HandleWrapper},
 };

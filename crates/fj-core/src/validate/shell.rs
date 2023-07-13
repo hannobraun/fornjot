@@ -3,7 +3,7 @@ use std::{collections::HashMap, iter::repeat};
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::surface::SurfaceGeometry,
+    geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
     storage::{Handle, ObjectId},
 };

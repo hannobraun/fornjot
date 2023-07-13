@@ -1,7 +1,7 @@
 use fj_interop::ext::ArrayExt;
 use iter_fixed::IntoIteratorFixed;
 
-use crate::{geometry::curve::SurfacePath, objects::Face};
+use crate::{geometry::SurfacePath, objects::Face};
 
 use super::{CurveFaceIntersection, SurfaceSurfaceIntersection};
 
@@ -62,7 +62,7 @@ mod tests {
 
     use crate::{
         algorithms::intersect::CurveFaceIntersection,
-        geometry::curve::SurfacePath,
+        geometry::SurfacePath,
         objects::{Cycle, Face},
         operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
         services::Services,

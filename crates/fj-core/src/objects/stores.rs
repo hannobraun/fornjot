@@ -1,7 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    geometry::{curve::GlobalPath, surface::SurfaceGeometry},
+    geometry::{GlobalPath, SurfaceGeometry},
     storage::{Handle, Store},
 };
 

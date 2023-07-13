@@ -4,7 +4,7 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::transform::TransformObject,
-    geometry::curve::GlobalPath,
+    geometry::GlobalPath,
     objects::{Cycle, Face, Region, Shell},
     operations::{BuildCycle, Insert, JoinCycle, Reverse},
     services::Services,

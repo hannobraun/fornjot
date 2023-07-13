@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::curve::{GlobalPath, SurfacePath},
+    geometry::{GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
@@ -304,7 +304,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        geometry::{curve::GlobalPath, surface::SurfaceGeometry},
+        geometry::{GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
         operations::BuildHalfEdge,
         services::Services,

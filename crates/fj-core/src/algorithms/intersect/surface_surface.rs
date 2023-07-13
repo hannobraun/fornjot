@@ -1,7 +1,7 @@
 use fj_math::{Line, Plane, Point, Scalar};
 
 use crate::{
-    geometry::curve::{GlobalPath, SurfacePath},
+    geometry::{GlobalPath, SurfacePath},
     objects::Surface,
     storage::Handle,
 };
@@ -76,7 +76,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject, geometry::curve::SurfacePath,
+        algorithms::transform::TransformObject, geometry::SurfacePath,
         services::Services,
     };
 

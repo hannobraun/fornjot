@@ -1,6 +1,6 @@
 use fj_math::{Aabb, Vector};
 
-use crate::{geometry::curve::SurfacePath, objects::HalfEdge};
+use crate::{geometry::SurfacePath, objects::HalfEdge};
 
 impl super::BoundingVolume<2> for HalfEdge {
     fn aabb(&self) -> Option<Aabb<2>> {

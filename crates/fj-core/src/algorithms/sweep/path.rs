@@ -1,10 +1,7 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{
-        curve::{GlobalPath, SurfacePath},
-        surface::SurfaceGeometry,
-    },
+    geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
     operations::Insert,
     services::Services,

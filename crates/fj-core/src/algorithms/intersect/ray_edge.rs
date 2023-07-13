@@ -4,7 +4,7 @@ use fj_math::Segment;
 
 use crate::{
     algorithms::intersect::{HorizontalRayToTheRight, Intersect},
-    geometry::curve::SurfacePath,
+    geometry::SurfacePath,
     objects::HalfEdge,
     storage::Handle,
 };

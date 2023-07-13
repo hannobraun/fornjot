@@ -1,6 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::{geometry::curve::SurfacePath, objects::HalfEdge};
+use crate::{geometry::SurfacePath, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
@@ -72,8 +72,8 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        geometry::curve::SurfacePath, objects::HalfEdge,
-        operations::BuildHalfEdge, services::Services,
+        geometry::SurfacePath, objects::HalfEdge, operations::BuildHalfEdge,
+        services::Services,
     };
 
     use super::CurveEdgeIntersection;

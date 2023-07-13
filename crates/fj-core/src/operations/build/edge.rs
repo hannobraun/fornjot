@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::curve::SurfacePath,
+    geometry::SurfacePath,
     objects::{GlobalEdge, HalfEdge, Vertex},
     operations::Insert,
     services::Services,

@@ -2,3 +2,8 @@
 
 pub mod curve;
 pub mod surface;
+
+pub use self::{
+    curve::{GlobalPath, SurfacePath},
+    surface::SurfaceGeometry,
+};

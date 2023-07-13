@@ -1,6 +1,6 @@
 use fj_math::Aabb;
 
-use crate::{geometry::curve::GlobalPath, objects::Face};
+use crate::{geometry::GlobalPath, objects::Face};
 
 impl super::BoundingVolume<3> for Face {
     fn aabb(&self) -> Option<Aabb<3>> {
