@@ -2,7 +2,7 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     geometry::{
-        curve::{Curve, GlobalPath},
+        curve::{GlobalPath, SurfacePath},
         surface::SurfaceGeometry,
     },
     objects::Surface,
@@ -13,7 +13,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Curve, &Surface) {
+impl Sweep for (SurfacePath, &Surface) {
     type Swept = Handle<Surface>;
 
     fn sweep_with_cache(
@@ -49,7 +49,7 @@ impl Sweep for (Curve, &Surface) {
         }
 
         let u = match curve {
-            Curve::Circle(circle) => {
+            SurfacePath::Circle(circle) => {
                 let center = surface
                     .geometry()
                     .point_from_surface_coords(circle.center());
@@ -62,7 +62,7 @@ impl Sweep for (Curve, &Surface) {
 
                 GlobalPath::Circle(circle)
             }
-            Curve::Line(line) => {
+            SurfacePath::Line(line) => {
                 let origin =
                     surface.geometry().point_from_surface_coords(line.origin());
                 let direction = surface

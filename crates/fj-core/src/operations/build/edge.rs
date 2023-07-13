@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::curve::Curve,
+    geometry::curve::SurfacePath,
     objects::{GlobalEdge, HalfEdge, Vertex},
     operations::Insert,
     services::Services,
@@ -12,7 +12,7 @@ use crate::{
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to another
     fn unjoined(
-        curve: Curve,
+        curve: SurfacePath,
         boundary: [Point<1>; 2],
         services: &mut Services,
     ) -> HalfEdge {
@@ -41,7 +41,7 @@ pub trait BuildHalfEdge {
         let arc = Arc::from_endpoints_and_angle(start, end, angle_rad);
 
         let curve =
-            Curve::circle_from_center_and_radius(arc.center, arc.radius);
+            SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
@@ -54,7 +54,7 @@ pub trait BuildHalfEdge {
         radius: impl Into<Scalar>,
         services: &mut Services,
     ) -> HalfEdge {
-        let curve = Curve::circle_from_center_and_radius(center, radius);
+        let curve = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
@@ -69,7 +69,7 @@ pub trait BuildHalfEdge {
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
-        let curve = Curve::line_from_points_with_coords(
+        let curve = SurfacePath::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 

@@ -4,7 +4,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::curve::Curve,
+    geometry::curve::SurfacePath,
     objects::{Cycle, HalfEdge},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
@@ -17,7 +17,7 @@ pub trait JoinCycle {
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, SurfacePath, [Point<1>; 2])>,
         Es::IntoIter: Clone + ExactSizeIterator;
 
     /// Join the cycle to another
@@ -62,7 +62,7 @@ pub trait JoinCycle {
 impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, Curve, [Point<1>; 2])>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, SurfacePath, [Point<1>; 2])>,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(

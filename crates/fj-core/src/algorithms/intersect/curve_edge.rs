@@ -1,6 +1,6 @@
 use fj_math::{Point, Segment};
 
-use crate::{geometry::curve::Curve, objects::HalfEdge};
+use crate::{geometry::curve::SurfacePath, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
@@ -28,15 +28,15 @@ impl CurveEdgeIntersection {
     /// Currently, only intersections between lines and line segments can be
     /// computed. Panics, if a different type of curve or [`HalfEdge`] is
     /// passed.
-    pub fn compute(curve: &Curve, half_edge: &HalfEdge) -> Option<Self> {
+    pub fn compute(curve: &SurfacePath, half_edge: &HalfEdge) -> Option<Self> {
         let curve_as_line = match curve {
-            Curve::Line(line) => line,
+            SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
             let edge_curve_as_line = match half_edge.curve() {
-                Curve::Line(line) => line,
+                SurfacePath::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
@@ -72,8 +72,8 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        geometry::curve::Curve, objects::HalfEdge, operations::BuildHalfEdge,
-        services::Services,
+        geometry::curve::SurfacePath, objects::HalfEdge,
+        operations::BuildHalfEdge, services::Services,
     };
 
     use super::CurveEdgeIntersection;
@@ -82,7 +82,7 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let mut services = Services::new();
 
-        let curve = Curve::u_axis();
+        let curve = SurfacePath::u_axis();
         let half_edge =
             HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
 
@@ -100,7 +100,7 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let mut services = Services::new();
 
-        let curve = Curve::u_axis();
+        let curve = SurfacePath::u_axis();
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [-1., 1.]],
             None,
@@ -121,7 +121,7 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let mut services = Services::new();
 
-        let curve = Curve::u_axis();
+        let curve = SurfacePath::u_axis();
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [1., -1.]],
             None,
@@ -137,7 +137,7 @@ mod tests {
     fn compute_edge_on_curve() {
         let mut services = Services::new();
 
-        let curve = Curve::u_axis();
+        let curve = SurfacePath::u_axis();
         let half_edge =
             HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
 
