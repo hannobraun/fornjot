@@ -1,9 +1,9 @@
 //! Types that are tied to objects, but aren't objects themselves
 
-mod curve;
+mod path;
 mod surface;
 
 pub use self::{
-    curve::{GlobalPath, SurfacePath},
+    path::{GlobalPath, SurfacePath},
     surface::SurfaceGeometry,
 };
