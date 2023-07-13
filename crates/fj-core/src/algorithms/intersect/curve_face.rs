@@ -28,7 +28,7 @@ impl CurveFaceIntersection {
     }
 
     /// Compute the intersection
-    pub fn compute(curve: &SurfacePath, face: &Face) -> Self {
+    pub fn compute(path: &SurfacePath, face: &Face) -> Self {
         let half_edges = face
             .region()
             .all_cycles()
@@ -37,7 +37,7 @@ impl CurveFaceIntersection {
         let mut intersections = Vec::new();
 
         for half_edge in half_edges {
-            let intersection = CurveEdgeIntersection::compute(curve, half_edge);
+            let intersection = CurveEdgeIntersection::compute(path, half_edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
