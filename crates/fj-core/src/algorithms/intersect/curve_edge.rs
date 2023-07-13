@@ -82,11 +82,11 @@ mod tests {
     fn compute_edge_in_front_of_curve_origin() {
         let mut services = Services::new();
 
-        let curve = SurfacePath::u_axis();
+        let path = SurfacePath::u_axis();
         let half_edge =
             HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
 
         assert_eq!(
             intersection,
@@ -100,14 +100,14 @@ mod tests {
     fn compute_edge_behind_curve_origin() {
         let mut services = Services::new();
 
-        let curve = SurfacePath::u_axis();
+        let path = SurfacePath::u_axis();
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [-1., 1.]],
             None,
             &mut services,
         );
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
 
         assert_eq!(
             intersection,
@@ -121,14 +121,14 @@ mod tests {
     fn compute_edge_parallel_to_curve() {
         let mut services = Services::new();
 
-        let curve = SurfacePath::u_axis();
+        let path = SurfacePath::u_axis();
         let half_edge = HalfEdge::line_segment(
             [[-1., -1.], [1., -1.]],
             None,
             &mut services,
         );
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
 
         assert!(intersection.is_none());
     }
@@ -137,11 +137,11 @@ mod tests {
     fn compute_edge_on_curve() {
         let mut services = Services::new();
 
-        let curve = SurfacePath::u_axis();
+        let path = SurfacePath::u_axis();
         let half_edge =
             HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&curve, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
 
         assert_eq!(
             intersection,
