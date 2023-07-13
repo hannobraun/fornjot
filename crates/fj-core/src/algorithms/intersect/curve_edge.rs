@@ -35,7 +35,7 @@ impl CurveEdgeIntersection {
         };
 
         let edge_as_segment = {
-            let edge_curve_as_line = match half_edge.path() {
+            let edge_path_as_line = match half_edge.path() {
                 SurfacePath::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
@@ -44,7 +44,7 @@ impl CurveEdgeIntersection {
 
             let edge_vertices = half_edge
                 .boundary()
-                .map(|point| edge_curve_as_line.point_from_line_coords(point));
+                .map(|point| edge_path_as_line.point_from_line_coords(point));
 
             Segment::from_points(edge_vertices)
         };
