@@ -29,7 +29,7 @@ impl CurveEdgeIntersection {
     /// computed. Panics, if a different type of curve or [`HalfEdge`] is
     /// passed.
     pub fn compute(path: &SurfacePath, half_edge: &HalfEdge) -> Option<Self> {
-        let curve_as_line = match path {
+        let path_as_line = match path {
             SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
@@ -50,7 +50,7 @@ impl CurveEdgeIntersection {
         };
 
         let intersection =
-            LineSegmentIntersection::compute(curve_as_line, &edge_as_segment)?;
+            LineSegmentIntersection::compute(path_as_line, &edge_as_segment)?;
 
         let intersection = match intersection {
             LineSegmentIntersection::Point { point_on_line } => Self::Point {
