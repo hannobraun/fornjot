@@ -16,7 +16,7 @@ impl TransformObject for HalfEdge {
     ) -> Self {
         // Don't need to transform curve, as that's defined in surface
         // coordinates.
-        let curve = self.path();
+        let path = self.path();
         let boundary = self.boundary();
         let start_vertex = self
             .start_vertex()
@@ -27,7 +27,7 @@ impl TransformObject for HalfEdge {
             .clone()
             .transform_with_cache(transform, services, cache);
 
-        Self::new(curve, boundary, start_vertex, global_form)
+        Self::new(path, boundary, start_vertex, global_form)
     }
 }
 
