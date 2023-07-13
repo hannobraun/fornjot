@@ -93,7 +93,7 @@ mod tests {
             let boundary = [Point::from([0.]); 2];
 
             HalfEdge::new(
-                valid.curve(),
+                valid.path(),
                 boundary,
                 valid.start_vertex().clone(),
                 valid.global_form().clone(),

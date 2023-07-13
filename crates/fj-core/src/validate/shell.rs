@@ -74,7 +74,7 @@ fn distances(
     ) -> Point<3> {
         let boundary = edge.boundary();
         let path_coords = boundary[0] + (boundary[1] - boundary[0]) * percent;
-        let surface_coords = edge.curve().point_from_path_coords(path_coords);
+        let surface_coords = edge.path().point_from_path_coords(path_coords);
         surface.point_from_surface_coords(surface_coords)
     }
 

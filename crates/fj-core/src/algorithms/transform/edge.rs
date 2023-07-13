@@ -16,7 +16,7 @@ impl TransformObject for HalfEdge {
     ) -> Self {
         // Don't need to transform curve, as that's defined in surface
         // coordinates.
-        let curve = self.curve();
+        let curve = self.path();
         let boundary = self.boundary();
         let start_vertex = self
             .start_vertex()

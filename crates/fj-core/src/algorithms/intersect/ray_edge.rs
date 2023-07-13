@@ -17,7 +17,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, edge) = self;
 
-        let line = match edge.curve() {
+        let line = match edge.path() {
             SurfacePath::Line(line) => line,
             SurfacePath::Circle(_) => {
                 todo!("Casting rays against circles is not supported yet")

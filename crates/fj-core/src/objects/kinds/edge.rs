@@ -63,7 +63,7 @@ impl HalfEdge {
     }
 
     /// Access the curve that defines the half-edge's geometry
-    pub fn curve(&self) -> SurfacePath {
+    pub fn path(&self) -> SurfacePath {
         self.path
     }
 

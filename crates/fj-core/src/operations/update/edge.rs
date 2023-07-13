@@ -17,7 +17,7 @@ pub trait UpdateHalfEdge {
 impl UpdateHalfEdge for HalfEdge {
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
         HalfEdge::new(
-            self.curve(),
+            self.path(),
             self.boundary(),
             start_vertex,
             self.global_form().clone(),
@@ -26,7 +26,7 @@ impl UpdateHalfEdge for HalfEdge {
 
     fn replace_global_form(&self, global_form: Handle<GlobalEdge>) -> Self {
         HalfEdge::new(
-            self.curve(),
+            self.path(),
             self.boundary(),
             self.start_vertex().clone(),
             global_form,
