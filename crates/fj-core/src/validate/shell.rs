@@ -174,10 +174,9 @@ impl ShellValidationError {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let faces = shell.faces();
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
 
-        for face in faces {
+        for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let id = half_edge.global_form().id();
