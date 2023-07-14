@@ -28,7 +28,8 @@ pub enum ShellValidationError {
     #[error("Shell is not watertight")]
     NotWatertight,
 
-    /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
+    /// [`Shell`] contains half_edges that are coincident, but refer to
+    /// different global_edges
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but refer to \
         different `GlobalEdge`s\n\
@@ -126,7 +127,9 @@ impl ShellValidationError {
             for other_edge in &edges_and_surfaces {
                 let id = edge.0.global_form().id();
                 let other_id = other_edge.0.global_form().id();
+
                 let identical = id == other_id;
+
                 match identical {
                     true => {
                         // All points on identical curves should be within
@@ -173,6 +176,7 @@ impl ShellValidationError {
     ) {
         let faces = shell.faces();
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
+
         for face in faces {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
@@ -183,7 +187,8 @@ impl ShellValidationError {
             }
         }
 
-        // Each global edge should have exactly two half edges that are part of the shell
+        // Each global edge should have exactly two half edges that are part of
+        // the shell
         if half_edge_to_faces.iter().any(|(_, c)| *c != 2) {
             errors.push(Self::NotWatertight.into())
         }
