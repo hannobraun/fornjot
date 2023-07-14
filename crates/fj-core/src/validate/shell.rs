@@ -24,11 +24,11 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains global_edges not referred to by two half_edges
+    /// [`Shell`] contains global_edges not referred to by two half-edges
     #[error("Shell is not watertight")]
     NotWatertight,
 
-    /// [`Shell`] contains half_edges that are coincident, but refer to
+    /// [`Shell`] contains half-edges that are coincident, but refer to
     /// different global_edges
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but refer to \
@@ -38,7 +38,7 @@ pub enum ShellValidationError {
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
 
-    /// [`Shell`] contains half_edges that are identical, but do not coincide
+    /// [`Shell`] contains half-edges that are identical, but do not coincide
     #[error(
         "Shell contains HalfEdges that are identical but do not coincide\n\
         Edge 1: {edge_1:#?}\n\
