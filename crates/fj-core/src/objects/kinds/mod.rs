@@ -1,3 +1,4 @@
+pub mod curve;
 pub mod cycle;
 pub mod edge;
 pub mod face;
