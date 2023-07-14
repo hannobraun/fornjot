@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{BoundaryOnCurve, SurfacePath},
-    objects::Vertex,
+    objects::{Curve, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -42,6 +42,7 @@ use crate::{
 pub struct HalfEdge {
     path: SurfacePath,
     boundary: BoundaryOnCurve,
+    curve: HandleWrapper<Curve>,
     start_vertex: HandleWrapper<Vertex>,
     global_form: HandleWrapper<GlobalEdge>,
 }
@@ -51,12 +52,14 @@ impl HalfEdge {
     pub fn new(
         path: SurfacePath,
         boundary: impl Into<BoundaryOnCurve>,
+        curve: Handle<Curve>,
         start_vertex: Handle<Vertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             path,
             boundary: boundary.into(),
+            curve: curve.into(),
             start_vertex: start_vertex.into(),
             global_form: global_form.into(),
         }
@@ -80,6 +83,11 @@ impl HalfEdge {
 
         let [start, _] = self.boundary.inner;
         self.path.point_from_path_coords(start)
+    }
+
+    /// Access the curve of the half-edge
+    pub fn curve(&self) -> &Handle<Curve> {
+        &self.curve
     }
 
     /// Access the vertex from where this half-edge starts

@@ -19,6 +19,7 @@ impl UpdateHalfEdge for HalfEdge {
         HalfEdge::new(
             self.path(),
             self.boundary(),
+            self.curve().clone(),
             start_vertex,
             self.global_form().clone(),
         )
@@ -28,6 +29,7 @@ impl UpdateHalfEdge for HalfEdge {
         HalfEdge::new(
             self.path(),
             self.boundary(),
+            self.curve().clone(),
             self.start_vertex().clone(),
             global_form,
         )

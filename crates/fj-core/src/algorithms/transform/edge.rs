@@ -18,6 +18,10 @@ impl TransformObject for HalfEdge {
         // coordinates.
         let path = self.path();
         let boundary = self.boundary();
+        let curve = self
+            .curve()
+            .clone()
+            .transform_with_cache(transform, services, cache);
         let start_vertex = self
             .start_vertex()
             .clone()
@@ -27,7 +31,7 @@ impl TransformObject for HalfEdge {
             .clone()
             .transform_with_cache(transform, services, cache);
 
-        Self::new(path, boundary, start_vertex, global_form)
+        Self::new(path, boundary, curve, start_vertex, global_form)
     }
 }
 
