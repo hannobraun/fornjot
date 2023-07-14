@@ -120,10 +120,6 @@ pub struct GlobalEdge {}
 
 impl GlobalEdge {
     /// Create a new instance
-    ///
-    /// The order of `vertices` is irrelevant. Two `GlobalEdge`s with the same
-    /// `curve` and `vertices` will end up being equal, regardless of the order
-    /// of `vertices` here.
     pub fn new() -> Self {
         Self::default()
     }

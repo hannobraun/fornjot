@@ -24,11 +24,12 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains global_edges not referred to by two half_edges
+    /// [`Shell`] contains global_edges not referred to by two half-edges
     #[error("Shell is not watertight")]
     NotWatertight,
 
-    /// [`Shell`] contains half_edges that are coincident, but refer to different global_edges
+    /// [`Shell`] contains half-edges that are coincident, but refer to
+    /// different global_edges
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but refer to \
         different `GlobalEdge`s\n\
@@ -37,7 +38,7 @@ pub enum ShellValidationError {
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
 
-    /// [`Shell`] contains half_edges that are identical, but do not coincide
+    /// [`Shell`] contains half-edges that are identical, but do not coincide
     #[error(
         "Shell contains HalfEdges that are identical but do not coincide\n\
         Edge 1: {edge_1:#?}\n\
@@ -126,7 +127,9 @@ impl ShellValidationError {
             for other_edge in &edges_and_surfaces {
                 let id = edge.0.global_form().id();
                 let other_id = other_edge.0.global_form().id();
+
                 let identical = id == other_id;
+
                 match identical {
                     true => {
                         // All points on identical curves should be within
@@ -171,9 +174,9 @@ impl ShellValidationError {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let faces = shell.faces();
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
-        for face in faces {
+
+        for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let id = half_edge.global_form().id();
@@ -183,7 +186,8 @@ impl ShellValidationError {
             }
         }
 
-        // Each global edge should have exactly two half edges that are part of the shell
+        // Each global edge should have exactly two half edges that are part of
+        // the shell
         if half_edge_to_faces.iter().any(|(_, c)| *c != 2) {
             errors.push(Self::NotWatertight.into())
         }
