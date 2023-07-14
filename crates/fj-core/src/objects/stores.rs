@@ -6,13 +6,16 @@ use crate::{
 };
 
 use super::{
-    Cycle, Face, GlobalEdge, HalfEdge, Region, Shell, Sketch, Solid, Surface,
-    Vertex,
+    Curve, Cycle, Face, GlobalEdge, HalfEdge, Region, Shell, Sketch, Solid,
+    Surface, Vertex,
 };
 
 /// The available object stores
 #[derive(Debug, Default)]
 pub struct Objects {
+    /// Store for [`Curve`]s
+    pub curves: Store<Curve>,
+
     /// Store for [`Cycle`]s
     pub cycles: Store<Cycle>,
 
