@@ -259,11 +259,11 @@ impl EdgeCache {
     pub fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
-        range: BoundaryOnCurve,
+        boundary: BoundaryOnCurve,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
-            .insert((handle.id(), range), approx.clone())
+            .insert((handle.id(), boundary), approx.clone())
             .unwrap_or(approx)
     }
 
