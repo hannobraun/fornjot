@@ -154,9 +154,9 @@ impl PathApproxParams {
         &self,
         boundary: impl Into<BoundaryOnCurve>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        let range = boundary.into();
+        let boundary = boundary.into();
 
-        let [a, b] = range.boundary.map(|point| point.t / self.increment());
+        let [a, b] = boundary.boundary.map(|point| point.t / self.increment());
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 
