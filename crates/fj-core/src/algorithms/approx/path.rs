@@ -76,15 +76,15 @@ impl Approx for (GlobalPath, BoundaryOnCurve) {
     }
 }
 
-/// The range on which a path should be approximated
+/// A boundary on a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct BoundaryOnCurve {
-    /// The boundary of the range
+    /// The raw representation of the boundary
     pub inner: [Point<1>; 2],
 }
 
 impl BoundaryOnCurve {
-    /// Reverse the direction of the range
+    /// Reverse the direction of the boundary
     pub fn reverse(self) -> Self {
         let [a, b] = self.inner;
         Self { inner: [b, a] }
