@@ -123,9 +123,9 @@ impl ShellValidationError {
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for edge in &edges_and_surfaces {
+        for (edge_a, surface_a) in &edges_and_surfaces {
             for other_edge in &edges_and_surfaces {
-                let id = edge.0.global_form().id();
+                let id = edge_a.global_form().id();
                 let other_id = other_edge.0.global_form().id();
 
                 let identical = id == other_id;
@@ -135,13 +135,17 @@ impl ShellValidationError {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
                         // greater than the max
-                        if distances(config, edge.clone(), other_edge.clone())
-                            .any(|d| d > config.identical_max_distance)
+                        if distances(
+                            config,
+                            (edge_a.clone(), surface_a.clone()),
+                            other_edge.clone(),
+                        )
+                        .any(|d| d > config.identical_max_distance)
                         {
                             errors.push(
                                 Self::IdenticalEdgesNotCoincident {
-                                    edge_a: edge.0.clone(),
-                                    surface_a: edge.1.clone(),
+                                    edge_a: edge_a.clone(),
+                                    surface_a: surface_a.clone(),
                                     edge_b: other_edge.0.clone(),
                                     surface_b: other_edge.1.clone(),
                                 }
@@ -152,12 +156,16 @@ impl ShellValidationError {
                     false => {
                         // If all points on distinct curves are within
                         // distinct_min_distance, that's a problem.
-                        if distances(config, edge.clone(), other_edge.clone())
-                            .all(|d| d < config.distinct_min_distance)
+                        if distances(
+                            config,
+                            (edge_a.clone(), surface_a.clone()),
+                            other_edge.clone(),
+                        )
+                        .all(|d| d < config.distinct_min_distance)
                         {
                             errors.push(
                                 Self::CoincidentEdgesNotIdentical(
-                                    edge.0.clone(),
+                                    edge_a.clone(),
                                     other_edge.0.clone(),
                                 )
                                 .into(),
