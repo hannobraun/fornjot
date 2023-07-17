@@ -107,10 +107,10 @@ where
 /// from the circle.
 fn approx_circle<const D: usize>(
     circle: &Circle<D>,
-    range: impl Into<BoundaryOnCurve>,
+    boundary: impl Into<BoundaryOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<D>)> {
-    let range = range.into();
+    let range = boundary.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
     let mut points = Vec::new();
