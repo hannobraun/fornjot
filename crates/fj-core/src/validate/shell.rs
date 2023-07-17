@@ -125,9 +125,9 @@ impl ShellValidationError {
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
         for (edge_a, surface_a) in &edges_and_surfaces {
-            for other_edge in &edges_and_surfaces {
+            for (edge_b, surface_b) in &edges_and_surfaces {
                 let id = edge_a.global_form().id();
-                let other_id = other_edge.0.global_form().id();
+                let other_id = edge_b.global_form().id();
 
                 let identical = id == other_id;
 
@@ -140,7 +140,7 @@ impl ShellValidationError {
                             config,
                             edge_a.clone(),
                             surface_a.clone(),
-                            other_edge.clone(),
+                            (edge_b.clone(), surface_b.clone()),
                         )
                         .any(|d| d > config.identical_max_distance)
                         {
@@ -148,8 +148,8 @@ impl ShellValidationError {
                                 Self::IdenticalEdgesNotCoincident {
                                     edge_a: edge_a.clone(),
                                     surface_a: surface_a.clone(),
-                                    edge_b: other_edge.0.clone(),
-                                    surface_b: other_edge.1.clone(),
+                                    edge_b: edge_b.clone(),
+                                    surface_b: surface_b.clone(),
                                 }
                                 .into(),
                             )
@@ -162,14 +162,14 @@ impl ShellValidationError {
                             config,
                             edge_a.clone(),
                             surface_a.clone(),
-                            other_edge.clone(),
+                            (edge_b.clone(), surface_b.clone()),
                         )
                         .all(|d| d < config.distinct_min_distance)
                         {
                             errors.push(
                                 Self::CoincidentEdgesNotIdentical(
                                     edge_a.clone(),
-                                    other_edge.0.clone(),
+                                    edge_b.clone(),
                                 )
                                 .into(),
                             )
