@@ -245,7 +245,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            range: impl Into<BoundaryOnCurve>,
+            boundary: impl Into<BoundaryOnCurve>,
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
@@ -257,7 +257,7 @@ mod tests {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
             let params = PathApproxParams::for_circle(&circle, tolerance);
 
-            let points = params.points(range).collect::<Vec<_>>();
+            let points = params.points(boundary).collect::<Vec<_>>();
 
             let expected_points = expected_coords
                 .into_iter()
