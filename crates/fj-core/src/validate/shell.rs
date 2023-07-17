@@ -67,7 +67,7 @@ pub enum ShellValidationError {
 fn distances(
     config: &ValidationConfig,
     (edge_a, surface_a): (Handle<HalfEdge>, Handle<Surface>),
-    (edge_b, surface2): (Handle<HalfEdge>, Handle<Surface>),
+    (edge_b, surface_b): (Handle<HalfEdge>, Handle<Surface>),
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -81,7 +81,7 @@ fn distances(
 
     // Check whether start positions do not match. If they don't treat second edge as flipped
     let flip = sample(0.0, (&edge_a, surface_a.geometry()))
-        .distance_to(&sample(0.0, (&edge_b, surface2.geometry())))
+        .distance_to(&sample(0.0, (&edge_b, surface_b.geometry())))
         > config.identical_max_distance;
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -96,7 +96,7 @@ fn distances(
         let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
-            (&edge_b, surface2.geometry()),
+            (&edge_b, surface_b.geometry()),
         );
         distances.push(sample1.distance_to(&sample2))
     }
