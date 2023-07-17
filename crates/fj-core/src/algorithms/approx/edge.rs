@@ -28,9 +28,7 @@ impl Approx for (&HalfEdge, &Surface) {
     ) -> Self::Approximation {
         let (half_edge, surface) = self;
 
-        let boundary = BoundaryOnCurve {
-            inner: half_edge.boundary(),
-        };
+        let boundary = half_edge.boundary();
 
         let position_surface = half_edge.start_position();
         let position_global = match cache.get_position(half_edge.start_vertex())

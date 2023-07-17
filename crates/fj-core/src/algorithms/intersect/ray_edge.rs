@@ -26,6 +26,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
 
         let points = edge
             .boundary()
+            .inner
             .map(|point| line.point_from_line_coords(point));
         let segment = Segment::from_points(points);
 

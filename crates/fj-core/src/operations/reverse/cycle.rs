@@ -12,7 +12,7 @@ impl Reverse for Cycle {
             .half_edge_pairs()
             .map(|(current, next)| {
                 let boundary = {
-                    let [a, b] = current.boundary();
+                    let [a, b] = current.boundary().inner;
                     [b, a]
                 };
 

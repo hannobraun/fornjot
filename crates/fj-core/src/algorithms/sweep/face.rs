@@ -75,7 +75,7 @@ impl Sweep for Handle<Face> {
                 top_edges.push((
                     top_edge,
                     half_edge.path(),
-                    half_edge.boundary(),
+                    half_edge.boundary().inner,
                 ));
             }
 

@@ -82,7 +82,7 @@ impl Cycle {
                 .next()
                 .expect("Invalid cycle: expected at least one half-edge");
 
-            let [a, b] = first.boundary();
+            let [a, b] = first.boundary().inner;
             let edge_direction_positive = a < b;
 
             let circle = match first.path() {

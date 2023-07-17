@@ -68,8 +68,8 @@ impl HalfEdge {
     }
 
     /// Access the boundary points of the half-edge on the curve
-    pub fn boundary(&self) -> [Point<1>; 2] {
-        self.boundary.inner
+    pub fn boundary(&self) -> BoundaryOnCurve {
+        self.boundary
     }
 
     /// Compute the surface position where the half-edge starts
