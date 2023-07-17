@@ -44,7 +44,7 @@ pub enum ShellValidationError {
         Edge 1: {edge_a:#?}\n\
         Surface for edge 1: {surface_a:#?}\n\
         Edge 2: {edge_b:#?}\n\
-        Surface for edge 2: {surface_2:#?}"
+        Surface for edge 2: {surface_b:#?}"
     )]
     IdenticalEdgesNotCoincident {
         /// The first edge
@@ -57,7 +57,7 @@ pub enum ShellValidationError {
         edge_b: Handle<HalfEdge>,
 
         /// The surface that the second edge is on
-        surface_2: Handle<Surface>,
+        surface_b: Handle<Surface>,
     },
 }
 
@@ -143,7 +143,7 @@ impl ShellValidationError {
                                     edge_a: edge.0.clone(),
                                     surface_a: edge.1.clone(),
                                     edge_b: other_edge.0.clone(),
-                                    surface_2: other_edge.1.clone(),
+                                    surface_b: other_edge.1.clone(),
                                 }
                                 .into(),
                             )
