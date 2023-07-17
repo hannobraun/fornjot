@@ -41,23 +41,23 @@ pub enum ShellValidationError {
     /// [`Shell`] contains half-edges that are identical, but do not coincide
     #[error(
         "Shell contains HalfEdges that are identical but do not coincide\n\
-        Edge 1: {edge_1:#?}\n\
-        Surface for edge 1: {surface_1:#?}\n\
-        Edge 2: {edge_2:#?}\n\
-        Surface for edge 2: {surface_2:#?}"
+        Edge 1: {edge_a:#?}\n\
+        Surface for edge 1: {surface_a:#?}\n\
+        Edge 2: {edge_b:#?}\n\
+        Surface for edge 2: {surface_b:#?}"
     )]
     IdenticalEdgesNotCoincident {
         /// The first edge
-        edge_1: Handle<HalfEdge>,
+        edge_a: Handle<HalfEdge>,
 
         /// The surface that the first edge is on
-        surface_1: Handle<Surface>,
+        surface_a: Handle<Surface>,
 
         /// The second edge
-        edge_2: Handle<HalfEdge>,
+        edge_b: Handle<HalfEdge>,
 
         /// The surface that the second edge is on
-        surface_2: Handle<Surface>,
+        surface_b: Handle<Surface>,
     },
 }
 
@@ -66,8 +66,10 @@ pub enum ShellValidationError {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     config: &ValidationConfig,
-    (edge1, surface1): (Handle<HalfEdge>, Handle<Surface>),
-    (edge2, surface2): (Handle<HalfEdge>, Handle<Surface>),
+    edge_a: Handle<HalfEdge>,
+    surface_a: Handle<Surface>,
+    edge_b: Handle<HalfEdge>,
+    surface_b: Handle<Surface>,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -80,8 +82,8 @@ fn distances(
     }
 
     // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge1, surface1.geometry()))
-        .distance_to(&sample(0.0, (&edge2, surface2.geometry())))
+    let flip = sample(0.0, (&edge_a, surface_a.geometry()))
+        .distance_to(&sample(0.0, (&edge_b, surface_b.geometry())))
         > config.identical_max_distance;
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -93,10 +95,10 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge1, surface1.geometry()));
+        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
-            (&edge2, surface2.geometry()),
+            (&edge_b, surface_b.geometry()),
         );
         distances.push(sample1.distance_to(&sample2))
     }
@@ -123,27 +125,31 @@ impl ShellValidationError {
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for edge in &edges_and_surfaces {
-            for other_edge in &edges_and_surfaces {
-                let id = edge.0.global_form().id();
-                let other_id = other_edge.0.global_form().id();
-
-                let identical = id == other_id;
+        for (edge_a, surface_a) in &edges_and_surfaces {
+            for (edge_b, surface_b) in &edges_and_surfaces {
+                let identical =
+                    edge_a.global_form().id() == edge_b.global_form().id();
 
                 match identical {
                     true => {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
                         // greater than the max
-                        if distances(config, edge.clone(), other_edge.clone())
-                            .any(|d| d > config.identical_max_distance)
+                        if distances(
+                            config,
+                            edge_a.clone(),
+                            surface_a.clone(),
+                            edge_b.clone(),
+                            surface_b.clone(),
+                        )
+                        .any(|d| d > config.identical_max_distance)
                         {
                             errors.push(
                                 Self::IdenticalEdgesNotCoincident {
-                                    edge_1: edge.0.clone(),
-                                    surface_1: edge.1.clone(),
-                                    edge_2: other_edge.0.clone(),
-                                    surface_2: other_edge.1.clone(),
+                                    edge_a: edge_a.clone(),
+                                    surface_a: surface_a.clone(),
+                                    edge_b: edge_b.clone(),
+                                    surface_b: surface_b.clone(),
                                 }
                                 .into(),
                             )
@@ -152,13 +158,19 @@ impl ShellValidationError {
                     false => {
                         // If all points on distinct curves are within
                         // distinct_min_distance, that's a problem.
-                        if distances(config, edge.clone(), other_edge.clone())
-                            .all(|d| d < config.distinct_min_distance)
+                        if distances(
+                            config,
+                            edge_a.clone(),
+                            surface_a.clone(),
+                            edge_b.clone(),
+                            surface_b.clone(),
+                        )
+                        .all(|d| d < config.distinct_min_distance)
                         {
                             errors.push(
                                 Self::CoincidentEdgesNotIdentical(
-                                    edge.0.clone(),
-                                    other_edge.0.clone(),
+                                    edge_a.clone(),
+                                    edge_b.clone(),
                                 )
                                 .into(),
                             )
