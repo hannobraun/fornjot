@@ -68,7 +68,8 @@ fn distances(
     config: &ValidationConfig,
     edge_a: Handle<HalfEdge>,
     surface_a: Handle<Surface>,
-    (edge_b, surface_b): (Handle<HalfEdge>, Handle<Surface>),
+    edge_b: Handle<HalfEdge>,
+    surface_b: Handle<Surface>,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -140,7 +141,8 @@ impl ShellValidationError {
                             config,
                             edge_a.clone(),
                             surface_a.clone(),
-                            (edge_b.clone(), surface_b.clone()),
+                            edge_b.clone(),
+                            surface_b.clone(),
                         )
                         .any(|d| d > config.identical_max_distance)
                         {
@@ -162,7 +164,8 @@ impl ShellValidationError {
                             config,
                             edge_a.clone(),
                             surface_a.clone(),
-                            (edge_b.clone(), surface_b.clone()),
+                            edge_b.clone(),
+                            surface_b.clone(),
                         )
                         .all(|d| d < config.distinct_min_distance)
                         {
