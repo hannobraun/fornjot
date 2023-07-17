@@ -347,7 +347,7 @@ mod tests {
         let mut services = Services::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let range = BoundaryOnCurve::from([[0.], [TAU]]);
+        let boundary = BoundaryOnCurve::from([[0.], [TAU]]);
 
         let surface = Surface::new(SurfaceGeometry {
             u: path,
@@ -355,14 +355,14 @@ mod tests {
         });
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
-            Some(range.boundary),
+            Some(boundary.boundary),
             &mut services,
         );
 
         let tolerance = 1.;
         let approx = (&half_edge, &surface).approx(tolerance);
 
-        let expected_approx = (path, range)
+        let expected_approx = (path, boundary)
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
