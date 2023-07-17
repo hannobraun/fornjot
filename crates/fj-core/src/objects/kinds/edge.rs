@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::SurfacePath,
+    geometry::{BoundaryOnCurve, SurfacePath},
     objects::Vertex,
     storage::{Handle, HandleWrapper},
 };
@@ -41,7 +41,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     path: SurfacePath,
-    boundary: [Point<1>; 2],
+    boundary: BoundaryOnCurve,
     start_vertex: HandleWrapper<Vertex>,
     global_form: HandleWrapper<GlobalEdge>,
 }
@@ -50,13 +50,13 @@ impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         path: SurfacePath,
-        boundary: [Point<1>; 2],
+        boundary: impl Into<BoundaryOnCurve>,
         start_vertex: Handle<Vertex>,
         global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             path,
-            boundary,
+            boundary: boundary.into(),
             start_vertex: start_vertex.into(),
             global_form: global_form.into(),
         }
@@ -69,7 +69,7 @@ impl HalfEdge {
 
     /// Access the boundary points of the half-edge on the curve
     pub fn boundary(&self) -> [Point<1>; 2] {
-        self.boundary
+        self.boundary.inner
     }
 
     /// Compute the surface position where the half-edge starts
@@ -78,7 +78,7 @@ impl HalfEdge {
         // `HalfEdge` "owns" its start position. There is no competing code that
         // could compute the surface position from slightly different data.
 
-        let [start, _] = self.boundary;
+        let [start, _] = self.boundary.inner;
         self.path.point_from_path_coords(start)
     }
 
