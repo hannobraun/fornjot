@@ -42,7 +42,7 @@ pub enum ShellValidationError {
     #[error(
         "Shell contains HalfEdges that are identical but do not coincide\n\
         Edge 1: {edge_a:#?}\n\
-        Surface for edge 1: {surface_1:#?}\n\
+        Surface for edge 1: {surface_a:#?}\n\
         Edge 2: {edge_2:#?}\n\
         Surface for edge 2: {surface_2:#?}"
     )]
@@ -51,7 +51,7 @@ pub enum ShellValidationError {
         edge_a: Handle<HalfEdge>,
 
         /// The surface that the first edge is on
-        surface_1: Handle<Surface>,
+        surface_a: Handle<Surface>,
 
         /// The second edge
         edge_2: Handle<HalfEdge>,
@@ -141,7 +141,7 @@ impl ShellValidationError {
                             errors.push(
                                 Self::IdenticalEdgesNotCoincident {
                                     edge_a: edge.0.clone(),
-                                    surface_1: edge.1.clone(),
+                                    surface_a: edge.1.clone(),
                                     edge_2: other_edge.0.clone(),
                                     surface_2: other_edge.1.clone(),
                                 }
