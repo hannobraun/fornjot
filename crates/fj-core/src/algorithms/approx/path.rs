@@ -110,12 +110,12 @@ fn approx_circle<const D: usize>(
     boundary: impl Into<BoundaryOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<D>)> {
-    let range = boundary.into();
+    let boundary = boundary.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
     let mut points = Vec::new();
 
-    for point_curve in params.points(range) {
+    for point_curve in params.points(boundary) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push((point_curve, point_global));
     }
