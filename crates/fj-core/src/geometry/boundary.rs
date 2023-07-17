@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 /// A boundary on a curve
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct BoundaryOnCurve {
     /// The raw representation of the boundary
     pub inner: [Point<1>; 2],
