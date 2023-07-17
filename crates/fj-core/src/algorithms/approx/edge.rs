@@ -29,7 +29,7 @@ impl Approx for (&HalfEdge, &Surface) {
         let (half_edge, surface) = self;
 
         let boundary = half_edge.boundary();
-        let range = BoundaryOnCurve { boundary };
+        let boundary = BoundaryOnCurve { boundary };
 
         let position_surface = half_edge.start_position();
         let position_global = match cache.get_position(half_edge.start_vertex())
@@ -88,19 +88,19 @@ impl Approx for (&HalfEdge, &Surface) {
             // Only item 2. is something we can do right here. Item 1. requires
             // a change to the object graph.
             let cached_approx =
-                cache.get_edge(half_edge.global_form().clone(), range);
+                cache.get_edge(half_edge.global_form().clone(), boundary);
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
                         &half_edge.path(),
                         surface,
-                        range,
+                        boundary,
                         tolerance,
                     );
                     cache.insert_edge(
                         half_edge.global_form().clone(),
-                        range,
+                        boundary,
                         approx,
                     )
                 }
