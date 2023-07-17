@@ -127,10 +127,8 @@ impl ShellValidationError {
         // data-structure like an octree.
         for (edge_a, surface_a) in &edges_and_surfaces {
             for (edge_b, surface_b) in &edges_and_surfaces {
-                let id = edge_a.global_form().id();
-                let other_id = edge_b.global_form().id();
-
-                let identical = id == other_id;
+                let identical =
+                    edge_a.global_form().id() == edge_b.global_form().id();
 
                 match identical {
                     true => {
