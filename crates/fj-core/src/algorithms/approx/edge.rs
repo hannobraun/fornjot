@@ -149,7 +149,7 @@ impl HalfEdgeApprox {
 fn approx_edge(
     path: &SurfacePath,
     surface: &Surface,
-    range: BoundaryOnCurve,
+    boundary: BoundaryOnCurve,
     tolerance: impl Into<Tolerance>,
 ) -> GlobalEdgeApprox {
     // There are different cases of varying complexity. Circles are the hard
@@ -165,7 +165,7 @@ fn approx_edge(
             )
         }
         (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (path, range)
+            (path, boundary)
                 .approx_with_cache(tolerance, &mut ())
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
@@ -193,7 +193,7 @@ fn approx_edge(
         }
         (SurfacePath::Line(line), _) => {
             let range_u =
-                BoundaryOnCurve::from(range.boundary.map(|point_curve| {
+                BoundaryOnCurve::from(boundary.boundary.map(|point_curve| {
                     [path.point_from_path_coords(point_curve).u]
                 }));
 
