@@ -10,12 +10,12 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{GlobalPath, SurfacePath},
+    geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
 
-use super::{path::BoundaryOnCurve, Approx, ApproxPoint, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -304,8 +304,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{path::BoundaryOnCurve, Approx, ApproxPoint},
-        geometry::{GlobalPath, SurfaceGeometry},
+        algorithms::approx::{Approx, ApproxPoint},
+        geometry::{BoundaryOnCurve, GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
         operations::BuildHalfEdge,
         services::Services,
