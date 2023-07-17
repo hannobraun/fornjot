@@ -66,7 +66,7 @@ pub enum ShellValidationError {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     config: &ValidationConfig,
-    (edge1, surface1): (Handle<HalfEdge>, Handle<Surface>),
+    (edge_a, surface1): (Handle<HalfEdge>, Handle<Surface>),
     (edge2, surface2): (Handle<HalfEdge>, Handle<Surface>),
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
@@ -80,7 +80,7 @@ fn distances(
     }
 
     // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge1, surface1.geometry()))
+    let flip = sample(0.0, (&edge_a, surface1.geometry()))
         .distance_to(&sample(0.0, (&edge2, surface2.geometry())))
         > config.identical_max_distance;
 
@@ -93,7 +93,7 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge1, surface1.geometry()));
+        let sample1 = sample(percent, (&edge_a, surface1.geometry()));
         let sample2 = sample(
             if flip { 1.0 - percent } else { percent },
             (&edge2, surface2.geometry()),
