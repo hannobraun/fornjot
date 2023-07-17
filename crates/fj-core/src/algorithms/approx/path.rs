@@ -36,7 +36,7 @@ use crate::geometry::{GlobalPath, SurfacePath};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (&SurfacePath, RangeOnPath) {
+impl Approx for (&SurfacePath, BoundaryOnCurve) {
     type Approximation = Vec<(Point<1>, Point<2>)>;
     type Cache = ();
 
@@ -56,7 +56,7 @@ impl Approx for (&SurfacePath, RangeOnPath) {
     }
 }
 
-impl Approx for (GlobalPath, RangeOnPath) {
+impl Approx for (GlobalPath, BoundaryOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
     type Cache = ();
 
@@ -78,12 +78,12 @@ impl Approx for (GlobalPath, RangeOnPath) {
 
 /// The range on which a path should be approximated
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct RangeOnPath {
+pub struct BoundaryOnCurve {
     /// The boundary of the range
     pub boundary: [Point<1>; 2],
 }
 
-impl RangeOnPath {
+impl BoundaryOnCurve {
     /// Reverse the direction of the range
     pub fn reverse(self) -> Self {
         let [a, b] = self.boundary;
@@ -91,7 +91,7 @@ impl RangeOnPath {
     }
 }
 
-impl<T> From<[T; 2]> for RangeOnPath
+impl<T> From<[T; 2]> for BoundaryOnCurve
 where
     T: Into<Point<1>>,
 {
@@ -107,7 +107,7 @@ where
 /// from the circle.
 fn approx_circle<const D: usize>(
     circle: &Circle<D>,
-    range: impl Into<RangeOnPath>,
+    range: impl Into<BoundaryOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<D>)> {
     let range = range.into();
@@ -152,7 +152,7 @@ impl PathApproxParams {
 
     pub fn points(
         &self,
-        range: impl Into<RangeOnPath>,
+        range: impl Into<BoundaryOnCurve>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
         let range = range.into();
 
@@ -195,7 +195,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::algorithms::approx::{path::RangeOnPath, Tolerance};
+    use crate::algorithms::approx::{path::BoundaryOnCurve, Tolerance};
 
     use super::PathApproxParams;
 
@@ -245,7 +245,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            range: impl Into<RangeOnPath>,
+            range: impl Into<BoundaryOnCurve>,
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
