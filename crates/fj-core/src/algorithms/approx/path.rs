@@ -32,11 +32,11 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{GlobalPath, SurfacePath};
+use crate::geometry::{BoundaryOnCurve, GlobalPath, SurfacePath};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (&SurfacePath, RangeOnPath) {
+impl Approx for (&SurfacePath, BoundaryOnCurve) {
     type Approximation = Vec<(Point<1>, Point<2>)>;
     type Cache = ();
 
@@ -56,7 +56,7 @@ impl Approx for (&SurfacePath, RangeOnPath) {
     }
 }
 
-impl Approx for (GlobalPath, RangeOnPath) {
+impl Approx for (GlobalPath, BoundaryOnCurve) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
     type Cache = ();
 
@@ -76,46 +76,21 @@ impl Approx for (GlobalPath, RangeOnPath) {
     }
 }
 
-/// The range on which a path should be approximated
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct RangeOnPath {
-    /// The boundary of the range
-    pub boundary: [Point<1>; 2],
-}
-
-impl RangeOnPath {
-    /// Reverse the direction of the range
-    pub fn reverse(self) -> Self {
-        let [a, b] = self.boundary;
-        Self { boundary: [b, a] }
-    }
-}
-
-impl<T> From<[T; 2]> for RangeOnPath
-where
-    T: Into<Point<1>>,
-{
-    fn from(boundary: [T; 2]) -> Self {
-        let boundary = boundary.map(Into::into);
-        Self { boundary }
-    }
-}
-
 /// Approximate a circle
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
 fn approx_circle<const D: usize>(
     circle: &Circle<D>,
-    range: impl Into<RangeOnPath>,
+    boundary: impl Into<BoundaryOnCurve>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<D>)> {
-    let range = range.into();
+    let boundary = boundary.into();
 
     let params = PathApproxParams::for_circle(circle, tolerance);
     let mut points = Vec::new();
 
-    for point_curve in params.points(range) {
+    for point_curve in params.points(boundary) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push((point_curve, point_global));
     }
@@ -152,11 +127,11 @@ impl PathApproxParams {
 
     pub fn points(
         &self,
-        range: impl Into<RangeOnPath>,
+        boundary: impl Into<BoundaryOnCurve>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        let range = range.into();
+        let boundary = boundary.into();
 
-        let [a, b] = range.boundary.map(|point| point.t / self.increment());
+        let [a, b] = boundary.inner.map(|point| point.t / self.increment());
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 
@@ -195,7 +170,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::algorithms::approx::{path::RangeOnPath, Tolerance};
+    use crate::algorithms::approx::{path::BoundaryOnCurve, Tolerance};
 
     use super::PathApproxParams;
 
@@ -245,7 +220,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            range: impl Into<RangeOnPath>,
+            boundary: impl Into<BoundaryOnCurve>,
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to
@@ -257,7 +232,7 @@ mod tests {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
             let params = PathApproxParams::for_circle(&circle, tolerance);
 
-            let points = params.points(range).collect::<Vec<_>>();
+            let points = params.points(boundary).collect::<Vec<_>>();
 
             let expected_points = expected_coords
                 .into_iter()

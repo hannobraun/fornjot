@@ -65,7 +65,7 @@ impl CycleValidationError {
     ) {
         for (first, second) in cycle.half_edge_pairs() {
             let end_of_first = {
-                let [_, end] = first.boundary();
+                let [_, end] = first.boundary().inner;
                 first.path().point_from_path_coords(end)
             };
             let start_of_second = second.start_position();

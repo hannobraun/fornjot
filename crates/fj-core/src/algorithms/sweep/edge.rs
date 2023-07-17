@@ -47,7 +47,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         // Let's figure out the surface coordinates of the edge vertices.
         let surface_points = {
-            let [a, b] = edge.boundary();
+            let [a, b] = edge.boundary().inner;
 
             [
                 [a.t, Scalar::ZERO],
@@ -65,7 +65,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         // Now, the boundaries of each edge.
         let boundaries = {
-            let [a, b] = edge.boundary();
+            let [a, b] = edge.boundary().inner;
             let [c, d] = [0., 1.].map(|coord| Point::from([coord]));
 
             [[a, b], [c, d], [b, a], [d, c]]

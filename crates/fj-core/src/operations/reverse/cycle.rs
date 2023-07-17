@@ -11,14 +11,9 @@ impl Reverse for Cycle {
         let mut edges = self
             .half_edge_pairs()
             .map(|(current, next)| {
-                let boundary = {
-                    let [a, b] = current.boundary();
-                    [b, a]
-                };
-
                 HalfEdge::new(
                     current.path(),
-                    boundary,
+                    current.boundary().reverse(),
                     next.start_vertex().clone(),
                     current.global_form().clone(),
                 )

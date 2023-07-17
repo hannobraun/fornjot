@@ -10,12 +10,12 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{GlobalPath, SurfacePath},
+    geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, ObjectId},
 };
 
-use super::{path::RangeOnPath, Approx, ApproxPoint, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -27,9 +27,6 @@ impl Approx for (&HalfEdge, &Surface) {
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (half_edge, surface) = self;
-
-        let boundary = half_edge.boundary();
-        let range = RangeOnPath { boundary };
 
         let position_surface = half_edge.start_position();
         let position_global = match cache.get_position(half_edge.start_vertex())
@@ -87,20 +84,22 @@ impl Approx for (&HalfEdge, &Surface) {
             //
             // Only item 2. is something we can do right here. Item 1. requires
             // a change to the object graph.
-            let cached_approx =
-                cache.get_edge(half_edge.global_form().clone(), range);
+            let cached_approx = cache.get_edge(
+                half_edge.global_form().clone(),
+                half_edge.boundary(),
+            );
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
                         &half_edge.path(),
                         surface,
-                        range,
+                        half_edge.boundary(),
                         tolerance,
                     );
                     cache.insert_edge(
                         half_edge.global_form().clone(),
-                        range,
+                        half_edge.boundary(),
                         approx,
                     )
                 }
@@ -148,7 +147,7 @@ impl HalfEdgeApprox {
 fn approx_edge(
     path: &SurfacePath,
     surface: &Surface,
-    range: RangeOnPath,
+    boundary: BoundaryOnCurve,
     tolerance: impl Into<Tolerance>,
 ) -> GlobalEdgeApprox {
     // There are different cases of varying complexity. Circles are the hard
@@ -164,7 +163,7 @@ fn approx_edge(
             )
         }
         (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (path, range)
+            (path, boundary)
                 .approx_with_cache(tolerance, &mut ())
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
@@ -192,7 +191,7 @@ fn approx_edge(
         }
         (SurfacePath::Line(line), _) => {
             let range_u =
-                RangeOnPath::from(range.boundary.map(|point_curve| {
+                BoundaryOnCurve::from(boundary.inner.map(|point_curve| {
                     [path.point_from_path_coords(point_curve).u]
                 }));
 
@@ -224,7 +223,7 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
-    edge_approx: BTreeMap<(ObjectId, RangeOnPath), GlobalEdgeApprox>,
+    edge_approx: BTreeMap<(ObjectId, BoundaryOnCurve), GlobalEdgeApprox>,
     vertex_approx: BTreeMap<ObjectId, Point<3>>,
 }
 
@@ -238,15 +237,15 @@ impl EdgeCache {
     pub fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
-        range: RangeOnPath,
+        boundary: BoundaryOnCurve,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.edge_approx.get(&(handle.id(), range)) {
+        if let Some(approx) = self.edge_approx.get(&(handle.id(), boundary)) {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.id(), range.reverse()))
+            self.edge_approx.get(&(handle.id(), boundary.reverse()))
         {
-            // If we have a cache entry for the reverse range, we need to use
+            // If we have a cache entry for the reverse boundary, we need to use
             // that too!
             return Some(approx.clone().reverse());
         }
@@ -258,11 +257,11 @@ impl EdgeCache {
     pub fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
-        range: RangeOnPath,
+        boundary: BoundaryOnCurve,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
-            .insert((handle.id(), range), approx.clone())
+            .insert((handle.id(), boundary), approx.clone())
             .unwrap_or(approx)
     }
 
@@ -303,8 +302,8 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{path::RangeOnPath, Approx, ApproxPoint},
-        geometry::{GlobalPath, SurfaceGeometry},
+        algorithms::approx::{Approx, ApproxPoint},
+        geometry::{BoundaryOnCurve, GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
         operations::BuildHalfEdge,
         services::Services,
@@ -346,7 +345,7 @@ mod tests {
         let mut services = Services::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let range = RangeOnPath::from([[0.], [TAU]]);
+        let boundary = BoundaryOnCurve::from([[0.], [TAU]]);
 
         let surface = Surface::new(SurfaceGeometry {
             u: path,
@@ -354,14 +353,14 @@ mod tests {
         });
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
-            Some(range.boundary),
+            Some(boundary.inner),
             &mut services,
         );
 
         let tolerance = 1.;
         let approx = (&half_edge, &surface).approx(tolerance);
 
-        let expected_approx = (path, range)
+        let expected_approx = (path, boundary)
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
@@ -386,7 +385,7 @@ mod tests {
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.path(), RangeOnPath::from([[0.], [TAU]]))
+            (&half_edge.path(), BoundaryOnCurve::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {

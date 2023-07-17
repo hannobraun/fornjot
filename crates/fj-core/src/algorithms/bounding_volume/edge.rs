@@ -18,7 +18,7 @@ impl super::BoundingVolume<2> for HalfEdge {
                 })
             }
             SurfacePath::Line(_) => {
-                let points = self.boundary().map(|point_curve| {
+                let points = self.boundary().inner.map(|point_curve| {
                     self.path().point_from_path_coords(point_curve)
                 });
 

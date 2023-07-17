@@ -44,6 +44,7 @@ impl CurveEdgeIntersection {
 
             let edge_vertices = half_edge
                 .boundary()
+                .inner
                 .map(|point| edge_path_as_line.point_from_line_coords(point));
 
             Segment::from_points(edge_vertices)

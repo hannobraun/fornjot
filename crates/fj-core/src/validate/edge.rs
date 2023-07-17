@@ -54,7 +54,7 @@ impl HalfEdgeValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let [back_position, front_position] = half_edge.boundary();
+        let [back_position, front_position] = half_edge.boundary().inner;
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {

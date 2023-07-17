@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::SurfacePath,
+    geometry::{BoundaryOnCurve, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Vertex},
     operations::Insert,
     services::Services,
@@ -13,7 +13,7 @@ pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to another
     fn unjoined(
         path: SurfacePath,
-        boundary: [Point<1>; 2],
+        boundary: impl Into<BoundaryOnCurve>,
         services: &mut Services,
     ) -> HalfEdge {
         let start_vertex = Vertex::new().insert(services);
