@@ -152,9 +152,9 @@ impl PathApproxParams {
 
     pub fn points(
         &self,
-        range: impl Into<BoundaryOnCurve>,
+        boundary: impl Into<BoundaryOnCurve>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
-        let range = range.into();
+        let range = boundary.into();
 
         let [a, b] = range.boundary.map(|point| point.t / self.increment());
         let direction = (b - a).sign();
