@@ -247,7 +247,7 @@ impl EdgeCache {
         if let Some(approx) =
             self.edge_approx.get(&(handle.id(), boundary.reverse()))
         {
-            // If we have a cache entry for the reverse range, we need to use
+            // If we have a cache entry for the reverse boundary, we need to use
             // that too!
             return Some(approx.clone().reverse());
         }
