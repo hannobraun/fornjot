@@ -80,14 +80,14 @@ impl Approx for (GlobalPath, BoundaryOnCurve) {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct BoundaryOnCurve {
     /// The boundary of the range
-    pub boundary: [Point<1>; 2],
+    pub inner: [Point<1>; 2],
 }
 
 impl BoundaryOnCurve {
     /// Reverse the direction of the range
     pub fn reverse(self) -> Self {
-        let [a, b] = self.boundary;
-        Self { boundary: [b, a] }
+        let [a, b] = self.inner;
+        Self { inner: [b, a] }
     }
 }
 
@@ -96,8 +96,8 @@ where
     T: Into<Point<1>>,
 {
     fn from(boundary: [T; 2]) -> Self {
-        let boundary = boundary.map(Into::into);
-        Self { boundary }
+        let inner = boundary.map(Into::into);
+        Self { inner }
     }
 }
 
@@ -156,7 +156,7 @@ impl PathApproxParams {
     ) -> impl Iterator<Item = Point<1>> + '_ {
         let boundary = boundary.into();
 
-        let [a, b] = boundary.boundary.map(|point| point.t / self.increment());
+        let [a, b] = boundary.inner.map(|point| point.t / self.increment());
         let direction = (b - a).sign();
         let [min, max] = if a < b { [a, b] } else { [b, a] };
 

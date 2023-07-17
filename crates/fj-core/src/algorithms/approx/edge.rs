@@ -29,7 +29,7 @@ impl Approx for (&HalfEdge, &Surface) {
         let (half_edge, surface) = self;
 
         let boundary = BoundaryOnCurve {
-            boundary: half_edge.boundary(),
+            inner: half_edge.boundary(),
         };
 
         let position_surface = half_edge.start_position();
@@ -193,7 +193,7 @@ fn approx_edge(
         }
         (SurfacePath::Line(line), _) => {
             let range_u =
-                BoundaryOnCurve::from(boundary.boundary.map(|point_curve| {
+                BoundaryOnCurve::from(boundary.inner.map(|point_curve| {
                     [path.point_from_path_coords(point_curve).u]
                 }));
 
@@ -355,7 +355,7 @@ mod tests {
         });
         let half_edge = HalfEdge::line_segment(
             [[0., 1.], [TAU, 1.]],
-            Some(boundary.boundary),
+            Some(boundary.inner),
             &mut services,
         );
 
