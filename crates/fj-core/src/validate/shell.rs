@@ -66,7 +66,8 @@ pub enum ShellValidationError {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     config: &ValidationConfig,
-    (edge_a, surface_a): (Handle<HalfEdge>, Handle<Surface>),
+    edge_a: Handle<HalfEdge>,
+    surface_a: Handle<Surface>,
     (edge_b, surface_b): (Handle<HalfEdge>, Handle<Surface>),
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
@@ -137,7 +138,8 @@ impl ShellValidationError {
                         // greater than the max
                         if distances(
                             config,
-                            (edge_a.clone(), surface_a.clone()),
+                            edge_a.clone(),
+                            surface_a.clone(),
                             other_edge.clone(),
                         )
                         .any(|d| d > config.identical_max_distance)
@@ -158,7 +160,8 @@ impl ShellValidationError {
                         // distinct_min_distance, that's a problem.
                         if distances(
                             config,
-                            (edge_a.clone(), surface_a.clone()),
+                            edge_a.clone(),
+                            surface_a.clone(),
                             other_edge.clone(),
                         )
                         .all(|d| d < config.distinct_min_distance)
