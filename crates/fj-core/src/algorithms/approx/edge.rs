@@ -239,13 +239,13 @@ impl EdgeCache {
     pub fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
-        range: BoundaryOnCurve,
+        boundary: BoundaryOnCurve,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.edge_approx.get(&(handle.id(), range)) {
+        if let Some(approx) = self.edge_approx.get(&(handle.id(), boundary)) {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.id(), range.reverse()))
+            self.edge_approx.get(&(handle.id(), boundary.reverse()))
         {
             // If we have a cache entry for the reverse range, we need to use
             // that too!
