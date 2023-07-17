@@ -73,8 +73,8 @@ fn distances(
         percent: f64,
         (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
     ) -> Point<3> {
-        let boundary = edge.boundary();
-        let path_coords = boundary[0] + (boundary[1] - boundary[0]) * percent;
+        let [start, end] = edge.boundary();
+        let path_coords = start + (end - start) * percent;
         let surface_coords = edge.path().point_from_path_coords(path_coords);
         surface.point_from_surface_coords(surface_coords)
     }
