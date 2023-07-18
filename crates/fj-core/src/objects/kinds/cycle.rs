@@ -37,9 +37,7 @@ impl Cycle {
 
     /// Access the half-edge after the provided one
     ///
-    /// # Panics
-    ///
-    /// Panics, if the provided half-edge is not part of this cycle.
+    /// Returns `None`, if the provided `HalfEdge` is not part of the cycle.
     pub fn half_edge_after(
         &self,
         half_edge: &Handle<HalfEdge>,
