@@ -87,6 +87,7 @@ pub mod algorithms;
 pub mod geometry;
 pub mod objects;
 pub mod operations;
+pub mod queries;
 pub mod services;
 pub mod storage;
 pub mod validate;
