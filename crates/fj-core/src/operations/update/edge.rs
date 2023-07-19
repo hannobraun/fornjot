@@ -5,11 +5,11 @@ use crate::{
 
 /// Update a [`HalfEdge`]
 pub trait UpdateHalfEdge {
-    /// Update the start vertex of the half-edge
+    /// Replace the start vertex of the half-edge
     #[must_use]
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 
-    /// Update the global form of the half-edge
+    /// Replace the global form of the half-edge
     #[must_use]
     fn replace_global_form(&self, global_form: Handle<GlobalEdge>) -> Self;
 }
