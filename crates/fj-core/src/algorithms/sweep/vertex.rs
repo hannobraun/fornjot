@@ -32,9 +32,6 @@ impl Sweep for Handle<Vertex> {
             .or_insert_with(|| GlobalEdge::new().insert(services))
             .clone();
 
-        // The vertices of the returned `GlobalEdge` are in normalized order,
-        // which means the order can't be relied upon by the caller. Return the
-        // ordered vertices in addition.
         (global_edge, vertices)
     }
 }
