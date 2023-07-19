@@ -5,6 +5,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
+    queries::BoundingVerticesOfEdge,
     storage::{Handle, ObjectId},
 };
 
@@ -130,7 +131,31 @@ impl ShellValidationError {
                 let identical_according_to_global_form =
                     edge_a.global_form().id() == edge_b.global_form().id();
 
-                match identical_according_to_global_form {
+                let identical_according_to_curve = {
+                    let on_same_curve =
+                        edge_a.curve().id() == edge_b.curve().id();
+
+                    let have_same_boundary = {
+                        let bounding_vertices_of = |edge| {
+                            shell
+                                .bounding_vertices_of_edge(edge)
+                                .expect("Expected edge to be part of shell")
+                                .normalize()
+                        };
+
+                        bounding_vertices_of(edge_a)
+                            == bounding_vertices_of(edge_b)
+                    };
+
+                    on_same_curve && have_same_boundary
+                };
+
+                assert_eq!(
+                    identical_according_to_curve,
+                    identical_according_to_global_form,
+                );
+
+                match identical_according_to_curve {
                     true => {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
