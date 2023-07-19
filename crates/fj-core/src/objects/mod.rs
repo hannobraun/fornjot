@@ -46,6 +46,7 @@ mod stores;
 
 pub use self::{
     kinds::{
+        curve::Curve,
         cycle::{Cycle, HalfEdgesOfCycle},
         edge::{GlobalEdge, HalfEdge},
         face::{Face, FaceSet, Handedness},

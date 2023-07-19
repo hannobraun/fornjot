@@ -14,6 +14,7 @@ impl Reverse for Cycle {
                 HalfEdge::new(
                     current.path(),
                     current.boundary().reverse(),
+                    current.curve().clone(),
                     next.start_vertex().clone(),
                     current.global_form().clone(),
                 )

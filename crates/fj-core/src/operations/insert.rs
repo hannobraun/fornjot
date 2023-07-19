@@ -1,6 +1,6 @@
 use crate::{
     objects::{
-        Cycle, Face, GlobalEdge, HalfEdge, Region, Shell, Sketch, Solid,
+        Curve, Cycle, Face, GlobalEdge, HalfEdge, Region, Shell, Sketch, Solid,
         Surface, Vertex,
     },
     services::Services,
@@ -43,6 +43,7 @@ macro_rules! impl_insert {
 }
 
 impl_insert!(
+    Curve, curves;
     Cycle, cycles;
     Face, faces;
     GlobalEdge, global_edges;

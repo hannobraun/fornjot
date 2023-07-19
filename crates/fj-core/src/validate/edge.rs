@@ -95,6 +95,7 @@ mod tests {
             HalfEdge::new(
                 valid.path(),
                 boundary,
+                valid.curve().clone(),
                 valid.start_vertex().clone(),
                 valid.global_form().clone(),
             )
