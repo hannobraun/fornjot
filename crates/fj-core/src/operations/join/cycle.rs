@@ -115,6 +115,7 @@ impl JoinCycle for Cycle {
                 .expect("Expected this cycle to contain edge");
 
             let this_joined = half_edge
+                .replace_curve(half_edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
                 .replace_global_form(half_edge_other.global_form().clone())
                 .insert(services);
