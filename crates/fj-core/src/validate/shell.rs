@@ -1,4 +1,7 @@
-use std::{collections::HashMap, iter::repeat};
+use std::{
+    collections::{BTreeMap, HashMap},
+    iter::repeat,
+};
 
 use fj_math::{Point, Scalar};
 
@@ -6,7 +9,7 @@ use crate::{
     geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
     queries::BoundingVerticesOfEdge,
-    storage::{Handle, ObjectId},
+    storage::{Handle, HandleWrapper, ObjectId},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -211,6 +214,32 @@ impl ShellValidationError {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        let mut num_edges = BTreeMap::new();
+
+        for face in shell.faces() {
+            for cycle in face.region().all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let curve = HandleWrapper::from(half_edge.curve().clone());
+                    let bounding_vertices = cycle
+                        .bounding_vertices_of_edge(half_edge)
+                        .expect(
+                            "Cycle should provide bounds of its own half-edge",
+                        )
+                        .normalize();
+
+                    let edge = (curve, bounding_vertices);
+
+                    *num_edges.entry(edge).or_insert(0) += 1;
+                }
+            }
+        }
+
+        // Every edge should have exactly one matching edge that shares a curve
+        // and boundary.
+        if num_edges.into_values().any(|num| num != 2) {
+            errors.push(Self::NotWatertight.into());
+        }
+
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
 
         for face in shell.faces() {
