@@ -210,7 +210,7 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{GlobalEdge, Shell},
+        objects::{Curve, GlobalEdge, Shell},
         operations::{
             BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
             UpdateRegion, UpdateShell,
@@ -237,9 +237,13 @@ mod tests {
                         .update_exterior(|cycle| {
                             cycle
                                 .update_nth_half_edge(0, |half_edge| {
+                                    let curve =
+                                        Curve::new().insert(&mut services);
                                     let global_form =
                                         GlobalEdge::new().insert(&mut services);
+
                                     half_edge
+                                        .replace_curve(curve)
                                         .replace_global_form(global_form)
                                         .insert(&mut services)
                                 })
