@@ -46,7 +46,7 @@ pub trait Sweep: Sized {
 #[derive(Default)]
 pub struct SweepCache {
     /// Cache for global vertices
-    pub global_vertex: BTreeMap<ObjectId, Handle<Vertex>>,
+    pub vertices: BTreeMap<ObjectId, Handle<Vertex>>,
 
     /// Cache for global edges
     pub global_edge: BTreeMap<ObjectId, Handle<GlobalEdge>>,

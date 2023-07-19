@@ -20,7 +20,7 @@ impl Sweep for Handle<Vertex> {
     ) -> Self::Swept {
         let a = self.clone();
         let b = cache
-            .global_vertex
+            .vertices
             .entry(self.id())
             .or_insert_with(|| Vertex::new().insert(services))
             .clone();
