@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// The bounding vertices of an edge
-#[derive(Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct BoundingVertices {
     /// The bounding vertices
     pub inner: [HandleWrapper<Vertex>; 2],
