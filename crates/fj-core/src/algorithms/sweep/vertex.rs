@@ -1,7 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{GlobalEdge, Vertex},
+    objects::{Curve, GlobalEdge, Vertex},
     operations::Insert,
     services::Services,
     storage::Handle,
@@ -10,7 +10,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for Handle<Vertex> {
-    type Swept = (Handle<GlobalEdge>, [Self; 2]);
+    type Swept = (Handle<Curve>, Handle<GlobalEdge>, [Self; 2]);
 
     fn sweep_with_cache(
         self,
@@ -18,23 +18,26 @@ impl Sweep for Handle<Vertex> {
         cache: &mut SweepCache,
         services: &mut Services,
     ) -> Self::Swept {
+        let curve = cache
+            .curves
+            .entry(self.id())
+            .or_insert_with(|| Curve::new().insert(services))
+            .clone();
+
         let a = self.clone();
         let b = cache
-            .global_vertex
+            .vertices
             .entry(self.id())
             .or_insert_with(|| Vertex::new().insert(services))
             .clone();
-
         let vertices = [a, b];
+
         let global_edge = cache
-            .global_edge
+            .global_edges
             .entry(self.id())
             .or_insert_with(|| GlobalEdge::new().insert(services))
             .clone();
 
-        // The vertices of the returned `GlobalEdge` are in normalized order,
-        // which means the order can't be relied upon by the caller. Return the
-        // ordered vertices in addition.
-        (global_edge, vertices)
+        (curve, global_edge, vertices)
     }
 }

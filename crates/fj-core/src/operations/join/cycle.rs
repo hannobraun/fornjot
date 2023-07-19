@@ -71,6 +71,7 @@ impl JoinCycle for Cycle {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, services)
+                    .replace_curve(half_edge.curve().clone())
                     .replace_start_vertex(prev.start_vertex().clone())
                     .replace_global_form(half_edge.global_form().clone())
                     .insert(services)
@@ -115,6 +116,7 @@ impl JoinCycle for Cycle {
                 .expect("Expected this cycle to contain edge");
 
             let this_joined = half_edge
+                .replace_curve(half_edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
                 .replace_global_form(half_edge_other.global_form().clone())
                 .insert(services);

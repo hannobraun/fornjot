@@ -1,11 +1,15 @@
-use std::{collections::HashMap, iter::repeat};
+use std::{
+    collections::{BTreeMap, HashMap},
+    iter::repeat,
+};
 
 use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
-    storage::{Handle, ObjectId},
+    queries::BoundingVerticesOfEdge,
+    storage::{Handle, HandleWrapper, ObjectId},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -127,10 +131,34 @@ impl ShellValidationError {
         // data-structure like an octree.
         for (edge_a, surface_a) in &edges_and_surfaces {
             for (edge_b, surface_b) in &edges_and_surfaces {
-                let identical =
+                let identical_according_to_global_form =
                     edge_a.global_form().id() == edge_b.global_form().id();
 
-                match identical {
+                let identical_according_to_curve = {
+                    let on_same_curve =
+                        edge_a.curve().id() == edge_b.curve().id();
+
+                    let have_same_boundary = {
+                        let bounding_vertices_of = |edge| {
+                            shell
+                                .bounding_vertices_of_edge(edge)
+                                .expect("Expected edge to be part of shell")
+                                .normalize()
+                        };
+
+                        bounding_vertices_of(edge_a)
+                            == bounding_vertices_of(edge_b)
+                    };
+
+                    on_same_curve && have_same_boundary
+                };
+
+                assert_eq!(
+                    identical_according_to_curve,
+                    identical_according_to_global_form,
+                );
+
+                match identical_according_to_curve {
                     true => {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
@@ -186,6 +214,32 @@ impl ShellValidationError {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        let mut num_edges = BTreeMap::new();
+
+        for face in shell.faces() {
+            for cycle in face.region().all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let curve = HandleWrapper::from(half_edge.curve().clone());
+                    let bounding_vertices = cycle
+                        .bounding_vertices_of_edge(half_edge)
+                        .expect(
+                            "Cycle should provide bounds of its own half-edge",
+                        )
+                        .normalize();
+
+                    let edge = (curve, bounding_vertices);
+
+                    *num_edges.entry(edge).or_insert(0) += 1;
+                }
+            }
+        }
+
+        // Every edge should have exactly one matching edge that shares a curve
+        // and boundary.
+        if num_edges.into_values().any(|num| num != 2) {
+            errors.push(Self::NotWatertight.into());
+        }
+
         let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
 
         for face in shell.faces() {
@@ -210,7 +264,7 @@ impl ShellValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{GlobalEdge, Shell},
+        objects::{Curve, GlobalEdge, Shell},
         operations::{
             BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
             UpdateRegion, UpdateShell,
@@ -237,9 +291,13 @@ mod tests {
                         .update_exterior(|cycle| {
                             cycle
                                 .update_nth_half_edge(0, |half_edge| {
+                                    let curve =
+                                        Curve::new().insert(&mut services);
                                     let global_form =
                                         GlobalEdge::new().insert(&mut services);
+
                                     half_edge
+                                        .replace_curve(curve)
                                         .replace_global_form(global_form)
                                         .insert(&mut services)
                                 })
