@@ -49,5 +49,5 @@ pub struct SweepCache {
     pub vertices: BTreeMap<ObjectId, Handle<Vertex>>,
 
     /// Cache for global edges
-    pub global_edge: BTreeMap<ObjectId, Handle<GlobalEdge>>,
+    pub global_edges: BTreeMap<ObjectId, Handle<GlobalEdge>>,
 }

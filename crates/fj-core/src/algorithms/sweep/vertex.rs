@@ -27,7 +27,7 @@ impl Sweep for Handle<Vertex> {
 
         let vertices = [a, b];
         let global_edge = cache
-            .global_edge
+            .global_edges
             .entry(self.id())
             .or_insert_with(|| GlobalEdge::new().insert(services))
             .clone();
