@@ -228,7 +228,7 @@ impl EdgeCache {
     }
 
     /// Access the approximation for the given [`GlobalEdge`], if available
-    pub fn get_edge(
+    fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
         boundary: BoundaryOnCurve,
@@ -248,7 +248,7 @@ impl EdgeCache {
     }
 
     /// Insert the approximation of a [`GlobalEdge`]
-    pub fn insert_edge(
+    fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
         boundary: BoundaryOnCurve,
@@ -276,14 +276,14 @@ impl EdgeCache {
 
 /// An approximation of a [`GlobalEdge`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalEdgeApprox {
+struct GlobalEdgeApprox {
     /// The points that approximate the edge
-    pub points: Vec<ApproxPoint<1>>,
+    points: Vec<ApproxPoint<1>>,
 }
 
 impl GlobalEdgeApprox {
     /// Reverse the order of the approximation
-    pub fn reverse(mut self) -> Self {
+    fn reverse(mut self) -> Self {
         self.points.reverse();
         self
     }
