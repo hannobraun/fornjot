@@ -54,8 +54,8 @@ impl Approx for (&HalfEdge, &Surface) {
             // approximations.
             //
             // Caching works like this: We check whether there already is a
-            // cache entry for the `GlobalEdge`. If there isn't we create the 3D
-            // approximation from the 2D `HalfEdge`. Next time we check for a
+            // cache entry for the `GlobalEdge`. If there isn't, we create the
+            // 3D approximation from the 2D `HalfEdge`. Next time we check for a
             // coincident `HalfEdge`, we'll find the cache and use that, getting
             // the exact same 3D approximation, instead of generating a slightly
             // different one from the different 2D `HalfEdge`.
@@ -74,16 +74,10 @@ impl Approx for (&HalfEdge, &Surface) {
             // forward, as it is, well, too limiting. This means things here
             // will need to change.
             //
-            // Basically, we're missing two things:
-            //
-            // 1. A "global curve" object that is referenced by `HalfEdge`s and
-            //    can be used as the cache key, in combination with the range.
-            // 2. More intelligent caching, that can deliver partial results for
-            //    the range given, while generating (and then caching) any
-            //    unavailable parts of the range on the fly.
-            //
-            // Only item 2. is something we can do right here. Item 1. requires
-            // a change to the object graph.
+            // What we need here, is more intelligent caching based on `Curve`
+            // and the edge boundaries, instead of `GlobalEdge`. The cache needs
+            // to be able to deliver partial results for a given boundary, then
+            // generating (and caching) the rest of it on the fly.
             let cached_approx = cache.get_edge(
                 half_edge.global_form().clone(),
                 half_edge.boundary(),
