@@ -12,7 +12,7 @@ use fj_math::Point;
 use crate::{
     geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
-    storage::{Handle, HandleWrapper, ObjectId},
+    storage::{Handle, HandleWrapper},
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
@@ -221,7 +221,7 @@ pub struct EdgeCache {
         (HandleWrapper<GlobalEdge>, BoundaryOnCurve),
         GlobalEdgeApprox,
     >,
-    vertex_approx: BTreeMap<ObjectId, Point<3>>,
+    vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
 }
 
 impl EdgeCache {
@@ -265,7 +265,7 @@ impl EdgeCache {
     }
 
     fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
-        self.vertex_approx.get(&handle.id()).cloned()
+        self.vertex_approx.get(&handle.clone().into()).cloned()
     }
 
     fn insert_position(
@@ -274,7 +274,7 @@ impl EdgeCache {
         position: Point<3>,
     ) -> Point<3> {
         self.vertex_approx
-            .insert(handle.id(), position)
+            .insert(handle.clone().into(), position)
             .unwrap_or(position)
     }
 }
