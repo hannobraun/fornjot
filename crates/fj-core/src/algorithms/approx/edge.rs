@@ -12,7 +12,7 @@ use fj_math::Point;
 use crate::{
     geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
-    storage::{Handle, ObjectId},
+    storage::{Handle, HandleWrapper, ObjectId},
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
@@ -217,7 +217,10 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
-    edge_approx: BTreeMap<(ObjectId, BoundaryOnCurve), GlobalEdgeApprox>,
+    edge_approx: BTreeMap<
+        (HandleWrapper<GlobalEdge>, BoundaryOnCurve),
+        GlobalEdgeApprox,
+    >,
     vertex_approx: BTreeMap<ObjectId, Point<3>>,
 }
 
@@ -233,11 +236,13 @@ impl EdgeCache {
         handle: Handle<GlobalEdge>,
         boundary: BoundaryOnCurve,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.edge_approx.get(&(handle.id(), boundary)) {
+        if let Some(approx) =
+            self.edge_approx.get(&(handle.clone().into(), boundary))
+        {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.id(), boundary.reverse()))
+            self.edge_approx.get(&(handle.into(), boundary.reverse()))
         {
             // If we have a cache entry for the reverse boundary, we need to use
             // that too!
@@ -255,7 +260,7 @@ impl EdgeCache {
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
-            .insert((handle.id(), boundary), approx.clone())
+            .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
     }
 
