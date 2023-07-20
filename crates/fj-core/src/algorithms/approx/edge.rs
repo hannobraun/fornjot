@@ -12,7 +12,7 @@ use fj_math::Point;
 use crate::{
     geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
-    storage::{Handle, ObjectId},
+    storage::{Handle, HandleWrapper},
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
@@ -54,8 +54,8 @@ impl Approx for (&HalfEdge, &Surface) {
             // approximations.
             //
             // Caching works like this: We check whether there already is a
-            // cache entry for the `GlobalEdge`. If there isn't we create the 3D
-            // approximation from the 2D `HalfEdge`. Next time we check for a
+            // cache entry for the `GlobalEdge`. If there isn't, we create the
+            // 3D approximation from the 2D `HalfEdge`. Next time we check for a
             // coincident `HalfEdge`, we'll find the cache and use that, getting
             // the exact same 3D approximation, instead of generating a slightly
             // different one from the different 2D `HalfEdge`.
@@ -74,16 +74,10 @@ impl Approx for (&HalfEdge, &Surface) {
             // forward, as it is, well, too limiting. This means things here
             // will need to change.
             //
-            // Basically, we're missing two things:
-            //
-            // 1. A "global curve" object that is referenced by `HalfEdge`s and
-            //    can be used as the cache key, in combination with the range.
-            // 2. More intelligent caching, that can deliver partial results for
-            //    the range given, while generating (and then caching) any
-            //    unavailable parts of the range on the fly.
-            //
-            // Only item 2. is something we can do right here. Item 1. requires
-            // a change to the object graph.
+            // What we need here, is more intelligent caching based on `Curve`
+            // and the edge boundaries, instead of `GlobalEdge`. The cache needs
+            // to be able to deliver partial results for a given boundary, then
+            // generating (and caching) the rest of it on the fly.
             let cached_approx = cache.get_edge(
                 half_edge.global_form().clone(),
                 half_edge.boundary(),
@@ -223,8 +217,11 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
-    edge_approx: BTreeMap<(ObjectId, BoundaryOnCurve), GlobalEdgeApprox>,
-    vertex_approx: BTreeMap<ObjectId, Point<3>>,
+    edge_approx: BTreeMap<
+        (HandleWrapper<GlobalEdge>, BoundaryOnCurve),
+        GlobalEdgeApprox,
+    >,
+    vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
 }
 
 impl EdgeCache {
@@ -234,16 +231,18 @@ impl EdgeCache {
     }
 
     /// Access the approximation for the given [`GlobalEdge`], if available
-    pub fn get_edge(
+    fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
         boundary: BoundaryOnCurve,
     ) -> Option<GlobalEdgeApprox> {
-        if let Some(approx) = self.edge_approx.get(&(handle.id(), boundary)) {
+        if let Some(approx) =
+            self.edge_approx.get(&(handle.clone().into(), boundary))
+        {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.id(), boundary.reverse()))
+            self.edge_approx.get(&(handle.into(), boundary.reverse()))
         {
             // If we have a cache entry for the reverse boundary, we need to use
             // that too!
@@ -254,19 +253,19 @@ impl EdgeCache {
     }
 
     /// Insert the approximation of a [`GlobalEdge`]
-    pub fn insert_edge(
+    fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
         boundary: BoundaryOnCurve,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
-            .insert((handle.id(), boundary), approx.clone())
+            .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
     }
 
     fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
-        self.vertex_approx.get(&handle.id()).cloned()
+        self.vertex_approx.get(&handle.clone().into()).cloned()
     }
 
     fn insert_position(
@@ -275,21 +274,21 @@ impl EdgeCache {
         position: Point<3>,
     ) -> Point<3> {
         self.vertex_approx
-            .insert(handle.id(), position)
+            .insert(handle.clone().into(), position)
             .unwrap_or(position)
     }
 }
 
 /// An approximation of a [`GlobalEdge`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct GlobalEdgeApprox {
+struct GlobalEdgeApprox {
     /// The points that approximate the edge
-    pub points: Vec<ApproxPoint<1>>,
+    points: Vec<ApproxPoint<1>>,
 }
 
 impl GlobalEdgeApprox {
     /// Reverse the order of the approximation
-    pub fn reverse(mut self) -> Self {
+    fn reverse(mut self) -> Self {
         self.points.reverse();
         self
     }
