@@ -4,11 +4,6 @@ use crate::{
 };
 
 /// A 3-dimensional closed shell
-///
-/// # Implementation Note
-///
-/// The faces that make up a shell should be closed ("watertight"). This is not
-/// currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Shell {
     faces: FaceSet,
