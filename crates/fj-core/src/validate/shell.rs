@@ -20,6 +20,7 @@ impl Validate for Shell {
         ShellValidationError::validate_curve_coordinates(self, config, errors);
         ShellValidationError::validate_edges_coincident(self, config, errors);
         ShellValidationError::validate_watertight(self, config, errors);
+        ShellValidationError::validate_same_orientation(self, errors);
     }
 }
 
@@ -69,6 +70,10 @@ pub enum ShellValidationError {
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
     },
+
+    /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
+    #[error("Shell has mixed face orientations")]
+    MixedOrientations,
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -342,6 +347,20 @@ impl ShellValidationError {
             errors.push(Self::NotWatertight.into())
         }
     }
+
+    fn validate_same_orientation(
+        shell: &Shell,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        let mut orientations = shell
+            .faces()
+            .into_iter()
+            .map(|f| f.region().exterior().winding());
+        let first = orientations.next().unwrap();
+        if !orientations.all(|elem| elem == first) {
+            errors.push(Self::MixedOrientations.into())
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -360,8 +379,8 @@ mod tests {
         assert_contains_err,
         objects::{Curve, GlobalEdge, Shell},
         operations::{
-            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
-            UpdateRegion, UpdateShell,
+            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
+            UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -472,6 +491,27 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)
+        );
+
+        Ok(())
+    }
+    #[test]
+    fn shell_mixed_orientations() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let valid = Shell::tetrahedron(
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
+            &mut services,
+        );
+        let invalid = valid.shell.replace_face(
+            &valid.abc.face,
+            valid.abc.face.reverse(&mut services).insert(&mut services),
+        );
+
+        valid.shell.validate_and_return_first_error()?;
+        assert_contains_err!(
+            invalid,
+            ValidationError::Shell(ShellValidationError::MixedOrientations)
         );
 
         Ok(())
