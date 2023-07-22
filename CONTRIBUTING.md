@@ -32,7 +32,7 @@ Usually, you'd have to specify which model you want to load, but there is a [con
 The same configuration file specifies the [`models/` directory](models/) as the default path. That means, if you want to run another model, you don't have to type the full path. To load the [cuboid model](models/cuboid/), for example, you can do this:
 
 ``` sh
-cargo run -m cuboid
+cargo run -p cuboid
 ```
 
 ### Running tests
@@ -43,10 +43,10 @@ You can run the full suite of unit/integration tests like this:
 cargo test
 ```
 
-During development, it can often be convenient to just run the tests for the crate you're currently working on, as that can be much quicker. You can run only the tests for `fj-kernel`, for example, like this:
+During development, it can often be convenient to just run the tests for the crate you're currently working on, as that can be much quicker. You can run only the tests for `fj-core`, for example, like this:
 
 ``` sh
-cargo test -p fj-kernel
+cargo test -p fj-core
 ```
 
 ### Running a full build
