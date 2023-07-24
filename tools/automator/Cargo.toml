@@ -18,7 +18,7 @@ url = "2.4.0"
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.3.12"
+version = "4.3.19"
 features = ["derive"]
 
 [dependencies.tokio]
