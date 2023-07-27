@@ -1,4 +1,7 @@
-use std::hash::Hash;
+use std::{
+    cmp::Ordering,
+    hash::{Hash, Hasher},
+};
 
 use fj_math::Point;
 
@@ -9,7 +12,7 @@ use crate::{objects::Vertex, storage::HandleWrapper};
 /// This struct is generic, because different situations require different
 /// representations of a boundary. In some cases, curve coordinates are enough,
 /// in other cases, vertices are required, and sometimes you need both.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug)]
 pub struct CurveBoundary<T: CurveBoundaryElement> {
     /// The raw representation of the boundary
     pub inner: [T::Repr; 2],
@@ -37,6 +40,14 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     }
 }
 
+impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
+
+impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
+    }
+}
+
 impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>
 where
     S: Into<T::Repr>,
@@ -44,6 +55,24 @@ where
     fn from(boundary: [S; 2]) -> Self {
         let inner = boundary.map(Into::into);
         Self { inner }
+    }
+}
+
+impl<T: CurveBoundaryElement> Hash for CurveBoundary<T> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.inner.hash(state);
+    }
+}
+
+impl<T: CurveBoundaryElement> Ord for CurveBoundary<T> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.inner.cmp(&other.inner)
+    }
+}
+
+impl<T: CurveBoundaryElement> PartialOrd for CurveBoundary<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.inner.partial_cmp(&other.inner)
     }
 }
 
