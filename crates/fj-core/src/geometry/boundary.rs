@@ -90,6 +90,6 @@ impl CurveBoundaryElement for Point<1> {
     type Repr = Self;
 }
 
-impl CurveBoundaryElement for HandleWrapper<Vertex> {
-    type Repr = Self;
+impl CurveBoundaryElement for Vertex {
+    type Repr = HandleWrapper<Vertex>;
 }
