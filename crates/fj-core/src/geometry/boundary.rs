@@ -2,12 +2,12 @@ use fj_math::Point;
 
 /// A boundary on a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct BoundaryOnCurve {
+pub struct BoundaryOnCurve<T> {
     /// The raw representation of the boundary
-    pub inner: [Point<1>; 2],
+    pub inner: [T; 2],
 }
 
-impl BoundaryOnCurve {
+impl<T> BoundaryOnCurve<T> {
     /// Reverse the direction of the boundary
     ///
     /// Returns a new instance of this struct, which has its direction reversed.
@@ -18,7 +18,7 @@ impl BoundaryOnCurve {
     }
 }
 
-impl<T> From<[T; 2]> for BoundaryOnCurve
+impl<T> From<[T; 2]> for BoundaryOnCurve<Point<1>>
 where
     T: Into<Point<1>>,
 {

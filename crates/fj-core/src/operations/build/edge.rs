@@ -13,7 +13,7 @@ pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to another
     fn unjoined(
         path: SurfacePath,
-        boundary: impl Into<BoundaryOnCurve>,
+        boundary: impl Into<BoundaryOnCurve<Point<1>>>,
         services: &mut Services,
     ) -> HalfEdge {
         let curve = Curve::new().insert(services);

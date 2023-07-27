@@ -41,7 +41,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     path: SurfacePath,
-    boundary: BoundaryOnCurve,
+    boundary: BoundaryOnCurve<Point<1>>,
     curve: HandleWrapper<Curve>,
     start_vertex: HandleWrapper<Vertex>,
     global_form: HandleWrapper<GlobalEdge>,
@@ -51,7 +51,7 @@ impl HalfEdge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         path: SurfacePath,
-        boundary: impl Into<BoundaryOnCurve>,
+        boundary: impl Into<BoundaryOnCurve<Point<1>>>,
         curve: Handle<Curve>,
         start_vertex: Handle<Vertex>,
         global_form: Handle<GlobalEdge>,
@@ -71,7 +71,7 @@ impl HalfEdge {
     }
 
     /// Access the boundary points of the half-edge on the curve
-    pub fn boundary(&self) -> BoundaryOnCurve {
+    pub fn boundary(&self) -> BoundaryOnCurve<Point<1>> {
         self.boundary
     }
 

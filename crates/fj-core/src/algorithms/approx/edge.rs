@@ -141,7 +141,7 @@ impl HalfEdgeApprox {
 fn approx_edge(
     path: &SurfacePath,
     surface: &Surface,
-    boundary: BoundaryOnCurve,
+    boundary: BoundaryOnCurve<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> GlobalEdgeApprox {
     // There are different cases of varying complexity. Circles are the hard
@@ -218,7 +218,7 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeCache {
     edge_approx: BTreeMap<
-        (HandleWrapper<GlobalEdge>, BoundaryOnCurve),
+        (HandleWrapper<GlobalEdge>, BoundaryOnCurve<Point<1>>),
         GlobalEdgeApprox,
     >,
     vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
@@ -234,7 +234,7 @@ impl EdgeCache {
     fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
-        boundary: BoundaryOnCurve,
+        boundary: BoundaryOnCurve<Point<1>>,
     ) -> Option<GlobalEdgeApprox> {
         if let Some(approx) =
             self.edge_approx.get(&(handle.clone().into(), boundary))
@@ -256,7 +256,7 @@ impl EdgeCache {
     fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
-        boundary: BoundaryOnCurve,
+        boundary: BoundaryOnCurve<Point<1>>,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
