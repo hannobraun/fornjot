@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{BoundaryOnCurve, GlobalPath, SurfacePath},
+    geometry::{CurveBoundary, GlobalPath, SurfacePath},
     objects::{GlobalEdge, HalfEdge, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
@@ -141,7 +141,7 @@ impl HalfEdgeApprox {
 fn approx_edge(
     path: &SurfacePath,
     surface: &Surface,
-    boundary: BoundaryOnCurve,
+    boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> GlobalEdgeApprox {
     // There are different cases of varying complexity. Circles are the hard
@@ -185,7 +185,7 @@ fn approx_edge(
         }
         (SurfacePath::Line(line), _) => {
             let range_u =
-                BoundaryOnCurve::from(boundary.inner.map(|point_curve| {
+                CurveBoundary::from(boundary.inner.map(|point_curve| {
                     [path.point_from_path_coords(point_curve).u]
                 }));
 
@@ -218,7 +218,7 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeCache {
     edge_approx: BTreeMap<
-        (HandleWrapper<GlobalEdge>, BoundaryOnCurve),
+        (HandleWrapper<GlobalEdge>, CurveBoundary<Point<1>>),
         GlobalEdgeApprox,
     >,
     vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
@@ -234,7 +234,7 @@ impl EdgeCache {
     fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
-        boundary: BoundaryOnCurve,
+        boundary: CurveBoundary<Point<1>>,
     ) -> Option<GlobalEdgeApprox> {
         if let Some(approx) =
             self.edge_approx.get(&(handle.clone().into(), boundary))
@@ -256,7 +256,7 @@ impl EdgeCache {
     fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
-        boundary: BoundaryOnCurve,
+        boundary: CurveBoundary<Point<1>>,
         approx: GlobalEdgeApprox,
     ) -> GlobalEdgeApprox {
         self.edge_approx
@@ -302,7 +302,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
-        geometry::{BoundaryOnCurve, GlobalPath, SurfaceGeometry},
+        geometry::{CurveBoundary, GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
         operations::BuildHalfEdge,
         services::Services,
@@ -344,7 +344,7 @@ mod tests {
         let mut services = Services::new();
 
         let path = GlobalPath::circle_from_radius(1.);
-        let boundary = BoundaryOnCurve::from([[0.], [TAU]]);
+        let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let surface = Surface::new(SurfaceGeometry {
             u: path,
@@ -384,7 +384,7 @@ mod tests {
         let approx = (&half_edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.path(), BoundaryOnCurve::from([[0.], [TAU]]))
+            (&half_edge.path(), CurveBoundary::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {

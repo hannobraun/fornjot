@@ -1,9 +1,10 @@
 use std::ops::RangeInclusive;
 
+use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{BoundaryOnCurve, SurfacePath},
+    geometry::{CurveBoundary, SurfacePath},
     objects::{Cycle, HalfEdge},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
@@ -17,7 +18,7 @@ pub trait JoinCycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, BoundaryOnCurve),
+            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator;
 
@@ -64,7 +65,7 @@ impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, BoundaryOnCurve),
+            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
