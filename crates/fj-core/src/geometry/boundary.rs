@@ -18,6 +18,20 @@ impl<T> BoundaryOnCurve<T> {
         let [a, b] = self.inner;
         Self { inner: [b, a] }
     }
+
+    /// Normalize the boundary
+    ///
+    /// Returns a new instance of this struct, which has the bounding elements
+    /// in a defined order. This can be used to compare a boundary while
+    /// disregarding its direction.
+    #[must_use]
+    pub fn normalize(mut self) -> Self
+    where
+        T: Ord,
+    {
+        self.inner.sort();
+        self
+    }
 }
 
 impl<S, T> From<[S; 2]> for BoundaryOnCurve<T>
