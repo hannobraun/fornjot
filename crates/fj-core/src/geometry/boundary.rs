@@ -1,4 +1,8 @@
 /// A boundary on a curve
+///
+/// This struct is generic, because different situations require different
+/// representations of a boundary. In some cases, curve coordinates are enough,
+/// in other cases, vertices are required, and sometimes you need both.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct BoundaryOnCurve<T> {
     /// The raw representation of the boundary
