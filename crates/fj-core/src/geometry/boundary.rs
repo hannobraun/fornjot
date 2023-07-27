@@ -9,6 +9,8 @@ pub struct BoundaryOnCurve {
 
 impl BoundaryOnCurve {
     /// Reverse the direction of the boundary
+    ///
+    /// Returns a new instance of this struct, which has its direction reversed.
     pub fn reverse(self) -> Self {
         let [a, b] = self.inner;
         Self { inner: [b, a] }
