@@ -1,5 +1,3 @@
-use fj_math::Point;
-
 /// A boundary on a curve
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct BoundaryOnCurve<T> {
@@ -18,11 +16,11 @@ impl<T> BoundaryOnCurve<T> {
     }
 }
 
-impl<T> From<[T; 2]> for BoundaryOnCurve<Point<1>>
+impl<S, T> From<[S; 2]> for BoundaryOnCurve<T>
 where
-    T: Into<Point<1>>,
+    S: Into<T>,
 {
-    fn from(boundary: [T; 2]) -> Self {
+    fn from(boundary: [S; 2]) -> Self {
         let inner = boundary.map(Into::into);
         Self { inner }
     }
