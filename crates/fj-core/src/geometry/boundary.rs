@@ -1,3 +1,5 @@
+use std::hash::Hash;
+
 use fj_math::Point;
 
 use crate::{objects::Vertex, storage::HandleWrapper};
@@ -52,7 +54,7 @@ pub trait CurveBoundaryElement {
     /// The representation the curve boundary element
     ///
     /// This is the actual data stored in [`CurveBoundary`].
-    type Repr: Ord;
+    type Repr: Eq + Hash + Ord;
 }
 
 impl CurveBoundaryElement for Point<1> {
