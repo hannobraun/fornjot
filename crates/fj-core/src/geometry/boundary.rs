@@ -4,12 +4,12 @@
 /// representations of a boundary. In some cases, curve coordinates are enough,
 /// in other cases, vertices are required, and sometimes you need both.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct BoundaryOnCurve<T> {
+pub struct CurveBoundary<T> {
     /// The raw representation of the boundary
     pub inner: [T; 2],
 }
 
-impl<T> BoundaryOnCurve<T> {
+impl<T> CurveBoundary<T> {
     /// Reverse the direction of the boundary
     ///
     /// Returns a new instance of this struct, which has its direction reversed.
@@ -34,7 +34,7 @@ impl<T> BoundaryOnCurve<T> {
     }
 }
 
-impl<S, T> From<[S; 2]> for BoundaryOnCurve<T>
+impl<S, T> From<[S; 2]> for CurveBoundary<T>
 where
     S: Into<T>,
 {

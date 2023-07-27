@@ -32,11 +32,11 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{BoundaryOnCurve, GlobalPath, SurfacePath};
+use crate::geometry::{CurveBoundary, GlobalPath, SurfacePath};
 
 use super::{Approx, Tolerance};
 
-impl Approx for (&SurfacePath, BoundaryOnCurve<Point<1>>) {
+impl Approx for (&SurfacePath, CurveBoundary<Point<1>>) {
     type Approximation = Vec<(Point<1>, Point<2>)>;
     type Cache = ();
 
@@ -56,7 +56,7 @@ impl Approx for (&SurfacePath, BoundaryOnCurve<Point<1>>) {
     }
 }
 
-impl Approx for (GlobalPath, BoundaryOnCurve<Point<1>>) {
+impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
     type Approximation = Vec<(Point<1>, Point<3>)>;
     type Cache = ();
 
@@ -82,7 +82,7 @@ impl Approx for (GlobalPath, BoundaryOnCurve<Point<1>>) {
 /// from the circle.
 fn approx_circle<const D: usize>(
     circle: &Circle<D>,
-    boundary: impl Into<BoundaryOnCurve<Point<1>>>,
+    boundary: impl Into<CurveBoundary<Point<1>>>,
     tolerance: Tolerance,
 ) -> Vec<(Point<1>, Point<D>)> {
     let boundary = boundary.into();
@@ -127,7 +127,7 @@ impl PathApproxParams {
 
     pub fn points(
         &self,
-        boundary: impl Into<BoundaryOnCurve<Point<1>>>,
+        boundary: impl Into<CurveBoundary<Point<1>>>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
         let boundary = boundary.into();
 
@@ -170,7 +170,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::algorithms::approx::{path::BoundaryOnCurve, Tolerance};
+    use crate::algorithms::approx::{path::CurveBoundary, Tolerance};
 
     use super::PathApproxParams;
 
@@ -220,7 +220,7 @@ mod tests {
         test_path([[TAU - 2.], [0.]], [2., 1.]);
 
         fn test_path(
-            boundary: impl Into<BoundaryOnCurve<Point<1>>>,
+            boundary: impl Into<CurveBoundary<Point<1>>>,
             expected_coords: impl IntoIterator<Item = impl Into<Scalar>>,
         ) {
             // Choose radius and tolerance such, that we need 4 vertices to

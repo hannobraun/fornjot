@@ -10,7 +10,7 @@
 //! them for various objects that have the information to answer the query.
 
 use crate::{
-    geometry::BoundaryOnCurve,
+    geometry::CurveBoundary,
     objects::{Cycle, Face, HalfEdge, Region, Shell, Vertex},
     storage::{Handle, HandleWrapper},
 };
@@ -24,18 +24,18 @@ pub trait BoundingVerticesOfEdge {
     fn bounding_vertices_of_edge(
         &self,
         edge: &Handle<HalfEdge>,
-    ) -> Option<BoundaryOnCurve<HandleWrapper<Vertex>>>;
+    ) -> Option<CurveBoundary<HandleWrapper<Vertex>>>;
 }
 
 impl BoundingVerticesOfEdge for Cycle {
     fn bounding_vertices_of_edge(
         &self,
         edge: &Handle<HalfEdge>,
-    ) -> Option<BoundaryOnCurve<HandleWrapper<Vertex>>> {
+    ) -> Option<CurveBoundary<HandleWrapper<Vertex>>> {
         let start = edge.start_vertex().clone();
         let end = self.half_edge_after(edge)?.start_vertex().clone();
 
-        Some(BoundaryOnCurve::from([start, end]))
+        Some(CurveBoundary::from([start, end]))
     }
 }
 
@@ -43,7 +43,7 @@ impl BoundingVerticesOfEdge for Region {
     fn bounding_vertices_of_edge(
         &self,
         edge: &Handle<HalfEdge>,
-    ) -> Option<BoundaryOnCurve<HandleWrapper<Vertex>>> {
+    ) -> Option<CurveBoundary<HandleWrapper<Vertex>>> {
         for cycle in self.all_cycles() {
             if let Some(vertices) = cycle.bounding_vertices_of_edge(edge) {
                 return Some(vertices);
@@ -58,7 +58,7 @@ impl BoundingVerticesOfEdge for Face {
     fn bounding_vertices_of_edge(
         &self,
         edge: &Handle<HalfEdge>,
-    ) -> Option<BoundaryOnCurve<HandleWrapper<Vertex>>> {
+    ) -> Option<CurveBoundary<HandleWrapper<Vertex>>> {
         self.region().bounding_vertices_of_edge(edge)
     }
 }
@@ -67,7 +67,7 @@ impl BoundingVerticesOfEdge for Shell {
     fn bounding_vertices_of_edge(
         &self,
         edge: &Handle<HalfEdge>,
-    ) -> Option<BoundaryOnCurve<HandleWrapper<Vertex>>> {
+    ) -> Option<CurveBoundary<HandleWrapper<Vertex>>> {
         for face in self.faces() {
             if let Some(vertices) = face.bounding_vertices_of_edge(edge) {
                 return Some(vertices);
