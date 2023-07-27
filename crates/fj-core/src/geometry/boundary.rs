@@ -1,15 +1,19 @@
+use fj_math::Point;
+
+use crate::{objects::Vertex, storage::HandleWrapper};
+
 /// A boundary on a curve
 ///
 /// This struct is generic, because different situations require different
 /// representations of a boundary. In some cases, curve coordinates are enough,
 /// in other cases, vertices are required, and sometimes you need both.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveBoundary<T> {
+pub struct CurveBoundary<T: CurveBoundaryElement> {
     /// The raw representation of the boundary
-    pub inner: [T; 2],
+    pub inner: [T::Repr; 2],
 }
 
-impl<T> CurveBoundary<T> {
+impl<T: CurveBoundaryElement> CurveBoundary<T> {
     /// Reverse the direction of the boundary
     ///
     /// Returns a new instance of this struct, which has its direction reversed.
@@ -27,19 +31,37 @@ impl<T> CurveBoundary<T> {
     #[must_use]
     pub fn normalize(mut self) -> Self
     where
-        T: Ord,
+        T::Repr: Ord,
     {
         self.inner.sort();
         self
     }
 }
 
-impl<S, T> From<[S; 2]> for CurveBoundary<T>
+impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>
 where
-    S: Into<T>,
+    S: Into<T::Repr>,
 {
     fn from(boundary: [S; 2]) -> Self {
         let inner = boundary.map(Into::into);
         Self { inner }
     }
+}
+
+/// An element of a curve boundary
+///
+/// Used for the type parameter of [`CurveBoundary`].
+pub trait CurveBoundaryElement {
+    /// The representation the curve boundary element
+    ///
+    /// This is the actual data stored in [`CurveBoundary`].
+    type Repr;
+}
+
+impl CurveBoundaryElement for Point<1> {
+    type Repr = Self;
+}
+
+impl CurveBoundaryElement for HandleWrapper<Vertex> {
+    type Repr = Self;
 }
