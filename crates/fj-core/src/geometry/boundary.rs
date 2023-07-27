@@ -29,10 +29,7 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     /// in a defined order. This can be used to compare a boundary while
     /// disregarding its direction.
     #[must_use]
-    pub fn normalize(mut self) -> Self
-    where
-        T::Repr: Ord,
-    {
+    pub fn normalize(mut self) -> Self {
         self.inner.sort();
         self
     }
@@ -55,7 +52,7 @@ pub trait CurveBoundaryElement {
     /// The representation the curve boundary element
     ///
     /// This is the actual data stored in [`CurveBoundary`].
-    type Repr;
+    type Repr: Ord;
 }
 
 impl CurveBoundaryElement for Point<1> {
