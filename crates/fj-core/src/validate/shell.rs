@@ -329,13 +329,13 @@ impl ShellValidationError {
             errors.push(Self::NotWatertight.into());
         }
 
-        let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
+        let mut global_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let id = half_edge.global_form().id();
-                    let entry = half_edge_to_faces.entry(id);
+                    let entry = global_edge_to_faces.entry(id);
                     *entry.or_insert(0) += 1;
                 }
             }
@@ -343,7 +343,7 @@ impl ShellValidationError {
 
         // Each global edge should have exactly two half edges that are part of
         // the shell
-        if half_edge_to_faces.iter().any(|(_, c)| *c != 2) {
+        if global_edge_to_faces.iter().any(|(_, c)| *c != 2) {
             errors.push(Self::NotWatertight.into())
         }
     }
