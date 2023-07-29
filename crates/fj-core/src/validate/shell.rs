@@ -352,13 +352,31 @@ impl ShellValidationError {
         shell: &Shell,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut orientations = shell
-            .faces()
-            .into_iter()
-            .map(|f| f.region().exterior().winding());
-        let first = orientations.next().unwrap();
-        if !orientations.all(|elem| elem == first) {
-            errors.push(Self::MixedOrientations.into())
+        let mut global_to_half: HashMap<ObjectId, Vec<_>> = HashMap::new();
+
+        for face in shell.faces() {
+            for cycle in face.region().all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let id = half_edge.global_form().id();
+                    global_to_half
+                        .entry(id)
+                        .or_insert(Vec::new())
+                        .push(half_edge.clone());
+                }
+            }
+        }
+
+        // In order for the faces to all have the same outside winding global
+        // edge should have two half edges in opposite directions.
+        for (_, halfs) in global_to_half {
+            if let (Some(a), Some(b)) = (halfs.get(0), halfs.get(1)) {
+                // Check if a is reverse of b
+                if a.start_vertex().id() == b.start_vertex().id() {
+                    errors.push(Self::MixedOrientations.into());
+                    dbg!(a, b);
+                    return;
+                }
+            }
         }
     }
 }
