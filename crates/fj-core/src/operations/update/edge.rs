@@ -1,10 +1,17 @@
+use fj_math::Point;
+
 use crate::{
+    geometry::CurveBoundary,
     objects::{Curve, GlobalEdge, HalfEdge, Vertex},
     storage::Handle,
 };
 
 /// Update a [`HalfEdge`]
 pub trait UpdateHalfEdge {
+    /// Replace the boundary of the half-edge
+    #[must_use]
+    fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self;
+
     /// Replace the curve of the half-edge
     #[must_use]
     fn replace_curve(&self, curve: Handle<Curve>) -> Self;
@@ -19,6 +26,16 @@ pub trait UpdateHalfEdge {
 }
 
 impl UpdateHalfEdge for HalfEdge {
+    fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self {
+        HalfEdge::new(
+            self.path(),
+            boundary,
+            self.curve().clone(),
+            self.start_vertex().clone(),
+            self.global_form().clone(),
+        )
+    }
+
     fn replace_curve(&self, curve: Handle<Curve>) -> Self {
         HalfEdge::new(
             self.path(),
