@@ -9,6 +9,10 @@
 //! This module provides traits express such non-trivial queries, and implements
 //! them for various objects that have the information to answer the query.
 
+mod all_edges_with_surface;
 mod bounding_vertices_of_edge;
 
-pub use self::bounding_vertices_of_edge::BoundingVerticesOfEdge;
+pub use self::{
+    all_edges_with_surface::AllEdgesWithSurface,
+    bounding_vertices_of_edge::BoundingVerticesOfEdge,
+};
