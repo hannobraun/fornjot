@@ -68,6 +68,15 @@ impl SurfacePath {
             Self::Line(line) => line.point_from_line_coords(point),
         }
     }
+
+    /// Create a new path that is the reverse of this one
+    #[must_use]
+    pub fn reverse(self) -> Self {
+        match self {
+            Self::Circle(circle) => Self::Circle(circle.reverse()),
+            Self::Line(line) => Self::Line(line.reverse()),
+        }
+    }
 }
 
 /// A path through global (3D) space
