@@ -1,14 +1,11 @@
-use std::{
-    collections::{BTreeMap, HashMap},
-    iter::repeat,
-};
+use std::collections::{BTreeMap, HashMap};
 
 use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
-    queries::BoundingVerticesOfEdge,
+    queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
     storage::{Handle, HandleWrapper, ObjectId},
 };
 
@@ -115,16 +112,8 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let edges_and_surfaces: Vec<_> = shell
-            .faces()
-            .into_iter()
-            .flat_map(|face| {
-                face.region()
-                    .all_cycles()
-                    .flat_map(|cycle| cycle.half_edges().cloned())
-                    .zip(repeat(face.surface().clone()))
-            })
-            .collect();
+        let mut edges_and_surfaces = Vec::new();
+        shell.all_edges_with_surface(&mut edges_and_surfaces);
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
