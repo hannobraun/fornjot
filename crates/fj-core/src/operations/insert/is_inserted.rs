@@ -1,3 +1,5 @@
+use std::borrow::Borrow;
+
 use crate::storage::Handle;
 
 /// Indicate whether an object has been inserted
@@ -6,7 +8,7 @@ use crate::storage::Handle;
 /// whether their contents have been inserted or not.
 pub trait IsInserted {
     /// The type of the object for which the insertion status is tracked
-    type T<T>;
+    type T<T>: Borrow<T>;
 }
 
 /// Indicate that an object has been inserted
