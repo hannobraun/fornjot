@@ -1,4 +1,4 @@
-use std::array;
+use std::{array, borrow::Borrow};
 
 use fj_interop::ext::ArrayExt;
 use fj_math::Point;
@@ -86,4 +86,39 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
 
     /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],
+}
+
+impl<const D: usize, I: IsInserted> Polygon<D, I> {
+    /// Replace the face of the polygon
+    ///
+    /// Returns a new instance of `Polygon` with the replaced face. Also updates
+    /// the other fields of `Polygon` to match the new face.
+    pub fn replace_face(&self, face: I::T<Face>) -> Self {
+        let edges = array::from_fn(|i| {
+            face.borrow()
+                .region()
+                .exterior()
+                .nth_half_edge(i)
+                .expect("Operation should not have changed length of cycle")
+                .clone()
+        });
+        let vertices = array::from_fn(|i| {
+            // The duplicated code here is unfortunate, but unless we get a
+            // stable `array::each_ref` and something like `array::unzip`, I'm
+            // not sure how to avoid it.
+            face.borrow()
+                .region()
+                .exterior()
+                .nth_half_edge(i)
+                .expect("Operation should not have changed length of cycle")
+                .start_vertex()
+                .clone()
+        });
+
+        Self {
+            face,
+            edges,
+            vertices,
+        }
+    }
 }
