@@ -1,4 +1,6 @@
-use std::{any::type_name, cmp::Ordering, fmt, hash::Hash, ops::Deref};
+use std::{
+    any::type_name, borrow::Borrow, cmp::Ordering, fmt, hash::Hash, ops::Deref,
+};
 
 use super::{blocks::Index, store::StoreInner};
 
@@ -79,6 +81,12 @@ impl<T> Deref for Handle<T> {
         // was never completed.
         slot.as_ref()
             .expect("Handle references non-existing object")
+    }
+}
+
+impl<T> Borrow<T> for Handle<T> {
+    fn borrow(&self) -> &T {
+        self.deref()
     }
 }
 
