@@ -4,6 +4,7 @@ use crate::services::Services;
 
 mod cycle;
 mod face;
+mod region;
 
 /// Reverse the direction/orientation of an object
 pub trait Reverse {
