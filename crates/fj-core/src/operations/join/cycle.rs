@@ -108,14 +108,14 @@ impl JoinCycle for Cycle {
 
             let vertex_a = other
                 .half_edge_after(half_edge_other)
-                .expect("Expected other cycle to contain edge")
+                .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
             let vertex_b = half_edge_other.start_vertex().clone();
 
             let next_edge = cycle
                 .half_edge_after(half_edge)
-                .expect("Expected this cycle to contain edge");
+                .expect("Cycle must contain edge; just obtained edge from it");
 
             let this_joined = half_edge
                 .replace_curve(half_edge_other.curve().clone())
