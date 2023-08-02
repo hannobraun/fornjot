@@ -89,7 +89,8 @@ impl JoinCycle for Cycle {
     ) -> Self {
         assert_eq!(
             range.end() - range.start(),
-            range_other.end() - range_other.start()
+            range_other.end() - range_other.start(),
+            "Ranges have different lengths",
         );
 
         let mut cycle = self.clone();
