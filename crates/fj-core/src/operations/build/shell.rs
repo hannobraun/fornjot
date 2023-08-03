@@ -3,8 +3,9 @@ use fj_math::Point;
 use crate::{
     objects::{Face, Shell},
     operations::{
-        update::region::UpdateRegion, BuildFace, Insert, IsInserted,
-        IsInsertedNo, IsInsertedYes, JoinCycle, Polygon, UpdateFace,
+        reverse::ReverseCurveCoordinateSystems, update::region::UpdateRegion,
+        BuildFace, Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle,
+        Polygon, UpdateCycle, UpdateFace,
     },
     services::Services,
 };
@@ -45,6 +46,10 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
+                        .update_nth_half_edge(0, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
@@ -59,12 +64,20 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
+                        .update_nth_half_edge(1, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             abc.face.region().exterior(),
                             1..=1,
                             2..=2,
                             services,
                         )
+                        .update_nth_half_edge(0, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             bad.face.region().exterior(),
                             0..=0,
@@ -79,18 +92,30 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
+                        .update_nth_half_edge(0, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
                             1..=1,
                             services,
                         )
+                        .update_nth_half_edge(1, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             bad.face.region().exterior(),
                             1..=1,
                             2..=2,
                             services,
                         )
+                        .update_nth_half_edge(2, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             dac.face.region().exterior(),
                             2..=2,
