@@ -75,7 +75,6 @@ pub enum ShellValidationError {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    config: &ValidationConfig,
     edge_a: Handle<HalfEdge>,
     surface_a: Handle<Surface>,
     edge_b: Handle<HalfEdge>,
@@ -91,11 +90,6 @@ fn distances(
         surface.point_from_surface_coords(surface_coords)
     }
 
-    // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge_a, surface_a.geometry()))
-        .distance_to(&sample(0.0, (&edge_b, surface_b.geometry())))
-        > config.identical_max_distance;
-
     // Three samples (start, middle, end), are enough to detect weather lines
     // and circles match. If we were to add more complicated curves, this might
     // need to change.
@@ -106,10 +100,7 @@ fn distances(
     for i in 0..sample_count {
         let percent = i as f64 * step;
         let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(
-            if flip { 1.0 - percent } else { percent },
-            (&edge_b, surface_b.geometry()),
-        );
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
@@ -259,7 +250,6 @@ impl ShellValidationError {
                         // identical_max_distance, so we shouldn't have any
                         // greater than the max
                         if distances(
-                            config,
                             edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
@@ -282,7 +272,6 @@ impl ShellValidationError {
                         // If all points on distinct curves are within
                         // distinct_min_distance, that's a problem.
                         if distances(
-                            config,
                             edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
