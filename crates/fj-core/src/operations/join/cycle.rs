@@ -35,6 +35,18 @@ pub trait JoinCycle {
     ///
     /// Panics, if the ranges have different lengths.
     ///
+    /// # Assumptions
+    ///
+    /// This method makes some assumptions that need to be met, if the operation
+    /// is to result in a valid shape:
+    ///
+    /// - **The joined half-edges must be coincident.**
+    /// - **The locally defined curve coordinate systems of the edges must
+    ///   match.**
+    ///
+    /// If either of those assumptions are not met, this will result in a
+    /// validation error down the line.
+    ///
     /// # Implementation Note
     ///
     /// The use of the `RangeInclusive` type might be a bit limiting, as other

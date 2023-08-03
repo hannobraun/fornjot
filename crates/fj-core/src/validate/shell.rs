@@ -17,6 +17,7 @@ impl Validate for Shell {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        ShellValidationError::validate_curve_coordinates(self, config, errors);
         ShellValidationError::validate_edges_coincident(self, config, errors);
         ShellValidationError::validate_watertight(self, config, errors);
     }
@@ -25,6 +26,14 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
+    /// [`Shell`] contains curves whose coordinate systems don't match
+    #[error(
+        "Curve coordinate system mismatch ({} errors): {:#?}",
+        .0.len(),
+        .0
+    )]
+    CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
+
     /// [`Shell`] contains global_edges not referred to by two half-edges
     #[error("Shell is not watertight")]
     NotWatertight,
@@ -66,7 +75,6 @@ pub enum ShellValidationError {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    config: &ValidationConfig,
     edge_a: Handle<HalfEdge>,
     surface_a: Handle<Surface>,
     edge_b: Handle<HalfEdge>,
@@ -82,11 +90,6 @@ fn distances(
         surface.point_from_surface_coords(surface_coords)
     }
 
-    // Check whether start positions do not match. If they don't treat second edge as flipped
-    let flip = sample(0.0, (&edge_a, surface_a.geometry()))
-        .distance_to(&sample(0.0, (&edge_b, surface_b.geometry())))
-        > config.identical_max_distance;
-
     // Three samples (start, middle, end), are enough to detect weather lines
     // and circles match. If we were to add more complicated curves, this might
     // need to change.
@@ -97,16 +100,105 @@ fn distances(
     for i in 0..sample_count {
         let percent = i as f64 * step;
         let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(
-            if flip { 1.0 - percent } else { percent },
-            (&edge_b, surface_b.geometry()),
-        );
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
 }
 
 impl ShellValidationError {
+    fn validate_curve_coordinates(
+        shell: &Shell,
+        config: &ValidationConfig,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        let mut edges_and_surfaces = Vec::new();
+        shell.all_edges_with_surface(&mut edges_and_surfaces);
+
+        for (edge_a, surface_a) in &edges_and_surfaces {
+            for (edge_b, surface_b) in &edges_and_surfaces {
+                // We only care about edges referring to the same curve.
+                if edge_a.curve().id() != edge_b.curve().id() {
+                    continue;
+                }
+
+                // No need to check an edge against itself.
+                if edge_a.id() == edge_b.id() {
+                    continue;
+                }
+
+                fn compare_curve_coords(
+                    edge_a: &Handle<HalfEdge>,
+                    surface_a: &Handle<Surface>,
+                    edge_b: &Handle<HalfEdge>,
+                    surface_b: &Handle<Surface>,
+                    config: &ValidationConfig,
+                    mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
+                ) {
+                    // Let's check 4 points. Given that the most complex curves
+                    // we have right now are circles, 3 would be enough to check
+                    // for coincidence. But the first and last might be
+                    // identical, so let's add an extra one.
+                    let [a, d] = edge_a.boundary().inner;
+                    let b = a + (d - a) * 1. / 3.;
+                    let c = a + (d - a) * 2. / 3.;
+
+                    for point_curve in [a, b, c, d] {
+                        let a_surface =
+                            edge_a.path().point_from_path_coords(point_curve);
+                        let b_surface =
+                            edge_b.path().point_from_path_coords(point_curve);
+
+                        let a_global = surface_a
+                            .geometry()
+                            .point_from_surface_coords(a_surface);
+                        let b_global = surface_b
+                            .geometry()
+                            .point_from_surface_coords(b_surface);
+
+                        let distance = (a_global - b_global).magnitude();
+
+                        if distance > config.identical_max_distance {
+                            mismatches.push(CurveCoordinateSystemMismatch {
+                                edge_a: edge_a.clone(),
+                                edge_b: edge_b.clone(),
+                                point_curve,
+                                point_a: a_global,
+                                point_b: b_global,
+                                distance,
+                            });
+                        }
+                    }
+                }
+
+                let mut mismatches = Vec::new();
+
+                compare_curve_coords(
+                    edge_a,
+                    surface_a,
+                    edge_b,
+                    surface_b,
+                    config,
+                    &mut mismatches,
+                );
+                compare_curve_coords(
+                    edge_b,
+                    surface_b,
+                    edge_a,
+                    surface_a,
+                    config,
+                    &mut mismatches,
+                );
+
+                if !mismatches.is_empty() {
+                    errors.push(
+                        Self::CurveCoordinateSystemMismatch(mismatches).into(),
+                    );
+                }
+            }
+        }
+    }
+
     fn validate_edges_coincident(
         shell: &Shell,
         config: &ValidationConfig,
@@ -120,6 +212,11 @@ impl ShellValidationError {
         // data-structure like an octree.
         for (edge_a, surface_a) in &edges_and_surfaces {
             for (edge_b, surface_b) in &edges_and_surfaces {
+                // No need to check an edge against itself.
+                if edge_a.id() == edge_b.id() {
+                    continue;
+                }
+
                 let identical_according_to_global_form =
                     edge_a.global_form().id() == edge_b.global_form().id();
 
@@ -153,7 +250,6 @@ impl ShellValidationError {
                         // identical_max_distance, so we shouldn't have any
                         // greater than the max
                         if distances(
-                            config,
                             edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
@@ -176,7 +272,6 @@ impl ShellValidationError {
                         // If all points on distinct curves are within
                         // distinct_min_distance, that's a problem.
                         if distances(
-                            config,
                             edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
@@ -249,6 +344,16 @@ impl ShellValidationError {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct CurveCoordinateSystemMismatch {
+    pub edge_a: Handle<HalfEdge>,
+    pub edge_b: Handle<HalfEdge>,
+    pub point_curve: Point<1>,
+    pub point_a: Point<3>,
+    pub point_b: Point<3>,
+    pub distance: Scalar,
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
@@ -261,6 +366,51 @@ mod tests {
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
     };
+
+    #[test]
+    fn curve_coordinate_system_mismatch() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let valid = Shell::tetrahedron(
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
+            &mut services,
+        );
+        let invalid = valid.shell.replace_face(
+            &valid.abc.face,
+            valid
+                .abc
+                .face
+                .update_region(|region| {
+                    region
+                        .update_exterior(|cycle| {
+                            cycle
+                                .update_nth_half_edge(0, |half_edge| {
+                                    half_edge
+                                        .replace_path(
+                                            half_edge.path().reverse(),
+                                        )
+                                        .replace_boundary(
+                                            half_edge.boundary().reverse(),
+                                        )
+                                        .insert(&mut services)
+                                })
+                                .insert(&mut services)
+                        })
+                        .insert(&mut services)
+                })
+                .insert(&mut services),
+        );
+
+        valid.shell.validate_and_return_first_error()?;
+        assert_contains_err!(
+            invalid,
+            ValidationError::Shell(
+                ShellValidationError::CurveCoordinateSystemMismatch(..)
+            )
+        );
+
+        Ok(())
+    }
 
     #[test]
     fn coincident_not_identical() -> anyhow::Result<()> {
