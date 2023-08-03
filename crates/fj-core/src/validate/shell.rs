@@ -371,7 +371,7 @@ impl ShellValidationError {
         for (_, halfs) in global_to_half {
             if let (Some(a), Some(b)) = (halfs.get(0), halfs.get(1)) {
                 // Check if a is reverse of b
-                if a.start_vertex().id() == b.start_vertex().id() {
+                if a.boundary().reverse() != b.boundary() {
                     errors.push(Self::MixedOrientations.into());
                     dbg!(a, b);
                     return;
