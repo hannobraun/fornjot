@@ -20,6 +20,7 @@ impl Validate for Shell {
         ShellValidationError::validate_curve_coordinates(self, config, errors);
         ShellValidationError::validate_edges_coincident(self, config, errors);
         ShellValidationError::validate_watertight(self, config, errors);
+        ShellValidationError::validate_same_orientation(self, errors);
     }
 }
 
@@ -69,6 +70,10 @@ pub enum ShellValidationError {
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
     },
+
+    /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
+    #[error("Shell has mixed face orientations")]
+    MixedOrientations,
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -324,13 +329,13 @@ impl ShellValidationError {
             errors.push(Self::NotWatertight.into());
         }
 
-        let mut half_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
+        let mut global_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let id = half_edge.global_form().id();
-                    let entry = half_edge_to_faces.entry(id);
+                    let entry = global_edge_to_faces.entry(id);
                     *entry.or_insert(0) += 1;
                 }
             }
@@ -338,8 +343,40 @@ impl ShellValidationError {
 
         // Each global edge should have exactly two half edges that are part of
         // the shell
-        if half_edge_to_faces.iter().any(|(_, c)| *c != 2) {
+        if global_edge_to_faces.iter().any(|(_, c)| *c != 2) {
             errors.push(Self::NotWatertight.into())
+        }
+    }
+
+    fn validate_same_orientation(
+        shell: &Shell,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        let mut global_to_half: HashMap<ObjectId, Vec<_>> = HashMap::new();
+
+        for face in shell.faces() {
+            for cycle in face.region().all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let id = half_edge.global_form().id();
+                    global_to_half
+                        .entry(id)
+                        .or_insert(Vec::new())
+                        .push(half_edge.clone());
+                }
+            }
+        }
+
+        // In order for the faces to all have the same outside winding global
+        // edge should have two half edges in opposite directions.
+        for (_, halfs) in global_to_half {
+            if let (Some(a), Some(b)) = (halfs.get(0), halfs.get(1)) {
+                // Check if a is reverse of b
+                if a.boundary().reverse() != b.boundary() {
+                    errors.push(Self::MixedOrientations.into());
+                    dbg!(a, b);
+                    return;
+                }
+            }
         }
     }
 }
@@ -360,8 +397,8 @@ mod tests {
         assert_contains_err,
         objects::{Curve, GlobalEdge, Shell},
         operations::{
-            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
-            UpdateRegion, UpdateShell,
+            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
+            UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -472,6 +509,27 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(ShellValidationError::NotWatertight)
+        );
+
+        Ok(())
+    }
+    #[test]
+    fn shell_mixed_orientations() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let valid = Shell::tetrahedron(
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
+            &mut services,
+        );
+        let invalid = valid.shell.replace_face(
+            &valid.abc.face,
+            valid.abc.face.reverse(&mut services).insert(&mut services),
+        );
+
+        valid.shell.validate_and_return_first_error()?;
+        assert_contains_err!(
+            invalid,
+            ValidationError::Shell(ShellValidationError::MixedOrientations)
         );
 
         Ok(())
