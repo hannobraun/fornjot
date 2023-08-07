@@ -373,7 +373,6 @@ impl ShellValidationError {
                 // Check if a is reverse of b
                 if a.boundary().reverse() != b.boundary() {
                     errors.push(Self::MixedOrientations.into());
-                    dbg!(a, b);
                     return;
                 }
             }
