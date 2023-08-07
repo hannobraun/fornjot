@@ -373,7 +373,46 @@ impl ShellValidationError {
                 // Check if a is reverse of b
                 if a.boundary().reverse() != b.boundary() {
                     errors.push(Self::MixedOrientations.into());
-                    dbg!(a, b);
+                    return;
+                }
+            }
+        }
+
+        // Here's the same check again a second time, except using `Curve`
+        // instead of `GlobalEdge`. This redundancy can be fixed once the
+        // transition from `Curve` to `GlobalEdge` is finished, and `GlobalEdge`
+        // can be removed.
+
+        let mut edges_by_coincidence = BTreeMap::new();
+
+        for face in shell.faces() {
+            for cycle in face.region().all_cycles() {
+                for edge in cycle.half_edges() {
+                    let curve = HandleWrapper::from(edge.curve().clone());
+                    let boundary = cycle
+                        .bounding_vertices_of_edge(edge)
+                        .expect(
+                            "Just got edge from this cycle; must be part of it",
+                        )
+                        .normalize();
+
+                    edges_by_coincidence
+                        .entry((curve, boundary))
+                        .or_insert(Vec::new())
+                        .push(edge.clone());
+                }
+            }
+        }
+
+        for (_, edges) in edges_by_coincidence {
+            let mut edges = edges.into_iter();
+
+            // We should have exactly two coincident edges here. This is
+            // verified in a different validation check, so let's just silently
+            // do nothing here, if that isn't the case.
+            if let (Some(a), Some(b)) = (edges.next(), edges.next()) {
+                if a.boundary().reverse() != b.boundary() {
+                    errors.push(Self::MixedOrientations.into());
                     return;
                 }
             }
