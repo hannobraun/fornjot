@@ -34,9 +34,13 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     /// in a defined order. This can be used to compare a boundary while
     /// disregarding its direction.
     #[must_use]
-    pub fn normalize(mut self) -> Self {
-        self.inner.sort();
-        self
+    pub fn normalize(self) -> Self {
+        let [a, b] = &self.inner;
+        if a > b {
+            self.reverse()
+        } else {
+            self
+        }
     }
 }
 
