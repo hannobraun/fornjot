@@ -235,6 +235,7 @@ impl ShellValidationError {
                                 .bounding_vertices_of_edge(edge)
                                 .expect("Expected edge to be part of shell")
                                 .normalize()
+                                .0
                         };
 
                         bounding_vertices_of(edge_a)
@@ -314,7 +315,8 @@ impl ShellValidationError {
                         .expect(
                             "Cycle should provide bounds of its own half-edge",
                         )
-                        .normalize();
+                        .normalize()
+                        .0;
 
                     let edge = (curve, bounding_vertices);
 
@@ -394,7 +396,8 @@ impl ShellValidationError {
                         .expect(
                             "Just got edge from this cycle; must be part of it",
                         )
-                        .normalize();
+                        .normalize()
+                        .0;
 
                     edges_by_coincidence
                         .entry((curve, boundary))
