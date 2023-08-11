@@ -38,10 +38,10 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     #[must_use]
     pub fn normalize(self) -> (Self, bool) {
         let [a, b] = &self.inner;
-        if a > b {
-            (self.reverse(), true)
-        } else {
+        if a <= b {
             (self, false)
+        } else {
+            (self.reverse(), true)
         }
     }
 }
