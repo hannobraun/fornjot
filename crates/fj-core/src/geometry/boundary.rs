@@ -40,10 +40,8 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     /// Normalize the boundary
     ///
     /// Returns a new instance of this struct, which has the bounding elements
-    /// in a defined order, alongside a boolean that indicates whether the new
-    /// instance is different from the original one.
-    ///
-    /// This can be used to compare a boundary while disregarding its direction.
+    /// in a defined order. This can be used to compare boundaries while
+    /// disregarding their direction.
     #[must_use]
     pub fn normalize(self) -> Self {
         if self.is_normalized() {
