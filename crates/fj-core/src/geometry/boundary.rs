@@ -45,11 +45,11 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     ///
     /// This can be used to compare a boundary while disregarding its direction.
     #[must_use]
-    pub fn normalize(self) -> (Self, bool) {
+    pub fn normalize(self) -> Self {
         if self.is_normalized() {
-            (self, false)
+            self
         } else {
-            (self.reverse(), true)
+            self.reverse()
         }
     }
 }
