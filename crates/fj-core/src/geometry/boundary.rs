@@ -28,6 +28,15 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
         Self { inner: [b, a] }
     }
 
+    /// Indicate whether the boundary is normalized
+    ///
+    /// If the boundary is normalized, its bounding elements are in a defined
+    /// order, and calling `normalize` will return an identical instance.
+    pub fn is_normalized(&self) -> bool {
+        let [a, b] = &self.inner;
+        a <= b
+    }
+
     /// Normalize the boundary
     ///
     /// Returns a new instance of this struct, which has the bounding elements
@@ -37,8 +46,7 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     /// This can be used to compare a boundary while disregarding its direction.
     #[must_use]
     pub fn normalize(self) -> (Self, bool) {
-        let [a, b] = &self.inner;
-        if a <= b {
+        if self.is_normalized() {
             (self, false)
         } else {
             (self.reverse(), true)
