@@ -1520,9 +1520,9 @@ dependencies = [
 
 [[package]]
 name = "log"
-version = "0.4.19"
+version = "0.4.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b06a4cde4c0f271a446782e3eff8de789548ce57dbc8eca9292c27f4a42004b4"
+checksum = "b5e6163cb8c49088c2c36f57875e58ccd8c87c7427f7fbd50ea6710b2f3f2e8f"
 
 [[package]]
 name = "malloc_buf"
@@ -1921,9 +1921,9 @@ dependencies = [
 
 [[package]]
 name = "octocrab"
-version = "0.29.1"
+version = "0.29.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a2f5937fa816ca24c81cd817637a29be1eb9be0b4ddfccf3783df3eb095cc4f6"
+checksum = "5e8c7bc06899f663c4208c548488face69abc134692887a2edd4366bef18655d"
 dependencies = [
  "arc-swap",
  "async-trait",
@@ -2991,9 +2991,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.30.0"
+version = "1.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d3ce25f50619af8b0aec2eb23deebe84249e19e2ddd393a6e16e3300a6dadfd"
+checksum = "40de3a2ba249dcb097e01be5e67a5ff53cf250397715a071a81543e8a832a920"
 dependencies = [
  "backtrace",
  "bytes",
