@@ -143,7 +143,7 @@ fn approx_edge(
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-) -> GlobalEdgeApprox {
+) -> CurveApproxSegment {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
     //
@@ -211,7 +211,7 @@ fn approx_edge(
             ApproxPoint::new(point_curve, point_global)
         })
         .collect();
-    GlobalEdgeApprox { points }
+    CurveApproxSegment { points }
 }
 
 /// A cache for results of an approximation
@@ -219,7 +219,7 @@ fn approx_edge(
 pub struct EdgeCache {
     edge_approx: BTreeMap<
         (HandleWrapper<GlobalEdge>, CurveBoundary<Point<1>>),
-        GlobalEdgeApprox,
+        CurveApproxSegment,
     >,
     vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
 }
@@ -235,7 +235,7 @@ impl EdgeCache {
         &self,
         handle: Handle<GlobalEdge>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> Option<GlobalEdgeApprox> {
+    ) -> Option<CurveApproxSegment> {
         if let Some(approx) =
             self.edge_approx.get(&(handle.clone().into(), boundary))
         {
@@ -257,8 +257,8 @@ impl EdgeCache {
         &mut self,
         handle: Handle<GlobalEdge>,
         boundary: CurveBoundary<Point<1>>,
-        approx: GlobalEdgeApprox,
-    ) -> GlobalEdgeApprox {
+        approx: CurveApproxSegment,
+    ) -> CurveApproxSegment {
         self.edge_approx
             .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
@@ -281,12 +281,12 @@ impl EdgeCache {
 
 /// An approximation of a [`GlobalEdge`]
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-struct GlobalEdgeApprox {
+struct CurveApproxSegment {
     /// The points that approximate the edge
     points: Vec<ApproxPoint<1>>,
 }
 
-impl GlobalEdgeApprox {
+impl CurveApproxSegment {
     /// Reverse the order of the approximation
     fn reverse(mut self) -> Self {
         self.points.reverse();
