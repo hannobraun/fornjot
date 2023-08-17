@@ -211,7 +211,7 @@ fn approx_edge(
             ApproxPoint::new(point_curve, point_global)
         })
         .collect();
-    CurveApproxSegment { points }
+    CurveApproxSegment { boundary, points }
 }
 
 /// A cache for results of an approximation
