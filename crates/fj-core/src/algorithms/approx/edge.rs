@@ -286,14 +286,14 @@ impl EdgeCache {
 /// This means a curve can only be approximated locally, at a number of
 /// segments. This struct represents on such segment.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-struct CurveApproxSegment {
+pub struct CurveApproxSegment {
     /// The points that approximate the curve segment
-    points: Vec<ApproxPoint<1>>,
+    pub points: Vec<ApproxPoint<1>>,
 }
 
 impl CurveApproxSegment {
     /// Reverse the orientation of the approximation
-    fn reverse(mut self) -> Self {
+    pub fn reverse(mut self) -> Self {
         self.points.reverse();
         self
     }
