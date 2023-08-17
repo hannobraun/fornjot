@@ -14,6 +14,7 @@ pub struct CurveApproxSegment {
 
 impl CurveApproxSegment {
     /// Reverse the orientation of the approximation
+    #[must_use]
     pub fn reverse(mut self) -> Self {
         self.points.reverse();
         self
