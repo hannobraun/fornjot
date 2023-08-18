@@ -8,30 +8,21 @@ use crate::{
 
 /// A directed edge, defined in a surface's 2D space
 ///
-/// The concept of an "edge" in Fornjot is represented by two structs,
-/// `HalfEdge` and [`GlobalEdge`]. `HalfEdge` has two attributes that make it
-/// distinct from [`GlobalEdge`]:
-///
-/// - `HalfEdge` is directed, meaning it has a defined start and end vertex.
-/// - `HalfEdge` is defined in the 2-dimensional space of a surface.
-///
 /// When multiple faces, which are bound by edges, are combined to form a solid,
 /// the `HalfEdge`s that bound the face on the surface are then coincident with
 /// the `HalfEdge`s of other faces, where those faces touch. Those coincident
-/// `HalfEdge`s are different representations of the same edge. This edge is
-/// represented by an instance of [`GlobalEdge`].
+/// `HalfEdge`s are different representations of the same edge, and this fact
+/// must be represented in the following way:
 ///
-/// There are some requirements that a `HalfEdge` needs to uphold to be valid:
+/// - The coincident `HalfEdge`s must refer to the same `Curve`.
+/// - The coincident `HalfEdge`s must have the same boundary.
 ///
-/// 1. Coincident `HalfEdge`s *must* refer to the same [`GlobalEdge`].
-/// 2. `HalfEdge`s that are coincident, i.e. located in the same space, must
-///    always be congruent. This means they must coincide *exactly*. The overlap
-///    must be complete. None of the coincident `HalfEdge`s must overlap with
-///    just a section of another.
+/// There is another, implicit requirement hidden here:
 ///
-/// That second requirement means that a `HalfEdge` might need to be split into
-/// multiple smaller `HalfEdge`s that are each coincident with a `HalfEdge` in
-/// another face.
+/// `HalfEdge`s that are coincident, i.e. located in the same space, must always
+/// be congruent. This means they must coincide *exactly*. The overlap must be
+/// complete. None of the coincident `HalfEdge`s must overlap with just a
+/// section of another.
 ///
 /// # Implementation Note
 ///
