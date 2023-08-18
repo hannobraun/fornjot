@@ -53,17 +53,17 @@ impl Edge {
         }
     }
 
-    /// Access the curve that defines the half-edge's geometry
+    /// Access the curve that defines the edge's geometry
     pub fn path(&self) -> SurfacePath {
         self.path
     }
 
-    /// Access the boundary points of the half-edge on the curve
+    /// Access the boundary points of the edge on the curve
     pub fn boundary(&self) -> CurveBoundary<Point<1>> {
         self.boundary
     }
 
-    /// Compute the surface position where the half-edge starts
+    /// Compute the surface position where the edge starts
     pub fn start_position(&self) -> Point<2> {
         // Computing the surface position from the curve position is fine.
         // `Edge` "owns" its start position. There is no competing code that
@@ -73,12 +73,12 @@ impl Edge {
         self.path.point_from_path_coords(start)
     }
 
-    /// Access the curve of the half-edge
+    /// Access the curve of the edge
     pub fn curve(&self) -> &Handle<Curve> {
         &self.curve
     }
 
-    /// Access the vertex from where this half-edge starts
+    /// Access the vertex from where this edge starts
     pub fn start_vertex(&self) -> &Handle<Vertex> {
         &self.start_vertex
     }
