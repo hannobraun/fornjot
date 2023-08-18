@@ -299,10 +299,10 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for half_edge in cycle.edges() {
-                    let curve = HandleWrapper::from(half_edge.curve().clone());
+                for edge in cycle.edges() {
+                    let curve = HandleWrapper::from(edge.curve().clone());
                     let bounding_vertices = cycle
-                        .bounding_vertices_of_edge(half_edge)
+                        .bounding_vertices_of_edge(edge)
                         .expect(
                             "Cycle should provide bounds of its own half-edge",
                         )
