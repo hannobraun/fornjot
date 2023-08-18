@@ -113,7 +113,7 @@ mod tests {
                 Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
                 Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
             ];
-            let edges = edges.map(|half_edge| half_edge.insert(&mut services));
+            let edges = edges.map(|edge| edge.insert(&mut services));
 
             Cycle::empty().add_edges(edges)
         };
