@@ -11,7 +11,7 @@ impl Validate for Cycle {
         errors: &mut Vec<ValidationError>,
     ) {
         CycleValidationError::check_edges_disconnected(self, config, errors);
-        CycleValidationError::check_enough_half_edges(self, config, errors);
+        CycleValidationError::check_enough_edges(self, config, errors);
     }
 }
 
@@ -45,7 +45,7 @@ pub enum CycleValidationError {
 }
 
 impl CycleValidationError {
-    fn check_enough_half_edges(
+    fn check_enough_edges(
         cycle: &Cycle,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
