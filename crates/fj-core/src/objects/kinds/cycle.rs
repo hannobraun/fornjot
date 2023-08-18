@@ -36,11 +36,8 @@ impl Cycle {
     /// Access the half-edge after the provided one
     ///
     /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
-    pub fn edge_after(
-        &self,
-        half_edge: &Handle<Edge>,
-    ) -> Option<&Handle<Edge>> {
-        self.index_of(half_edge).map(|index| {
+    pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
+        self.index_of(edge).map(|index| {
             let next_index = (index + 1) % self.edges.len();
             &self.edges[next_index]
         })
