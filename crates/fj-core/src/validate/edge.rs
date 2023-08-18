@@ -41,11 +41,11 @@ pub enum EdgeValidationError {
 
 impl EdgeValidationError {
     fn check_vertex_coincidence(
-        half_edge: &Edge,
+        edge: &Edge,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let [back_position, front_position] = half_edge.boundary().inner;
+        let [back_position, front_position] = edge.boundary().inner;
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {
@@ -54,7 +54,7 @@ impl EdgeValidationError {
                     back_position,
                     front_position,
                     distance,
-                    edge: half_edge.clone(),
+                    edge: edge.clone(),
                 }
                 .into(),
             );
