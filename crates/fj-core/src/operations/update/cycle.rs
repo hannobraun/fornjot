@@ -73,12 +73,12 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let edges = self.edges().enumerate().map(|(i, half_edge)| {
+        let edges = self.edges().enumerate().map(|(i, edge)| {
             if i == index {
                 num_replacements += 1;
-                f(half_edge)
+                f(edge)
             } else {
-                half_edge.clone()
+                edge.clone()
             }
         });
 
