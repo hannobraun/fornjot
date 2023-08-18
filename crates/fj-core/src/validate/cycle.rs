@@ -22,10 +22,10 @@ impl Validate for Cycle {
 pub enum CycleValidationError {
     /// [`Cycle`]'s half-edges are not connected
     #[error(
-        "Adjacent `HalfEdge`s are distinct\n\
-        - End position of first `HalfEdge`: {end_of_first:?}\n\
-        - Start position of second `HalfEdge`: {start_of_second:?}\n\
-        - `HalfEdge`s: {half_edges:#?}"
+        "Adjacent `Edge`s are distinct\n\
+        - End position of first `Edge`: {end_of_first:?}\n\
+        - Start position of second `Edge`: {start_of_second:?}\n\
+        - `Edge`s: {half_edges:#?}"
     )]
     HalfEdgesDisconnected {
         /// The end position of the first [`Edge`]
@@ -42,7 +42,7 @@ pub enum CycleValidationError {
     },
 
     /// [`Cycle`]'s should have at least one `HalfEdge`
-    #[error("Expected at least one `HalfEdge`\n")]
+    #[error("Expected at least one `Edge`\n")]
     NotEnoughHalfEdges,
 }
 
