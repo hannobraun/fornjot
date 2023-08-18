@@ -44,8 +44,8 @@ impl Cycle {
     }
 
     /// Return the index of the provided half-edge, if it is in this cycle
-    pub fn index_of(&self, half_edge: &Handle<Edge>) -> Option<usize> {
-        self.edges.iter().position(|e| e.id() == half_edge.id())
+    pub fn index_of(&self, edge: &Handle<Edge>) -> Option<usize> {
+        self.edges.iter().position(|e| e.id() == edge.id())
     }
 
     /// Return the number of half-edges in the cycle
