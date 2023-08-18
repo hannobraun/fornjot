@@ -11,7 +11,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
-    objects::{GlobalEdge, HalfEdge, Surface, Vertex},
+    objects::{Curve, HalfEdge, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
@@ -78,10 +78,8 @@ impl Approx for (&HalfEdge, &Surface) {
             // and the edge boundaries, instead of `GlobalEdge`. The cache needs
             // to be able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
-            let cached_approx = cache.get_edge(
-                half_edge.global_form().clone(),
-                half_edge.boundary(),
-            );
+            let cached_approx =
+                cache.get_edge(half_edge.curve().clone(), half_edge.boundary());
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
@@ -92,7 +90,7 @@ impl Approx for (&HalfEdge, &Surface) {
                         tolerance,
                     );
                     cache.insert_edge(
-                        half_edge.global_form().clone(),
+                        half_edge.curve().clone(),
                         half_edge.boundary(),
                         approx,
                     )
@@ -218,7 +216,7 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeCache {
     edge_approx: BTreeMap<
-        (HandleWrapper<GlobalEdge>, CurveBoundary<Point<1>>),
+        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         CurveApproxSegment,
     >,
     vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
@@ -233,7 +231,7 @@ impl EdgeCache {
     /// Access the approximation for the given edge, if available
     fn get_edge(
         &self,
-        handle: Handle<GlobalEdge>,
+        handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
         if let Some(approx) =
@@ -255,7 +253,7 @@ impl EdgeCache {
     /// Insert the approximation of an edge
     fn insert_edge(
         &mut self,
-        handle: Handle<GlobalEdge>,
+        handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
