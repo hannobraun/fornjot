@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// Update a [`Edge`]
-pub trait UpdateHalfEdge {
+pub trait UpdateEdge {
     /// Replace the path of the half-edge
     #[must_use]
     fn replace_path(&self, path: SurfacePath) -> Self;
@@ -25,7 +25,7 @@ pub trait UpdateHalfEdge {
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 }
 
-impl UpdateHalfEdge for Edge {
+impl UpdateEdge for Edge {
     fn replace_path(&self, path: SurfacePath) -> Self {
         Edge::new(
             path,

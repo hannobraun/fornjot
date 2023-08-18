@@ -379,8 +379,8 @@ mod tests {
         assert_contains_err,
         objects::{Curve, Shell},
         operations::{
-            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
-            UpdateHalfEdge, UpdateRegion, UpdateShell,
+            BuildShell, Insert, Reverse, UpdateCycle, UpdateEdge, UpdateFace,
+            UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
