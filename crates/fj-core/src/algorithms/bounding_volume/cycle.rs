@@ -7,9 +7,8 @@ impl super::BoundingVolume<2> for Cycle {
         let mut aabb: Option<Aabb<2>> = None;
 
         for half_edge in self.half_edges() {
-            let new_aabb = half_edge
-                .aabb()
-                .expect("`HalfEdge` can always compute AABB");
+            let new_aabb =
+                half_edge.aabb().expect("`Edge` can always compute AABB");
             aabb = Some(aabb.map_or(new_aabb, |aabb| aabb.merged(&new_aabb)));
         }
 
