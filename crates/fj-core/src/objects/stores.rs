@@ -18,11 +18,11 @@ pub struct Objects {
     /// Store for [`Cycle`]s
     pub cycles: Store<Cycle>,
 
-    /// Store for [`Face`]s
-    pub faces: Store<Face>,
-
     /// Store for [`Edge`]s
     pub edges: Store<Edge>,
+
+    /// Store for [`Face`]s
+    pub faces: Store<Face>,
 
     /// Store for [`Region`]s
     pub regions: Store<Region>,
