@@ -5,15 +5,15 @@ use crate::{
 
 /// Update a [`Cycle`]
 pub trait UpdateCycle {
-    /// Add half-edges to the cycle
+    /// Add edges to the cycle
     #[must_use]
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
 
-    /// Replace the provided half-edge
+    /// Replace the provided edge
     ///
     /// # Panics
     ///
-    /// Panics, unless this operation replaces exactly one half-edge.
+    /// Panics, unless this operation replaces exactly one edge.
     #[must_use]
     fn replace_edge(
         &self,
@@ -21,11 +21,11 @@ pub trait UpdateCycle {
         replacement: Handle<Edge>,
     ) -> Self;
 
-    /// Update the half-edge at the given index
+    /// Update the edge at the given index
     ///
     /// # Panics
     ///
-    /// Panics, unless this operation updates exactly one half-edge.
+    /// Panics, unless this operation updates exactly one edge.
     #[must_use]
     fn update_nth_edge(
         &self,
