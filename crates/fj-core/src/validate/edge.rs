@@ -19,10 +19,10 @@ impl Validate for Edge {
 pub enum EdgeValidationError {
     /// [`Edge`]'s vertices are coincident
     #[error(
-        "Vertices of `HalfEdge` on curve are coincident\n\
+        "Vertices of `Edge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
         - Position of front vertex: {front_position:?}\n\
-        - `HalfEdge`: {half_edge:#?}"
+        - `Edge`: {half_edge:#?}"
     )]
     VerticesAreCoincident {
         /// The position of the back vertex
