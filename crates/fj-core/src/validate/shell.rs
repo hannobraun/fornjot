@@ -302,9 +302,7 @@ impl ShellValidationError {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let bounding_vertices = cycle
                         .bounding_vertices_of_edge(edge)
-                        .expect(
-                            "Cycle should provide bounds of its own half-edge",
-                        )
+                        .expect("Cycle should provide bounds of its own edge")
                         .normalize();
 
                     let edge = (curve, bounding_vertices);
