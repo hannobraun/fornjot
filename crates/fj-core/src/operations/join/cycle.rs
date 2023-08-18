@@ -86,7 +86,6 @@ impl JoinCycle for Cycle {
                 HalfEdge::unjoined(curve, boundary, services)
                     .replace_curve(half_edge.curve().clone())
                     .replace_start_vertex(prev.start_vertex().clone())
-                    .replace_global_form(half_edge.global_form().clone())
                     .insert(services)
             },
         ))
@@ -132,7 +131,6 @@ impl JoinCycle for Cycle {
             let this_joined = half_edge
                 .replace_curve(half_edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
-                .replace_global_form(half_edge_other.global_form().clone())
                 .insert(services);
             let next_joined =
                 next_edge.replace_start_vertex(vertex_b).insert(services);

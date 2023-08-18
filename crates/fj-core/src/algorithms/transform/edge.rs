@@ -1,9 +1,6 @@
 use fj_math::Transform;
 
-use crate::{
-    objects::{GlobalEdge, HalfEdge},
-    services::Services,
-};
+use crate::{objects::HalfEdge, services::Services};
 
 use super::{TransformCache, TransformObject};
 
@@ -26,25 +23,7 @@ impl TransformObject for HalfEdge {
             .start_vertex()
             .clone()
             .transform_with_cache(transform, services, cache);
-        let global_form = self
-            .global_form()
-            .clone()
-            .transform_with_cache(transform, services, cache);
 
-        Self::new(path, boundary, curve, start_vertex, global_form)
-    }
-}
-
-impl TransformObject for GlobalEdge {
-    fn transform_with_cache(
-        self,
-        _: &Transform,
-        _: &mut Services,
-        _: &mut TransformCache,
-    ) -> Self {
-        // There's nothing to actually transform here, as `GlobalEdge` holds no
-        // data. We still need this implementation though, as a new `GlobalEdge`
-        // object must be created to represent the new and transformed edge.
-        Self::new()
+        Self::new(path, boundary, curve, start_vertex)
     }
 }

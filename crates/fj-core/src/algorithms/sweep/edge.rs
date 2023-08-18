@@ -27,21 +27,15 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
-        let (vertices, global_edges, curves) = {
+        let (vertices, curves) = {
             let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
-            let (curve_up, edge_up, [_, c]) =
+            let (curve_up, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, services);
-            let (curve_down, edge_down, [_, d]) =
+            let (curve_down, [_, d]) =
                 a.clone().sweep_with_cache(path, cache, services);
 
             (
                 [a, b, c, d],
-                [
-                    Some(edge.global_form().clone()),
-                    Some(edge_up),
-                    None,
-                    Some(edge_down),
-                ],
                 [
                     Some(edge.curve().clone()),
                     Some(curve_up),
@@ -85,45 +79,33 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(surface_points_next)
             .zip_ext(vertices)
             .zip_ext(curves)
-            .zip_ext(global_edges)
-            .map(
-                |(
-                    ((((boundary, start), end), start_vertex), curve),
-                    global_edge,
-                )| {
-                    let half_edge = {
-                        let half_edge = HalfEdge::line_segment(
-                            [start, end],
-                            Some(boundary),
-                            services,
-                        )
-                        .replace_start_vertex(start_vertex);
+            .map(|((((boundary, start), end), start_vertex), curve)| {
+                let half_edge = {
+                    let half_edge = HalfEdge::line_segment(
+                        [start, end],
+                        Some(boundary),
+                        services,
+                    )
+                    .replace_start_vertex(start_vertex);
 
-                        let half_edge = if let Some(curve) = curve {
-                            half_edge.replace_curve(curve)
-                        } else {
-                            half_edge
-                        };
-
-                        let half_edge = if let Some(global_edge) = global_edge {
-                            half_edge.replace_global_form(global_edge)
-                        } else {
-                            half_edge
-                        };
-
-                        half_edge.insert(services)
+                    let half_edge = if let Some(curve) = curve {
+                        half_edge.replace_curve(curve)
+                    } else {
+                        half_edge
                     };
 
-                    exterior = Some(
-                        exterior
-                            .take()
-                            .unwrap()
-                            .add_half_edges([half_edge.clone()]),
-                    );
+                    half_edge.insert(services)
+                };
 
-                    half_edge
-                },
-            );
+                exterior = Some(
+                    exterior
+                        .take()
+                        .unwrap()
+                        .add_half_edges([half_edge.clone()]),
+                );
+
+                half_edge
+            });
 
         let region = Region::new(exterior.unwrap().insert(services), [], color)
             .insert(services);

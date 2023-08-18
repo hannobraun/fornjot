@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 use fj_math::{Point, Scalar};
 
@@ -6,7 +6,7 @@ use crate::{
     geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
     queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
-    storage::{Handle, HandleWrapper, ObjectId},
+    storage::{Handle, HandleWrapper},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -222,10 +222,7 @@ impl ShellValidationError {
                     continue;
                 }
 
-                let identical_according_to_global_form =
-                    edge_a.global_form().id() == edge_b.global_form().id();
-
-                let identical_according_to_curve = {
+                let identical = {
                     let on_same_curve =
                         edge_a.curve().id() == edge_b.curve().id();
 
@@ -244,12 +241,7 @@ impl ShellValidationError {
                     on_same_curve && have_same_boundary
                 };
 
-                assert_eq!(
-                    identical_according_to_curve,
-                    identical_according_to_global_form,
-                );
-
-                match identical_according_to_curve {
+                match identical {
                     true => {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
@@ -328,61 +320,12 @@ impl ShellValidationError {
         if num_edges.into_values().any(|num| num != 2) {
             errors.push(Self::NotWatertight.into());
         }
-
-        let mut global_edge_to_faces: HashMap<ObjectId, usize> = HashMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
-                    let id = half_edge.global_form().id();
-                    let entry = global_edge_to_faces.entry(id);
-                    *entry.or_insert(0) += 1;
-                }
-            }
-        }
-
-        // Each global edge should have exactly two half edges that are part of
-        // the shell
-        if global_edge_to_faces.iter().any(|(_, c)| *c != 2) {
-            errors.push(Self::NotWatertight.into())
-        }
     }
 
     fn validate_same_orientation(
         shell: &Shell,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut global_to_half: HashMap<ObjectId, Vec<_>> = HashMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
-                    let id = half_edge.global_form().id();
-                    global_to_half
-                        .entry(id)
-                        .or_insert(Vec::new())
-                        .push(half_edge.clone());
-                }
-            }
-        }
-
-        // In order for the faces to all have the same outside winding global
-        // edge should have two half edges in opposite directions.
-        for (_, halfs) in global_to_half {
-            if let (Some(a), Some(b)) = (halfs.get(0), halfs.get(1)) {
-                // Check if a is reverse of b
-                if a.boundary().reverse() != b.boundary() {
-                    errors.push(Self::MixedOrientations.into());
-                    return;
-                }
-            }
-        }
-
-        // Here's the same check again a second time, except using `Curve`
-        // instead of `GlobalEdge`. This redundancy can be fixed once the
-        // transition from `Curve` to `GlobalEdge` is finished, and `GlobalEdge`
-        // can be removed.
-
         let mut edges_by_coincidence = BTreeMap::new();
 
         for face in shell.faces() {
@@ -434,7 +377,7 @@ pub struct CurveCoordinateSystemMismatch {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Curve, GlobalEdge, Shell},
+        objects::{Curve, Shell},
         operations::{
             BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
             UpdateHalfEdge, UpdateRegion, UpdateShell,
@@ -508,12 +451,9 @@ mod tests {
                                 .update_nth_half_edge(0, |half_edge| {
                                     let curve =
                                         Curve::new().insert(&mut services);
-                                    let global_form =
-                                        GlobalEdge::new().insert(&mut services);
 
                                     half_edge
                                         .replace_curve(curve)
-                                        .replace_global_form(global_form)
                                         .insert(&mut services)
                                 })
                                 .insert(&mut services)

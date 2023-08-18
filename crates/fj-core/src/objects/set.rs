@@ -1,8 +1,7 @@
 use std::collections::{btree_set, BTreeSet};
 
 use super::{
-    BehindHandle, Curve, Cycle, Face, GlobalEdge, HalfEdge, Object, Surface,
-    Vertex,
+    BehindHandle, Curve, Cycle, Face, HalfEdge, Object, Surface, Vertex,
 };
 
 /// A graph of objects and their relationships
@@ -90,10 +89,6 @@ impl InsertIntoSet for Face {
     }
 }
 
-impl InsertIntoSet for GlobalEdge {
-    fn insert_into_set(&self, _: &mut ObjectSet) {}
-}
-
 impl InsertIntoSet for HalfEdge {
     fn insert_into_set(&self, objects: &mut ObjectSet) {
         objects.inner.insert(self.curve().clone().into());
@@ -101,9 +96,6 @@ impl InsertIntoSet for HalfEdge {
 
         objects.inner.insert(self.start_vertex().clone().into());
         self.start_vertex().insert_into_set(objects);
-
-        objects.inner.insert(self.global_form().clone().into());
-        self.global_form().insert_into_set(objects);
     }
 }
 
