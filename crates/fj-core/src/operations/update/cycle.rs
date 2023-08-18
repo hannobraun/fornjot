@@ -47,12 +47,12 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let edges = self.edges().map(|half_edge| {
-            if half_edge.id() == original.id() {
+        let edges = self.edges().map(|edge| {
+            if edge.id() == original.id() {
                 num_replacements += 1;
                 replacement.clone()
             } else {
-                half_edge.clone()
+                edge.clone()
             }
         });
 
