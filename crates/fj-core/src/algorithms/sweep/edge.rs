@@ -81,20 +81,20 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
                 let edge = {
-                    let half_edge = Edge::line_segment(
+                    let edge = Edge::line_segment(
                         [start, end],
                         Some(boundary),
                         services,
                     )
                     .replace_start_vertex(start_vertex);
 
-                    let half_edge = if let Some(curve) = curve {
-                        half_edge.replace_curve(curve)
+                    let edge = if let Some(curve) = curve {
+                        edge.replace_curve(curve)
                     } else {
-                        half_edge
+                        edge
                     };
 
-                    half_edge.insert(services)
+                    edge.insert(services)
                 };
 
                 exterior = Some(
