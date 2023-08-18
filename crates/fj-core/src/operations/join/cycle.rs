@@ -110,7 +110,7 @@ impl JoinCycle for Cycle {
             let index = index % self.len();
             let index_other = index_other % self.len();
 
-            let half_edge = self
+            let edge = self
                 .nth_edge(index)
                 .expect("Index must be valid, due to use of `%` above");
             let half_edge_other = other
@@ -125,10 +125,10 @@ impl JoinCycle for Cycle {
             let vertex_b = half_edge_other.start_vertex().clone();
 
             let next_edge = cycle
-                .edge_after(half_edge)
+                .edge_after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
-            let this_joined = half_edge
+            let this_joined = edge
                 .replace_curve(half_edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
                 .insert(services);
@@ -136,7 +136,7 @@ impl JoinCycle for Cycle {
                 next_edge.replace_start_vertex(vertex_b).insert(services);
 
             cycle = cycle
-                .replace_edge(half_edge, this_joined)
+                .replace_edge(edge, this_joined)
                 .replace_edge(next_edge, next_joined)
         }
 
