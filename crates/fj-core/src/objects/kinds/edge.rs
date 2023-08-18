@@ -26,9 +26,9 @@ use crate::{
 ///
 /// # Implementation Note
 ///
-/// There is currently no validation code to verify that coincident `HalfEdge`s
-/// are congruent:
-/// <https://github.com/hannobraun/Fornjot/issues/1608>
+/// The limitation that coincident `HalfEdge`s must be congruent is currently
+/// being lifted:
+/// <https://github.com/hannobraun/fornjot/issues/1937>
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     path: SurfacePath,
