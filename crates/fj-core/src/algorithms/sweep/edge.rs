@@ -2,7 +2,7 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
+    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
     storage::Handle,
@@ -10,8 +10,8 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Handle<Face>, Handle<HalfEdge>);
+impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
+    type Swept = (Handle<Face>, Handle<Edge>);
 
     fn sweep_with_cache(
         self,
@@ -81,7 +81,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
                 let half_edge = {
-                    let half_edge = HalfEdge::line_segment(
+                    let half_edge = Edge::line_segment(
                         [start, end],
                         Some(boundary),
                         services,

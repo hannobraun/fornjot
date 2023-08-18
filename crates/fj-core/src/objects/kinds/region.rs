@@ -7,10 +7,10 @@ use crate::{objects::Cycle, storage::Handle};
 ///
 /// Interior cycles must have the opposite winding of the exterior cycle,
 /// meaning on the front side of the region, they must appear clockwise. This
-/// means that all [`HalfEdge`]s that bound a `Region` have the interior of the
+/// means that all [`Edge`]s that bound a `Region` have the interior of the
 /// region on their left side (on the region's front side).
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`Edge`]: crate::objects::Edge
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Region {
     exterior: Handle<Cycle>,

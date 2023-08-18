@@ -11,13 +11,13 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
-    objects::{Curve, HalfEdge, Surface, Vertex},
+    objects::{Curve, Edge, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
 use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&HalfEdge, &Surface) {
+impl Approx for (&Edge, &Surface) {
     type Approximation = HalfEdgeApprox;
     type Cache = EdgeCache;
 
@@ -115,7 +115,7 @@ impl Approx for (&HalfEdge, &Surface) {
     }
 }
 
-/// An approximation of an [`HalfEdge`]
+/// An approximation of an [`Edge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdgeApprox {
     /// The point that approximates the first vertex of the edge
@@ -287,7 +287,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfaceGeometry},
-        objects::{HalfEdge, Surface},
+        objects::{Edge, Surface},
         operations::BuildHalfEdge,
         services::Services,
     };
@@ -298,7 +298,7 @@ mod tests {
 
         let surface = services.objects.surfaces.xz_plane();
         let half_edge =
-            HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
+            Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);
@@ -315,7 +315,7 @@ mod tests {
             v: [0., 0., 1.].into(),
         });
         let half_edge =
-            HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
+            Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
         let approx = (&half_edge, &surface).approx(tolerance);
@@ -334,7 +334,7 @@ mod tests {
             u: path,
             v: [0., 0., 1.].into(),
         });
-        let half_edge = HalfEdge::line_segment(
+        let half_edge = Edge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(boundary.inner),
             &mut services,
@@ -362,7 +362,7 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdge::circle([0., 0.], 1., &mut services);
+        let half_edge = Edge::circle([0., 0.], 1., &mut services);
 
         let tolerance = 1.;
         let approx = (&half_edge, surface.deref()).approx(tolerance);

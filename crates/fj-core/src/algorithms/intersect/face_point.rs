@@ -3,7 +3,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, HalfEdge},
+    objects::{Edge, Face},
     storage::Handle,
 };
 
@@ -122,7 +122,7 @@ pub enum FacePointIntersection {
     PointIsInsideFace,
 
     /// The point is coincident with an edge
-    PointIsOnEdge(Handle<HalfEdge>),
+    PointIsOnEdge(Handle<Edge>),
 
     /// The point is coincident with a vertex
     PointIsOnVertex(Point<2>),

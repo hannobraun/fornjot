@@ -3,17 +3,17 @@ use std::slice;
 use fj_math::{Scalar, Winding};
 use itertools::Itertools;
 
-use crate::{geometry::SurfacePath, objects::HalfEdge, storage::Handle};
+use crate::{geometry::SurfacePath, objects::Edge, storage::Handle};
 
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    half_edges: Vec<Handle<HalfEdge>>,
+    half_edges: Vec<Handle<Edge>>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
-    pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
+    pub fn new(half_edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
         let half_edges = half_edges.into_iter().collect::<Vec<_>>();
         Self { half_edges }
     }
@@ -26,12 +26,12 @@ impl Cycle {
     /// Access the half-edges in pairs
     pub fn half_edge_pairs(
         &self,
-    ) -> impl Iterator<Item = (&Handle<HalfEdge>, &Handle<HalfEdge>)> {
+    ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
         self.half_edges.iter().circular_tuple_windows()
     }
 
     /// Access the half-edge with the provided index
-    pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<HalfEdge>> {
+    pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<Edge>> {
         self.half_edges.get(index)
     }
 
@@ -40,8 +40,8 @@ impl Cycle {
     /// Returns `None`, if the provided `HalfEdge` is not part of the cycle.
     pub fn half_edge_after(
         &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> Option<&Handle<HalfEdge>> {
+        half_edge: &Handle<Edge>,
+    ) -> Option<&Handle<Edge>> {
         self.index_of(half_edge).map(|index| {
             let next_index = (index + 1) % self.half_edges.len();
             &self.half_edges[next_index]
@@ -49,7 +49,7 @@ impl Cycle {
     }
 
     /// Return the index of the provided half-edge, if it is in this cycle
-    pub fn index_of(&self, half_edge: &Handle<HalfEdge>) -> Option<usize> {
+    pub fn index_of(&self, half_edge: &Handle<Edge>) -> Option<usize> {
         self.half_edges
             .iter()
             .position(|edge| edge.id() == half_edge.id())
@@ -124,4 +124,4 @@ impl Cycle {
 /// An iterator over the half-edges of a [`Cycle`]
 ///
 /// Returned by [`Cycle::half_edges`].
-pub type HalfEdgesOfCycle<'a> = slice::Iter<'a, Handle<HalfEdge>>;
+pub type HalfEdgesOfCycle<'a> = slice::Iter<'a, Handle<Edge>>;

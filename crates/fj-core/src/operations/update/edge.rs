@@ -2,11 +2,11 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Curve, HalfEdge, Vertex},
+    objects::{Curve, Edge, Vertex},
     storage::Handle,
 };
 
-/// Update a [`HalfEdge`]
+/// Update a [`Edge`]
 pub trait UpdateHalfEdge {
     /// Replace the path of the half-edge
     #[must_use]
@@ -25,9 +25,9 @@ pub trait UpdateHalfEdge {
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 }
 
-impl UpdateHalfEdge for HalfEdge {
+impl UpdateHalfEdge for Edge {
     fn replace_path(&self, path: SurfacePath) -> Self {
-        HalfEdge::new(
+        Edge::new(
             path,
             self.boundary(),
             self.curve().clone(),
@@ -36,7 +36,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             boundary,
             self.curve().clone(),
@@ -45,7 +45,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_curve(&self, curve: Handle<Curve>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             self.boundary(),
             curve,
@@ -54,7 +54,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),

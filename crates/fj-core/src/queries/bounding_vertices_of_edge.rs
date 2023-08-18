@@ -1,6 +1,6 @@
 use crate::{
     geometry::CurveBoundary,
-    objects::{Cycle, Face, HalfEdge, Region, Shell, Vertex},
+    objects::{Cycle, Edge, Face, Region, Shell, Vertex},
     storage::Handle,
 };
 
@@ -12,14 +12,14 @@ pub trait BoundingVerticesOfEdge {
     /// method is called on.
     fn bounding_vertices_of_edge(
         &self,
-        edge: &Handle<HalfEdge>,
+        edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>>;
 }
 
 impl BoundingVerticesOfEdge for Cycle {
     fn bounding_vertices_of_edge(
         &self,
-        edge: &Handle<HalfEdge>,
+        edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>> {
         let start = edge.start_vertex().clone();
         let end = self.half_edge_after(edge)?.start_vertex().clone();
@@ -31,7 +31,7 @@ impl BoundingVerticesOfEdge for Cycle {
 impl BoundingVerticesOfEdge for Region {
     fn bounding_vertices_of_edge(
         &self,
-        edge: &Handle<HalfEdge>,
+        edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>> {
         for cycle in self.all_cycles() {
             if let Some(vertices) = cycle.bounding_vertices_of_edge(edge) {
@@ -46,7 +46,7 @@ impl BoundingVerticesOfEdge for Region {
 impl BoundingVerticesOfEdge for Face {
     fn bounding_vertices_of_edge(
         &self,
-        edge: &Handle<HalfEdge>,
+        edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>> {
         self.region().bounding_vertices_of_edge(edge)
     }
@@ -55,7 +55,7 @@ impl BoundingVerticesOfEdge for Face {
 impl BoundingVerticesOfEdge for Shell {
     fn bounding_vertices_of_edge(
         &self,
-        edge: &Handle<HalfEdge>,
+        edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>> {
         for face in self.faces() {
             if let Some(vertices) = face.bounding_vertices_of_edge(edge) {

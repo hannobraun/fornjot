@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Cycle, HalfEdge},
+    objects::{Cycle, Edge},
     storage::Handle,
 };
 
@@ -9,7 +9,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn add_half_edges(
         &self,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+        half_edges: impl IntoIterator<Item = Handle<Edge>>,
     ) -> Self;
 
     /// Replace the provided half-edge
@@ -20,8 +20,8 @@ pub trait UpdateCycle {
     #[must_use]
     fn replace_half_edge(
         &self,
-        original: &Handle<HalfEdge>,
-        replacement: Handle<HalfEdge>,
+        original: &Handle<Edge>,
+        replacement: Handle<Edge>,
     ) -> Self;
 
     /// Update the half-edge at the given index
@@ -33,14 +33,14 @@ pub trait UpdateCycle {
     fn update_nth_half_edge(
         &self,
         index: usize,
-        f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
+        f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
 }
 
 impl UpdateCycle for Cycle {
     fn add_half_edges(
         &self,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+        half_edges: impl IntoIterator<Item = Handle<Edge>>,
     ) -> Self {
         let half_edges = self.half_edges().cloned().chain(half_edges);
         Cycle::new(half_edges)
@@ -48,8 +48,8 @@ impl UpdateCycle for Cycle {
 
     fn replace_half_edge(
         &self,
-        original: &Handle<HalfEdge>,
-        replacement: Handle<HalfEdge>,
+        original: &Handle<Edge>,
+        replacement: Handle<Edge>,
     ) -> Self {
         let mut num_replacements = 0;
 
@@ -75,7 +75,7 @@ impl UpdateCycle for Cycle {
     fn update_nth_half_edge(
         &self,
         index: usize,
-        mut f: impl FnMut(&Handle<HalfEdge>) -> Handle<HalfEdge>,
+        mut f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
         let mut num_replacements = 0;
 

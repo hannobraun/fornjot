@@ -30,14 +30,14 @@ use crate::{
 /// being lifted:
 /// <https://github.com/hannobraun/fornjot/issues/1937>
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct HalfEdge {
+pub struct Edge {
     path: SurfacePath,
     boundary: CurveBoundary<Point<1>>,
     curve: HandleWrapper<Curve>,
     start_vertex: HandleWrapper<Vertex>,
 }
 
-impl HalfEdge {
+impl Edge {
     /// Create an instance of `HalfEdge`
     pub fn new(
         path: SurfacePath,

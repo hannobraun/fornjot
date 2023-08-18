@@ -1,6 +1,6 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::{Cycle, HalfEdge};
+use crate::objects::{Cycle, Edge};
 
 use super::{Validate, ValidationConfig, ValidationError};
 
@@ -28,17 +28,17 @@ pub enum CycleValidationError {
         - `HalfEdge`s: {half_edges:#?}"
     )]
     HalfEdgesDisconnected {
-        /// The end position of the first [`HalfEdge`]
+        /// The end position of the first [`Edge`]
         end_of_first: Point<2>,
 
-        /// The start position of the second [`HalfEdge`]
+        /// The start position of the second [`Edge`]
         start_of_second: Point<2>,
 
         /// The distance between the two vertices
         distance: Scalar,
 
         /// The half-edge
-        half_edges: Box<(HalfEdge, HalfEdge)>,
+        half_edges: Box<(Edge, Edge)>,
     },
 
     /// [`Cycle`]'s should have at least one `HalfEdge`
@@ -95,7 +95,7 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        objects::{Cycle, HalfEdge},
+        objects::{Cycle, Edge},
         operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
@@ -112,16 +112,8 @@ mod tests {
 
         let disconnected = {
             let half_edges = [
-                HalfEdge::line_segment(
-                    [[0., 0.], [1., 0.]],
-                    None,
-                    &mut services,
-                ),
-                HalfEdge::line_segment(
-                    [[0., 0.], [1., 0.]],
-                    None,
-                    &mut services,
-                ),
+                Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
+                Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
             ];
             let half_edges =
                 half_edges.map(|half_edge| half_edge.insert(&mut services));

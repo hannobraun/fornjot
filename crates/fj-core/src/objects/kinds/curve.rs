@@ -1,10 +1,10 @@
 /// A curve
 ///
 /// `Curve` represents a curve in space, but holds no data to define that curve.
-/// It is referenced by [`HalfEdge`], which defines the curve in the coordinates
-/// of its surface.
+/// It is referenced by [`Edge`], which defines the curve in the coordinates of
+/// its surface.
 ///
-/// `Curve` exists to allow identifying which [`HalfEdge`]s are supposed to be
+/// `Curve` exists to allow identifying which [`Edge`]s are supposed to be
 /// coincident in global space.
 ///
 /// # Equality
@@ -20,7 +20,7 @@
 /// `Eq`/`Ord`/..., you can use `HandleWrapper<Curve>` to do that. It will use
 /// `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`Edge`]: crate::objects::Edge
 #[derive(Clone, Debug, Default, Hash)]
 pub struct Curve {}
 

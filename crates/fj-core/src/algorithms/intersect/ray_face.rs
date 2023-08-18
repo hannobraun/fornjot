@@ -5,7 +5,7 @@ use fj_math::{Plane, Point, Scalar};
 use crate::{
     algorithms::intersect::face_point::FacePointIntersection,
     geometry::GlobalPath,
-    objects::{Face, HalfEdge},
+    objects::{Edge, Face},
     storage::Handle,
 };
 
@@ -134,7 +134,7 @@ pub enum RayFaceIntersection {
     RayHitsFaceAndAreParallel,
 
     /// The ray hits an edge
-    RayHitsEdge(Handle<HalfEdge>),
+    RayHitsEdge(Handle<Edge>),
 
     /// The ray hits a vertex
     RayHitsVertex(Point<2>),

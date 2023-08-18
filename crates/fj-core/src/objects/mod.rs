@@ -48,7 +48,7 @@ pub use self::{
     kinds::{
         curve::Curve,
         cycle::{Cycle, HalfEdgesOfCycle},
-        edge::HalfEdge,
+        edge::Edge,
         face::{Face, FaceSet, Handedness},
         region::Region,
         shell::Shell,

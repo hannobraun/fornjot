@@ -5,7 +5,7 @@ use itertools::Itertools;
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Cycle, HalfEdge},
+    objects::{Cycle, Edge},
     operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
     storage::Handle,
@@ -18,7 +18,7 @@ pub trait JoinCycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
+            Item = (Handle<Edge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator;
 
@@ -77,13 +77,13 @@ impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
+            Item = (Handle<Edge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, services)
+                Edge::unjoined(curve, boundary, services)
                     .replace_curve(half_edge.curve().clone())
                     .replace_start_vertex(prev.start_vertex().clone())
                     .insert(services)

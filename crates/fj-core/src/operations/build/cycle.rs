@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, HalfEdge},
+    objects::{Cycle, Edge},
     operations::{BuildHalfEdge, Insert, UpdateCycle},
     services::Services,
 };
@@ -20,8 +20,7 @@ pub trait BuildCycle {
         radius: impl Into<Scalar>,
         services: &mut Services,
     ) -> Cycle {
-        let circle =
-            HalfEdge::circle(center, radius, services).insert(services);
+        let circle = Edge::circle(center, radius, services).insert(services);
         Cycle::empty().add_half_edges([circle])
     }
 
@@ -37,7 +36,7 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, services)
+                Edge::line_segment([start, end], None, services)
                     .insert(services)
             });
 

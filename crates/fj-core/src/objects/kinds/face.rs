@@ -26,10 +26,10 @@ use crate::{
 ///
 /// Interior cycles must have the opposite winding of the exterior cycle,
 /// meaning on the front side of the face, they must appear clockwise. This
-/// means that all [`HalfEdge`]s that bound a `Face` have the interior of the
-/// face on their left side (on the face's front side).
+/// means that all [`Edge`]s that bound a `Face` have the interior of the face
+/// on their left side (on the face's front side).
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`Edge`]: crate::objects::Edge
 /// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {

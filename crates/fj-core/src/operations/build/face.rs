@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
+    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
     operations::{
         BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
     },
@@ -40,10 +40,9 @@ pub trait BuildFace {
                     .expect("Just asserted that there are three half-edges")
             })
         };
-        let vertices =
-            edges.each_ref_ext().map(|half_edge: &Handle<HalfEdge>| {
-                half_edge.start_vertex().clone()
-            });
+        let vertices = edges
+            .each_ref_ext()
+            .map(|half_edge: &Handle<Edge>| half_edge.start_vertex().clone());
 
         Polygon {
             face,
@@ -82,7 +81,7 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     pub face: I::T<Face>,
 
     /// The edges of the polygon
-    pub edges: [Handle<HalfEdge>; D],
+    pub edges: [Handle<Edge>; D],
 
     /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],
