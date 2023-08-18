@@ -6,31 +6,31 @@ use crate::{geometry::SurfacePath, objects::Edge, storage::Handle};
 /// A cycle of connected half-edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    half_edges: Vec<Handle<Edge>>,
+    edges: Vec<Handle<Edge>>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
     pub fn new(half_edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let half_edges = half_edges.into_iter().collect::<Vec<_>>();
-        Self { half_edges }
+        let edges = half_edges.into_iter().collect::<Vec<_>>();
+        Self { edges }
     }
 
     /// Access the half-edges that make up the cycle
     pub fn half_edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
-        self.half_edges.iter()
+        self.edges.iter()
     }
 
     /// Access the half-edges in pairs
     pub fn half_edge_pairs(
         &self,
     ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
-        self.half_edges.iter().circular_tuple_windows()
+        self.edges.iter().circular_tuple_windows()
     }
 
     /// Access the half-edge with the provided index
     pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<Edge>> {
-        self.half_edges.get(index)
+        self.edges.get(index)
     }
 
     /// Access the half-edge after the provided one
@@ -41,26 +41,26 @@ impl Cycle {
         half_edge: &Handle<Edge>,
     ) -> Option<&Handle<Edge>> {
         self.index_of(half_edge).map(|index| {
-            let next_index = (index + 1) % self.half_edges.len();
-            &self.half_edges[next_index]
+            let next_index = (index + 1) % self.edges.len();
+            &self.edges[next_index]
         })
     }
 
     /// Return the index of the provided half-edge, if it is in this cycle
     pub fn index_of(&self, half_edge: &Handle<Edge>) -> Option<usize> {
-        self.half_edges
+        self.edges
             .iter()
             .position(|edge| edge.id() == half_edge.id())
     }
 
     /// Return the number of half-edges in the cycle
     pub fn len(&self) -> usize {
-        self.half_edges.len()
+        self.edges.len()
     }
 
     /// Indicate whether the cycle is empty
     pub fn is_empty(&self) -> bool {
-        self.half_edges.is_empty()
+        self.edges.is_empty()
     }
 
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
@@ -72,7 +72,7 @@ impl Cycle {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the
         // first circle.
-        if self.half_edges.len() < 3 {
+        if self.edges.len() < 3 {
             let first = self
                 .half_edges()
                 .next()
