@@ -22,7 +22,7 @@ impl AllEdgesWithSurface for Face {
                 cycle
                     .edges()
                     .cloned()
-                    .map(|half_edge| (half_edge, self.surface().clone())),
+                    .map(|edge| (edge, self.surface().clone())),
             );
         }
     }
