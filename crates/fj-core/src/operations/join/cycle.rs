@@ -113,23 +113,23 @@ impl JoinCycle for Cycle {
             let edge = self
                 .nth_edge(index)
                 .expect("Index must be valid, due to use of `%` above");
-            let half_edge_other = other
+            let edge_other = other
                 .nth_edge(index_other)
                 .expect("Index must be valid, due to use of `%` above");
 
             let vertex_a = other
-                .edge_after(half_edge_other)
+                .edge_after(edge_other)
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
-            let vertex_b = half_edge_other.start_vertex().clone();
+            let vertex_b = edge_other.start_vertex().clone();
 
             let next_edge = cycle
                 .edge_after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
             let this_joined = edge
-                .replace_curve(half_edge_other.curve().clone())
+                .replace_curve(edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
                 .insert(services);
             let next_joined =
