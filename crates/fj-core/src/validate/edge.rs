@@ -69,7 +69,7 @@ mod tests {
     use crate::{
         assert_contains_err,
         objects::Edge,
-        operations::BuildHalfEdge,
+        operations::BuildEdge,
         services::Services,
         validate::{HalfEdgeValidationError, Validate, ValidationError},
     };

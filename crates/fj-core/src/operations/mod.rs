@@ -10,7 +10,7 @@ mod update;
 pub use self::{
     build::{
         cycle::BuildCycle,
-        edge::BuildHalfEdge,
+        edge::BuildEdge,
         face::{BuildFace, Polygon},
         region::BuildRegion,
         shell::{BuildShell, TetrahedronShell},

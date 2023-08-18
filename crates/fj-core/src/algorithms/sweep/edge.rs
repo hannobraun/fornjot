@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Cycle, Edge, Face, Region, Surface, Vertex},
-    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
+    operations::{BuildEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
     storage::Handle,
 };

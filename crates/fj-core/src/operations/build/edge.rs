@@ -9,7 +9,7 @@ use crate::{
 };
 
 /// Build an [`Edge`]
-pub trait BuildHalfEdge {
+pub trait BuildEdge {
     /// Create a half-edge that is not joined to another
     fn unjoined(
         path: SurfacePath,
@@ -77,4 +77,4 @@ pub trait BuildHalfEdge {
     }
 }
 
-impl BuildHalfEdge for Edge {}
+impl BuildEdge for Edge {}

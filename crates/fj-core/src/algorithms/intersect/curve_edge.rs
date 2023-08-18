@@ -72,7 +72,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        geometry::SurfacePath, objects::Edge, operations::BuildHalfEdge,
+        geometry::SurfacePath, objects::Edge, operations::BuildEdge,
         services::Services,
     };
 
