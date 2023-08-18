@@ -109,7 +109,7 @@ pub enum ValidationError {
 
     /// `Edge` validation error
     #[error("`Edge` validation error")]
-    HalfEdge(#[from] EdgeValidationError),
+    Edge(#[from] EdgeValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error")]

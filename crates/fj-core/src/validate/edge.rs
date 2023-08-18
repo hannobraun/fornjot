@@ -94,7 +94,7 @@ mod tests {
         valid.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
-            ValidationError::HalfEdge(
+            ValidationError::Edge(
                 EdgeValidationError::VerticesAreCoincident { .. }
             )
         );
