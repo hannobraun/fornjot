@@ -445,12 +445,11 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_edge(0, |half_edge| {
+                                .update_nth_edge(0, |edge| {
                                     let curve =
                                         Curve::new().insert(&mut services);
 
-                                    half_edge
-                                        .replace_curve(curve)
+                                    edge.replace_curve(curve)
                                         .insert(&mut services)
                                 })
                                 .insert(&mut services)
