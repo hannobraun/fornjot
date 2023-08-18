@@ -36,7 +36,7 @@ impl Cycle {
     /// Access the half-edge after the provided one
     ///
     /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
-    pub fn half_edge_after(
+    pub fn edge_after(
         &self,
         half_edge: &Handle<Edge>,
     ) -> Option<&Handle<Edge>> {

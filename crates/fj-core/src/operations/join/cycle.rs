@@ -118,14 +118,14 @@ impl JoinCycle for Cycle {
                 .expect("Index must be valid, due to use of `%` above");
 
             let vertex_a = other
-                .half_edge_after(half_edge_other)
+                .edge_after(half_edge_other)
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
             let vertex_b = half_edge_other.start_vertex().clone();
 
             let next_edge = cycle
-                .half_edge_after(half_edge)
+                .edge_after(half_edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
             let this_joined = half_edge
