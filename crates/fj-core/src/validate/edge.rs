@@ -97,7 +97,6 @@ mod tests {
                 boundary,
                 valid.curve().clone(),
                 valid.start_vertex().clone(),
-                valid.global_form().clone(),
             )
         };
 

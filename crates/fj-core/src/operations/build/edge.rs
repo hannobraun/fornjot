@@ -3,7 +3,7 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Curve, GlobalEdge, HalfEdge, Vertex},
+    objects::{Curve, HalfEdge, Vertex},
     operations::Insert,
     services::Services,
 };
@@ -18,9 +18,8 @@ pub trait BuildHalfEdge {
     ) -> HalfEdge {
         let curve = Curve::new().insert(services);
         let start_vertex = Vertex::new().insert(services);
-        let global_form = GlobalEdge::new().insert(services);
 
-        HalfEdge::new(path, boundary, curve, start_vertex, global_form)
+        HalfEdge::new(path, boundary, curve, start_vertex)
     }
 
     /// Create an arc

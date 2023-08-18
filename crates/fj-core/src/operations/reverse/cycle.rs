@@ -16,7 +16,6 @@ impl Reverse for Cycle {
                     current.boundary().reverse(),
                     current.curve().clone(),
                     next.start_vertex().clone(),
-                    current.global_form().clone(),
                 )
                 .insert(services)
             })

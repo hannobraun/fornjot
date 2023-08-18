@@ -32,7 +32,6 @@ impl UpdateHalfEdge for HalfEdge {
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
-            self.global_form().clone(),
         )
     }
 
@@ -42,7 +41,6 @@ impl UpdateHalfEdge for HalfEdge {
             boundary,
             self.curve().clone(),
             self.start_vertex().clone(),
-            self.global_form().clone(),
         )
     }
 
@@ -52,7 +50,6 @@ impl UpdateHalfEdge for HalfEdge {
             self.boundary(),
             curve,
             self.start_vertex().clone(),
-            self.global_form().clone(),
         )
     }
 
@@ -62,7 +59,6 @@ impl UpdateHalfEdge for HalfEdge {
             self.boundary(),
             self.curve().clone(),
             start_vertex,
-            self.global_form().clone(),
         )
     }
 }

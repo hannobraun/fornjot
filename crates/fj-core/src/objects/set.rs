@@ -101,9 +101,6 @@ impl InsertIntoSet for HalfEdge {
 
         objects.inner.insert(self.start_vertex().clone().into());
         self.start_vertex().insert_into_set(objects);
-
-        objects.inner.insert(self.global_form().clone().into());
-        self.global_form().insert_into_set(objects);
     }
 }
 

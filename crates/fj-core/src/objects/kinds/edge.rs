@@ -35,7 +35,6 @@ pub struct HalfEdge {
     boundary: CurveBoundary<Point<1>>,
     curve: HandleWrapper<Curve>,
     start_vertex: HandleWrapper<Vertex>,
-    global_form: HandleWrapper<GlobalEdge>,
 }
 
 impl HalfEdge {
@@ -45,14 +44,12 @@ impl HalfEdge {
         boundary: impl Into<CurveBoundary<Point<1>>>,
         curve: Handle<Curve>,
         start_vertex: Handle<Vertex>,
-        global_form: Handle<GlobalEdge>,
     ) -> Self {
         Self {
             path,
             boundary: boundary.into(),
             curve: curve.into(),
             start_vertex: start_vertex.into(),
-            global_form: global_form.into(),
         }
     }
 
@@ -84,11 +81,6 @@ impl HalfEdge {
     /// Access the vertex from where this half-edge starts
     pub fn start_vertex(&self) -> &Handle<Vertex> {
         &self.start_vertex
-    }
-
-    /// Access the global form of the half-edge
-    pub fn global_form(&self) -> &Handle<GlobalEdge> {
-        &self.global_form
     }
 }
 

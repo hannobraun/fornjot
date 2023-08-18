@@ -12,7 +12,6 @@ impl ReverseCurveCoordinateSystems for HalfEdge {
             boundary,
             self.curve().clone(),
             self.start_vertex().clone(),
-            self.global_form().clone(),
         )
     }
 }
