@@ -43,10 +43,10 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(position_surface, position_global);
 
         let points = {
-            // We cache approximated `HalfEdge`s using the `GlobalEdge`s they
-            // reference as the key. That bakes in the undesirable assumption
-            // that all coincident `HalfEdge`s are also congruent. Let me
-            // explain.
+            // We cache approximated `HalfEdge`s using the `Curve`s they
+            // reference and their boundary on that curve as the key. That bakes
+            // in the undesirable assumption that all coincident `HalfEdge`s are
+            // also congruent. Let me explain.
             //
             // When two `HalfEdge`s are coincident, we need to make sure their
             // approximations are identical where they overlap. Otherwise, we'll
@@ -54,7 +54,7 @@ impl Approx for (&HalfEdge, &Surface) {
             // approximations.
             //
             // Caching works like this: We check whether there already is a
-            // cache entry for the `GlobalEdge`. If there isn't, we create the
+            // cache entry for the curve/boundary. If there isn't, we create the
             // 3D approximation from the 2D `HalfEdge`. Next time we check for a
             // coincident `HalfEdge`, we'll find the cache and use that, getting
             // the exact same 3D approximation, instead of generating a slightly
@@ -62,11 +62,11 @@ impl Approx for (&HalfEdge, &Surface) {
             //
             // So what if we had two coincident `HalfEdge`s that aren't
             // congruent? Meaning, they overlap partially, but not fully. Then
-            // obviously, they wouldn't refer to the same `GlobalEdge`, because
-            // they are not the same edge, in global coordinates. And since the
-            // `GlobalEdge` is the key in our cache, those `HalfEdge`s would not
-            // share an approximation where they overlap, leading to exactly the
-            // problems that the cache is supposed to avoid.
+            // obviously, they wouldn't refer to the same combination of curve
+            // and boundary. And since those are the key in our cache, those
+            // `HalfEdge`s would not share an approximation where they overlap,
+            // leading to exactly the problems that the cache is supposed to
+            // prevent.
             //
             // As of this writing, it is a documented (but not validated)
             // limitation, that coincident `HalfEdge`s must always be congruent.
@@ -74,9 +74,10 @@ impl Approx for (&HalfEdge, &Surface) {
             // forward, as it is, well, too limiting. This means things here
             // will need to change.
             //
-            // What we need here, is more intelligent caching based on `Curve`
-            // and the edge boundaries, instead of `GlobalEdge`. The cache needs
-            // to be able to deliver partial results for a given boundary, then
+            // What we need here, is more intelligent caching, that can reuse
+            // already cached curve approximations where the boundaries overlap,
+            // even if those boundaries aren't identical. The cache needs to be
+            // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_approx =
                 cache.get_edge(half_edge.curve().clone(), half_edge.boundary());
