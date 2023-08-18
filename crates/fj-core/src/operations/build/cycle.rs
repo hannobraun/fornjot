@@ -21,7 +21,7 @@ pub trait BuildCycle {
         services: &mut Services,
     ) -> Cycle {
         let circle = Edge::circle(center, radius, services).insert(services);
-        Cycle::empty().add_half_edges([circle])
+        Cycle::empty().add_edges([circle])
     }
 
     /// Build a polygon

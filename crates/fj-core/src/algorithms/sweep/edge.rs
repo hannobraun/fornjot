@@ -97,9 +97,8 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
                     edge.insert(services)
                 };
 
-                exterior = Some(
-                    exterior.take().unwrap().add_half_edges([edge.clone()]),
-                );
+                exterior =
+                    Some(exterior.take().unwrap().add_edges([edge.clone()]));
 
                 edge
             });

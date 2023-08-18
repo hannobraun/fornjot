@@ -7,7 +7,7 @@ use crate::{
 pub trait UpdateCycle {
     /// Add half-edges to the cycle
     #[must_use]
-    fn add_half_edges(
+    fn add_edges(
         &self,
         half_edges: impl IntoIterator<Item = Handle<Edge>>,
     ) -> Self;
@@ -38,7 +38,7 @@ pub trait UpdateCycle {
 }
 
 impl UpdateCycle for Cycle {
-    fn add_half_edges(
+    fn add_edges(
         &self,
         half_edges: impl IntoIterator<Item = Handle<Edge>>,
     ) -> Self {
