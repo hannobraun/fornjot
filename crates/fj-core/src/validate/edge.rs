@@ -1,6 +1,6 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::{GlobalEdge, HalfEdge};
+use crate::objects::HalfEdge;
 
 use super::{Validate, ValidationConfig, ValidationError};
 
@@ -11,15 +11,6 @@ impl Validate for HalfEdge {
         errors: &mut Vec<ValidationError>,
     ) {
         HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
-    }
-}
-
-impl Validate for GlobalEdge {
-    fn validate_with_config(
-        &self,
-        _: &ValidationConfig,
-        _: &mut Vec<ValidationError>,
-    ) {
     }
 }
 

@@ -83,35 +83,3 @@ impl HalfEdge {
         &self.start_vertex
     }
 }
-
-/// An undirected edge, defined in global (3D) coordinates
-///
-/// In contrast to [`HalfEdge`], `GlobalEdge` is undirected, meaning it has no
-/// defined direction. This means it can be used to determine whether two
-/// [`HalfEdge`]s map to the same `GlobalEdge`, regardless of their direction.
-///
-/// See [`HalfEdge`]'s documentation for more information on the relationship
-/// between [`HalfEdge`] and `GlobalEdge`.
-///
-/// # Equality
-///
-/// `GlobalEdge` contains no data and exists purely to be used within a
-/// `Handle`, where `Handle::id` can be used to compare different instances of
-/// `GlobalEdge`.
-///
-/// If `GlobalEdge` had `Eq`/`PartialEq` implementations, it containing no data
-/// would mean that all instances of `GlobalEdge` would be considered equal.
-/// This would be very error-prone.
-///
-/// If you need to reference a `GlobalEdge` from a struct that needs to derive
-/// `Eq`/`Ord`/..., you can use `HandleWrapper<GlobalEdge>` to do that. It will
-/// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
-#[derive(Clone, Debug, Default, Hash)]
-pub struct GlobalEdge {}
-
-impl GlobalEdge {
-    /// Create a new instance
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
