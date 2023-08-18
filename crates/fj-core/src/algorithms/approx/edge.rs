@@ -18,7 +18,7 @@ use crate::{
 use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Edge, &Surface) {
-    type Approximation = HalfEdgeApprox;
+    type Approximation = EdgeApprox;
     type Cache = EdgeCache;
 
     fn approx_with_cache(
@@ -110,13 +110,13 @@ impl Approx for (&Edge, &Surface) {
                 .collect()
         };
 
-        HalfEdgeApprox { first, points }
+        EdgeApprox { first, points }
     }
 }
 
 /// An approximation of an [`Edge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct HalfEdgeApprox {
+pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
     pub first: ApproxPoint<2>,
 
@@ -124,7 +124,7 @@ pub struct HalfEdgeApprox {
     pub points: Vec<ApproxPoint<2>>,
 }
 
-impl HalfEdgeApprox {
+impl EdgeApprox {
     /// Compute the points that approximate the edge
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
