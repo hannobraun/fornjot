@@ -42,8 +42,8 @@ pub enum ShellValidationError {
     /// [`Shell`] contains half-edges that are coincident, but refer to
     /// different global_edges
     #[error(
-        "`Shell` contains `HalfEdge`s that are coincident but refer to \
-        different `GlobalEdge`s\n\
+        "`Shell` contains `Edge`s that are coincident but refer to different \
+        `Curve`s\n\
         Edge 1: {0:#?}\n\
         Edge 2: {1:#?}"
     )]
@@ -51,7 +51,7 @@ pub enum ShellValidationError {
 
     /// [`Shell`] contains half-edges that are identical, but do not coincide
     #[error(
-        "Shell contains HalfEdges that are identical but do not coincide\n\
+        "Shell contains `Edge`s that are identical but do not coincide\n\
         Edge 1: {edge_a:#?}\n\
         Surface for edge 1: {surface_a:#?}\n\
         Edge 2: {edge_b:#?}\n\
