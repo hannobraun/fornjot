@@ -403,13 +403,10 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_edge(0, |half_edge| {
-                                    half_edge
-                                        .replace_path(
-                                            half_edge.path().reverse(),
-                                        )
+                                .update_nth_edge(0, |edge| {
+                                    edge.replace_path(edge.path().reverse())
                                         .replace_boundary(
-                                            half_edge.boundary().reverse(),
+                                            edge.boundary().reverse(),
                                         )
                                         .insert(&mut services)
                                 })
