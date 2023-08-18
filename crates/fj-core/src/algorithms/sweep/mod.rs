@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{Curve, GlobalEdge, Vertex},
+    objects::{Curve, Vertex},
     services::Services,
     storage::{Handle, ObjectId},
 };
@@ -50,7 +50,4 @@ pub struct SweepCache {
 
     /// Cache for vertices
     pub vertices: BTreeMap<ObjectId, Handle<Vertex>>,
-
-    /// Cache for global edges
-    pub global_edges: BTreeMap<ObjectId, Handle<GlobalEdge>>,
 }
