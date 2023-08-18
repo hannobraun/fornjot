@@ -18,7 +18,7 @@ impl Validate for Cycle {
 /// [`Cycle`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum CycleValidationError {
-    /// [`Cycle`]'s half-edges are not connected
+    /// [`Cycle`]'s edges are not connected
     #[error(
         "Adjacent `Edge`s are distinct\n\
         - End position of first `Edge`: {end_of_first:?}\n\
@@ -35,7 +35,7 @@ pub enum CycleValidationError {
         /// The distance between the two vertices
         distance: Scalar,
 
-        /// The half-edge
+        /// The edges
         edges: Box<(Edge, Edge)>,
     },
 
