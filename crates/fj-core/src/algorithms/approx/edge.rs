@@ -294,11 +294,11 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge =
+        let edge =
             Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&edge, surface.deref()).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -311,11 +311,11 @@ mod tests {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
         });
-        let half_edge =
+        let edge =
             Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, &surface).approx(tolerance);
+        let approx = (&edge, &surface).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -331,21 +331,21 @@ mod tests {
             u: path,
             v: [0., 0., 1.].into(),
         });
-        let half_edge = Edge::line_segment(
+        let edge = Edge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(boundary.inner),
             &mut services,
         );
 
         let tolerance = 1.;
-        let approx = (&half_edge, &surface).approx(tolerance);
+        let approx = (&edge, &surface).approx(tolerance);
 
         let expected_approx = (path, boundary)
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
-                    half_edge.path().point_from_path_coords(point_local);
+                    edge.path().point_from_path_coords(point_local);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
@@ -359,13 +359,13 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = Edge::circle([0., 0.], 1., &mut services);
+        let edge = Edge::circle([0., 0.], 1., &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.path(), CurveBoundary::from([[0.], [TAU]]))
+            (&edge.path(), CurveBoundary::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {
