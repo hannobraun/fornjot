@@ -22,7 +22,7 @@ pub enum EdgeValidationError {
         "Vertices of `Edge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
         - Position of front vertex: {front_position:?}\n\
-        - `Edge`: {half_edge:#?}"
+        - `Edge`: {edge:#?}"
     )]
     VerticesAreCoincident {
         /// The position of the back vertex
@@ -35,7 +35,7 @@ pub enum EdgeValidationError {
         distance: Scalar,
 
         /// The half-edge
-        half_edge: Edge,
+        edge: Edge,
     },
 }
 
@@ -54,7 +54,7 @@ impl EdgeValidationError {
                     back_position,
                     front_position,
                     distance,
-                    half_edge: half_edge.clone(),
+                    edge: half_edge.clone(),
                 }
                 .into(),
             );
