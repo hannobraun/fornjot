@@ -109,14 +109,13 @@ mod tests {
         valid.validate_and_return_first_error()?;
 
         let disconnected = {
-            let half_edges = [
+            let edges = [
                 Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
                 Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
             ];
-            let half_edges =
-                half_edges.map(|half_edge| half_edge.insert(&mut services));
+            let edges = edges.map(|half_edge| half_edge.insert(&mut services));
 
-            Cycle::empty().add_edges(half_edges)
+            Cycle::empty().add_edges(edges)
         };
 
         assert_contains_err!(
