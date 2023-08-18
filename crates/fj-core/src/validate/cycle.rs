@@ -100,7 +100,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edges_connected() -> anyhow::Result<()> {
+    fn edges_connected() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid =
