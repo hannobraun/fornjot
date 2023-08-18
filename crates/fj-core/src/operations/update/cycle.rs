@@ -47,7 +47,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let half_edges = self.edges().map(|half_edge| {
+        let edges = self.edges().map(|half_edge| {
             if half_edge.id() == original.id() {
                 num_replacements += 1;
                 replacement.clone()
@@ -56,7 +56,7 @@ impl UpdateCycle for Cycle {
             }
         });
 
-        let cycle = Cycle::new(half_edges);
+        let cycle = Cycle::new(edges);
 
         assert_eq!(
             num_replacements, 1,
