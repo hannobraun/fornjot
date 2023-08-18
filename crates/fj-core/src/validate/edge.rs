@@ -75,7 +75,7 @@ mod tests {
     };
 
     #[test]
-    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
+    fn edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid =
