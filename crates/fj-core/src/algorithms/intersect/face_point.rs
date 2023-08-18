@@ -371,10 +371,8 @@ mod tests {
             .region()
             .exterior()
             .edges()
-            .find(|half_edge| {
-                half_edge.start_position() == Point::from([1., 0.])
-            })
-            .map(|half_edge| half_edge.start_position())
+            .find(|edge| edge.start_position() == Point::from([1., 0.]))
+            .map(|edge| edge.start_position())
             .unwrap();
         assert_eq!(
             intersection,
