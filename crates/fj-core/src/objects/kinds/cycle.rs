@@ -98,7 +98,7 @@ impl Cycle {
         let mut sum = Scalar::ZERO;
 
         for (a, b) in self.edge_pairs() {
-            let [a, b] = [a, b].map(|half_edge| half_edge.start_position());
+            let [a, b] = [a, b].map(|edge| edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);
         }
