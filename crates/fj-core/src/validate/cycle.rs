@@ -41,7 +41,7 @@ pub enum CycleValidationError {
         half_edges: Box<(Edge, Edge)>,
     },
 
-    /// [`Cycle`]'s should have at least one `HalfEdge`
+    /// [`Cycle`]'s should have at least one [`Edge`]
     #[error("Expected at least one `Edge`\n")]
     NotEnoughHalfEdges,
 }
