@@ -43,7 +43,7 @@ pub enum CycleValidationError {
 
     /// [`Cycle`]'s should have at least one [`Edge`]
     #[error("Expected at least one `Edge`\n")]
-    NotEnoughHalfEdges,
+    NotEnoughEdges,
 }
 
 impl CycleValidationError {
@@ -54,7 +54,7 @@ impl CycleValidationError {
     ) {
         // If there are no half edges
         if cycle.half_edges().next().is_none() {
-            errors.push(Self::NotEnoughHalfEdges.into());
+            errors.push(Self::NotEnoughEdges.into());
         }
     }
 
@@ -131,7 +131,7 @@ mod tests {
         let empty = Cycle::new([]);
         assert_contains_err!(
             empty,
-            ValidationError::Cycle(CycleValidationError::NotEnoughHalfEdges)
+            ValidationError::Cycle(CycleValidationError::NotEnoughEdges)
         );
         Ok(())
     }
