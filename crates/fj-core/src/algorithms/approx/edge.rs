@@ -26,17 +26,16 @@ impl Approx for (&Edge, &Surface) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (half_edge, surface) = self;
+        let (edge, surface) = self;
 
-        let position_surface = half_edge.start_position();
-        let position_global = match cache.get_position(half_edge.start_vertex())
-        {
+        let position_surface = edge.start_position();
+        let position_global = match cache.get_position(edge.start_vertex()) {
             Some(position) => position,
             None => {
                 let position_global = surface
                     .geometry()
                     .point_from_surface_coords(position_surface);
-                cache.insert_position(half_edge.start_vertex(), position_global)
+                cache.insert_position(edge.start_vertex(), position_global)
             }
         };
 
@@ -79,19 +78,19 @@ impl Approx for (&Edge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_approx =
-                cache.get_edge(half_edge.curve().clone(), half_edge.boundary());
+                cache.get_edge(edge.curve().clone(), edge.boundary());
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
-                        &half_edge.path(),
+                        &edge.path(),
                         surface,
-                        half_edge.boundary(),
+                        edge.boundary(),
                         tolerance,
                     );
                     cache.insert_edge(
-                        half_edge.curve().clone(),
-                        half_edge.boundary(),
+                        edge.curve().clone(),
+                        edge.boundary(),
                         approx,
                     )
                 }
@@ -101,9 +100,8 @@ impl Approx for (&Edge, &Surface) {
                 .points
                 .into_iter()
                 .map(|point| {
-                    let point_surface = half_edge
-                        .path()
-                        .point_from_path_coords(point.local_form);
+                    let point_surface =
+                        edge.path().point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
                 })
