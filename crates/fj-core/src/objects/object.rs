@@ -94,7 +94,7 @@ object!(
     Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;
-    Edge, "half-edge", edges;
+    Edge, "edge", edges;
     Region, "region", regions;
     Shell, "shell", shells;
     Sketch, "sketch", sketches;
