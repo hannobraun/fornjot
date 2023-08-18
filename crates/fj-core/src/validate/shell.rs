@@ -35,12 +35,11 @@ pub enum ShellValidationError {
     )]
     CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
 
-    /// [`Shell`] contains global_edges not referred to by two half-edges
+    /// [`Shell`] is not watertight
     #[error("Shell is not watertight")]
     NotWatertight,
 
-    /// [`Shell`] contains half-edges that are coincident, but refer to
-    /// different global_edges
+    /// [`Shell`] contains edges that are coincident, but not identical
     #[error(
         "`Shell` contains `Edge`s that are coincident but refer to different \
         `Curve`s\n\
@@ -49,7 +48,7 @@ pub enum ShellValidationError {
     )]
     CoincidentEdgesNotIdentical(Handle<Edge>, Handle<Edge>),
 
-    /// [`Shell`] contains half-edges that are identical, but do not coincide
+    /// [`Shell`] contains edges that are identical, but do not coincide
     #[error(
         "Shell contains `Edge`s that are identical but do not coincide\n\
         Edge 1: {edge_a:#?}\n\
