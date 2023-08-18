@@ -107,7 +107,7 @@ pub enum ValidationError {
     #[error("`Face` validation error")]
     Face(#[from] FaceValidationError),
 
-    /// `HalfEdge` validation error
+    /// `Edge` validation error
     #[error("`HalfEdge` validation error")]
     HalfEdge(#[from] EdgeValidationError),
 
