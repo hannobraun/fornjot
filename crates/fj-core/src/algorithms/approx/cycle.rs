@@ -26,7 +26,7 @@ impl Approx for (&Cycle, &Surface) {
         let tolerance = tolerance.into();
 
         let half_edges = cycle
-            .half_edges()
+            .edges()
             .map(|half_edge| {
                 (half_edge.deref(), surface).approx_with_cache(tolerance, cache)
             })

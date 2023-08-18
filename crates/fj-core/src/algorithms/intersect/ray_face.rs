@@ -262,7 +262,7 @@ mod tests {
         let edge = face
             .region()
             .exterior()
-            .half_edges()
+            .edges()
             .find(|edge| edge.start_position() == Point::from([-1., 1.]))
             .unwrap();
         assert_eq!(
@@ -297,7 +297,7 @@ mod tests {
         let vertex = face
             .region()
             .exterior()
-            .half_edges()
+            .edges()
             .find(|half_edge| {
                 half_edge.start_position() == Point::from([-1., -1.])
             })

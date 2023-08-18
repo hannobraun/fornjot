@@ -299,7 +299,7 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
+                for half_edge in cycle.edges() {
                     let curve = HandleWrapper::from(half_edge.curve().clone());
                     let bounding_vertices = cycle
                         .bounding_vertices_of_edge(half_edge)
@@ -330,7 +330,7 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for edge in cycle.half_edges() {
+                for edge in cycle.edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let boundary = cycle
                         .bounding_vertices_of_edge(edge)

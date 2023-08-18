@@ -42,7 +42,7 @@ impl UpdateCycle for Cycle {
         &self,
         half_edges: impl IntoIterator<Item = Handle<Edge>>,
     ) -> Self {
-        let half_edges = self.half_edges().cloned().chain(half_edges);
+        let half_edges = self.edges().cloned().chain(half_edges);
         Cycle::new(half_edges)
     }
 
@@ -53,7 +53,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let half_edges = self.half_edges().map(|half_edge| {
+        let half_edges = self.edges().map(|half_edge| {
             if half_edge.id() == original.id() {
                 num_replacements += 1;
                 replacement.clone()
@@ -79,7 +79,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let half_edges = self.half_edges().enumerate().map(|(i, half_edge)| {
+        let half_edges = self.edges().enumerate().map(|(i, half_edge)| {
             if i == index {
                 num_replacements += 1;
                 f(half_edge)

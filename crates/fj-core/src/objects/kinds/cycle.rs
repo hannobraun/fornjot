@@ -17,7 +17,7 @@ impl Cycle {
     }
 
     /// Access the half-edges that make up the cycle
-    pub fn half_edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
+    pub fn edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
         self.edges.iter()
     }
 
@@ -74,7 +74,7 @@ impl Cycle {
         // first circle.
         if self.edges.len() < 3 {
             let first = self
-                .half_edges()
+                .edges()
                 .next()
                 .expect("Invalid cycle: expected at least one half-edge");
 

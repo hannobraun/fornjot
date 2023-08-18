@@ -32,7 +32,7 @@ pub trait BuildFace {
         let face = Face::polygon(surface, points_surface, services);
 
         let edges = {
-            let mut half_edges = face.region().exterior().half_edges().cloned();
+            let mut half_edges = face.region().exterior().edges().cloned();
 
             let array =
                 array::from_fn(|_| half_edges.next()).map(|half_edge| {

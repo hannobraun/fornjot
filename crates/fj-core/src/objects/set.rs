@@ -61,7 +61,7 @@ impl InsertIntoSet for Curve {
 
 impl InsertIntoSet for Cycle {
     fn insert_into_set(&self, objects: &mut ObjectSet) {
-        for half_edge in self.half_edges() {
+        for half_edge in self.edges() {
             objects.inner.insert(half_edge.clone().into());
             half_edge.insert_into_set(objects);
         }
