@@ -25,11 +25,11 @@ pub trait JoinCycle {
     /// Join the cycle to another
     ///
     /// Joins the cycle to the other at the provided ranges. The ranges specify
-    /// the indices of the half-edges that are joined together.
+    /// the indices of the edges that are joined together.
     ///
     /// A modulo operation is applied to all indices before use, so in a cycle
-    /// of 3 half-edges, indices `0` and `3` refer to the same half-edge. This
-    /// allows for specifying a range that crosses the "seam" of the cycle.
+    /// of 3 edges, indices `0` and `3` refer to the same edge. This allows for
+    /// specifying a range that crosses the "seam" of the cycle.
     ///
     /// # Panics
     ///
@@ -40,7 +40,7 @@ pub trait JoinCycle {
     /// This method makes some assumptions that need to be met, if the operation
     /// is to result in a valid shape:
     ///
-    /// - **The joined half-edges must be coincident.**
+    /// - **The joined edges must be coincident.**
     /// - **The locally defined curve coordinate systems of the edges must
     ///   match.**
     ///
