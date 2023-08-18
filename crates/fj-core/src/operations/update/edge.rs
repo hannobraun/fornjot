@@ -8,19 +8,19 @@ use crate::{
 
 /// Update a [`Edge`]
 pub trait UpdateEdge {
-    /// Replace the path of the half-edge
+    /// Replace the path of the edge
     #[must_use]
     fn replace_path(&self, path: SurfacePath) -> Self;
 
-    /// Replace the boundary of the half-edge
+    /// Replace the boundary of the edge
     #[must_use]
     fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self;
 
-    /// Replace the curve of the half-edge
+    /// Replace the curve of the edge
     #[must_use]
     fn replace_curve(&self, curve: Handle<Curve>) -> Self;
 
-    /// Replace the start vertex of the half-edge
+    /// Replace the start vertex of the edge
     #[must_use]
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 }
