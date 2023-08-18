@@ -71,7 +71,7 @@ impl Cycle {
             let first = self
                 .edges()
                 .next()
-                .expect("Invalid cycle: expected at least one half-edge");
+                .expect("Invalid cycle: expected at least one edge");
 
             let [a, b] = first.boundary().inner;
             let edge_direction_positive = a < b;
