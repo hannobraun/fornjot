@@ -103,13 +103,13 @@ pub enum ValidationError {
     #[error("`Cycle` validation error")]
     Cycle(#[from] CycleValidationError),
 
-    /// `Face` validation error
-    #[error("`Face` validation error")]
-    Face(#[from] FaceValidationError),
-
     /// `Edge` validation error
     #[error("`Edge` validation error")]
     Edge(#[from] EdgeValidationError),
+
+    /// `Face` validation error
+    #[error("`Face` validation error")]
+    Face(#[from] FaceValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error")]
