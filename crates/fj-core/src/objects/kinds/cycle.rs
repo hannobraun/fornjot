@@ -29,7 +29,7 @@ impl Cycle {
     }
 
     /// Access the half-edge with the provided index
-    pub fn nth_half_edge(&self, index: usize) -> Option<&Handle<Edge>> {
+    pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
         self.edges.get(index)
     }
 

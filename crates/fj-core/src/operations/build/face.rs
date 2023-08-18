@@ -101,7 +101,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .nth_half_edge(i)
+                .nth_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .clone()
         });
@@ -112,7 +112,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .nth_half_edge(i)
+                .nth_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .start_vertex()
                 .clone()
