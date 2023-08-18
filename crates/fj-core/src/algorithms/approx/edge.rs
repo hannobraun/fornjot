@@ -230,7 +230,7 @@ impl EdgeCache {
         Self::default()
     }
 
-    /// Access the approximation for the given [`GlobalEdge`], if available
+    /// Access the approximation for the given edge, if available
     fn get_edge(
         &self,
         handle: Handle<GlobalEdge>,
@@ -252,7 +252,7 @@ impl EdgeCache {
         None
     }
 
-    /// Insert the approximation of a [`GlobalEdge`]
+    /// Insert the approximation of an edge
     fn insert_edge(
         &mut self,
         handle: Handle<GlobalEdge>,
