@@ -23,7 +23,7 @@ pub enum CycleValidationError {
         "Adjacent `Edge`s are distinct\n\
         - End position of first `Edge`: {end_of_first:?}\n\
         - Start position of second `Edge`: {start_of_second:?}\n\
-        - `Edge`s: {half_edges:#?}"
+        - `Edge`s: {edges:#?}"
     )]
     EdgesDisconnected {
         /// The end position of the first [`Edge`]
@@ -36,7 +36,7 @@ pub enum CycleValidationError {
         distance: Scalar,
 
         /// The half-edge
-        half_edges: Box<(Edge, Edge)>,
+        edges: Box<(Edge, Edge)>,
     },
 
     /// [`Cycle`]'s should have at least one [`Edge`]
@@ -76,7 +76,7 @@ impl CycleValidationError {
                         end_of_first,
                         start_of_second,
                         distance,
-                        half_edges: Box::new((
+                        edges: Box::new((
                             first.clone_object(),
                             second.clone_object(),
                         )),
