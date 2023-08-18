@@ -32,15 +32,14 @@ pub trait BuildFace {
         let face = Face::polygon(surface, points_surface, services);
 
         let edges = {
-            let mut half_edges = face.region().exterior().edges().cloned();
+            let mut edges = face.region().exterior().edges().cloned();
 
-            let array =
-                array::from_fn(|_| half_edges.next()).map(|half_edge| {
-                    half_edge
-                        .expect("Just asserted that there are three half-edges")
-                });
+            let array = array::from_fn(|_| edges.next()).map(|half_edge| {
+                half_edge
+                    .expect("Just asserted that there are three half-edges")
+            });
 
-            assert!(half_edges.next().is_none());
+            assert!(edges.next().is_none());
 
             array
         };
