@@ -33,12 +33,16 @@ pub trait BuildFace {
 
         let edges = {
             let mut half_edges = face.region().exterior().half_edges().cloned();
-            assert_eq!(half_edges.clone().count(), 3);
 
-            array::from_fn(|_| half_edges.next()).map(|half_edge| {
-                half_edge
-                    .expect("Just asserted that there are three half-edges")
-            })
+            let array =
+                array::from_fn(|_| half_edges.next()).map(|half_edge| {
+                    half_edge
+                        .expect("Just asserted that there are three half-edges")
+                });
+
+            assert!(half_edges.next().is_none());
+
+            array
         };
         let vertices = edges
             .each_ref_ext()
