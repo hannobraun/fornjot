@@ -27,7 +27,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
-        let (vertices, global_edges, curves) = {
+        let (vertices, _, curves) = {
             let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
             let (curve_up, edge_up, [_, c]) =
                 b.clone().sweep_with_cache(path, cache, services);
@@ -85,8 +85,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(surface_points_next)
             .zip_ext(vertices)
             .zip_ext(curves)
-            .zip_ext(global_edges)
-            .map(|(((((boundary, start), end), start_vertex), curve), _)| {
+            .map(|((((boundary, start), end), start_vertex), curve)| {
                 let half_edge = {
                     let half_edge = HalfEdge::line_segment(
                         [start, end],
