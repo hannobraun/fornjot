@@ -377,7 +377,7 @@ pub struct CurveCoordinateSystemMismatch {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Curve, GlobalEdge, Shell},
+        objects::{Curve, Shell},
         operations::{
             BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
             UpdateHalfEdge, UpdateRegion, UpdateShell,
@@ -451,12 +451,9 @@ mod tests {
                                 .update_nth_half_edge(0, |half_edge| {
                                     let curve =
                                         Curve::new().insert(&mut services);
-                                    let global_form =
-                                        GlobalEdge::new().insert(&mut services);
 
                                     half_edge
                                         .replace_curve(curve)
-                                        .replace_global_form(global_form)
                                         .insert(&mut services)
                                 })
                                 .insert(&mut services)
