@@ -1,10 +1,10 @@
 use fj_math::{Point, Segment};
 
-use crate::{geometry::SurfacePath, objects::HalfEdge};
+use crate::{geometry::SurfacePath, objects::Edge};
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a curve and a [`HalfEdge`]
+/// The intersection between a curve and an [`Edge`]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point
@@ -26,23 +26,22 @@ impl CurveEdgeIntersection {
     /// # Panics
     ///
     /// Currently, only intersections between lines and line segments can be
-    /// computed. Panics, if a different type of curve or [`HalfEdge`] is
-    /// passed.
-    pub fn compute(path: &SurfacePath, half_edge: &HalfEdge) -> Option<Self> {
+    /// computed. Panics, if a different type of curve or [`Edge`] is passed.
+    pub fn compute(path: &SurfacePath, edge: &Edge) -> Option<Self> {
         let path_as_line = match path {
             SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
-            let edge_path_as_line = match half_edge.path() {
+            let edge_path_as_line = match edge.path() {
                 SurfacePath::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
             };
 
-            let edge_vertices = half_edge
+            let edge_vertices = edge
                 .boundary()
                 .inner
                 .map(|point| edge_path_as_line.point_from_line_coords(point));
@@ -73,7 +72,7 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        geometry::SurfacePath, objects::HalfEdge, operations::BuildHalfEdge,
+        geometry::SurfacePath, objects::Edge, operations::BuildEdge,
         services::Services,
     };
 
@@ -84,10 +83,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
-            HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
+        let edge =
+            Edge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,
@@ -102,13 +101,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge = HalfEdge::line_segment(
-            [[-1., -1.], [-1., 1.]],
-            None,
-            &mut services,
-        );
+        let edge =
+            Edge::line_segment([[-1., -1.], [-1., 1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,
@@ -123,13 +119,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge = HalfEdge::line_segment(
-            [[-1., -1.], [1., -1.]],
-            None,
-            &mut services,
-        );
+        let edge =
+            Edge::line_segment([[-1., -1.], [1., -1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert!(intersection.is_none());
     }
@@ -139,10 +132,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
-            HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
+        let edge =
+            Edge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,

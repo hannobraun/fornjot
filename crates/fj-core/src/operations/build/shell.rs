@@ -46,7 +46,7 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_nth_half_edge(0, |edge| {
+                        .update_nth_edge(0, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
@@ -64,7 +64,7 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_nth_half_edge(1, |edge| {
+                        .update_nth_edge(1, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
@@ -74,7 +74,7 @@ pub trait BuildShell {
                             2..=2,
                             services,
                         )
-                        .update_nth_half_edge(0, |edge| {
+                        .update_nth_edge(0, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
@@ -92,7 +92,7 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_nth_half_edge(0, |edge| {
+                        .update_nth_edge(0, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
@@ -102,7 +102,7 @@ pub trait BuildShell {
                             1..=1,
                             services,
                         )
-                        .update_nth_half_edge(1, |edge| {
+                        .update_nth_edge(1, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
@@ -112,7 +112,7 @@ pub trait BuildShell {
                             2..=2,
                             services,
                         )
-                        .update_nth_half_edge(2, |edge| {
+                        .update_nth_edge(2, |edge| {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })

@@ -12,7 +12,7 @@ mod surface;
 mod vertex;
 
 pub use self::{
-    cycle::CycleValidationError, edge::HalfEdgeValidationError,
+    cycle::CycleValidationError, edge::EdgeValidationError,
     face::FaceValidationError, shell::ShellValidationError,
     solid::SolidValidationError,
 };
@@ -103,13 +103,13 @@ pub enum ValidationError {
     #[error("`Cycle` validation error")]
     Cycle(#[from] CycleValidationError),
 
+    /// `Edge` validation error
+    #[error("`Edge` validation error")]
+    Edge(#[from] EdgeValidationError),
+
     /// `Face` validation error
     #[error("`Face` validation error")]
     Face(#[from] FaceValidationError),
-
-    /// `HalfEdge` validation error
-    #[error("`HalfEdge` validation error")]
-    HalfEdge(#[from] HalfEdgeValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error")]

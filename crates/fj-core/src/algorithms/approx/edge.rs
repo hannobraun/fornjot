@@ -11,14 +11,14 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
-    objects::{Curve, HalfEdge, Surface, Vertex},
+    objects::{Curve, Edge, Surface, Vertex},
     storage::{Handle, HandleWrapper},
 };
 
 use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&HalfEdge, &Surface) {
-    type Approximation = HalfEdgeApprox;
+impl Approx for (&Edge, &Surface) {
+    type Approximation = EdgeApprox;
     type Cache = EdgeCache;
 
     fn approx_with_cache(
@@ -26,50 +26,48 @@ impl Approx for (&HalfEdge, &Surface) {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        let (half_edge, surface) = self;
+        let (edge, surface) = self;
 
-        let position_surface = half_edge.start_position();
-        let position_global = match cache.get_position(half_edge.start_vertex())
-        {
+        let position_surface = edge.start_position();
+        let position_global = match cache.get_position(edge.start_vertex()) {
             Some(position) => position,
             None => {
                 let position_global = surface
                     .geometry()
                     .point_from_surface_coords(position_surface);
-                cache.insert_position(half_edge.start_vertex(), position_global)
+                cache.insert_position(edge.start_vertex(), position_global)
             }
         };
 
         let first = ApproxPoint::new(position_surface, position_global);
 
         let points = {
-            // We cache approximated `HalfEdge`s using the `Curve`s they
-            // reference and their boundary on that curve as the key. That bakes
-            // in the undesirable assumption that all coincident `HalfEdge`s are
-            // also congruent. Let me explain.
+            // We cache approximated `Edge`s using the `Curve`s they reference
+            // and their boundary on that curve as the key. That bakes in the
+            // undesirable assumption that all coincident `Edge`s are also
+            // congruent. Let me explain.
             //
-            // When two `HalfEdge`s are coincident, we need to make sure their
+            // When two `Edge`s are coincident, we need to make sure their
             // approximations are identical where they overlap. Otherwise, we'll
             // get an invalid triangle mesh in the end. Hence, we cache
             // approximations.
             //
             // Caching works like this: We check whether there already is a
             // cache entry for the curve/boundary. If there isn't, we create the
-            // 3D approximation from the 2D `HalfEdge`. Next time we check for a
-            // coincident `HalfEdge`, we'll find the cache and use that, getting
+            // 3D approximation from the 2D `Edge`. Next time we check for a
+            // coincident `Edge`, we'll find the cache and use that, getting
             // the exact same 3D approximation, instead of generating a slightly
-            // different one from the different 2D `HalfEdge`.
+            // different one from the different 2D `Edge`.
             //
-            // So what if we had two coincident `HalfEdge`s that aren't
-            // congruent? Meaning, they overlap partially, but not fully. Then
-            // obviously, they wouldn't refer to the same combination of curve
-            // and boundary. And since those are the key in our cache, those
-            // `HalfEdge`s would not share an approximation where they overlap,
-            // leading to exactly the problems that the cache is supposed to
-            // prevent.
+            // So what if we had two coincident `fEdge`s that aren't congruent?
+            // Meaning, they overlap partially, but not fully. Then obviously,
+            // they wouldn't refer to the same combination of curve and
+            // boundary. And since those are the key in our cache, those `Edge`s
+            // would not share an approximation where they overlap, leading to
+            // exactly the problems that the cache is supposed to prevent.
             //
             // As of this writing, it is a documented (but not validated)
-            // limitation, that coincident `HalfEdge`s must always be congruent.
+            // limitation, that coincident `Edge`s must always be congruent.
             // However, we're going to need to lift this limitation going
             // forward, as it is, well, too limiting. This means things here
             // will need to change.
@@ -80,19 +78,19 @@ impl Approx for (&HalfEdge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_approx =
-                cache.get_edge(half_edge.curve().clone(), half_edge.boundary());
+                cache.get_edge(edge.curve().clone(), edge.boundary());
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
                     let approx = approx_edge(
-                        &half_edge.path(),
+                        &edge.path(),
                         surface,
-                        half_edge.boundary(),
+                        edge.boundary(),
                         tolerance,
                     );
                     cache.insert_edge(
-                        half_edge.curve().clone(),
-                        half_edge.boundary(),
+                        edge.curve().clone(),
+                        edge.boundary(),
                         approx,
                     )
                 }
@@ -102,22 +100,21 @@ impl Approx for (&HalfEdge, &Surface) {
                 .points
                 .into_iter()
                 .map(|point| {
-                    let point_surface = half_edge
-                        .path()
-                        .point_from_path_coords(point.local_form);
+                    let point_surface =
+                        edge.path().point_from_path_coords(point.local_form);
 
                     ApproxPoint::new(point_surface, point.global_form)
                 })
                 .collect()
         };
 
-        HalfEdgeApprox { first, points }
+        EdgeApprox { first, points }
     }
 }
 
-/// An approximation of an [`HalfEdge`]
+/// An approximation of an [`Edge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct HalfEdgeApprox {
+pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
     pub first: ApproxPoint<2>,
 
@@ -125,7 +122,7 @@ pub struct HalfEdgeApprox {
     pub points: Vec<ApproxPoint<2>>,
 }
 
-impl HalfEdgeApprox {
+impl EdgeApprox {
     /// Compute the points that approximate the edge
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
@@ -287,8 +284,8 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfaceGeometry},
-        objects::{HalfEdge, Surface},
-        operations::BuildHalfEdge,
+        objects::{Edge, Surface},
+        operations::BuildEdge,
         services::Services,
     };
 
@@ -297,11 +294,11 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge =
-            HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
+        let edge =
+            Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&edge, surface.deref()).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -314,11 +311,11 @@ mod tests {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
         });
-        let half_edge =
-            HalfEdge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
+        let edge =
+            Edge::line_segment([[1., 1.], [2., 1.]], None, &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, &surface).approx(tolerance);
+        let approx = (&edge, &surface).approx(tolerance);
 
         assert_eq!(approx.points, Vec::new());
     }
@@ -334,21 +331,21 @@ mod tests {
             u: path,
             v: [0., 0., 1.].into(),
         });
-        let half_edge = HalfEdge::line_segment(
+        let edge = Edge::line_segment(
             [[0., 1.], [TAU, 1.]],
             Some(boundary.inner),
             &mut services,
         );
 
         let tolerance = 1.;
-        let approx = (&half_edge, &surface).approx(tolerance);
+        let approx = (&edge, &surface).approx(tolerance);
 
         let expected_approx = (path, boundary)
             .approx(tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
-                    half_edge.path().point_from_path_coords(point_local);
+                    edge.path().point_from_path_coords(point_local);
                 let point_global =
                     surface.geometry().point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_surface, point_global)
@@ -362,13 +359,13 @@ mod tests {
         let mut services = Services::new();
 
         let surface = services.objects.surfaces.xz_plane();
-        let half_edge = HalfEdge::circle([0., 0.], 1., &mut services);
+        let edge = Edge::circle([0., 0.], 1., &mut services);
 
         let tolerance = 1.;
-        let approx = (&half_edge, surface.deref()).approx(tolerance);
+        let approx = (&edge, surface.deref()).approx(tolerance);
 
         let expected_approx =
-            (&half_edge.path(), CurveBoundary::from([[0.], [TAU]]))
+            (&edge.path(), CurveBoundary::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {

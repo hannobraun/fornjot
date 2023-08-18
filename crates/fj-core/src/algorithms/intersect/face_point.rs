@@ -3,7 +3,7 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, HalfEdge},
+    objects::{Edge, Face},
     storage::Handle,
 };
 
@@ -28,13 +28,13 @@ impl Intersect for (&Face, &Point<2>) {
             // as long as we initialize the `previous_hit` variable with the
             // result of the last segment.
             let mut previous_hit = cycle
-                .half_edges()
+                .edges()
                 .last()
                 .cloned()
                 .and_then(|edge| (&ray, &edge).intersect());
 
-            for (half_edge, next_half_edge) in cycle.half_edge_pairs() {
-                let hit = (&ray, half_edge).intersect();
+            for (edge, next_edge) in cycle.edge_pairs() {
+                let hit = (&ray, edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
                     (
@@ -44,17 +44,17 @@ impl Intersect for (&Face, &Point<2>) {
                         // If the ray starts on the boundary of the face,
                         // there's nothing to else check.
                         return Some(FacePointIntersection::PointIsOnEdge(
-                            half_edge.clone()
+                            edge.clone()
                         ));
                     }
                     (Some(RaySegmentIntersection::RayStartsOnOnFirstVertex), _) => {
-                        let vertex = half_edge.start_position();
+                        let vertex = edge.start_position();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
                     }
                     (Some(RaySegmentIntersection::RayStartsOnSecondVertex), _) => {
-                        let vertex = next_half_edge.start_position();
+                        let vertex = next_edge.start_position();
                         return Some(
                             FacePointIntersection::PointIsOnVertex(vertex)
                         );
@@ -122,7 +122,7 @@ pub enum FacePointIntersection {
     PointIsInsideFace,
 
     /// The point is coincident with an edge
-    PointIsOnEdge(Handle<HalfEdge>),
+    PointIsOnEdge(Handle<Edge>),
 
     /// The point is coincident with a vertex
     PointIsOnVertex(Point<2>),
@@ -335,7 +335,7 @@ mod tests {
         let edge = face
             .region()
             .exterior()
-            .half_edges()
+            .edges()
             .find(|edge| edge.start_position() == Point::from([0., 0.]))
             .unwrap();
         assert_eq!(
@@ -370,11 +370,9 @@ mod tests {
         let vertex = face
             .region()
             .exterior()
-            .half_edges()
-            .find(|half_edge| {
-                half_edge.start_position() == Point::from([1., 0.])
-            })
-            .map(|half_edge| half_edge.start_position())
+            .edges()
+            .find(|edge| edge.start_position() == Point::from([1., 0.]))
+            .map(|edge| edge.start_position())
             .unwrap();
         assert_eq!(
             intersection,

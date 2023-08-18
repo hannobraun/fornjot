@@ -38,18 +38,18 @@ pub enum FaceValidationError {
 
 impl FaceValidationError {
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
-        if face.region().exterior().half_edges().count() == 0 {
-            // Can't determine winding, if the cycle has no half-edges. Sounds
-            // like a job for a different validation check.
+        if face.region().exterior().edges().count() == 0 {
+            // Can't determine winding, if the cycle has no edges. Sounds like a
+            // job for a different validation check.
             return;
         }
 
         let exterior_winding = face.region().exterior().winding();
 
         for interior in face.region().interiors() {
-            if interior.half_edges().count() == 0 {
-                // Can't determine winding, if the cycle has no half-edges.
-                // Sounds like a job for a different validation check.
+            if interior.edges().count() == 0 {
+                // Can't determine winding, if the cycle has no edges. Sounds
+                // like a job for a different validation check.
                 continue;
             }
             let interior_winding = interior.winding();

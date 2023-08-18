@@ -2,32 +2,32 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Curve, HalfEdge, Vertex},
+    objects::{Curve, Edge, Vertex},
     storage::Handle,
 };
 
-/// Update a [`HalfEdge`]
-pub trait UpdateHalfEdge {
-    /// Replace the path of the half-edge
+/// Update a [`Edge`]
+pub trait UpdateEdge {
+    /// Replace the path of the edge
     #[must_use]
     fn replace_path(&self, path: SurfacePath) -> Self;
 
-    /// Replace the boundary of the half-edge
+    /// Replace the boundary of the edge
     #[must_use]
     fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self;
 
-    /// Replace the curve of the half-edge
+    /// Replace the curve of the edge
     #[must_use]
     fn replace_curve(&self, curve: Handle<Curve>) -> Self;
 
-    /// Replace the start vertex of the half-edge
+    /// Replace the start vertex of the edge
     #[must_use]
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 }
 
-impl UpdateHalfEdge for HalfEdge {
+impl UpdateEdge for Edge {
     fn replace_path(&self, path: SurfacePath) -> Self {
-        HalfEdge::new(
+        Edge::new(
             path,
             self.boundary(),
             self.curve().clone(),
@@ -36,7 +36,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             boundary,
             self.curve().clone(),
@@ -45,7 +45,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_curve(&self, curve: Handle<Curve>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             self.boundary(),
             curve,
@@ -54,7 +54,7 @@ impl UpdateHalfEdge for HalfEdge {
     }
 
     fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
-        HalfEdge::new(
+        Edge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),

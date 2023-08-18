@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
+    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
     operations::{
         BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
     },
@@ -32,18 +32,19 @@ pub trait BuildFace {
         let face = Face::polygon(surface, points_surface, services);
 
         let edges = {
-            let mut half_edges = face.region().exterior().half_edges().cloned();
-            assert_eq!(half_edges.clone().count(), 3);
+            let mut edges = face.region().exterior().edges().cloned();
 
-            array::from_fn(|_| half_edges.next()).map(|half_edge| {
-                half_edge
-                    .expect("Just asserted that there are three half-edges")
-            })
-        };
-        let vertices =
-            edges.each_ref_ext().map(|half_edge: &Handle<HalfEdge>| {
-                half_edge.start_vertex().clone()
+            let array = array::from_fn(|_| edges.next()).map(|edge| {
+                edge.expect("Just asserted that there are three edges")
             });
+
+            assert!(edges.next().is_none());
+
+            array
+        };
+        let vertices = edges
+            .each_ref_ext()
+            .map(|edge: &Handle<Edge>| edge.start_vertex().clone());
 
         Polygon {
             face,
@@ -82,7 +83,7 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     pub face: I::T<Face>,
 
     /// The edges of the polygon
-    pub edges: [Handle<HalfEdge>; D],
+    pub edges: [Handle<Edge>; D],
 
     /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],
@@ -98,7 +99,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .nth_half_edge(i)
+                .nth_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .clone()
         });
@@ -109,7 +110,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .nth_half_edge(i)
+                .nth_edge(i)
                 .expect("Operation should not have changed length of cycle")
                 .start_vertex()
                 .clone()

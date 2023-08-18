@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Face, HalfEdge, Shell, Surface},
+    objects::{Edge, Face, Shell, Surface},
     storage::Handle,
 };
 
@@ -8,21 +8,21 @@ pub trait AllEdgesWithSurface {
     /// Access all edges referenced by the object and the surface they're on
     fn all_edges_with_surface(
         &self,
-        result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
+        result: &mut Vec<(Handle<Edge>, Handle<Surface>)>,
     );
 }
 
 impl AllEdgesWithSurface for Face {
     fn all_edges_with_surface(
         &self,
-        result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
+        result: &mut Vec<(Handle<Edge>, Handle<Surface>)>,
     ) {
         for cycle in self.region().all_cycles() {
             result.extend(
                 cycle
-                    .half_edges()
+                    .edges()
                     .cloned()
-                    .map(|half_edge| (half_edge, self.surface().clone())),
+                    .map(|edge| (edge, self.surface().clone())),
             );
         }
     }
@@ -31,7 +31,7 @@ impl AllEdgesWithSurface for Face {
 impl AllEdgesWithSurface for Shell {
     fn all_edges_with_surface(
         &self,
-        result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
+        result: &mut Vec<(Handle<Edge>, Handle<Surface>)>,
     ) {
         for face in self.faces() {
             face.all_edges_with_surface(result);

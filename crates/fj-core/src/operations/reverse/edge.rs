@@ -1,13 +1,13 @@
-use crate::{objects::HalfEdge, services::Services};
+use crate::{objects::Edge, services::Services};
 
 use super::ReverseCurveCoordinateSystems;
 
-impl ReverseCurveCoordinateSystems for HalfEdge {
+impl ReverseCurveCoordinateSystems for Edge {
     fn reverse_curve_coordinate_systems(&self, _: &mut Services) -> Self {
         let path = self.path().reverse();
         let boundary = self.boundary().reverse();
 
-        HalfEdge::new(
+        Edge::new(
             path,
             boundary,
             self.curve().clone(),

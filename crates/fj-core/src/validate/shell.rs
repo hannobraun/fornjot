@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::SurfaceGeometry,
-    objects::{HalfEdge, Shell, Surface},
+    objects::{Edge, Shell, Surface},
     queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
     storage::{Handle, HandleWrapper},
 };
@@ -35,23 +35,22 @@ pub enum ShellValidationError {
     )]
     CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
 
-    /// [`Shell`] contains global_edges not referred to by two half-edges
+    /// [`Shell`] is not watertight
     #[error("Shell is not watertight")]
     NotWatertight,
 
-    /// [`Shell`] contains half-edges that are coincident, but refer to
-    /// different global_edges
+    /// [`Shell`] contains edges that are coincident, but not identical
     #[error(
-        "`Shell` contains `HalfEdge`s that are coincident but refer to \
-        different `GlobalEdge`s\n\
+        "`Shell` contains `Edge`s that are coincident but refer to different \
+        `Curve`s\n\
         Edge 1: {0:#?}\n\
         Edge 2: {1:#?}"
     )]
-    CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
+    CoincidentEdgesNotIdentical(Handle<Edge>, Handle<Edge>),
 
-    /// [`Shell`] contains half-edges that are identical, but do not coincide
+    /// [`Shell`] contains edges that are identical, but do not coincide
     #[error(
-        "Shell contains HalfEdges that are identical but do not coincide\n\
+        "Shell contains `Edge`s that are identical but do not coincide\n\
         Edge 1: {edge_a:#?}\n\
         Surface for edge 1: {surface_a:#?}\n\
         Edge 2: {edge_b:#?}\n\
@@ -59,13 +58,13 @@ pub enum ShellValidationError {
     )]
     IdenticalEdgesNotCoincident {
         /// The first edge
-        edge_a: Handle<HalfEdge>,
+        edge_a: Handle<Edge>,
 
         /// The surface that the first edge is on
         surface_a: Handle<Surface>,
 
         /// The second edge
-        edge_b: Handle<HalfEdge>,
+        edge_b: Handle<Edge>,
 
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
@@ -80,14 +79,14 @@ pub enum ShellValidationError {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    edge_a: Handle<HalfEdge>,
+    edge_a: Handle<Edge>,
     surface_a: Handle<Surface>,
-    edge_b: Handle<HalfEdge>,
+    edge_b: Handle<Edge>,
     surface_b: Handle<Surface>,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
+        (edge, surface): (&Handle<Edge>, SurfaceGeometry),
     ) -> Point<3> {
         let [start, end] = edge.boundary().inner;
         let path_coords = start + (end - start) * percent;
@@ -133,9 +132,9 @@ impl ShellValidationError {
                 }
 
                 fn compare_curve_coords(
-                    edge_a: &Handle<HalfEdge>,
+                    edge_a: &Handle<Edge>,
                     surface_a: &Handle<Surface>,
-                    edge_b: &Handle<HalfEdge>,
+                    edge_b: &Handle<Edge>,
                     surface_b: &Handle<Surface>,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
@@ -299,13 +298,11 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
-                    let curve = HandleWrapper::from(half_edge.curve().clone());
+                for edge in cycle.edges() {
+                    let curve = HandleWrapper::from(edge.curve().clone());
                     let bounding_vertices = cycle
-                        .bounding_vertices_of_edge(half_edge)
-                        .expect(
-                            "Cycle should provide bounds of its own half-edge",
-                        )
+                        .bounding_vertices_of_edge(edge)
+                        .expect("Cycle should provide bounds of its own edge")
                         .normalize();
 
                     let edge = (curve, bounding_vertices);
@@ -330,7 +327,7 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for edge in cycle.half_edges() {
+                for edge in cycle.edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let boundary = cycle
                         .bounding_vertices_of_edge(edge)
@@ -365,8 +362,8 @@ impl ShellValidationError {
 
 #[derive(Clone, Debug)]
 pub struct CurveCoordinateSystemMismatch {
-    pub edge_a: Handle<HalfEdge>,
-    pub edge_b: Handle<HalfEdge>,
+    pub edge_a: Handle<Edge>,
+    pub edge_b: Handle<Edge>,
     pub point_curve: Point<1>,
     pub point_a: Point<3>,
     pub point_b: Point<3>,
@@ -379,8 +376,8 @@ mod tests {
         assert_contains_err,
         objects::{Curve, Shell},
         operations::{
-            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
-            UpdateHalfEdge, UpdateRegion, UpdateShell,
+            BuildShell, Insert, Reverse, UpdateCycle, UpdateEdge, UpdateFace,
+            UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -403,13 +400,10 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_half_edge(0, |half_edge| {
-                                    half_edge
-                                        .replace_path(
-                                            half_edge.path().reverse(),
-                                        )
+                                .update_nth_edge(0, |edge| {
+                                    edge.replace_path(edge.path().reverse())
                                         .replace_boundary(
-                                            half_edge.boundary().reverse(),
+                                            edge.boundary().reverse(),
                                         )
                                         .insert(&mut services)
                                 })
@@ -448,12 +442,11 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_half_edge(0, |half_edge| {
+                                .update_nth_edge(0, |edge| {
                                     let curve =
                                         Curve::new().insert(&mut services);
 
-                                    half_edge
-                                        .replace_curve(curve)
+                                    edge.replace_curve(curve)
                                         .insert(&mut services)
                                 })
                                 .insert(&mut services)

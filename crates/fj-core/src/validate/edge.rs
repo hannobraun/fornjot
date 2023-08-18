@@ -1,28 +1,28 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::HalfEdge;
+use crate::objects::Edge;
 
 use super::{Validate, ValidationConfig, ValidationError};
 
-impl Validate for HalfEdge {
+impl Validate for Edge {
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
+        EdgeValidationError::check_vertex_coincidence(self, config, errors);
     }
 }
 
-/// [`HalfEdge`] validation failed
+/// [`Edge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum HalfEdgeValidationError {
-    /// [`HalfEdge`]'s vertices are coincident
+pub enum EdgeValidationError {
+    /// [`Edge`]'s vertices are coincident
     #[error(
-        "Vertices of `HalfEdge` on curve are coincident\n\
+        "Vertices of `Edge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
         - Position of front vertex: {front_position:?}\n\
-        - `HalfEdge`: {half_edge:#?}"
+        - `Edge`: {edge:#?}"
     )]
     VerticesAreCoincident {
         /// The position of the back vertex
@@ -34,18 +34,18 @@ pub enum HalfEdgeValidationError {
         /// The distance between the two vertices
         distance: Scalar,
 
-        /// The half-edge
-        half_edge: HalfEdge,
+        /// The edge
+        edge: Edge,
     },
 }
 
-impl HalfEdgeValidationError {
+impl EdgeValidationError {
     fn check_vertex_coincidence(
-        half_edge: &HalfEdge,
+        edge: &Edge,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let [back_position, front_position] = half_edge.boundary().inner;
+        let [back_position, front_position] = edge.boundary().inner;
         let distance = (back_position - front_position).magnitude();
 
         if distance < config.distinct_min_distance {
@@ -54,7 +54,7 @@ impl HalfEdgeValidationError {
                     back_position,
                     front_position,
                     distance,
-                    half_edge: half_edge.clone(),
+                    edge: edge.clone(),
                 }
                 .into(),
             );
@@ -68,22 +68,22 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        objects::HalfEdge,
-        operations::BuildHalfEdge,
+        objects::Edge,
+        operations::BuildEdge,
         services::Services,
-        validate::{HalfEdgeValidationError, Validate, ValidationError},
+        validate::{EdgeValidationError, Validate, ValidationError},
     };
 
     #[test]
-    fn half_edge_vertices_are_coincident() -> anyhow::Result<()> {
+    fn edge_vertices_are_coincident() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid =
-            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
+            Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 
-            HalfEdge::new(
+            Edge::new(
                 valid.path(),
                 boundary,
                 valid.curve().clone(),
@@ -94,8 +94,8 @@ mod tests {
         valid.validate_and_return_first_error()?;
         assert_contains_err!(
             invalid,
-            ValidationError::HalfEdge(
-                HalfEdgeValidationError::VerticesAreCoincident { .. }
+            ValidationError::Edge(
+                EdgeValidationError::VerticesAreCoincident { .. }
             )
         );
 

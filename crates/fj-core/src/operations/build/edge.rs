@@ -3,23 +3,23 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Curve, HalfEdge, Vertex},
+    objects::{Curve, Edge, Vertex},
     operations::Insert,
     services::Services,
 };
 
-/// Build a [`HalfEdge`]
-pub trait BuildHalfEdge {
-    /// Create a half-edge that is not joined to another
+/// Build an [`Edge`]
+pub trait BuildEdge {
+    /// Create an edge that is not joined to another
     fn unjoined(
         path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
         services: &mut Services,
-    ) -> HalfEdge {
+    ) -> Edge {
         let curve = Curve::new().insert(services);
         let start_vertex = Vertex::new().insert(services);
 
-        HalfEdge::new(path, boundary, curve, start_vertex)
+        Edge::new(path, boundary, curve, start_vertex)
     }
 
     /// Create an arc
@@ -32,7 +32,7 @@ pub trait BuildHalfEdge {
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
         services: &mut Services,
-    ) -> HalfEdge {
+    ) -> Edge {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -45,7 +45,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        Edge::unjoined(path, boundary, services)
     }
 
     /// Create a circle
@@ -53,12 +53,12 @@ pub trait BuildHalfEdge {
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         services: &mut Services,
-    ) -> HalfEdge {
+    ) -> Edge {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        Edge::unjoined(path, boundary, services)
     }
 
     /// Create a line segment
@@ -66,15 +66,15 @@ pub trait BuildHalfEdge {
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         services: &mut Services,
-    ) -> HalfEdge {
+    ) -> Edge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
         let path = SurfacePath::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, services)
+        Edge::unjoined(path, boundary, services)
     }
 }
 
-impl BuildHalfEdge for HalfEdge {}
+impl BuildEdge for Edge {}

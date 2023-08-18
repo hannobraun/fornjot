@@ -1,10 +1,10 @@
 use fj_math::Transform;
 
-use crate::{objects::HalfEdge, services::Services};
+use crate::{objects::Edge, services::Services};
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for HalfEdge {
+impl TransformObject for Edge {
     fn transform_with_cache(
         self,
         transform: &Transform,

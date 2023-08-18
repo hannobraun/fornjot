@@ -5,8 +5,8 @@ use itertools::Itertools;
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Cycle, HalfEdge},
-    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
+    objects::{Cycle, Edge},
+    operations::{BuildEdge, Insert, UpdateCycle, UpdateEdge},
     services::Services,
     storage::Handle,
 };
@@ -18,18 +18,18 @@ pub trait JoinCycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
+            Item = (Handle<Edge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator;
 
     /// Join the cycle to another
     ///
     /// Joins the cycle to the other at the provided ranges. The ranges specify
-    /// the indices of the half-edges that are joined together.
+    /// the indices of the edges that are joined together.
     ///
     /// A modulo operation is applied to all indices before use, so in a cycle
-    /// of 3 half-edges, indices `0` and `3` refer to the same half-edge. This
-    /// allows for specifying a range that crosses the "seam" of the cycle.
+    /// of 3 edges, indices `0` and `3` refer to the same edge. This allows for
+    /// specifying a range that crosses the "seam" of the cycle.
     ///
     /// # Panics
     ///
@@ -40,7 +40,7 @@ pub trait JoinCycle {
     /// This method makes some assumptions that need to be met, if the operation
     /// is to result in a valid shape:
     ///
-    /// - **The joined half-edges must be coincident.**
+    /// - **The joined edges must be coincident.**
     /// - **The locally defined curve coordinate systems of the edges must
     ///   match.**
     ///
@@ -77,14 +77,14 @@ impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
         Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
+            Item = (Handle<Edge>, SurfacePath, CurveBoundary<Point<1>>),
         >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
-        self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
-            |((prev, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, services)
-                    .replace_curve(half_edge.curve().clone())
+        self.add_edges(edges.into_iter().circular_tuple_windows().map(
+            |((prev, _, _), (edge, curve, boundary))| {
+                Edge::unjoined(curve, boundary, services)
+                    .replace_curve(edge.curve().clone())
                     .replace_start_vertex(prev.start_vertex().clone())
                     .insert(services)
             },
@@ -110,34 +110,34 @@ impl JoinCycle for Cycle {
             let index = index % self.len();
             let index_other = index_other % self.len();
 
-            let half_edge = self
-                .nth_half_edge(index)
+            let edge = self
+                .nth_edge(index)
                 .expect("Index must be valid, due to use of `%` above");
-            let half_edge_other = other
-                .nth_half_edge(index_other)
+            let edge_other = other
+                .nth_edge(index_other)
                 .expect("Index must be valid, due to use of `%` above");
 
             let vertex_a = other
-                .half_edge_after(half_edge_other)
+                .edge_after(edge_other)
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
-            let vertex_b = half_edge_other.start_vertex().clone();
+            let vertex_b = edge_other.start_vertex().clone();
 
             let next_edge = cycle
-                .half_edge_after(half_edge)
+                .edge_after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
-            let this_joined = half_edge
-                .replace_curve(half_edge_other.curve().clone())
+            let this_joined = edge
+                .replace_curve(edge_other.curve().clone())
                 .replace_start_vertex(vertex_a)
                 .insert(services);
             let next_joined =
                 next_edge.replace_start_vertex(vertex_b).insert(services);
 
             cycle = cycle
-                .replace_half_edge(half_edge, this_joined)
-                .replace_half_edge(next_edge, next_joined)
+                .replace_edge(edge, this_joined)
+                .replace_edge(next_edge, next_joined)
         }
 
         cycle

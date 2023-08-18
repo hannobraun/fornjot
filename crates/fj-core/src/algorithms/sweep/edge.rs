@@ -2,16 +2,16 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
-    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
+    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
+    operations::{BuildEdge, Insert, UpdateCycle, UpdateEdge},
     services::Services,
     storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Handle<Face>, Handle<HalfEdge>);
+impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
+    type Swept = (Handle<Face>, Handle<Edge>);
 
     fn sweep_with_cache(
         self,
@@ -80,31 +80,27 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
-                let half_edge = {
-                    let half_edge = HalfEdge::line_segment(
+                let edge = {
+                    let edge = Edge::line_segment(
                         [start, end],
                         Some(boundary),
                         services,
                     )
                     .replace_start_vertex(start_vertex);
 
-                    let half_edge = if let Some(curve) = curve {
-                        half_edge.replace_curve(curve)
+                    let edge = if let Some(curve) = curve {
+                        edge.replace_curve(curve)
                     } else {
-                        half_edge
+                        edge
                     };
 
-                    half_edge.insert(services)
+                    edge.insert(services)
                 };
 
-                exterior = Some(
-                    exterior
-                        .take()
-                        .unwrap()
-                        .add_half_edges([half_edge.clone()]),
-                );
+                exterior =
+                    Some(exterior.take().unwrap().add_edges([edge.clone()]));
 
-                half_edge
+                edge
             });
 
         let region = Region::new(exterior.unwrap().insert(services), [], color)
