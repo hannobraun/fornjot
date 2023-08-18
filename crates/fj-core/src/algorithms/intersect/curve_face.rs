@@ -33,8 +33,8 @@ impl CurveFaceIntersection {
 
         let mut intersections = Vec::new();
 
-        for half_edge in edges {
-            let intersection = CurveEdgeIntersection::compute(path, half_edge);
+        for edge in edges {
+            let intersection = CurveEdgeIntersection::compute(path, edge);
 
             if let Some(intersection) = intersection {
                 match intersection {
