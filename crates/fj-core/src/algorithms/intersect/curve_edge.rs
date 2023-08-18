@@ -27,21 +27,21 @@ impl CurveEdgeIntersection {
     ///
     /// Currently, only intersections between lines and line segments can be
     /// computed. Panics, if a different type of curve or [`Edge`] is passed.
-    pub fn compute(path: &SurfacePath, half_edge: &Edge) -> Option<Self> {
+    pub fn compute(path: &SurfacePath, edge: &Edge) -> Option<Self> {
         let path_as_line = match path {
             SurfacePath::Line(line) => line,
             _ => todo!("Curve-edge intersection only supports lines"),
         };
 
         let edge_as_segment = {
-            let edge_path_as_line = match half_edge.path() {
+            let edge_path_as_line = match edge.path() {
                 SurfacePath::Line(line) => line,
                 _ => {
                     todo!("Curve-edge intersection only supports line segments")
                 }
             };
 
-            let edge_vertices = half_edge
+            let edge_vertices = edge
                 .boundary()
                 .inner
                 .map(|point| edge_path_as_line.point_from_line_coords(point));
