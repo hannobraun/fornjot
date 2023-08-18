@@ -27,7 +27,7 @@ pub enum CycleValidationError {
         - Start position of second `Edge`: {start_of_second:?}\n\
         - `Edge`s: {half_edges:#?}"
     )]
-    HalfEdgesDisconnected {
+    EdgesDisconnected {
         /// The end position of the first [`Edge`]
         end_of_first: Point<2>,
 
@@ -74,7 +74,7 @@ impl CycleValidationError {
 
             if distance > config.identical_max_distance {
                 errors.push(
-                    Self::HalfEdgesDisconnected {
+                    Self::EdgesDisconnected {
                         end_of_first,
                         start_of_second,
                         distance,
@@ -124,7 +124,7 @@ mod tests {
         assert_contains_err!(
             disconnected,
             ValidationError::Cycle(
-                CycleValidationError::HalfEdgesDisconnected { .. }
+                CycleValidationError::EdgesDisconnected { .. }
             )
         );
 
