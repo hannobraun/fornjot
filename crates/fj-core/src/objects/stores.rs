@@ -22,7 +22,7 @@ pub struct Objects {
     pub faces: Store<Face>,
 
     /// Store for [`Edge`]s
-    pub half_edges: Store<Edge>,
+    pub edges: Store<Edge>,
 
     /// Store for [`Region`]s
     pub regions: Store<Region>,
