@@ -73,7 +73,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let half_edges = self.edges().enumerate().map(|(i, half_edge)| {
+        let edges = self.edges().enumerate().map(|(i, half_edge)| {
             if i == index {
                 num_replacements += 1;
                 f(half_edge)
@@ -82,7 +82,7 @@ impl UpdateCycle for Cycle {
             }
         });
 
-        let cycle = Cycle::new(half_edges);
+        let cycle = Cycle::new(edges);
 
         assert_eq!(
             num_replacements, 1,
