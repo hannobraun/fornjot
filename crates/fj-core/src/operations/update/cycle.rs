@@ -36,8 +36,8 @@ pub trait UpdateCycle {
 
 impl UpdateCycle for Cycle {
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let half_edges = self.edges().cloned().chain(edges);
-        Cycle::new(half_edges)
+        let edges = self.edges().cloned().chain(edges);
+        Cycle::new(edges)
     }
 
     fn replace_edge(
