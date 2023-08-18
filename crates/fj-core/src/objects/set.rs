@@ -96,6 +96,9 @@ impl InsertIntoSet for GlobalEdge {
 
 impl InsertIntoSet for HalfEdge {
     fn insert_into_set(&self, objects: &mut ObjectSet) {
+        objects.inner.insert(self.curve().clone().into());
+        self.curve().insert_into_set(objects);
+
         objects.inner.insert(self.start_vertex().clone().into());
         self.start_vertex().insert_into_set(objects);
 
