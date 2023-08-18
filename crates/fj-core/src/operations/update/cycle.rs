@@ -27,7 +27,7 @@ pub trait UpdateCycle {
     ///
     /// Panics, unless this operation updates exactly one half-edge.
     #[must_use]
-    fn update_nth_half_edge(
+    fn update_nth_edge(
         &self,
         index: usize,
         f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
@@ -66,7 +66,7 @@ impl UpdateCycle for Cycle {
         cycle
     }
 
-    fn update_nth_half_edge(
+    fn update_nth_edge(
         &self,
         index: usize,
         mut f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
