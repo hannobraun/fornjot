@@ -34,7 +34,7 @@ pub enum EdgeValidationError {
         /// The distance between the two vertices
         distance: Scalar,
 
-        /// The half-edge
+        /// The edge
         edge: Edge,
     },
 }
