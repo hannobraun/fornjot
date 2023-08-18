@@ -80,7 +80,7 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
-                let half_edge = {
+                let edge = {
                     let half_edge = Edge::line_segment(
                         [start, end],
                         Some(boundary),
@@ -98,13 +98,10 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
                 };
 
                 exterior = Some(
-                    exterior
-                        .take()
-                        .unwrap()
-                        .add_half_edges([half_edge.clone()]),
+                    exterior.take().unwrap().add_half_edges([edge.clone()]),
                 );
 
-                half_edge
+                edge
             });
 
         let region = Region::new(exterior.unwrap().insert(services), [], color)
