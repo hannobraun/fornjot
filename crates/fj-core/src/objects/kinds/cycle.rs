@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{geometry::SurfacePath, objects::Edge, storage::Handle};
 
-/// A cycle of connected half-edges
+/// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
     edges: Vec<Handle<Edge>>,
@@ -16,24 +16,24 @@ impl Cycle {
         Self { edges }
     }
 
-    /// Access the half-edges that make up the cycle
+    /// Access the edges that make up the cycle
     pub fn edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
         self.edges.iter()
     }
 
-    /// Access the half-edges in pairs
+    /// Access neighboring edges in pairs
     pub fn edge_pairs(
         &self,
     ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
         self.edges.iter().circular_tuple_windows()
     }
 
-    /// Access the half-edge with the provided index
+    /// Access the edge with the provided index
     pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
         self.edges.get(index)
     }
 
-    /// Access the half-edge after the provided one
+    /// Access the edge after the provided one
     ///
     /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
     pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
@@ -43,12 +43,12 @@ impl Cycle {
         })
     }
 
-    /// Return the index of the provided half-edge, if it is in this cycle
+    /// Return the index of the provided edge, if it is in this cycle
     pub fn index_of(&self, edge: &Handle<Edge>) -> Option<usize> {
         self.edges.iter().position(|e| e.id() == edge.id())
     }
 
-    /// Return the number of half-edges in the cycle
+    /// Return the number of edges in the cycle
     pub fn len(&self) -> usize {
         self.edges.len()
     }
