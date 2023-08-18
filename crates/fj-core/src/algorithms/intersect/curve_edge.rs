@@ -83,10 +83,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
+        let edge =
             Edge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,
@@ -101,10 +101,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
+        let edge =
             Edge::line_segment([[-1., -1.], [-1., 1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,
@@ -119,10 +119,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
+        let edge =
             Edge::line_segment([[-1., -1.], [1., -1.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert!(intersection.is_none());
     }
@@ -132,10 +132,10 @@ mod tests {
         let mut services = Services::new();
 
         let path = SurfacePath::u_axis();
-        let half_edge =
+        let edge =
             Edge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
 
-        let intersection = CurveEdgeIntersection::compute(&path, &half_edge);
+        let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
         assert_eq!(
             intersection,
