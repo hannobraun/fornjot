@@ -1,7 +1,8 @@
 use std::collections::{btree_set, BTreeSet};
 
 use super::{
-    BehindHandle, Cycle, Face, GlobalEdge, HalfEdge, Object, Surface, Vertex,
+    BehindHandle, Curve, Cycle, Face, GlobalEdge, HalfEdge, Object, Surface,
+    Vertex,
 };
 
 /// A graph of objects and their relationships
@@ -55,6 +56,10 @@ impl IntoIterator for ObjectSet {
 
 trait InsertIntoSet {
     fn insert_into_set(&self, objects: &mut ObjectSet);
+}
+
+impl InsertIntoSet for Curve {
+    fn insert_into_set(&self, _: &mut ObjectSet) {}
 }
 
 impl InsertIntoSet for Cycle {
