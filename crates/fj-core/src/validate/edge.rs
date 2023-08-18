@@ -10,13 +10,13 @@ impl Validate for Edge {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        HalfEdgeValidationError::check_vertex_coincidence(self, config, errors);
+        EdgeValidationError::check_vertex_coincidence(self, config, errors);
     }
 }
 
 /// [`Edge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum HalfEdgeValidationError {
+pub enum EdgeValidationError {
     /// [`Edge`]'s vertices are coincident
     #[error(
         "Vertices of `HalfEdge` on curve are coincident\n\
@@ -39,7 +39,7 @@ pub enum HalfEdgeValidationError {
     },
 }
 
-impl HalfEdgeValidationError {
+impl EdgeValidationError {
     fn check_vertex_coincidence(
         half_edge: &Edge,
         config: &ValidationConfig,
@@ -71,7 +71,7 @@ mod tests {
         objects::Edge,
         operations::BuildEdge,
         services::Services,
-        validate::{HalfEdgeValidationError, Validate, ValidationError},
+        validate::{EdgeValidationError, Validate, ValidationError},
     };
 
     #[test]
@@ -95,7 +95,7 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::HalfEdge(
-                HalfEdgeValidationError::VerticesAreCoincident { .. }
+                EdgeValidationError::VerticesAreCoincident { .. }
             )
         );
 
