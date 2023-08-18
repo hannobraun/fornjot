@@ -60,7 +60,7 @@ impl UpdateCycle for Cycle {
 
         assert_eq!(
             num_replacements, 1,
-            "Expected operation to replace exactly one half-edge"
+            "Expected operation to replace exactly one edge"
         );
 
         cycle
@@ -86,7 +86,7 @@ impl UpdateCycle for Cycle {
 
         assert_eq!(
             num_replacements, 1,
-            "Expected operation to replace exactly one half-edge"
+            "Expected operation to replace exactly one edge"
         );
 
         cycle
