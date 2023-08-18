@@ -222,7 +222,7 @@ impl ShellValidationError {
                     continue;
                 }
 
-                let identical_according_to_curve = {
+                let identical = {
                     let on_same_curve =
                         edge_a.curve().id() == edge_b.curve().id();
 
@@ -241,7 +241,7 @@ impl ShellValidationError {
                     on_same_curve && have_same_boundary
                 };
 
-                match identical_according_to_curve {
+                match identical {
                     true => {
                         // All points on identical curves should be within
                         // identical_max_distance, so we shouldn't have any
