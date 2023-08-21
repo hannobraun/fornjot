@@ -5,22 +5,22 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.72"
+anyhow = "1.0.75"
 chrono = "0.4.26"
 map-macro = "0.2.6"
-octocrab = "0.29.2"
+octocrab = "0.29.3"
 semver = "1.0.18"
-serde = "1.0.183"
-serde_json = "1.0.104"
+serde = "1.0.185"
+serde_json = "1.0.105"
 url = "2.4.0"
 
 [dependencies.autolib]
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.3.21"
+version = "4.3.23"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.31.0"
+version = "1.32.0"
 features = ["full"]
