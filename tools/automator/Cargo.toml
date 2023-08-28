@@ -10,15 +10,15 @@ chrono = "0.4.26"
 map-macro = "0.2.6"
 octocrab = "0.29.3"
 semver = "1.0.18"
-serde = "1.0.185"
+serde = "1.0.188"
 serde_json = "1.0.105"
-url = "2.4.0"
+url = "2.4.1"
 
 [dependencies.autolib]
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.3.23"
+version = "4.4.0"
 features = ["derive"]
 
 [dependencies.tokio]

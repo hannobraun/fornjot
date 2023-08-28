@@ -20,14 +20,14 @@ thiserror = "1.0.47"
 path = "../autolib"
 
 [dependencies.reqwest]
-version = "0.11.18"
+version = "0.11.20"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.3.23"
+version = "4.4.0"
 features = ["std", "derive", "env"]
 default_features = false
 
 [dependencies.serde]
-version = "1.0.185"
+version = "1.0.188"
 features = ["derive"]
