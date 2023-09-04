@@ -36,7 +36,10 @@ impl Approx for (&Edge, &Surface) {
                     let position_global = surface
                         .geometry()
                         .point_from_surface_coords(start_position_surface);
-                    cache.insert_position(edge.start_vertex(), position_global)
+                    cache.insert_start_position_approx(
+                        edge.start_vertex(),
+                        position_global,
+                    )
                 }
             };
 
@@ -234,7 +237,7 @@ impl EdgeCache {
         self.vertex_approx.get(&handle.clone().into()).cloned()
     }
 
-    fn insert_position(
+    fn insert_start_position_approx(
         &mut self,
         handle: &Handle<Vertex>,
         position: Point<3>,
