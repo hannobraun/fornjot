@@ -92,7 +92,7 @@ impl Approx for (&Edge, &Surface) {
                         edge.boundary(),
                         tolerance,
                     );
-                    cache.insert_edge(
+                    cache.insert_curve_approx(
                         edge.curve().clone(),
                         edge.boundary(),
                         approx,
@@ -272,7 +272,7 @@ impl EdgeCache {
     }
 
     /// Insert the approximation of an edge
-    fn insert_edge(
+    fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
