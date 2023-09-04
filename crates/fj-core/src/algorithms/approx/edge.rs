@@ -217,11 +217,11 @@ fn approx_edge(
 /// A cache for results of an approximation
 #[derive(Default)]
 pub struct EdgeCache {
+    vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
     edge_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         CurveApproxSegment,
     >,
-    vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
 }
 
 impl EdgeCache {
