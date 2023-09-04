@@ -214,7 +214,7 @@ fn approx_edge(
     CurveApproxSegment { boundary, points }
 }
 
-/// A cache for results of an approximation
+/// Cache for edge approximations
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
