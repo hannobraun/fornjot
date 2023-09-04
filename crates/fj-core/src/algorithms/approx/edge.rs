@@ -82,7 +82,7 @@ impl Approx for (&Edge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_approx =
-                cache.get_edge(edge.curve().clone(), edge.boundary());
+                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
@@ -250,7 +250,7 @@ impl EdgeCache {
     }
 
     /// Access the approximation for the given edge, if available
-    fn get_edge(
+    fn get_curve_approx(
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
