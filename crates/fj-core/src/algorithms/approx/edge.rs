@@ -118,7 +118,7 @@ pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
     first: ApproxPoint<2>,
 
-    /// The approximation of the edge
+    /// The approximation of the rest of the edge
     points: Vec<ApproxPoint<2>>,
 }
 
