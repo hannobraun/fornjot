@@ -116,10 +116,10 @@ impl Approx for (&Edge, &Surface) {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
-    pub first: ApproxPoint<2>,
+    first: ApproxPoint<2>,
 
     /// The approximation of the edge
-    pub points: Vec<ApproxPoint<2>>,
+    points: Vec<ApproxPoint<2>>,
 }
 
 impl EdgeApprox {
