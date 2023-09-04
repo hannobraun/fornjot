@@ -249,7 +249,6 @@ impl EdgeApproxCache {
             .unwrap_or(position)
     }
 
-    /// Access the approximation for the given edge, if available
     fn get_curve_approx(
         &self,
         handle: Handle<Curve>,
@@ -271,7 +270,6 @@ impl EdgeApproxCache {
         None
     }
 
-    /// Insert the approximation of an edge
     fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
