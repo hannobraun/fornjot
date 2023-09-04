@@ -218,7 +218,7 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
-    edge_approx: BTreeMap<
+    curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         CurveApproxSegment,
     >,
@@ -256,12 +256,12 @@ impl EdgeCache {
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
         if let Some(approx) =
-            self.edge_approx.get(&(handle.clone().into(), boundary))
+            self.curve_approx.get(&(handle.clone().into(), boundary))
         {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.into(), boundary.reverse()))
+            self.curve_approx.get(&(handle.into(), boundary.reverse()))
         {
             // If we have a cache entry for the reverse boundary, we need to use
             // that too!
@@ -278,7 +278,7 @@ impl EdgeCache {
         boundary: CurveBoundary<Point<1>>,
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        self.edge_approx
+        self.curve_approx
             .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
     }
