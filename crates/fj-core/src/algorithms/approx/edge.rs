@@ -19,7 +19,7 @@ use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Edge, &Surface) {
     type Approximation = EdgeApprox;
-    type Cache = EdgeCache;
+    type Cache = EdgeApproxCache;
 
     fn approx_with_cache(
         self,
@@ -216,7 +216,7 @@ fn approx_edge(
 
 /// A cache for results of an approximation
 #[derive(Default)]
-pub struct EdgeCache {
+pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
     curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
@@ -224,7 +224,7 @@ pub struct EdgeCache {
     >,
 }
 
-impl EdgeCache {
+impl EdgeApproxCache {
     /// Create an empty cache
     pub fn new() -> Self {
         Self::default()
