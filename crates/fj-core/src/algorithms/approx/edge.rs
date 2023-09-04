@@ -86,7 +86,7 @@ impl Approx for (&Edge, &Surface) {
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
-                    let approx = approx_edge(
+                    let approx = approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
@@ -138,7 +138,7 @@ impl EdgeApprox {
     }
 }
 
-fn approx_edge(
+fn approx_curve(
     path: &SurfacePath,
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
