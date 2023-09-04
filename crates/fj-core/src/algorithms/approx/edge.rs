@@ -226,6 +226,20 @@ impl EdgeCache {
         Self::default()
     }
 
+    fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
+        self.vertex_approx.get(&handle.clone().into()).cloned()
+    }
+
+    fn insert_position(
+        &mut self,
+        handle: &Handle<Vertex>,
+        position: Point<3>,
+    ) -> Point<3> {
+        self.vertex_approx
+            .insert(handle.clone().into(), position)
+            .unwrap_or(position)
+    }
+
     /// Access the approximation for the given edge, if available
     fn get_edge(
         &self,
@@ -258,20 +272,6 @@ impl EdgeCache {
         self.edge_approx
             .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
-    }
-
-    fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
-        self.vertex_approx.get(&handle.clone().into()).cloned()
-    }
-
-    fn insert_position(
-        &mut self,
-        handle: &Handle<Vertex>,
-        position: Point<3>,
-    ) -> Point<3> {
-        self.vertex_approx
-            .insert(handle.clone().into(), position)
-            .unwrap_or(position)
     }
 }
 
