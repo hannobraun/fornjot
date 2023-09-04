@@ -6,7 +6,7 @@ updates:
       interval: "weekly"
     # Group dependency updates into a single pull request.
     groups:
-      dependencies:
+      cargo:
         patterns:
           - "*"
 
@@ -16,6 +16,6 @@ updates:
       interval: "weekly"
     # Group dependency updates into a single pull request.
     groups:
-      dependencies:
+      github-actions:
         patterns:
           - "*"
