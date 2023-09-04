@@ -19,7 +19,7 @@ use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Edge, &Surface) {
     type Approximation = EdgeApprox;
-    type Cache = EdgeCache;
+    type Cache = EdgeApproxCache;
 
     fn approx_with_cache(
         self,
@@ -28,20 +28,24 @@ impl Approx for (&Edge, &Surface) {
     ) -> Self::Approximation {
         let (edge, surface) = self;
 
-        let position_surface = edge.start_position();
-        let position_global = match cache.get_position(edge.start_vertex()) {
-            Some(position) => position,
-            None => {
-                let position_global = surface
-                    .geometry()
-                    .point_from_surface_coords(position_surface);
-                cache.insert_position(edge.start_vertex(), position_global)
-            }
-        };
+        let start_position_surface = edge.start_position();
+        let start_position =
+            match cache.get_start_position_approx(edge.start_vertex()) {
+                Some(position) => position,
+                None => {
+                    let position_global = surface
+                        .geometry()
+                        .point_from_surface_coords(start_position_surface);
+                    cache.insert_start_position_approx(
+                        edge.start_vertex(),
+                        position_global,
+                    )
+                }
+            };
 
-        let first = ApproxPoint::new(position_surface, position_global);
+        let first = ApproxPoint::new(start_position_surface, start_position);
 
-        let points = {
+        let rest = {
             // We cache approximated `Edge`s using the `Curve`s they reference
             // and their boundary on that curve as the key. That bakes in the
             // undesirable assumption that all coincident `Edge`s are also
@@ -78,7 +82,7 @@ impl Approx for (&Edge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_approx =
-                cache.get_edge(edge.curve().clone(), edge.boundary());
+                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
@@ -88,7 +92,7 @@ impl Approx for (&Edge, &Surface) {
                         edge.boundary(),
                         tolerance,
                     );
-                    cache.insert_edge(
+                    cache.insert_curve_approx(
                         edge.curve().clone(),
                         edge.boundary(),
                         approx,
@@ -108,7 +112,7 @@ impl Approx for (&Edge, &Surface) {
                 .collect()
         };
 
-        EdgeApprox { first, points }
+        EdgeApprox { first, rest }
     }
 }
 
@@ -116,10 +120,10 @@ impl Approx for (&Edge, &Surface) {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
-    pub first: ApproxPoint<2>,
+    first: ApproxPoint<2>,
 
-    /// The approximation of the edge
-    pub points: Vec<ApproxPoint<2>>,
+    /// The approximation of the rest of the edge
+    rest: Vec<ApproxPoint<2>>,
 }
 
 impl EdgeApprox {
@@ -128,7 +132,7 @@ impl EdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first.clone());
-        points.extend(self.points.iter().cloned());
+        points.extend(self.rest.iter().cloned());
 
         points
     }
@@ -210,35 +214,53 @@ fn approx_edge(
     CurveApproxSegment { boundary, points }
 }
 
-/// A cache for results of an approximation
+/// Cache for edge approximations
 #[derive(Default)]
-pub struct EdgeCache {
-    edge_approx: BTreeMap<
+pub struct EdgeApproxCache {
+    start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
+    curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         CurveApproxSegment,
     >,
-    vertex_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
 }
 
-impl EdgeCache {
+impl EdgeApproxCache {
     /// Create an empty cache
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Access the approximation for the given edge, if available
-    fn get_edge(
+    fn get_start_position_approx(
+        &self,
+        handle: &Handle<Vertex>,
+    ) -> Option<Point<3>> {
+        self.start_position_approx
+            .get(&handle.clone().into())
+            .cloned()
+    }
+
+    fn insert_start_position_approx(
+        &mut self,
+        handle: &Handle<Vertex>,
+        position: Point<3>,
+    ) -> Point<3> {
+        self.start_position_approx
+            .insert(handle.clone().into(), position)
+            .unwrap_or(position)
+    }
+
+    fn get_curve_approx(
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
         if let Some(approx) =
-            self.edge_approx.get(&(handle.clone().into(), boundary))
+            self.curve_approx.get(&(handle.clone().into(), boundary))
         {
             return Some(approx.clone());
         }
         if let Some(approx) =
-            self.edge_approx.get(&(handle.into(), boundary.reverse()))
+            self.curve_approx.get(&(handle.into(), boundary.reverse()))
         {
             // If we have a cache entry for the reverse boundary, we need to use
             // that too!
@@ -248,30 +270,15 @@ impl EdgeCache {
         None
     }
 
-    /// Insert the approximation of an edge
-    fn insert_edge(
+    fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        self.edge_approx
+        self.curve_approx
             .insert((handle.into(), boundary), approx.clone())
             .unwrap_or(approx)
-    }
-
-    fn get_position(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
-        self.vertex_approx.get(&handle.clone().into()).cloned()
-    }
-
-    fn insert_position(
-        &mut self,
-        handle: &Handle<Vertex>,
-        position: Point<3>,
-    ) -> Point<3> {
-        self.vertex_approx
-            .insert(handle.clone().into(), position)
-            .unwrap_or(position)
     }
 }
 
@@ -300,7 +307,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.points, Vec::new());
+        assert_eq!(approx.rest, Vec::new());
     }
 
     #[test]
@@ -317,7 +324,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, &surface).approx(tolerance);
 
-        assert_eq!(approx.points, Vec::new());
+        assert_eq!(approx.rest, Vec::new());
     }
 
     #[test]
@@ -351,7 +358,7 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx.rest, expected_approx);
     }
 
     #[test]
@@ -375,6 +382,6 @@ mod tests {
                     ApproxPoint::new(point_surface, point_global)
                 })
                 .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx.rest, expected_approx);
     }
 }
