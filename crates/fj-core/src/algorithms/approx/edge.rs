@@ -29,7 +29,7 @@ impl Approx for (&Edge, &Surface) {
         let (edge, surface) = self;
 
         let start_position_surface = edge.start_position();
-        let position_global = match cache.get_position(edge.start_vertex()) {
+        let start_position = match cache.get_position(edge.start_vertex()) {
             Some(position) => position,
             None => {
                 let position_global = surface
@@ -39,7 +39,7 @@ impl Approx for (&Edge, &Surface) {
             }
         };
 
-        let first = ApproxPoint::new(start_position_surface, position_global);
+        let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
             // We cache approximated `Edge`s using the `Curve`s they reference
