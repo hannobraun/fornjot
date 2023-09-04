@@ -41,7 +41,7 @@ impl Approx for (&Edge, &Surface) {
 
         let first = ApproxPoint::new(position_surface, position_global);
 
-        let points = {
+        let rest = {
             // We cache approximated `Edge`s using the `Curve`s they reference
             // and their boundary on that curve as the key. That bakes in the
             // undesirable assumption that all coincident `Edge`s are also
@@ -108,7 +108,7 @@ impl Approx for (&Edge, &Surface) {
                 .collect()
         };
 
-        EdgeApprox { first, points }
+        EdgeApprox { first, rest }
     }
 }
 
@@ -119,7 +119,7 @@ pub struct EdgeApprox {
     first: ApproxPoint<2>,
 
     /// The approximation of the rest of the edge
-    points: Vec<ApproxPoint<2>>,
+    rest: Vec<ApproxPoint<2>>,
 }
 
 impl EdgeApprox {
@@ -128,7 +128,7 @@ impl EdgeApprox {
         let mut points = Vec::new();
 
         points.push(self.first.clone());
-        points.extend(self.points.iter().cloned());
+        points.extend(self.rest.iter().cloned());
 
         points
     }
@@ -300,7 +300,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.points, Vec::new());
+        assert_eq!(approx.rest, Vec::new());
     }
 
     #[test]
@@ -317,7 +317,7 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, &surface).approx(tolerance);
 
-        assert_eq!(approx.points, Vec::new());
+        assert_eq!(approx.rest, Vec::new());
     }
 
     #[test]
@@ -351,7 +351,7 @@ mod tests {
                 ApproxPoint::new(point_surface, point_global)
             })
             .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx.rest, expected_approx);
     }
 
     #[test]
@@ -375,6 +375,6 @@ mod tests {
                     ApproxPoint::new(point_surface, point_global)
                 })
                 .collect::<Vec<_>>();
-        assert_eq!(approx.points, expected_approx);
+        assert_eq!(approx.rest, expected_approx);
     }
 }
