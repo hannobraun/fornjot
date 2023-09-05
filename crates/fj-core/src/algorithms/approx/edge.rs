@@ -221,11 +221,6 @@ pub struct EdgeApproxCache {
 }
 
 impl EdgeApproxCache {
-    /// Create an empty cache
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     fn get_start_position_approx(
         &self,
         handle: &Handle<Vertex>,
