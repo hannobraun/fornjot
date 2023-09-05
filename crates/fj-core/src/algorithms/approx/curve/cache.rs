@@ -13,8 +13,7 @@ use super::CurveApproxSegment;
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
-    #[allow(missing_docs)]
-    pub inner: BTreeMap<
+    inner: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         CurveApproxSegment,
     >,
