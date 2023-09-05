@@ -41,4 +41,14 @@ impl CurveApproxCache {
 
         None
     }
+
+    /// Insert an approximated segment of the curve into the cache
+    pub fn insert(
+        &mut self,
+        curve: Handle<Curve>,
+        new_segment: CurveApproxSegment,
+    ) -> Option<CurveApproxSegment> {
+        self.inner
+            .insert((curve.into(), new_segment.boundary), new_segment)
+    }
 }

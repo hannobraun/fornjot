@@ -259,8 +259,7 @@ impl EdgeApproxCache {
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
         self.curve_approx
-            .inner
-            .insert((handle.into(), approx.boundary), approx.clone())
+            .insert(handle, approx.clone())
             .unwrap_or(approx)
     }
 }
