@@ -95,11 +95,7 @@ impl Approx for (&Edge, &Surface) {
                         edge.boundary(),
                         tolerance,
                     );
-                    cache.insert_curve_approx(
-                        edge.curve().clone(),
-                        edge.boundary(),
-                        approx,
-                    )
+                    cache.insert_curve_approx(edge.curve().clone(), approx)
                 }
             };
 
@@ -260,12 +256,11 @@ impl EdgeApproxCache {
     fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
-        boundary: CurveBoundary<Point<1>>,
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
         self.curve_approx
             .inner
-            .insert((handle.into(), boundary), approx.clone())
+            .insert((handle.into(), approx.boundary), approx.clone())
             .unwrap_or(approx)
     }
 }
