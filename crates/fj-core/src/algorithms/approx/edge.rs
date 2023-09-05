@@ -15,7 +15,10 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::{curve::CurveApproxSegment, Approx, ApproxPoint, Tolerance};
+use super::{
+    curve::{CurveApproxCache, CurveApproxSegment},
+    Approx, ApproxPoint, Tolerance,
+};
 
 impl Approx for (&Edge, &Surface) {
     type Approximation = EdgeApprox;
@@ -86,17 +89,13 @@ impl Approx for (&Edge, &Surface) {
             let approx = match cached_approx {
                 Some(approx) => approx,
                 None => {
-                    let approx = approx_edge(
+                    let approx = approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
                         tolerance,
                     );
-                    cache.insert_curve_approx(
-                        edge.curve().clone(),
-                        edge.boundary(),
-                        approx,
-                    )
+                    cache.insert_curve_approx(edge.curve().clone(), approx)
                 }
             };
 
@@ -138,7 +137,7 @@ impl EdgeApprox {
     }
 }
 
-fn approx_edge(
+fn approx_curve(
     path: &SurfacePath,
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
@@ -218,18 +217,10 @@ fn approx_edge(
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
-    curve_approx: BTreeMap<
-        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
-        CurveApproxSegment,
-    >,
+    curve_approx: CurveApproxCache,
 }
 
 impl EdgeApproxCache {
-    /// Create an empty cache
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     fn get_start_position_approx(
         &self,
         handle: &Handle<Vertex>,
@@ -254,30 +245,16 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        if let Some(approx) =
-            self.curve_approx.get(&(handle.clone().into(), boundary))
-        {
-            return Some(approx.clone());
-        }
-        if let Some(approx) =
-            self.curve_approx.get(&(handle.into(), boundary.reverse()))
-        {
-            // If we have a cache entry for the reverse boundary, we need to use
-            // that too!
-            return Some(approx.clone().reverse());
-        }
-
-        None
+        self.curve_approx.get(&handle, &boundary)
     }
 
     fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
-        boundary: CurveBoundary<Point<1>>,
         approx: CurveApproxSegment,
     ) -> CurveApproxSegment {
         self.curve_approx
-            .insert((handle.into(), boundary), approx.clone())
+            .insert(handle, approx.clone())
             .unwrap_or(approx)
     }
 }
