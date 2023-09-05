@@ -254,24 +254,7 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        if let Some(approx) = self
-            .curve_approx
-            .inner
-            .get(&(handle.clone().into(), boundary))
-        {
-            return Some(approx.clone());
-        }
-        if let Some(approx) = self
-            .curve_approx
-            .inner
-            .get(&(handle.into(), boundary.reverse()))
-        {
-            // If we have a cache entry for the reverse boundary, we need to use
-            // that too!
-            return Some(approx.clone().reverse());
-        }
-
-        None
+        self.curve_approx.get(&handle, &boundary)
     }
 
     fn insert_curve_approx(
