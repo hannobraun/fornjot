@@ -36,9 +36,7 @@ impl CurveApproxCache {
         self.inner.get(&(curve, normalized_boundary)).cloned().map(
             |mut approx| {
                 if !was_already_normalized {
-                    for segment in &mut approx.segments {
-                        segment.reverse();
-                    }
+                    approx.reverse();
                 }
 
                 approx
