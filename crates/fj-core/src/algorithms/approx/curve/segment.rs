@@ -32,6 +32,21 @@ impl CurveApproxSegment {
         self.points.reverse();
         self
     }
+
+    /// Normalize the segment
+    ///
+    /// Returns a new instance of this struct, which has the points of the
+    /// approximation in a defined order. This can be used to compare segments
+    /// while disregarding their direction.
+    #[must_use]
+    pub fn normalize(mut self) -> Self {
+        if !self.is_normalized() {
+            self.boundary = self.boundary.normalize();
+            self.points.reverse();
+        }
+
+        self
+    }
 }
 
 impl Ord for CurveApproxSegment {
