@@ -8,15 +8,13 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::CurveApproxSegment;
+use super::{CurveApprox, CurveApproxSegment};
 
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
-    inner: BTreeMap<
-        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
-        CurveApproxSegment,
-    >,
+    inner:
+        BTreeMap<(HandleWrapper<Curve>, CurveBoundary<Point<1>>), CurveApprox>,
 }
 
 impl CurveApproxCache {
@@ -25,29 +23,58 @@ impl CurveApproxCache {
         &self,
         curve: &Handle<Curve>,
         boundary: &CurveBoundary<Point<1>>,
-    ) -> Option<CurveApproxSegment> {
-        if let Some(approx) = self.inner.get(&(curve.clone().into(), *boundary))
-        {
-            return Some(approx.clone());
-        }
-        if let Some(approx) =
-            self.inner.get(&(curve.clone().into(), boundary.reverse()))
-        {
-            // If we have a cache entry for the reverse boundary, we need to use
-            // that too!
-            return Some(approx.clone().reverse());
-        }
+    ) -> Option<CurveApprox> {
+        let curve = HandleWrapper::from(curve.clone());
 
-        None
+        // Approximations within the cache are all stored in normalized form. If
+        // the caller requests a non-normalized boundary, that means we need to
+        // adjust the result before we return it, so let's remember whether the
+        // normalization resulted in a reversal.
+        let was_already_normalized = boundary.is_normalized();
+        let normalized_boundary = boundary.normalize();
+
+        self.inner.get(&(curve, normalized_boundary)).cloned().map(
+            |mut approx| {
+                if !was_already_normalized {
+                    approx.reverse();
+                }
+
+                approx
+            },
+        )
     }
 
     /// Insert an approximated segment of the curve into the cache
     pub fn insert(
         &mut self,
         curve: Handle<Curve>,
-        new_segment: CurveApproxSegment,
-    ) -> Option<CurveApproxSegment> {
+        mut new_segment: CurveApproxSegment,
+    ) -> CurveApproxSegment {
+        new_segment.normalize();
+
+        // We assume that curve approximation segments never overlap, so so we
+        // don't have to do any merging of this segment with a possibly existing
+        // approximation for this curve.
+        //
+        // For now, this is a valid assumption, as it matches the uses of this
+        // method, due to documented limitations elsewhere in the system.
+        let approx = CurveApprox {
+            segments: vec![new_segment.clone()],
+        };
+
         self.inner
-            .insert((curve.into(), new_segment.boundary), new_segment)
+            .insert((curve.into(), new_segment.boundary), approx)
+            .map(|approx| {
+                let mut segments = approx.segments.into_iter();
+                let segment = segments
+                    .next()
+                    .expect("Empty approximations should not exist in cache");
+                assert!(
+                    segments.next().is_none(),
+                    "Cached approximations should have exactly 1 segment"
+                );
+                segment
+            })
+            .unwrap_or(new_segment)
     }
 }
