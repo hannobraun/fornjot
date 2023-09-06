@@ -39,7 +39,7 @@ impl CurveApproxCache {
                     approx
                 } else {
                     for segment in &mut approx.segments {
-                        *segment = segment.clone().reverse();
+                        segment.reverse();
                     }
                     approx
                 }
