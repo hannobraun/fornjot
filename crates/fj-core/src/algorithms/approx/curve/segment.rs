@@ -35,9 +35,8 @@ impl CurveApproxSegment {
 
     /// Normalize the segment
     ///
-    /// Returns a new instance of this struct, which has the points of the
-    /// approximation in a defined order. This can be used to compare segments
-    /// while disregarding their direction.
+    /// Puts the points of the approximation in a defined order. This can be
+    /// used to compare segments while disregarding their direction.
     pub fn normalize(&mut self) -> &mut Self {
         if !self.is_normalized() {
             self.boundary = self.boundary.normalize();
