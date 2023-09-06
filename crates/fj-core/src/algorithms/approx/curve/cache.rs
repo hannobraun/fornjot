@@ -24,6 +24,10 @@ impl CurveApproxCache {
         curve: &Handle<Curve>,
         boundary: &CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
+        // Approximations within the cache are all stored in normalized form. If
+        // the caller requests a non-normalized boundary, that means we need to
+        // adjust the result before we return it, so let's remember whether the
+        // normalization resulted in a reversal.
         let was_already_normalized = boundary.is_normalized();
         let normalized_boundary = boundary.normalize();
 
