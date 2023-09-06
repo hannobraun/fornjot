@@ -20,6 +20,11 @@ pub struct CurveApproxSegment {
 }
 
 impl CurveApproxSegment {
+    /// Indicate whether the segment is normalized
+    pub fn is_normalized(&self) -> bool {
+        self.boundary.is_normalized()
+    }
+
     /// Reverse the orientation of the approximation
     #[must_use]
     pub fn reverse(mut self) -> Self {
