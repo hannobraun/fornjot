@@ -23,7 +23,7 @@ impl CurveApproxCache {
         &self,
         curve: &Handle<Curve>,
         boundary: &CurveBoundary<Point<1>>,
-    ) -> Option<CurveApproxSegment> {
+    ) -> Option<CurveApprox> {
         let curve = HandleWrapper::from(curve.clone());
 
         // Approximations within the cache are all stored in normalized form. If
@@ -33,10 +33,8 @@ impl CurveApproxCache {
         let was_already_normalized = boundary.is_normalized();
         let normalized_boundary = boundary.normalize();
 
-        self.inner
-            .get(&(curve, normalized_boundary))
-            .cloned()
-            .map(|mut approx| {
+        self.inner.get(&(curve, normalized_boundary)).cloned().map(
+            |mut approx| {
                 if was_already_normalized {
                     approx
                 } else {
@@ -45,18 +43,8 @@ impl CurveApproxCache {
                     }
                     approx
                 }
-            })
-            .map(|approx| {
-                let mut segments = approx.segments.into_iter();
-                let segment = segments
-                    .next()
-                    .expect("Empty approximations should not exist in cache");
-                assert!(
-                    segments.next().is_none(),
-                    "Cached approximations should have exactly 1 segment"
-                );
-                segment
-            })
+            },
+        )
     }
 
     /// Insert an approximated segment of the curve into the cache
