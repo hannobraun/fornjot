@@ -46,9 +46,10 @@ impl CurveApproxCache {
         &mut self,
         curve: Handle<Curve>,
         new_segment: CurveApproxSegment,
-    ) -> Option<CurveApproxSegment> {
+    ) -> CurveApproxSegment {
         let new_segment = new_segment.normalize();
         self.inner
-            .insert((curve.into(), new_segment.boundary), new_segment)
+            .insert((curve.into(), new_segment.boundary), new_segment.clone())
+            .unwrap_or(new_segment)
     }
 }
