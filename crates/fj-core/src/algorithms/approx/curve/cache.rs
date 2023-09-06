@@ -50,6 +50,7 @@ impl CurveApproxCache {
         curve: Handle<Curve>,
         new_segment: CurveApproxSegment,
     ) -> Option<CurveApproxSegment> {
+        let new_segment = new_segment.normalize();
         self.inner
             .insert((curve.into(), new_segment.boundary), new_segment)
     }
