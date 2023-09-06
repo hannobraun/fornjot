@@ -48,6 +48,7 @@ impl CurveApproxCache {
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
         let new_segment = new_segment.normalize();
+
         self.inner
             .insert((curve.into(), new_segment.boundary), new_segment.clone())
             .unwrap_or(new_segment)
