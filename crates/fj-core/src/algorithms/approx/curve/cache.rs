@@ -26,22 +26,19 @@ impl CurveApproxCache {
         curve: &Handle<Curve>,
         boundary: &CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        if let Some(approx) =
-            self.inner.get(&(curve.clone().into(), *boundary)).cloned()
-        {
-            return Some(approx);
-        }
-        if let Some(approx) = self
-            .inner
-            .get(&(curve.clone().into(), boundary.reverse()))
-            .cloned()
-        {
-            // If we have a cache entry for the reverse boundary, we need to use
-            // that too!
-            return Some(approx.reverse());
-        }
+        let was_already_normalized = boundary.is_normalized();
+        let normalized_boundary = boundary.normalize();
 
-        None
+        self.inner
+            .get(&(curve.clone().into(), normalized_boundary))
+            .cloned()
+            .map(|approx| {
+                if was_already_normalized {
+                    approx
+                } else {
+                    approx.reverse()
+                }
+            })
     }
 
     /// Insert an approximated segment of the curve into the cache
