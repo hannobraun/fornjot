@@ -51,9 +51,9 @@ impl CurveApproxCache {
     pub fn insert(
         &mut self,
         curve: Handle<Curve>,
-        new_segment: CurveApproxSegment,
+        mut new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        let new_segment = new_segment.normalize();
+        new_segment.normalize();
 
         // We assume that curve approximation segments never overlap, so so we
         // don't have to do any merging of this segment with a possibly existing
