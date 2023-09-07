@@ -54,8 +54,8 @@ impl CurveApproxCache {
 
         new_segment.normalize();
 
-        // We assume that curve approximation segments never overlap, so we
-        // don't have to do any merging of this segment with a possibly existing
+        // We assume that approximated curve segments never overlap, so we don't
+        // have to do any merging of this segment with a possibly existing
         // approximation for this curve.
         //
         // For now, this is a valid assumption, as it matches the uses of this
