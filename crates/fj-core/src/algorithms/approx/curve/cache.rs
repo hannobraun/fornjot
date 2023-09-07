@@ -78,3 +78,174 @@ impl CurveApproxCache {
             .unwrap_or(new_segment)
     }
 }
+
+#[cfg(test)]
+pub mod tests {
+    use crate::{
+        algorithms::approx::{
+            curve::{CurveApprox, CurveApproxCache, CurveApproxSegment},
+            ApproxPoint,
+        },
+        geometry::CurveBoundary,
+        objects::Curve,
+        operations::Insert,
+        services::Services,
+    };
+
+    #[test]
+    fn insert_curve_already_exists_but_no_segment_merge_necessary() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // An approximation of our curve already exists.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[2.], [3.]]),
+                points: vec![
+                    ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
+                    ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
+                ],
+            },
+        );
+
+        // Here's another approximated segment for the same curve, but i doesn't
+        // overlap with the already existing one.
+        let boundary = CurveBoundary::from([[0.], [1.]]);
+        let segment = CurveApproxSegment {
+            boundary,
+            points: vec![
+                ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
+                ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
+            ],
+        };
+
+        // When inserting the second segment, we expect to get it back
+        // unchanged.
+        let inserted = cache.insert(curve.clone(), segment.clone());
+        assert_eq!(inserted, segment);
+    }
+
+    #[test]
+    fn insert_congruent_segment_already_exists() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // An approximation of our curve already exists.
+        let boundary = CurveBoundary::from([[0.], [1.]]);
+        let existing_segment = CurveApproxSegment {
+            boundary,
+            points: vec![
+                ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
+                ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
+            ],
+        };
+        cache.insert(curve.clone(), existing_segment.clone());
+
+        // Here's another approximated segment for the same curve that is
+        // congruent with the existing one.
+        let new_segment = CurveApproxSegment {
+            boundary,
+            points: vec![
+                ApproxPoint::new([0.24], [0.24, 0.24, 0.24]),
+                ApproxPoint::new([0.76], [0.76, 0.76, 0.76]),
+            ],
+        };
+
+        // When inserting the second segment, we expect to get the original one
+        // back.
+        let inserted = cache.insert(curve.clone(), new_segment);
+        assert_eq!(inserted, existing_segment);
+    }
+
+    #[test]
+    fn get_exact_match() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // An approximation of our curve already exists.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[2.], [3.]]),
+                points: vec![
+                    ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
+                    ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
+                ],
+            },
+        );
+
+        // Here's a second segment that doesn't overlap the existing one.
+        let boundary = CurveBoundary::from([[0.], [1.]]);
+        let segment = CurveApproxSegment {
+            boundary,
+            points: vec![
+                ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
+                ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
+            ],
+        };
+        cache.insert(curve.clone(), segment.clone());
+
+        // When asking for an approximation with the same boundary as the second
+        // segment we added, we expect to get it back exactly.
+        let cached = cache.get(&curve, &boundary);
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![segment]
+            })
+        );
+    }
+
+    #[test]
+    fn get_exact_match_except_reversed() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // An approximation of our curve already exists.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[2.], [3.]]),
+                points: vec![
+                    ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
+                    ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
+                ],
+            },
+        );
+
+        // Here's a second segment that doesn't overlap the existing one.
+        let boundary = CurveBoundary::from([[0.], [1.]]);
+        let segment = CurveApproxSegment {
+            points: vec![
+                ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
+                ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
+            ],
+            boundary,
+        };
+        cache.insert(curve.clone(), segment.clone());
+
+        // When asking for an approximation with the same boundary of the second
+        // segment we added but reversed, we expect to get back the segment, but
+        // reversed.
+        let cached = cache.get(&curve, &boundary.reverse());
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![{
+                    let mut segment = segment;
+                    segment.reverse();
+                    segment
+                }]
+            })
+        );
+    }
+}
