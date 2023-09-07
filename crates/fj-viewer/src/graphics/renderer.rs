@@ -1,7 +1,7 @@
 use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
-use tracing::debug;
+use tracing::{debug, trace};
 use wgpu::util::DeviceExt as _;
 
 use crate::{
@@ -41,7 +41,7 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::PRIMARY,
+            backends: wgpu::Backends::all(),
             ..Default::default()
         });
 
@@ -50,12 +50,14 @@ impl Renderer {
 
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::HighPerformance,
+                power_preference: wgpu::PowerPreference::None,
                 force_fallback_adapter: false,
                 compatible_surface: Some(&surface),
             })
             .await
             .ok_or(RendererInitError::RequestAdapter)?;
+
+        debug!("Using adapter: {:?}", adapter.get_info());
 
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
@@ -325,10 +327,10 @@ impl Renderer {
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
-        debug!("Presenting...");
+        trace!("Presenting...");
         surface_texture.present();
 
-        debug!("Finished drawing.");
+        trace!("Finished drawing.");
         Ok(())
     }
 
