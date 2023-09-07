@@ -13,8 +13,7 @@ use super::{CurveApprox, CurveApproxSegment};
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
-    inner:
-        BTreeMap<(HandleWrapper<Curve>, CurveBoundary<Point<1>>), CurveApprox>,
+    inner: BTreeMap<HandleWrapper<Curve>, CurveApprox>,
 }
 
 impl CurveApproxCache {
@@ -33,8 +32,11 @@ impl CurveApproxCache {
         let was_already_normalized = boundary.is_normalized();
         let normalized_boundary = boundary.normalize();
 
-        let mut approx =
-            self.inner.get(&(curve, normalized_boundary)).cloned()?;
+        let mut approx = self.inner.get(&curve).cloned()?;
+
+        approx
+            .segments
+            .retain(|segment| segment.boundary == normalized_boundary);
 
         if !was_already_normalized {
             approx.reverse();
@@ -50,38 +52,41 @@ impl CurveApproxCache {
         mut new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
         let curve = HandleWrapper::from(curve);
-        let cache_key = (curve, new_segment.boundary);
+        let cache_key = curve;
 
         new_segment.normalize();
 
         let existing_approx = self.inner.remove(&cache_key);
         let (approx, segment) = match existing_approx {
-            Some(existing_approx) => {
+            Some(mut existing_approx) => {
                 // An approximation for this curve already exists. We need to
                 // merge the new segment into it.
 
                 // We assume that approximated curve segments never overlap,
                 // unless they are completely congruent. As a consequence of
-                // this, and the current structure of the cache, we can assume
-                // that the existing approximation contains exactly one segment
-                // that is congruent with the one we are meant to insert. This
-                // means we can just extract that segment and return it to the
-                // caller.
+                // this, we don't have to do any merging with existing segments
+                // here.
                 //
                 // For now, this is a valid assumption, as it matches the uses
                 // of this method, due to documented limitations elsewhere in
                 // the system.
 
-                let mut segments = existing_approx.segments.iter().cloned();
-                let existing_segment = segments
-                    .next()
-                    .expect("Empty approximations should not exist in cache");
-                assert!(
-                    segments.next().is_none(),
-                    "Cached approximations should have exactly 1 segment"
-                );
+                let mut existing_segment = None;
+                for segment in existing_approx.segments.iter().cloned() {
+                    if segment.boundary == new_segment.boundary {
+                        existing_segment = Some(segment);
+                    }
+                }
 
-                (existing_approx, existing_segment)
+                let segment = match existing_segment {
+                    Some(segment) => segment,
+                    None => {
+                        existing_approx.segments.push(new_segment.clone());
+                        new_segment
+                    }
+                };
+
+                (existing_approx, segment)
             }
             None => {
                 // No approximation for this curve exists. We need to create a
