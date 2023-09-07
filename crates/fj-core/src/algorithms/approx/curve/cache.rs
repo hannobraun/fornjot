@@ -51,6 +51,7 @@ impl CurveApproxCache {
         mut new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
         let curve = HandleWrapper::from(curve);
+        let cache_key = (curve, new_segment.boundary);
 
         new_segment.normalize();
 
@@ -65,7 +66,7 @@ impl CurveApproxCache {
         };
 
         self.inner
-            .insert((curve, new_segment.boundary), approx)
+            .insert(cache_key, approx)
             .map(|approx| {
                 let mut segments = approx.segments.into_iter();
                 let segment = segments
