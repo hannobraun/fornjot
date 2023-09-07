@@ -311,8 +311,10 @@ impl Renderer {
                 drawables.model.draw(&mut render_pass);
             }
 
-            if self.is_line_drawing_available() && config.draw_mesh {
-                drawables.mesh.draw(&mut render_pass);
+            if let Some(drawable) = drawables.mesh {
+                if self.is_line_drawing_available() && config.draw_mesh {
+                    drawable.draw(&mut render_pass);
+                }
             }
         }
 
