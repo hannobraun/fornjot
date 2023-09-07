@@ -50,6 +50,8 @@ impl CurveApproxCache {
         curve: Handle<Curve>,
         mut new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
+        let curve = HandleWrapper::from(curve);
+
         new_segment.normalize();
 
         // We assume that curve approximation segments never overlap, so so we
@@ -63,7 +65,7 @@ impl CurveApproxCache {
         };
 
         self.inner
-            .insert((curve.into(), new_segment.boundary), approx)
+            .insert((curve, new_segment.boundary), approx)
             .map(|approx| {
                 let mut segments = approx.segments.into_iter();
                 let segment = segments
