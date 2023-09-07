@@ -20,7 +20,6 @@ use super::{
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
-    features: wgpu::Features,
     device: wgpu::Device,
     queue: wgpu::Queue,
 
@@ -195,7 +194,6 @@ impl Renderer {
 
         Ok(Self {
             surface,
-            features,
             device,
             queue,
 
@@ -312,7 +310,7 @@ impl Renderer {
             }
 
             if let Some(drawable) = drawables.mesh {
-                if self.is_line_drawing_available() && config.draw_mesh {
+                if config.draw_mesh {
                     drawable.draw(&mut render_pass);
                 }
             }
@@ -377,11 +375,6 @@ impl Renderer {
         });
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
-    }
-
-    /// Returns true if the renderer's adapter can draw lines
-    pub fn is_line_drawing_available(&self) -> bool {
-        self.features.contains(wgpu::Features::POLYGON_MODE_LINE)
     }
 }
 
