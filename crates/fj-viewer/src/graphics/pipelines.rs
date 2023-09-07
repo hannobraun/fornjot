@@ -9,7 +9,7 @@ use super::{
 #[derive(Debug)]
 pub struct Pipelines {
     pub model: Pipeline,
-    pub mesh: Pipeline,
+    pub mesh: Option<Pipeline>,
     pub lines: Pipeline,
 }
 
@@ -37,14 +37,14 @@ impl Pipelines {
                 wgpu::PolygonMode::Fill,
                 color_format,
             ),
-            mesh: Pipeline::new(
+            mesh: Some(Pipeline::new(
                 device,
                 &pipeline_layout,
                 shaders.mesh(),
                 wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Line,
                 color_format,
-            ),
+            )),
             lines: Pipeline::new(
                 device,
                 &pipeline_layout,

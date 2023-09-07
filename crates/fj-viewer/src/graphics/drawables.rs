@@ -11,7 +11,10 @@ pub struct Drawables<'r> {
 impl<'r> Drawables<'r> {
     pub fn new(geometries: &'r Geometries, pipelines: &'r Pipelines) -> Self {
         let model = Drawable::new(&geometries.mesh, &pipelines.model);
-        let mesh = Some(Drawable::new(&geometries.mesh, &pipelines.mesh));
+        let mesh = pipelines
+            .mesh
+            .as_ref()
+            .map(|pipeline| Drawable::new(&geometries.mesh, pipeline));
 
         Self { model, mesh }
     }
