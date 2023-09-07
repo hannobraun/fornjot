@@ -56,10 +56,3 @@ fn frag_mesh(in: VertexOutput) -> FragmentOutput {
     out.color = vec4<f32>(1.0 - in.color.rgb, in.color.a);
     return out;
 }
-
-@fragment
-fn frag_lines(in: VertexOutput) -> FragmentOutput {
-    var out: FragmentOutput;
-    out.color = vec4<f32>(in.color.rgb, in.color.a);
-    return out;
-}
