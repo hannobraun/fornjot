@@ -57,6 +57,8 @@ impl Renderer {
             .await
             .ok_or(RendererInitError::RequestAdapter)?;
 
+        debug!("Using adapter: {:?}", adapter.get_info());
+
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
             let available_features = adapter.features();
