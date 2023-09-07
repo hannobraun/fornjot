@@ -41,7 +41,7 @@ impl Renderer {
     /// Returns a new `Renderer`.
     pub async fn new(screen: &impl Screen) -> Result<Self, RendererInitError> {
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::PRIMARY,
+            backends: wgpu::Backends::all(),
             ..Default::default()
         });
 
