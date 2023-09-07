@@ -57,7 +57,7 @@ impl CurveApproxCache {
 
         let existing_approx = self.inner.remove(&cache_key);
         let (approx, segment) = match existing_approx {
-            Some(approx) => {
+            Some(existing_approx) => {
                 // An approximation for this curve already exists. We need to
                 // merge the new segment into it.
 
@@ -72,7 +72,7 @@ impl CurveApproxCache {
                 // of this method, due to documented limitations elsewhere in
                 // the system.
 
-                let mut segments = approx.segments.iter().cloned();
+                let mut segments = existing_approx.segments.iter().cloned();
                 let existing_segment = segments
                     .next()
                     .expect("Empty approximations should not exist in cache");
@@ -81,7 +81,7 @@ impl CurveApproxCache {
                     "Cached approximations should have exactly 1 segment"
                 );
 
-                (approx, existing_segment)
+                (existing_approx, existing_segment)
             }
             None => {
                 // No approximation for this curve exists. We need to create a
