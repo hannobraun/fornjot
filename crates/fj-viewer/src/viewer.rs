@@ -47,9 +47,7 @@ impl Viewer {
 
     /// Toggle the "draw mesh" setting
     pub fn toggle_draw_mesh(&mut self) {
-        if self.renderer.is_line_drawing_available() {
-            self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
-        }
+        self.draw_config.draw_mesh = !self.draw_config.draw_mesh;
     }
 
     /// Handle the model being updated

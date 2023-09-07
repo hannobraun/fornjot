@@ -9,8 +9,7 @@ use super::{
 #[derive(Debug)]
 pub struct Pipelines {
     pub model: Pipeline,
-    pub mesh: Pipeline,
-    pub lines: Pipeline,
+    pub mesh: Option<Pipeline>,
 }
 
 impl Pipelines {
@@ -18,6 +17,7 @@ impl Pipelines {
         device: &wgpu::Device,
         bind_group_layout: &wgpu::BindGroupLayout,
         color_format: wgpu::TextureFormat,
+        features: wgpu::Features,
     ) -> Self {
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -28,32 +28,32 @@ impl Pipelines {
 
         let shaders = Shaders::new(device);
 
-        Self {
-            model: Pipeline::new(
-                device,
-                &pipeline_layout,
-                shaders.model(),
-                wgpu::PrimitiveTopology::TriangleList,
-                wgpu::PolygonMode::Fill,
-                color_format,
-            ),
-            mesh: Pipeline::new(
+        let model = Pipeline::new(
+            device,
+            &pipeline_layout,
+            shaders.model(),
+            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PolygonMode::Fill,
+            color_format,
+        );
+
+        let mesh = if features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+            // We need this feature, otherwise initializing the pipeline will
+            // panic.
+
+            Some(Pipeline::new(
                 device,
                 &pipeline_layout,
                 shaders.mesh(),
                 wgpu::PrimitiveTopology::TriangleList,
                 wgpu::PolygonMode::Line,
                 color_format,
-            ),
-            lines: Pipeline::new(
-                device,
-                &pipeline_layout,
-                shaders.lines(),
-                wgpu::PrimitiveTopology::LineList,
-                wgpu::PolygonMode::Line,
-                color_format,
-            ),
-        }
+            ))
+        } else {
+            None
+        };
+
+        Self { model, mesh }
     }
 }
 

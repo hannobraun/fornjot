@@ -20,7 +20,6 @@ use super::{
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
-    features: wgpu::Features,
     device: wgpu::Device,
     queue: wgpu::Queue,
 
@@ -188,14 +187,13 @@ impl Renderer {
 
         let geometries = Geometries::new(&device, &Vertices::empty());
         let pipelines =
-            Pipelines::new(&device, &bind_group_layout, color_format);
+            Pipelines::new(&device, &bind_group_layout, color_format, features);
 
         let navigation_cube_renderer =
             NavigationCubeRenderer::new(&device, &queue, &surface_config);
 
         Ok(Self {
             surface,
-            features,
             device,
             queue,
 
@@ -311,8 +309,10 @@ impl Renderer {
                 drawables.model.draw(&mut render_pass);
             }
 
-            if self.is_line_drawing_available() && config.draw_mesh {
-                drawables.mesh.draw(&mut render_pass);
+            if let Some(drawable) = drawables.mesh {
+                if config.draw_mesh {
+                    drawable.draw(&mut render_pass);
+                }
             }
         }
 
@@ -375,11 +375,6 @@ impl Renderer {
         });
 
         texture.create_view(&wgpu::TextureViewDescriptor::default())
-    }
-
-    /// Returns true if the renderer's adapter can draw lines
-    pub fn is_line_drawing_available(&self) -> bool {
-        self.features.contains(wgpu::Features::POLYGON_MODE_LINE)
     }
 }
 
