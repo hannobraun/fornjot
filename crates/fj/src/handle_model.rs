@@ -1,4 +1,4 @@
-use std::{mem, ops::Deref};
+use std::{error::Error as _, fmt, mem, ops::Deref};
 
 use fj_core::{
     algorithms::{
@@ -80,7 +80,7 @@ where
 pub type Result = std::result::Result<(), Error>;
 
 /// Error returned by [`handle_model`]
-#[derive(Debug, thiserror::Error)]
+#[derive(thiserror::Error)]
 pub enum Error {
     /// Error displaying model
     #[error("Error displaying model")]
@@ -97,4 +97,32 @@ pub enum Error {
     /// Unhandled validation errors
     #[error(transparent)]
     Validation(#[from] ValidationErrors),
+}
+
+impl fmt::Debug for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // When returning an error from Rust's `main` function, the runtime uses
+        // the error's `Debug` implementation to display it, not the `Display`
+        // one. This is unfortunate, and forces us to override `Debug` here.
+
+        // We should be able to replace this with `Report`, once it is stable:
+        // https://doc.rust-lang.org/std/error/struct.Report.html
+
+        write!(f, "{self}")?;
+
+        let mut source = self.source();
+
+        if source.is_some() {
+            write!(f, "\n\nCaused by:")?;
+        }
+
+        let mut i = 0;
+        while let Some(s) = source {
+            write!(f, "\n    {i}: {s}")?;
+            source = s.source();
+            i += 1;
+        }
+
+        Ok(())
+    }
 }
