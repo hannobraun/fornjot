@@ -61,12 +61,13 @@ impl CurveApproxCache {
                 // An approximation for this curve already exists. We need to
                 // merge the new segment into it.
 
-                // We assume that approximated curve segments never overlap. As
-                // a consequence of this, and the current structure of the
-                // cache, we can assume that the existing approximation
-                // contains exactly one segment that is congruent with the one
-                // we are meant to insert. This means we can just extract that
-                // segment and return it to the caller.
+                // We assume that approximated curve segments never overlap,
+                // unless they are completely congruent. As a consequence of
+                // this, and the current structure of the cache, we can assume
+                // that the existing approximation contains exactly one segment
+                // that is congruent with the one we are meant to insert. This
+                // means we can just extract that segment and return it to the
+                // caller.
                 //
                 // For now, this is a valid assumption, as it matches the uses
                 // of this method, due to documented limitations elsewhere in
