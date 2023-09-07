@@ -11,6 +11,7 @@ use fj_core::{
 };
 use fj_interop::model::Model;
 use fj_math::{Aabb, Point, Scalar};
+use tracing_subscriber::prelude::*;
 
 use crate::Args;
 
@@ -30,6 +31,11 @@ where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
 {
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer())
+        .with(tracing_subscriber::EnvFilter::from_default_env())
+        .init();
+
     let args = Args::parse();
 
     if args.ignore_validation {
@@ -82,6 +88,10 @@ pub type Result = std::result::Result<(), Error>;
 /// Error returned by [`handle_model`]
 #[derive(thiserror::Error)]
 pub enum Error {
+    /// Failed to set up logger
+    #[error("Failed to set up logger")]
+    Tracing(#[from] tracing::subscriber::SetGlobalDefaultError),
+
     /// Error displaying model
     #[error("Error displaying model")]
     Display(#[from] crate::window::Error),
