@@ -33,15 +33,14 @@ impl CurveApproxCache {
         let was_already_normalized = boundary.is_normalized();
         let normalized_boundary = boundary.normalize();
 
-        self.inner.get(&(curve, normalized_boundary)).cloned().map(
-            |mut approx| {
-                if !was_already_normalized {
-                    approx.reverse();
-                }
+        let mut approx =
+            self.inner.get(&(curve, normalized_boundary)).cloned()?;
 
-                approx
-            },
-        )
+        if !was_already_normalized {
+            approx.reverse();
+        }
+
+        Some(approx)
     }
 
     /// Insert an approximated segment of the curve into the cache
