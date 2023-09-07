@@ -55,30 +55,48 @@ impl CurveApproxCache {
 
         new_segment.normalize();
 
-        // We assume that approximated curve segments never overlap, so we don't
-        // have to do any merging of this segment with a possibly existing
-        // approximation for this curve.
-        //
-        // For now, this is a valid assumption, as it matches the uses of this
-        // method, due to documented limitations elsewhere in the system.
-        let approx = CurveApprox {
-            segments: vec![new_segment.clone()],
-        };
+        let existing_approx = self.inner.remove(&cache_key);
+        let (approx, segment) = match existing_approx {
+            Some(approx) => {
+                // An approximation for this curve already exists. We need to
+                // merge the new segment into it.
 
-        self.inner
-            .insert(cache_key, approx)
-            .map(|approx| {
-                let mut segments = approx.segments.into_iter();
-                let segment = segments
+                // We assume that approximated curve segments never overlap. As
+                // a consequence of this, and the current structure of the
+                // cache, we can assume that the existing approximation
+                // contains exactly one segment that is congruent with the one
+                // we are meant to insert. This means we can just extract that
+                // segment and return it to the caller.
+                //
+                // For now, this is a valid assumption, as it matches the uses
+                // of this method, due to documented limitations elsewhere in
+                // the system.
+
+                let mut segments = approx.segments.iter().cloned();
+                let existing_segment = segments
                     .next()
                     .expect("Empty approximations should not exist in cache");
                 assert!(
                     segments.next().is_none(),
                     "Cached approximations should have exactly 1 segment"
                 );
-                segment
-            })
-            .unwrap_or(new_segment)
+
+                (approx, existing_segment)
+            }
+            None => {
+                // No approximation for this curve exists. We need to create a
+                // new one.
+                let approx = CurveApprox {
+                    segments: vec![new_segment.clone()],
+                };
+
+                (approx, new_segment)
+            }
+        };
+
+        self.inner.insert(cache_key, approx);
+
+        segment
     }
 }
 
@@ -163,6 +181,16 @@ pub mod tests {
         // back.
         let inserted = cache.insert(curve.clone(), new_segment);
         assert_eq!(inserted, existing_segment);
+
+        // Also, the new segment should not have replaced the existing on in the
+        // cache.
+        let cached = cache.get(&curve, &boundary);
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![existing_segment]
+            })
+        );
     }
 
     #[test]
