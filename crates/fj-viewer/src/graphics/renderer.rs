@@ -1,7 +1,7 @@
 use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
-use tracing::debug;
+use tracing::{debug, trace};
 use wgpu::util::DeviceExt as _;
 
 use crate::{
@@ -327,10 +327,10 @@ impl Renderer {
         let command_buffer = encoder.finish();
         self.queue.submit(Some(command_buffer));
 
-        debug!("Presenting...");
+        trace!("Presenting...");
         surface_texture.present();
 
-        debug!("Finished drawing.");
+        trace!("Finished drawing.");
         Ok(())
     }
 
