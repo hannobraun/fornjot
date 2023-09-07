@@ -17,6 +17,7 @@ impl Pipelines {
         device: &wgpu::Device,
         bind_group_layout: &wgpu::BindGroupLayout,
         color_format: wgpu::TextureFormat,
+        features: wgpu::Features,
     ) -> Self {
         let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -36,14 +37,21 @@ impl Pipelines {
             color_format,
         );
 
-        let mesh = Some(Pipeline::new(
-            device,
-            &pipeline_layout,
-            shaders.mesh(),
-            wgpu::PrimitiveTopology::TriangleList,
-            wgpu::PolygonMode::Line,
-            color_format,
-        ));
+        let mesh = if features.contains(wgpu::Features::POLYGON_MODE_LINE) {
+            // We need this feature, otherwise initializing the pipeline will
+            // panic.
+
+            Some(Pipeline::new(
+                device,
+                &pipeline_layout,
+                shaders.mesh(),
+                wgpu::PrimitiveTopology::TriangleList,
+                wgpu::PolygonMode::Line,
+                color_format,
+            ))
+        } else {
+            None
+        };
 
         Self { model, mesh }
     }

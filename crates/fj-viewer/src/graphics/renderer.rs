@@ -188,7 +188,7 @@ impl Renderer {
 
         let geometries = Geometries::new(&device, &Vertices::empty());
         let pipelines =
-            Pipelines::new(&device, &bind_group_layout, color_format);
+            Pipelines::new(&device, &bind_group_layout, color_format, features);
 
         let navigation_cube_renderer =
             NavigationCubeRenderer::new(&device, &queue, &surface_config);
