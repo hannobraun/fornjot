@@ -86,11 +86,11 @@ impl CurveApproxCache {
             None => {
                 // No approximation for this curve exists. We need to create a
                 // new one.
-                let approx = CurveApprox {
+                let new_approx = CurveApprox {
                     segments: vec![new_segment.clone()],
                 };
 
-                (approx, new_segment)
+                (new_approx, new_segment)
             }
         };
 
