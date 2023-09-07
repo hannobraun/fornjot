@@ -27,24 +27,25 @@ impl Pipelines {
 
         let shaders = Shaders::new(device);
 
-        Self {
-            model: Pipeline::new(
-                device,
-                &pipeline_layout,
-                shaders.model(),
-                wgpu::PrimitiveTopology::TriangleList,
-                wgpu::PolygonMode::Fill,
-                color_format,
-            ),
-            mesh: Some(Pipeline::new(
-                device,
-                &pipeline_layout,
-                shaders.mesh(),
-                wgpu::PrimitiveTopology::TriangleList,
-                wgpu::PolygonMode::Line,
-                color_format,
-            )),
-        }
+        let model = Pipeline::new(
+            device,
+            &pipeline_layout,
+            shaders.model(),
+            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PolygonMode::Fill,
+            color_format,
+        );
+
+        let mesh = Some(Pipeline::new(
+            device,
+            &pipeline_layout,
+            shaders.mesh(),
+            wgpu::PrimitiveTopology::TriangleList,
+            wgpu::PolygonMode::Line,
+            color_format,
+        ));
+
+        Self { model, mesh }
     }
 }
 
