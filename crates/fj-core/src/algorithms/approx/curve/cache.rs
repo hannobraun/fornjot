@@ -52,11 +52,10 @@ impl CurveApproxCache {
         mut new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
         let curve = HandleWrapper::from(curve);
-        let cache_key = curve;
 
         new_segment.normalize();
 
-        let existing_approx = self.inner.remove(&cache_key);
+        let existing_approx = self.inner.remove(&curve);
         let (approx, segment) = match existing_approx {
             Some(mut existing_approx) => {
                 // An approximation for this curve already exists. We need to
@@ -99,7 +98,7 @@ impl CurveApproxCache {
             }
         };
 
-        self.inner.insert(cache_key, approx);
+        self.inner.insert(curve, approx);
 
         segment
     }
