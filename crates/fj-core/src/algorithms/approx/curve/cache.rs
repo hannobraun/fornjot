@@ -55,8 +55,7 @@ impl CurveApproxCache {
 
         new_segment.normalize();
 
-        let existing_approx = self.inner.remove(&curve);
-        let (approx, segment) = match existing_approx {
+        let (approx, segment) = match self.inner.remove(&curve) {
             Some(mut existing_approx) => {
                 // An approximation for this curve already exists. We need to
                 // merge the new segment into it.
