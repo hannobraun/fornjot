@@ -59,9 +59,7 @@ impl CurveApproxCache {
             Some(mut existing_approx) => {
                 // An approximation for this curve already exists. We need to
                 // merge the new segment into it.
-
                 let segment = existing_approx.merge(new_segment);
-
                 (existing_approx, segment)
             }
             None => {
