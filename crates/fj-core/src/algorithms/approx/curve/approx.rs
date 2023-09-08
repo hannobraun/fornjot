@@ -38,13 +38,10 @@ impl CurveApprox {
             }
         }
 
-        match existing_segment {
-            Some(segment) => segment,
-            None => {
-                self.segments.push(new_segment.clone());
-                new_segment
-            }
-        }
+        existing_segment.unwrap_or_else(|| {
+            self.segments.push(new_segment.clone());
+            new_segment
+        })
     }
 }
 
