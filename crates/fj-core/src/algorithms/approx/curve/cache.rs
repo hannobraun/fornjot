@@ -55,36 +55,9 @@ impl CurveApproxCache {
 
         new_segment.normalize();
 
-        let existing_approx = self.inner.remove(&curve);
-        let (approx, segment) = match existing_approx {
+        let (approx, segment) = match self.inner.remove(&curve) {
             Some(mut existing_approx) => {
-                // An approximation for this curve already exists. We need to
-                // merge the new segment into it.
-
-                // We assume that approximated curve segments never overlap,
-                // unless they are completely congruent. As a consequence of
-                // this, we don't have to do any merging with existing segments
-                // here.
-                //
-                // For now, this is a valid assumption, as it matches the uses
-                // of this method, due to documented limitations elsewhere in
-                // the system.
-
-                let mut existing_segment = None;
-                for segment in existing_approx.segments.iter().cloned() {
-                    if segment.boundary == new_segment.boundary {
-                        existing_segment = Some(segment);
-                    }
-                }
-
-                let segment = match existing_segment {
-                    Some(segment) => segment,
-                    None => {
-                        existing_approx.segments.push(new_segment.clone());
-                        new_segment
-                    }
-                };
-
+                let segment = existing_approx.merge(new_segment);
                 (existing_approx, segment)
             }
             None => {
