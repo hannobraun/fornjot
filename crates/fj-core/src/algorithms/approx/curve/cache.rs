@@ -53,6 +53,10 @@ impl CurveApproxCache {
     ) -> CurveApproxSegment {
         let curve = HandleWrapper::from(curve);
 
+        // Overlapping approximations need to result in the same points,
+        // regardless of what direction those overlapping approximations happen
+        // to have. To make sure this is always the case, we normalize each new
+        // approximated segment before doing *anything* with it.
         new_segment.normalize();
 
         let (approx, segment) = match self.inner.remove(&curve) {
