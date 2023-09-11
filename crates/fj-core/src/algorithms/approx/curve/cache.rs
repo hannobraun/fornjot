@@ -25,16 +25,13 @@ impl CurveApproxCache {
     ) -> Option<CurveApprox> {
         let curve = HandleWrapper::from(curve.clone());
 
-        // Approximations within the cache are all stored in normalized form. If
-        // the caller requests a non-normalized boundary, that means we need to
-        // adjust the result before we return it, so let's remember whether the
-        // normalization resulted in a reversal.
-        let was_already_normalized = boundary.is_normalized();
-
         let mut approx = self.inner.get(&curve).cloned()?;
         approx.make_subset(boundary);
 
-        if !was_already_normalized {
+        // Approximations within the cache are stored in normalized form. If the
+        // caller requests a non-normalized boundary, that means we need to
+        // adjust the result before we return it.
+        if !boundary.is_normalized() {
             approx.reverse();
         }
 
