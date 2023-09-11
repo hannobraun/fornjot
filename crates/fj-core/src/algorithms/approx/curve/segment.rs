@@ -20,6 +20,23 @@ pub struct CurveApproxSegment {
 }
 
 impl CurveApproxSegment {
+    /// Indicate whether the segment is empty
+    pub fn is_empty(&self) -> bool {
+        let is_empty = {
+            let [min, max] = self.boundary.inner;
+            min >= max
+        };
+
+        if is_empty {
+            assert!(
+                self.points.is_empty(),
+                "Empty approximation still has points"
+            );
+        }
+
+        is_empty
+    }
+
     /// Indicate whether the segment is normalized
     pub fn is_normalized(&self) -> bool {
         self.boundary.is_normalized()
