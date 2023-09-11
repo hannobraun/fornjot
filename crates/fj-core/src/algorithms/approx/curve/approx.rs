@@ -25,9 +25,11 @@ impl CurveApprox {
 
     /// Reduce the approximation to the subset defined by the provided boundary
     pub fn make_subset(&mut self, boundary: &CurveBoundary<Point<1>>) {
-        self.segments.retain(|segment| {
-            segment.boundary.normalize() == boundary.normalize()
-        });
+        for segment in &mut self.segments {
+            segment.make_subset(boundary.normalize());
+        }
+
+        self.segments.retain(|segment| !segment.is_empty());
     }
 
     /// Merge the provided segment into the approximation
