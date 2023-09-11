@@ -20,7 +20,7 @@ thiserror = "1.0.48"
 tracing = "0.1.37"
 
 [dependencies.bytemuck]
-version = "1.13.1"
+version = "1.14.0"
 features = ["derive"]
 
 [dependencies.image]
