@@ -1,3 +1,7 @@
+use fj_math::Point;
+
+use crate::geometry::CurveBoundary;
+
 use super::CurveApproxSegment;
 
 /// Partial approximation of a curve
@@ -17,6 +21,13 @@ impl CurveApprox {
         }
 
         self
+    }
+
+    /// Reduce the approximation to the subset defined by the provided boundary
+    pub fn make_subset(&mut self, boundary: &CurveBoundary<Point<1>>) {
+        self.segments.retain(|segment| {
+            segment.boundary.normalize() == boundary.normalize()
+        });
     }
 
     /// Merge the provided segment into the approximation

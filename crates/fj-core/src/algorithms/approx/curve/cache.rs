@@ -30,13 +30,9 @@ impl CurveApproxCache {
         // adjust the result before we return it, so let's remember whether the
         // normalization resulted in a reversal.
         let was_already_normalized = boundary.is_normalized();
-        let normalized_boundary = boundary.normalize();
 
         let mut approx = self.inner.get(&curve).cloned()?;
-
-        approx
-            .segments
-            .retain(|segment| segment.boundary == normalized_boundary);
+        approx.make_subset(boundary);
 
         if !was_already_normalized {
             approx.reverse();
