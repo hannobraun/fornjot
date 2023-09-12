@@ -53,7 +53,7 @@ impl Approx for &FaceSet {
                     }
                 }
 
-                all_points.insert(a.clone());
+                all_points.insert(*a);
             }
         }
 
