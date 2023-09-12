@@ -49,7 +49,7 @@ pub trait Approx: Sized {
 }
 
 /// A point from an approximation, with local and global forms
-#[derive(Debug, Clone)]
+#[derive(Clone, Copy, Debug)]
 pub struct ApproxPoint<const D: usize> {
     /// The local form of the point
     pub local_form: Point<D>,

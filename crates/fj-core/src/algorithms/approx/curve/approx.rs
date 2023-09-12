@@ -37,17 +37,11 @@ impl CurveApprox {
         &mut self,
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        // We assume that approximated curve segments never overlap, unless they
-        // are completely congruent. As a consequence of this, we don't have to
-        // do any merging with existing segments here.
-        //
-        // For now, this is a valid assumption, as it matches the uses of this
-        // method, due to documented limitations elsewhere in the system.
-
         let mut existing_segment = None;
-        for segment in self.segments.iter().cloned() {
-            if segment.boundary == new_segment.boundary {
-                existing_segment = Some(segment);
+        for segment in &mut self.segments {
+            if segment.overlaps(&new_segment) {
+                segment.merge(&new_segment);
+                existing_segment = Some(segment.clone());
             }
         }
 

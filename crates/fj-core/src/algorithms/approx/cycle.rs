@@ -53,7 +53,7 @@ impl CycleApprox {
         }
 
         if let Some(point) = points.first() {
-            points.push(point.clone());
+            points.push(*point);
         }
 
         points

@@ -130,7 +130,7 @@ impl EdgeApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        points.push(self.first.clone());
+        points.push(self.first);
         points.extend(self.rest.iter().cloned());
 
         points
