@@ -45,9 +45,9 @@ impl CurveApprox {
         // method, due to documented limitations elsewhere in the system.
 
         let mut existing_segment = None;
-        for segment in self.segments.iter().cloned() {
+        for segment in &self.segments {
             if segment.boundary == new_segment.boundary {
-                existing_segment = Some(segment);
+                existing_segment = Some(segment.clone());
             }
         }
 
