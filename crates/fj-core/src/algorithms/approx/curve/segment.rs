@@ -98,6 +98,35 @@ impl CurveApproxSegment {
         self.points
             .retain(|point| point.local_form > min && point.local_form < max);
     }
+
+    /// Merge the provided segment into this one
+    pub fn merge(&mut self, other: &Self) {
+        assert!(
+            self.overlaps(other),
+            "Shouldn't merge segments that don't overlap."
+        );
+        assert!(
+            self.is_normalized(),
+            "Can't merge into non-normalized segment."
+        );
+        assert!(other.is_normalized(), "Can't merge non-normalized segment.");
+
+        let [a_min, a_max] = self.boundary.inner;
+        let [b_min, b_max] = other.boundary.inner;
+
+        let min = cmp::min(a_min, b_min);
+        let max = cmp::max(a_max, b_max);
+
+        self.boundary.inner = [min, max];
+
+        self.points
+            .extend(other.points.iter().copied().filter(|point| {
+                // Only add points that come from `other`. Otherwise we might
+                // end up with duplicate points.
+                point.local_form < a_min || point.local_form > a_max
+            }));
+        self.points.sort();
+    }
 }
 
 impl Ord for CurveApproxSegment {
