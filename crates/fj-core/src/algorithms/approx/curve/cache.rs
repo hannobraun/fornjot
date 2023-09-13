@@ -174,6 +174,9 @@ pub mod tests {
         let mut cache = CurveApproxCache::default();
         let curve = Curve::new().insert(&mut services);
 
+        // Insert overlapping segments (touching counts as overlapping). Those
+        // need to be merged. Make sure they are not normalized, to exercise
+        // more functionality.
         cache.insert(
             curve.clone(),
             CurveApproxSegment {
