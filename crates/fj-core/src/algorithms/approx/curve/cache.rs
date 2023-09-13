@@ -168,6 +168,58 @@ pub mod tests {
     }
 
     #[test]
+    fn insert_merge_non_overlapping_segments() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // Insert segments that are not overlapping. The segments themselves
+        // don't need to be merged, but both segments still need to be merged
+        // into the same curve approximation.
+        //
+        // Let's make sure they are out of order, to make sure that is taken
+        // care of when doing the merge.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.75], [1.]]),
+                points: vec![ApproxPoint::new([0.875], [0.875, 0.875, 0.875])],
+            },
+        );
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.], [0.25]]),
+                points: vec![ApproxPoint::new([0.125], [0.125, 0.125, 0.125])],
+            },
+        );
+
+        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![
+                    CurveApproxSegment {
+                        boundary: CurveBoundary::from([[0.], [0.25]]),
+                        points: vec![ApproxPoint::new(
+                            [0.125],
+                            [0.125, 0.125, 0.125]
+                        )],
+                    },
+                    CurveApproxSegment {
+                        boundary: CurveBoundary::from([[0.75], [1.]]),
+                        points: vec![ApproxPoint::new(
+                            [0.875],
+                            [0.875, 0.875, 0.875]
+                        )],
+                    }
+                ]
+            })
+        );
+    }
+
+    #[test]
     fn insert_merge_overlapping_segments() {
         let mut services = Services::new();
 

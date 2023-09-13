@@ -47,6 +47,7 @@ impl CurveApprox {
 
         existing_segment.unwrap_or_else(|| {
             self.segments.push(new_segment.clone());
+            self.segments.sort();
             new_segment
         })
     }
