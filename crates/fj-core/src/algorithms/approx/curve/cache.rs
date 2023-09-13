@@ -52,25 +52,7 @@ impl CurveApproxCache {
         // approximated segment before doing *anything* with it.
         new_segment.normalize();
 
-        let (approx, segment) = match self.inner.remove(&curve) {
-            Some(mut existing_approx) => {
-                let segment = existing_approx.merge(new_segment);
-                (existing_approx, segment)
-            }
-            None => {
-                // No approximation for this curve exists. We need to create a
-                // new one.
-                let new_approx = CurveApprox {
-                    segments: vec![new_segment.clone()],
-                };
-
-                (new_approx, new_segment)
-            }
-        };
-
-        self.inner.insert(curve, approx);
-
-        segment
+        self.inner.entry(curve).or_default().merge(new_segment)
     }
 }
 
@@ -168,6 +150,123 @@ pub mod tests {
     }
 
     #[test]
+    fn insert_merge_non_overlapping_segments() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // Insert segments that are not overlapping. The segments themselves
+        // don't need to be merged, but both segments still need to be merged
+        // into the same curve approximation.
+        //
+        // Let's make sure they are out of order, to make sure that is taken
+        // care of when doing the merge.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.75], [1.]]),
+                points: vec![ApproxPoint::new([0.875], [0.875, 0.875, 0.875])],
+            },
+        );
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.], [0.25]]),
+                points: vec![ApproxPoint::new([0.125], [0.125, 0.125, 0.125])],
+            },
+        );
+
+        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![
+                    CurveApproxSegment {
+                        boundary: CurveBoundary::from([[0.], [0.25]]),
+                        points: vec![ApproxPoint::new(
+                            [0.125],
+                            [0.125, 0.125, 0.125]
+                        )],
+                    },
+                    CurveApproxSegment {
+                        boundary: CurveBoundary::from([[0.75], [1.]]),
+                        points: vec![ApproxPoint::new(
+                            [0.875],
+                            [0.875, 0.875, 0.875]
+                        )],
+                    }
+                ]
+            })
+        );
+    }
+
+    #[test]
+    fn insert_merge_overlapping_segments() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        // Insert two non-overlapping segments to prepare for the actual test.
+        // Make sure they are not normalized and out of order, to exercise that
+        // functionality.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[1.5], [1.0]]),
+                points: vec![
+                    ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
+                    ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
+                ],
+            },
+        );
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.5], [0.]]),
+                points: vec![
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                ],
+            },
+        );
+
+        // Now insert a third segment that overlaps both of them (touching
+        // counts as overlapping). They should all get merged into a single
+        // segment.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[1.0], [0.5]]),
+                points: vec![
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                ],
+            },
+        );
+
+        let boundary = CurveBoundary::from([[0.], [1.5]]);
+        let cached = cache.get(&curve, &boundary);
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![CurveApproxSegment {
+                    boundary,
+                    points: vec![
+                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                        ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
+                        ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
+                    ],
+                }]
+            })
+        );
+    }
+
+    #[test]
     fn get_exact_match() {
         let mut services = Services::new();
 
@@ -255,7 +354,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_that_overlaps_start() {
+    fn get_partial_match_that_overlaps_start() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
@@ -291,7 +390,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_that_overlaps_end() {
+    fn get_partial_match_that_overlaps_end() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
@@ -327,7 +426,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_in_the_middle() {
+    fn get_partial_match_in_the_middle() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
@@ -356,88 +455,6 @@ pub mod tests {
                     points: vec![
                         ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                         ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                    ],
-                }]
-            })
-        );
-    }
-
-    #[test]
-    fn merge_insertions() {
-        let mut services = Services::new();
-
-        let mut cache = CurveApproxCache::default();
-        let curve = Curve::new().insert(&mut services);
-
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.5], [1.]]),
-                points: vec![ApproxPoint::new([0.75], [0.75, 0.75, 0.75])],
-            },
-        );
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [0.5]]),
-                points: vec![ApproxPoint::new([0.25], [0.25, 0.25, 0.25])],
-            },
-        );
-
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
-        assert_eq!(
-            cached,
-            Some(CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [1.]]),
-                    points: vec![
-                        ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
-                        ApproxPoint::new([0.75], [0.75, 0.75, 0.75])
-                    ],
-                }]
-            })
-        );
-    }
-
-    #[test]
-    fn merge_insertions_that_are_not_normalized() {
-        let mut services = Services::new();
-
-        let mut cache = CurveApproxCache::default();
-        let curve = Curve::new().insert(&mut services);
-
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[1.], [0.5]]),
-                points: vec![
-                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                ],
-            },
-        );
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.5], [0.]]),
-                points: vec![
-                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                ],
-            },
-        );
-
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
-        assert_eq!(
-            cached,
-            Some(CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [1.]]),
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                     ],
                 }]
             })

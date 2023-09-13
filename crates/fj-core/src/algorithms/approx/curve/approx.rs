@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use fj_math::Point;
 
 use crate::geometry::CurveBoundary;
@@ -5,7 +7,7 @@ use crate::geometry::CurveBoundary;
 use super::CurveApproxSegment;
 
 /// Partial approximation of a curve
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
     /// The approximated segments that are part of this approximation
     pub segments: Vec<CurveApproxSegment>,
@@ -37,18 +39,31 @@ impl CurveApprox {
         &mut self,
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        let mut existing_segment = None;
-        for segment in &mut self.segments {
+        let mut overlapping_segments = VecDeque::new();
+
+        let mut i = 0;
+        loop {
+            let Some(segment) = self.segments.get(i) else {
+                break;
+            };
+
             if segment.overlaps(&new_segment) {
-                segment.merge(&new_segment);
-                existing_segment = Some(segment.clone());
+                let segment = self.segments.swap_remove(i);
+                overlapping_segments.push_back(segment);
+                continue;
             }
+
+            i += 1;
         }
 
-        existing_segment.unwrap_or_else(|| {
-            self.segments.push(new_segment.clone());
-            new_segment
-        })
+        let mut merged_segment = new_segment;
+        for segment in overlapping_segments {
+            merged_segment.merge(&segment);
+        }
+
+        self.segments.push(merged_segment.clone());
+        self.segments.sort();
+        merged_segment
     }
 }
 
