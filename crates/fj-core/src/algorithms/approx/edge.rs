@@ -66,7 +66,7 @@ impl Approx for (&Edge, &Surface) {
             // the exact same 3D approximation, instead of generating a slightly
             // different one from the different 2D `Edge`.
             //
-            // So what if we had two coincident `fEdge`s that aren't congruent?
+            // So what if we had two coincident `Edge`s that aren't congruent?
             // Meaning, they overlap partially, but not fully. Then obviously,
             // they wouldn't refer to the same combination of curve and
             // boundary. And since those are the key in our cache, those `Edge`s
