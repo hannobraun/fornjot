@@ -37,15 +37,15 @@ impl CurveApprox {
         &mut self,
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        let mut existing_segment = None;
+        let mut merged_segment = None;
         for segment in &mut self.segments {
             if segment.overlaps(&new_segment) {
                 segment.merge(&new_segment);
-                existing_segment = Some(segment.clone());
+                merged_segment = Some(segment.clone());
             }
         }
 
-        existing_segment.unwrap_or_else(|| {
+        merged_segment.unwrap_or_else(|| {
             self.segments.push(new_segment.clone());
             self.segments.sort();
             new_segment
