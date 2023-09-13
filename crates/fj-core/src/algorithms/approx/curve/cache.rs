@@ -255,7 +255,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_that_overlaps_start() {
+    fn get_partial_match_that_overlaps_start() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
@@ -291,7 +291,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_that_overlaps_end() {
+    fn get_partial_match_that_overlaps_end() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
@@ -327,7 +327,7 @@ pub mod tests {
     }
 
     #[test]
-    fn partial_match_in_the_middle() {
+    fn get_partial_match_in_the_middle() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
