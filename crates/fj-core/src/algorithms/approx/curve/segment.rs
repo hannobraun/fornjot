@@ -100,6 +100,10 @@ impl CurveApproxSegment {
     }
 
     /// Merge the provided segment into this one
+    ///
+    /// It there is a true overlap between both segments (as opposed to them
+    /// just touching), then the overlapping part is taken from the other
+    /// segment, meaning parts of this one get overwritten.
     pub fn merge(&mut self, other: &Self) {
         assert!(
             self.overlaps(other),
