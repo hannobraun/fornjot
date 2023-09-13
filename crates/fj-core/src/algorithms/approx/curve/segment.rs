@@ -119,12 +119,12 @@ impl CurveApproxSegment {
 
         self.boundary.inner = [min, max];
 
-        self.points
-            .extend(other.points.iter().copied().filter(|point| {
-                // Only add points that come from `other`. Otherwise we might
-                // end up with duplicate points.
-                point.local_form < a_min || point.local_form > a_max
-            }));
+        self.points.retain(|point| {
+            // Only retain points that don't overlap with the other segment, or
+            // we might end up with duplicates.
+            point.local_form < b_min || point.local_form > b_max
+        });
+        self.points.extend(&other.points);
         self.points.sort();
     }
 }

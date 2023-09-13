@@ -208,16 +208,16 @@ pub mod tests {
         let mut cache = CurveApproxCache::default();
         let curve = Curve::new().insert(&mut services);
 
-        // Insert overlapping segments (touching counts as overlapping). Those
-        // need to be merged. Make sure they are not normalized, to exercise
-        // more functionality.
+        // Insert two non-overlapping segments to prepare for the actual test.
+        // Make sure they are not normalized and out of order, to exercise that
+        // functionality.
         cache.insert(
             curve.clone(),
             CurveApproxSegment {
-                boundary: CurveBoundary::from([[1.], [0.5]]),
+                boundary: CurveBoundary::from([[1.5], [1.0]]),
                 points: vec![
-                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                    ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
+                    ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
                 ],
             },
         );
@@ -232,17 +232,34 @@ pub mod tests {
             },
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        // Now insert a third segment that overlaps both of them (touching
+        // counts as overlapping). They should all get merged into a single
+        // segment.
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[1.0], [0.5]]),
+                points: vec![
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                ],
+            },
+        );
+
+        let boundary = CurveBoundary::from([[0.], [1.5]]);
+        let cached = cache.get(&curve, &boundary);
         assert_eq!(
             cached,
             Some(CurveApprox {
                 segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [1.]]),
+                    boundary,
                     points: vec![
                         ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
                         ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                         ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                         ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                        ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
+                        ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
                     ],
                 }]
             })
