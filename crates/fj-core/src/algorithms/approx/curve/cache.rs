@@ -168,6 +168,88 @@ pub mod tests {
     }
 
     #[test]
+    fn merge_insertions() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.5], [1.]]),
+                points: vec![ApproxPoint::new([0.75], [0.75, 0.75, 0.75])],
+            },
+        );
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.], [0.5]]),
+                points: vec![ApproxPoint::new([0.25], [0.25, 0.25, 0.25])],
+            },
+        );
+
+        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![CurveApproxSegment {
+                    boundary: CurveBoundary::from([[0.], [1.]]),
+                    points: vec![
+                        ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
+                        ApproxPoint::new([0.75], [0.75, 0.75, 0.75])
+                    ],
+                }]
+            })
+        );
+    }
+
+    #[test]
+    fn merge_insertions_that_are_not_normalized() {
+        let mut services = Services::new();
+
+        let mut cache = CurveApproxCache::default();
+        let curve = Curve::new().insert(&mut services);
+
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[1.], [0.5]]),
+                points: vec![
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                ],
+            },
+        );
+        cache.insert(
+            curve.clone(),
+            CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.5], [0.]]),
+                points: vec![
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                ],
+            },
+        );
+
+        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        assert_eq!(
+            cached,
+            Some(CurveApprox {
+                segments: vec![CurveApproxSegment {
+                    boundary: CurveBoundary::from([[0.], [1.]]),
+                    points: vec![
+                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ],
+                }]
+            })
+        );
+    }
+
+    #[test]
     fn get_exact_match() {
         let mut services = Services::new();
 
@@ -356,88 +438,6 @@ pub mod tests {
                     points: vec![
                         ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                         ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                    ],
-                }]
-            })
-        );
-    }
-
-    #[test]
-    fn merge_insertions() {
-        let mut services = Services::new();
-
-        let mut cache = CurveApproxCache::default();
-        let curve = Curve::new().insert(&mut services);
-
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.5], [1.]]),
-                points: vec![ApproxPoint::new([0.75], [0.75, 0.75, 0.75])],
-            },
-        );
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [0.5]]),
-                points: vec![ApproxPoint::new([0.25], [0.25, 0.25, 0.25])],
-            },
-        );
-
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
-        assert_eq!(
-            cached,
-            Some(CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [1.]]),
-                    points: vec![
-                        ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
-                        ApproxPoint::new([0.75], [0.75, 0.75, 0.75])
-                    ],
-                }]
-            })
-        );
-    }
-
-    #[test]
-    fn merge_insertions_that_are_not_normalized() {
-        let mut services = Services::new();
-
-        let mut cache = CurveApproxCache::default();
-        let curve = Curve::new().insert(&mut services);
-
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[1.], [0.5]]),
-                points: vec![
-                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                ],
-            },
-        );
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.5], [0.]]),
-                points: vec![
-                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                ],
-            },
-        );
-
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
-        assert_eq!(
-            cached,
-            Some(CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [1.]]),
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                     ],
                 }]
             })
