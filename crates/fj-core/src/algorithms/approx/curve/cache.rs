@@ -52,25 +52,7 @@ impl CurveApproxCache {
         // approximated segment before doing *anything* with it.
         new_segment.normalize();
 
-        let (approx, segment) = match self.inner.remove(&curve) {
-            Some(mut existing_approx) => {
-                let segment = existing_approx.merge(new_segment);
-                (existing_approx, segment)
-            }
-            None => {
-                // No approximation for this curve exists. We need to create a
-                // new one.
-                let new_approx = CurveApprox {
-                    segments: vec![new_segment.clone()],
-                };
-
-                (new_approx, new_segment)
-            }
-        };
-
-        self.inner.insert(curve, approx);
-
-        segment
+        self.inner.entry(curve).or_default().merge(new_segment)
     }
 }
 
