@@ -168,7 +168,7 @@ pub mod tests {
     }
 
     #[test]
-    fn merge_insertions_that_are_not_normalized() {
+    fn insert_merge_overlapping_segments() {
         let mut services = Services::new();
 
         let mut cache = CurveApproxCache::default();
