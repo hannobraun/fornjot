@@ -87,7 +87,7 @@ impl Approx for (&Edge, &Surface) {
             let cached_segment =
                 cache.get_curve_approx(edge.curve().clone(), edge.boundary());
             let approx = match cached_segment {
-                Some(approx) => approx,
+                Some(segment) => segment,
                 None => {
                     let approx = approx_curve(
                         &edge.path(),
