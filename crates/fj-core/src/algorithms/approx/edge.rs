@@ -93,7 +93,7 @@ impl Approx for (&Edge, &Surface) {
                 let segment = segments.next();
                 assert!(
                     segments.next().is_none(),
-                    "Cached approximations should have at most 1 segment"
+                    "Cached approximations should have 1 segment max"
                 );
 
                 segment
