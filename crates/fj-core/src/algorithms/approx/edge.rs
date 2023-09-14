@@ -16,7 +16,7 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApproxCache, CurveApproxSegment},
+    curve::{CurveApprox, CurveApproxCache, CurveApproxSegment},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -49,57 +49,41 @@ impl Approx for (&Edge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            // We cache approximated `Edge`s using the `Curve`s they reference
-            // and their boundary on that curve as the key. That bakes in the
-            // undesirable assumption that all coincident `Edge`s are also
-            // congruent. Let me explain.
-            //
-            // When two `Edge`s are coincident, we need to make sure their
-            // approximations are identical where they overlap. Otherwise, we'll
-            // get an invalid triangle mesh in the end. Hence, we cache
-            // approximations.
-            //
-            // Caching works like this: We check whether there already is a
-            // cache entry for the curve/boundary. If there isn't, we create the
-            // 3D approximation from the 2D `Edge`. Next time we check for a
-            // coincident `Edge`, we'll find the cache and use that, getting
-            // the exact same 3D approximation, instead of generating a slightly
-            // different one from the different 2D `Edge`.
-            //
-            // So what if we had two coincident `fEdge`s that aren't congruent?
-            // Meaning, they overlap partially, but not fully. Then obviously,
-            // they wouldn't refer to the same combination of curve and
-            // boundary. And since those are the key in our cache, those `Edge`s
-            // would not share an approximation where they overlap, leading to
-            // exactly the problems that the cache is supposed to prevent.
-            //
-            // As of this writing, it is a documented (but not validated)
-            // limitation, that coincident `Edge`s must always be congruent.
-            // However, we're going to need to lift this limitation going
-            // forward, as it is, well, too limiting. This means things here
-            // will need to change.
-            //
-            // What we need here, is more intelligent caching, that can reuse
-            // already cached curve approximations where the boundaries overlap,
-            // even if those boundaries aren't identical. The cache needs to be
-            // able to deliver partial results for a given boundary, then
-            // generating (and caching) the rest of it on the fly.
-            let cached_approx =
-                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
-            let approx = match cached_approx {
-                Some(approx) => approx,
-                None => {
-                    let approx = approx_curve(
-                        &edge.path(),
-                        surface,
-                        edge.boundary(),
-                        tolerance,
-                    );
-                    cache.insert_curve_approx(edge.curve().clone(), approx)
+            let segment = {
+                let mut cached = cache
+                    .get_curve_approx(edge.curve().clone(), edge.boundary());
+
+                match cached.segments.pop() {
+                    Some(segment) if cached.segments.is_empty() => {
+                        // If the cached approximation has a single segment,
+                        // that means everything we need is available, and we
+                        // can use the cached approximation as-is.
+                        segment
+                    }
+                    _ => {
+                        // If we make it here, there are holes in the
+                        // approximation, in some way or another. We could be
+                        // really surgical and fill in exactly those holes, and
+                        // in the future we might want to, for performance
+                        // reasons.
+                        //
+                        // For now, let's just approximate *all* we need and
+                        // insert that into the cache. The cache takes care of
+                        // merging that with whatever is already there.
+                        cache.insert_curve_approx(
+                            edge.curve().clone(),
+                            approx_curve(
+                                &edge.path(),
+                                surface,
+                                edge.boundary(),
+                                tolerance,
+                            ),
+                        )
+                    }
                 }
             };
 
-            approx
+            segment
                 .points
                 .into_iter()
                 .map(|point| {
@@ -244,18 +228,8 @@ impl EdgeApproxCache {
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> Option<CurveApproxSegment> {
-        self.curve_approx.get(&handle, &boundary).map(|approx| {
-            let mut segments = approx.segments.into_iter();
-            let segment = segments
-                .next()
-                .expect("Empty approximations should not exist in cache");
-            assert!(
-                segments.next().is_none(),
-                "Cached approximations should have exactly 1 segment"
-            );
-            segment
-        })
+    ) -> CurveApprox {
+        self.curve_approx.get(&handle, &boundary)
     }
 
     fn insert_curve_approx(

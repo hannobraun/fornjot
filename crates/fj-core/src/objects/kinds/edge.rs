@@ -10,25 +10,8 @@ use crate::{
 ///
 /// When multiple faces, which are bound by edges, are combined to form a solid,
 /// the `Edge`s that bound the face on the surface are then coincident with the
-/// `Edge`s of other faces, where those faces touch. Those coincident `Edge`s
-/// are different representations of the same edge, and this fact must be
-/// represented in the following way:
-///
-/// - The coincident `Edge`s must refer to the same `Curve`.
-/// - The coincident `Edge`s must have the same boundary.
-///
-/// There is another, implicit requirement hidden here:
-///
-/// `Edge`s that are coincident, i.e. located in the same space, must always be
-/// congruent. This means they must coincide *exactly*. The overlap must be
-/// complete. None of the coincident `Edge`s must overlap with just a section of
-/// another.
-///
-/// # Implementation Note
-///
-/// The limitation that coincident `Edge`s must be congruent is currently
-/// being lifted:
-/// <https://github.com/hannobraun/fornjot/issues/1937>
+/// `Edge`s of other faces, where those faces touch. Suche coincident `Edge`s
+///  must always refer to the same `Curve`.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
     path: SurfacePath,
