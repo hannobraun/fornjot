@@ -89,14 +89,10 @@ impl Approx for (&Edge, &Surface) {
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
                 match cached.segments.pop() {
-                    Some(segment) => {
-                        assert!(
-                            cached.segments.is_empty(),
-                            "Cached approximations should have 1 segment max"
-                        );
-
-                        segment
-                    }
+                    Some(segment) if cached.segments.is_empty() => segment,
+                    Some(_) => panic!(
+                        "Cached approximations should have 1 segment max"
+                    ),
                     None => cache.insert_curve_approx(
                         edge.curve().clone(),
                         approx_curve(
