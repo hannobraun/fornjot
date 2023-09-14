@@ -16,7 +16,7 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApproxCache, CurveApproxSegment},
+    curve::{CurveApprox, CurveApproxCache, CurveApproxSegment},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -84,8 +84,22 @@ impl Approx for (&Edge, &Surface) {
             // even if those boundaries aren't identical. The cache needs to be
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
-            let cached_segment =
-                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
+            let cached_segment = 'segment: {
+                let approx = cache
+                    .get_curve_approx(edge.curve().clone(), edge.boundary());
+
+                let mut segments = approx.segments.into_iter();
+
+                let Some(segment) = segments.next() else {
+                    break 'segment None;
+                };
+                assert!(
+                    segments.next().is_none(),
+                    "Cached approximations should have at most 1 segment"
+                );
+
+                Some(segment)
+            };
             let approx = match cached_segment {
                 Some(segment) => segment,
                 None => {
@@ -244,18 +258,8 @@ impl EdgeApproxCache {
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> Option<CurveApproxSegment> {
-        let approx = self.curve_approx.get(&handle, &boundary);
-
-        let mut segments = approx.segments.into_iter();
-
-        let segment = segments.next()?;
-        assert!(
-            segments.next().is_none(),
-            "Cached approximations should have at most 1 segment"
-        );
-
-        Some(segment)
+    ) -> CurveApprox {
+        self.curve_approx.get(&handle, &boundary)
     }
 
     fn insert_curve_approx(
