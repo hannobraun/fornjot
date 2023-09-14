@@ -85,10 +85,10 @@ impl Approx for (&Edge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let cached_segment = 'segment: {
-                let approx = cache
+                let cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                let mut segments = approx.segments.into_iter();
+                let mut segments = cached.segments.into_iter();
 
                 let Some(segment) = segments.next() else {
                     break 'segment None;
