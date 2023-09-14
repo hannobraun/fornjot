@@ -89,7 +89,12 @@ impl Approx for (&Edge, &Surface) {
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
                 match cached.segments.pop() {
-                    Some(segment) if cached.segments.is_empty() => segment,
+                    Some(segment) if cached.segments.is_empty() => {
+                        // If the cached approximation has a single segment,
+                        // that means everything we need is available, and we
+                        // can use the cached approximation as-is.
+                        segment
+                    }
                     Some(_) => panic!(
                         "Cached approximations should have 1 segment max"
                     ),
