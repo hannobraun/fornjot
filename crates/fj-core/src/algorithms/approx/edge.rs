@@ -84,7 +84,7 @@ impl Approx for (&Edge, &Surface) {
             // even if those boundaries aren't identical. The cache needs to be
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
-            let cached_segment = {
+            let segment = {
                 let cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
@@ -97,22 +97,18 @@ impl Approx for (&Edge, &Surface) {
                             "Cached approximations should have 1 segment max"
                         );
 
-                        Some(segment)
+                        segment
                     }
-                    None => None,
-                }
-            };
-            let segment = match cached_segment {
-                Some(segment) => segment,
-                None => cache.insert_curve_approx(
-                    edge.curve().clone(),
-                    approx_curve(
-                        &edge.path(),
-                        surface,
-                        edge.boundary(),
-                        tolerance,
+                    None => cache.insert_curve_approx(
+                        edge.curve().clone(),
+                        approx_curve(
+                            &edge.path(),
+                            surface,
+                            edge.boundary(),
+                            tolerance,
+                        ),
                     ),
-                ),
+                }
             };
 
             segment
