@@ -252,7 +252,7 @@ impl EdgeApproxCache {
         let segment = segments.next()?;
         assert!(
             segments.next().is_none(),
-            "Cached approximations should have exactly 1 segment"
+            "Cached approximations should have at most 1 segment"
         );
 
         Some(segment)
