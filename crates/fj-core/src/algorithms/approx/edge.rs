@@ -90,13 +90,17 @@ impl Approx for (&Edge, &Surface) {
 
                 let mut segments = cached.segments.into_iter();
 
-                let segment = segments.next();
-                assert!(
-                    segments.next().is_none(),
-                    "Cached approximations should have 1 segment max"
-                );
+                match segments.next() {
+                    Some(segment) => {
+                        assert!(
+                            segments.next().is_none(),
+                            "Cached approximations should have 1 segment max"
+                        );
 
-                segment
+                        Some(segment)
+                    }
+                    None => None,
+                }
             };
             let segment = match cached_segment {
                 Some(segment) => segment,
