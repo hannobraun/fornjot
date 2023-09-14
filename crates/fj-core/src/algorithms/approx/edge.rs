@@ -85,15 +85,13 @@ impl Approx for (&Edge, &Surface) {
             // able to deliver partial results for a given boundary, then
             // generating (and caching) the rest of it on the fly.
             let segment = {
-                let cached = cache
+                let mut cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                let mut segments = cached.segments.into_iter();
-
-                match segments.next() {
+                match cached.segments.pop() {
                     Some(segment) => {
                         assert!(
-                            segments.next().is_none(),
+                            cached.segments.is_empty(),
                             "Cached approximations should have 1 segment max"
                         );
 
