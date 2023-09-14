@@ -245,17 +245,17 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        self.curve_approx.get(&handle, &boundary).map(|approx| {
-            let mut segments = approx.segments.into_iter();
-            let segment = segments
-                .next()
-                .expect("Empty approximations should not exist in cache");
-            assert!(
-                segments.next().is_none(),
-                "Cached approximations should have exactly 1 segment"
-            );
-            segment
-        })
+        let approx = self.curve_approx.get(&handle, &boundary);
+
+        let mut segments = approx.segments.into_iter();
+
+        let segment = segments.next()?;
+        assert!(
+            segments.next().is_none(),
+            "Cached approximations should have exactly 1 segment"
+        );
+
+        Some(segment)
     }
 
     fn insert_curve_approx(

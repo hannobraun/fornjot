@@ -22,10 +22,10 @@ impl CurveApproxCache {
         &self,
         curve: &Handle<Curve>,
         boundary: &CurveBoundary<Point<1>>,
-    ) -> Option<CurveApprox> {
+    ) -> CurveApprox {
         let curve = HandleWrapper::from(curve.clone());
 
-        let mut approx = self.inner.get(&curve).cloned()?;
+        let mut approx = self.inner.get(&curve).cloned().unwrap_or_default();
         approx.make_subset(boundary);
 
         // Approximations within the cache are stored in normalized form. If the
@@ -35,7 +35,7 @@ impl CurveApproxCache {
             approx.reverse();
         }
 
-        Some(approx)
+        approx
     }
 
     /// Insert an approximated segment of the curve into the cache
@@ -143,9 +143,9 @@ pub mod tests {
         let cached = cache.get(&curve, &boundary);
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![existing_segment]
-            })
+            }
         );
     }
 
@@ -180,7 +180,7 @@ pub mod tests {
         let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![
                     CurveApproxSegment {
                         boundary: CurveBoundary::from([[0.], [0.25]]),
@@ -197,7 +197,7 @@ pub mod tests {
                         )],
                     }
                 ]
-            })
+            }
         );
     }
 
@@ -250,7 +250,7 @@ pub mod tests {
         let cached = cache.get(&curve, &boundary);
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![CurveApproxSegment {
                     boundary,
                     points: vec![
@@ -262,7 +262,7 @@ pub mod tests {
                         ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
                     ],
                 }]
-            })
+            }
         );
     }
 
@@ -301,9 +301,9 @@ pub mod tests {
         let cached = cache.get(&curve, &boundary);
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![segment]
-            })
+            }
         );
     }
 
@@ -343,13 +343,13 @@ pub mod tests {
         let cached = cache.get(&curve, &boundary.reverse());
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![{
                     let mut segment = segment;
                     segment.reverse();
                     segment
                 }]
-            })
+            }
         );
     }
 
@@ -377,7 +377,7 @@ pub mod tests {
         let cached = cache.get(&curve, &CurveBoundary::from([[-0.5], [0.5]]));
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![CurveApproxSegment {
                     boundary: CurveBoundary::from([[0.], [0.5]]),
                     points: vec![
@@ -385,7 +385,7 @@ pub mod tests {
                         ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                     ],
                 }]
-            })
+            }
         );
     }
 
@@ -413,7 +413,7 @@ pub mod tests {
         let cached = cache.get(&curve, &CurveBoundary::from([[0.5], [1.5]]));
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![CurveApproxSegment {
                     boundary: CurveBoundary::from([[0.5], [1.0]]),
                     points: vec![
@@ -421,7 +421,7 @@ pub mod tests {
                         ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                     ],
                 }]
-            })
+            }
         );
     }
 
@@ -449,7 +449,7 @@ pub mod tests {
         let cached = cache.get(&curve, &CurveBoundary::from([[0.25], [0.75]]));
         assert_eq!(
             cached,
-            Some(CurveApprox {
+            CurveApprox {
                 segments: vec![CurveApproxSegment {
                     boundary: CurveBoundary::from([[0.25], [0.75]]),
                     points: vec![
@@ -457,7 +457,7 @@ pub mod tests {
                         ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ],
                 }]
-            })
+            }
         );
     }
 }
