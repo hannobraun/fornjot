@@ -100,7 +100,7 @@ impl Approx for (&Edge, &Surface) {
 
                 Some(segment)
             };
-            let approx = match cached_segment {
+            let segment = match cached_segment {
                 Some(segment) => segment,
                 None => cache.insert_curve_approx(
                     edge.curve().clone(),
@@ -113,7 +113,7 @@ impl Approx for (&Edge, &Surface) {
                 ),
             };
 
-            approx
+            segment
                 .points
                 .into_iter()
                 .map(|point| {
