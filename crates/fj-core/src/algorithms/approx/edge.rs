@@ -102,15 +102,15 @@ impl Approx for (&Edge, &Surface) {
             };
             let approx = match cached_segment {
                 Some(segment) => segment,
-                None => {
-                    let approx = approx_curve(
+                None => cache.insert_curve_approx(
+                    edge.curve().clone(),
+                    approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
                         tolerance,
-                    );
-                    cache.insert_curve_approx(edge.curve().clone(), approx)
-                }
+                    ),
+                ),
             };
 
             approx
