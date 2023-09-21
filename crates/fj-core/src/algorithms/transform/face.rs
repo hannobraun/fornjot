@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::{Face, FaceSet, Region},
+    objects::{Face, Region},
     operations::Insert,
     services::Services,
 };
@@ -34,22 +34,5 @@ impl TransformObject for Face {
         let region = Region::new(exterior, interiors, color).insert(services);
 
         Self::new(surface, region)
-    }
-}
-
-impl TransformObject for FaceSet {
-    fn transform_with_cache(
-        self,
-        transform: &Transform,
-        services: &mut Services,
-        cache: &mut TransformCache,
-    ) -> Self {
-        let mut faces = Self::new();
-        faces.extend(
-            self.into_iter().map(|face| {
-                face.transform_with_cache(transform, services, cache)
-            }),
-        );
-        faces
     }
 }
