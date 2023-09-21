@@ -51,7 +51,7 @@ pub use self::{
         curve::Curve,
         cycle::Cycle,
         edge::Edge,
-        face::{Face, FaceSet, Handedness},
+        face::{Face, Handedness},
         region::Region,
         shell::Shell,
         sketch::Sketch,
