@@ -39,6 +39,7 @@
 //!
 //! [`Handle`]: crate::storage::Handle
 
+mod handles;
 mod kinds;
 mod object;
 mod set;
