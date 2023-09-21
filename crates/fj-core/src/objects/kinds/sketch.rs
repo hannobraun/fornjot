@@ -1,7 +1,5 @@
-use std::collections::BTreeSet;
-
 use crate::{
-    objects::{Face, FaceSet, Region, Surface},
+    objects::{handles::HandleSet, Face, FaceSet, Region, Surface},
     operations::Insert,
     services::Services,
     storage::Handle,
@@ -10,7 +8,7 @@ use crate::{
 /// A 2-dimensional shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    regions: BTreeSet<Handle<Region>>,
+    regions: HandleSet<Region>,
 }
 
 impl Sketch {

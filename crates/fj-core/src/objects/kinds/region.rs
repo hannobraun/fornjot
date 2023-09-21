@@ -1,7 +1,10 @@
 //! A single, continues 2d region
 use fj_interop::mesh::Color;
 
-use crate::{objects::Cycle, storage::Handle};
+use crate::{
+    objects::{handles::HandleSet, Cycle},
+    storage::Handle,
+};
 
 /// A single, continuous 2d region, may contain holes
 ///
@@ -14,7 +17,7 @@ use crate::{objects::Cycle, storage::Handle};
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Region {
     exterior: Handle<Cycle>,
-    interiors: Vec<Handle<Cycle>>,
+    interiors: HandleSet<Cycle>,
     color: Option<Color>,
 }
 
