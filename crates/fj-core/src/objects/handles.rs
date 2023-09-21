@@ -37,10 +37,11 @@ impl<T> HandleSet<T> {
         self.inner.get(index)
     }
 
-    pub fn iter(
-        &self,
-    ) -> impl Iterator<Item = &Handle<T>> + Clone + ExactSizeIterator {
-        self.inner.iter()
+    pub fn iter(&self) -> HandleIter<T> {
+        HandleIter {
+            handles: &self.inner,
+            next_index: 0,
+        }
     }
 }
 
@@ -65,5 +66,50 @@ where
         }
 
         Self { inner }
+    }
+}
+
+/// An iterator over handles to objects
+///
+/// This struct is returned by the respective methods of all objects that
+/// reference multiple objects of the same type.
+pub struct HandleIter<'r, T> {
+    handles: &'r Vec<Handle<T>>,
+    next_index: usize,
+}
+
+impl<'r, T> Iterator for HandleIter<'r, T> {
+    // You might wonder why we're returning references to handles here, when
+    // `Handle` already is kind of reference, and easily cloned.
+    //
+    // Most of the time that doesn't make a difference, but there are use cases
+    // where dealing with owned `Handle`s is inconvenient, for example when
+    // using iterator adapters. You can't return a reference to the argument of
+    // an adapter's closure, if you own that argument. You can, if you just
+    // reference the argument.
+    type Item = &'r Handle<T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let handle = self.handles.get(self.next_index);
+        self.next_index += 1;
+        handle
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let size = self.handles.len();
+        (size, Some(size))
+    }
+}
+
+impl<T> ExactSizeIterator for HandleIter<'_, T> {}
+
+// Deriving won't work, as that only derives `Clone` where `T: Clone`. But
+// `HandleIter` can be `Clone`d unconditionally.
+impl<T> Clone for HandleIter<'_, T> {
+    fn clone(&self) -> Self {
+        Self {
+            handles: self.handles,
+            next_index: self.next_index,
+        }
     }
 }
