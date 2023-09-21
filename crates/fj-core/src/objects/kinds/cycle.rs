@@ -24,13 +24,6 @@ impl Cycle {
         self.edges.iter()
     }
 
-    /// Access neighboring edges in pairs
-    pub fn edge_pairs(
-        &self,
-    ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
-        self.edges.iter().pairs()
-    }
-
     /// Access the edge with the provided index
     pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
         self.edges.nth(index)
@@ -100,7 +93,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for (a, b) in self.edge_pairs() {
+        for (a, b) in self.edges().pairs() {
             let [a, b] = [a, b].map(|edge| edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);

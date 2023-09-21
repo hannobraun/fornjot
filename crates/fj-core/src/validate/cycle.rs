@@ -61,7 +61,7 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        for (first, second) in cycle.edge_pairs() {
+        for (first, second) in cycle.edges().pairs() {
             let end_of_first = {
                 let [_, end] = first.boundary().inner;
                 first.path().point_from_path_coords(end)
