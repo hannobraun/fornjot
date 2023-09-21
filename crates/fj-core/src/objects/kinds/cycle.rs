@@ -12,7 +12,7 @@ pub struct Cycle {
 impl Cycle {
     /// Create an instance of `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let edges = edges.into_iter().collect::<Vec<_>>();
+        let edges = edges.into_iter().collect();
         Self { edges }
     }
 
