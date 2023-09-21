@@ -39,17 +39,19 @@
 //!
 //! [`Handle`]: crate::storage::Handle
 
+mod handles;
 mod kinds;
 mod object;
 mod set;
 mod stores;
 
 pub use self::{
+    handles::HandleIter,
     kinds::{
         curve::Curve,
         cycle::Cycle,
         edge::Edge,
-        face::{Face, FaceSet, Handedness},
+        face::{Face, Handedness},
         region::Region,
         shell::Shell,
         sketch::Sketch,

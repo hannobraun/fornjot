@@ -1,12 +1,12 @@
 use crate::{
-    objects::{Face, FaceSet},
+    objects::{handles::HandleSet, Face, HandleIter},
     storage::Handle,
 };
 
 /// A 3-dimensional closed shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Shell {
-    faces: FaceSet,
+    faces: HandleSet<Face>,
 }
 
 impl Shell {
@@ -18,7 +18,7 @@ impl Shell {
     }
 
     /// Access the faces of the shell
-    pub fn faces(&self) -> &FaceSet {
-        &self.faces
+    pub fn faces(&self) -> HandleIter<Face> {
+        self.faces.iter()
     }
 }

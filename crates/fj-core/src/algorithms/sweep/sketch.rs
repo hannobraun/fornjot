@@ -1,7 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{Sketch, Solid, Surface},
+    objects::{Face, Sketch, Solid, Surface},
     operations::Insert,
     services::Services,
     storage::Handle,
@@ -18,10 +18,13 @@ impl Sweep for (Handle<Sketch>, Handle<Surface>) {
         cache: &mut SweepCache,
         services: &mut Services,
     ) -> Self::Swept {
+        let (sketch, surface) = self;
         let path = path.into();
 
         let mut shells = Vec::new();
-        for face in self.0.faces(self.1, services) {
+        for region in sketch.regions() {
+            let face =
+                Face::new(surface.clone(), region.clone()).insert(services);
             let shell = face.sweep_with_cache(path, cache, services);
             shells.push(shell);
         }

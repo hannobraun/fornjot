@@ -1,6 +1,7 @@
-use std::collections::BTreeSet;
-
-use crate::{objects::Shell, storage::Handle};
+use crate::{
+    objects::{handles::HandleSet, HandleIter, Shell},
+    storage::Handle,
+};
 
 /// A 3-dimensional shape, built from [`Shell`]s. Many Solids will contains only
 /// one shell, but if the Solid contains cavities they will be represented by a
@@ -12,7 +13,7 @@ use crate::{objects::Shell, storage::Handle};
 /// not currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    shells: BTreeSet<Handle<Shell>>,
+    shells: HandleSet<Shell>,
 }
 
 impl Solid {
@@ -24,7 +25,7 @@ impl Solid {
     }
 
     /// Access the solid's shells
-    pub fn shells(&self) -> impl Iterator<Item = &Handle<Shell>> {
+    pub fn shells(&self) -> HandleIter<Shell> {
         self.shells.iter()
     }
 }

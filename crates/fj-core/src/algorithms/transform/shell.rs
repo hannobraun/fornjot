@@ -11,10 +11,10 @@ impl TransformObject for Shell {
         services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
-        let faces =
-            self.faces().clone().into_iter().map(|face| {
-                face.transform_with_cache(transform, services, cache)
-            });
+        let faces = self
+            .faces()
+            .cloned()
+            .map(|face| face.transform_with_cache(transform, services, cache));
 
         Self::new(faces)
     }

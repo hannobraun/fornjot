@@ -1,5 +1,3 @@
-use std::collections::{btree_set, BTreeSet};
-
 use fj_math::Winding;
 
 use crate::{
@@ -68,51 +66,6 @@ impl Face {
             Winding::Ccw => Handedness::RightHanded,
             Winding::Cw => Handedness::LeftHanded,
         }
-    }
-}
-
-/// A collection of faces
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct FaceSet {
-    inner: BTreeSet<Handle<Face>>,
-}
-
-impl FaceSet {
-    /// Create an empty instance of `Faces`
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
-impl Extend<Handle<Face>> for FaceSet {
-    fn extend<T: IntoIterator<Item = Handle<Face>>>(&mut self, iter: T) {
-        self.inner.extend(iter);
-    }
-}
-
-impl FromIterator<Handle<Face>> for FaceSet {
-    fn from_iter<T: IntoIterator<Item = Handle<Face>>>(iter: T) -> Self {
-        let mut faces = Self::new();
-        faces.extend(iter);
-        faces
-    }
-}
-
-impl IntoIterator for FaceSet {
-    type Item = Handle<Face>;
-    type IntoIter = btree_set::IntoIter<Handle<Face>>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.inner.into_iter()
-    }
-}
-
-impl<'a> IntoIterator for &'a FaceSet {
-    type Item = &'a Handle<Face>;
-    type IntoIter = btree_set::Iter<'a, Handle<Face>>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.inner.iter()
     }
 }
 

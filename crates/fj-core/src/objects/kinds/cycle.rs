@@ -1,23 +1,27 @@
 use fj_math::{Scalar, Winding};
 use itertools::Itertools;
 
-use crate::{geometry::SurfacePath, objects::Edge, storage::Handle};
+use crate::{
+    geometry::SurfacePath,
+    objects::{handles::HandleSet, Edge, HandleIter},
+    storage::Handle,
+};
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    edges: Vec<Handle<Edge>>,
+    edges: HandleSet<Edge>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let edges = edges.into_iter().collect::<Vec<_>>();
+        let edges = edges.into_iter().collect();
         Self { edges }
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
+    pub fn edges(&self) -> HandleIter<Edge> {
         self.edges.iter()
     }
 
@@ -30,7 +34,7 @@ impl Cycle {
 
     /// Access the edge with the provided index
     pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
-        self.edges.get(index)
+        self.edges.nth(index)
     }
 
     /// Access the edge after the provided one
@@ -39,7 +43,7 @@ impl Cycle {
     pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
         self.index_of(edge).map(|index| {
             let next_index = (index + 1) % self.edges.len();
-            &self.edges[next_index]
+            self.edges.nth(next_index).unwrap()
         })
     }
 
