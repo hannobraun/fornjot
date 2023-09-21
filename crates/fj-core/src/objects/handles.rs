@@ -81,6 +81,13 @@ pub struct HandleIter<'r, T> {
 }
 
 impl<'r, T> HandleIter<'r, T> {
+    /// Return the n-th item
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
+        self.handles.get(index)
+    }
+
     /// Return iterator over the pairs of the remaining items in this iterator
     pub fn pairs(self) -> impl Iterator<Item = (&'r Handle<T>, &'r Handle<T>)> {
         self.circular_tuple_windows()

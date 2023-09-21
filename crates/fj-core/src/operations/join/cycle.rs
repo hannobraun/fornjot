@@ -110,11 +110,14 @@ impl JoinCycle for Cycle {
             let index = index % self.len();
             let index_other = index_other % self.len();
 
-            let edge = self
-                .nth_edge(index)
+            let edges_self = self.edges();
+            let edges_other = other.edges();
+
+            let edge = edges_self
+                .nth(index)
                 .expect("Index must be valid, due to use of `%` above");
-            let edge_other = other
-                .nth_edge(index_other)
+            let edge_other = edges_other
+                .nth(index_other)
                 .expect("Index must be valid, due to use of `%` above");
 
             let vertex_a = other

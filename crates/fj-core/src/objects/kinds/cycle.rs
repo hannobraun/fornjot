@@ -24,11 +24,6 @@ impl Cycle {
         self.edges.iter()
     }
 
-    /// Access the edge with the provided index
-    pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
-        self.edges.nth(index)
-    }
-
     /// Access the edge after the provided one
     ///
     /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
