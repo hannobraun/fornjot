@@ -49,6 +49,11 @@ impl Region {
 
     /// Access all cycles of the region (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> {
+        // It would be nice to return `HandleIter` here, but there's no
+        // straight-forward way to chain it to another iterator, given it's
+        // current implementation.
+        //
+        // Maybe this can be addressed, once the need arises.
         [self.exterior()].into_iter().chain(self.interiors())
     }
 
