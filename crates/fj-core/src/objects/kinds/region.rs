@@ -2,7 +2,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{handles::HandleSet, Cycle},
+    objects::{handles::HandleSet, Cycle, HandleIter},
     storage::Handle,
 };
 
@@ -43,7 +43,7 @@ impl Region {
     /// Access the cycles that bound the region on the inside
     ///
     /// Each of these cycles defines a hole in the region .
-    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> {
+    pub fn interiors(&self) -> HandleIter<Cycle> {
         self.interiors.iter()
     }
 

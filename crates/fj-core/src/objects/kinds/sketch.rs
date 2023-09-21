@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::HandleSet, Face, FaceSet, Region, Surface},
+    objects::{handles::HandleSet, Face, FaceSet, HandleIter, Region, Surface},
     operations::Insert,
     services::Services,
     storage::Handle,
@@ -20,7 +20,7 @@ impl Sketch {
     }
 
     /// Access the regions of the sketch
-    pub fn regions(&self) -> impl Iterator<Item = &Handle<Region>> {
+    pub fn regions(&self) -> HandleIter<Region> {
         self.regions.iter()
     }
 

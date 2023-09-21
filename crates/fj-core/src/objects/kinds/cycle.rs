@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::HandleSet, Edge},
+    objects::{handles::HandleSet, Edge, HandleIter},
     storage::Handle,
 };
 
@@ -21,7 +21,7 @@ impl Cycle {
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> impl Iterator<Item = &Handle<Edge>> {
+    pub fn edges(&self) -> HandleIter<Edge> {
         self.edges.iter()
     }
 
