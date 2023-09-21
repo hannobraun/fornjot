@@ -107,18 +107,11 @@ impl JoinCycle for Cycle {
         let mut cycle = self.clone();
 
         for (index, index_other) in range.zip(range_other) {
-            let index = index % self.len();
-            let index_other = index_other % self.len();
-
             let edges_self = self.edges();
             let edges_other = other.edges();
 
-            let edge = edges_self
-                .nth(index)
-                .expect("Index must be valid, due to use of `%` above");
-            let edge_other = edges_other
-                .nth(index_other)
-                .expect("Index must be valid, due to use of `%` above");
+            let edge = edges_self.nth_circular(index);
+            let edge_other = edges_other.nth_circular(index_other);
 
             let vertex_a = other
                 .edge_after(edge_other)

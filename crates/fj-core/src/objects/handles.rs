@@ -88,6 +88,18 @@ impl<'r, T> HandleIter<'r, T> {
         self.handles.get(index)
     }
 
+    /// Return the n-th item, treating the iterator as circular
+    ///
+    /// If the length of the iterator is `i`, then retrieving the i-th edge
+    /// using this method, is the same as retrieving the 0-th one.
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn nth_circular(&self, index: usize) -> &Handle<T> {
+        let index = index % self.len();
+        self.nth(index)
+            .expect("Index must be valid, due to modulo above")
+    }
+
     /// Return iterator over the pairs of the remaining items in this iterator
     pub fn pairs(self) -> impl Iterator<Item = (&'r Handle<T>, &'r Handle<T>)> {
         self.circular_tuple_windows()
