@@ -1,7 +1,5 @@
 use crate::{
-    objects::{handles::HandleSet, Face, FaceSet, HandleIter, Region, Surface},
-    operations::Insert,
-    services::Services,
+    objects::{handles::HandleSet, HandleIter, Region},
     storage::Handle,
 };
 
@@ -22,18 +20,5 @@ impl Sketch {
     /// Access the regions of the sketch
     pub fn regions(&self) -> HandleIter<Region> {
         self.regions.iter()
-    }
-
-    /// Apply the regions of the sketch to some [`Surface`]
-    pub fn faces(
-        &self,
-        surface: Handle<Surface>,
-        services: &mut Services,
-    ) -> FaceSet {
-        self.regions()
-            .map(|region| {
-                Face::new(surface.clone(), region.clone()).insert(services)
-            })
-            .collect()
     }
 }
