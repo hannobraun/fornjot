@@ -1,5 +1,7 @@
 use std::{collections::BTreeSet, fmt::Debug};
 
+use itertools::Itertools;
+
 use crate::storage::Handle;
 
 /// An ordered set of object handles
@@ -76,6 +78,13 @@ where
 pub struct HandleIter<'r, T> {
     handles: &'r Vec<Handle<T>>,
     next_index: usize,
+}
+
+impl<'r, T> HandleIter<'r, T> {
+    /// Return iterator over the pairs of the remaining items in this iterator
+    pub fn pairs(self) -> impl Iterator<Item = (&'r Handle<T>, &'r Handle<T>)> {
+        self.circular_tuple_windows()
+    }
 }
 
 impl<'r, T> Iterator for HandleIter<'r, T> {

@@ -1,5 +1,4 @@
 use fj_math::{Scalar, Winding};
-use itertools::Itertools;
 
 use crate::{
     geometry::SurfacePath,
@@ -29,7 +28,7 @@ impl Cycle {
     pub fn edge_pairs(
         &self,
     ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
-        self.edges.iter().circular_tuple_windows()
+        self.edges.iter().pairs()
     }
 
     /// Access the edge with the provided index
