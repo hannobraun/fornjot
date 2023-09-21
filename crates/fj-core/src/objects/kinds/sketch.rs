@@ -30,8 +30,7 @@ impl Sketch {
         surface: Handle<Surface>,
         services: &mut Services,
     ) -> FaceSet {
-        self.regions
-            .iter()
+        self.regions()
             .map(|region| {
                 Face::new(surface.clone(), region.clone()).insert(services)
             })
