@@ -40,12 +40,12 @@ impl Region {
     /// Access the cycles that bound the region on the inside
     ///
     /// Each of these cycles defines a hole in the region .
-    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
+    pub fn interiors(&self) -> impl Iterator<Item = &Handle<Cycle>> {
         self.interiors.iter()
     }
 
     /// Access all cycles of the region (both exterior and interior)
-    pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> + '_ {
+    pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> {
         [self.exterior()].into_iter().chain(self.interiors())
     }
 
