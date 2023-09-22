@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::Handles, HandleIter, Region},
+    objects::{handles::Handles, Region},
     storage::Handle,
 };
 
@@ -18,7 +18,7 @@ impl Sketch {
     }
 
     /// Access the regions of the sketch
-    pub fn regions(&self) -> HandleIter<Region> {
-        self.regions.iter()
+    pub fn regions(&self) -> &Handles<Region> {
+        &self.regions
     }
 }
