@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::HandleSet, HandleIter, Shell},
+    objects::{handles::Handles, HandleIter, Shell},
     storage::Handle,
 };
 
@@ -13,7 +13,7 @@ use crate::{
 /// not currently validated.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Solid {
-    shells: HandleSet<Shell>,
+    shells: Handles<Shell>,
 }
 
 impl Solid {

@@ -1,12 +1,12 @@
 use crate::{
-    objects::{handles::HandleSet, HandleIter, Region},
+    objects::{handles::Handles, HandleIter, Region},
     storage::Handle,
 };
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    regions: HandleSet<Region>,
+    regions: Handles<Region>,
 }
 
 impl Sketch {

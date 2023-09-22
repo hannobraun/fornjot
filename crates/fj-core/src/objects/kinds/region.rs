@@ -2,7 +2,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{handles::HandleSet, Cycle, HandleIter},
+    objects::{handles::Handles, Cycle, HandleIter},
     storage::Handle,
 };
 
@@ -17,7 +17,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Region {
     exterior: Handle<Cycle>,
-    interiors: HandleSet<Cycle>,
+    interiors: Handles<Cycle>,
     color: Option<Color>,
 }
 

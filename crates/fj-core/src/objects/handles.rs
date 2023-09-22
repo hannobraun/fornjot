@@ -13,7 +13,7 @@ use crate::storage::Handle;
 /// `HandleSet` implement `FromIterator`, but it must never be constructed from
 /// an iterator that contains duplicate handles. This will result in a panic.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct HandleSet<T> {
+pub struct Handles<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
     // here? Well, it's here because we need it to preserve insertion order, but
     // that doesn't explain why it is here *alone*.
@@ -26,7 +26,7 @@ pub struct HandleSet<T> {
     inner: Vec<Handle<T>>,
 }
 
-impl<T> HandleSet<T> {
+impl<T> Handles<T> {
     pub fn len(&self) -> usize {
         self.inner.len()
     }
@@ -43,7 +43,7 @@ impl<T> HandleSet<T> {
     }
 }
 
-impl<O> FromIterator<Handle<O>> for HandleSet<O>
+impl<O> FromIterator<Handle<O>> for Handles<O>
 where
     O: Debug + Ord,
 {
