@@ -6,9 +6,9 @@ use crate::storage::Handle;
 
 /// An ordered set of object handles
 ///
-/// This is an internal data structure that is used within objects that
-/// reference multiple other objects of the same type. It does not contain any
-/// duplicate elements, and it maintains the insertion order of those elements.
+/// This is the data structure used by all objects that reference multiple
+/// objects of the same type. It is a set, not containing any duplicate
+/// elements, and it maintains the insertion order of those elements.
 ///
 /// `HandleSet` implement `FromIterator`, but it must never be constructed from
 /// an iterator that contains duplicate handles. This will result in a panic.
@@ -27,14 +27,17 @@ pub struct Handles<T> {
 }
 
 impl<T> Handles<T> {
+    /// Return the number of handles in this set
     pub fn len(&self) -> usize {
         self.inner.len()
     }
 
+    /// Indicate whether the set is empty
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
     }
 
+    /// Access an iterator over the handles
     pub fn iter(&self) -> HandleIter<T> {
         HandleIter {
             handles: &self.inner,
