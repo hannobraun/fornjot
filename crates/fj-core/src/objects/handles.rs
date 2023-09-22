@@ -27,6 +27,33 @@ pub struct Handles<T> {
 }
 
 impl<T> Handles<T> {
+    /// Create a new instances of `Handles` from an iterator over `Handle<T>`
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the iterator contains duplicate `Handle`s.
+    pub fn new(handles: impl IntoIterator<Item = Handle<T>>) -> Self
+    where
+        T: Debug + Ord,
+    {
+        let mut added = BTreeSet::new();
+        let mut inner = Vec::new();
+
+        for handle in handles {
+            if added.contains(&handle) {
+                panic!(
+                    "Constructing `HandleSet` with duplicate handle: {:?}",
+                    handle
+                );
+            }
+
+            added.insert(handle.clone());
+            inner.push(handle);
+        }
+
+        Self { inner }
+    }
+
     /// Return the number of handles in this set
     pub fn len(&self) -> usize {
         self.inner.len()
@@ -84,22 +111,7 @@ where
     O: Debug + Ord,
 {
     fn from_iter<T: IntoIterator<Item = Handle<O>>>(handles: T) -> Self {
-        let mut added = BTreeSet::new();
-        let mut inner = Vec::new();
-
-        for handle in handles {
-            if added.contains(&handle) {
-                panic!(
-                    "Constructing `HandleSet` with duplicate handle: {:?}",
-                    handle
-                );
-            }
-
-            added.insert(handle.clone());
-            inner.push(handle);
-        }
-
-        Self { inner }
+        Self::new(handles)
     }
 }
 
