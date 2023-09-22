@@ -112,6 +112,15 @@ where
     }
 }
 
+impl<'r, T> IntoIterator for &'r Handles<T> {
+    type Item = &'r Handle<T>;
+    type IntoIter = HandleIter<'r, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
 /// An iterator over handles to objects
 ///
 /// This struct is returned by the respective methods of all objects that
