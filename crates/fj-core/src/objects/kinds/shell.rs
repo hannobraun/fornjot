@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::Handles, Face, HandleIter},
+    objects::{handles::Handles, Face},
     storage::Handle,
 };
 
@@ -18,7 +18,7 @@ impl Shell {
     }
 
     /// Access the faces of the shell
-    pub fn faces(&self) -> HandleIter<Face> {
-        self.faces.iter()
+    pub fn faces(&self) -> &Handles<Face> {
+        &self.faces
     }
 }

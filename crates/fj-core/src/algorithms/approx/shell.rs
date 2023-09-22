@@ -15,6 +15,6 @@ impl Approx for &Shell {
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
-        self.faces().approx_with_cache(tolerance, cache)
+        self.faces().iter().approx_with_cache(tolerance, cache)
     }
 }
