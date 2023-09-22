@@ -28,15 +28,10 @@ impl Cycle {
     ///
     /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
     pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
-        self.index_of(edge).map(|index| {
+        self.edges().index_of(edge).map(|index| {
             let next_index = (index + 1) % self.edges.len();
             self.edges.nth(next_index).unwrap()
         })
-    }
-
-    /// Return the index of the provided edge, if it is in this cycle
-    pub fn index_of(&self, edge: &Handle<Edge>) -> Option<usize> {
-        self.edges.iter().position(|e| e.id() == edge.id())
     }
 
     /// Return the number of edges in the cycle

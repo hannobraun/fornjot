@@ -100,6 +100,13 @@ impl<'r, T> HandleIter<'r, T> {
             .expect("Index must be valid, due to modulo above")
     }
 
+    /// Return the index of the item, if it is in this iterator
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn index_of(&self, handle: &Handle<T>) -> Option<usize> {
+        self.handles.iter().position(|h| h.id() == handle.id())
+    }
+
     /// Return iterator over the pairs of the remaining items in this iterator
     pub fn pairs(self) -> impl Iterator<Item = (&'r Handle<T>, &'r Handle<T>)> {
         self.circular_tuple_windows()
