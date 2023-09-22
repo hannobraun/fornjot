@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::Handles, HandleIter, Shell},
+    objects::{handles::Handles, Shell},
     storage::Handle,
 };
 
@@ -25,7 +25,7 @@ impl Solid {
     }
 
     /// Access the solid's shells
-    pub fn shells(&self) -> HandleIter<Shell> {
-        self.shells.iter()
+    pub fn shells(&self) -> &Handles<Shell> {
+        &self.shells
     }
 }

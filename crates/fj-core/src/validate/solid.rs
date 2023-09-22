@@ -70,6 +70,7 @@ impl SolidValidationError {
     ) {
         let vertices: Vec<(Point<3>, Handle<Vertex>)> = solid
             .shells()
+            .iter()
             .flat_map(|s| s.faces())
             .flat_map(|face| {
                 face.region()
