@@ -51,7 +51,7 @@ impl CycleValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         // If there are no half edges
-        if cycle.edges().next().is_none() {
+        if cycle.edges().iter().next().is_none() {
             errors.push(Self::NotEnoughEdges.into());
         }
     }

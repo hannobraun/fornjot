@@ -2,7 +2,7 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::Handles, Edge, HandleIter},
+    objects::{handles::Handles, Edge},
     storage::Handle,
 };
 
@@ -20,8 +20,8 @@ impl Cycle {
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> HandleIter<Edge> {
-        self.edges.iter()
+    pub fn edges(&self) -> &Handles<Edge> {
+        &self.edges
     }
 
     /// Return the number of edges in the cycle
@@ -46,6 +46,7 @@ impl Cycle {
         if self.edges.len() < 3 {
             let first = self
                 .edges()
+                .iter()
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
 

@@ -29,6 +29,7 @@ impl Intersect for (&Face, &Point<2>) {
             // result of the last segment.
             let mut previous_hit = cycle
                 .edges()
+                .iter()
                 .last()
                 .cloned()
                 .and_then(|edge| (&ray, &edge).intersect());
@@ -336,6 +337,7 @@ mod tests {
             .region()
             .exterior()
             .edges()
+            .iter()
             .find(|edge| edge.start_position() == Point::from([0., 0.]))
             .unwrap();
         assert_eq!(
@@ -371,6 +373,7 @@ mod tests {
             .region()
             .exterior()
             .edges()
+            .iter()
             .find(|edge| edge.start_position() == Point::from([1., 0.]))
             .map(|edge| edge.start_position())
             .unwrap();

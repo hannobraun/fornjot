@@ -21,6 +21,7 @@ impl AllEdgesWithSurface for Face {
             result.extend(
                 cycle
                     .edges()
+                    .iter()
                     .cloned()
                     .map(|edge| (edge, self.surface().clone())),
             );

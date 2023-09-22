@@ -36,7 +36,7 @@ pub trait UpdateCycle {
 
 impl UpdateCycle for Cycle {
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let edges = self.edges().cloned().chain(edges);
+        let edges = self.edges().iter().cloned().chain(edges);
         Cycle::new(edges)
     }
 
@@ -47,7 +47,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let edges = self.edges().map(|edge| {
+        let edges = self.edges().iter().map(|edge| {
             if edge.id() == original.id() {
                 num_replacements += 1;
                 replacement.clone()
@@ -73,7 +73,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let mut num_replacements = 0;
 
-        let edges = self.edges().enumerate().map(|(i, edge)| {
+        let edges = self.edges().iter().enumerate().map(|(i, edge)| {
             if i == index {
                 num_replacements += 1;
                 f(edge)
