@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fmt::Debug};
+use std::{collections::BTreeSet, fmt::Debug, slice};
 
 use itertools::Itertools;
 
@@ -90,11 +90,8 @@ impl<T> Handles<T> {
     }
 
     /// Access an iterator over the handles
-    pub fn iter(&self) -> HandleIter<T> {
-        HandleIter {
-            handles: self,
-            next_index: 0,
-        }
+    pub fn iter(&self) -> slice::Iter<Handle<T>> {
+        self.inner.iter()
     }
 
     /// Return iterator over the pairs of all handles
@@ -122,7 +119,7 @@ impl<'r, T> IntoIterator for &'r Handles<T> {
     // an adapter's closure, if you own that argument. You can, if you just
     // reference the argument.
     type Item = &'r Handle<T>;
-    type IntoIter = HandleIter<'r, T>;
+    type IntoIter = slice::Iter<'r, Handle<T>>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
