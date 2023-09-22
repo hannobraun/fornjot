@@ -24,16 +24,6 @@ impl Cycle {
         &self.edges
     }
 
-    /// Return the number of edges in the cycle
-    pub fn len(&self) -> usize {
-        self.edges.len()
-    }
-
-    /// Indicate whether the cycle is empty
-    pub fn is_empty(&self) -> bool {
-        self.edges.is_empty()
-    }
-
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
     ///
     /// Please note that this is not *the* winding of the cycle, only one of the
