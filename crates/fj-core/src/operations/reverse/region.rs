@@ -7,6 +7,7 @@ impl Reverse for Region {
         let exterior = self.exterior().reverse(services).insert(services);
         let interiors = self
             .interiors()
+            .iter()
             .map(|cycle| cycle.reverse(services).insert(services));
 
         Region::new(exterior, interiors, self.color())
@@ -22,7 +23,7 @@ impl ReverseCurveCoordinateSystems for Region {
             .exterior()
             .reverse_curve_coordinate_systems(services)
             .insert(services);
-        let interiors = self.interiors().map(|cycle| {
+        let interiors = self.interiors().iter().map(|cycle| {
             cycle
                 .reverse_curve_coordinate_systems(services)
                 .insert(services)

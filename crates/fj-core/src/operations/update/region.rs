@@ -26,14 +26,14 @@ impl UpdateRegion for Region {
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
         let exterior = f(self.exterior());
-        Region::new(exterior, self.interiors().cloned(), self.color())
+        Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 
     fn add_interiors(
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
-        let interiors = self.interiors().cloned().chain(interiors);
+        let interiors = self.interiors().iter().cloned().chain(interiors);
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }

@@ -27,9 +27,10 @@ impl TransformObject for Face {
             .exterior()
             .clone()
             .transform_with_cache(transform, services, cache);
-        let interiors = self.region().interiors().cloned().map(|interior| {
-            interior.transform_with_cache(transform, services, cache)
-        });
+        let interiors =
+            self.region().interiors().iter().cloned().map(|interior| {
+                interior.transform_with_cache(transform, services, cache)
+            });
 
         let region = Region::new(exterior, interiors, color).insert(services);
 
