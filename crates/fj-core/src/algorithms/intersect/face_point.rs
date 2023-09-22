@@ -31,8 +31,7 @@ impl Intersect for (&Face, &Point<2>) {
                 .edges()
                 .iter()
                 .last()
-                .cloned()
-                .and_then(|edge| (&ray, &edge).intersect());
+                .and_then(|edge| (&ray, edge).intersect());
 
             for (edge, next_edge) in cycle.edges().pairs() {
                 let hit = (&ray, edge).intersect();
