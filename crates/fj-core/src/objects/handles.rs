@@ -113,6 +113,14 @@ where
 }
 
 impl<'r, T> IntoIterator for &'r Handles<T> {
+    // You might wonder why we're returning references to handles here, when
+    // `Handle` already is kind of reference, and easily cloned.
+    //
+    // Most of the time that doesn't make a difference, but there are use cases
+    // where dealing with owned `Handle`s is inconvenient, for example when
+    // using iterator adapters. You can't return a reference to the argument of
+    // an adapter's closure, if you own that argument. You can, if you just
+    // reference the argument.
     type Item = &'r Handle<T>;
     type IntoIter = HandleIter<'r, T>;
 
@@ -169,14 +177,6 @@ impl<'r, T> HandleIter<'r, T> {
 }
 
 impl<'r, T> Iterator for HandleIter<'r, T> {
-    // You might wonder why we're returning references to handles here, when
-    // `Handle` already is kind of reference, and easily cloned.
-    //
-    // Most of the time that doesn't make a difference, but there are use cases
-    // where dealing with owned `Handle`s is inconvenient, for example when
-    // using iterator adapters. You can't return a reference to the argument of
-    // an adapter's closure, if you own that argument. You can, if you just
-    // reference the argument.
     type Item = &'r Handle<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
