@@ -40,7 +40,7 @@ impl<T> Handles<T> {
     /// Access an iterator over the handles
     pub fn iter(&self) -> HandleIter<T> {
         HandleIter {
-            handles: &self.inner,
+            handles: self,
             next_index: 0,
         }
     }
@@ -75,7 +75,7 @@ where
 /// This struct is returned by the respective methods of all objects that
 /// reference multiple objects of the same type.
 pub struct HandleIter<'r, T> {
-    handles: &'r Vec<Handle<T>>,
+    handles: &'r Handles<T>,
     next_index: usize,
 }
 
@@ -84,7 +84,7 @@ impl<'r, T> HandleIter<'r, T> {
     ///
     /// This method is unaffected by any previous calls to `next`.
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
-        self.handles.get(index)
+        self.handles.inner.get(index)
     }
 
     /// Return the n-th item, treating the iterator as circular
@@ -103,7 +103,10 @@ impl<'r, T> HandleIter<'r, T> {
     ///
     /// This method is unaffected by any previous calls to `next`.
     pub fn index_of(&self, handle: &Handle<T>) -> Option<usize> {
-        self.handles.iter().position(|h| h.id() == handle.id())
+        self.handles
+            .inner
+            .iter()
+            .position(|h| h.id() == handle.id())
     }
 
     /// Access the item after the provided one
@@ -132,13 +135,13 @@ impl<'r, T> Iterator for HandleIter<'r, T> {
     type Item = &'r Handle<T>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let handle = self.handles.get(self.next_index);
+        let handle = self.handles.inner.get(self.next_index);
         self.next_index += 1;
         handle
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
-        let size = self.handles.len();
+        let size = self.handles.inner.len();
         (size, Some(size))
     }
 }
