@@ -9,9 +9,6 @@ use crate::storage::Handle;
 /// This is the data structure used by all objects that reference multiple
 /// objects of the same type. It is a set, not containing any duplicate
 /// elements, and it maintains the insertion order of those elements.
-///
-/// `HandleSet` implement `FromIterator`, but it must never be constructed from
-/// an iterator that contains duplicate handles. This will result in a panic.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Handles<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
