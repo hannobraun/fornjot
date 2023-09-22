@@ -35,10 +35,6 @@ impl<T> HandleSet<T> {
         self.inner.is_empty()
     }
 
-    pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
-        self.inner.get(index)
-    }
-
     pub fn iter(&self) -> HandleIter<T> {
         HandleIter {
             handles: &self.inner,
@@ -105,6 +101,14 @@ impl<'r, T> HandleIter<'r, T> {
     /// This method is unaffected by any previous calls to `next`.
     pub fn index_of(&self, handle: &Handle<T>) -> Option<usize> {
         self.handles.iter().position(|h| h.id() == handle.id())
+    }
+
+    /// Access the item after the provided one
+    ///
+    /// Returns `None`, if the provided item is not in this iterator.
+    pub fn after(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
+        self.index_of(handle)
+            .map(|index| self.nth_circular(index + 1))
     }
 
     /// Return iterator over the pairs of the remaining items in this iterator

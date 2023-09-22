@@ -113,15 +113,15 @@ impl JoinCycle for Cycle {
             let edge = edges_self.nth_circular(index);
             let edge_other = edges_other.nth_circular(index_other);
 
-            let vertex_a = other
-                .edge_after(edge_other)
+            let vertex_a = edges_other
+                .after(edge_other)
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
             let vertex_b = edge_other.start_vertex().clone();
 
-            let next_edge = self
-                .edge_after(edge)
+            let next_edge = edges_self
+                .after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
             let this_joined = edge

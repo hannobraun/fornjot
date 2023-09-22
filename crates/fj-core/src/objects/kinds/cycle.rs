@@ -24,16 +24,6 @@ impl Cycle {
         self.edges.iter()
     }
 
-    /// Access the edge after the provided one
-    ///
-    /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
-    pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
-        self.edges().index_of(edge).map(|index| {
-            let next_index = (index + 1) % self.edges.len();
-            self.edges.nth(next_index).unwrap()
-        })
-    }
-
     /// Return the number of edges in the cycle
     pub fn len(&self) -> usize {
         self.edges.len()
