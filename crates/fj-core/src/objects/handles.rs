@@ -1,5 +1,7 @@
 use std::{collections::BTreeSet, fmt::Debug};
 
+use itertools::Itertools;
+
 use crate::storage::Handle;
 
 /// An ordered set of object handles
@@ -31,10 +33,6 @@ impl<T> HandleSet<T> {
 
     pub fn is_empty(&self) -> bool {
         self.inner.is_empty()
-    }
-
-    pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
-        self.inner.get(index)
     }
 
     pub fn iter(&self) -> HandleIter<T> {
@@ -76,6 +74,47 @@ where
 pub struct HandleIter<'r, T> {
     handles: &'r Vec<Handle<T>>,
     next_index: usize,
+}
+
+impl<'r, T> HandleIter<'r, T> {
+    /// Return the n-th item
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
+        self.handles.get(index)
+    }
+
+    /// Return the n-th item, treating the iterator as circular
+    ///
+    /// If the length of the iterator is `i`, then retrieving the i-th edge
+    /// using this method, is the same as retrieving the 0-th one.
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn nth_circular(&self, index: usize) -> &Handle<T> {
+        let index = index % self.len();
+        self.nth(index)
+            .expect("Index must be valid, due to modulo above")
+    }
+
+    /// Return the index of the item, if it is in this iterator
+    ///
+    /// This method is unaffected by any previous calls to `next`.
+    pub fn index_of(&self, handle: &Handle<T>) -> Option<usize> {
+        self.handles.iter().position(|h| h.id() == handle.id())
+    }
+
+    /// Access the item after the provided one
+    ///
+    /// Returns `None`, if the provided item is not in this iterator.
+    pub fn after(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
+        self.index_of(handle)
+            .map(|index| self.nth_circular(index + 1))
+    }
+
+    /// Return iterator over the pairs of the remaining items in this iterator
+    pub fn pairs(self) -> impl Iterator<Item = (&'r Handle<T>, &'r Handle<T>)> {
+        self.circular_tuple_windows()
+    }
 }
 
 impl<'r, T> Iterator for HandleIter<'r, T> {

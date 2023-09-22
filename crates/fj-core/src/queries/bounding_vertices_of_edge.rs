@@ -22,7 +22,7 @@ impl BoundingVerticesOfEdge for Cycle {
         edge: &Handle<Edge>,
     ) -> Option<CurveBoundary<Vertex>> {
         let start = edge.start_vertex().clone();
-        let end = self.edge_after(edge)?.start_vertex().clone();
+        let end = self.edges().after(edge)?.start_vertex().clone();
 
         Some(CurveBoundary::from([start, end]))
     }

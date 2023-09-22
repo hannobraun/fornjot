@@ -1,5 +1,4 @@
 use fj_math::{Scalar, Winding};
-use itertools::Itertools;
 
 use crate::{
     geometry::SurfacePath,
@@ -23,33 +22,6 @@ impl Cycle {
     /// Access the edges that make up the cycle
     pub fn edges(&self) -> HandleIter<Edge> {
         self.edges.iter()
-    }
-
-    /// Access neighboring edges in pairs
-    pub fn edge_pairs(
-        &self,
-    ) -> impl Iterator<Item = (&Handle<Edge>, &Handle<Edge>)> {
-        self.edges.iter().circular_tuple_windows()
-    }
-
-    /// Access the edge with the provided index
-    pub fn nth_edge(&self, index: usize) -> Option<&Handle<Edge>> {
-        self.edges.nth(index)
-    }
-
-    /// Access the edge after the provided one
-    ///
-    /// Returns `None`, if the provided [`Edge`] is not part of the cycle.
-    pub fn edge_after(&self, edge: &Handle<Edge>) -> Option<&Handle<Edge>> {
-        self.index_of(edge).map(|index| {
-            let next_index = (index + 1) % self.edges.len();
-            self.edges.nth(next_index).unwrap()
-        })
-    }
-
-    /// Return the index of the provided edge, if it is in this cycle
-    pub fn index_of(&self, edge: &Handle<Edge>) -> Option<usize> {
-        self.edges.iter().position(|e| e.id() == edge.id())
     }
 
     /// Return the number of edges in the cycle
@@ -101,7 +73,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for (a, b) in self.edge_pairs() {
+        for (a, b) in self.edges().pairs() {
             let [a, b] = [a, b].map(|edge| edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);

@@ -9,7 +9,8 @@ use super::{Reverse, ReverseCurveCoordinateSystems};
 impl Reverse for Cycle {
     fn reverse(&self, services: &mut Services) -> Self {
         let mut edges = self
-            .edge_pairs()
+            .edges()
+            .pairs()
             .map(|(current, next)| {
                 Edge::new(
                     current.path(),

@@ -107,25 +107,21 @@ impl JoinCycle for Cycle {
         let mut cycle = self.clone();
 
         for (index, index_other) in range.zip(range_other) {
-            let index = index % self.len();
-            let index_other = index_other % self.len();
+            let edges_self = self.edges();
+            let edges_other = other.edges();
 
-            let edge = self
-                .nth_edge(index)
-                .expect("Index must be valid, due to use of `%` above");
-            let edge_other = other
-                .nth_edge(index_other)
-                .expect("Index must be valid, due to use of `%` above");
+            let edge = edges_self.nth_circular(index);
+            let edge_other = edges_other.nth_circular(index_other);
 
-            let vertex_a = other
-                .edge_after(edge_other)
+            let vertex_a = edges_other
+                .after(edge_other)
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
             let vertex_b = edge_other.start_vertex().clone();
 
-            let next_edge = cycle
-                .edge_after(edge)
+            let next_edge = edges_self
+                .after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
             let this_joined = edge
