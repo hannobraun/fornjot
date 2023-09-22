@@ -120,7 +120,7 @@ impl JoinCycle for Cycle {
                 .clone();
             let vertex_b = edge_other.start_vertex().clone();
 
-            let next_edge = cycle
+            let next_edge = self
                 .edge_after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
