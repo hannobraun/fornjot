@@ -32,7 +32,7 @@ pub trait BuildFace {
         let face = Face::polygon(surface, points_surface, services);
 
         let edges = {
-            let mut edges = face.region().exterior().edges().cloned();
+            let mut edges = face.region().exterior().edges().iter().cloned();
 
             let array = array::from_fn(|_| edges.next()).map(|edge| {
                 edge.expect("Just asserted that there are three edges")

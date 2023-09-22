@@ -18,6 +18,7 @@ impl Approx for &Solid {
         let tolerance = tolerance.into();
 
         self.shells()
+            .iter()
             .flat_map(|shell| shell.approx_with_cache(tolerance, cache))
             .collect()
     }

@@ -24,7 +24,7 @@ pub trait UpdateShell {
 
 impl UpdateShell for Shell {
     fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
-        let faces = self.faces().cloned().chain(faces);
+        let faces = self.faces().iter().cloned().chain(faces);
         Shell::new(faces)
     }
 
@@ -33,7 +33,7 @@ impl UpdateShell for Shell {
         original: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Self {
-        let faces = self.faces().map(|face| {
+        let faces = self.faces().iter().map(|face| {
             if face.id() == original.id() {
                 replacement.clone()
             } else {
@@ -47,6 +47,7 @@ impl UpdateShell for Shell {
     fn remove_face(&self, handle: &Handle<Face>) -> Self {
         let faces = self
             .faces()
+            .iter()
             .filter(|face| face.id() == handle.id())
             .cloned();
 

@@ -18,7 +18,7 @@ impl UpdateSolid for Solid {
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,
     ) -> Self {
-        let shells = self.shells().cloned().chain(shells);
+        let shells = self.shells().iter().cloned().chain(shells);
         Solid::new(shells)
     }
 }

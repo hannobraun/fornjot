@@ -11,7 +11,7 @@ impl TransformObject for Solid {
         services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
-        let shells = self.shells().cloned().map(|shell| {
+        let shells = self.shells().iter().cloned().map(|shell| {
             shell.transform_with_cache(transform, services, cache)
         });
 

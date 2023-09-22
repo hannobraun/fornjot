@@ -46,7 +46,7 @@ mod set;
 mod stores;
 
 pub use self::{
-    handles::HandleIter,
+    handles::Handles,
     kinds::{
         curve::Curve,
         cycle::Cycle,

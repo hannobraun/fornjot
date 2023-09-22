@@ -12,6 +12,6 @@ pub trait UpdateSketch {
 
 impl UpdateSketch for Sketch {
     fn add_region(&self, region: Handle<Region>) -> Self {
-        Sketch::new(self.regions().cloned().chain([region]))
+        Sketch::new(self.regions().iter().cloned().chain([region]))
     }
 }

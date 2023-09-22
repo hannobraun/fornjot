@@ -263,6 +263,7 @@ mod tests {
             .region()
             .exterior()
             .edges()
+            .iter()
             .find(|edge| edge.start_position() == Point::from([-1., 1.]))
             .unwrap();
         assert_eq!(
@@ -298,6 +299,7 @@ mod tests {
             .region()
             .exterior()
             .edges()
+            .iter()
             .find(|edge| edge.start_position() == Point::from([-1., -1.]))
             .map(|edge| edge.start_position())
             .unwrap();

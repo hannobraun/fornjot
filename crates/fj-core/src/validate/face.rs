@@ -38,7 +38,7 @@ pub enum FaceValidationError {
 
 impl FaceValidationError {
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
-        if face.region().exterior().edges().count() == 0 {
+        if face.region().exterior().edges().is_empty() {
             // Can't determine winding, if the cycle has no edges. Sounds like a
             // job for a different validation check.
             return;
@@ -47,7 +47,7 @@ impl FaceValidationError {
         let exterior_winding = face.region().exterior().winding();
 
         for interior in face.region().interiors() {
-            if interior.edges().count() == 0 {
+            if interior.edges().is_empty() {
                 // Can't determine winding, if the cycle has no edges. Sounds
                 // like a job for a different validation check.
                 continue;
@@ -106,6 +106,7 @@ mod tests {
             let interiors = valid
                 .region()
                 .interiors()
+                .iter()
                 .cloned()
                 .map(|cycle| cycle.reverse(&mut services).insert(&mut services))
                 .collect::<Vec<_>>();

@@ -2,14 +2,14 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::HandleSet, Edge, HandleIter},
+    objects::{handles::Handles, Edge},
     storage::Handle,
 };
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    edges: HandleSet<Edge>,
+    edges: Handles<Edge>,
 }
 
 impl Cycle {
@@ -20,18 +20,8 @@ impl Cycle {
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> HandleIter<Edge> {
-        self.edges.iter()
-    }
-
-    /// Return the number of edges in the cycle
-    pub fn len(&self) -> usize {
-        self.edges.len()
-    }
-
-    /// Indicate whether the cycle is empty
-    pub fn is_empty(&self) -> bool {
-        self.edges.is_empty()
+    pub fn edges(&self) -> &Handles<Edge> {
+        &self.edges
     }
 
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
@@ -46,6 +36,7 @@ impl Cycle {
         if self.edges.len() < 3 {
             let first = self
                 .edges()
+                .iter()
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
 

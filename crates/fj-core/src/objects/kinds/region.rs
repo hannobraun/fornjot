@@ -2,7 +2,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{handles::HandleSet, Cycle, HandleIter},
+    objects::{handles::Handles, Cycle},
     storage::Handle,
 };
 
@@ -17,7 +17,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Region {
     exterior: Handle<Cycle>,
-    interiors: HandleSet<Cycle>,
+    interiors: Handles<Cycle>,
     color: Option<Color>,
 }
 
@@ -43,17 +43,14 @@ impl Region {
     /// Access the cycles that bound the region on the inside
     ///
     /// Each of these cycles defines a hole in the region .
-    pub fn interiors(&self) -> HandleIter<Cycle> {
-        self.interiors.iter()
+    pub fn interiors(&self) -> &Handles<Cycle> {
+        &self.interiors
     }
 
     /// Access all cycles of the region (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> {
-        // It would be nice to return `HandleIter` here, but there's no
-        // straight-forward way to chain it to another iterator, given it's
-        // current implementation.
-        //
-        // Maybe this can be addressed, once the need arises.
+        // It would be nice to return `&Handles` here, but I don't see a way for
+        // doing that here *and* in `interiors`.
         [self.exterior()].into_iter().chain(self.interiors())
     }
 

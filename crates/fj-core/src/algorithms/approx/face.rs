@@ -7,7 +7,7 @@ use std::{collections::BTreeSet, ops::Deref};
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{Face, Handedness, HandleIter},
+    objects::{Face, Handedness, Handles},
     validate::ValidationConfig,
 };
 
@@ -15,7 +15,7 @@ use super::{
     cycle::CycleApprox, edge::EdgeApproxCache, Approx, ApproxPoint, Tolerance,
 };
 
-impl Approx for HandleIter<'_, Face> {
+impl Approx for &Handles<Face> {
     type Approximation = BTreeSet<FaceApprox>;
     type Cache = EdgeApproxCache;
 

@@ -33,7 +33,7 @@ impl ReverseCurveCoordinateSystems for Cycle {
         &self,
         services: &mut Services,
     ) -> Self {
-        let edges = self.edges().map(|edge| {
+        let edges = self.edges().iter().map(|edge| {
             edge.reverse_curve_coordinate_systems(services)
                 .insert(services)
         });
