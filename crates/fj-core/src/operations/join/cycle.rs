@@ -111,8 +111,7 @@ impl JoinCycle for Cycle {
 
             let vertex_a = other
                 .edges()
-                .after(edge_other)
-                .expect("Cycle must contain edge; just obtained edge from it")
+                .nth_circular(index_other + 1)
                 .start_vertex()
                 .clone();
 
