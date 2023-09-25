@@ -45,27 +45,19 @@ impl UpdateCycle for Cycle {
         edge: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
-        let updated = update(edge);
-
-        let mut num_replacements = 0;
+        let mut updated = Some(update(edge));
 
         let edges = self.edges().iter().map(|e| {
             if e.id() == edge.id() {
-                num_replacements += 1;
-                updated.clone()
+                updated
+                    .take()
+                    .expect("Cycle should not contain same edge twice")
             } else {
                 e.clone()
             }
         });
 
-        let cycle = Cycle::new(edges);
-
-        assert_eq!(
-            num_replacements, 1,
-            "Expected operation to replace exactly one edge"
-        );
-
-        cycle
+        Cycle::new(edges)
     }
 
     fn update_nth_edge(
