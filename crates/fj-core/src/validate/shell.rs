@@ -400,13 +400,16 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_edge(0, |edge| {
-                                    edge.replace_path(edge.path().reverse())
-                                        .replace_boundary(
-                                            edge.boundary().reverse(),
-                                        )
-                                        .insert(&mut services)
-                                })
+                                .update_edge(
+                                    cycle.edges().nth_circular(0),
+                                    |edge| {
+                                        edge.replace_path(edge.path().reverse())
+                                            .replace_boundary(
+                                                edge.boundary().reverse(),
+                                            )
+                                            .insert(&mut services)
+                                    },
+                                )
                                 .insert(&mut services)
                         })
                         .insert(&mut services)
@@ -442,13 +445,16 @@ mod tests {
                     region
                         .update_exterior(|cycle| {
                             cycle
-                                .update_nth_edge(0, |edge| {
-                                    let curve =
-                                        Curve::new().insert(&mut services);
+                                .update_edge(
+                                    cycle.edges().nth_circular(0),
+                                    |edge| {
+                                        let curve =
+                                            Curve::new().insert(&mut services);
 
-                                    edge.replace_curve(curve)
-                                        .insert(&mut services)
-                                })
+                                        edge.replace_curve(curve)
+                                            .insert(&mut services)
+                                    },
+                                )
                                 .insert(&mut services)
                         })
                         .insert(&mut services)

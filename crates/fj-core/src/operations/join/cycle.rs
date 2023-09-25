@@ -104,37 +104,30 @@ impl JoinCycle for Cycle {
             "Ranges have different lengths",
         );
 
-        let mut cycle = self.clone();
+        range.zip(range_other).fold(
+            self.clone(),
+            |cycle, (index, index_other)| {
+                let edge_other = other.edges().nth_circular(index_other);
 
-        for (index, index_other) in range.zip(range_other) {
-            let edge = self.edges().nth_circular(index);
-            let edge_other = other.edges().nth_circular(index_other);
-
-            let vertex_a = other
-                .edges()
-                .after(edge_other)
-                .expect("Cycle must contain edge; just obtained edge from it")
-                .start_vertex()
-                .clone();
-            let vertex_b = edge_other.start_vertex().clone();
-
-            let next_edge = self
-                .edges()
-                .after(edge)
-                .expect("Cycle must contain edge; just obtained edge from it");
-
-            let this_joined = edge
-                .replace_curve(edge_other.curve().clone())
-                .replace_start_vertex(vertex_a)
-                .insert(services);
-            let next_joined =
-                next_edge.replace_start_vertex(vertex_b).insert(services);
-
-            cycle = cycle
-                .replace_edge(edge, this_joined)
-                .replace_edge(next_edge, next_joined)
-        }
-
-        cycle
+                cycle
+                    .update_edge(self.edges().nth_circular(index), |edge| {
+                        edge.replace_curve(edge_other.curve().clone())
+                            .replace_start_vertex(
+                                other
+                                    .edges()
+                                    .nth_circular(index_other + 1)
+                                    .start_vertex()
+                                    .clone(),
+                            )
+                            .insert(services)
+                    })
+                    .update_edge(self.edges().nth_circular(index + 1), |edge| {
+                        edge.replace_start_vertex(
+                            edge_other.start_vertex().clone(),
+                        )
+                        .insert(services)
+                    })
+            },
+        )
     }
 }
