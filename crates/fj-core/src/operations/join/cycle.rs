@@ -124,12 +124,12 @@ impl JoinCycle for Cycle {
                 .expect("Cycle must contain edge; just obtained edge from it");
 
             cycle = cycle
-                .update_edge(edge, |_| {
+                .update_edge(edge, |edge| {
                     edge.replace_curve(edge_other.curve().clone())
                         .replace_start_vertex(vertex_a)
                         .insert(services)
                 })
-                .update_edge(next_edge, |_| {
+                .update_edge(next_edge, |next_edge| {
                     next_edge.replace_start_vertex(vertex_b).insert(services)
                 })
         }
