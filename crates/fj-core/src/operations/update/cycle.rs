@@ -9,11 +9,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
 
-    /// Replace the provided edge
-    ///
-    /// # Panics
-    ///
-    /// Panics, unless this operation replaces exactly one edge.
+    /// Update the provided edge
     #[must_use]
     fn update_edge(
         &self,
