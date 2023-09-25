@@ -104,29 +104,31 @@ impl JoinCycle for Cycle {
             "Ranges have different lengths",
         );
 
-        let mut cycle = self.clone();
+        let cycle = self.clone();
 
-        for (index, index_other) in range.zip(range_other) {
-            let edge_other = other.edges().nth_circular(index_other);
+        range
+            .zip(range_other)
+            .fold(cycle, |cycle, (index, index_other)| {
+                let edge_other = other.edges().nth_circular(index_other);
 
-            cycle = cycle
-                .update_edge(self.edges().nth_circular(index), |edge| {
-                    edge.replace_curve(edge_other.curve().clone())
-                        .replace_start_vertex(
-                            other
-                                .edges()
-                                .nth_circular(index_other + 1)
-                                .start_vertex()
-                                .clone(),
+                cycle
+                    .update_edge(self.edges().nth_circular(index), |edge| {
+                        edge.replace_curve(edge_other.curve().clone())
+                            .replace_start_vertex(
+                                other
+                                    .edges()
+                                    .nth_circular(index_other + 1)
+                                    .start_vertex()
+                                    .clone(),
+                            )
+                            .insert(services)
+                    })
+                    .update_edge(self.edges().nth_circular(index + 1), |edge| {
+                        edge.replace_start_vertex(
+                            edge_other.start_vertex().clone(),
                         )
                         .insert(services)
-                })
-                .update_edge(self.edges().nth_circular(index + 1), |edge| {
-                    edge.replace_start_vertex(edge_other.start_vertex().clone())
-                        .insert(services)
-                })
-        }
-
-        cycle
+                    })
+            })
     }
 }
