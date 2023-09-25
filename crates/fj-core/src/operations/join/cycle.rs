@@ -109,16 +109,16 @@ impl JoinCycle for Cycle {
         for (index, index_other) in range.zip(range_other) {
             let edge_other = other.edges().nth_circular(index_other);
 
-            let vertex_a = other
-                .edges()
-                .nth_circular(index_other + 1)
-                .start_vertex()
-                .clone();
-
             cycle = cycle
                 .update_edge(self.edges().nth_circular(index), |edge| {
                     edge.replace_curve(edge_other.curve().clone())
-                        .replace_start_vertex(vertex_a)
+                        .replace_start_vertex(
+                            other
+                                .edges()
+                                .nth_circular(index_other + 1)
+                                .start_vertex()
+                                .clone(),
+                        )
                         .insert(services)
                 })
                 .update_edge(self.edges().nth_circular(index + 1), |edge| {
