@@ -104,11 +104,9 @@ impl JoinCycle for Cycle {
             "Ranges have different lengths",
         );
 
-        let cycle = self.clone();
-
-        range
-            .zip(range_other)
-            .fold(cycle, |cycle, (index, index_other)| {
+        range.zip(range_other).fold(
+            self.clone(),
+            |cycle, (index, index_other)| {
                 let edge_other = other.edges().nth_circular(index_other);
 
                 cycle
@@ -129,6 +127,7 @@ impl JoinCycle for Cycle {
                         )
                         .insert(services)
                     })
-            })
+            },
+        )
     }
 }
