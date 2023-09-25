@@ -17,7 +17,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn update_edge(
         &self,
-        original: &Handle<Edge>,
+        edge: &Handle<Edge>,
         replacement: Handle<Edge>,
     ) -> Self;
 
@@ -42,13 +42,13 @@ impl UpdateCycle for Cycle {
 
     fn update_edge(
         &self,
-        original: &Handle<Edge>,
+        edge: &Handle<Edge>,
         replacement: Handle<Edge>,
     ) -> Self {
         let mut num_replacements = 0;
 
         let edges = self.edges().iter().map(|e| {
-            if e.id() == original.id() {
+            if e.id() == edge.id() {
                 num_replacements += 1;
                 replacement.clone()
             } else {
