@@ -20,18 +20,6 @@ pub trait UpdateCycle {
         edge: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
-
-    /// Update the edge at the given index
-    ///
-    /// # Panics
-    ///
-    /// Panics, unless this operation updates exactly one edge.
-    #[must_use]
-    fn update_nth_edge(
-        &self,
-        index: usize,
-        f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
-    ) -> Self;
 }
 
 impl UpdateCycle for Cycle {
@@ -58,31 +46,5 @@ impl UpdateCycle for Cycle {
         });
 
         Cycle::new(edges)
-    }
-
-    fn update_nth_edge(
-        &self,
-        index: usize,
-        mut f: impl FnMut(&Handle<Edge>) -> Handle<Edge>,
-    ) -> Self {
-        let mut num_replacements = 0;
-
-        let edges = self.edges().iter().enumerate().map(|(i, edge)| {
-            if i == index {
-                num_replacements += 1;
-                f(edge)
-            } else {
-                edge.clone()
-            }
-        });
-
-        let cycle = Cycle::new(edges);
-
-        assert_eq!(
-            num_replacements, 1,
-            "Expected operation to replace exactly one edge"
-        );
-
-        cycle
     }
 }
