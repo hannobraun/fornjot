@@ -107,7 +107,6 @@ impl JoinCycle for Cycle {
         let mut cycle = self.clone();
 
         for (index, index_other) in range.zip(range_other) {
-            let edge = self.edges().nth_circular(index);
             let edge_other = other.edges().nth_circular(index_other);
 
             let vertex_a = other
@@ -119,7 +118,7 @@ impl JoinCycle for Cycle {
             let vertex_b = edge_other.start_vertex().clone();
 
             cycle = cycle
-                .update_edge(edge, |edge| {
+                .update_edge(self.edges().nth_circular(index), |edge| {
                     edge.replace_curve(edge_other.curve().clone())
                         .replace_start_vertex(vertex_a)
                         .insert(services)
