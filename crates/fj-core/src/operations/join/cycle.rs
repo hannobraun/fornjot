@@ -131,8 +131,8 @@ impl JoinCycle for Cycle {
                 next_edge.replace_start_vertex(vertex_b).insert(services);
 
             cycle = cycle
-                .replace_edge(edge, this_joined)
-                .replace_edge(next_edge, next_joined)
+                .update_edge(edge, this_joined)
+                .update_edge(next_edge, next_joined)
         }
 
         cycle

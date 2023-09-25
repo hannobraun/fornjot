@@ -15,7 +15,7 @@ pub trait UpdateCycle {
     ///
     /// Panics, unless this operation replaces exactly one edge.
     #[must_use]
-    fn replace_edge(
+    fn update_edge(
         &self,
         original: &Handle<Edge>,
         replacement: Handle<Edge>,
@@ -40,7 +40,7 @@ impl UpdateCycle for Cycle {
         Cycle::new(edges)
     }
 
-    fn replace_edge(
+    fn update_edge(
         &self,
         original: &Handle<Edge>,
         replacement: Handle<Edge>,
