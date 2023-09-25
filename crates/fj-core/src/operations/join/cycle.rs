@@ -118,17 +118,20 @@ impl JoinCycle for Cycle {
                 .clone();
             let vertex_b = edge_other.start_vertex().clone();
 
-            let next_edge = self.edges().nth_circular(index + 1);
-
             cycle = cycle
                 .update_edge(edge, |edge| {
                     edge.replace_curve(edge_other.curve().clone())
                         .replace_start_vertex(vertex_a)
                         .insert(services)
                 })
-                .update_edge(next_edge, |next_edge| {
-                    next_edge.replace_start_vertex(vertex_b).insert(services)
-                })
+                .update_edge(
+                    self.edges().nth_circular(index + 1),
+                    |next_edge| {
+                        next_edge
+                            .replace_start_vertex(vertex_b)
+                            .insert(services)
+                    },
+                )
         }
 
         cycle
