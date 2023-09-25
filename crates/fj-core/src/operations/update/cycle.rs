@@ -18,7 +18,7 @@ pub trait UpdateCycle {
     fn update_edge(
         &self,
         edge: &Handle<Edge>,
-        replacement: Handle<Edge>,
+        update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
 
     /// Update the edge at the given index
@@ -43,14 +43,16 @@ impl UpdateCycle for Cycle {
     fn update_edge(
         &self,
         edge: &Handle<Edge>,
-        replacement: Handle<Edge>,
+        update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
+        let updated = update(edge);
+
         let mut num_replacements = 0;
 
         let edges = self.edges().iter().map(|e| {
             if e.id() == edge.id() {
                 num_replacements += 1;
-                replacement.clone()
+                updated.clone()
             } else {
                 e.clone()
             }
