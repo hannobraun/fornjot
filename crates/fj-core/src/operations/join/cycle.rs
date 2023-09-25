@@ -123,15 +123,15 @@ impl JoinCycle for Cycle {
                 .after(edge)
                 .expect("Cycle must contain edge; just obtained edge from it");
 
-            let this_joined = edge
-                .replace_curve(edge_other.curve().clone())
-                .replace_start_vertex(vertex_a)
-                .insert(services);
             let next_joined =
                 next_edge.replace_start_vertex(vertex_b).insert(services);
 
             cycle = cycle
-                .update_edge(edge, |_| this_joined)
+                .update_edge(edge, |_| {
+                    edge.replace_curve(edge_other.curve().clone())
+                        .replace_start_vertex(vertex_a)
+                        .insert(services)
+                })
                 .update_edge(next_edge, |_| next_joined)
         }
 
