@@ -124,14 +124,9 @@ impl JoinCycle for Cycle {
                         .replace_start_vertex(vertex_a)
                         .insert(services)
                 })
-                .update_edge(
-                    self.edges().nth_circular(index + 1),
-                    |next_edge| {
-                        next_edge
-                            .replace_start_vertex(vertex_b)
-                            .insert(services)
-                    },
-                )
+                .update_edge(self.edges().nth_circular(index + 1), |edge| {
+                    edge.replace_start_vertex(vertex_b).insert(services)
+                })
         }
 
         cycle
