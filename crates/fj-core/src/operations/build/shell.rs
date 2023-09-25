@@ -96,26 +96,26 @@ pub trait BuildShell {
                             edge.reverse_curve_coordinate_systems(services)
                                 .insert(services)
                         })
+                        .update_nth_edge(1, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
+                        .update_nth_edge(2, |edge| {
+                            edge.reverse_curve_coordinate_systems(services)
+                                .insert(services)
+                        })
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
                             1..=1,
                             services,
                         )
-                        .update_nth_edge(1, |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
                         .join_to(
                             bad.face.region().exterior(),
                             1..=1,
                             2..=2,
                             services,
                         )
-                        .update_nth_edge(2, |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
                         .join_to(
                             dac.face.region().exterior(),
                             2..=2,
