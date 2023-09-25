@@ -115,7 +115,6 @@ impl JoinCycle for Cycle {
                 .expect("Cycle must contain edge; just obtained edge from it")
                 .start_vertex()
                 .clone();
-            let vertex_b = edge_other.start_vertex().clone();
 
             cycle = cycle
                 .update_edge(self.edges().nth_circular(index), |edge| {
@@ -124,7 +123,8 @@ impl JoinCycle for Cycle {
                         .insert(services)
                 })
                 .update_edge(self.edges().nth_circular(index + 1), |edge| {
-                    edge.replace_start_vertex(vertex_b).insert(services)
+                    edge.replace_start_vertex(edge_other.start_vertex().clone())
+                        .insert(services)
                 })
         }
 
