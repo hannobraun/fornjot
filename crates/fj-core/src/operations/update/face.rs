@@ -6,7 +6,7 @@ use crate::{
 
 /// Update a [`Face`]
 pub trait UpdateFace {
-    /// Replace the region of the face
+    /// Update the region of the face
     #[must_use]
     fn update_region(
         &self,
