@@ -448,11 +448,10 @@ mod tests {
                                 .update_edge(
                                     cycle.edges().nth_circular(0),
                                     |edge| {
-                                        let curve =
-                                            Curve::new().insert(&mut services);
-
-                                        edge.update_curve(|_| curve)
-                                            .insert(&mut services)
+                                        edge.update_curve(|_| {
+                                            Curve::new().insert(&mut services)
+                                        })
+                                        .insert(&mut services)
                                     },
                                 )
                                 .insert(&mut services)
