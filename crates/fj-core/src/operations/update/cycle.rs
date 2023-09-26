@@ -41,6 +41,10 @@ impl UpdateCycle for Cycle {
             }
         });
 
-        Cycle::new(edges)
+        let cycle = Cycle::new(edges);
+
+        assert!(updated.is_none(), "Edge not found in cycle");
+
+        cycle
     }
 }
