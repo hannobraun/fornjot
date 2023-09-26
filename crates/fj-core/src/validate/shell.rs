@@ -490,8 +490,8 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |_| {
-            valid.abc.face.reverse(&mut services).insert(&mut services)
+        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
+            face.reverse(&mut services).insert(&mut services)
         });
 
         valid.shell.validate_and_return_first_error()?;
