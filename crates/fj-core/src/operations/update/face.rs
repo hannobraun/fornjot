@@ -10,16 +10,16 @@ pub trait UpdateFace {
     #[must_use]
     fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+        update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self;
 }
 
 impl UpdateFace for Face {
     fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+        update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        let region = f(self.region());
+        let region = update(self.region());
         Face::new(self.surface().clone(), region)
     }
 }
@@ -27,8 +27,8 @@ impl UpdateFace for Face {
 impl<const D: usize> UpdateFace for Polygon<D> {
     fn update_region(
         &self,
-        f: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+        update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        self.replace_face(self.face.update_region(f))
+        self.replace_face(self.face.update_region(update))
     }
 }
