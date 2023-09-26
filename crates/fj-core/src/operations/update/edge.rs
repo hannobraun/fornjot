@@ -10,7 +10,10 @@ use crate::{
 pub trait UpdateEdge {
     /// Replace the path of the edge
     #[must_use]
-    fn update_path(&self, path: SurfacePath) -> Self;
+    fn update_path(
+        &self,
+        update: impl FnOnce(SurfacePath) -> SurfacePath,
+    ) -> Self;
 
     /// Replace the boundary of the edge
     #[must_use]
@@ -26,9 +29,12 @@ pub trait UpdateEdge {
 }
 
 impl UpdateEdge for Edge {
-    fn update_path(&self, path: SurfacePath) -> Self {
+    fn update_path(
+        &self,
+        update: impl FnOnce(SurfacePath) -> SurfacePath,
+    ) -> Self {
         Edge::new(
-            path,
+            update(self.path()),
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
