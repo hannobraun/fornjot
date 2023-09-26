@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fmt::Debug, slice};
+use std::{collections::BTreeSet, fmt::Debug, slice, vec};
 
 use itertools::Itertools;
 
@@ -106,6 +106,15 @@ where
 {
     fn from_iter<T: IntoIterator<Item = Handle<O>>>(handles: T) -> Self {
         Self::new(handles)
+    }
+}
+
+impl<T> IntoIterator for Handles<T> {
+    type Item = Handle<T>;
+    type IntoIter = vec::IntoIter<Handle<T>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
     }
 }
 
