@@ -33,22 +33,7 @@ impl UpdateCycle for Cycle {
         edge: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
-        let mut updated = Some(update(edge));
-
-        let edges = self.edges().iter().map(|e| {
-            if e.id() == edge.id() {
-                updated
-                    .take()
-                    .expect("Cycle should not contain same edge twice")
-            } else {
-                e.clone()
-            }
-        });
-
-        let cycle = Cycle::new(edges);
-
-        assert!(updated.is_none(), "Edge not found in cycle");
-
-        cycle
+        let edges = self.edges().update(edge, update);
+        Cycle::new(edges)
     }
 }
