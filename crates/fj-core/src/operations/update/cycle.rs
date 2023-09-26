@@ -13,7 +13,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Panics, if the provided edge is not part of the cycle.
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
     fn update_edge(
         &self,
