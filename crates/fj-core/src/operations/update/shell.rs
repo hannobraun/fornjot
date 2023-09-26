@@ -13,7 +13,7 @@ pub trait UpdateShell {
     #[must_use]
     fn update_face(
         &self,
-        original: &Handle<Face>,
+        face: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Self;
 
@@ -30,11 +30,11 @@ impl UpdateShell for Shell {
 
     fn update_face(
         &self,
-        original: &Handle<Face>,
+        face: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Self {
         let faces = self.faces().iter().map(|f| {
-            if f.id() == original.id() {
+            if f.id() == face.id() {
                 replacement.clone()
             } else {
                 f.clone()
