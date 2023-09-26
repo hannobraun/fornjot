@@ -11,7 +11,7 @@ pub trait UpdateShell {
 
     /// Replace a face of the shell
     #[must_use]
-    fn replace_face(
+    fn update_face(
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
@@ -28,7 +28,7 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn replace_face(
+    fn update_face(
         &self,
         original: &Handle<Face>,
         replacement: Handle<Face>,
