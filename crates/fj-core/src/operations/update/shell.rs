@@ -9,7 +9,13 @@ pub trait UpdateShell {
     #[must_use]
     fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
 
-    /// Replace a face of the shell
+    /// Update a face of the shell
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
     fn update_face(
         &self,
