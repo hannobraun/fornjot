@@ -8,28 +8,28 @@ use crate::{
 
 /// Update a [`Edge`]
 pub trait UpdateEdge {
-    /// Replace the path of the edge
+    /// Update the path of the edge
     #[must_use]
     fn update_path(
         &self,
         update: impl FnOnce(SurfacePath) -> SurfacePath,
     ) -> Self;
 
-    /// Replace the boundary of the edge
+    /// Update the boundary of the edge
     #[must_use]
     fn update_boundary(
         &self,
         update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
     ) -> Self;
 
-    /// Replace the curve of the edge
+    /// Update the curve of the edge
     #[must_use]
     fn update_curve(
         &self,
         update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
     ) -> Self;
 
-    /// Replace the start vertex of the edge
+    /// Update the start vertex of the edge
     #[must_use]
     fn update_start_vertex(
         &self,
