@@ -404,9 +404,9 @@ mod tests {
                                     cycle.edges().nth_circular(0),
                                     |edge| {
                                         edge.update_path(|path| path.reverse())
-                                            .update_boundary(
-                                                edge.boundary().reverse(),
-                                            )
+                                            .update_boundary(|_| {
+                                                edge.boundary().reverse()
+                                            })
                                             .insert(&mut services)
                                     },
                                 )

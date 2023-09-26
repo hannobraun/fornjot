@@ -17,7 +17,10 @@ pub trait UpdateEdge {
 
     /// Replace the boundary of the edge
     #[must_use]
-    fn update_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self;
+    fn update_boundary(
+        &self,
+        update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
+    ) -> Self;
 
     /// Replace the curve of the edge
     #[must_use]
@@ -41,10 +44,13 @@ impl UpdateEdge for Edge {
         )
     }
 
-    fn update_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self {
+    fn update_boundary(
+        &self,
+        update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
+    ) -> Self {
         Edge::new(
             self.path(),
-            boundary,
+            update(self.boundary()),
             self.curve().clone(),
             self.start_vertex().clone(),
         )
