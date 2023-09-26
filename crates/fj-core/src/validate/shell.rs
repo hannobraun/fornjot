@@ -403,13 +403,11 @@ mod tests {
                                 .update_edge(
                                     cycle.edges().nth_circular(0),
                                     |edge| {
-                                        edge.update_path(|_| {
-                                            edge.path().reverse()
-                                        })
-                                        .replace_boundary(
-                                            edge.boundary().reverse(),
-                                        )
-                                        .insert(&mut services)
+                                        edge.update_path(|path| path.reverse())
+                                            .replace_boundary(
+                                                edge.boundary().reverse(),
+                                            )
+                                            .insert(&mut services)
                                     },
                                 )
                                 .insert(&mut services)
