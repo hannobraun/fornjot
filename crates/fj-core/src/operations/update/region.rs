@@ -12,7 +12,7 @@ pub trait UpdateRegion {
         f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self;
 
-    /// Add the provides interiors to the region
+    /// Add the provided interiors to the region
     #[must_use]
     fn add_interiors(
         &self,
