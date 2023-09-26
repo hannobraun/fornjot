@@ -85,7 +85,7 @@ impl JoinCycle for Cycle {
             |((prev, _, _), (edge, curve, boundary))| {
                 Edge::unjoined(curve, boundary, services)
                     .update_curve(|_| edge.curve().clone())
-                    .update_start_vertex(prev.start_vertex().clone())
+                    .update_start_vertex(|_| prev.start_vertex().clone())
                     .insert(services)
             },
         ))
@@ -112,19 +112,19 @@ impl JoinCycle for Cycle {
                 cycle
                     .update_edge(self.edges().nth_circular(index), |edge| {
                         edge.update_curve(|_| edge_other.curve().clone())
-                            .update_start_vertex(
+                            .update_start_vertex(|_| {
                                 other
                                     .edges()
                                     .nth_circular(index_other + 1)
                                     .start_vertex()
-                                    .clone(),
-                            )
+                                    .clone()
+                            })
                             .insert(services)
                     })
                     .update_edge(self.edges().nth_circular(index + 1), |edge| {
-                        edge.update_start_vertex(
-                            edge_other.start_vertex().clone(),
-                        )
+                        edge.update_start_vertex(|_| {
+                            edge_other.start_vertex().clone()
+                        })
                         .insert(services)
                     })
             },

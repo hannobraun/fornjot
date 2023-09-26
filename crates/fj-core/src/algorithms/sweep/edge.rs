@@ -86,7 +86,7 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
                         Some(boundary),
                         services,
                     )
-                    .update_start_vertex(start_vertex);
+                    .update_start_vertex(|_| start_vertex);
 
                     let edge = if let Some(curve) = curve {
                         edge.update_curve(|_| curve)
