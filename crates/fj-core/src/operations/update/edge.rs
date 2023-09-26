@@ -31,7 +31,7 @@ pub trait UpdateEdge {
 
     /// Replace the start vertex of the edge
     #[must_use]
-    fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
+    fn update_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
 }
 
 impl UpdateEdge for Edge {
@@ -71,7 +71,7 @@ impl UpdateEdge for Edge {
         )
     }
 
-    fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
+    fn update_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
         Edge::new(
             self.path(),
             self.boundary(),
