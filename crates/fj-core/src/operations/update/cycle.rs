@@ -10,6 +10,12 @@ pub trait UpdateCycle {
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
 
     /// Update the provided edge
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
     fn update_edge(
         &self,
@@ -29,18 +35,7 @@ impl UpdateCycle for Cycle {
         edge: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
-        let mut updated = Some(update(edge));
-
-        let edges = self.edges().iter().map(|e| {
-            if e.id() == edge.id() {
-                updated
-                    .take()
-                    .expect("Cycle should not contain same edge twice")
-            } else {
-                e.clone()
-            }
-        });
-
+        let edges = self.edges().update(edge, update);
         Cycle::new(edges)
     }
 }

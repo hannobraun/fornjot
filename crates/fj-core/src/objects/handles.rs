@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fmt::Debug, slice};
+use std::{collections::BTreeSet, fmt::Debug, slice, vec};
 
 use itertools::Itertools;
 
@@ -98,6 +98,40 @@ impl<T> Handles<T> {
     pub fn pairs(&self) -> impl Iterator<Item = (&Handle<T>, &Handle<T>)> {
         self.iter().circular_tuple_windows()
     }
+
+    /// Create a new instance in which the provided item is updated
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the provided item is not present.
+    /// Panics, if the update results in a duplicate item.
+    #[must_use]
+    pub fn update(
+        &self,
+        handle: &Handle<T>,
+        update: impl FnOnce(&Handle<T>) -> Handle<T>,
+    ) -> Self
+    where
+        T: Debug + Ord,
+    {
+        let mut updated = Some(update(handle));
+
+        let items = self.iter().map(|h| {
+            if h.id() == handle.id() {
+                updated
+                    .take()
+                    .expect("`Handles` should not contain same item twice")
+            } else {
+                h.clone()
+            }
+        });
+
+        let handles = items.collect();
+
+        assert!(updated.is_none(), "Edge not found in cycle");
+
+        handles
+    }
 }
 
 impl<O> FromIterator<Handle<O>> for Handles<O>
@@ -106,6 +140,15 @@ where
 {
     fn from_iter<T: IntoIterator<Item = Handle<O>>>(handles: T) -> Self {
         Self::new(handles)
+    }
+}
+
+impl<T> IntoIterator for Handles<T> {
+    type Item = Handle<T>;
+    type IntoIter = vec::IntoIter<Handle<T>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
     }
 }
 

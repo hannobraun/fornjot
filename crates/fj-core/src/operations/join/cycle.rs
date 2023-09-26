@@ -84,8 +84,8 @@ impl JoinCycle for Cycle {
         self.add_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev, _, _), (edge, curve, boundary))| {
                 Edge::unjoined(curve, boundary, services)
-                    .replace_curve(edge.curve().clone())
-                    .replace_start_vertex(prev.start_vertex().clone())
+                    .update_curve(|_| edge.curve().clone())
+                    .update_start_vertex(|_| prev.start_vertex().clone())
                     .insert(services)
             },
         ))
@@ -111,20 +111,20 @@ impl JoinCycle for Cycle {
 
                 cycle
                     .update_edge(self.edges().nth_circular(index), |edge| {
-                        edge.replace_curve(edge_other.curve().clone())
-                            .replace_start_vertex(
+                        edge.update_curve(|_| edge_other.curve().clone())
+                            .update_start_vertex(|_| {
                                 other
                                     .edges()
                                     .nth_circular(index_other + 1)
                                     .start_vertex()
-                                    .clone(),
-                            )
+                                    .clone()
+                            })
                             .insert(services)
                     })
                     .update_edge(self.edges().nth_circular(index + 1), |edge| {
-                        edge.replace_start_vertex(
-                            edge_other.start_vertex().clone(),
-                        )
+                        edge.update_start_vertex(|_| {
+                            edge_other.start_vertex().clone()
+                        })
                         .insert(services)
                     })
             },

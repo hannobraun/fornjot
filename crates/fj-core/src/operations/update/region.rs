@@ -9,10 +9,10 @@ pub trait UpdateRegion {
     #[must_use]
     fn update_exterior(
         &self,
-        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self;
 
-    /// Add the provides interiors to the region
+    /// Add the provided interiors to the region
     #[must_use]
     fn add_interiors(
         &self,
@@ -23,9 +23,9 @@ pub trait UpdateRegion {
 impl UpdateRegion for Region {
     fn update_exterior(
         &self,
-        f: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
-        let exterior = f(self.exterior());
+        let exterior = update(self.exterior());
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 

@@ -391,31 +391,27 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.replace_face(
-            &valid.abc.face,
-            valid
-                .abc
-                .face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_edge(
-                                    cycle.edges().nth_circular(0),
-                                    |edge| {
-                                        edge.replace_path(edge.path().reverse())
-                                            .replace_boundary(
-                                                edge.boundary().reverse(),
-                                            )
-                                            .insert(&mut services)
-                                    },
-                                )
-                                .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                })
-                .insert(&mut services),
-        );
+        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
+            face.update_region(|region| {
+                region
+                    .update_exterior(|cycle| {
+                        cycle
+                            .update_edge(
+                                cycle.edges().nth_circular(0),
+                                |edge| {
+                                    edge.update_path(|path| path.reverse())
+                                        .update_boundary(|boundary| {
+                                            boundary.reverse()
+                                        })
+                                        .insert(&mut services)
+                                },
+                            )
+                            .insert(&mut services)
+                    })
+                    .insert(&mut services)
+            })
+            .insert(&mut services)
+        });
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
@@ -436,31 +432,26 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.replace_face(
-            &valid.abc.face,
-            valid
-                .abc
-                .face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_edge(
-                                    cycle.edges().nth_circular(0),
-                                    |edge| {
-                                        let curve =
-                                            Curve::new().insert(&mut services);
-
-                                        edge.replace_curve(curve)
-                                            .insert(&mut services)
-                                    },
-                                )
-                                .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                })
-                .insert(&mut services),
-        );
+        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
+            face.update_region(|region| {
+                region
+                    .update_exterior(|cycle| {
+                        cycle
+                            .update_edge(
+                                cycle.edges().nth_circular(0),
+                                |edge| {
+                                    edge.update_curve(|_| {
+                                        Curve::new().insert(&mut services)
+                                    })
+                                    .insert(&mut services)
+                                },
+                            )
+                            .insert(&mut services)
+                    })
+                    .insert(&mut services)
+            })
+            .insert(&mut services)
+        });
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
@@ -499,10 +490,9 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.replace_face(
-            &valid.abc.face,
-            valid.abc.face.reverse(&mut services).insert(&mut services),
-        );
+        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
+            face.reverse(&mut services).insert(&mut services)
+        });
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(

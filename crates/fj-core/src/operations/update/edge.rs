@@ -8,57 +8,81 @@ use crate::{
 
 /// Update a [`Edge`]
 pub trait UpdateEdge {
-    /// Replace the path of the edge
+    /// Update the path of the edge
     #[must_use]
-    fn replace_path(&self, path: SurfacePath) -> Self;
+    fn update_path(
+        &self,
+        update: impl FnOnce(SurfacePath) -> SurfacePath,
+    ) -> Self;
 
-    /// Replace the boundary of the edge
+    /// Update the boundary of the edge
     #[must_use]
-    fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self;
+    fn update_boundary(
+        &self,
+        update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
+    ) -> Self;
 
-    /// Replace the curve of the edge
+    /// Update the curve of the edge
     #[must_use]
-    fn replace_curve(&self, curve: Handle<Curve>) -> Self;
+    fn update_curve(
+        &self,
+        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
+    ) -> Self;
 
-    /// Replace the start vertex of the edge
+    /// Update the start vertex of the edge
     #[must_use]
-    fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self;
+    fn update_start_vertex(
+        &self,
+        update: impl FnOnce(&Handle<Vertex>) -> Handle<Vertex>,
+    ) -> Self;
 }
 
 impl UpdateEdge for Edge {
-    fn replace_path(&self, path: SurfacePath) -> Self {
+    fn update_path(
+        &self,
+        update: impl FnOnce(SurfacePath) -> SurfacePath,
+    ) -> Self {
         Edge::new(
-            path,
+            update(self.path()),
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
         )
     }
 
-    fn replace_boundary(&self, boundary: CurveBoundary<Point<1>>) -> Self {
+    fn update_boundary(
+        &self,
+        update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
+    ) -> Self {
         Edge::new(
             self.path(),
-            boundary,
+            update(self.boundary()),
             self.curve().clone(),
             self.start_vertex().clone(),
         )
     }
 
-    fn replace_curve(&self, curve: Handle<Curve>) -> Self {
+    fn update_curve(
+        &self,
+        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
+    ) -> Self {
         Edge::new(
             self.path(),
             self.boundary(),
-            curve,
+            update(self.curve()),
             self.start_vertex().clone(),
         )
     }
 
-    fn replace_start_vertex(&self, start_vertex: Handle<Vertex>) -> Self {
+    fn update_start_vertex(
+        &self,
+        update: impl FnOnce(&Handle<Vertex>) -> Handle<Vertex>,
+    ) -> Self {
         Edge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),
-            start_vertex,
+            update(self.start_vertex()),
         )
     }
 }

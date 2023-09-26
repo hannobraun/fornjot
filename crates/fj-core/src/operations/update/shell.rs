@@ -9,12 +9,18 @@ pub trait UpdateShell {
     #[must_use]
     fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
 
-    /// Replace a face of the shell
+    /// Update a face of the shell
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
-    fn replace_face(
+    fn update_face(
         &self,
-        original: &Handle<Face>,
-        replacement: Handle<Face>,
+        face: &Handle<Face>,
+        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self;
 
     /// Remove a face from the shell
@@ -28,19 +34,12 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn replace_face(
+    fn update_face(
         &self,
-        original: &Handle<Face>,
-        replacement: Handle<Face>,
+        face: &Handle<Face>,
+        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self {
-        let faces = self.faces().iter().map(|face| {
-            if face.id() == original.id() {
-                replacement.clone()
-            } else {
-                face.clone()
-            }
-        });
-
+        let faces = self.faces().update(face, update);
         Shell::new(faces)
     }
 
