@@ -403,7 +403,7 @@ mod tests {
                                 .update_edge(
                                     cycle.edges().nth_circular(0),
                                     |edge| {
-                                        edge.replace_path(edge.path().reverse())
+                                        edge.update_path(edge.path().reverse())
                                             .replace_boundary(
                                                 edge.boundary().reverse(),
                                             )
