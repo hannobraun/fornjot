@@ -24,7 +24,7 @@ pub trait UpdateEdge {
 
     /// Replace the curve of the edge
     #[must_use]
-    fn replace_curve(&self, curve: Handle<Curve>) -> Self;
+    fn update_curve(&self, curve: Handle<Curve>) -> Self;
 
     /// Replace the start vertex of the edge
     #[must_use]
@@ -56,7 +56,7 @@ impl UpdateEdge for Edge {
         )
     }
 
-    fn replace_curve(&self, curve: Handle<Curve>) -> Self {
+    fn update_curve(&self, curve: Handle<Curve>) -> Self {
         Edge::new(
             self.path(),
             self.boundary(),

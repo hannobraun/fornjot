@@ -451,7 +451,7 @@ mod tests {
                                         let curve =
                                             Curve::new().insert(&mut services);
 
-                                        edge.replace_curve(curve)
+                                        edge.update_curve(curve)
                                             .insert(&mut services)
                                     },
                                 )
