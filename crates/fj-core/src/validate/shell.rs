@@ -391,29 +391,26 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut services,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |_| {
-            valid
-                .abc
-                .face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_edge(
-                                    cycle.edges().nth_circular(0),
-                                    |edge| {
-                                        edge.update_path(|path| path.reverse())
-                                            .update_boundary(|boundary| {
-                                                boundary.reverse()
-                                            })
-                                            .insert(&mut services)
-                                    },
-                                )
-                                .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                })
-                .insert(&mut services)
+        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
+            face.update_region(|region| {
+                region
+                    .update_exterior(|cycle| {
+                        cycle
+                            .update_edge(
+                                cycle.edges().nth_circular(0),
+                                |edge| {
+                                    edge.update_path(|path| path.reverse())
+                                        .update_boundary(|boundary| {
+                                            boundary.reverse()
+                                        })
+                                        .insert(&mut services)
+                                },
+                            )
+                            .insert(&mut services)
+                    })
+                    .insert(&mut services)
+            })
+            .insert(&mut services)
         });
 
         valid.shell.validate_and_return_first_error()?;
