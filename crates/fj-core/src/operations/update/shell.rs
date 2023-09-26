@@ -14,7 +14,7 @@ pub trait UpdateShell {
     fn update_face(
         &self,
         face: &Handle<Face>,
-        replacement: Handle<Face>,
+        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self;
 
     /// Remove a face from the shell
@@ -31,16 +31,9 @@ impl UpdateShell for Shell {
     fn update_face(
         &self,
         face: &Handle<Face>,
-        replacement: Handle<Face>,
+        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self {
-        let faces = self.faces().iter().map(|f| {
-            if f.id() == face.id() {
-                replacement.clone()
-            } else {
-                f.clone()
-            }
-        });
-
+        let faces = self.faces().update(face, update);
         Shell::new(faces)
     }
 
