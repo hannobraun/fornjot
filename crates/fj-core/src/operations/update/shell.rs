@@ -33,11 +33,11 @@ impl UpdateShell for Shell {
         original: &Handle<Face>,
         replacement: Handle<Face>,
     ) -> Self {
-        let faces = self.faces().iter().map(|face| {
-            if face.id() == original.id() {
+        let faces = self.faces().iter().map(|f| {
+            if f.id() == original.id() {
                 replacement.clone()
             } else {
-                face.clone()
+                f.clone()
             }
         });
 
