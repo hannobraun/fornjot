@@ -114,6 +114,27 @@ impl<T> Handles<T> {
     where
         T: Debug + Ord,
     {
+        self.replace(handle, |handle| [update(handle)])
+    }
+
+    /// Create a new instance in which the provided item has been replaced
+    ///
+    /// This is a more general version of [`Handles::update`] which can replace
+    /// a single item with multiple others.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the provided item is not present.
+    /// Panics, if the update results in a duplicate item.
+    #[must_use]
+    pub fn replace<const N: usize>(
+        &self,
+        handle: &Handle<T>,
+        replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
+    ) -> Self
+    where
+        T: Debug + Ord,
+    {
         let mut iter = self.iter().cloned().peekable();
 
         // Collect all items before the item we want to update.
@@ -135,10 +156,10 @@ impl<T> Handles<T> {
             before.push(next.clone());
         }
 
-        let updated = update(handle);
+        let replaced = replace(handle);
         let after = iter;
 
-        before.into_iter().chain([updated]).chain(after).collect()
+        before.into_iter().chain(replaced).chain(after).collect()
     }
 }
 
