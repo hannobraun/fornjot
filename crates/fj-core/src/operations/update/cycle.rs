@@ -30,9 +30,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn replace_edge<const N: usize>(
         &self,
