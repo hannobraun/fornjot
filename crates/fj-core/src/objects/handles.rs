@@ -61,6 +61,25 @@ impl<T> Handles<T> {
         self.inner.is_empty()
     }
 
+    /// Return the only item
+    ///
+    /// # Panics
+    ///
+    /// Panics, if there is more than one item.
+    pub fn only(&self) -> &Handle<T> {
+        let mut iter = self.inner.iter();
+        let item = iter
+            .next()
+            .expect("Requested only item, but no items available");
+
+        assert!(
+            iter.next().is_none(),
+            "Requested only item, but more than one available"
+        );
+
+        item
+    }
+
     /// Return the n-th item
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
         self.inner.get(index)
