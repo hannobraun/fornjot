@@ -22,6 +22,23 @@ pub trait UpdateCycle {
         edge: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
+
+    /// Replace the provided edge
+    ///
+    /// This is a more general version of [`UpdateCycle::update_edge`] which can
+    /// replace a single edge with multiple others.
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
+    #[must_use]
+    fn replace_edge<const N: usize>(
+        &self,
+        edge: &Handle<Edge>,
+        replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
+    ) -> Self;
 }
 
 impl UpdateCycle for Cycle {
@@ -36,6 +53,15 @@ impl UpdateCycle for Cycle {
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
         let edges = self.edges().update(edge, update);
+        Cycle::new(edges)
+    }
+
+    fn replace_edge<const N: usize>(
+        &self,
+        edge: &Handle<Edge>,
+        replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
+    ) -> Self {
+        let edges = self.edges().replace(edge, replace);
         Cycle::new(edges)
     }
 }

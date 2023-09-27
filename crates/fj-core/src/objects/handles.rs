@@ -114,23 +114,52 @@ impl<T> Handles<T> {
     where
         T: Debug + Ord,
     {
-        let mut updated = Some(update(handle));
+        self.replace(handle, |handle| [update(handle)])
+    }
 
-        let items = self.iter().map(|h| {
+    /// Create a new instance in which the provided item has been replaced
+    ///
+    /// This is a more general version of [`Handles::update`] which can replace
+    /// a single item with multiple others.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the provided item is not present.
+    /// Panics, if the update results in a duplicate item.
+    #[must_use]
+    pub fn replace<const N: usize>(
+        &self,
+        handle: &Handle<T>,
+        replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
+    ) -> Self
+    where
+        T: Debug + Ord,
+    {
+        let mut iter = self.iter().cloned().peekable();
+
+        // Collect all items before the item we want to update.
+        let mut before = Vec::new();
+        loop {
+            let h = match iter.peek() {
+                Some(h) => h,
+                None => panic!("Item not found"),
+            };
+
             if h.id() == handle.id() {
-                updated
-                    .take()
-                    .expect("`Handles` should not contain same item twice")
-            } else {
-                h.clone()
+                // Found the item we want to update. Remove it from the
+                // iterator, then move on.
+                iter.next();
+                break;
             }
-        });
 
-        let handles = items.collect();
+            let next = iter.next().expect("Peek just returned `Some`");
+            before.push(next.clone());
+        }
 
-        assert!(updated.is_none(), "Edge not found in cycle");
+        let replaced = replace(handle);
+        let after = iter;
 
-        handles
+        before.into_iter().chain(replaced).chain(after).collect()
     }
 }
 
