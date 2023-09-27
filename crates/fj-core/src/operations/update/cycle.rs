@@ -9,7 +9,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
 
-    /// Update the provided edge
+    /// Update an edge of the cycle
     ///
     /// # Panics
     ///
@@ -19,24 +19,24 @@ pub trait UpdateCycle {
     #[must_use]
     fn update_edge(
         &self,
-        edge: &Handle<Edge>,
+        handle: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
 
-    /// Replace the provided edge
+    /// Replace an edge of the cycle
     ///
     /// This is a more general version of [`UpdateCycle::update_edge`] which can
     /// replace a single edge with multiple others.
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn replace_edge<const N: usize>(
         &self,
-        edge: &Handle<Edge>,
+        handle: &Handle<Edge>,
         replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
     ) -> Self;
 }
@@ -49,19 +49,19 @@ impl UpdateCycle for Cycle {
 
     fn update_edge(
         &self,
-        edge: &Handle<Edge>,
+        handle: &Handle<Edge>,
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self {
-        let edges = self.edges().update(edge, update);
+        let edges = self.edges().update(handle, update);
         Cycle::new(edges)
     }
 
     fn replace_edge<const N: usize>(
         &self,
-        edge: &Handle<Edge>,
+        handle: &Handle<Edge>,
         replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
     ) -> Self {
-        let edges = self.edges().replace(edge, replace);
+        let edges = self.edges().replace(handle, replace);
         Cycle::new(edges)
     }
 }

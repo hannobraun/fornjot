@@ -18,6 +18,37 @@ pub trait UpdateRegion {
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self;
+
+    /// Update an interior cycle of the region
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
+    #[must_use]
+    fn update_interior(
+        &self,
+        handle: &Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self;
+
+    /// Replace an interior cycle of the region
+    ///
+    /// This is a more general version of [`UpdateRegion::update_interior`]
+    /// which can replace a single cycle with multiple others.
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::replace`]: crate::objects::Handles::replace
+    #[must_use]
+    fn replace_interior<const N: usize>(
+        &self,
+        handle: &Handle<Cycle>,
+        replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
+    ) -> Self;
 }
 
 impl UpdateRegion for Region {
@@ -34,6 +65,24 @@ impl UpdateRegion for Region {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
         let interiors = self.interiors().iter().cloned().chain(interiors);
+        Region::new(self.exterior().clone(), interiors, self.color())
+    }
+
+    fn update_interior(
+        &self,
+        handle: &Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self {
+        let interiors = self.interiors().update(handle, update);
+        Region::new(self.exterior().clone(), interiors, self.color())
+    }
+
+    fn replace_interior<const N: usize>(
+        &self,
+        handle: &Handle<Cycle>,
+        replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
+    ) -> Self {
+        let interiors = self.interiors().replace(handle, replace);
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }
