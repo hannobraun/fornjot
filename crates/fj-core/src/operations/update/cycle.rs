@@ -9,7 +9,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
 
-    /// Update the provided edge
+    /// Update an edge of the cycle
     ///
     /// # Panics
     ///
@@ -23,7 +23,7 @@ pub trait UpdateCycle {
         update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
     ) -> Self;
 
-    /// Replace the provided edge
+    /// Replace an edge of the cycle
     ///
     /// This is a more general version of [`UpdateCycle::update_edge`] which can
     /// replace a single edge with multiple others.
