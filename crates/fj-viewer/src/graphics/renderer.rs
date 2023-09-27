@@ -367,11 +367,11 @@ impl Renderer {
 #[derive(Error, Debug)]
 pub enum RendererInitError {
     /// General IO error
-    #[error("I/O error: {0}")]
+    #[error("I/O error")]
     Io(#[from] io::Error),
 
     /// Surface creating error
-    #[error("Error creating surface: {0}")]
+    #[error("Error creating surface")]
     CreateSurface(#[from] wgpu::CreateSurfaceError),
 
     /// Graphics accelerator acquisition error
@@ -381,7 +381,7 @@ pub enum RendererInitError {
     /// Device request errors
     ///
     /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
-    #[error("Error requesting device: {0}")]
+    #[error("Error requesting device")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
 }
 
