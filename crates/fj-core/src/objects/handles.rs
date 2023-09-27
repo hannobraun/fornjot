@@ -128,7 +128,7 @@ impl<T> Handles<T> {
 
         let handles = items.collect();
 
-        assert!(updated.is_none(), "Edge not found in cycle");
+        assert!(updated.is_none(), "Item not found");
 
         handles
     }
