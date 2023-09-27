@@ -10,18 +10,17 @@ use crate::{
 };
 
 use super::{
-    draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
-    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
-    SAMPLE_COUNT,
+    device::Device, draw_config::DrawConfig, drawables::Drawables,
+    geometries::Geometries, navigation_cube::NavigationCubeRenderer,
+    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
+    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
-    device: wgpu::Device,
-    queue: wgpu::Queue,
+    device: Device,
 
     surface_config: wgpu::SurfaceConfiguration,
     frame_buffer: wgpu::TextureView,
@@ -47,6 +46,10 @@ impl Renderer {
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(screen.window()) }?;
 
+        for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
+            debug!("Available adapter: {:?}", adapter.get_info());
+        }
+
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::None,
@@ -58,43 +61,7 @@ impl Renderer {
 
         debug!("Using adapter: {:?}", adapter.get_info());
 
-        let features = {
-            let desired_features = wgpu::Features::POLYGON_MODE_LINE;
-            let available_features = adapter.features();
-
-            // By requesting the intersection of desired and available features,
-            // we prevent two things:
-            //
-            // 1. That requesting the device panics, which would happen if we
-            //    requested unavailable features.
-            // 2. That a developer ends up accidentally using features that
-            //    happen to be available on their machine, but that aren't
-            //    necessarily available for all the users.
-            desired_features.intersection(available_features)
-        };
-
-        let limits = {
-            // This is the lowest of the available defaults. It should guarantee
-            // that we can run pretty much everywhere.
-            let lowest_limits = wgpu::Limits::downlevel_webgl2_defaults();
-
-            // However, these lowest limits aren't necessarily capable of
-            // supporting the screen resolution of our current platform, so
-            // let's amend them.
-            let supported_limits = adapter.limits();
-            lowest_limits.using_resolution(supported_limits)
-        };
-
-        let (device, queue) = adapter
-            .request_device(
-                &wgpu::DeviceDescriptor {
-                    label: None,
-                    features,
-                    limits,
-                },
-                None,
-            )
-            .await?;
+        let (device, features) = Device::new(&adapter).await?;
 
         let color_format = 'color_format: {
             let capabilities = surface.get_capabilities(&adapter);
@@ -142,20 +109,23 @@ impl Renderer {
             alpha_mode: wgpu::CompositeAlphaMode::Auto,
             view_formats: vec![],
         };
-        surface.configure(&device, &surface_config);
+        surface.configure(&device.device, &surface_config);
 
-        let frame_buffer = Self::create_frame_buffer(&device, &surface_config);
-        let depth_view = Self::create_depth_buffer(&device, &surface_config);
+        let frame_buffer =
+            Self::create_frame_buffer(&device.device, &surface_config);
+        let depth_view =
+            Self::create_depth_buffer(&device.device, &surface_config);
 
-        let uniform_buffer =
-            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+        let uniform_buffer = device.device.create_buffer_init(
+            &wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(&[Uniforms::default()]),
                 usage: wgpu::BufferUsages::UNIFORM
                     | wgpu::BufferUsages::COPY_DST,
-            });
-        let bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            },
+        );
+        let bind_group_layout = device.device.create_bind_group_layout(
+            &wgpu::BindGroupLayoutDescriptor {
                 entries: &[wgpu::BindGroupLayoutEntry {
                     binding: 0,
                     visibility: wgpu::ShaderStages::all(),
@@ -171,31 +141,41 @@ impl Renderer {
                     count: None,
                 }],
                 label: None,
+            },
+        );
+        let bind_group =
+            device.device.create_bind_group(&wgpu::BindGroupDescriptor {
+                layout: &bind_group_layout,
+                entries: &[wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(
+                        wgpu::BufferBinding {
+                            buffer: &uniform_buffer,
+                            offset: 0,
+                            size: None,
+                        },
+                    ),
+                }],
+                label: None,
             });
-        let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-            layout: &bind_group_layout,
-            entries: &[wgpu::BindGroupEntry {
-                binding: 0,
-                resource: wgpu::BindingResource::Buffer(wgpu::BufferBinding {
-                    buffer: &uniform_buffer,
-                    offset: 0,
-                    size: None,
-                }),
-            }],
-            label: None,
-        });
 
-        let geometries = Geometries::new(&device, &Vertices::empty());
-        let pipelines =
-            Pipelines::new(&device, &bind_group_layout, color_format, features);
+        let geometries = Geometries::new(&device.device, &Vertices::empty());
+        let pipelines = Pipelines::new(
+            &device.device,
+            &bind_group_layout,
+            color_format,
+            features,
+        );
 
-        let navigation_cube_renderer =
-            NavigationCubeRenderer::new(&device, &queue, &surface_config);
+        let navigation_cube_renderer = NavigationCubeRenderer::new(
+            &device.device,
+            &device.queue,
+            &surface_config,
+        );
 
         Ok(Self {
             surface,
             device,
-            queue,
 
             surface_config,
             frame_buffer,
@@ -213,7 +193,7 @@ impl Renderer {
 
     /// Updates the geometry of the model being rendered.
     pub fn update_geometry(&mut self, mesh: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh);
+        self.geometries = Geometries::new(&self.device.device, &mesh);
     }
 
     /// Resizes the render surface.
@@ -224,12 +204,17 @@ impl Renderer {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 
-        self.surface.configure(&self.device, &self.surface_config);
+        self.surface
+            .configure(&self.device.device, &self.surface_config);
 
-        self.frame_buffer =
-            Self::create_frame_buffer(&self.device, &self.surface_config);
-        self.depth_view =
-            Self::create_depth_buffer(&self.device, &self.surface_config);
+        self.frame_buffer = Self::create_frame_buffer(
+            &self.device.device,
+            &self.surface_config,
+        );
+        self.depth_view = Self::create_depth_buffer(
+            &self.device.device,
+            &self.surface_config,
+        );
     }
 
     /// Draws the renderer, camera, and config state to the window.
@@ -245,7 +230,7 @@ impl Renderer {
             transform_normals: Transform::for_normals(camera),
         };
 
-        self.queue.write_buffer(
+        self.device.queue.write_buffer(
             &self.uniform_buffer,
             0,
             bytemuck::cast_slice(&[uniforms]),
@@ -269,7 +254,7 @@ impl Renderer {
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
-        let mut encoder = self.device.create_command_encoder(
+        let mut encoder = self.device.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
@@ -319,13 +304,13 @@ impl Renderer {
         self.navigation_cube_renderer.draw(
             &color_view,
             &mut encoder,
-            &self.queue,
+            &self.device.queue,
             aspect_ratio,
             camera.rotation,
         );
 
         let command_buffer = encoder.finish();
-        self.queue.submit(Some(command_buffer));
+        self.device.queue.submit(Some(command_buffer));
 
         trace!("Presenting...");
         surface_texture.present();
@@ -382,11 +367,11 @@ impl Renderer {
 #[derive(Error, Debug)]
 pub enum RendererInitError {
     /// General IO error
-    #[error("I/O error: {0}")]
+    #[error("I/O error")]
     Io(#[from] io::Error),
 
     /// Surface creating error
-    #[error("Error creating surface: {0}")]
+    #[error("Error creating surface")]
     CreateSurface(#[from] wgpu::CreateSurfaceError),
 
     /// Graphics accelerator acquisition error
@@ -396,7 +381,7 @@ pub enum RendererInitError {
     /// Device request errors
     ///
     /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
-    #[error("Error requesting device: {0}")]
+    #[error("Error requesting device")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
 }
 
