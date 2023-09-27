@@ -47,6 +47,10 @@ impl Renderer {
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe { instance.create_surface(screen.window()) }?;
 
+        for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
+            debug!("Available adapter: {:?}", adapter.get_info());
+        }
+
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
                 power_preference: wgpu::PowerPreference::None,
