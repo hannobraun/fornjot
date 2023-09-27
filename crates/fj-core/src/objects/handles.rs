@@ -114,23 +114,31 @@ impl<T> Handles<T> {
     where
         T: Debug + Ord,
     {
-        let mut updated = Some(update(handle));
+        let mut iter = self.iter().cloned().peekable();
 
-        let items = self.iter().map(|h| {
+        // Collect all items before the item we want to update.
+        let mut before = Vec::new();
+        loop {
+            let h = match iter.peek() {
+                Some(h) => h,
+                None => panic!("Item not found"),
+            };
+
             if h.id() == handle.id() {
-                updated
-                    .take()
-                    .expect("`Handles` should not contain same item twice")
-            } else {
-                h.clone()
+                // Found the item we want to update. Remove it from the
+                // iterator, then move on.
+                iter.next();
+                break;
             }
-        });
 
-        let handles = items.collect();
+            let next = iter.next().expect("Peek just returned `Some`");
+            before.push(next.clone());
+        }
 
-        assert!(updated.is_none(), "Item not found");
+        let updated = update(handle);
+        let after = iter;
 
-        handles
+        before.into_iter().chain([updated]).chain(after).collect()
     }
 }
 
