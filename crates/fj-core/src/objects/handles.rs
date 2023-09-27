@@ -80,6 +80,17 @@ impl<T> Handles<T> {
         item
     }
 
+    /// Return the first item
+    ///
+    /// # Panics
+    ///
+    /// Panics, if there are no items.
+    pub fn first(&self) -> &Handle<T> {
+        self.inner
+            .first()
+            .expect("Requested first item, but no items available")
+    }
+
     /// Return the n-th item
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
         self.inner.get(index)
