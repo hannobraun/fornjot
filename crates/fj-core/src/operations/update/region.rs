@@ -18,6 +18,20 @@ pub trait UpdateRegion {
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self;
+
+    /// Update an interior cycle of the region
+    ///
+    /// # Panics
+    ///
+    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    ///
+    /// [`Handles::update`]: crate::objects::Handles::update
+    #[must_use]
+    fn update_interior(
+        &self,
+        handle: &Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self;
 }
 
 impl UpdateRegion for Region {
@@ -34,6 +48,15 @@ impl UpdateRegion for Region {
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
     ) -> Self {
         let interiors = self.interiors().iter().cloned().chain(interiors);
+        Region::new(self.exterior().clone(), interiors, self.color())
+    }
+
+    fn update_interior(
+        &self,
+        handle: &Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+    ) -> Self {
+        let interiors = self.interiors().update(handle, update);
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }
