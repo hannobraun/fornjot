@@ -19,7 +19,7 @@ pub trait UpdateShell {
     #[must_use]
     fn update_face(
         &self,
-        face: &Handle<Face>,
+        handle: &Handle<Face>,
         update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self;
 
@@ -36,10 +36,10 @@ impl UpdateShell for Shell {
 
     fn update_face(
         &self,
-        face: &Handle<Face>,
+        handle: &Handle<Face>,
         update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self {
-        let faces = self.faces().update(face, update);
+        let faces = self.faces().update(handle, update);
         Shell::new(faces)
     }
 
