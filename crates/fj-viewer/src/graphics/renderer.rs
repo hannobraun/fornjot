@@ -10,18 +10,17 @@ use crate::{
 };
 
 use super::{
-    draw_config::DrawConfig, drawables::Drawables, geometries::Geometries,
-    navigation_cube::NavigationCubeRenderer, pipelines::Pipelines,
-    transform::Transform, uniforms::Uniforms, vertices::Vertices, DEPTH_FORMAT,
-    SAMPLE_COUNT,
+    device::Device, draw_config::DrawConfig, drawables::Drawables,
+    geometries::Geometries, navigation_cube::NavigationCubeRenderer,
+    pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
+    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
     surface: wgpu::Surface,
-    device: wgpu::Device,
-    queue: wgpu::Queue,
+    device: Device,
 
     surface_config: wgpu::SurfaceConfiguration,
     frame_buffer: wgpu::TextureView,
@@ -198,8 +197,7 @@ impl Renderer {
 
         Ok(Self {
             surface,
-            device,
-            queue,
+            device: Device { device, queue },
 
             surface_config,
             frame_buffer,
@@ -217,7 +215,7 @@ impl Renderer {
 
     /// Updates the geometry of the model being rendered.
     pub fn update_geometry(&mut self, mesh: Vertices) {
-        self.geometries = Geometries::new(&self.device, &mesh);
+        self.geometries = Geometries::new(&self.device.device, &mesh);
     }
 
     /// Resizes the render surface.
@@ -228,12 +226,17 @@ impl Renderer {
         self.surface_config.width = size.width;
         self.surface_config.height = size.height;
 
-        self.surface.configure(&self.device, &self.surface_config);
+        self.surface
+            .configure(&self.device.device, &self.surface_config);
 
-        self.frame_buffer =
-            Self::create_frame_buffer(&self.device, &self.surface_config);
-        self.depth_view =
-            Self::create_depth_buffer(&self.device, &self.surface_config);
+        self.frame_buffer = Self::create_frame_buffer(
+            &self.device.device,
+            &self.surface_config,
+        );
+        self.depth_view = Self::create_depth_buffer(
+            &self.device.device,
+            &self.surface_config,
+        );
     }
 
     /// Draws the renderer, camera, and config state to the window.
@@ -249,7 +252,7 @@ impl Renderer {
             transform_normals: Transform::for_normals(camera),
         };
 
-        self.queue.write_buffer(
+        self.device.queue.write_buffer(
             &self.uniform_buffer,
             0,
             bytemuck::cast_slice(&[uniforms]),
@@ -273,7 +276,7 @@ impl Renderer {
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
 
-        let mut encoder = self.device.create_command_encoder(
+        let mut encoder = self.device.device.create_command_encoder(
             &wgpu::CommandEncoderDescriptor { label: None },
         );
 
@@ -323,13 +326,13 @@ impl Renderer {
         self.navigation_cube_renderer.draw(
             &color_view,
             &mut encoder,
-            &self.queue,
+            &self.device.queue,
             aspect_ratio,
             camera.rotation,
         );
 
         let command_buffer = encoder.finish();
-        self.queue.submit(Some(command_buffer));
+        self.device.queue.submit(Some(command_buffer));
 
         trace!("Presenting...");
         surface_texture.present();

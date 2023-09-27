@@ -1,5 +1,6 @@
 //! Rendering primitives, routines, and structures.
 
+mod device;
 mod draw_config;
 mod drawables;
 mod geometries;
