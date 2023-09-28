@@ -70,6 +70,10 @@ impl<T> Handles<T> {
     ///
     /// If the length of `Handles` is `i`, then retrieving the i-th edge using
     /// this method, is the same as retrieving the 0-th one.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if `Handles` is empty.
     pub fn nth_circular(&self, index: usize) -> &Handle<T> {
         assert!(!self.is_empty(), "`Handles` must not be empty");
 
