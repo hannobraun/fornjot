@@ -61,6 +61,36 @@ impl<T> Handles<T> {
         self.inner.is_empty()
     }
 
+    /// Return the only item
+    ///
+    /// # Panics
+    ///
+    /// Panics, if there is more than one item.
+    pub fn only(&self) -> &Handle<T> {
+        let mut iter = self.inner.iter();
+        let item = iter
+            .next()
+            .expect("Requested only item, but no items available");
+
+        assert!(
+            iter.next().is_none(),
+            "Requested only item, but more than one available"
+        );
+
+        item
+    }
+
+    /// Return the first item
+    ///
+    /// # Panics
+    ///
+    /// Panics, if there are no items.
+    pub fn first(&self) -> &Handle<T> {
+        self.inner
+            .first()
+            .expect("Requested first item, but no items available")
+    }
+
     /// Return the n-th item
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
         self.inner.get(index)
@@ -70,7 +100,13 @@ impl<T> Handles<T> {
     ///
     /// If the length of `Handles` is `i`, then retrieving the i-th edge using
     /// this method, is the same as retrieving the 0-th one.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if `Handles` is empty.
     pub fn nth_circular(&self, index: usize) -> &Handle<T> {
+        assert!(!self.is_empty(), "`Handles` must not be empty");
+
         let index = index % self.len();
         self.nth(index)
             .expect("Index must be valid, due to modulo above")
