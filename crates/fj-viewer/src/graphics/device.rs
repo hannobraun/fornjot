@@ -1,3 +1,5 @@
+use tracing::{debug, error};
+
 #[derive(Debug)]
 pub struct Device {
     pub device: wgpu::Device,
@@ -5,9 +7,66 @@ pub struct Device {
 }
 
 impl Device {
+    pub async fn from_preferred_adapter(
+        instance: &wgpu::Instance,
+        surface: &wgpu::Surface,
+    ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
+                power_preference: wgpu::PowerPreference::None,
+                force_fallback_adapter: false,
+                compatible_surface: Some(surface),
+            })
+            .await
+            .ok_or(DeviceError::RequestAdapter)?;
+
+        debug!("Using adapter: {:?}", adapter.get_info());
+
+        let (device, features) = Device::new(&adapter).await?;
+
+        Ok((device, adapter, features))
+    }
+
+    pub async fn try_from_all_adapters(
+        instance: &wgpu::Instance,
+    ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
+        let mut all_adapters =
+            instance.enumerate_adapters(wgpu::Backends::all());
+
+        let result = loop {
+            let Some(adapter) = all_adapters.next() else {
+                debug!("No more adapters to try");
+                break None;
+            };
+
+            let (device, features) = match Device::new(&adapter).await {
+                Ok((device, adapter)) => (device, adapter),
+                Err(err) => {
+                    error!(
+                        "Failed to get device from adapter {:?}: {:?}",
+                        adapter.get_info(),
+                        err,
+                    );
+                    continue;
+                }
+            };
+
+            break Some((device, adapter, features));
+        };
+
+        for adapter in all_adapters {
+            debug!(
+                "Remaining adapter that wasn't tried: {:?}",
+                adapter.get_info()
+            );
+        }
+
+        result.ok_or(DeviceError::FoundNoWorkingAdapter)
+    }
+
     pub async fn new(
         adapter: &wgpu::Adapter,
-    ) -> Result<(Self, wgpu::Features), wgpu::RequestDeviceError> {
+    ) -> Result<(Self, wgpu::Features), DeviceError> {
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
             let available_features = adapter.features();
@@ -48,4 +107,20 @@ impl Device {
 
         Ok((Device { device, queue }, features))
     }
+}
+
+/// Render device initialization error
+#[derive(Debug, thiserror::Error)]
+pub enum DeviceError {
+    /// Failed to request adapter
+    #[error("Failed to request adapter")]
+    RequestAdapter,
+
+    /// Failed to request device
+    #[error("Failed to request device")]
+    RequestDevice(#[from] wgpu::RequestDeviceError),
+
+    /// Found no working adapter to get a device from
+    #[error("Found no working adapter to get a device from")]
+    FoundNoWorkingAdapter,
 }

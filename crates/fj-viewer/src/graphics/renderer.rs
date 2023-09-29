@@ -1,7 +1,7 @@
 use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
-use tracing::{debug, trace};
+use tracing::{debug, error, trace};
 use wgpu::util::DeviceExt as _;
 
 use crate::{
@@ -13,7 +13,7 @@ use super::{
     device::Device, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, navigation_cube::NavigationCubeRenderer,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
+    vertices::Vertices, DeviceError, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
@@ -50,18 +50,28 @@ impl Renderer {
             debug!("Available adapter: {:?}", adapter.get_info());
         }
 
-        let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::None,
-                force_fallback_adapter: false,
-                compatible_surface: Some(&surface),
-            })
-            .await
-            .ok_or(RendererInitError::RequestAdapter)?;
+        let result = Device::from_preferred_adapter(&instance, &surface).await;
+        let (device, adapter, features) = match result {
+            Ok((device, adapter, features)) => (device, adapter, features),
+            Err(_) => {
+                error!("Failed to acquire device from preferred adapter");
 
-        debug!("Using adapter: {:?}", adapter.get_info());
+                match Device::try_from_all_adapters(&instance).await {
+                    Ok((device, adapter, features)) => {
+                        (device, adapter, features)
+                    }
+                    Err(err) => {
+                        error!("Prepend `RUST_LOG=fj_viewer=debug` and re-run");
+                        error!("Then open an issue and post your output");
+                        error!(
+                            "https://github.com/hannobraun/fornjot/issues/new"
+                        );
 
-        let (device, features) = Device::new(&adapter).await?;
+                        return Err(err.into());
+                    }
+                }
+            }
+        };
 
         let color_format = 'color_format: {
             let capabilities = surface.get_capabilities(&adapter);
@@ -374,15 +384,9 @@ pub enum RendererInitError {
     #[error("Error creating surface")]
     CreateSurface(#[from] wgpu::CreateSurfaceError),
 
-    /// Graphics accelerator acquisition error
-    #[error("Error request adapter")]
-    RequestAdapter,
-
-    /// Device request errors
-    ///
-    /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
-    #[error("Error requesting device")]
-    RequestDevice(#[from] wgpu::RequestDeviceError),
+    /// Device error
+    #[error(transparent)]
+    Device(#[from] DeviceError),
 }
 
 /// Draw error

@@ -15,6 +15,7 @@ mod uniforms;
 mod vertices;
 
 pub use self::{
+    device::DeviceError,
     draw_config::DrawConfig,
     renderer::{DrawError, Renderer, RendererInitError},
 };
