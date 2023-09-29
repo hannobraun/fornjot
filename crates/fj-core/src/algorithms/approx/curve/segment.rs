@@ -101,18 +101,18 @@ impl CurveApproxSegment {
         );
         assert!(other.is_normalized(), "Can't merge non-normalized segment.");
 
-        let [a_min, a_max] = self.boundary.inner;
-        let [b_min, b_max] = other.boundary.inner;
+        let [self_min, self_max] = self.boundary.inner;
+        let [other_min, other_max] = other.boundary.inner;
 
-        let min = cmp::min(a_min, b_min);
-        let max = cmp::max(a_max, b_max);
+        let min = cmp::min(self_min, other_min);
+        let max = cmp::max(self_max, other_max);
 
         self.boundary.inner = [min, max];
 
         self.points.retain(|point| {
             // Only retain points that don't overlap with the other segment, or
             // we might end up with duplicates.
-            point.local_form < b_min || point.local_form > b_max
+            point.local_form < other_min || point.local_form > other_max
         });
         self.points.extend(&other.points);
         self.points.sort();
