@@ -1,7 +1,7 @@
 use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
-use tracing::{debug, trace};
+use tracing::{debug, error, trace};
 use wgpu::util::DeviceExt as _;
 
 use crate::{
@@ -50,8 +50,28 @@ impl Renderer {
             debug!("Available adapter: {:?}", adapter.get_info());
         }
 
-        let (device, adapter, features) =
-            Device::from_preferred_adapter(&instance, &surface).await?;
+        let result = Device::from_preferred_adapter(&instance, &surface).await;
+        let (device, adapter, features) = match result {
+            Ok((device, adapter, features)) => (device, adapter, features),
+            Err(_) => {
+                error!("Failed to acquire device from preferred adapter");
+
+                match Device::try_from_all_adapters(&instance).await {
+                    Ok((device, adapter, features)) => {
+                        (device, adapter, features)
+                    }
+                    Err(err) => {
+                        error!("Prepend `RUST_LOG=fj_viewer=debug` and re-run");
+                        error!("Then open an issue and post your output");
+                        error!(
+                            "https://github.com/hannobraun/fornjot/issues/new"
+                        );
+
+                        return Err(err.into());
+                    }
+                }
+            }
+        };
 
         let color_format = 'color_format: {
             let capabilities = surface.get_capabilities(&adapter);

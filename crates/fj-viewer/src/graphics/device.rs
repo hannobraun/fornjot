@@ -1,4 +1,4 @@
-use tracing::debug;
+use tracing::{debug, error};
 
 #[derive(Debug)]
 pub struct Device {
@@ -25,6 +25,43 @@ impl Device {
         let (device, features) = Device::new(&adapter).await?;
 
         Ok((device, adapter, features))
+    }
+
+    pub async fn try_from_all_adapters(
+        instance: &wgpu::Instance,
+    ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
+        let mut all_adapters =
+            instance.enumerate_adapters(wgpu::Backends::all());
+
+        let result = loop {
+            let Some(adapter) = all_adapters.next() else {
+                debug!("No more adapters to try");
+                break None;
+            };
+
+            let (device, features) = match Device::new(&adapter).await {
+                Ok((device, adapter)) => (device, adapter),
+                Err(err) => {
+                    error!(
+                        "Failed to get device from adapter {:?}: {:?}",
+                        adapter.get_info(),
+                        err,
+                    );
+                    continue;
+                }
+            };
+
+            break Some((device, adapter, features));
+        };
+
+        for adapter in all_adapters {
+            debug!(
+                "Remaining adapter that wasn't tried: {:?}",
+                adapter.get_info()
+            );
+        }
+
+        result.ok_or(DeviceError::FoundNoWorkingAdapter)
     }
 
     pub async fn new(
@@ -82,4 +119,8 @@ pub enum DeviceError {
     /// Failed to request device
     #[error("Failed to request device")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
+
+    /// Found no working adapter to get a device from
+    #[error("Found no working adapter to get a device from")]
+    FoundNoWorkingAdapter,
 }
