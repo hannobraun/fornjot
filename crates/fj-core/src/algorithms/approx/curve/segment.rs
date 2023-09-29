@@ -70,7 +70,7 @@ impl CurveApproxSegment {
     /// Reduce the approximation to the subset defined by the provided boundary
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         assert!(
-            self.boundary.is_normalized(),
+            self.is_normalized(),
             "Expected normalized segment for making subset."
         );
         assert!(
