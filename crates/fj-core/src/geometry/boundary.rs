@@ -66,14 +66,6 @@ impl CurveBoundary<Point<1>> {
     }
 }
 
-impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
-
-impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.inner == other.inner
-    }
-}
-
 impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>
 where
     S: Into<T::Repr>,
@@ -81,6 +73,14 @@ where
     fn from(boundary: [S; 2]) -> Self {
         let inner = boundary.map(Into::into);
         Self { inner }
+    }
+}
+
+impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
+
+impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
     }
 }
 
