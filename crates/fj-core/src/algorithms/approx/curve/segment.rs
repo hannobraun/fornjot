@@ -146,32 +146,3 @@ impl PartialOrd for CurveApproxSegment {
         Some(self.cmp(other))
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use crate::algorithms::approx::curve::CurveApproxSegment;
-
-    #[test]
-    fn overlaps() {
-        assert!(overlap([0., 2.], [1., 3.])); // regular overlap
-        assert!(overlap([0., 1.], [1., 2.])); // just touching
-        assert!(overlap([2., 0.], [3., 1.])); // not normalized
-        assert!(overlap([1., 3.], [0., 2.])); // lower boundary comes second
-
-        assert!(!overlap([0., 1.], [2., 3.])); // regular non-overlap
-        assert!(!overlap([2., 3.], [0., 1.])); // lower boundary comes second
-
-        fn overlap(a: [f64; 2], b: [f64; 2]) -> bool {
-            let a = CurveApproxSegment {
-                boundary: a.map(|coord| [coord]).into(),
-                points: Vec::new(),
-            };
-            let b = CurveApproxSegment {
-                boundary: b.map(|coord| [coord]).into(),
-                points: Vec::new(),
-            };
-
-            a.overlaps(&b)
-        }
-    }
-}

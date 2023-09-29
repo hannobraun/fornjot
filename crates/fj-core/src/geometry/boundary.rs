@@ -130,3 +130,32 @@ impl CurveBoundaryElement for Point<1> {
 impl CurveBoundaryElement for Vertex {
     type Repr = HandleWrapper<Vertex>;
 }
+
+#[cfg(test)]
+mod tests {
+    use fj_math::Point;
+
+    use crate::geometry::CurveBoundary;
+
+    #[test]
+    fn overlaps() {
+        assert!(overlap([0., 2.], [1., 3.])); // regular overlap
+        assert!(overlap([0., 1.], [1., 2.])); // just touching
+        assert!(overlap([2., 0.], [3., 1.])); // not normalized
+        assert!(overlap([1., 3.], [0., 2.])); // lower boundary comes second
+
+        assert!(!overlap([0., 1.], [2., 3.])); // regular non-overlap
+        assert!(!overlap([2., 3.], [0., 1.])); // lower boundary comes second
+
+        fn overlap(a: [f64; 2], b: [f64; 2]) -> bool {
+            let a = array_to_boundary(a);
+            let b = array_to_boundary(b);
+
+            a.overlaps(&b)
+        }
+
+        fn array_to_boundary(array: [f64; 2]) -> CurveBoundary<Point<1>> {
+            CurveBoundary::from(array.map(|element| [element]))
+        }
+    }
+}
