@@ -57,7 +57,7 @@ impl Renderer {
                 compatible_surface: Some(&surface),
             })
             .await
-            .ok_or(RendererInitError::RequestAdapter)?;
+            .ok_or(RendererInitError::Device(DeviceError::RequestAdapter))?;
 
         debug!("Using adapter: {:?}", adapter.get_info());
 
@@ -373,10 +373,6 @@ pub enum RendererInitError {
     /// Surface creating error
     #[error("Error creating surface")]
     CreateSurface(#[from] wgpu::CreateSurfaceError),
-
-    /// Graphics accelerator acquisition error
-    #[error("Error request adapter")]
-    RequestAdapter,
 
     /// Device error
     #[error(transparent)]

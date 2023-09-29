@@ -53,6 +53,10 @@ impl Device {
 /// Render device initialization error
 #[derive(Debug, thiserror::Error)]
 pub enum DeviceError {
+    /// Failed to request adapter
+    #[error("Failed to request adapter")]
+    RequestAdapter,
+
     /// Failed to request device
     #[error("Failed to request device")]
     RequestDevice(#[from] wgpu::RequestDeviceError),
