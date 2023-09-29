@@ -19,15 +19,6 @@ pub struct CurveBoundary<T: CurveBoundaryElement> {
 }
 
 impl<T: CurveBoundaryElement> CurveBoundary<T> {
-    /// Reverse the direction of the boundary
-    ///
-    /// Returns a new instance of this struct, which has its direction reversed.
-    #[must_use]
-    pub fn reverse(self) -> Self {
-        let [a, b] = self.inner;
-        Self { inner: [b, a] }
-    }
-
     /// Indicate whether the boundary is normalized
     ///
     /// If the boundary is normalized, its bounding elements are in a defined
@@ -35,6 +26,15 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     pub fn is_normalized(&self) -> bool {
         let [a, b] = &self.inner;
         a <= b
+    }
+
+    /// Reverse the direction of the boundary
+    ///
+    /// Returns a new instance of this struct, which has its direction reversed.
+    #[must_use]
+    pub fn reverse(self) -> Self {
+        let [a, b] = self.inner;
+        Self { inner: [b, a] }
     }
 
     /// Normalize the boundary
