@@ -79,10 +79,8 @@ impl CurveApproxSegment {
         );
 
         self.boundary = self.boundary.subset(boundary);
-
-        let [min, max] = self.boundary.inner;
         self.points
-            .retain(|point| point.local_form > min && point.local_form < max);
+            .retain(|point| self.boundary.contains(point.local_form));
     }
 
     /// Merge the provided segment into this one
@@ -112,7 +110,7 @@ impl CurveApproxSegment {
         self.points.retain(|point| {
             // Only retain points that don't overlap with the other segment, or
             // we might end up with duplicates.
-            point.local_form < other_min || point.local_form > other_max
+            !other.boundary.contains(point.local_form)
         });
         self.points.extend(&other.points);
         self.points.sort();

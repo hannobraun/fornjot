@@ -65,6 +65,12 @@ impl CurveBoundary<Point<1>> {
         min >= max
     }
 
+    /// Indicate whether the boundary contains the given element
+    pub fn contains(&self, point: Point<1>) -> bool {
+        let [min, max] = self.inner;
+        point > min && point < max
+    }
+
     /// Indicate whether the boundary overlaps another
     ///
     /// Boundaries that touch (i.e. their closest boundary elements are equal)
