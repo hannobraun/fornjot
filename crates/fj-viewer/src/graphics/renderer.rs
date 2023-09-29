@@ -13,7 +13,7 @@ use super::{
     device::Device, draw_config::DrawConfig, drawables::Drawables,
     geometries::Geometries, navigation_cube::NavigationCubeRenderer,
     pipelines::Pipelines, transform::Transform, uniforms::Uniforms,
-    vertices::Vertices, DEPTH_FORMAT, SAMPLE_COUNT,
+    vertices::Vertices, DeviceError, DEPTH_FORMAT, SAMPLE_COUNT,
 };
 
 /// Graphics rendering state and target abstraction
@@ -378,11 +378,9 @@ pub enum RendererInitError {
     #[error("Error request adapter")]
     RequestAdapter,
 
-    /// Device request errors
-    ///
-    /// See: [wgpu::RequestDeviceError](https://docs.rs/wgpu/latest/wgpu/struct.RequestDeviceError.html)
-    #[error("Error requesting device")]
-    RequestDevice(#[from] wgpu::RequestDeviceError),
+    /// Device error
+    #[error(transparent)]
+    Device(#[from] DeviceError),
 }
 
 /// Draw error

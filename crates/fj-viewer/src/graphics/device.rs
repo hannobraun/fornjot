@@ -7,7 +7,7 @@ pub struct Device {
 impl Device {
     pub async fn new(
         adapter: &wgpu::Adapter,
-    ) -> Result<(Self, wgpu::Features), wgpu::RequestDeviceError> {
+    ) -> Result<(Self, wgpu::Features), DeviceError> {
         let features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
             let available_features = adapter.features();
@@ -48,4 +48,12 @@ impl Device {
 
         Ok((Device { device, queue }, features))
     }
+}
+
+/// Render device initialization error
+#[derive(Debug, thiserror::Error)]
+pub enum DeviceError {
+    /// Failed to request device
+    #[error("Failed to request device")]
+    RequestDevice(#[from] wgpu::RequestDeviceError),
 }

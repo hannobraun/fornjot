@@ -18,7 +18,7 @@ mod screen;
 mod viewer;
 
 pub use self::{
-    graphics::RendererInitError,
+    graphics::{DeviceError, RendererInitError},
     input::InputEvent,
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     viewer::Viewer,
