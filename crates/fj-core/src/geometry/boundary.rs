@@ -52,6 +52,20 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     }
 }
 
+// Technically, these methods could be implemented for all
+// `CurveBoundaryElement`s, but that would be misleading. While
+// `HandleWrapper<Vertex>` implements `Ord`, which is useful for putting it (and
+// by extension, `CurveBoundary<Vertex>`) into `BTreeMap`s, this `Ord`
+// implementation doesn't actually define the geometrically meaningful ordering
+// that the following methods rely on.
+impl CurveBoundary<Point<1>> {
+    /// Indicate whether the boundary is empty
+    pub fn is_empty(&self) -> bool {
+        let [min, max] = &self.inner;
+        min >= max
+    }
+}
+
 impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
 
 impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {

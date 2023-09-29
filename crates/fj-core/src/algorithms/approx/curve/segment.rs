@@ -22,10 +22,7 @@ pub struct CurveApproxSegment {
 impl CurveApproxSegment {
     /// Indicate whether the segment is empty
     pub fn is_empty(&self) -> bool {
-        let is_empty = {
-            let [min, max] = self.boundary.inner;
-            min >= max
-        };
+        let is_empty = self.boundary.is_empty();
 
         if is_empty {
             assert!(
