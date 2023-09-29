@@ -22,10 +22,7 @@ pub struct CurveApproxSegment {
 impl CurveApproxSegment {
     /// Indicate whether the segment is empty
     pub fn is_empty(&self) -> bool {
-        let is_empty = {
-            let [min, max] = self.boundary.inner;
-            min >= max
-        };
+        let is_empty = self.boundary.is_empty();
 
         if is_empty {
             assert!(
@@ -47,10 +44,7 @@ impl CurveApproxSegment {
     /// Segments that touch (i.e. their closest boundary is equal) count as
     /// overlapping.
     pub fn overlaps(&self, other: &Self) -> bool {
-        let [a_low, a_high] = self.boundary.normalize().inner;
-        let [b_low, b_high] = other.boundary.normalize().inner;
-
-        a_low <= b_high && a_high >= b_low
+        self.boundary.overlaps(&other.boundary)
     }
 
     /// Reverse the orientation of the approximation
@@ -76,7 +70,7 @@ impl CurveApproxSegment {
     /// Reduce the approximation to the subset defined by the provided boundary
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         assert!(
-            self.boundary.is_normalized(),
+            self.is_normalized(),
             "Expected normalized segment for making subset."
         );
         assert!(
@@ -84,19 +78,9 @@ impl CurveApproxSegment {
             "Expected subset to be defined by normalized boundary."
         );
 
-        let [min, max] = boundary.inner;
-
-        self.boundary.inner = {
-            let [self_min, self_max] = self.boundary.inner;
-
-            let min = cmp::max(self_min, min);
-            let max = cmp::min(self_max, max);
-
-            [min, max]
-        };
-
+        self.boundary = self.boundary.subset(boundary);
         self.points
-            .retain(|point| point.local_form > min && point.local_form < max);
+            .retain(|point| self.boundary.contains(point.local_form));
     }
 
     /// Merge the provided segment into this one
@@ -115,18 +99,12 @@ impl CurveApproxSegment {
         );
         assert!(other.is_normalized(), "Can't merge non-normalized segment.");
 
-        let [a_min, a_max] = self.boundary.inner;
-        let [b_min, b_max] = other.boundary.inner;
-
-        let min = cmp::min(a_min, b_min);
-        let max = cmp::max(a_max, b_max);
-
-        self.boundary.inner = [min, max];
+        self.boundary = self.boundary.union(other.boundary);
 
         self.points.retain(|point| {
             // Only retain points that don't overlap with the other segment, or
             // we might end up with duplicates.
-            point.local_form < b_min || point.local_form > b_max
+            !other.boundary.contains(point.local_form)
         });
         self.points.extend(&other.points);
         self.points.sort();
@@ -150,34 +128,5 @@ impl Ord for CurveApproxSegment {
 impl PartialOrd for CurveApproxSegment {
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         Some(self.cmp(other))
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::algorithms::approx::curve::CurveApproxSegment;
-
-    #[test]
-    fn overlaps() {
-        assert!(overlap([0., 2.], [1., 3.])); // regular overlap
-        assert!(overlap([0., 1.], [1., 2.])); // just touching
-        assert!(overlap([2., 0.], [3., 1.])); // not normalized
-        assert!(overlap([1., 3.], [0., 2.])); // lower boundary comes second
-
-        assert!(!overlap([0., 1.], [2., 3.])); // regular non-overlap
-        assert!(!overlap([2., 3.], [0., 1.])); // lower boundary comes second
-
-        fn overlap(a: [f64; 2], b: [f64; 2]) -> bool {
-            let a = CurveApproxSegment {
-                boundary: a.map(|coord| [coord]).into(),
-                points: Vec::new(),
-            };
-            let b = CurveApproxSegment {
-                boundary: b.map(|coord| [coord]).into(),
-                points: Vec::new(),
-            };
-
-            a.overlaps(&b)
-        }
     }
 }

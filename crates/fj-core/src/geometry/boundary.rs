@@ -1,5 +1,5 @@
 use std::{
-    cmp::Ordering,
+    cmp::{self, Ordering},
     hash::{Hash, Hasher},
 };
 
@@ -19,15 +19,6 @@ pub struct CurveBoundary<T: CurveBoundaryElement> {
 }
 
 impl<T: CurveBoundaryElement> CurveBoundary<T> {
-    /// Reverse the direction of the boundary
-    ///
-    /// Returns a new instance of this struct, which has its direction reversed.
-    #[must_use]
-    pub fn reverse(self) -> Self {
-        let [a, b] = self.inner;
-        Self { inner: [b, a] }
-    }
-
     /// Indicate whether the boundary is normalized
     ///
     /// If the boundary is normalized, its bounding elements are in a defined
@@ -35,6 +26,15 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     pub fn is_normalized(&self) -> bool {
         let [a, b] = &self.inner;
         a <= b
+    }
+
+    /// Reverse the direction of the boundary
+    ///
+    /// Returns a new instance of this struct, which has its direction reversed.
+    #[must_use]
+    pub fn reverse(self) -> Self {
+        let [a, b] = self.inner;
+        Self { inner: [b, a] }
     }
 
     /// Normalize the boundary
@@ -52,11 +52,77 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     }
 }
 
-impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
+// Technically, these methods could be implemented for all
+// `CurveBoundaryElement`s, but that would be misleading. While
+// `HandleWrapper<Vertex>` implements `Ord`, which is useful for putting it (and
+// by extension, `CurveBoundary<Vertex>`) into `BTreeMap`s, this `Ord`
+// implementation doesn't actually define the geometrically meaningful ordering
+// that the following methods rely on.
+impl CurveBoundary<Point<1>> {
+    /// Indicate whether the boundary is empty
+    pub fn is_empty(&self) -> bool {
+        let [min, max] = &self.inner;
+        min >= max
+    }
 
-impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.inner == other.inner
+    /// Indicate whether the boundary contains the given element
+    pub fn contains(&self, point: Point<1>) -> bool {
+        let [min, max] = self.inner;
+        point > min && point < max
+    }
+
+    /// Indicate whether the boundary overlaps another
+    ///
+    /// Boundaries that touch (i.e. their closest boundary elements are equal)
+    /// count as overlapping.
+    pub fn overlaps(&self, other: &Self) -> bool {
+        let [a_low, a_high] = self.normalize().inner;
+        let [b_low, b_high] = other.normalize().inner;
+
+        a_low <= b_high && a_high >= b_low
+    }
+
+    /// Create the subset of this boundary and another
+    ///
+    /// The result will be normalized.
+    #[must_use]
+    pub fn subset(self, other: Self) -> Self {
+        let self_ = self.normalize();
+        let other = other.normalize();
+
+        let [self_min, self_max] = self_.inner;
+        let [other_min, other_max] = other.inner;
+
+        let min = cmp::max(self_min, other_min);
+        let max = cmp::min(self_max, other_max);
+
+        Self { inner: [min, max] }
+    }
+
+    /// Create the union of this boundary and another
+    ///
+    /// The result will be normalized.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the two boundaries don't overlap (touching counts as
+    /// overlapping).
+    pub fn union(self, other: Self) -> Self {
+        let self_ = self.normalize();
+        let other = other.normalize();
+
+        assert!(
+            self.overlaps(&other),
+            "Can't merge boundaries that don't at least touch"
+        );
+
+        let [self_min, self_max] = self_.inner;
+        let [other_min, other_max] = other.inner;
+
+        let min = cmp::min(self_min, other_min);
+        let max = cmp::max(self_max, other_max);
+
+        Self { inner: [min, max] }
     }
 }
 
@@ -67,6 +133,14 @@ where
     fn from(boundary: [S; 2]) -> Self {
         let inner = boundary.map(Into::into);
         Self { inner }
+    }
+}
+
+impl<T: CurveBoundaryElement> Eq for CurveBoundary<T> {}
+
+impl<T: CurveBoundaryElement> PartialEq for CurveBoundary<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner == other.inner
     }
 }
 
@@ -104,4 +178,33 @@ impl CurveBoundaryElement for Point<1> {
 
 impl CurveBoundaryElement for Vertex {
     type Repr = HandleWrapper<Vertex>;
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_math::Point;
+
+    use crate::geometry::CurveBoundary;
+
+    #[test]
+    fn overlaps() {
+        assert!(overlap([0., 2.], [1., 3.])); // regular overlap
+        assert!(overlap([0., 1.], [1., 2.])); // just touching
+        assert!(overlap([2., 0.], [3., 1.])); // not normalized
+        assert!(overlap([1., 3.], [0., 2.])); // lower boundary comes second
+
+        assert!(!overlap([0., 1.], [2., 3.])); // regular non-overlap
+        assert!(!overlap([2., 3.], [0., 1.])); // lower boundary comes second
+
+        fn overlap(a: [f64; 2], b: [f64; 2]) -> bool {
+            let a = array_to_boundary(a);
+            let b = array_to_boundary(b);
+
+            a.overlaps(&b)
+        }
+
+        fn array_to_boundary(array: [f64; 2]) -> CurveBoundary<Point<1>> {
+            CurveBoundary::from(array.map(|element| [element]))
+        }
+    }
 }
