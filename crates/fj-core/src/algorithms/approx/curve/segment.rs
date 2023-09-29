@@ -78,17 +78,9 @@ impl CurveApproxSegment {
             "Expected subset to be defined by normalized boundary."
         );
 
-        let [min, max] = boundary.inner;
+        self.boundary = self.boundary.subset(boundary);
 
-        self.boundary.inner = {
-            let [self_min, self_max] = self.boundary.inner;
-
-            let min = cmp::max(self_min, min);
-            let max = cmp::min(self_max, max);
-
-            [min, max]
-        };
-
+        let [min, max] = self.boundary.inner;
         self.points
             .retain(|point| point.local_form > min && point.local_form < max);
     }

@@ -1,5 +1,5 @@
 use std::{
-    cmp::Ordering,
+    cmp::{self, Ordering},
     hash::{Hash, Hasher},
 };
 
@@ -74,6 +74,23 @@ impl CurveBoundary<Point<1>> {
         let [b_low, b_high] = other.normalize().inner;
 
         a_low <= b_high && a_high >= b_low
+    }
+
+    /// Create the subset of this boundary and another
+    ///
+    /// The result will be normalized.
+    #[must_use]
+    pub fn subset(self, other: Self) -> Self {
+        let self_ = self.normalize();
+        let other = other.normalize();
+
+        let [self_min, self_max] = self_.inner;
+        let [other_min, other_max] = other.inner;
+
+        let min = cmp::max(self_min, other_min);
+        let max = cmp::min(self_max, other_max);
+
+        Self { inner: [min, max] }
     }
 }
 
