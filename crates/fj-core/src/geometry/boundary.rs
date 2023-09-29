@@ -64,6 +64,17 @@ impl CurveBoundary<Point<1>> {
         let [min, max] = &self.inner;
         min >= max
     }
+
+    /// Indicate whether the boundary overlaps another
+    ///
+    /// Boundaries that touch (i.e. their closest boundary elements are equal)
+    /// count as overlapping.
+    pub fn overlaps(&self, other: &Self) -> bool {
+        let [a_low, a_high] = self.normalize().inner;
+        let [b_low, b_high] = other.normalize().inner;
+
+        a_low <= b_high && a_high >= b_low
+    }
 }
 
 impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>

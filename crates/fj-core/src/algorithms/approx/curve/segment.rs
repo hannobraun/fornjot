@@ -44,10 +44,7 @@ impl CurveApproxSegment {
     /// Segments that touch (i.e. their closest boundary is equal) count as
     /// overlapping.
     pub fn overlaps(&self, other: &Self) -> bool {
-        let [a_low, a_high] = self.boundary.normalize().inner;
-        let [b_low, b_high] = other.boundary.normalize().inner;
-
-        a_low <= b_high && a_high >= b_low
+        self.boundary.overlaps(&other.boundary)
     }
 
     /// Reverse the orientation of the approximation
