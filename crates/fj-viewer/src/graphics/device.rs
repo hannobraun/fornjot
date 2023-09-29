@@ -1,3 +1,5 @@
+use tracing::debug;
+
 #[derive(Debug)]
 pub struct Device {
     pub device: wgpu::Device,
@@ -5,6 +7,26 @@ pub struct Device {
 }
 
 impl Device {
+    pub async fn from_preferred_adapter(
+        instance: &wgpu::Instance,
+        surface: &wgpu::Surface,
+    ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
+                power_preference: wgpu::PowerPreference::None,
+                force_fallback_adapter: false,
+                compatible_surface: Some(surface),
+            })
+            .await
+            .ok_or(DeviceError::RequestAdapter)?;
+
+        debug!("Using adapter: {:?}", adapter.get_info());
+
+        let (device, features) = Device::new(&adapter).await?;
+
+        Ok((device, adapter, features))
+    }
+
     pub async fn new(
         adapter: &wgpu::Adapter,
     ) -> Result<(Self, wgpu::Features), DeviceError> {

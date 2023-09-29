@@ -50,18 +50,8 @@ impl Renderer {
             debug!("Available adapter: {:?}", adapter.get_info());
         }
 
-        let adapter = instance
-            .request_adapter(&wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::None,
-                force_fallback_adapter: false,
-                compatible_surface: Some(&surface),
-            })
-            .await
-            .ok_or(RendererInitError::Device(DeviceError::RequestAdapter))?;
-
-        debug!("Using adapter: {:?}", adapter.get_info());
-
-        let (device, features) = Device::new(&adapter).await?;
+        let (device, adapter, features) =
+            Device::from_preferred_adapter(&instance, &surface).await?;
 
         let color_format = 'color_format: {
             let capabilities = surface.get_capabilities(&adapter);
