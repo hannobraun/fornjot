@@ -98,6 +98,32 @@ impl CurveBoundary<Point<1>> {
 
         Self { inner: [min, max] }
     }
+
+    /// Create the union of this boundary and another
+    ///
+    /// The result will be normalized.
+    ///
+    /// # Panics
+    ///
+    /// Panics, if the two boundaries don't overlap (touching counts as
+    /// overlapping).
+    pub fn union(self, other: Self) -> Self {
+        let self_ = self.normalize();
+        let other = other.normalize();
+
+        assert!(
+            self.overlaps(&other),
+            "Can't merge boundaries that don't at least touch"
+        );
+
+        let [self_min, self_max] = self_.inner;
+        let [other_min, other_max] = other.inner;
+
+        let min = cmp::min(self_min, other_min);
+        let max = cmp::max(self_max, other_max);
+
+        Self { inner: [min, max] }
+    }
 }
 
 impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>
