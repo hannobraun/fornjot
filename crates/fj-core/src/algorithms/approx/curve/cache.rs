@@ -26,7 +26,7 @@ impl CurveApproxCache {
         let curve = HandleWrapper::from(curve.clone());
 
         let mut approx = self.inner.get(&curve).cloned().unwrap_or_default();
-        approx.make_subset(boundary);
+        approx.make_subset(*boundary);
 
         // Approximations within the cache are stored in normalized form. If the
         // caller requests a non-normalized boundary, that means we need to
