@@ -45,11 +45,11 @@ impl CurveApprox {
 
         let mut i = 0;
         loop {
-            let Some((_, segment)) = self.segments.get(i) else {
+            let Some((boundary, _)) = self.segments.get(i) else {
                 break;
             };
 
-            if segment.overlaps(&new_segment) {
+            if boundary.overlaps(&new_segment.boundary) {
                 let segment = self.segments.swap_remove(i);
                 overlapping_segments.push_back(segment);
                 continue;
