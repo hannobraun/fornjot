@@ -21,12 +21,12 @@ impl CurveApproxCache {
     pub fn get(
         &self,
         curve: &Handle<Curve>,
-        boundary: &CurveBoundary<Point<1>>,
+        boundary: CurveBoundary<Point<1>>,
     ) -> CurveApprox {
         let curve = HandleWrapper::from(curve.clone());
 
         let mut approx = self.inner.get(&curve).cloned().unwrap_or_default();
-        approx.make_subset(*boundary);
+        approx.make_subset(boundary);
 
         // Approximations within the cache are stored in normalized form. If the
         // caller requests a non-normalized boundary, that means we need to
@@ -140,7 +140,7 @@ pub mod tests {
 
         // Also, the new segment should not have replaced the existing on in the
         // cache.
-        let cached = cache.get(&curve, &boundary);
+        let cached = cache.get(&curve, boundary);
         assert_eq!(
             cached,
             CurveApprox {
@@ -177,7 +177,7 @@ pub mod tests {
             },
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.], [1.]]));
         assert_eq!(
             cached,
             CurveApprox {
@@ -247,7 +247,7 @@ pub mod tests {
         );
 
         let boundary = CurveBoundary::from([[0.], [1.5]]);
-        let cached = cache.get(&curve, &boundary);
+        let cached = cache.get(&curve, boundary);
         assert_eq!(
             cached,
             CurveApprox {
@@ -298,7 +298,7 @@ pub mod tests {
 
         // When asking for an approximation with the same boundary as the second
         // segment we added, we expect to get it back exactly.
-        let cached = cache.get(&curve, &boundary);
+        let cached = cache.get(&curve, boundary);
         assert_eq!(
             cached,
             CurveApprox {
@@ -340,7 +340,7 @@ pub mod tests {
         // When asking for an approximation with the same boundary of the second
         // segment we added but reversed, we expect to get back the segment, but
         // reversed.
-        let cached = cache.get(&curve, &boundary.reverse());
+        let cached = cache.get(&curve, boundary.reverse());
         assert_eq!(
             cached,
             CurveApprox {
@@ -374,7 +374,7 @@ pub mod tests {
             .clone(),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[-0.5], [0.5]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[-0.5], [0.5]]));
         assert_eq!(
             cached,
             CurveApprox {
@@ -410,7 +410,7 @@ pub mod tests {
             .clone(),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.5], [1.5]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.5], [1.5]]));
         assert_eq!(
             cached,
             CurveApprox {
@@ -446,7 +446,7 @@ pub mod tests {
             .clone(),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.25], [0.75]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.25], [0.75]]));
         assert_eq!(
             cached,
             CurveApprox {
