@@ -58,16 +58,23 @@ impl CurveApprox {
             i += 1;
         }
 
-        let mut merged_segment = new_segment;
+        let mut merged_boundary = new_segment.boundary;
+        let mut merged_segment = new_segment.points;
 
         for (boundary, segment) in overlapping_segments {
             assert!(
-                merged_segment.boundary.overlaps(&boundary),
+                merged_boundary.overlaps(&boundary),
                 "Shouldn't merge segments that don't overlap."
             );
-            merged_segment.merge(&segment);
+
+            merged_boundary = merged_boundary.union(boundary);
+            merged_segment.merge(&segment.points, boundary);
         }
 
+        let merged_segment = CurveApproxSegment {
+            boundary: merged_boundary,
+            points: merged_segment,
+        };
         self.segments
             .push((merged_segment.boundary, merged_segment.clone()));
         self.segments.sort();

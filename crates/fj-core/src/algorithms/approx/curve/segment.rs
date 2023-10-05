@@ -75,22 +75,6 @@ impl CurveApproxSegment {
         self.boundary = self.boundary.subset(boundary);
         self.points.make_subset(boundary);
     }
-
-    /// Merge the provided segment into this one
-    ///
-    /// If there is a true overlap between both segments (as opposed to them
-    /// just touching), then the overlapping part is taken from the other
-    /// segment, meaning parts of this one get overwritten.
-    pub fn merge(&mut self, other: &Self) {
-        assert!(
-            self.is_normalized(),
-            "Can't merge into non-normalized segment."
-        );
-        assert!(other.is_normalized(), "Can't merge non-normalized segment.");
-
-        self.boundary = self.boundary.union(other.boundary);
-        self.points.merge(&other.points, other.boundary);
-    }
 }
 
 impl Ord for CurveApproxSegment {
