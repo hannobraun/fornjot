@@ -83,7 +83,7 @@ impl CurveApproxSegment {
         self.boundary = self.boundary.subset(boundary);
         self.points
             .inner
-            .retain(|point| self.boundary.contains(point.local_form));
+            .retain(|point| boundary.contains(point.local_form));
     }
 
     /// Merge the provided segment into this one
