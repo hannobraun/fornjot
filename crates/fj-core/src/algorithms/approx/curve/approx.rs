@@ -30,7 +30,13 @@ impl CurveApprox {
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         for (b, segment) in &mut self.segments {
             *b = b.subset(boundary);
-            segment.make_subset(boundary.normalize());
+
+            assert!(
+                segment.is_normalized(),
+                "Expected normalized segment for making subset."
+            );
+            segment.boundary = *b;
+            segment.points.make_subset(boundary.normalize());
         }
 
         self.segments.retain(|(_, segment)| !segment.is_empty());
