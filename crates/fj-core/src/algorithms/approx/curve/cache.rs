@@ -141,12 +141,7 @@ pub mod tests {
         // Also, the new segment should not have replaced the existing on in the
         // cache.
         let cached = cache.get(&curve, boundary);
-        assert_eq!(
-            cached,
-            CurveApprox {
-                segments: vec![existing_segment]
-            }
-        );
+        assert_eq!(cached, CurveApprox::from([existing_segment]));
     }
 
     #[test]
@@ -180,24 +175,22 @@ pub mod tests {
         let cached = cache.get(&curve, CurveBoundary::from([[0.], [1.]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![
-                    CurveApproxSegment {
-                        boundary: CurveBoundary::from([[0.], [0.25]]),
-                        points: vec![ApproxPoint::new(
-                            [0.125],
-                            [0.125, 0.125, 0.125]
-                        )],
-                    },
-                    CurveApproxSegment {
-                        boundary: CurveBoundary::from([[0.75], [1.]]),
-                        points: vec![ApproxPoint::new(
-                            [0.875],
-                            [0.875, 0.875, 0.875]
-                        )],
-                    }
-                ]
-            }
+            CurveApprox::from([
+                CurveApproxSegment {
+                    boundary: CurveBoundary::from([[0.], [0.25]]),
+                    points: vec![ApproxPoint::new(
+                        [0.125],
+                        [0.125, 0.125, 0.125]
+                    )],
+                },
+                CurveApproxSegment {
+                    boundary: CurveBoundary::from([[0.75], [1.]]),
+                    points: vec![ApproxPoint::new(
+                        [0.875],
+                        [0.875, 0.875, 0.875]
+                    )],
+                }
+            ]),
         );
     }
 
@@ -250,19 +243,17 @@ pub mod tests {
         let cached = cache.get(&curve, boundary);
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary,
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                        ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
-                        ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment {
+                boundary,
+                points: vec![
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
+                    ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
+                ],
+            }])
         );
     }
 
@@ -299,12 +290,7 @@ pub mod tests {
         // When asking for an approximation with the same boundary as the second
         // segment we added, we expect to get it back exactly.
         let cached = cache.get(&curve, boundary);
-        assert_eq!(
-            cached,
-            CurveApprox {
-                segments: vec![segment]
-            }
-        );
+        assert_eq!(cached, CurveApprox::from([segment]));
     }
 
     #[test]
@@ -343,13 +329,11 @@ pub mod tests {
         let cached = cache.get(&curve, boundary.reverse());
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![{
-                    let mut segment = segment;
-                    segment.reverse();
-                    segment
-                }]
-            }
+            CurveApprox::from([{
+                let mut segment = segment;
+                segment.reverse();
+                segment
+            }]),
         );
     }
 
@@ -377,15 +361,13 @@ pub mod tests {
         let cached = cache.get(&curve, CurveBoundary::from([[-0.5], [0.5]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [0.5]]),
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.], [0.5]]),
+                points: vec![
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                ],
+            }]),
         );
     }
 
@@ -413,15 +395,13 @@ pub mod tests {
         let cached = cache.get(&curve, CurveBoundary::from([[0.5], [1.5]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.5], [1.0]]),
-                    points: vec![
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.5], [1.0]]),
+                points: vec![
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                ],
+            }]),
         );
     }
 
@@ -449,15 +429,13 @@ pub mod tests {
         let cached = cache.get(&curve, CurveBoundary::from([[0.25], [0.75]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.25], [0.75]]),
-                    points: vec![
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment {
+                boundary: CurveBoundary::from([[0.25], [0.75]]),
+                points: vec![
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                ],
+            }]),
         );
     }
 }
