@@ -28,7 +28,7 @@ impl CurveApproxSegment {
 
         if is_empty {
             assert!(
-                self.points.inner.is_empty(),
+                self.points.is_empty(),
                 "Empty approximation still has points"
             );
         }
