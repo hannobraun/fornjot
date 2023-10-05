@@ -315,11 +315,11 @@ pub mod tests {
         // Here's a second segment that doesn't overlap the existing one.
         let boundary = CurveBoundary::from([[0.], [1.]]);
         let segment = CurveApproxSegment {
+            boundary,
             points: vec![
                 ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
                 ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
             ],
-            boundary,
         };
         cache.insert(curve.clone(), segment.clone());
 
