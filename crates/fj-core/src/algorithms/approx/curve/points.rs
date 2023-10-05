@@ -6,3 +6,11 @@ pub struct CurveApproxPoints {
     /// Points of a curve approximation
     pub inner: Vec<ApproxPoint<1>>,
 }
+
+impl CurveApproxPoints {
+    /// Reverse the orientation of the approximation
+    pub fn reverse(&mut self) -> &mut Self {
+        self.inner.reverse();
+        self
+    }
+}

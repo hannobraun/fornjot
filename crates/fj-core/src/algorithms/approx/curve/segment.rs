@@ -52,7 +52,7 @@ impl CurveApproxSegment {
     /// Reverse the orientation of the approximation
     pub fn reverse(&mut self) -> &mut Self {
         self.boundary = self.boundary.reverse();
-        self.points.inner.reverse();
+        self.points.reverse();
         self
     }
 
