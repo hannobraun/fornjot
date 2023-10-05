@@ -91,10 +91,6 @@ impl CurveApproxSegment {
     /// segment, meaning parts of this one get overwritten.
     pub fn merge(&mut self, other: &Self) {
         assert!(
-            self.overlaps(other),
-            "Shouldn't merge segments that don't overlap."
-        );
-        assert!(
             self.is_normalized(),
             "Can't merge into non-normalized segment."
         );

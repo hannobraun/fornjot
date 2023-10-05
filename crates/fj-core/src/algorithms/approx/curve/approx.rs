@@ -60,6 +60,10 @@ impl CurveApprox {
 
         let mut merged_segment = new_segment;
         for (_, segment) in overlapping_segments {
+            assert!(
+                merged_segment.boundary.overlaps(&segment.boundary),
+                "Shouldn't merge segments that don't overlap."
+            );
             merged_segment.merge(&segment);
         }
 
