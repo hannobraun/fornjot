@@ -2,8 +2,10 @@
 
 mod approx;
 mod cache;
+mod points;
 mod segment;
 
 pub use self::{
-    approx::CurveApprox, cache::CurveApproxCache, segment::CurveApproxSegment,
+    approx::CurveApprox, cache::CurveApproxCache, points::CurveApproxPoints,
+    segment::CurveApproxSegment,
 };

@@ -16,7 +16,9 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApprox, CurveApproxCache, CurveApproxSegment},
+    curve::{
+        CurveApprox, CurveApproxCache, CurveApproxPoints, CurveApproxSegment,
+    },
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -85,6 +87,7 @@ impl Approx for (&Edge, &Surface) {
 
             segment
                 .points
+                .inner
                 .into_iter()
                 .map(|point| {
                     let point_surface =
@@ -194,7 +197,10 @@ fn approx_curve(
             ApproxPoint::new(point_curve, point_global)
         })
         .collect();
-    CurveApproxSegment { boundary, points }
+    CurveApproxSegment {
+        boundary,
+        points: CurveApproxPoints { inner: points },
+    }
 }
 
 /// Cache for edge approximations

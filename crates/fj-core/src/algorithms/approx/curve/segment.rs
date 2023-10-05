@@ -4,6 +4,8 @@ use fj_math::Point;
 
 use crate::{algorithms::approx::ApproxPoint, geometry::CurveBoundary};
 
+use super::points::CurveApproxPoints;
+
 /// A segment of a curve approximation
 ///
 /// A curve is potentially infinite (at least its local coordinate space is
@@ -16,7 +18,7 @@ pub struct CurveApproxSegment {
     pub boundary: CurveBoundary<Point<1>>,
 
     /// The points that approximate the curve segment
-    pub points: Vec<ApproxPoint<1>>,
+    pub points: CurveApproxPoints,
 }
 
 impl CurveApproxSegment {
@@ -26,7 +28,7 @@ impl CurveApproxSegment {
 
         if is_empty {
             assert!(
-                self.points.is_empty(),
+                self.points.inner.is_empty(),
                 "Empty approximation still has points"
             );
         }
@@ -50,7 +52,7 @@ impl CurveApproxSegment {
     /// Reverse the orientation of the approximation
     pub fn reverse(&mut self) -> &mut Self {
         self.boundary = self.boundary.reverse();
-        self.points.reverse();
+        self.points.inner.reverse();
         self
     }
 
@@ -61,7 +63,7 @@ impl CurveApproxSegment {
     pub fn normalize(&mut self) -> &mut Self {
         if !self.is_normalized() {
             self.boundary = self.boundary.normalize();
-            self.points.reverse();
+            self.points.inner.reverse();
         }
 
         self
@@ -80,6 +82,7 @@ impl CurveApproxSegment {
 
         self.boundary = self.boundary.subset(boundary);
         self.points
+            .inner
             .retain(|point| self.boundary.contains(point.local_form));
     }
 
@@ -101,13 +104,13 @@ impl CurveApproxSegment {
 
         self.boundary = self.boundary.union(other.boundary);
 
-        self.points.retain(|point| {
+        self.points.inner.retain(|point| {
             // Only retain points that don't overlap with the other segment, or
             // we might end up with duplicates.
             !other.boundary.contains(point.local_form)
         });
-        self.points.extend(&other.points);
-        self.points.sort();
+        self.points.inner.extend(&other.points.inner);
+        self.points.inner.sort();
     }
 }
 
@@ -139,7 +142,9 @@ impl<const D: usize> From<(CurveBoundary<Point<1>>, [ApproxPoint<1>; D])>
     ) -> Self {
         Self {
             boundary,
-            points: points.into_iter().collect(),
+            points: CurveApproxPoints {
+                inner: points.into_iter().collect(),
+            },
         }
     }
 }
