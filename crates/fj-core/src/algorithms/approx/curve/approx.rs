@@ -84,20 +84,20 @@ mod tests {
     #[test]
     fn reverse() {
         let mut approx = CurveApprox::from([
-            CurveApproxSegment {
-                boundary: [[0.1], [0.4]].into(),
-                points: vec![
+            CurveApproxSegment::from((
+                [[0.1], [0.4]].into(),
+                [
                     ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
                     ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
                 ],
-            },
-            CurveApproxSegment {
-                boundary: [[0.6], [0.9]].into(),
-                points: vec![
+            )),
+            CurveApproxSegment::from((
+                [[0.6], [0.9]].into(),
+                [
                     ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
                     ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
                 ],
-            },
+            )),
         ]);
 
         approx.reverse();
@@ -105,20 +105,20 @@ mod tests {
         assert_eq!(
             approx,
             CurveApprox::from([
-                CurveApproxSegment {
-                    boundary: [[0.9], [0.6]].into(),
-                    points: vec![
+                CurveApproxSegment::from((
+                    [[0.9], [0.6]].into(),
+                    [
                         ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
                         ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
                     ],
-                },
-                CurveApproxSegment {
-                    boundary: [[0.4], [0.1]].into(),
-                    points: vec![
+                )),
+                CurveApproxSegment::from((
+                    [[0.4], [0.1]].into(),
+                    [
                         ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
                         ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
                     ],
-                }
+                )),
             ])
         )
     }

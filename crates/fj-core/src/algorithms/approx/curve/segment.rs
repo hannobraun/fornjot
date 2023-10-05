@@ -130,3 +130,16 @@ impl PartialOrd for CurveApproxSegment {
         Some(self.cmp(other))
     }
 }
+
+impl<const D: usize> From<(CurveBoundary<Point<1>>, [ApproxPoint<1>; D])>
+    for CurveApproxSegment
+{
+    fn from(
+        (boundary, points): (CurveBoundary<Point<1>>, [ApproxPoint<1>; D]),
+    ) -> Self {
+        Self {
+            boundary,
+            points: points.into_iter().collect(),
+        }
+    }
+}
