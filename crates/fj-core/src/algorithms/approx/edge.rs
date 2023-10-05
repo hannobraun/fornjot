@@ -16,7 +16,9 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApprox, CurveApproxCache, CurveApproxSegment},
+    curve::{
+        CurveApprox, CurveApproxCache, CurveApproxPoints, CurveApproxSegment,
+    },
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -54,11 +56,11 @@ impl Approx for (&Edge, &Surface) {
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
                 match cached.segments.pop() {
-                    Some(segment) if cached.segments.is_empty() => {
+                    Some((boundary, points)) if cached.segments.is_empty() => {
                         // If the cached approximation has a single segment,
                         // that means everything we need is available, and we
                         // can use the cached approximation as-is.
-                        segment
+                        CurveApproxSegment { boundary, points }
                     }
                     _ => {
                         // If we make it here, there are holes in the
@@ -85,6 +87,7 @@ impl Approx for (&Edge, &Surface) {
 
             segment
                 .points
+                .inner
                 .into_iter()
                 .map(|point| {
                     let point_surface =
@@ -194,7 +197,10 @@ fn approx_curve(
             ApproxPoint::new(point_curve, point_global)
         })
         .collect();
-    CurveApproxSegment { boundary, points }
+    CurveApproxSegment {
+        boundary,
+        points: CurveApproxPoints { inner: points },
+    }
 }
 
 /// Cache for edge approximations

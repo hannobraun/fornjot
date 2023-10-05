@@ -4,6 +4,8 @@ use fj_math::Point;
 
 use crate::{algorithms::approx::ApproxPoint, geometry::CurveBoundary};
 
+use super::points::CurveApproxPoints;
+
 /// A segment of a curve approximation
 ///
 /// A curve is potentially infinite (at least its local coordinate space is
@@ -16,35 +18,13 @@ pub struct CurveApproxSegment {
     pub boundary: CurveBoundary<Point<1>>,
 
     /// The points that approximate the curve segment
-    pub points: Vec<ApproxPoint<1>>,
+    pub points: CurveApproxPoints,
 }
 
 impl CurveApproxSegment {
-    /// Indicate whether the segment is empty
-    pub fn is_empty(&self) -> bool {
-        let is_empty = self.boundary.is_empty();
-
-        if is_empty {
-            assert!(
-                self.points.is_empty(),
-                "Empty approximation still has points"
-            );
-        }
-
-        is_empty
-    }
-
     /// Indicate whether the segment is normalized
     pub fn is_normalized(&self) -> bool {
         self.boundary.is_normalized()
-    }
-
-    /// Indicate whether this segment overlaps another
-    ///
-    /// Segments that touch (i.e. their closest boundary is equal) count as
-    /// overlapping.
-    pub fn overlaps(&self, other: &Self) -> bool {
-        self.boundary.overlaps(&other.boundary)
     }
 
     /// Reverse the orientation of the approximation
@@ -61,53 +41,10 @@ impl CurveApproxSegment {
     pub fn normalize(&mut self) -> &mut Self {
         if !self.is_normalized() {
             self.boundary = self.boundary.normalize();
-            self.points.reverse();
+            self.points.inner.reverse();
         }
 
         self
-    }
-
-    /// Reduce the approximation to the subset defined by the provided boundary
-    pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
-        assert!(
-            self.is_normalized(),
-            "Expected normalized segment for making subset."
-        );
-        assert!(
-            boundary.is_normalized(),
-            "Expected subset to be defined by normalized boundary."
-        );
-
-        self.boundary = self.boundary.subset(boundary);
-        self.points
-            .retain(|point| self.boundary.contains(point.local_form));
-    }
-
-    /// Merge the provided segment into this one
-    ///
-    /// It there is a true overlap between both segments (as opposed to them
-    /// just touching), then the overlapping part is taken from the other
-    /// segment, meaning parts of this one get overwritten.
-    pub fn merge(&mut self, other: &Self) {
-        assert!(
-            self.overlaps(other),
-            "Shouldn't merge segments that don't overlap."
-        );
-        assert!(
-            self.is_normalized(),
-            "Can't merge into non-normalized segment."
-        );
-        assert!(other.is_normalized(), "Can't merge non-normalized segment.");
-
-        self.boundary = self.boundary.union(other.boundary);
-
-        self.points.retain(|point| {
-            // Only retain points that don't overlap with the other segment, or
-            // we might end up with duplicates.
-            !other.boundary.contains(point.local_form)
-        });
-        self.points.extend(&other.points);
-        self.points.sort();
     }
 }
 
@@ -139,7 +76,9 @@ impl<const D: usize> From<(CurveBoundary<Point<1>>, [ApproxPoint<1>; D])>
     ) -> Self {
         Self {
             boundary,
-            points: points.into_iter().collect(),
+            points: CurveApproxPoints {
+                inner: points.into_iter().collect(),
+            },
         }
     }
 }
