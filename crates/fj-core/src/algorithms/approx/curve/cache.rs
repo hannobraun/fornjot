@@ -354,8 +354,7 @@ pub mod tests {
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            },
         );
 
         let cached = cache.get(&curve, CurveBoundary::from([[-0.5], [0.5]]));
@@ -388,8 +387,7 @@ pub mod tests {
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            },
         );
 
         let cached = cache.get(&curve, CurveBoundary::from([[0.5], [1.5]]));
@@ -422,8 +420,7 @@ pub mod tests {
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            },
         );
 
         let cached = cache.get(&curve, CurveBoundary::from([[0.25], [0.75]]));
