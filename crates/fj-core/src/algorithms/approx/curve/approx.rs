@@ -78,6 +78,7 @@ impl CurveApprox {
         self.segments
             .push((merged_segment.boundary, merged_segment.clone()));
         self.segments.sort();
+
         merged_segment
     }
 }
