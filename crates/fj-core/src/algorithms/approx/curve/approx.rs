@@ -4,13 +4,13 @@ use fj_math::Point;
 
 use crate::geometry::CurveBoundary;
 
-use super::CurveApproxSegment;
+use super::{CurveApproxPoints, CurveApproxSegment};
 
 /// Partial approximation of a curve
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
     /// The approximated segments that are part of this approximation
-    pub segments: Vec<(CurveBoundary<Point<1>>, CurveApproxSegment)>,
+    pub segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
 }
 
 impl CurveApprox {
@@ -30,13 +30,7 @@ impl CurveApprox {
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         for (b, segment) in &mut self.segments {
             *b = b.subset(boundary);
-
-            assert!(
-                segment.is_normalized(),
-                "Expected normalized segment for making subset."
-            );
-            segment.boundary = *b;
-            segment.points.make_subset(boundary.normalize());
+            segment.make_subset(boundary.normalize());
         }
 
         self.segments.retain(|(_, segment)| !segment.is_empty());
@@ -74,18 +68,17 @@ impl CurveApprox {
             );
 
             merged_boundary = merged_boundary.union(boundary);
-            merged_segment.merge(&segment.points, boundary);
+            merged_segment.merge(&segment, boundary);
         }
 
-        let merged_segment = CurveApproxSegment {
-            boundary: merged_boundary,
-            points: merged_segment,
-        };
         self.segments
             .push((merged_boundary, merged_segment.clone()));
         self.segments.sort();
 
-        merged_segment
+        CurveApproxSegment {
+            boundary: merged_boundary,
+            points: merged_segment,
+        }
     }
 }
 
@@ -94,7 +87,7 @@ impl<const N: usize> From<[CurveApproxSegment; N]> for CurveApprox {
         Self {
             segments: segments
                 .into_iter()
-                .map(|segment| (segment.boundary, segment))
+                .map(|segment| (segment.boundary, segment.points))
                 .collect(),
         }
     }

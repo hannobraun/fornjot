@@ -56,11 +56,14 @@ impl Approx for (&Edge, &Surface) {
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
                 match cached.segments.pop() {
-                    Some((_, segment)) if cached.segments.is_empty() => {
+                    Some((boundary, segment)) if cached.segments.is_empty() => {
                         // If the cached approximation has a single segment,
                         // that means everything we need is available, and we
                         // can use the cached approximation as-is.
-                        segment
+                        CurveApproxSegment {
+                            boundary,
+                            points: segment,
+                        }
                     }
                     _ => {
                         // If we make it here, there are holes in the
