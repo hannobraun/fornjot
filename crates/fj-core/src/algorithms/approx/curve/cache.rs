@@ -21,7 +21,7 @@ impl CurveApproxCache {
     pub fn get(
         &self,
         curve: &Handle<Curve>,
-        boundary: &CurveBoundary<Point<1>>,
+        boundary: CurveBoundary<Point<1>>,
     ) -> CurveApprox {
         let curve = HandleWrapper::from(curve.clone());
 
@@ -79,25 +79,25 @@ pub mod tests {
         // An approximation of our curve already exists.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[2.], [3.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[2.], [3.]]),
+                [
                     ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
                     ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
                 ],
-            },
+            )),
         );
 
         // Here's another approximated segment for the same curve, but i doesn't
         // overlap with the already existing one.
         let boundary = CurveBoundary::from([[0.], [1.]]);
-        let segment = CurveApproxSegment {
+        let segment = CurveApproxSegment::from((
             boundary,
-            points: vec![
+            [
                 ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
                 ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
             ],
-        };
+        ));
 
         // When inserting the second segment, we expect to get it back
         // unchanged.
@@ -114,24 +114,24 @@ pub mod tests {
 
         // An approximation of our curve already exists.
         let boundary = CurveBoundary::from([[0.], [1.]]);
-        let existing_segment = CurveApproxSegment {
+        let existing_segment = CurveApproxSegment::from((
             boundary,
-            points: vec![
+            [
                 ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
                 ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
             ],
-        };
+        ));
         cache.insert(curve.clone(), existing_segment.clone());
 
         // Here's another approximated segment for the same curve that is
         // congruent with the existing one.
-        let new_segment = CurveApproxSegment {
+        let new_segment = CurveApproxSegment::from((
             boundary,
-            points: vec![
+            [
                 ApproxPoint::new([0.24], [0.24, 0.24, 0.24]),
                 ApproxPoint::new([0.76], [0.76, 0.76, 0.76]),
             ],
-        };
+        ));
 
         // When inserting the second segment, we expect to get the original one
         // back.
@@ -140,13 +140,8 @@ pub mod tests {
 
         // Also, the new segment should not have replaced the existing on in the
         // cache.
-        let cached = cache.get(&curve, &boundary);
-        assert_eq!(
-            cached,
-            CurveApprox {
-                segments: vec![existing_segment]
-            }
-        );
+        let cached = cache.get(&curve, boundary);
+        assert_eq!(cached, CurveApprox::from([existing_segment]));
     }
 
     #[test]
@@ -164,40 +159,32 @@ pub mod tests {
         // care of when doing the merge.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.75], [1.]]),
-                points: vec![ApproxPoint::new([0.875], [0.875, 0.875, 0.875])],
-            },
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.75], [1.]]),
+                [ApproxPoint::new([0.875], [0.875, 0.875, 0.875])],
+            )),
         );
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [0.25]]),
-                points: vec![ApproxPoint::new([0.125], [0.125, 0.125, 0.125])],
-            },
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.], [0.25]]),
+                [ApproxPoint::new([0.125], [0.125, 0.125, 0.125])],
+            )),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.], [1.]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.], [1.]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![
-                    CurveApproxSegment {
-                        boundary: CurveBoundary::from([[0.], [0.25]]),
-                        points: vec![ApproxPoint::new(
-                            [0.125],
-                            [0.125, 0.125, 0.125]
-                        )],
-                    },
-                    CurveApproxSegment {
-                        boundary: CurveBoundary::from([[0.75], [1.]]),
-                        points: vec![ApproxPoint::new(
-                            [0.875],
-                            [0.875, 0.875, 0.875]
-                        )],
-                    }
-                ]
-            }
+            CurveApprox::from([
+                CurveApproxSegment::from((
+                    CurveBoundary::from([[0.], [0.25]]),
+                    [ApproxPoint::new([0.125], [0.125, 0.125, 0.125])],
+                )),
+                CurveApproxSegment::from((
+                    CurveBoundary::from([[0.75], [1.]]),
+                    [ApproxPoint::new([0.875], [0.875, 0.875, 0.875])],
+                ))
+            ]),
         );
     }
 
@@ -213,23 +200,23 @@ pub mod tests {
         // functionality.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[1.5], [1.0]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[1.5], [1.0]]),
+                [
                     ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
                     ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
                 ],
-            },
+            )),
         );
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.5], [0.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.5], [0.]]),
+                [
                     ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                     ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
                 ],
-            },
+            )),
         );
 
         // Now insert a third segment that overlaps both of them (touching
@@ -237,32 +224,30 @@ pub mod tests {
         // segment.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[1.0], [0.5]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[1.0], [0.5]]),
+                [
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                 ],
-            },
+            )),
         );
 
         let boundary = CurveBoundary::from([[0.], [1.5]]);
-        let cached = cache.get(&curve, &boundary);
+        let cached = cache.get(&curve, boundary);
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary,
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                        ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
-                        ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment::from((
+                boundary,
+                [
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                    ApproxPoint::new([1.125], [1.125, 1.125, 1.125]),
+                    ApproxPoint::new([1.375], [1.375, 1.375, 1.375]),
+                ],
+            ))])
         );
     }
 
@@ -276,35 +261,30 @@ pub mod tests {
         // An approximation of our curve already exists.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[2.], [3.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[2.], [3.]]),
+                [
                     ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
                     ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
                 ],
-            },
+            )),
         );
 
         // Here's a second segment that doesn't overlap the existing one.
         let boundary = CurveBoundary::from([[0.], [1.]]);
-        let segment = CurveApproxSegment {
+        let segment = CurveApproxSegment::from((
             boundary,
-            points: vec![
+            [
                 ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
                 ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
             ],
-        };
+        ));
         cache.insert(curve.clone(), segment.clone());
 
         // When asking for an approximation with the same boundary as the second
         // segment we added, we expect to get it back exactly.
-        let cached = cache.get(&curve, &boundary);
-        assert_eq!(
-            cached,
-            CurveApprox {
-                segments: vec![segment]
-            }
-        );
+        let cached = cache.get(&curve, boundary);
+        assert_eq!(cached, CurveApprox::from([segment]));
     }
 
     #[test]
@@ -317,39 +297,37 @@ pub mod tests {
         // An approximation of our curve already exists.
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[2.], [3.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[2.], [3.]]),
+                [
                     ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
                     ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
                 ],
-            },
+            )),
         );
 
         // Here's a second segment that doesn't overlap the existing one.
         let boundary = CurveBoundary::from([[0.], [1.]]);
-        let segment = CurveApproxSegment {
-            points: vec![
+        let segment = CurveApproxSegment::from((
+            boundary,
+            [
                 ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
                 ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
             ],
-            boundary,
-        };
+        ));
         cache.insert(curve.clone(), segment.clone());
 
         // When asking for an approximation with the same boundary of the second
         // segment we added but reversed, we expect to get back the segment, but
         // reversed.
-        let cached = cache.get(&curve, &boundary.reverse());
+        let cached = cache.get(&curve, boundary.reverse());
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![{
-                    let mut segment = segment;
-                    segment.reverse();
-                    segment
-                }]
-            }
+            CurveApprox::from([{
+                let mut segment = segment;
+                segment.reverse();
+                segment
+            }]),
         );
     }
 
@@ -362,30 +340,27 @@ pub mod tests {
 
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [1.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.], [1.]]),
+                [
                     ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
                     ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            )),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[-0.5], [0.5]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[-0.5], [0.5]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.], [0.5]]),
-                    points: vec![
-                        ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment::from((
+                CurveBoundary::from([[0.], [0.5]]),
+                [
+                    ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                ],
+            ))]),
         );
     }
 
@@ -398,30 +373,27 @@ pub mod tests {
 
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [1.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.], [1.]]),
+                [
                     ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
                     ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            )),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.5], [1.5]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.5], [1.5]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.5], [1.0]]),
-                    points: vec![
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                        ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment::from((
+                CurveBoundary::from([[0.5], [1.0]]),
+                [
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                    ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
+                ],
+            ))]),
         );
     }
 
@@ -434,30 +406,27 @@ pub mod tests {
 
         cache.insert(
             curve.clone(),
-            CurveApproxSegment {
-                boundary: CurveBoundary::from([[0.], [1.]]),
-                points: vec![
+            CurveApproxSegment::from((
+                CurveBoundary::from([[0.], [1.]]),
+                [
                     ApproxPoint::new([0.125], [0.125, 0.125, 0.125]),
                     ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
                     ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
                     ApproxPoint::new([0.875], [0.875, 0.875, 0.875]),
                 ],
-            }
-            .clone(),
+            )),
         );
 
-        let cached = cache.get(&curve, &CurveBoundary::from([[0.25], [0.75]]));
+        let cached = cache.get(&curve, CurveBoundary::from([[0.25], [0.75]]));
         assert_eq!(
             cached,
-            CurveApprox {
-                segments: vec![CurveApproxSegment {
-                    boundary: CurveBoundary::from([[0.25], [0.75]]),
-                    points: vec![
-                        ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
-                        ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
-                    ],
-                }]
-            }
+            CurveApprox::from([CurveApproxSegment::from((
+                CurveBoundary::from([[0.25], [0.75]]),
+                [
+                    ApproxPoint::new([0.375], [0.375, 0.375, 0.375]),
+                    ApproxPoint::new([0.625], [0.625, 0.625, 0.625]),
+                ],
+            ))]),
         );
     }
 }

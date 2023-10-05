@@ -229,7 +229,7 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> CurveApprox {
-        self.curve_approx.get(&handle, &boundary)
+        self.curve_approx.get(&handle, boundary)
     }
 
     fn insert_curve_approx(

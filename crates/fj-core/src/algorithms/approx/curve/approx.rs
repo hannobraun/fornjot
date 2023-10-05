@@ -26,7 +26,7 @@ impl CurveApprox {
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary
-    pub fn make_subset(&mut self, boundary: &CurveBoundary<Point<1>>) {
+    pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         for segment in &mut self.segments {
             segment.make_subset(boundary.normalize());
         }
@@ -67,6 +67,14 @@ impl CurveApprox {
     }
 }
 
+impl<const N: usize> From<[CurveApproxSegment; N]> for CurveApprox {
+    fn from(segments: [CurveApproxSegment; N]) -> Self {
+        Self {
+            segments: segments.into_iter().collect(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::algorithms::approx::{curve::CurveApproxSegment, ApproxPoint};
@@ -75,47 +83,43 @@ mod tests {
 
     #[test]
     fn reverse() {
-        let mut approx = CurveApprox {
-            segments: vec![
-                CurveApproxSegment {
-                    boundary: [[0.1], [0.4]].into(),
-                    points: vec![
-                        ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
-                        ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
-                    ],
-                },
-                CurveApproxSegment {
-                    boundary: [[0.6], [0.9]].into(),
-                    points: vec![
-                        ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
-                        ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
-                    ],
-                },
-            ],
-        };
+        let mut approx = CurveApprox::from([
+            CurveApproxSegment::from((
+                [[0.1], [0.4]].into(),
+                [
+                    ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
+                    ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
+                ],
+            )),
+            CurveApproxSegment::from((
+                [[0.6], [0.9]].into(),
+                [
+                    ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
+                    ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
+                ],
+            )),
+        ]);
 
         approx.reverse();
 
         assert_eq!(
             approx,
-            CurveApprox {
-                segments: vec![
-                    CurveApproxSegment {
-                        boundary: [[0.9], [0.6]].into(),
-                        points: vec![
-                            ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
-                            ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
-                        ],
-                    },
-                    CurveApproxSegment {
-                        boundary: [[0.4], [0.1]].into(),
-                        points: vec![
-                            ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
-                            ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
-                        ],
-                    },
-                ],
-            }
+            CurveApprox::from([
+                CurveApproxSegment::from((
+                    [[0.9], [0.6]].into(),
+                    [
+                        ApproxPoint::new([0.9], [0.9, 0.9, 0.9]),
+                        ApproxPoint::new([0.6], [0.6, 0.6, 0.6]),
+                    ],
+                )),
+                CurveApproxSegment::from((
+                    [[0.4], [0.1]].into(),
+                    [
+                        ApproxPoint::new([0.4], [0.4, 0.4, 0.4]),
+                        ApproxPoint::new([0.1], [0.1, 0.1, 0.1]),
+                    ],
+                )),
+            ])
         )
     }
 }
