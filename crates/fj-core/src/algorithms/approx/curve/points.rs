@@ -21,4 +21,22 @@ impl CurveApproxPoints {
         self.inner
             .retain(|point| boundary.contains(point.local_form));
     }
+
+    /// Merge the provided points
+    ///
+    /// If there is a true overlap between these points and the other points
+    /// then the overlapping part is taken from the other points.
+    pub fn merge(
+        &mut self,
+        other: &Self,
+        other_boundary: CurveBoundary<Point<1>>,
+    ) {
+        self.inner.retain(|point| {
+            // Only retain points that don't overlap with the other points, or
+            // we might end up with duplicates.
+            !other_boundary.contains(point.local_form)
+        });
+        self.inner.extend(&other.inner);
+        self.inner.sort();
+    }
 }

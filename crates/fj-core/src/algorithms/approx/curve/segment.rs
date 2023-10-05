@@ -101,14 +101,7 @@ impl CurveApproxSegment {
         assert!(other.is_normalized(), "Can't merge non-normalized segment.");
 
         self.boundary = self.boundary.union(other.boundary);
-
-        self.points.inner.retain(|point| {
-            // Only retain points that don't overlap with the other segment, or
-            // we might end up with duplicates.
-            !other.boundary.contains(point.local_form)
-        });
-        self.points.inner.extend(&other.points.inner);
-        self.points.inner.sort();
+        self.points.merge(&other.points, other.boundary);
     }
 }
 
