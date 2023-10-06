@@ -160,7 +160,7 @@ impl Eq for Scalar {}
 
 impl PartialOrd for Scalar {
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
-        self.0.partial_cmp(&other.0)
+        Some(self.cmp(other))
     }
 }
 
@@ -168,7 +168,7 @@ impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         // Should never panic, as `from_f64` checks that the wrapped value is
         // finite.
-        self.partial_cmp(other).expect("Invalid `Scalar`")
+        self.0.partial_cmp(&other.0).expect("Invalid `Scalar`")
     }
 }
 

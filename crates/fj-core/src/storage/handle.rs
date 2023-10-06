@@ -245,7 +245,7 @@ impl<T> Ord for HandleWrapper<T> {
 
 impl<T> PartialOrd for HandleWrapper<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.0.id().partial_cmp(&other.0.id())
+        Some(self.cmp(other))
     }
 }
 
