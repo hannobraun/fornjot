@@ -158,7 +158,7 @@ impl<T: CurveBoundaryElement> Ord for CurveBoundary<T> {
 
 impl<T: CurveBoundaryElement> PartialOrd for CurveBoundary<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.inner.partial_cmp(&other.inner)
+        Some(self.cmp(other))
     }
 }
 
