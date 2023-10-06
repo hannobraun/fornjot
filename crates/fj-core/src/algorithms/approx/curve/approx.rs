@@ -59,7 +59,7 @@ impl CurveApprox {
             segment.make_subset(boundary.normalize());
         }
 
-        self.segments.retain(|(_, segment)| !segment.is_empty());
+        self.segments.retain(|(boundary, _)| !boundary.is_empty());
     }
 
     /// Merge the provided segment into the approximation
