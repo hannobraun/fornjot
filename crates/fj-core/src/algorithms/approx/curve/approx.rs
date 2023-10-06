@@ -25,12 +25,7 @@ impl CurveApprox {
 
     /// Reverse the approximation
     pub fn reverse(&mut self) {
-        self.segments.inner.reverse();
-
-        for (boundary, segment) in &mut self.segments.inner {
-            *boundary = boundary.reverse();
-            segment.reverse();
-        }
+        self.segments.reverse();
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary

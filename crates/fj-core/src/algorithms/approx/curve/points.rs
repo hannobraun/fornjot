@@ -48,4 +48,8 @@ impl CurveApproxPoints {
     }
 }
 
-impl CurveBoundariesPayload for CurveApproxPoints {}
+impl CurveBoundariesPayload for CurveApproxPoints {
+    fn reverse(&mut self) {
+        self.reverse();
+    }
+}

@@ -41,6 +41,16 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
             }
         }
     }
+
+    /// Reverse each boundary, and their order
+    pub fn reverse(&mut self) {
+        self.inner.reverse();
+
+        for (boundary, payload) in &mut self.inner {
+            *boundary = boundary.reverse();
+            payload.reverse();
+        }
+    }
 }
 
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
@@ -50,6 +60,11 @@ impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
 }
 
 /// A payload that can be used in [`CurveBoundaries`]
-pub trait CurveBoundariesPayload {}
+pub trait CurveBoundariesPayload {
+    /// Reverse the orientation of the payload
+    fn reverse(&mut self);
+}
 
-impl CurveBoundariesPayload for () {}
+impl CurveBoundariesPayload for () {
+    fn reverse(&mut self) {}
+}
