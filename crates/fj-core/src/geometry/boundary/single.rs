@@ -67,7 +67,7 @@ impl CurveBoundary<Point<1>> {
 
     /// Indicate whether the boundary contains the given element
     pub fn contains(&self, point: Point<1>) -> bool {
-        let [min, max] = self.inner;
+        let [min, max] = self.normalize().inner;
         point > min && point < max
     }
 
