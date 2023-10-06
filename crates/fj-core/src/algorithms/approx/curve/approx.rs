@@ -15,33 +15,12 @@ pub struct CurveApprox {
 impl CurveApprox {
     /// Get the single segment that covers the provided boundary, if available
     pub fn into_single_segment(
-        mut self,
+        self,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        match self.segments.inner.pop() {
-            Some((b, points))
-                if self.segments.inner.is_empty() && b == boundary =>
-            {
-                // We just removed a single segment, there are no others, and
-                // the removed segment's boundary matches the boundary provided
-                // to us.
-                //
-                // This is what the caller was asking for. Return it!
-                Some(CurveApproxSegment {
-                    boundary: b,
-                    points,
-                })
-            }
-            _ => {
-                // Either we don't have any segments in here, or we have more
-                // than one (which implies there are gaps between them), or we
-                // have a single one that doesn't cover the full boundary we
-                // were asked for.
-                //
-                // Either way, we don't have what the caller wants.
-                None
-            }
-        }
+        self.segments
+            .into_single_payload(boundary)
+            .map(|points| CurveApproxSegment { boundary, points })
     }
 
     /// Reverse the approximation
