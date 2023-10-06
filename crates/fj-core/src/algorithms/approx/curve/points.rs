@@ -19,9 +19,8 @@ impl CurveApproxPoints {
     }
 
     /// Reverse the orientation of the approximation
-    pub fn reverse(&mut self) -> &mut Self {
+    pub fn reverse(&mut self) {
         self.inner.reverse();
-        self
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary
