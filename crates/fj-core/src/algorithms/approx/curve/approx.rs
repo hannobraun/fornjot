@@ -9,8 +9,7 @@ use super::{CurveApproxPoints, CurveApproxSegment};
 /// Partial approximation of a curve
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
-    /// The approximated segments that are part of this approximation
-    pub segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
+    segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
 }
 
 impl CurveApprox {
