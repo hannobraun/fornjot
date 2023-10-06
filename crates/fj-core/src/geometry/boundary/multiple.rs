@@ -7,12 +7,12 @@ use crate::geometry::CurveBoundary;
 /// Has a type parameter, `T`, which can be used to attach a payload to each
 /// boundary.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct CurveBoundaries<T = ()> {
+pub struct CurveBoundaries<T: CurveBoundariesPayload = ()> {
     /// The [`CurveBoundary`] instances
     pub inner: Vec<(CurveBoundary<Point<1>>, T)>,
 }
 
-impl<T> CurveBoundaries<T> {
+impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Transform `self` into the payload of the single boundary requested
     ///
     /// If there are no boundaries or multiple boundaries in `self`, or if the
@@ -43,8 +43,13 @@ impl<T> CurveBoundaries<T> {
     }
 }
 
-impl<T> Default for CurveBoundaries<T> {
+impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
     fn default() -> Self {
         Self { inner: Vec::new() }
     }
 }
+
+/// A payload that can be used in [`CurveBoundaries`]
+pub trait CurveBoundariesPayload {}
+
+impl CurveBoundariesPayload for () {}

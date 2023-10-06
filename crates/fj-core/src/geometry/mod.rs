@@ -6,7 +6,7 @@ mod surface;
 
 pub use self::{
     boundary::{
-        multiple::CurveBoundaries,
+        multiple::{CurveBoundaries, CurveBoundariesPayload},
         single::{CurveBoundary, CurveBoundaryElement},
     },
     path::{GlobalPath, SurfacePath},

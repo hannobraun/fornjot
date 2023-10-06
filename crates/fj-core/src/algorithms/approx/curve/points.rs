@@ -1,6 +1,9 @@
 use fj_math::Point;
 
-use crate::{algorithms::approx::ApproxPoint, geometry::CurveBoundary};
+use crate::{
+    algorithms::approx::ApproxPoint,
+    geometry::{CurveBoundariesPayload, CurveBoundary},
+};
 
 /// Points of a curve approximation
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -45,3 +48,5 @@ impl CurveApproxPoints {
         self.inner.sort();
     }
 }
+
+impl CurveBoundariesPayload for CurveApproxPoints {}
