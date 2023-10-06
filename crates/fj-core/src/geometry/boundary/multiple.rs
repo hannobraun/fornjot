@@ -70,7 +70,7 @@ impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
 }
 
 /// A payload that can be used in [`CurveBoundaries`]
-pub trait CurveBoundariesPayload {
+pub trait CurveBoundariesPayload: Clone + Ord {
     /// Reverse the orientation of the payload
     fn reverse(&mut self);
 
