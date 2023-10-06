@@ -56,4 +56,8 @@ impl CurveBoundariesPayload for CurveApproxPoints {
     fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         self.make_subset(boundary)
     }
+
+    fn merge(&mut self, other: &Self, other_boundary: CurveBoundary<Point<1>>) {
+        self.merge(other, other_boundary)
+    }
 }

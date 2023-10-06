@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use fj_math::Point;
 
 use crate::geometry::CurveBoundary;
@@ -61,6 +63,50 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
 
         self.inner.retain(|(boundary, _)| !boundary.is_empty());
     }
+
+    /// Merge the provided boundary into `self`
+    ///
+    /// Return the merged boundary and payload.
+    pub fn merge(
+        &mut self,
+        new_boundary: CurveBoundary<Point<1>>,
+        new_payload: T,
+    ) -> (CurveBoundary<Point<1>>, T) {
+        let mut overlapping_payloads = VecDeque::new();
+
+        let mut i = 0;
+        loop {
+            let Some((boundary, _)) = self.inner.get(i) else {
+                break;
+            };
+
+            if boundary.overlaps(&new_boundary) {
+                let payload = self.inner.swap_remove(i);
+                overlapping_payloads.push_back(payload);
+                continue;
+            }
+
+            i += 1;
+        }
+
+        let mut merged_boundary = new_boundary;
+        let mut merged_payload = new_payload;
+
+        for (boundary, payload) in overlapping_payloads {
+            assert!(
+                merged_boundary.overlaps(&boundary),
+                "Shouldn't merge boundaries that don't overlap."
+            );
+
+            merged_boundary = merged_boundary.union(boundary);
+            merged_payload.merge(&payload, boundary);
+        }
+
+        self.inner.push((merged_boundary, merged_payload.clone()));
+        self.inner.sort();
+
+        (merged_boundary, merged_payload)
+    }
 }
 
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
@@ -76,9 +122,13 @@ pub trait CurveBoundariesPayload: Clone + Ord {
 
     /// Reduce the payload to the subset defined by the provided boundary
     fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>);
+
+    /// Merge the provided payload
+    fn merge(&mut self, other: &Self, other_boundary: CurveBoundary<Point<1>>);
 }
 
 impl CurveBoundariesPayload for () {
     fn reverse(&mut self) {}
     fn make_subset(&mut self, _: CurveBoundary<Point<1>>) {}
+    fn merge(&mut self, _: &Self, _: CurveBoundary<Point<1>>) {}
 }

@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use fj_math::Point;
 
 use crate::geometry::{CurveBoundaries, CurveBoundary};
@@ -38,40 +36,9 @@ impl CurveApprox {
         &mut self,
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        let mut overlapping_segments = VecDeque::new();
-
-        let mut i = 0;
-        loop {
-            let Some((boundary, _)) = self.segments.inner.get(i) else {
-                break;
-            };
-
-            if boundary.overlaps(&new_segment.boundary) {
-                let segment = self.segments.inner.swap_remove(i);
-                overlapping_segments.push_back(segment);
-                continue;
-            }
-
-            i += 1;
-        }
-
-        let mut merged_boundary = new_segment.boundary;
-        let mut merged_segment = new_segment.points;
-
-        for (boundary, segment) in overlapping_segments {
-            assert!(
-                merged_boundary.overlaps(&boundary),
-                "Shouldn't merge segments that don't overlap."
-            );
-
-            merged_boundary = merged_boundary.union(boundary);
-            merged_segment.merge(&segment, boundary);
-        }
-
-        self.segments
-            .inner
-            .push((merged_boundary, merged_segment.clone()));
-        self.segments.inner.sort();
+        let (merged_boundary, merged_segment) = self
+            .segments
+            .merge(new_segment.boundary, new_segment.points);
 
         CurveApproxSegment {
             boundary: merged_boundary,
