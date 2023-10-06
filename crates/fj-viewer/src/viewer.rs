@@ -1,5 +1,4 @@
 use fj_interop::model::Model;
-use fj_math::Aabb;
 use tracing::warn;
 
 use crate::{
@@ -93,7 +92,7 @@ impl Viewer {
             .model
             .as_ref()
             .map(|shape| shape.aabb)
-            .unwrap_or_else(Aabb::default);
+            .unwrap_or_default();
 
         self.camera.update_planes(&aabb);
 
