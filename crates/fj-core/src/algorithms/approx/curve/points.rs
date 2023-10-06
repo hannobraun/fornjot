@@ -1,6 +1,9 @@
 use fj_math::Point;
 
-use crate::{algorithms::approx::ApproxPoint, geometry::CurveBoundary};
+use crate::{
+    algorithms::approx::ApproxPoint,
+    geometry::{CurveBoundariesPayload, CurveBoundary},
+};
 
 /// Points of a curve approximation
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -16,9 +19,8 @@ impl CurveApproxPoints {
     }
 
     /// Reverse the orientation of the approximation
-    pub fn reverse(&mut self) -> &mut Self {
+    pub fn reverse(&mut self) {
         self.inner.reverse();
-        self
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary
@@ -43,5 +45,19 @@ impl CurveApproxPoints {
         });
         self.inner.extend(&other.inner);
         self.inner.sort();
+    }
+}
+
+impl CurveBoundariesPayload for CurveApproxPoints {
+    fn reverse(&mut self) {
+        self.reverse();
+    }
+
+    fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
+        self.make_subset(boundary)
+    }
+
+    fn merge(&mut self, other: &Self, other_boundary: CurveBoundary<Point<1>>) {
+        self.merge(other, other_boundary)
     }
 }

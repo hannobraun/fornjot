@@ -5,7 +5,10 @@ mod path;
 mod surface;
 
 pub use self::{
-    boundary::{CurveBoundary, CurveBoundaryElement},
+    boundary::{
+        multiple::{CurveBoundaries, CurveBoundariesPayload},
+        single::{CurveBoundary, CurveBoundaryElement},
+    },
     path::{GlobalPath, SurfacePath},
     surface::SurfaceGeometry,
 };

@@ -1,65 +1,34 @@
-use std::collections::VecDeque;
-
 use fj_math::Point;
 
-use crate::geometry::CurveBoundary;
+use crate::geometry::{CurveBoundaries, CurveBoundary};
 
 use super::{CurveApproxPoints, CurveApproxSegment};
 
 /// Partial approximation of a curve
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
-    segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
+    segments: CurveBoundaries<CurveApproxPoints>,
 }
 
 impl CurveApprox {
     /// Get the single segment that covers the provided boundary, if available
     pub fn into_single_segment(
-        mut self,
+        self,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApproxSegment> {
-        match self.segments.pop() {
-            Some((b, points)) if self.segments.is_empty() && b == boundary => {
-                // We just removed a single segment, there are no others, and
-                // the removed segment's boundary matches the boundary provided
-                // to us.
-                //
-                // This is what the caller was asking for. Return it!
-                Some(CurveApproxSegment {
-                    boundary: b,
-                    points,
-                })
-            }
-            _ => {
-                // Either we don't have any segments in here, or we have more
-                // than one (which implies there are gaps between them), or we
-                // have a single one that doesn't cover the full boundary we
-                // were asked for.
-                //
-                // Either way, we don't have what the caller wants.
-                None
-            }
-        }
+        self.segments
+            .into_single_payload(boundary)
+            .map(|points| CurveApproxSegment { boundary, points })
     }
 
     /// Reverse the approximation
     pub fn reverse(&mut self) {
         self.segments.reverse();
-
-        for (boundary, segment) in &mut self.segments {
-            *boundary = boundary.reverse();
-            segment.reverse();
-        }
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
-        for (b, segment) in &mut self.segments {
-            *b = b.subset(boundary);
-            segment.make_subset(boundary.normalize());
-        }
-
-        self.segments.retain(|(boundary, _)| !boundary.is_empty());
+        self.segments.make_subset(boundary);
     }
 
     /// Merge the provided segment into the approximation
@@ -67,39 +36,9 @@ impl CurveApprox {
         &mut self,
         new_segment: CurveApproxSegment,
     ) -> CurveApproxSegment {
-        let mut overlapping_segments = VecDeque::new();
-
-        let mut i = 0;
-        loop {
-            let Some((boundary, _)) = self.segments.get(i) else {
-                break;
-            };
-
-            if boundary.overlaps(&new_segment.boundary) {
-                let segment = self.segments.swap_remove(i);
-                overlapping_segments.push_back(segment);
-                continue;
-            }
-
-            i += 1;
-        }
-
-        let mut merged_boundary = new_segment.boundary;
-        let mut merged_segment = new_segment.points;
-
-        for (boundary, segment) in overlapping_segments {
-            assert!(
-                merged_boundary.overlaps(&boundary),
-                "Shouldn't merge segments that don't overlap."
-            );
-
-            merged_boundary = merged_boundary.union(boundary);
-            merged_segment.merge(&segment, boundary);
-        }
-
-        self.segments
-            .push((merged_boundary, merged_segment.clone()));
-        self.segments.sort();
+        let (merged_boundary, merged_segment) = self
+            .segments
+            .merge(new_segment.boundary, new_segment.points);
 
         CurveApproxSegment {
             boundary: merged_boundary,
@@ -111,10 +50,12 @@ impl CurveApprox {
 impl<const N: usize> From<[CurveApproxSegment; N]> for CurveApprox {
     fn from(segments: [CurveApproxSegment; N]) -> Self {
         Self {
-            segments: segments
-                .into_iter()
-                .map(|segment| (segment.boundary, segment.points))
-                .collect(),
+            segments: CurveBoundaries {
+                inner: segments
+                    .into_iter()
+                    .map(|segment| (segment.boundary, segment.points))
+                    .collect(),
+            },
         }
     }
 }
