@@ -51,6 +51,16 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
             payload.reverse();
         }
     }
+
+    /// Reduce `self` to the subset defined by the provided boundary
+    pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
+        for (b, segment) in &mut self.inner {
+            *b = b.subset(boundary);
+            segment.make_subset(boundary);
+        }
+
+        self.inner.retain(|(boundary, _)| !boundary.is_empty());
+    }
 }
 
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
@@ -63,8 +73,12 @@ impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
 pub trait CurveBoundariesPayload {
     /// Reverse the orientation of the payload
     fn reverse(&mut self);
+
+    /// Reduce the payload to the subset defined by the provided boundary
+    fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>);
 }
 
 impl CurveBoundariesPayload for () {
     fn reverse(&mut self) {}
+    fn make_subset(&mut self, _: CurveBoundary<Point<1>>) {}
 }

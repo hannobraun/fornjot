@@ -52,4 +52,8 @@ impl CurveBoundariesPayload for CurveApproxPoints {
     fn reverse(&mut self) {
         self.reverse();
     }
+
+    fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
+        self.make_subset(boundary)
+    }
 }
