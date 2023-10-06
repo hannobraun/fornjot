@@ -52,17 +52,21 @@ impl Approx for (&Edge, &Surface) {
 
         let rest = {
             let segment = {
-                let mut cached = cache
+                let cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                match cached.segments.pop() {
-                    Some((boundary, points)) if cached.segments.is_empty() => {
-                        // If the cached approximation has a single segment,
-                        // that means everything we need is available, and we
-                        // can use the cached approximation as-is.
-                        CurveApproxSegment { boundary, points }
+                // `cached` is the approximation of the curve that is available
+                // within the edge boundary. This approximation might or might
+                // not be complete.
+
+                match cached.into_single_segment(edge.boundary()) {
+                    Some(segment) => {
+                        // We've asked the approximation to give us a single
+                        // segment that covers the boundary, and we got it. We
+                        // can use it as-is.
+                        segment
                     }
-                    _ => {
+                    None => {
                         // If we make it here, there are holes in the
                         // approximation, in some way or another. We could be
                         // really surgical and fill in exactly those holes, and

@@ -9,21 +9,47 @@ use super::{CurveApproxPoints, CurveApproxSegment};
 /// Partial approximation of a curve
 #[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveApprox {
-    /// The approximated segments that are part of this approximation
-    pub segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
+    segments: Vec<(CurveBoundary<Point<1>>, CurveApproxPoints)>,
 }
 
 impl CurveApprox {
+    /// Get the single segment that covers the provided boundary, if available
+    pub fn into_single_segment(
+        mut self,
+        boundary: CurveBoundary<Point<1>>,
+    ) -> Option<CurveApproxSegment> {
+        match self.segments.pop() {
+            Some((b, points)) if self.segments.is_empty() && b == boundary => {
+                // We just removed a single segment, there are no others, and
+                // the removed segment's boundary matches the boundary provided
+                // to us.
+                //
+                // This is what the caller was asking for. Return it!
+                Some(CurveApproxSegment {
+                    boundary: b,
+                    points,
+                })
+            }
+            _ => {
+                // Either we don't have any segments in here, or we have more
+                // than one (which implies there are gaps between them), or we
+                // have a single one that doesn't cover the full boundary we
+                // were asked for.
+                //
+                // Either way, we don't have what the caller wants.
+                None
+            }
+        }
+    }
+
     /// Reverse the approximation
-    pub fn reverse(&mut self) -> &mut Self {
+    pub fn reverse(&mut self) {
         self.segments.reverse();
 
         for (boundary, segment) in &mut self.segments {
             *boundary = boundary.reverse();
             segment.reverse();
         }
-
-        self
     }
 
     /// Reduce the approximation to the subset defined by the provided boundary
@@ -33,7 +59,7 @@ impl CurveApprox {
             segment.make_subset(boundary.normalize());
         }
 
-        self.segments.retain(|(_, segment)| !segment.is_empty());
+        self.segments.retain(|(boundary, _)| !boundary.is_empty());
     }
 
     /// Merge the provided segment into the approximation
