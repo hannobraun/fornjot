@@ -115,6 +115,19 @@ impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
     }
 }
 
+impl<T: CurveBoundariesPayload> FromIterator<(CurveBoundary<Point<1>>, T)>
+    for CurveBoundaries<T>
+{
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = (CurveBoundary<Point<1>>, T)>,
+    {
+        Self {
+            inner: iter.into_iter().collect(),
+        }
+    }
+}
+
 /// A payload that can be used in [`CurveBoundaries`]
 pub trait CurveBoundariesPayload: Clone + Ord {
     /// Reverse the orientation of the payload
