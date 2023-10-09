@@ -10,8 +10,7 @@ use crate::geometry::CurveBoundary;
 /// boundary.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveBoundaries<T: CurveBoundariesPayload = ()> {
-    /// The [`CurveBoundary`] instances
-    pub inner: Vec<(CurveBoundary<Point<1>>, T)>,
+    inner: Vec<(CurveBoundary<Point<1>>, T)>,
 }
 
 impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
@@ -29,7 +28,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
                 // the removed element's boundary matches the boundary provided
                 // to us.
                 //
-                // This is what the caller was asking for. Return it!
+                // This is what the caller is asking for. Return it!
                 Some(payload)
             }
             _ => {
@@ -112,6 +111,19 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
     fn default() -> Self {
         Self { inner: Vec::new() }
+    }
+}
+
+impl<T: CurveBoundariesPayload> FromIterator<(CurveBoundary<Point<1>>, T)>
+    for CurveBoundaries<T>
+{
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = (CurveBoundary<Point<1>>, T)>,
+    {
+        Self {
+            inner: iter.into_iter().collect(),
+        }
     }
 }
 

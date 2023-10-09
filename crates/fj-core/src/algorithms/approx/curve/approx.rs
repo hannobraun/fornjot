@@ -50,12 +50,10 @@ impl CurveApprox {
 impl<const N: usize> From<[CurveApproxSegment; N]> for CurveApprox {
     fn from(segments: [CurveApproxSegment; N]) -> Self {
         Self {
-            segments: CurveBoundaries {
-                inner: segments
-                    .into_iter()
-                    .map(|segment| (segment.boundary, segment.points))
-                    .collect(),
-            },
+            segments: segments
+                .into_iter()
+                .map(|segment| (segment.boundary, segment.points))
+                .collect(),
         }
     }
 }
