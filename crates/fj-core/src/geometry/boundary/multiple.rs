@@ -10,8 +10,7 @@ use crate::geometry::CurveBoundary;
 /// boundary.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CurveBoundaries<T: CurveBoundariesPayload = ()> {
-    /// The [`CurveBoundary`] instances
-    pub inner: Vec<(CurveBoundary<Point<1>>, T)>,
+    inner: Vec<(CurveBoundary<Point<1>>, T)>,
 }
 
 impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
