@@ -28,7 +28,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
                 // the removed element's boundary matches the boundary provided
                 // to us.
                 //
-                // This is what the caller was asking for. Return it!
+                // This is what the caller is asking for. Return it!
                 Some(payload)
             }
             _ => {
