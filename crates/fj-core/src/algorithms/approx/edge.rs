@@ -52,7 +52,7 @@ impl Approx for (&Edge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            let segment = {
+            let segment = loop {
                 let cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
@@ -60,34 +60,36 @@ impl Approx for (&Edge, &Surface) {
                 // within the edge boundary. This approximation might or might
                 // not be complete.
 
-                match cached.into_single_segment(edge.boundary()) {
-                    Some(segment) => {
-                        // We've asked the approximation to give us a single
-                        // segment that covers the boundary, and we got it. We
-                        // can use it as-is.
-                        segment
-                    }
-                    None => {
-                        // If we make it here, there are holes in the
-                        // approximation, in some way or another. We could be
-                        // really surgical and fill in exactly those holes, and
-                        // in the future we might want to, for performance
-                        // reasons.
-                        //
-                        // For now, let's just approximate *all* we need and
-                        // insert that into the cache. The cache takes care of
-                        // merging that with whatever is already there.
-                        cache.insert_curve_approx(
-                            edge.curve().clone(),
-                            approx_curve(
-                                &edge.path(),
-                                surface,
-                                edge.boundary(),
-                                tolerance,
-                            ),
-                        )
-                    }
+                if let Some(segment) =
+                    cached.into_single_segment(edge.boundary())
+                {
+                    // We've asked the approximation to give us a single
+                    // segment that covers the boundary, and we got it. We
+                    // can use it as-is.
+                    break segment;
                 }
+
+                // If we make it here, there are holes in the approximation, in
+                // some way or another. We could be really surgical and fill in
+                // exactly those holes, and in the future we might want to, for
+                // performance reasons.
+                //
+                // For now, let's just approximate *all* we need and insert that
+                // into the cache. The cache takes care of merging that with
+                // whatever is already there.
+                cache.insert_curve_approx(
+                    edge.curve().clone(),
+                    approx_curve(
+                        &edge.path(),
+                        surface,
+                        edge.boundary(),
+                        tolerance,
+                    ),
+                );
+
+                // We will never complete more than one full loop here. If we
+                // don't return the segment the first time, we'll insert it
+                // immediately, and it will be there on the second iteration.
             };
 
             segment
