@@ -4,6 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    allow:
+      - dependency-name: "*"
+        dependency-type: "all"
     # Group dependency updates into a single pull request.
     groups:
       cargo:
