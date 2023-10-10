@@ -32,6 +32,7 @@ impl Approx for (&Edge, &Surface) {
         cache: &mut Self::Cache,
     ) -> Self::Approximation {
         let (edge, surface) = self;
+        let tolerance = tolerance.into();
 
         let start_position_surface = edge.start_position();
         let start_position =
