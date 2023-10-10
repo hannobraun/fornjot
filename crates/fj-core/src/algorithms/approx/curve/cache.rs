@@ -43,7 +43,7 @@ impl CurveApproxCache {
         &mut self,
         curve: Handle<Curve>,
         mut new_segment: CurveApproxSegment,
-    ) -> CurveApproxSegment {
+    ) {
         let curve = HandleWrapper::from(curve);
 
         // Overlapping approximations need to result in the same points,
@@ -52,7 +52,7 @@ impl CurveApproxCache {
         // approximated segment before doing *anything* with it.
         new_segment.normalize();
 
-        self.inner.entry(curve).or_default().merge(new_segment)
+        self.inner.entry(curve).or_default().merge(new_segment);
     }
 }
 
