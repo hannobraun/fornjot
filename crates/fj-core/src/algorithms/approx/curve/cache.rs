@@ -43,7 +43,7 @@ impl CurveApproxCache {
         &mut self,
         curve: Handle<Curve>,
         mut new_segment: CurveApproxSegment,
-    ) -> CurveApproxSegment {
+    ) {
         let curve = HandleWrapper::from(curve);
 
         // Overlapping approximations need to result in the same points,
@@ -52,7 +52,7 @@ impl CurveApproxCache {
         // approximated segment before doing *anything* with it.
         new_segment.normalize();
 
-        self.inner.entry(curve).or_default().merge(new_segment)
+        self.inner.entry(curve).or_default().merge(new_segment);
     }
 }
 
@@ -68,42 +68,6 @@ pub mod tests {
         operations::Insert,
         services::Services,
     };
-
-    #[test]
-    fn insert_curve_already_exists_but_no_segment_merge_necessary() {
-        let mut services = Services::new();
-
-        let mut cache = CurveApproxCache::default();
-        let curve = Curve::new().insert(&mut services);
-
-        // An approximation of our curve already exists.
-        cache.insert(
-            curve.clone(),
-            CurveApproxSegment::from((
-                CurveBoundary::from([[2.], [3.]]),
-                [
-                    ApproxPoint::new([2.25], [2.25, 2.25, 2.25]),
-                    ApproxPoint::new([2.75], [2.75, 2.75, 2.75]),
-                ],
-            )),
-        );
-
-        // Here's another approximated segment for the same curve, but i doesn't
-        // overlap with the already existing one.
-        let boundary = CurveBoundary::from([[0.], [1.]]);
-        let segment = CurveApproxSegment::from((
-            boundary,
-            [
-                ApproxPoint::new([0.25], [0.25, 0.25, 0.25]),
-                ApproxPoint::new([0.75], [0.75, 0.75, 0.75]),
-            ],
-        ));
-
-        // When inserting the second segment, we expect to get it back
-        // unchanged.
-        let inserted = cache.insert(curve.clone(), segment.clone());
-        assert_eq!(inserted, segment);
-    }
 
     #[test]
     fn insert_congruent_segment_already_exists() {
@@ -132,11 +96,7 @@ pub mod tests {
                 ApproxPoint::new([0.76], [0.76, 0.76, 0.76]),
             ],
         ));
-
-        // When inserting the second segment, we expect to get the original one
-        // back.
-        let inserted = cache.insert(curve.clone(), new_segment);
-        assert_eq!(inserted, existing_segment);
+        cache.insert(curve.clone(), new_segment);
 
         // Also, the new segment should not have replaced the existing on in the
         // cache.
