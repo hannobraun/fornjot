@@ -249,8 +249,8 @@ impl EdgeApproxCache {
         &mut self,
         handle: Handle<Curve>,
         approx: CurveApproxSegment,
-    ) -> CurveApproxSegment {
-        self.curve_approx.insert(handle, approx)
+    ) {
+        self.curve_approx.insert(handle, approx);
     }
 }
 
