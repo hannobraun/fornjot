@@ -101,7 +101,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
             merged_payload.merge(&payload, boundary);
         }
 
-        self.inner.push((merged_boundary, merged_payload.clone()));
+        self.inner.push((merged_boundary, merged_payload));
         self.inner.sort();
     }
 }
