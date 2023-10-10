@@ -70,7 +70,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
         &mut self,
         new_boundary: CurveBoundary<Point<1>>,
         new_payload: T,
-    ) -> (CurveBoundary<Point<1>>, T) {
+    ) {
         let mut overlapping_payloads = VecDeque::new();
 
         let mut i = 0;
@@ -103,8 +103,6 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
 
         self.inner.push((merged_boundary, merged_payload.clone()));
         self.inner.sort();
-
-        (merged_boundary, merged_payload)
     }
 }
 
