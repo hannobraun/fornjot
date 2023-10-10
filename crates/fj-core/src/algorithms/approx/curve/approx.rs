@@ -32,18 +32,9 @@ impl CurveApprox {
     }
 
     /// Merge the provided segment into the approximation
-    pub fn merge(
-        &mut self,
-        new_segment: CurveApproxSegment,
-    ) -> CurveApproxSegment {
-        let (merged_boundary, merged_segment) = self
-            .segments
+    pub fn merge(&mut self, new_segment: CurveApproxSegment) {
+        self.segments
             .merge(new_segment.boundary, new_segment.points);
-
-        CurveApproxSegment {
-            boundary: merged_boundary,
-            points: merged_segment,
-        }
     }
 }
 
