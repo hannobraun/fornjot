@@ -67,43 +67,42 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     ///
     /// Return the merged boundary and payload.
     pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
-        let mut other = other.into();
+        let other = other.into();
 
-        let (other_boundary, other_payload) = other.inner.pop().unwrap();
-        assert!(other.inner.is_empty());
+        for (other_boundary, other_payload) in other.inner {
+            let mut overlapping_payloads = VecDeque::new();
 
-        let mut overlapping_payloads = VecDeque::new();
+            let mut i = 0;
+            loop {
+                let Some((boundary, _)) = self.inner.get(i) else {
+                    break;
+                };
 
-        let mut i = 0;
-        loop {
-            let Some((boundary, _)) = self.inner.get(i) else {
-                break;
-            };
+                if boundary.overlaps(&other_boundary) {
+                    let payload = self.inner.swap_remove(i);
+                    overlapping_payloads.push_back(payload);
+                    continue;
+                }
 
-            if boundary.overlaps(&other_boundary) {
-                let payload = self.inner.swap_remove(i);
-                overlapping_payloads.push_back(payload);
-                continue;
+                i += 1;
             }
 
-            i += 1;
+            let mut merged_boundary = other_boundary;
+            let mut merged_payload = other_payload;
+
+            for (boundary, payload) in overlapping_payloads {
+                assert!(
+                    merged_boundary.overlaps(&boundary),
+                    "Shouldn't merge boundaries that don't overlap."
+                );
+
+                merged_boundary = merged_boundary.union(boundary);
+                merged_payload.merge(&payload, boundary);
+            }
+
+            self.inner.push((merged_boundary, merged_payload));
+            self.inner.sort();
         }
-
-        let mut merged_boundary = other_boundary;
-        let mut merged_payload = other_payload;
-
-        for (boundary, payload) in overlapping_payloads {
-            assert!(
-                merged_boundary.overlaps(&boundary),
-                "Shouldn't merge boundaries that don't overlap."
-            );
-
-            merged_boundary = merged_boundary.union(boundary);
-            merged_payload.merge(&payload, boundary);
-        }
-
-        self.inner.push((merged_boundary, merged_payload));
-        self.inner.sort();
 
         self
     }
@@ -178,7 +177,12 @@ mod tests {
     fn union() {
         union([[0., 1.]], [[1., 2.]], [[0., 2.]]);
         union([[0., 1.]], [[2., 3.]], [[0., 1.], [2., 3.]]);
-        union([[0., 1.], [2., 3.]], [[1., 2.]], [[0., 3.]]);
+        union([[0., 1.], [2., 3.]], [[1., 2.], [3., 4.]], [[0., 4.]]);
+        union(
+            [[0., 1.], [2., 3.]],
+            [[1., 2.], [4., 5.]],
+            [[0., 3.], [4., 5.]],
+        );
 
         fn union<const A: usize, const B: usize, const X: usize>(
             a: [[f64; 2]; A],
