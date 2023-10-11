@@ -68,8 +68,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Return the merged boundary and payload.
     pub fn union(
         &mut self,
-        new_boundary: CurveBoundary<Point<1>>,
-        new_payload: T,
+        (new_boundary, new_payload): (CurveBoundary<Point<1>>, T),
     ) {
         let mut overlapping_payloads = VecDeque::new();
 

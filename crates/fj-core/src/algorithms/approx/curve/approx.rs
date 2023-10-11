@@ -34,7 +34,7 @@ impl CurveApprox {
     /// Merge the provided segment into the approximation
     pub fn merge(&mut self, new_segment: CurveApproxSegment) {
         self.segments
-            .union(new_segment.boundary, new_segment.points);
+            .union((new_segment.boundary, new_segment.points));
     }
 }
 
