@@ -66,7 +66,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Merge the provided boundary into `self`
     ///
     /// Return the merged boundary and payload.
-    pub fn merge(
+    pub fn union(
         &mut self,
         new_boundary: CurveBoundary<Point<1>>,
         new_payload: T,
