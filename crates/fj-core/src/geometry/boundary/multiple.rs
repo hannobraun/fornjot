@@ -123,6 +123,20 @@ impl<T: CurveBoundariesPayload> From<(CurveBoundary<Point<1>>, T)>
     }
 }
 
+impl<B> FromIterator<B> for CurveBoundaries<()>
+where
+    B: Into<CurveBoundary<Point<1>>>,
+{
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = B>,
+    {
+        iter.into_iter()
+            .map(|boundary| (boundary.into(), ()))
+            .collect()
+    }
+}
+
 impl<T: CurveBoundariesPayload> FromIterator<(CurveBoundary<Point<1>>, T)>
     for CurveBoundaries<T>
 {
