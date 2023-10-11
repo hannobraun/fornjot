@@ -169,3 +169,31 @@ impl CurveBoundariesPayload for () {
     fn make_subset(&mut self, _: CurveBoundary<Point<1>>) {}
     fn merge(&mut self, _: &Self, _: CurveBoundary<Point<1>>) {}
 }
+
+#[cfg(test)]
+mod tests {
+    use super::CurveBoundaries;
+
+    #[test]
+    fn union() {
+        union([[0., 1.]], [[1., 2.]], [[0., 2.]]);
+        union([[0., 1.]], [[2., 3.]], [[0., 1.], [2., 3.]]);
+        union([[0., 1.], [2., 3.]], [[1., 2.]], [[0., 3.]]);
+
+        fn union<const A: usize, const B: usize, const X: usize>(
+            a: [[f64; 2]; A],
+            b: [[f64; 2]; B],
+            x: [[f64; 2]; X],
+        ) {
+            let a = a.map(|boundary| boundary.map(|v| [v]));
+            let b = b.map(|boundary| boundary.map(|v| [v]));
+            let x = x.map(|boundary| boundary.map(|v| [v]));
+
+            let a = CurveBoundaries::from_iter(a);
+            let b = CurveBoundaries::from_iter(b);
+            let x = CurveBoundaries::from_iter(x);
+
+            assert_eq!(a.union(b), x);
+        }
+    }
+}
