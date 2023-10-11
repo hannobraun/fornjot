@@ -63,9 +63,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
         self.inner.retain(|(boundary, _)| !boundary.is_empty());
     }
 
-    /// Merge the provided boundary into `self`
-    ///
-    /// Return the merged boundary and payload.
+    /// Create the union between this an another `CurveBoundaries` instance
     pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
         for (other_boundary, other_payload) in other.into().inner {
             let mut overlapping_payloads = VecDeque::new();
