@@ -66,7 +66,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Merge the provided boundary into `self`
     ///
     /// Return the merged boundary and payload.
-    pub fn union(&mut self, other: impl Into<CurveBoundaries<T>>) {
+    pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
         let mut other = other.into();
 
         let (new_boundary, new_payload) = other.inner.pop().unwrap();
@@ -104,6 +104,8 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
 
         self.inner.push((merged_boundary, merged_payload));
         self.inner.sort();
+
+        self
     }
 }
 

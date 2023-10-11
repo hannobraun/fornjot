@@ -1,3 +1,5 @@
+use std::mem;
+
 use fj_math::Point;
 
 use crate::geometry::{CurveBoundaries, CurveBoundary};
@@ -33,7 +35,7 @@ impl CurveApprox {
 
     /// Merge the provided segment into the approximation
     pub fn merge(&mut self, new_segment: CurveApproxSegment) {
-        self.segments
+        self.segments = mem::take(&mut self.segments)
             .union((new_segment.boundary, new_segment.points));
     }
 }
