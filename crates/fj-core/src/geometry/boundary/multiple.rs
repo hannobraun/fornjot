@@ -111,6 +111,16 @@ impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
     }
 }
 
+impl<T: CurveBoundariesPayload> From<(CurveBoundary<Point<1>>, T)>
+    for CurveBoundaries<T>
+{
+    fn from((boundary, payload): (CurveBoundary<Point<1>>, T)) -> Self {
+        Self {
+            inner: vec![(boundary, payload)],
+        }
+    }
+}
+
 impl<T: CurveBoundariesPayload> FromIterator<(CurveBoundary<Point<1>>, T)>
     for CurveBoundaries<T>
 {
