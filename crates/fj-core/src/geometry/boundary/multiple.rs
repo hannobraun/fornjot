@@ -69,7 +69,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
         let mut other = other.into();
 
-        let (new_boundary, new_payload) = other.inner.pop().unwrap();
+        let (other_boundary, new_payload) = other.inner.pop().unwrap();
         assert!(other.inner.is_empty());
 
         let mut overlapping_payloads = VecDeque::new();
@@ -80,7 +80,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
                 break;
             };
 
-            if boundary.overlaps(&new_boundary) {
+            if boundary.overlaps(&other_boundary) {
                 let payload = self.inner.swap_remove(i);
                 overlapping_payloads.push_back(payload);
                 continue;
@@ -89,7 +89,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
             i += 1;
         }
 
-        let mut merged_boundary = new_boundary;
+        let mut merged_boundary = other_boundary;
         let mut merged_payload = new_payload;
 
         for (boundary, payload) in overlapping_payloads {
