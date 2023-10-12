@@ -82,7 +82,7 @@ impl CurveBoundary<Point<1>> {
         a_low <= b_high && a_high >= b_low
     }
 
-    /// Create the subset of this boundary and another
+    /// Create the intersection of this boundary and another
     ///
     /// The result will be normalized.
     #[must_use]
