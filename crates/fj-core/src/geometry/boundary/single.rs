@@ -202,9 +202,9 @@ mod tests {
 
             a.overlaps(&b)
         }
+    }
 
-        fn array_to_boundary(array: [f64; 2]) -> CurveBoundary<Point<1>> {
-            CurveBoundary::from(array.map(|element| [element]))
-        }
+    fn array_to_boundary(array: [f64; 2]) -> CurveBoundary<Point<1>> {
+        CurveBoundary::from(array.map(|element| [element]))
     }
 }
