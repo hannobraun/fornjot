@@ -64,7 +64,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     }
 
     /// Create the union between this an another `CurveBoundaries` instance
-    pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
+    pub fn union(mut self, other: impl Into<Self>) -> Self {
         for (other_boundary, other_payload) in other.into().inner {
             let mut overlapping_payloads = VecDeque::new();
 
