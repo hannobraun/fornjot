@@ -86,7 +86,7 @@ impl CurveBoundary<Point<1>> {
     ///
     /// The result will be normalized.
     #[must_use]
-    pub fn subset(self, other: Self) -> Self {
+    pub fn intersection(self, other: Self) -> Self {
         let self_ = self.normalize();
         let other = other.normalize();
 
