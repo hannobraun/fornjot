@@ -56,7 +56,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Reduce `self` to the subset defined by the provided boundary
     pub fn make_subset(&mut self, boundary: CurveBoundary<Point<1>>) {
         for (b, segment) in &mut self.inner {
-            *b = b.subset(boundary);
+            *b = b.intersection(boundary);
             segment.make_subset(boundary);
         }
 
@@ -64,7 +64,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     }
 
     /// Create the union between this an another `CurveBoundaries` instance
-    pub fn union(mut self, other: impl Into<CurveBoundaries<T>>) -> Self {
+    pub fn union(mut self, other: impl Into<Self>) -> Self {
         for (other_boundary, other_payload) in other.into().inner {
             let mut overlapping_payloads = VecDeque::new();
 
