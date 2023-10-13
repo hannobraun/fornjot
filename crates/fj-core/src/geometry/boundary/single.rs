@@ -82,6 +82,63 @@ impl CurveBoundary<Point<1>> {
         a_low <= b_high && a_high >= b_low
     }
 
+    /// Create the difference of this boundary and another
+    ///
+    /// The result will be normalized.
+    pub fn difference(self, other: Self) -> Option<OneOrTwoBoundaries> {
+        let [self_min, self_max] = self.normalize().inner;
+        let [other_min, other_max] = other.normalize().inner;
+
+        match (
+            self_min <= other_min,
+            self_min <= other_max,
+            self_max <= other_min,
+            self_max <= other_max,
+        ) {
+            (true, true, true, true) => {
+                Some(OneOrTwoBoundaries::One(CurveBoundary {
+                    inner: [self_min, self_max],
+                }))
+            }
+            (true, true, false, true) => {
+                let min = self_min;
+                let max = other_min;
+
+                if min == max {
+                    return None;
+                }
+
+                Some(OneOrTwoBoundaries::One(CurveBoundary {
+                    inner: [min, max],
+                }))
+            }
+            (true, true, false, false) => Some(OneOrTwoBoundaries::Two([
+                CurveBoundary {
+                    inner: [self_min, other_min],
+                },
+                CurveBoundary {
+                    inner: [other_max, self_max],
+                },
+            ])),
+            (false, true, false, true) => None,
+            (false, true, false, false) => {
+                Some(OneOrTwoBoundaries::One(CurveBoundary {
+                    inner: [other_max, self_max],
+                }))
+            }
+            (false, false, false, false) => {
+                Some(OneOrTwoBoundaries::One(CurveBoundary {
+                    inner: [self_min, self_max],
+                }))
+            }
+            case => {
+                unreachable!(
+                    "{case:?} is impossible, due to normalization above"
+                );
+            }
+        }
+    }
+
     /// Create the intersection of this boundary and another
     ///
     /// The result will be normalized.
@@ -162,6 +219,12 @@ impl<T: CurveBoundaryElement> PartialOrd for CurveBoundary<T> {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
+pub enum OneOrTwoBoundaries {
+    One(CurveBoundary<Point<1>>),
+    Two([CurveBoundary<Point<1>>; 2]),
+}
+
 /// An element of a curve boundary
 ///
 /// Used for the type parameter of [`CurveBoundary`].
@@ -184,7 +247,9 @@ impl CurveBoundaryElement for Vertex {
 mod tests {
     use fj_math::Point;
 
-    use crate::geometry::CurveBoundary;
+    use crate::geometry::{
+        boundary::single::OneOrTwoBoundaries, CurveBoundary,
+    };
 
     #[test]
     fn overlaps() {
@@ -201,6 +266,97 @@ mod tests {
             let b = array_to_boundary(b);
 
             a.overlaps(&b)
+        }
+    }
+
+    #[test]
+    fn difference() {
+        // `a \ b = x`
+
+        // b covers a exactly
+        diff([1., 2.], [1., 2.], &[]);
+        diff([1., 2.], [2., 1.], &[]);
+        diff([2., 1.], [1., 2.], &[]);
+        diff([2., 1.], [2., 1.], &[]);
+
+        // b covers a, overhang right
+        diff([1., 2.], [1., 3.], &[]);
+        diff([1., 2.], [3., 1.], &[]);
+        diff([2., 1.], [1., 3.], &[]);
+        diff([2., 1.], [3., 1.], &[]);
+
+        // b covers a, overhang left
+        diff([1., 2.], [0., 2.], &[]);
+        diff([1., 2.], [2., 0.], &[]);
+        diff([2., 1.], [0., 2.], &[]);
+        diff([2., 1.], [2., 0.], &[]);
+
+        // b covers a, overhang both sides
+        diff([1., 2.], [0., 3.], &[]);
+        diff([1., 2.], [3., 0.], &[]);
+        diff([2., 1.], [0., 3.], &[]);
+        diff([2., 1.], [3., 0.], &[]);
+
+        // a to the left of b, touching
+        diff([0., 1.], [1., 2.], &[[0., 1.]]);
+        diff([0., 1.], [2., 1.], &[[0., 1.]]);
+        diff([1., 0.], [1., 2.], &[[0., 1.]]);
+        diff([1., 0.], [2., 1.], &[[0., 1.]]);
+
+        // a to the left of b, not touching
+        diff([0., 1.], [2., 3.], &[[0., 1.]]);
+        diff([0., 1.], [3., 2.], &[[0., 1.]]);
+        diff([1., 0.], [2., 3.], &[[0., 1.]]);
+        diff([1., 0.], [3., 2.], &[[0., 1.]]);
+
+        // a to the right of b, touching
+        diff([2., 3.], [1., 2.], &[[2., 3.]]);
+        diff([2., 3.], [2., 1.], &[[2., 3.]]);
+        diff([3., 2.], [1., 2.], &[[2., 3.]]);
+        diff([3., 2.], [2., 1.], &[[2., 3.]]);
+
+        // a to the right of b, not touching
+        diff([2., 3.], [0., 1.], &[[2., 3.]]);
+        diff([2., 3.], [1., 0.], &[[2., 3.]]);
+        diff([3., 2.], [0., 1.], &[[2., 3.]]);
+        diff([3., 2.], [1., 0.], &[[2., 3.]]);
+
+        // b intersects a on the right
+        diff([0., 2.], [1., 3.], &[[0., 1.]]);
+        diff([0., 2.], [3., 1.], &[[0., 1.]]);
+        diff([2., 0.], [1., 3.], &[[0., 1.]]);
+        diff([2., 0.], [3., 1.], &[[0., 1.]]);
+
+        // b intersects a on the left
+        diff([1., 3.], [0., 2.], &[[2., 3.]]);
+        diff([1., 3.], [2., 0.], &[[2., 3.]]);
+        diff([3., 1.], [0., 2.], &[[2., 3.]]);
+        diff([3., 1.], [2., 0.], &[[2., 3.]]);
+
+        // a covers b, overhang both sides
+        diff([0., 3.], [1., 2.], &[[0., 1.], [2., 3.]]);
+        diff([0., 3.], [2., 1.], &[[0., 1.], [2., 3.]]);
+        diff([3., 0.], [1., 2.], &[[0., 1.], [2., 3.]]);
+        diff([3., 0.], [2., 1.], &[[0., 1.], [2., 3.]]);
+
+        fn diff(a: [f64; 2], b: [f64; 2], x: &[[f64; 2]]) {
+            print!("{a:?} \\ {b:?} = ");
+
+            let a = array_to_boundary(a);
+            let b = array_to_boundary(b);
+
+            let x = match x {
+                [] => None,
+                &[x] => Some(OneOrTwoBoundaries::One(array_to_boundary(x))),
+                &[x1, x2] => Some(OneOrTwoBoundaries::Two(
+                    [x1, x2].map(array_to_boundary),
+                )),
+                _ => panic!("Invalid result"),
+            };
+
+            let diff = a.difference(b);
+            println!("{diff:?}");
+            assert_eq!(diff, x);
         }
     }
 
