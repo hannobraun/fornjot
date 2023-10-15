@@ -10,7 +10,7 @@ use crate::{
 ///
 /// When multiple faces, which are bound by edges, are combined to form a solid,
 /// the `Edge`s that bound the face on the surface are then coincident with the
-/// `Edge`s of other faces, where those faces touch. Suche coincident `Edge`s
+/// `Edge`s of other faces, where those faces touch. Such coincident `Edge`s
 ///  must always refer to the same `Curve`.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Edge {
