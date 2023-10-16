@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use fj_math::Point;
 
 use crate::geometry::CurveBoundary;
@@ -66,7 +64,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     /// Create the union between this an another `CurveBoundaries` instance
     pub fn union(mut self, other: impl Into<Self>) -> Self {
         for (other_boundary, other_payload) in other.into().inner {
-            let mut overlapping_payloads = VecDeque::new();
+            let mut overlapping_payloads = Vec::new();
 
             let mut i = 0;
             loop {
@@ -76,7 +74,7 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
 
                 if boundary.overlaps(&other_boundary) {
                     let payload = self.inner.swap_remove(i);
-                    overlapping_payloads.push_back(payload);
+                    overlapping_payloads.push(payload);
                     continue;
                 }
 
