@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::SurfaceGeometry,
+    geometry::{CurveBoundaries, SurfaceGeometry},
     objects::{Edge, Shell, Surface},
     queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
     storage::{Handle, HandleWrapper},
@@ -294,28 +294,28 @@ impl ShellValidationError {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut num_edges = BTreeMap::new();
+        let mut unmatched_edges_by_curve = BTreeMap::new();
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for edge in cycle.edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
-                    let bounding_vertices = cycle
-                        .bounding_vertices_of_edge(edge)
-                        .expect("Cycle should provide bounds of its own edge")
-                        .normalize();
 
-                    let edge = (curve, bounding_vertices);
+                    let unmatched_edges = unmatched_edges_by_curve
+                        .entry(curve)
+                        .or_insert_with(CurveBoundaries::empty);
 
-                    *num_edges.entry(edge).or_insert(0) += 1;
+                    *unmatched_edges = unmatched_edges
+                        .clone()
+                        .symmetric_difference((edge.boundary(), ()));
                 }
             }
         }
 
-        // Every edge should have exactly one matching edge that shares a curve
-        // and boundary.
-        if num_edges.into_values().any(|num| num != 2) {
-            errors.push(Self::NotWatertight.into());
+        for unmatched_edges in unmatched_edges_by_curve.into_values() {
+            if !unmatched_edges.is_empty() {
+                errors.push(Self::NotWatertight.into());
+            }
         }
     }
 
