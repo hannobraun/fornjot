@@ -2,6 +2,8 @@ use fj_math::Point;
 
 use crate::geometry::CurveBoundary;
 
+use super::single::OneOrTwoBoundaries;
+
 /// A collection of multiple [`CurveBoundary`] instances
 ///
 /// Has a type parameter, `T`, which can be used to attach a payload to each
@@ -102,6 +104,56 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
     }
 }
 
+impl CurveBoundaries<()> {
+    /// Compute the difference between this instance and another one
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is only available for `CurveBoundaries` instances without
+    /// payloads, simply because more wasn't needed so far. Support for payloads
+    /// can be added by expanding [`CurveBoundariesPayload`] accordingly, and
+    /// integrating the new method here.
+    pub fn difference(mut self, other: impl Into<Self>) -> Self {
+        for (other_boundary, ()) in other.into().inner {
+            let mut i = 0;
+
+            loop {
+                if i == self.inner.len() {
+                    break;
+                }
+
+                let (boundary, ()) = self.inner.remove(i);
+
+                match boundary.difference(other_boundary) {
+                    Some(OneOrTwoBoundaries::One(b)) => {
+                        self.inner.insert(i, (b, ()));
+                        i += 1;
+                    }
+                    Some(OneOrTwoBoundaries::Two([b1, b2])) => {
+                        self.inner.insert(i, (b1, ()));
+                        i += 1;
+
+                        self.inner.insert(i, (b2, ()));
+                        i += 1;
+                    }
+                    None => {
+                        // Nothing to do!
+                        //
+                        // We already removed the original boundary above, and
+                        // if the difference leaves no result, we don't need to
+                        // add anything back.
+                        //
+                        // Don't need to update `i` either. Thanks to the
+                        // removal, it already points to the next item.
+                    }
+                }
+            }
+        }
+
+        self
+    }
+}
+
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
     fn default() -> Self {
         Self { inner: Vec::new() }
@@ -166,6 +218,47 @@ impl CurveBoundariesPayload for () {
 #[cfg(test)]
 mod tests {
     use super::CurveBoundaries;
+
+    #[test]
+    fn difference() {
+        // There are already extensive tests for `CurveBoundary::difference`,
+        // and we don't need to repeat those here. The following tests just make
+        // sure that all of the possible return values of that method are
+        // handled correctly.
+
+        // Difference results in one boundary.
+        diff([[0., 2.]], [[1., 3.]], [[0., 1.]]);
+
+        // Difference results in two boundaries.
+        diff([[0., 3.]], [[1., 2.]], [[0., 1.], [2., 3.]]);
+
+        // Difference results in no boundaries.
+        diff([[1., 2.]], [[0., 3.]], []);
+
+        // And a combined one, to make sure that everything works with multiple
+        // boundaries in the inputs.
+        diff(
+            [[0., 2.], [4., 7.], [9., 10.]],
+            [[1., 3.], [5., 6.], [8., 11.]],
+            [[0., 1.], [4., 5.], [6., 7.]],
+        );
+
+        fn diff<const A: usize, const B: usize, const X: usize>(
+            a: [[f64; 2]; A],
+            b: [[f64; 2]; B],
+            x: [[f64; 2]; X],
+        ) {
+            let a = a.map(|boundary| boundary.map(|v| [v]));
+            let b = b.map(|boundary| boundary.map(|v| [v]));
+            let x = x.map(|boundary| boundary.map(|v| [v]));
+
+            let a = CurveBoundaries::from_iter(a);
+            let b = CurveBoundaries::from_iter(b);
+            let x = CurveBoundaries::from_iter(x);
+
+            assert_eq!(a.difference(b), x);
+        }
+    }
 
     #[test]
     fn union() {
