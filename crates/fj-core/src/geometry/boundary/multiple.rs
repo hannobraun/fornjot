@@ -19,6 +19,11 @@ impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
         Self { inner: Vec::new() }
     }
 
+    /// Indicate whether this `CurveBoundaries` instance is empty
+    pub fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
+
     /// Transform `self` into the payload of the single boundary requested
     ///
     /// If there are no boundaries or multiple boundaries in `self`, or if the
