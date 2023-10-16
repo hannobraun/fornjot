@@ -14,6 +14,16 @@ pub struct CurveBoundaries<T: CurveBoundariesPayload = ()> {
 }
 
 impl<T: CurveBoundariesPayload> CurveBoundaries<T> {
+    /// Create an empty instance of `CurveBoundaries`
+    pub fn empty() -> Self {
+        Self { inner: Vec::new() }
+    }
+
+    /// Indicate whether this `CurveBoundaries` instance is empty
+    pub fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
+
     /// Transform `self` into the payload of the single boundary requested
     ///
     /// If there are no boundaries or multiple boundaries in `self`, or if the
