@@ -152,6 +152,21 @@ impl CurveBoundaries<()> {
 
         self
     }
+
+    /// Compute the symmetric difference between this instance and another one
+    ///
+    /// # Implementation Note
+    ///
+    /// This method is only available for `CurveBoundaries` instances without
+    /// payloads, simply because more wasn't needed so far. Support for payloads
+    /// can be added by expanding [`CurveBoundariesPayload`] accordingly, and
+    /// integrating the new method here.
+    pub fn symmetric_difference(self, other: impl Into<Self>) -> Self {
+        let other = other.into();
+        self.clone()
+            .difference(other.clone())
+            .union(other.difference(self))
+    }
 }
 
 impl<T: CurveBoundariesPayload> Default for CurveBoundaries<T> {
