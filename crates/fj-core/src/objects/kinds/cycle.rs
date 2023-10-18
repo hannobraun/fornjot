@@ -9,19 +9,19 @@ use crate::{
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    edges: Handles<HalfEdge>,
+    half_edges: Handles<HalfEdge>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let edges = edges.into_iter().collect();
-        Self { edges }
+        Self { half_edges: edges }
     }
 
     /// Access the edges that make up the cycle
     pub fn edges(&self) -> &Handles<HalfEdge> {
-        &self.edges
+        &self.half_edges
     }
 
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
@@ -33,7 +33,7 @@ impl Cycle {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the
         // first circle.
-        if self.edges.len() < 3 {
+        if self.half_edges.len() < 3 {
             let first = self
                 .edges()
                 .iter()
