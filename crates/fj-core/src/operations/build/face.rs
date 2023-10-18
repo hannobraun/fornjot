@@ -83,7 +83,7 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     /// The face that forms the polygon
     pub face: I::T<Face>,
 
-    /// The edges of the polygon
+    /// The half-edges of the polygon
     pub half_edges: [Handle<HalfEdge>; D],
 
     /// The vertices of the polygon
