@@ -28,12 +28,12 @@ impl Intersect for (&Face, &Point<2>) {
             // as long as we initialize the `previous_hit` variable with the
             // result of the last segment.
             let mut previous_hit = cycle
-                .edges()
+                .half_edges()
                 .iter()
                 .last()
                 .and_then(|edge| (&ray, edge).intersect());
 
-            for (edge, next_edge) in cycle.edges().pairs() {
+            for (edge, next_edge) in cycle.half_edges().pairs() {
                 let hit = (&ray, edge).intersect();
 
                 let count_hit = match (hit, previous_hit) {
@@ -335,7 +335,7 @@ mod tests {
         let edge = face
             .region()
             .exterior()
-            .edges()
+            .half_edges()
             .iter()
             .find(|edge| edge.start_position() == Point::from([0., 0.]))
             .unwrap();
@@ -371,7 +371,7 @@ mod tests {
         let vertex = face
             .region()
             .exterior()
-            .edges()
+            .half_edges()
             .iter()
             .find(|edge| edge.start_position() == Point::from([1., 0.]))
             .map(|edge| edge.start_position())

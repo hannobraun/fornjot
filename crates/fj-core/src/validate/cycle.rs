@@ -51,7 +51,7 @@ impl CycleValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         // If there are no half edges
-        if cycle.edges().iter().next().is_none() {
+        if cycle.half_edges().iter().next().is_none() {
             errors.push(Self::NotEnoughEdges.into());
         }
     }
@@ -61,7 +61,7 @@ impl CycleValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        for (first, second) in cycle.edges().pairs() {
+        for (first, second) in cycle.half_edges().pairs() {
             let end_of_first = {
                 let [_, end] = first.boundary().inner;
                 first.path().point_from_path_coords(end)

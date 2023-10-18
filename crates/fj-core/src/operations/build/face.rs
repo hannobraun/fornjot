@@ -32,7 +32,8 @@ pub trait BuildFace {
         let face = Face::polygon(surface, points_surface, services);
 
         let edges = {
-            let mut edges = face.region().exterior().edges().iter().cloned();
+            let mut edges =
+                face.region().exterior().half_edges().iter().cloned();
 
             let array = array::from_fn(|_| edges.next()).map(|edge| {
                 edge.expect("Just asserted that there are three edges")
@@ -99,7 +100,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .edges()
+                .half_edges()
                 .nth(i)
                 .expect("Operation should not have changed length of cycle")
                 .clone()
@@ -111,7 +112,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
             face.borrow()
                 .region()
                 .exterior()
-                .edges()
+                .half_edges()
                 .nth(i)
                 .expect("Operation should not have changed length of cycle")
                 .start_vertex()

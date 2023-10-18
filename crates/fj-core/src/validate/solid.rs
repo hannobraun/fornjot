@@ -75,7 +75,7 @@ impl SolidValidationError {
             .flat_map(|face| {
                 face.region()
                     .all_cycles()
-                    .flat_map(|cycle| cycle.edges().iter().cloned())
+                    .flat_map(|cycle| cycle.half_edges().iter().cloned())
                     .zip(repeat(face.surface().geometry()))
             })
             .map(|(h, s)| {

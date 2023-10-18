@@ -262,7 +262,7 @@ mod tests {
         let edge = face
             .region()
             .exterior()
-            .edges()
+            .half_edges()
             .iter()
             .find(|edge| edge.start_position() == Point::from([-1., 1.]))
             .unwrap();
@@ -298,7 +298,7 @@ mod tests {
         let vertex = face
             .region()
             .exterior()
-            .edges()
+            .half_edges()
             .iter()
             .find(|edge| edge.start_position() == Point::from([-1., -1.]))
             .map(|edge| edge.start_position())

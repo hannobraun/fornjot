@@ -298,7 +298,7 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for edge in cycle.edges() {
+                for edge in cycle.half_edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
 
                     let unmatched_edges = unmatched_edges_by_curve
@@ -327,7 +327,7 @@ impl ShellValidationError {
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
-                for edge in cycle.edges() {
+                for edge in cycle.half_edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let boundary = cycle
                         .bounding_vertices_of_edge(edge)
@@ -397,7 +397,7 @@ mod tests {
                     .update_exterior(|cycle| {
                         cycle
                             .update_edge(
-                                cycle.edges().nth_circular(0),
+                                cycle.half_edges().nth_circular(0),
                                 |edge| {
                                     edge.update_path(|path| path.reverse())
                                         .update_boundary(|boundary| {
@@ -438,7 +438,7 @@ mod tests {
                     .update_exterior(|cycle| {
                         cycle
                             .update_edge(
-                                cycle.edges().nth_circular(0),
+                                cycle.half_edges().nth_circular(0),
                                 |edge| {
                                     edge.update_curve(|_| {
                                         Curve::new().insert(&mut services)

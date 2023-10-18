@@ -20,7 +20,7 @@ impl AllEdgesWithSurface for Face {
         for cycle in self.region().all_cycles() {
             result.extend(
                 cycle
-                    .edges()
+                    .half_edges()
                     .iter()
                     .cloned()
                     .map(|edge| (edge, self.surface().clone())),

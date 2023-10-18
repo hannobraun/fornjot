@@ -49,7 +49,7 @@ impl UpdateCycle for Cycle {
         &self,
         edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
-        let edges = self.edges().iter().cloned().chain(edges);
+        let edges = self.half_edges().iter().cloned().chain(edges);
         Cycle::new(edges)
     }
 
@@ -58,7 +58,7 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Self {
-        let edges = self.edges().update(handle, update);
+        let edges = self.half_edges().update(handle, update);
         Cycle::new(edges)
     }
 
@@ -67,7 +67,7 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self {
-        let edges = self.edges().replace(handle, replace);
+        let edges = self.half_edges().replace(handle, replace);
         Cycle::new(edges)
     }
 }

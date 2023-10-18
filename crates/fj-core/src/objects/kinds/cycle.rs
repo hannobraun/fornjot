@@ -20,7 +20,7 @@ impl Cycle {
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> &Handles<HalfEdge> {
+    pub fn half_edges(&self) -> &Handles<HalfEdge> {
         &self.half_edges
     }
 
@@ -35,7 +35,7 @@ impl Cycle {
         // first circle.
         if self.half_edges.len() < 3 {
             let first = self
-                .edges()
+                .half_edges()
                 .iter()
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
@@ -64,7 +64,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for (a, b) in self.edges().pairs() {
+        for (a, b) in self.half_edges().pairs() {
             let [a, b] = [a, b].map(|edge| edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);

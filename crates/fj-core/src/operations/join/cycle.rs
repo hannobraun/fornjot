@@ -107,26 +107,32 @@ impl JoinCycle for Cycle {
         range.zip(range_other).fold(
             self.clone(),
             |cycle, (index, index_other)| {
-                let edge_other = other.edges().nth_circular(index_other);
+                let edge_other = other.half_edges().nth_circular(index_other);
 
                 cycle
-                    .update_edge(self.edges().nth_circular(index), |edge| {
-                        edge.update_curve(|_| edge_other.curve().clone())
-                            .update_start_vertex(|_| {
-                                other
-                                    .edges()
-                                    .nth_circular(index_other + 1)
-                                    .start_vertex()
-                                    .clone()
+                    .update_edge(
+                        self.half_edges().nth_circular(index),
+                        |edge| {
+                            edge.update_curve(|_| edge_other.curve().clone())
+                                .update_start_vertex(|_| {
+                                    other
+                                        .half_edges()
+                                        .nth_circular(index_other + 1)
+                                        .start_vertex()
+                                        .clone()
+                                })
+                                .insert(services)
+                        },
+                    )
+                    .update_edge(
+                        self.half_edges().nth_circular(index + 1),
+                        |edge| {
+                            edge.update_start_vertex(|_| {
+                                edge_other.start_vertex().clone()
                             })
                             .insert(services)
-                    })
-                    .update_edge(self.edges().nth_circular(index + 1), |edge| {
-                        edge.update_start_vertex(|_| {
-                            edge_other.start_vertex().clone()
-                        })
-                        .insert(services)
-                    })
+                        },
+                    )
             },
         )
     }
