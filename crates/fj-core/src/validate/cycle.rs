@@ -94,7 +94,7 @@ mod tests {
     use crate::{
         assert_contains_err,
         objects::{Cycle, HalfEdge},
-        operations::{BuildCycle, BuildEdge, Insert, UpdateCycle},
+        operations::{BuildCycle, BuildHalfEdge, Insert, UpdateCycle},
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
     };

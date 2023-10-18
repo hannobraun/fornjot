@@ -6,7 +6,7 @@ use itertools::Itertools;
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Cycle, HalfEdge},
-    operations::{BuildEdge, Insert, UpdateCycle, UpdateEdge},
+    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateEdge},
     services::Services,
     storage::Handle,
 };

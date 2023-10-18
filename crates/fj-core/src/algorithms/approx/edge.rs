@@ -264,7 +264,7 @@ mod tests {
         algorithms::approx::{Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfaceGeometry},
         objects::{HalfEdge, Surface},
-        operations::BuildEdge,
+        operations::BuildHalfEdge,
         services::Services,
     };
 
