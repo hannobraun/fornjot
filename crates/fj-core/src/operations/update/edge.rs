@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// Update a [`HalfEdge`]
-pub trait UpdateEdge {
+pub trait UpdateHalfEdge {
     /// Update the path of the edge
     #[must_use]
     fn update_path(
@@ -37,7 +37,7 @@ pub trait UpdateEdge {
     ) -> Self;
 }
 
-impl UpdateEdge for HalfEdge {
+impl UpdateHalfEdge for HalfEdge {
     fn update_path(
         &self,
         update: impl FnOnce(SurfacePath) -> SurfacePath,
