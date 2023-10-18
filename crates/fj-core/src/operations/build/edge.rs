@@ -10,7 +10,7 @@ use crate::{
 
 /// Build a [`HalfEdge`]
 pub trait BuildHalfEdge {
-    /// Create an edge that is not joined to another
+    /// Create a half-edge that is not joined to a sibling
     fn unjoined(
         path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
