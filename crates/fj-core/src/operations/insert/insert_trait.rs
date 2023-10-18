@@ -62,7 +62,7 @@ impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
     fn insert(self, services: &mut Services) -> Self::Inserted {
         Polygon {
             face: self.face.insert(services),
-            edges: self.edges,
+            half_edges: self.half_edges,
             vertices: self.vertices,
         }
     }

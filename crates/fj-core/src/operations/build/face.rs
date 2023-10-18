@@ -49,7 +49,7 @@ pub trait BuildFace {
 
         Polygon {
             face,
-            edges,
+            half_edges: edges,
             vertices,
         }
     }
@@ -84,7 +84,7 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     pub face: I::T<Face>,
 
     /// The edges of the polygon
-    pub edges: [Handle<HalfEdge>; D],
+    pub half_edges: [Handle<HalfEdge>; D],
 
     /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],
@@ -121,7 +121,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
 
         Self {
             face,
-            edges,
+            half_edges: edges,
             vertices,
         }
     }
