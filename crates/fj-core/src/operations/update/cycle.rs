@@ -37,7 +37,7 @@ pub trait UpdateCycle {
     ///
     /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
-    fn replace_edge<const N: usize>(
+    fn replace_half_edge<const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
@@ -62,7 +62,7 @@ impl UpdateCycle for Cycle {
         Cycle::new(edges)
     }
 
-    fn replace_edge<const N: usize>(
+    fn replace_half_edge<const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
