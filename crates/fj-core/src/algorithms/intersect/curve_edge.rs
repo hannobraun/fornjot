@@ -4,7 +4,7 @@ use crate::{geometry::SurfacePath, objects::HalfEdge};
 
 use super::LineSegmentIntersection;
 
-/// The intersection between a curve and an [`HalfEdge`]
+/// The intersection between a curve and a [`HalfEdge`]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum CurveEdgeIntersection {
     /// The curve and edge intersect at a point

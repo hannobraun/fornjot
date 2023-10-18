@@ -8,7 +8,7 @@ use crate::{
     services::Services,
 };
 
-/// Build an [`HalfEdge`]
+/// Build a [`HalfEdge`]
 pub trait BuildEdge {
     /// Create an edge that is not joined to another
     fn unjoined(

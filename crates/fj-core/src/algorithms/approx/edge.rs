@@ -109,7 +109,7 @@ impl Approx for (&HalfEdge, &Surface) {
     }
 }
 
-/// An approximation of an [`HalfEdge`]
+/// An approximation of a [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct EdgeApprox {
     /// The point that approximates the first vertex of the edge
