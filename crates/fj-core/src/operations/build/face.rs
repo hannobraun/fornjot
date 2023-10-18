@@ -31,7 +31,7 @@ pub trait BuildFace {
 
         let face = Face::polygon(surface, points_surface, services);
 
-        let edges = {
+        let half_edges = {
             let mut edges =
                 face.region().exterior().half_edges().iter().cloned();
 
@@ -43,13 +43,13 @@ pub trait BuildFace {
 
             array
         };
-        let vertices = edges
+        let vertices = half_edges
             .each_ref_ext()
             .map(|edge: &Handle<HalfEdge>| edge.start_vertex().clone());
 
         Polygon {
             face,
-            half_edges: edges,
+            half_edges,
             vertices,
         }
     }
