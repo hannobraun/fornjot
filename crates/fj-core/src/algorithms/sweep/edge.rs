@@ -2,16 +2,16 @@ use fj_interop::{ext::ArrayExt, mesh::Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
-    operations::{BuildEdge, Insert, UpdateCycle, UpdateEdge},
+    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
+    operations::{BuildHalfEdge, Insert, UpdateCycle, UpdateHalfEdge},
     services::Services,
     storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Handle<Face>, Handle<Edge>);
+impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
+    type Swept = (Handle<Face>, Handle<HalfEdge>);
 
     fn sweep_with_cache(
         self,
@@ -81,7 +81,7 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
                 let edge = {
-                    let edge = Edge::line_segment(
+                    let edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
                         services,
@@ -97,8 +97,9 @@ impl Sweep for (&Edge, &Handle<Vertex>, &Surface, Option<Color>) {
                     edge.insert(services)
                 };
 
-                exterior =
-                    Some(exterior.take().unwrap().add_edges([edge.clone()]));
+                exterior = Some(
+                    exterior.take().unwrap().add_half_edges([edge.clone()]),
+                );
 
                 edge
             });

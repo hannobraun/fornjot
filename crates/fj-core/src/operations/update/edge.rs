@@ -2,12 +2,12 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
-    objects::{Curve, Edge, Vertex},
+    objects::{Curve, HalfEdge, Vertex},
     storage::Handle,
 };
 
-/// Update a [`Edge`]
-pub trait UpdateEdge {
+/// Update a [`HalfEdge`]
+pub trait UpdateHalfEdge {
     /// Update the path of the edge
     #[must_use]
     fn update_path(
@@ -37,12 +37,12 @@ pub trait UpdateEdge {
     ) -> Self;
 }
 
-impl UpdateEdge for Edge {
+impl UpdateHalfEdge for HalfEdge {
     fn update_path(
         &self,
         update: impl FnOnce(SurfacePath) -> SurfacePath,
     ) -> Self {
-        Edge::new(
+        HalfEdge::new(
             update(self.path()),
             self.boundary(),
             self.curve().clone(),
@@ -54,7 +54,7 @@ impl UpdateEdge for Edge {
         &self,
         update: impl FnOnce(CurveBoundary<Point<1>>) -> CurveBoundary<Point<1>>,
     ) -> Self {
-        Edge::new(
+        HalfEdge::new(
             self.path(),
             update(self.boundary()),
             self.curve().clone(),
@@ -66,7 +66,7 @@ impl UpdateEdge for Edge {
         &self,
         update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
     ) -> Self {
-        Edge::new(
+        HalfEdge::new(
             self.path(),
             self.boundary(),
             update(self.curve()),
@@ -78,7 +78,7 @@ impl UpdateEdge for Edge {
         &self,
         update: impl FnOnce(&Handle<Vertex>) -> Handle<Vertex>,
     ) -> Self {
-        Edge::new(
+        HalfEdge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),

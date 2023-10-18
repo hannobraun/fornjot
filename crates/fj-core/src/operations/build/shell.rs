@@ -46,10 +46,13 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(cycle.edges().nth_circular(0), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(0),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
@@ -64,20 +67,26 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(cycle.edges().nth_circular(1), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(1),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
                         .join_to(
                             abc.face.region().exterior(),
                             1..=1,
                             2..=2,
                             services,
                         )
-                        .update_edge(cycle.edges().nth_circular(0), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(0),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
                         .join_to(
                             bad.face.region().exterior(),
                             0..=0,
@@ -92,18 +101,27 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(cycle.edges().nth_circular(0), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
-                        .update_edge(cycle.edges().nth_circular(1), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
-                        .update_edge(cycle.edges().nth_circular(2), |edge| {
-                            edge.reverse_curve_coordinate_systems(services)
-                                .insert(services)
-                        })
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(0),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(1),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
+                        .update_half_edge(
+                            cycle.half_edges().nth_circular(2),
+                            |edge| {
+                                edge.reverse_curve_coordinate_systems(services)
+                                    .insert(services)
+                            },
+                        )
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,

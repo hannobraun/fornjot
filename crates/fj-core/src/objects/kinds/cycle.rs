@@ -2,26 +2,26 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::Handles, Edge},
+    objects::{handles::Handles, HalfEdge},
     storage::Handle,
 };
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    edges: Handles<Edge>,
+    half_edges: Handles<HalfEdge>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
-    pub fn new(edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let edges = edges.into_iter().collect();
-        Self { edges }
+    pub fn new(half_edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
+        let half_edges = half_edges.into_iter().collect();
+        Self { half_edges }
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> &Handles<Edge> {
-        &self.edges
+    pub fn half_edges(&self) -> &Handles<HalfEdge> {
+        &self.half_edges
     }
 
     /// Indicate the cycle's winding, assuming a right-handed coordinate system
@@ -33,9 +33,9 @@ impl Cycle {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the
         // first circle.
-        if self.edges.len() < 3 {
+        if self.half_edges.len() < 3 {
             let first = self
-                .edges()
+                .half_edges()
                 .iter()
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
@@ -64,7 +64,7 @@ impl Cycle {
 
         let mut sum = Scalar::ZERO;
 
-        for (a, b) in self.edges().pairs() {
+        for (a, b) in self.half_edges().pairs() {
             let [a, b] = [a, b].map(|edge| edge.start_position());
 
             sum += (b.u - a.u) * (b.v + a.v);

@@ -1,6 +1,6 @@
 use crate::{
     objects::{
-        Curve, Cycle, Edge, Face, Objects, Region, Shell, Sketch, Solid,
+        Curve, Cycle, Face, HalfEdge, Objects, Region, Shell, Sketch, Solid,
         Surface, Vertex,
     },
     storage::{Handle, HandleWrapper, ObjectId},
@@ -94,7 +94,7 @@ object!(
     Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;
-    Edge, "edge", edges;
+    HalfEdge, "half-edge", half_edges;
     Region, "region", regions;
     Shell, "shell", shells;
     Sketch, "sketch", sketches;

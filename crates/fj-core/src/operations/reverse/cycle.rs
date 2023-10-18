@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Cycle, Edge},
+    objects::{Cycle, HalfEdge},
     operations::Insert,
     services::Services,
 };
@@ -9,10 +9,10 @@ use super::{Reverse, ReverseCurveCoordinateSystems};
 impl Reverse for Cycle {
     fn reverse(&self, services: &mut Services) -> Self {
         let mut edges = self
-            .edges()
+            .half_edges()
             .pairs()
             .map(|(current, next)| {
-                Edge::new(
+                HalfEdge::new(
                     current.path(),
                     current.boundary().reverse(),
                     current.curve().clone(),
@@ -33,7 +33,7 @@ impl ReverseCurveCoordinateSystems for Cycle {
         &self,
         services: &mut Services,
     ) -> Self {
-        let edges = self.edges().iter().map(|edge| {
+        let edges = self.half_edges().iter().map(|edge| {
             edge.reverse_curve_coordinate_systems(services)
                 .insert(services)
         });

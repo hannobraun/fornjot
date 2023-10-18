@@ -10,7 +10,7 @@ mod update;
 pub use self::{
     build::{
         cycle::BuildCycle,
-        edge::BuildEdge,
+        edge::BuildHalfEdge,
         face::{BuildFace, Polygon},
         region::BuildRegion,
         shell::{BuildShell, TetrahedronShell},
@@ -23,7 +23,7 @@ pub use self::{
     merge::Merge,
     reverse::Reverse,
     update::{
-        cycle::UpdateCycle, edge::UpdateEdge, face::UpdateFace,
+        cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
         region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
         solid::UpdateSolid,
     },

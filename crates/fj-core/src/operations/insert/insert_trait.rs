@@ -1,6 +1,7 @@
 use crate::{
     objects::{
-        Curve, Cycle, Edge, Face, Region, Shell, Sketch, Solid, Surface, Vertex,
+        Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
+        Vertex,
     },
     operations::{Polygon, TetrahedronShell},
     services::Services,
@@ -46,7 +47,7 @@ impl_insert!(
     Curve, curves;
     Cycle, cycles;
     Face, faces;
-    Edge, edges;
+    HalfEdge, half_edges;
     Region, regions;
     Shell, shells;
     Sketch, sketches;
@@ -61,7 +62,7 @@ impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
     fn insert(self, services: &mut Services) -> Self::Inserted {
         Polygon {
             face: self.face.insert(services),
-            edges: self.edges,
+            half_edges: self.half_edges,
             vertices: self.vertices,
         }
     }

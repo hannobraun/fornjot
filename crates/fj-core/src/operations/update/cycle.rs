@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Cycle, Edge},
+    objects::{Cycle, HalfEdge},
     storage::Handle,
 };
 
@@ -7,7 +7,10 @@ use crate::{
 pub trait UpdateCycle {
     /// Add edges to the cycle
     #[must_use]
-    fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self;
+    fn add_half_edges(
+        &self,
+        edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+    ) -> Self;
 
     /// Update an edge of the cycle
     ///
@@ -17,16 +20,16 @@ pub trait UpdateCycle {
     ///
     /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
-    fn update_edge(
+    fn update_half_edge(
         &self,
-        handle: &Handle<Edge>,
-        update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
+        handle: &Handle<HalfEdge>,
+        update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Self;
 
     /// Replace an edge of the cycle
     ///
-    /// This is a more general version of [`UpdateCycle::update_edge`] which can
-    /// replace a single edge with multiple others.
+    /// This is a more general version of [`UpdateCycle::update_half_edge`]
+    /// which can replace a single edge with multiple others.
     ///
     /// # Panics
     ///
@@ -34,34 +37,37 @@ pub trait UpdateCycle {
     ///
     /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
-    fn replace_edge<const N: usize>(
+    fn replace_half_edge<const N: usize>(
         &self,
-        handle: &Handle<Edge>,
-        replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
+        handle: &Handle<HalfEdge>,
+        replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self;
 }
 
 impl UpdateCycle for Cycle {
-    fn add_edges(&self, edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
-        let edges = self.edges().iter().cloned().chain(edges);
+    fn add_half_edges(
+        &self,
+        edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+    ) -> Self {
+        let edges = self.half_edges().iter().cloned().chain(edges);
         Cycle::new(edges)
     }
 
-    fn update_edge(
+    fn update_half_edge(
         &self,
-        handle: &Handle<Edge>,
-        update: impl FnOnce(&Handle<Edge>) -> Handle<Edge>,
+        handle: &Handle<HalfEdge>,
+        update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Self {
-        let edges = self.edges().update(handle, update);
+        let edges = self.half_edges().update(handle, update);
         Cycle::new(edges)
     }
 
-    fn replace_edge<const N: usize>(
+    fn replace_half_edge<const N: usize>(
         &self,
-        handle: &Handle<Edge>,
-        replace: impl FnOnce(&Handle<Edge>) -> [Handle<Edge>; N],
+        handle: &Handle<HalfEdge>,
+        replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self {
-        let edges = self.edges().replace(handle, replace);
+        let edges = self.half_edges().replace(handle, replace);
         Cycle::new(edges)
     }
 }
