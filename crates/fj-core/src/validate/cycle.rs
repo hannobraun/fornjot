@@ -123,7 +123,7 @@ mod tests {
             ];
             let edges = edges.map(|edge| edge.insert(&mut services));
 
-            Cycle::empty().add_edges(edges)
+            Cycle::empty().add_half_edges(edges)
         };
 
         assert_contains_err!(

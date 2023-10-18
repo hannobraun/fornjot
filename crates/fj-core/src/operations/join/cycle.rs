@@ -81,7 +81,7 @@ impl JoinCycle for Cycle {
         >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
-        self.add_edges(edges.into_iter().circular_tuple_windows().map(
+        self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev, _, _), (edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, services)
                     .update_curve(|_| edge.curve().clone())

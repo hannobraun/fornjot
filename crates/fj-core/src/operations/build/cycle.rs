@@ -22,7 +22,7 @@ pub trait BuildCycle {
     ) -> Cycle {
         let circle =
             HalfEdge::circle(center, radius, services).insert(services);
-        Cycle::empty().add_edges([circle])
+        Cycle::empty().add_half_edges([circle])
     }
 
     /// Build a polygon
