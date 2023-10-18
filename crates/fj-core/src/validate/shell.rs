@@ -164,7 +164,7 @@ impl ShellValidationError {
 
                         if distance > config.identical_max_distance {
                             mismatches.push(CurveCoordinateSystemMismatch {
-                                edge_a: edge_a.clone(),
+                                half_edge_a: edge_a.clone(),
                                 edge_b: edge_b.clone(),
                                 point_curve,
                                 point_a: a_global,
@@ -362,7 +362,7 @@ impl ShellValidationError {
 
 #[derive(Clone, Debug)]
 pub struct CurveCoordinateSystemMismatch {
-    pub edge_a: Handle<HalfEdge>,
+    pub half_edge_a: Handle<HalfEdge>,
     pub edge_b: Handle<HalfEdge>,
     pub point_curve: Point<1>,
     pub point_a: Point<3>,
