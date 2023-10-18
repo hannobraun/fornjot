@@ -15,8 +15,8 @@ pub struct Cycle {
 impl Cycle {
     /// Create an instance of `Cycle`
     pub fn new(edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
-        let edges = edges.into_iter().collect();
-        Self { half_edges: edges }
+        let half_edges = edges.into_iter().collect();
+        Self { half_edges }
     }
 
     /// Access the edges that make up the cycle
