@@ -96,7 +96,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
     /// Returns a new instance of `Polygon` with the replaced face. Also updates
     /// the other fields of `Polygon` to match the new face.
     pub fn replace_face(&self, face: I::T<Face>) -> Self {
-        let edges = array::from_fn(|i| {
+        let half_edges = array::from_fn(|i| {
             face.borrow()
                 .region()
                 .exterior()
@@ -121,7 +121,7 @@ impl<const D: usize, I: IsInserted> Polygon<D, I> {
 
         Self {
             face,
-            half_edges: edges,
+            half_edges,
             vertices,
         }
     }
