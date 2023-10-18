@@ -396,7 +396,7 @@ mod tests {
                 region
                     .update_exterior(|cycle| {
                         cycle
-                            .update_edge(
+                            .update_half_edge(
                                 cycle.half_edges().nth_circular(0),
                                 |edge| {
                                     edge.update_path(|path| path.reverse())
@@ -437,7 +437,7 @@ mod tests {
                 region
                     .update_exterior(|cycle| {
                         cycle
-                            .update_edge(
+                            .update_half_edge(
                                 cycle.half_edges().nth_circular(0),
                                 |edge| {
                                     edge.update_curve(|_| {

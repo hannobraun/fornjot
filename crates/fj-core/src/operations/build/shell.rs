@@ -46,7 +46,7 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)
@@ -67,7 +67,7 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)
@@ -80,7 +80,7 @@ pub trait BuildShell {
                             2..=2,
                             services,
                         )
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)
@@ -101,21 +101,21 @@ pub trait BuildShell {
             region
                 .update_exterior(|cycle| {
                     cycle
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)
                                     .insert(services)
                             },
                         )
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)
                                     .insert(services)
                             },
                         )
-                        .update_edge(
+                        .update_half_edge(
                             cycle.half_edges().nth_circular(2),
                             |edge| {
                                 edge.reverse_curve_coordinate_systems(services)

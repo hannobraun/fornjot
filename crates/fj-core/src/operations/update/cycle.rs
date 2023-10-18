@@ -20,7 +20,7 @@ pub trait UpdateCycle {
     ///
     /// [`Handles::update`]: crate::objects::Handles::update
     #[must_use]
-    fn update_edge(
+    fn update_half_edge(
         &self,
         handle: &Handle<HalfEdge>,
         update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
@@ -28,8 +28,8 @@ pub trait UpdateCycle {
 
     /// Replace an edge of the cycle
     ///
-    /// This is a more general version of [`UpdateCycle::update_edge`] which can
-    /// replace a single edge with multiple others.
+    /// This is a more general version of [`UpdateCycle::update_half_edge`]
+    /// which can replace a single edge with multiple others.
     ///
     /// # Panics
     ///
@@ -53,7 +53,7 @@ impl UpdateCycle for Cycle {
         Cycle::new(edges)
     }
 
-    fn update_edge(
+    fn update_half_edge(
         &self,
         handle: &Handle<HalfEdge>,
         update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
