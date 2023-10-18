@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundaries, SurfaceGeometry},
-    objects::{Edge, Shell, Surface},
+    objects::{HalfEdge, Shell, Surface},
     queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
     storage::{Handle, HandleWrapper},
 };
@@ -46,7 +46,7 @@ pub enum ShellValidationError {
         Edge 1: {0:#?}\n\
         Edge 2: {1:#?}"
     )]
-    CoincidentEdgesNotIdentical(Handle<Edge>, Handle<Edge>),
+    CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
 
     /// [`Shell`] contains edges that are identical, but do not coincide
     #[error(
@@ -58,13 +58,13 @@ pub enum ShellValidationError {
     )]
     IdenticalEdgesNotCoincident {
         /// The first edge
-        edge_a: Handle<Edge>,
+        edge_a: Handle<HalfEdge>,
 
         /// The surface that the first edge is on
         surface_a: Handle<Surface>,
 
         /// The second edge
-        edge_b: Handle<Edge>,
+        edge_b: Handle<HalfEdge>,
 
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
@@ -79,14 +79,14 @@ pub enum ShellValidationError {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    edge_a: Handle<Edge>,
+    edge_a: Handle<HalfEdge>,
     surface_a: Handle<Surface>,
-    edge_b: Handle<Edge>,
+    edge_b: Handle<HalfEdge>,
     surface_b: Handle<Surface>,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<Edge>, SurfaceGeometry),
+        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
     ) -> Point<3> {
         let [start, end] = edge.boundary().inner;
         let path_coords = start + (end - start) * percent;
@@ -132,9 +132,9 @@ impl ShellValidationError {
                 }
 
                 fn compare_curve_coords(
-                    edge_a: &Handle<Edge>,
+                    edge_a: &Handle<HalfEdge>,
                     surface_a: &Handle<Surface>,
-                    edge_b: &Handle<Edge>,
+                    edge_b: &Handle<HalfEdge>,
                     surface_b: &Handle<Surface>,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
@@ -362,8 +362,8 @@ impl ShellValidationError {
 
 #[derive(Clone, Debug)]
 pub struct CurveCoordinateSystemMismatch {
-    pub edge_a: Handle<Edge>,
-    pub edge_b: Handle<Edge>,
+    pub edge_a: Handle<HalfEdge>,
+    pub edge_b: Handle<HalfEdge>,
     pub point_curve: Point<1>,
     pub point_a: Point<3>,
     pub point_b: Point<3>,

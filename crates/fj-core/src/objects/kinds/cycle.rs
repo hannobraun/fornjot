@@ -2,25 +2,25 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::Handles, Edge},
+    objects::{handles::Handles, HalfEdge},
     storage::Handle,
 };
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    edges: Handles<Edge>,
+    edges: Handles<HalfEdge>,
 }
 
 impl Cycle {
     /// Create an instance of `Cycle`
-    pub fn new(edges: impl IntoIterator<Item = Handle<Edge>>) -> Self {
+    pub fn new(edges: impl IntoIterator<Item = Handle<HalfEdge>>) -> Self {
         let edges = edges.into_iter().collect();
         Self { edges }
     }
 
     /// Access the edges that make up the cycle
-    pub fn edges(&self) -> &Handles<Edge> {
+    pub fn edges(&self) -> &Handles<HalfEdge> {
         &self.edges
     }
 

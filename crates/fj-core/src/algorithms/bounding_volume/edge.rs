@@ -1,8 +1,8 @@
 use fj_math::{Aabb, Vector};
 
-use crate::{geometry::SurfacePath, objects::Edge};
+use crate::{geometry::SurfacePath, objects::HalfEdge};
 
-impl super::BoundingVolume<2> for Edge {
+impl super::BoundingVolume<2> for HalfEdge {
     fn aabb(&self) -> Option<Aabb<2>> {
         match self.path() {
             SurfacePath::Circle(circle) => {

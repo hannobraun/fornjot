@@ -5,13 +5,13 @@ use fj_math::Segment;
 use crate::{
     algorithms::intersect::{HorizontalRayToTheRight, Intersect},
     geometry::SurfacePath,
-    objects::Edge,
+    objects::HalfEdge,
     storage::Handle,
 };
 
 use super::ray_segment::RaySegmentIntersection;
 
-impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<Edge>) {
+impl Intersect for (&HorizontalRayToTheRight<2>, &Handle<HalfEdge>) {
     type Intersection = RaySegmentIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {

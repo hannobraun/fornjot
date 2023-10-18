@@ -1,10 +1,10 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::Edge;
+use crate::objects::HalfEdge;
 
 use super::{Validate, ValidationConfig, ValidationError};
 
-impl Validate for Edge {
+impl Validate for HalfEdge {
     fn validate_with_config(
         &self,
         config: &ValidationConfig,
@@ -14,10 +14,10 @@ impl Validate for Edge {
     }
 }
 
-/// [`Edge`] validation failed
+/// [`HalfEdge`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum EdgeValidationError {
-    /// [`Edge`]'s vertices are coincident
+    /// [`HalfEdge`]'s vertices are coincident
     #[error(
         "Vertices of `Edge` on curve are coincident\n\
         - Position of back vertex: {back_position:?}\n\
@@ -35,13 +35,13 @@ pub enum EdgeValidationError {
         distance: Scalar,
 
         /// The edge
-        edge: Edge,
+        edge: HalfEdge,
     },
 }
 
 impl EdgeValidationError {
     fn check_vertex_coincidence(
-        edge: &Edge,
+        edge: &HalfEdge,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -68,7 +68,7 @@ mod tests {
 
     use crate::{
         assert_contains_err,
-        objects::Edge,
+        objects::HalfEdge,
         operations::BuildEdge,
         services::Services,
         validate::{EdgeValidationError, Validate, ValidationError},
@@ -79,11 +79,11 @@ mod tests {
         let mut services = Services::new();
 
         let valid =
-            Edge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
+            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 
-            Edge::new(
+            HalfEdge::new(
                 valid.path(),
                 boundary,
                 valid.curve().clone(),

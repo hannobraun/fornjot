@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Cycle, Edge, Face, Region, Surface, Vertex},
+    objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
         BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
     },
@@ -44,7 +44,7 @@ pub trait BuildFace {
         };
         let vertices = edges
             .each_ref_ext()
-            .map(|edge: &Handle<Edge>| edge.start_vertex().clone());
+            .map(|edge: &Handle<HalfEdge>| edge.start_vertex().clone());
 
         Polygon {
             face,
@@ -83,7 +83,7 @@ pub struct Polygon<const D: usize, I: IsInserted = IsInsertedNo> {
     pub face: I::T<Face>,
 
     /// The edges of the polygon
-    pub edges: [Handle<Edge>; D],
+    pub edges: [Handle<HalfEdge>; D],
 
     /// The vertices of the polygon
     pub vertices: [Handle<Vertex>; D],

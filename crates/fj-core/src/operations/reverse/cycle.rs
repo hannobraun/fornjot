@@ -1,5 +1,5 @@
 use crate::{
-    objects::{Cycle, Edge},
+    objects::{Cycle, HalfEdge},
     operations::Insert,
     services::Services,
 };
@@ -12,7 +12,7 @@ impl Reverse for Cycle {
             .edges()
             .pairs()
             .map(|(current, next)| {
-                Edge::new(
+                HalfEdge::new(
                     current.path(),
                     current.boundary().reverse(),
                     current.curve().clone(),

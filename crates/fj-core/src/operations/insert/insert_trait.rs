@@ -1,6 +1,7 @@
 use crate::{
     objects::{
-        Curve, Cycle, Edge, Face, Region, Shell, Sketch, Solid, Surface, Vertex,
+        Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
+        Vertex,
     },
     operations::{Polygon, TetrahedronShell},
     services::Services,
@@ -46,7 +47,7 @@ impl_insert!(
     Curve, curves;
     Cycle, cycles;
     Face, faces;
-    Edge, edges;
+    HalfEdge, edges;
     Region, regions;
     Shell, shells;
     Sketch, sketches;

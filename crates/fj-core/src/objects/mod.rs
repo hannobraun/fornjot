@@ -50,7 +50,7 @@ pub use self::{
     kinds::{
         curve::Curve,
         cycle::Cycle,
-        edge::Edge,
+        edge::HalfEdge,
         face::{Face, Handedness},
         region::Region,
         shell::Shell,
