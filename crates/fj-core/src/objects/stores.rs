@@ -19,7 +19,7 @@ pub struct Objects {
     pub cycles: Store<Cycle>,
 
     /// Store for [`HalfEdge`]s
-    pub edges: Store<HalfEdge>,
+    pub half_edges: Store<HalfEdge>,
 
     /// Store for [`Face`]s
     pub faces: Store<Face>,

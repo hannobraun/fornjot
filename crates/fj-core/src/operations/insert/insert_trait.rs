@@ -47,7 +47,7 @@ impl_insert!(
     Curve, curves;
     Cycle, cycles;
     Face, faces;
-    HalfEdge, edges;
+    HalfEdge, half_edges;
     Region, regions;
     Shell, shells;
     Sketch, sketches;
