@@ -18,7 +18,7 @@ impl Validate for Shell {
         errors: &mut Vec<ValidationError>,
     ) {
         ShellValidationError::check_curve_coordinates(self, config, errors);
-        ShellValidationError::check_edges_coincident(self, config, errors);
+        ShellValidationError::check_half_edge_coincidence(self, config, errors);
         ShellValidationError::check_watertight(self, config, errors);
         ShellValidationError::check_same_orientation(self, errors);
     }
@@ -204,7 +204,7 @@ impl ShellValidationError {
         }
     }
 
-    fn check_edges_coincident(
+    fn check_half_edge_coincidence(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
