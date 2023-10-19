@@ -17,10 +17,10 @@ impl Validate for Shell {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        ShellValidationError::validate_curve_coordinates(self, config, errors);
-        ShellValidationError::validate_edges_coincident(self, config, errors);
-        ShellValidationError::validate_watertight(self, config, errors);
-        ShellValidationError::validate_same_orientation(self, errors);
+        ShellValidationError::check_curve_coordinates(self, config, errors);
+        ShellValidationError::check_half_edge_coincidence(self, config, errors);
+        ShellValidationError::check_watertight(self, config, errors);
+        ShellValidationError::check_same_orientation(self, errors);
     }
 }
 
@@ -34,10 +34,6 @@ pub enum ShellValidationError {
         .0
     )]
     CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
-
-    /// [`Shell`] is not watertight
-    #[error("Shell is not watertight")]
-    NotWatertight,
 
     /// [`Shell`] contains edges that are coincident, but not identical
     #[error(
@@ -69,6 +65,10 @@ pub enum ShellValidationError {
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
     },
+
+    /// [`Shell`] is not watertight
+    #[error("Shell is not watertight")]
+    NotWatertight,
 
     /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
     #[error("Shell has mixed face orientations")]
@@ -111,7 +111,8 @@ fn distances(
 }
 
 impl ShellValidationError {
-    fn validate_curve_coordinates(
+    /// Check that local curve definitions that refer to the same curve match
+    fn check_curve_coordinates(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -203,7 +204,8 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_edges_coincident(
+    /// Check that identical half-edges are coincident, non-identical are not
+    fn check_half_edge_coincidence(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -243,8 +245,8 @@ impl ShellValidationError {
                 match identical {
                     true => {
                         // All points on identical curves should be within
-                        // identical_max_distance, so we shouldn't have any
-                        // greater than the max
+                        // `identical_max_distance`, so we shouldn't have any
+                        // distances greater than that.
                         if distances(
                             edge_a.clone(),
                             surface_a.clone(),
@@ -266,7 +268,7 @@ impl ShellValidationError {
                     }
                     false => {
                         // If all points on distinct curves are within
-                        // distinct_min_distance, that's a problem.
+                        // `distinct_min_distance`, that's a problem.
                         if distances(
                             edge_a.clone(),
                             surface_a.clone(),
@@ -289,7 +291,7 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_watertight(
+    fn check_watertight(
         shell: &Shell,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -319,7 +321,7 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_same_orientation(
+    fn check_same_orientation(
         shell: &Shell,
         errors: &mut Vec<ValidationError>,
     ) {
