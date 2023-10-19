@@ -111,6 +111,7 @@ fn distances(
 }
 
 impl ShellValidationError {
+    /// Check that local curve definitions that refer to the same curve match
     fn check_curve_coordinates(
         shell: &Shell,
         config: &ValidationConfig,
