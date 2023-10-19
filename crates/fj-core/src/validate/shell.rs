@@ -35,10 +35,6 @@ pub enum ShellValidationError {
     )]
     CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
 
-    /// [`Shell`] is not watertight
-    #[error("Shell is not watertight")]
-    NotWatertight,
-
     /// [`Shell`] contains edges that are coincident, but not identical
     #[error(
         "`Shell` contains `Edge`s that are coincident but refer to different \
@@ -69,6 +65,10 @@ pub enum ShellValidationError {
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
     },
+
+    /// [`Shell`] is not watertight
+    #[error("Shell is not watertight")]
+    NotWatertight,
 
     /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
     #[error("Shell has mixed face orientations")]
