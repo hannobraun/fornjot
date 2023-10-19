@@ -245,8 +245,8 @@ impl ShellValidationError {
                 match identical {
                     true => {
                         // All points on identical curves should be within
-                        // identical_max_distance, so we shouldn't have any
-                        // greater than the max
+                        // `identical_max_distance`, so we shouldn't have any
+                        // distances greater than that.
                         if distances(
                             edge_a.clone(),
                             surface_a.clone(),
@@ -268,7 +268,7 @@ impl ShellValidationError {
                     }
                     false => {
                         // If all points on distinct curves are within
-                        // distinct_min_distance, that's a problem.
+                        // `distinct_min_distance`, that's a problem.
                         if distances(
                             edge_a.clone(),
                             surface_a.clone(),
