@@ -204,6 +204,7 @@ impl ShellValidationError {
         }
     }
 
+    /// Check that identical half-edges are coincident, non-identical are not
     fn check_half_edge_coincidence(
         shell: &Shell,
         config: &ValidationConfig,
