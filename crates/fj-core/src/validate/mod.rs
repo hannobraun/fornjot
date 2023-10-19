@@ -1,4 +1,73 @@
-//! Infrastructure for validating objects
+//! # Infrastructure for validating objects
+//!
+//! ## Structure and Nomenclature
+//!
+//! **Validation** is the process of checking that objects meet specific
+//! requirements. Each kind of object has its own set of requirements.
+//!
+//! An object that meets all the requirement for its kind is considered
+//! **valid**. An object that does not meet all of them is considered
+//! **invalid**. This results in a **validation error**, which is represented by
+//! [`ValidationError`].
+//!
+//! Every single requirement is checked by a dedicated function. These functions
+//! are called **validation checks**. Validation checks are currently not
+//! visible in the public API, but their structure is reflected in the variants
+//! of the different enums that make up [`ValidationError`] (each validation
+//! check produces one of the types of validation error, that these nested enums
+//! represent).
+//!
+//! In principle, the absence of validation errors should guarantee, that an
+//! object can be exported to an external file format without problems (which
+//! falls under the purview of the [`fj-export`] crate). This has not yet been
+//! achieved, as some validation checks are still missing.
+//!
+//! The [issue tracker] has open issues for some of those missing checks, but
+//! others are not currently tracked (or not even known). Please feel free to
+//! open a new issue (or comment on an existing one), if you encounter an object
+//! that you believe should be invalid, but is not.
+//!
+//!
+//! ## Use
+//!
+//! All objects implement the [`Validate`] trait, which users can use to
+//! validate objects manually. This might be useful for debugging, but is
+//! otherwise not recommended.
+//!
+//! Experience has shown, that stopping the construction of a shape on the first
+//! validation failure can make it hard to understand what actually went wrong.
+//! For that reason, objects are validated as they are constructed, but
+//! validation errors are collected in the background, to be processed when the
+//! whole shape has been finished.
+//!
+//! This is set up within the [`Services`] API, and validation errors result in
+//! a panic, when the [`Services`] instance is dropped. Unless you want to
+//! handle validation errors in a different way, you don't have to do anything
+//! special to use the validation infrastructure.
+//!
+//!
+//! ## Configuration
+//!
+//! Fornjot's geometry representation is set up to prioritize correctness, which
+//! is achieved by making the relations between different objects *explicit*.
+//! This means, for example, that coincident objects of the same type that don't
+//! have the same *identity* are generally considered invalid.
+//!
+//! Coincidence checks must use a tolerance value to be useful, meaning objects
+//! that are very close together can be considered coincident. What should be
+//! considered "very close" is dependent on the scale that your model operates
+//! on, and this fact is taken into account by allowing for configuration via
+//! [`Validate::validate_with_config`] and [`ValidationConfig`].
+//!
+//! However, it is currently not possible to define this configuration for the
+//! background validation done by the [`Services`] API. If this is a problem for
+//! you, please comment on this issue:
+//! <https://github.com/hannobraun/fornjot/issues/2060>
+//!
+//!
+//! [`fj-export`]: https://crates.io/crates/fj-export
+//! [issue tracker]: https://github.com/hannobraun/fornjot/issues
+//! [`Services`]: crate::services::Services
 
 mod curve;
 mod cycle;
