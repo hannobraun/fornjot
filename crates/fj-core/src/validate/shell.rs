@@ -17,10 +17,10 @@ impl Validate for Shell {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        ShellValidationError::validate_curve_coordinates(self, config, errors);
-        ShellValidationError::validate_edges_coincident(self, config, errors);
-        ShellValidationError::validate_watertight(self, config, errors);
-        ShellValidationError::validate_same_orientation(self, errors);
+        ShellValidationError::check_curve_coordinates(self, config, errors);
+        ShellValidationError::check_edges_coincident(self, config, errors);
+        ShellValidationError::check_watertight(self, config, errors);
+        ShellValidationError::check_same_orientation(self, errors);
     }
 }
 
@@ -111,7 +111,7 @@ fn distances(
 }
 
 impl ShellValidationError {
-    fn validate_curve_coordinates(
+    fn check_curve_coordinates(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -203,7 +203,7 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_edges_coincident(
+    fn check_edges_coincident(
         shell: &Shell,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -289,7 +289,7 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_watertight(
+    fn check_watertight(
         shell: &Shell,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -319,7 +319,7 @@ impl ShellValidationError {
         }
     }
 
-    fn validate_same_orientation(
+    fn check_same_orientation(
         shell: &Shell,
         errors: &mut Vec<ValidationError>,
     ) {
