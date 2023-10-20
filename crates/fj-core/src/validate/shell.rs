@@ -263,7 +263,7 @@ impl ShellValidationError {
         // data-structure like an octree.
         for (half_edge_a, surface_a) in &edges_and_surfaces {
             for (half_edge_b, surface_b) in &edges_and_surfaces {
-                // No need to check an edge against itself.
+                // No need to check a half-edge against itself.
                 if half_edge_a.id() == half_edge_b.id() {
                     continue;
                 }
