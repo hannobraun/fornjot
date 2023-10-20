@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// Access all edges referenced by the object and the surface they're on
-pub trait AllEdgesWithSurface {
+pub trait AllHalfEdgesWithSurface {
     /// Access all edges referenced by the object and the surface they're on
     fn all_half_edges_with_surface(
         &self,
@@ -12,7 +12,7 @@ pub trait AllEdgesWithSurface {
     );
 }
 
-impl AllEdgesWithSurface for Face {
+impl AllHalfEdgesWithSurface for Face {
     fn all_half_edges_with_surface(
         &self,
         result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
@@ -29,7 +29,7 @@ impl AllEdgesWithSurface for Face {
     }
 }
 
-impl AllEdgesWithSurface for Shell {
+impl AllHalfEdgesWithSurface for Shell {
     fn all_half_edges_with_surface(
         &self,
         result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,

@@ -5,7 +5,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::{CurveBoundaries, SurfaceGeometry},
     objects::{HalfEdge, Shell, Surface},
-    queries::{AllEdgesWithSurface, BoundingVerticesOfHalfEdge},
+    queries::{AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge},
     storage::{Handle, HandleWrapper},
 };
 
