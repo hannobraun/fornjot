@@ -402,7 +402,7 @@ mod tests {
     }
 
     #[test]
-    fn coincident_edges_not_identical() -> anyhow::Result<()> {
+    fn coincident_half_edges_are_not_siblings() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
