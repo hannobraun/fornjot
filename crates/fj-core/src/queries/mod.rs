@@ -14,5 +14,5 @@ mod bounding_vertices_of_edge;
 
 pub use self::{
     all_edges_with_surface::AllEdgesWithSurface,
-    bounding_vertices_of_edge::BoundingVerticesOfEdge,
+    bounding_vertices_of_edge::BoundingVerticesOfHalfEdge,
 };

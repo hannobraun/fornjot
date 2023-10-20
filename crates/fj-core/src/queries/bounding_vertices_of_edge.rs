@@ -5,7 +5,7 @@ use crate::{
 };
 
 /// Determine the bounding vertices of an edge
-pub trait BoundingVerticesOfEdge {
+pub trait BoundingVerticesOfHalfEdge {
     /// Determine the bounding vertices of an edge
     ///
     /// Returns `None`, if the provided edge is not part of the object this
@@ -16,7 +16,7 @@ pub trait BoundingVerticesOfEdge {
     ) -> Option<CurveBoundary<Vertex>>;
 }
 
-impl BoundingVerticesOfEdge for Cycle {
+impl BoundingVerticesOfHalfEdge for Cycle {
     fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
@@ -28,7 +28,7 @@ impl BoundingVerticesOfEdge for Cycle {
     }
 }
 
-impl BoundingVerticesOfEdge for Region {
+impl BoundingVerticesOfHalfEdge for Region {
     fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
@@ -43,7 +43,7 @@ impl BoundingVerticesOfEdge for Region {
     }
 }
 
-impl BoundingVerticesOfEdge for Face {
+impl BoundingVerticesOfHalfEdge for Face {
     fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
@@ -52,7 +52,7 @@ impl BoundingVerticesOfEdge for Face {
     }
 }
 
-impl BoundingVerticesOfEdge for Shell {
+impl BoundingVerticesOfHalfEdge for Shell {
     fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
