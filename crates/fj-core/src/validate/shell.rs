@@ -484,6 +484,7 @@ mod tests {
 
         Ok(())
     }
+
     #[test]
     fn mixed_orientations() -> anyhow::Result<()> {
         let mut services = Services::new();
