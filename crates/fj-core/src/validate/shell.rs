@@ -51,41 +51,6 @@ pub enum ShellValidationError {
     CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
 }
 
-/// Sample two edges at various (currently 3) points in 3D along them.
-///
-/// Returns an [`Iterator`] of the distance at each sample.
-fn distances(
-    edge_a: Handle<HalfEdge>,
-    surface_a: Handle<Surface>,
-    edge_b: Handle<HalfEdge>,
-    surface_b: Handle<Surface>,
-) -> impl Iterator<Item = Scalar> {
-    fn sample(
-        percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
-    ) -> Point<3> {
-        let [start, end] = edge.boundary().inner;
-        let path_coords = start + (end - start) * percent;
-        let surface_coords = edge.path().point_from_path_coords(path_coords);
-        surface.point_from_surface_coords(surface_coords)
-    }
-
-    // Three samples (start, middle, end), are enough to detect weather lines
-    // and circles match. If we were to add more complicated curves, this might
-    // need to change.
-    let sample_count = 3;
-    let step = 1.0 / (sample_count as f64 - 1.0);
-
-    let mut distances = Vec::new();
-    for i in 0..sample_count {
-        let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
-        distances.push(sample1.distance_to(&sample2))
-    }
-    distances.into_iter()
-}
-
 impl ShellValidationError {
     /// Check that local curve definitions that refer to the same curve match
     fn check_curve_coordinates(
@@ -279,6 +244,41 @@ pub struct CurveCoordinateSystemMismatch {
     pub point_a: Point<3>,
     pub point_b: Point<3>,
     pub distance: Scalar,
+}
+
+/// Sample two edges at various (currently 3) points in 3D along them.
+///
+/// Returns an [`Iterator`] of the distance at each sample.
+fn distances(
+    edge_a: Handle<HalfEdge>,
+    surface_a: Handle<Surface>,
+    edge_b: Handle<HalfEdge>,
+    surface_b: Handle<Surface>,
+) -> impl Iterator<Item = Scalar> {
+    fn sample(
+        percent: f64,
+        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
+    ) -> Point<3> {
+        let [start, end] = edge.boundary().inner;
+        let path_coords = start + (end - start) * percent;
+        let surface_coords = edge.path().point_from_path_coords(path_coords);
+        surface.point_from_surface_coords(surface_coords)
+    }
+
+    // Three samples (start, middle, end), are enough to detect weather lines
+    // and circles match. If we were to add more complicated curves, this might
+    // need to change.
+    let sample_count = 3;
+    let step = 1.0 / (sample_count as f64 - 1.0);
+
+    let mut distances = Vec::new();
+    for i in 0..sample_count {
+        let percent = i as f64 * step;
+        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
+        distances.push(sample1.distance_to(&sample2))
+    }
+    distances.into_iter()
 }
 
 #[cfg(test)]
