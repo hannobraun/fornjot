@@ -10,9 +10,9 @@
 //! them for various objects that have the information to answer the query.
 
 mod all_edges_with_surface;
-mod bounding_vertices_of_edge;
+mod bounding_vertices_of_half_edge;
 
 pub use self::{
     all_edges_with_surface::AllEdgesWithSurface,
-    bounding_vertices_of_edge::BoundingVerticesOfHalfEdge,
+    bounding_vertices_of_half_edge::BoundingVerticesOfHalfEdge,
 };
