@@ -49,7 +49,7 @@ pub enum ShellValidationError {
         Edge 1: {0:#?}\n\
         Edge 2: {1:#?}"
     )]
-    CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
+    CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
 
     /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
     #[error("Shell has mixed face orientations")]
@@ -264,7 +264,7 @@ impl ShellValidationError {
                 .all(|d| d < config.distinct_min_distance)
                 {
                     errors.push(
-                        Self::CoincidentEdgesNotIdentical(
+                        Self::CoincidentHalfEdgesAreNotSiblings(
                             half_edge_a.clone(),
                             half_edge_b.clone(),
                         )
@@ -434,7 +434,7 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
-                ShellValidationError::CoincidentEdgesNotIdentical(..)
+                ShellValidationError::CoincidentHalfEdgesAreNotSiblings(..)
             )
         );
 
