@@ -20,7 +20,6 @@ impl Validate for Shell {
         ShellValidationError::check_curve_coordinates(self, config, errors);
         ShellValidationError::check_half_edge_pairs(self, errors);
         ShellValidationError::check_half_edge_coincidence(self, config, errors);
-        ShellValidationError::check_same_orientation(self, errors);
     }
 }
 
@@ -42,75 +41,14 @@ pub enum ShellValidationError {
         half_edge: Handle<HalfEdge>,
     },
 
-    /// [`Shell`] contains edges that are coincident, but not identical
+    /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
-        "`Shell` contains `Edge`s that are coincident but refer to different \
-        `Curve`s\n\
-        Edge 1: {0:#?}\n\
-        Edge 2: {1:#?}"
+        "`Shell` contains `HalfEdge`s that are coincident but are not \
+        siblings\n\
+        Half-edge 1: {0:#?}\n\
+        Half-edge 2: {1:#?}"
     )]
-    CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
-
-    /// [`Shell`] contains edges that are identical, but do not coincide
-    #[error(
-        "Shell contains `Edge`s that are identical but do not coincide\n\
-        Edge 1: {half_edge_a:#?}\n\
-        Surface for edge 1: {surface_a:#?}\n\
-        Edge 2: {half_edge_b:#?}\n\
-        Surface for edge 2: {surface_b:#?}"
-    )]
-    IdenticalEdgesNotCoincident {
-        /// The first edge
-        half_edge_a: Handle<HalfEdge>,
-
-        /// The surface that the first edge is on
-        surface_a: Handle<Surface>,
-
-        /// The second edge
-        half_edge_b: Handle<HalfEdge>,
-
-        /// The surface that the second edge is on
-        surface_b: Handle<Surface>,
-    },
-
-    /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
-    #[error("Shell has mixed face orientations")]
-    MixedOrientations,
-}
-
-/// Sample two edges at various (currently 3) points in 3D along them.
-///
-/// Returns an [`Iterator`] of the distance at each sample.
-fn distances(
-    edge_a: Handle<HalfEdge>,
-    surface_a: Handle<Surface>,
-    edge_b: Handle<HalfEdge>,
-    surface_b: Handle<Surface>,
-) -> impl Iterator<Item = Scalar> {
-    fn sample(
-        percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
-    ) -> Point<3> {
-        let [start, end] = edge.boundary().inner;
-        let path_coords = start + (end - start) * percent;
-        let surface_coords = edge.path().point_from_path_coords(path_coords);
-        surface.point_from_surface_coords(surface_coords)
-    }
-
-    // Three samples (start, middle, end), are enough to detect weather lines
-    // and circles match. If we were to add more complicated curves, this might
-    // need to change.
-    let sample_count = 3;
-    let step = 1.0 / (sample_count as f64 - 1.0);
-
-    let mut distances = Vec::new();
-    for i in 0..sample_count {
-        let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
-        distances.push(sample1.distance_to(&sample2))
-    }
-    distances.into_iter()
+    CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
 }
 
 impl ShellValidationError {
@@ -225,22 +163,31 @@ impl ShellValidationError {
                     let key_reversed =
                         (curve, boundary.reverse(), vertices.reverse());
 
-                    let sibling_not_seen_yet =
-                        unmatched_half_edges.remove(&key_reversed).is_none();
-
-                    if sibling_not_seen_yet {
-                        unmatched_half_edges.insert(key, half_edge.clone());
+                    match unmatched_half_edges.remove(&key_reversed) {
+                        Some(sibling) => {
+                            // This must be the sibling of the half-edge we're
+                            // currently looking at. Let's make sure the logic
+                            // we use here to determine that matches the
+                            // "official" definition.
+                            assert!(shell.are_siblings(half_edge, sibling));
+                        }
+                        None => {
+                            // If this half-edge has a sibling, we haven't seen
+                            // it yet. Let's store this half-edge then, in case
+                            // we come across the sibling later.
+                            unmatched_half_edges.insert(key, half_edge);
+                        }
                     }
                 }
             }
         }
 
-        for half_edge in unmatched_half_edges.into_values() {
+        for half_edge in unmatched_half_edges.into_values().cloned() {
             errors.push(Self::HalfEdgeHasNoSibling { half_edge }.into());
         }
     }
 
-    /// Check that identical half-edges are coincident, non-identical are not
+    /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
         config: &ValidationConfig,
@@ -252,116 +199,37 @@ impl ShellValidationError {
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for (edge_a, surface_a) in &edges_and_surfaces {
-            for (edge_b, surface_b) in &edges_and_surfaces {
-                // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
+        for (half_edge_a, surface_a) in &edges_and_surfaces {
+            for (half_edge_b, surface_b) in &edges_and_surfaces {
+                // No need to check a half-edge against itself.
+                if half_edge_a.id() == half_edge_b.id() {
                     continue;
                 }
 
-                let identical = {
-                    let on_same_curve =
-                        edge_a.curve().id() == edge_b.curve().id();
-
-                    let have_same_boundary = {
-                        let bounding_vertices_of = |edge| {
-                            shell
-                                .bounding_vertices_of_half_edge(edge)
-                                .expect("Expected edge to be part of shell")
-                                .normalize()
-                        };
-
-                        bounding_vertices_of(edge_a)
-                            == bounding_vertices_of(edge_b)
-                    };
-
-                    on_same_curve && have_same_boundary
-                };
-
-                match identical {
-                    true => {
-                        // All points on identical curves should be within
-                        // `identical_max_distance`, so we shouldn't have any
-                        // distances greater than that.
-                        if distances(
-                            edge_a.clone(),
-                            surface_a.clone(),
-                            edge_b.clone(),
-                            surface_b.clone(),
-                        )
-                        .any(|d| d > config.identical_max_distance)
-                        {
-                            errors.push(
-                                Self::IdenticalEdgesNotCoincident {
-                                    half_edge_a: edge_a.clone(),
-                                    surface_a: surface_a.clone(),
-                                    half_edge_b: edge_b.clone(),
-                                    surface_b: surface_b.clone(),
-                                }
-                                .into(),
-                            )
-                        }
-                    }
-                    false => {
-                        // If all points on distinct curves are within
-                        // `distinct_min_distance`, that's a problem.
-                        if distances(
-                            edge_a.clone(),
-                            surface_a.clone(),
-                            edge_b.clone(),
-                            surface_b.clone(),
-                        )
-                        .all(|d| d < config.distinct_min_distance)
-                        {
-                            errors.push(
-                                Self::CoincidentEdgesNotIdentical(
-                                    edge_a.clone(),
-                                    edge_b.clone(),
-                                )
-                                .into(),
-                            )
-                        }
-                    }
+                if shell.are_siblings(half_edge_a, half_edge_b) {
+                    // If the half-edges are siblings, they are allowed to be
+                    // coincident. Must be, in fact. There's another validation
+                    // check that takes care of that.
+                    continue;
                 }
-            }
-        }
-    }
 
-    fn check_same_orientation(
-        shell: &Shell,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let mut edges_by_coincidence = BTreeMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for edge in cycle.half_edges() {
-                    let curve = HandleWrapper::from(edge.curve().clone());
-                    let boundary = cycle
-                        .bounding_vertices_of_half_edge(edge)
-                        .expect(
-                            "Just got edge from this cycle; must be part of it",
+                // If all points on distinct curves are within
+                // `distinct_min_distance`, that's a problem.
+                if distances(
+                    half_edge_a.clone(),
+                    surface_a.clone(),
+                    half_edge_b.clone(),
+                    surface_b.clone(),
+                )
+                .all(|d| d < config.distinct_min_distance)
+                {
+                    errors.push(
+                        Self::CoincidentHalfEdgesAreNotSiblings(
+                            half_edge_a.clone(),
+                            half_edge_b.clone(),
                         )
-                        .normalize();
-
-                    edges_by_coincidence
-                        .entry((curve, boundary))
-                        .or_insert(Vec::new())
-                        .push(edge.clone());
-                }
-            }
-        }
-
-        for (_, edges) in edges_by_coincidence {
-            let mut edges = edges.into_iter();
-
-            // We should have exactly two coincident edges here. This is
-            // verified in a different validation check, so let's just silently
-            // do nothing here, if that isn't the case.
-            if let (Some(a), Some(b)) = (edges.next(), edges.next()) {
-                if a.boundary().reverse() != b.boundary() {
-                    errors.push(Self::MixedOrientations.into());
-                    return;
+                        .into(),
+                    )
                 }
             }
         }
@@ -378,14 +246,49 @@ pub struct CurveCoordinateSystemMismatch {
     pub distance: Scalar,
 }
 
+/// Sample two edges at various (currently 3) points in 3D along them.
+///
+/// Returns an [`Iterator`] of the distance at each sample.
+fn distances(
+    edge_a: Handle<HalfEdge>,
+    surface_a: Handle<Surface>,
+    edge_b: Handle<HalfEdge>,
+    surface_b: Handle<Surface>,
+) -> impl Iterator<Item = Scalar> {
+    fn sample(
+        percent: f64,
+        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
+    ) -> Point<3> {
+        let [start, end] = edge.boundary().inner;
+        let path_coords = start + (end - start) * percent;
+        let surface_coords = edge.path().point_from_path_coords(path_coords);
+        surface.point_from_surface_coords(surface_coords)
+    }
+
+    // Three samples (start, middle, end), are enough to detect weather lines
+    // and circles match. If we were to add more complicated curves, this might
+    // need to change.
+    let sample_count = 3;
+    let step = 1.0 / (sample_count as f64 - 1.0);
+
+    let mut distances = Vec::new();
+    for i in 0..sample_count {
+        let percent = i as f64 * step;
+        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
+        distances.push(sample1.distance_to(&sample2))
+    }
+    distances.into_iter()
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
         assert_contains_err,
         objects::{Curve, Shell},
         operations::{
-            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
-            UpdateHalfEdge, UpdateRegion, UpdateShell,
+            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
+            UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -454,7 +357,7 @@ mod tests {
     }
 
     #[test]
-    fn coincident_edges_not_identical() -> anyhow::Result<()> {
+    fn coincident_half_edges_are_not_siblings() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
@@ -486,29 +389,8 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
-                ShellValidationError::CoincidentEdgesNotIdentical(..)
+                ShellValidationError::CoincidentHalfEdgesAreNotSiblings(..)
             )
-        );
-
-        Ok(())
-    }
-
-    #[test]
-    fn mixed_orientations() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
-        );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            face.reverse(&mut services).insert(&mut services)
-        });
-
-        valid.shell.validate_and_return_first_error()?;
-        assert_contains_err!(
-            invalid,
-            ValidationError::Shell(ShellValidationError::MixedOrientations)
         );
 
         Ok(())
