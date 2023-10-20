@@ -261,16 +261,16 @@ impl ShellValidationError {
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
         // data-structure like an octree.
-        for (edge_a, surface_a) in &edges_and_surfaces {
+        for (half_edge_a, surface_a) in &edges_and_surfaces {
             for (edge_b, surface_b) in &edges_and_surfaces {
                 // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
+                if half_edge_a.id() == edge_b.id() {
                     continue;
                 }
 
                 let identical = {
                     let on_same_curve =
-                        edge_a.curve().id() == edge_b.curve().id();
+                        half_edge_a.curve().id() == edge_b.curve().id();
 
                     let have_same_boundary = {
                         let bounding_vertices_of = |edge| {
@@ -280,7 +280,7 @@ impl ShellValidationError {
                                 .normalize()
                         };
 
-                        bounding_vertices_of(edge_a)
+                        bounding_vertices_of(half_edge_a)
                             == bounding_vertices_of(edge_b)
                     };
 
@@ -293,7 +293,7 @@ impl ShellValidationError {
                         // `identical_max_distance`, so we shouldn't have any
                         // distances greater than that.
                         if distances(
-                            edge_a.clone(),
+                            half_edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
                             surface_b.clone(),
@@ -302,7 +302,7 @@ impl ShellValidationError {
                         {
                             errors.push(
                                 Self::IdenticalEdgesNotCoincident {
-                                    half_edge_a: edge_a.clone(),
+                                    half_edge_a: half_edge_a.clone(),
                                     surface_a: surface_a.clone(),
                                     half_edge_b: edge_b.clone(),
                                     surface_b: surface_b.clone(),
@@ -315,7 +315,7 @@ impl ShellValidationError {
                         // If all points on distinct curves are within
                         // `distinct_min_distance`, that's a problem.
                         if distances(
-                            edge_a.clone(),
+                            half_edge_a.clone(),
                             surface_a.clone(),
                             edge_b.clone(),
                             surface_b.clone(),
@@ -324,7 +324,7 @@ impl ShellValidationError {
                         {
                             errors.push(
                                 Self::CoincidentEdgesNotIdentical(
-                                    edge_a.clone(),
+                                    half_edge_a.clone(),
                                     edge_b.clone(),
                                 )
                                 .into(),
