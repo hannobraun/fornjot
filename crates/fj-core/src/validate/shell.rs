@@ -467,7 +467,7 @@ mod tests {
     }
 
     #[test]
-    fn shell_not_watertight() -> anyhow::Result<()> {
+    fn not_watertight() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
@@ -485,7 +485,7 @@ mod tests {
         Ok(())
     }
     #[test]
-    fn shell_mixed_orientations() -> anyhow::Result<()> {
+    fn mixed_orientations() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid = Shell::tetrahedron(
