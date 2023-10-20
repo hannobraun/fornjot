@@ -51,28 +51,6 @@ pub enum ShellValidationError {
     )]
     CoincidentEdgesNotIdentical(Handle<HalfEdge>, Handle<HalfEdge>),
 
-    /// [`Shell`] contains edges that are identical, but do not coincide
-    #[error(
-        "Shell contains `Edge`s that are identical but do not coincide\n\
-        Edge 1: {half_edge_a:#?}\n\
-        Surface for edge 1: {surface_a:#?}\n\
-        Edge 2: {half_edge_b:#?}\n\
-        Surface for edge 2: {surface_b:#?}"
-    )]
-    IdenticalEdgesNotCoincident {
-        /// The first edge
-        half_edge_a: Handle<HalfEdge>,
-
-        /// The surface that the first edge is on
-        surface_a: Handle<Surface>,
-
-        /// The second edge
-        half_edge_b: Handle<HalfEdge>,
-
-        /// The surface that the second edge is on
-        surface_b: Handle<Surface>,
-    },
-
     /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
     #[error("Shell has mixed face orientations")]
     MixedOrientations,
