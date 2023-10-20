@@ -225,11 +225,20 @@ impl ShellValidationError {
                     let key_reversed =
                         (curve, boundary.reverse(), vertices.reverse());
 
-                    let sibling_not_seen_yet =
-                        unmatched_half_edges.remove(&key_reversed).is_none();
-
-                    if sibling_not_seen_yet {
-                        unmatched_half_edges.insert(key, half_edge.clone());
+                    match unmatched_half_edges.remove(&key_reversed) {
+                        Some(sibling) => {
+                            // This must be the sibling of the half-edge we're
+                            // currently looking at. Let's make sure the logic
+                            // we use here to determine that matches the
+                            // "official" definition.
+                            assert!(shell.are_siblings(half_edge, &sibling));
+                        }
+                        None => {
+                            // If this half-edge has a sibling, we haven't seen
+                            // it yet. Let's store this half-edge then, in case
+                            // we come across the sibling later.
+                            unmatched_half_edges.insert(key, half_edge.clone());
+                        }
                     }
                 }
             }
