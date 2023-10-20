@@ -5,7 +5,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::{CurveBoundaries, SurfaceGeometry},
     objects::{HalfEdge, Shell, Surface},
-    queries::{AllEdgesWithSurface, BoundingVerticesOfEdge},
+    queries::{AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge},
     storage::{Handle, HandleWrapper},
 };
 
@@ -118,7 +118,7 @@ impl ShellValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let mut edges_and_surfaces = Vec::new();
-        shell.all_edges_with_surface(&mut edges_and_surfaces);
+        shell.all_half_edges_with_surface(&mut edges_and_surfaces);
 
         for (edge_a, surface_a) in &edges_and_surfaces {
             for (edge_b, surface_b) in &edges_and_surfaces {
@@ -211,7 +211,7 @@ impl ShellValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let mut edges_and_surfaces = Vec::new();
-        shell.all_edges_with_surface(&mut edges_and_surfaces);
+        shell.all_half_edges_with_surface(&mut edges_and_surfaces);
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
@@ -230,7 +230,7 @@ impl ShellValidationError {
                     let have_same_boundary = {
                         let bounding_vertices_of = |edge| {
                             shell
-                                .bounding_vertices_of_edge(edge)
+                                .bounding_vertices_of_half_edge(edge)
                                 .expect("Expected edge to be part of shell")
                                 .normalize()
                         };
@@ -332,7 +332,7 @@ impl ShellValidationError {
                 for edge in cycle.half_edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let boundary = cycle
-                        .bounding_vertices_of_edge(edge)
+                        .bounding_vertices_of_half_edge(edge)
                         .expect(
                             "Just got edge from this cycle; must be part of it",
                         )
