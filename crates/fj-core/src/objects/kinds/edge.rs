@@ -6,12 +6,33 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-/// A directed edge, defined in a surface's 2D space
+/// # A directed half-edge, defined in a surface's 2D space
 ///
-/// When multiple faces, which are bound by edges, are combined to form a solid,
-/// the `Edge`s that bound the face on the surface are then coincident with the
-/// `Edge`s of other faces, where those faces touch. Such coincident `Edge`s
-///  must always refer to the same `Curve`.
+/// ## Structure
+///
+/// A `HalfEdge` is defined by the [`Curve`] it is on, its boundary on the
+/// curve, and the [`Vertex`] instances that bound it on the curve. To keep the
+/// data structures simple (by avoiding redundancy), each `HalfEdge` only refers
+/// to its start vertex. The vertex where it ends is referred to by the next
+/// `HalfEdge` in the [`Cycle`] that the `HalfEdge` is a part of.
+///
+///
+/// ## Validity
+///
+/// A valid `HalfEdge` must have a non-zero length, meaning its bounding
+/// vertices must not be coincident.
+///
+/// In a valid [`Shell`], `HalfEdge`s form coincident pairs, where the faces of
+/// the shell touch. The other `HalfEdge` in such a pair is called the sibling.
+///
+/// A `HalfEdge` and its sibling are equal but opposite. Specifically this means
+/// that both refer to the same curve; that the sibling has the same, but
+/// inverted, boundary; and that both are bound by the same vertices, though
+/// their start vertices are different.
+///
+///
+/// [`Cycle`]: crate::objects::Cycle
+/// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
     path: SurfacePath,
