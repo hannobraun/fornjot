@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundaries, SurfaceGeometry},
+    geometry::SurfaceGeometry,
     objects::{HalfEdge, Shell, Surface},
     queries::{AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge},
     storage::{Handle, HandleWrapper},
@@ -20,7 +20,6 @@ impl Validate for Shell {
         ShellValidationError::check_curve_coordinates(self, config, errors);
         ShellValidationError::check_half_edge_pairs(self, errors);
         ShellValidationError::check_half_edge_coincidence(self, config, errors);
-        ShellValidationError::check_watertight(self, config, errors);
         ShellValidationError::check_same_orientation(self, errors);
     }
 }
@@ -73,10 +72,6 @@ pub enum ShellValidationError {
         /// The surface that the second edge is on
         surface_b: Handle<Surface>,
     },
-
-    /// [`Shell`] is not watertight
-    #[error("Shell is not watertight")]
-    NotWatertight,
 
     /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
     #[error("Shell has mixed face orientations")]
@@ -332,36 +327,6 @@ impl ShellValidationError {
         }
     }
 
-    fn check_watertight(
-        shell: &Shell,
-        _: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let mut unmatched_edges_by_curve = BTreeMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for edge in cycle.half_edges() {
-                    let curve = HandleWrapper::from(edge.curve().clone());
-
-                    let unmatched_edges = unmatched_edges_by_curve
-                        .entry(curve)
-                        .or_insert_with(CurveBoundaries::empty);
-
-                    *unmatched_edges = unmatched_edges
-                        .clone()
-                        .symmetric_difference((edge.boundary(), ()));
-                }
-            }
-        }
-
-        for unmatched_edges in unmatched_edges_by_curve.into_values() {
-            if !unmatched_edges.is_empty() {
-                errors.push(Self::NotWatertight.into());
-            }
-        }
-    }
-
     fn check_same_orientation(
         shell: &Shell,
         errors: &mut Vec<ValidationError>,
@@ -523,25 +488,6 @@ mod tests {
             ValidationError::Shell(
                 ShellValidationError::CoincidentEdgesNotIdentical(..)
             )
-        );
-
-        Ok(())
-    }
-
-    #[test]
-    fn not_watertight() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
-        );
-        let invalid = valid.shell.remove_face(&valid.abc.face);
-
-        valid.shell.validate_and_return_first_error()?;
-        assert_contains_err!(
-            invalid,
-            ValidationError::Shell(ShellValidationError::NotWatertight)
         );
 
         Ok(())
