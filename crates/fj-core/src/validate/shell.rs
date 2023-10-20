@@ -230,7 +230,7 @@ impl ShellValidationError {
                     let have_same_boundary = {
                         let bounding_vertices_of = |edge| {
                             shell
-                                .bounding_vertices_of_edge(edge)
+                                .bounding_vertices_of_half_edge(edge)
                                 .expect("Expected edge to be part of shell")
                                 .normalize()
                         };
@@ -332,7 +332,7 @@ impl ShellValidationError {
                 for edge in cycle.half_edges() {
                     let curve = HandleWrapper::from(edge.curve().clone());
                     let boundary = cycle
-                        .bounding_vertices_of_edge(edge)
+                        .bounding_vertices_of_half_edge(edge)
                         .expect(
                             "Just got edge from this cycle; must be part of it",
                         )

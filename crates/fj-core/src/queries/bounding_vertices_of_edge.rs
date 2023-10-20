@@ -10,14 +10,14 @@ pub trait BoundingVerticesOfEdge {
     ///
     /// Returns `None`, if the provided edge is not part of the object this
     /// method is called on.
-    fn bounding_vertices_of_edge(
+    fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
     ) -> Option<CurveBoundary<Vertex>>;
 }
 
 impl BoundingVerticesOfEdge for Cycle {
-    fn bounding_vertices_of_edge(
+    fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
     ) -> Option<CurveBoundary<Vertex>> {
@@ -29,12 +29,12 @@ impl BoundingVerticesOfEdge for Cycle {
 }
 
 impl BoundingVerticesOfEdge for Region {
-    fn bounding_vertices_of_edge(
+    fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
     ) -> Option<CurveBoundary<Vertex>> {
         for cycle in self.all_cycles() {
-            if let Some(vertices) = cycle.bounding_vertices_of_edge(edge) {
+            if let Some(vertices) = cycle.bounding_vertices_of_half_edge(edge) {
                 return Some(vertices);
             }
         }
@@ -44,21 +44,21 @@ impl BoundingVerticesOfEdge for Region {
 }
 
 impl BoundingVerticesOfEdge for Face {
-    fn bounding_vertices_of_edge(
+    fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
     ) -> Option<CurveBoundary<Vertex>> {
-        self.region().bounding_vertices_of_edge(edge)
+        self.region().bounding_vertices_of_half_edge(edge)
     }
 }
 
 impl BoundingVerticesOfEdge for Shell {
-    fn bounding_vertices_of_edge(
+    fn bounding_vertices_of_half_edge(
         &self,
         edge: &Handle<HalfEdge>,
     ) -> Option<CurveBoundary<Vertex>> {
         for face in self.faces() {
-            if let Some(vertices) = face.bounding_vertices_of_edge(edge) {
+            if let Some(vertices) = face.bounding_vertices_of_half_edge(edge) {
                 return Some(vertices);
             }
         }
