@@ -9,10 +9,10 @@
 //! This module provides traits express such non-trivial queries, and implements
 //! them for various objects that have the information to answer the query.
 
-mod all_edges_with_surface;
+mod all_half_edges_with_surface;
 mod bounding_vertices_of_half_edge;
 
 pub use self::{
-    all_edges_with_surface::AllHalfEdgesWithSurface,
+    all_half_edges_with_surface::AllHalfEdgesWithSurface,
     bounding_vertices_of_half_edge::BoundingVerticesOfHalfEdge,
 };
