@@ -41,7 +41,7 @@ pub enum ShellValidationError {
         half_edge: Handle<HalfEdge>,
     },
 
-    /// [`Shell`] contains edges that are coincident, but not identical
+    /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
         "`Shell` contains `Edge`s that are coincident but refer to different \
         `Curve`s\n\
@@ -222,7 +222,7 @@ impl ShellValidationError {
         }
     }
 
-    /// Check that identical half-edges are coincident, non-identical are not
+    /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
         config: &ValidationConfig,
