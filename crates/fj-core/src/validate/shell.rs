@@ -231,20 +231,20 @@ impl ShellValidationError {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(shell.are_siblings(half_edge, &sibling));
+                            assert!(shell.are_siblings(half_edge, sibling));
                         }
                         None => {
                             // If this half-edge has a sibling, we haven't seen
                             // it yet. Let's store this half-edge then, in case
                             // we come across the sibling later.
-                            unmatched_half_edges.insert(key, half_edge.clone());
+                            unmatched_half_edges.insert(key, half_edge);
                         }
                     }
                 }
             }
         }
 
-        for half_edge in unmatched_half_edges.into_values() {
+        for half_edge in unmatched_half_edges.into_values().cloned() {
             errors.push(Self::HalfEdgeHasNoSibling { half_edge }.into());
         }
     }
