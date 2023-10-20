@@ -4,11 +4,11 @@ use crate::{
     storage::Handle,
 };
 
-/// Determine the bounding vertices of an edge
+/// Determine the bounding vertices of a half-edge
 pub trait BoundingVerticesOfHalfEdge {
-    /// Determine the bounding vertices of an edge
+    /// Determine the bounding vertices of a half-edge
     ///
-    /// Returns `None`, if the provided edge is not part of the object this
+    /// Returns `None`, if the provided half-edge is not part of the object this
     /// method is called on.
     fn bounding_vertices_of_half_edge(
         &self,
