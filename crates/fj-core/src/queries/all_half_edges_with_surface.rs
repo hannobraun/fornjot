@@ -3,9 +3,9 @@ use crate::{
     storage::Handle,
 };
 
-/// Access all edges referenced by the object and the surface they're on
+/// Access all half-edges referenced by an object, and the surface they're on
 pub trait AllHalfEdgesWithSurface {
-    /// Access all edges referenced by the object and the surface they're on
+    /// Access all half-edges of the object, and the surface they're on
     fn all_half_edges_with_surface(
         &self,
         result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
