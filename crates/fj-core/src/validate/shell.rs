@@ -43,10 +43,10 @@ pub enum ShellValidationError {
 
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
-        "`Shell` contains `Edge`s that are coincident but refer to different \
-        `Curve`s\n\
-        Edge 1: {0:#?}\n\
-        Edge 2: {1:#?}"
+        "`Shell` contains `HalfEdge`s that are coincident but are not \
+        siblings\n\
+        Half-edge 1: {0:#?}\n\
+        Half-edge 2: {1:#?}"
     )]
     CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
 }
