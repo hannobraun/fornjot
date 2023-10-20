@@ -268,69 +268,30 @@ impl ShellValidationError {
                     continue;
                 }
 
-                let identical = {
-                    let on_same_curve =
-                        half_edge_a.curve().id() == half_edge_b.curve().id();
+                if shell.are_siblings(half_edge_a, half_edge_b) {
+                    // If the half-edges are siblings, they are allowed to be
+                    // coincident. Must be, in fact. There's another validation
+                    // check that takes care of that.
+                    continue;
+                }
 
-                    let have_same_boundary = {
-                        let bounding_vertices_of = |edge| {
-                            shell
-                                .bounding_vertices_of_half_edge(edge)
-                                .expect("Expected edge to be part of shell")
-                                .normalize()
-                        };
-
-                        bounding_vertices_of(half_edge_a)
-                            == bounding_vertices_of(half_edge_b)
-                    };
-
-                    on_same_curve && have_same_boundary
-                };
-
-                match identical {
-                    true => {
-                        // All points on identical curves should be within
-                        // `identical_max_distance`, so we shouldn't have any
-                        // distances greater than that.
-                        if distances(
+                // If all points on distinct curves are within
+                // `distinct_min_distance`, that's a problem.
+                if distances(
+                    half_edge_a.clone(),
+                    surface_a.clone(),
+                    half_edge_b.clone(),
+                    surface_b.clone(),
+                )
+                .all(|d| d < config.distinct_min_distance)
+                {
+                    errors.push(
+                        Self::CoincidentEdgesNotIdentical(
                             half_edge_a.clone(),
-                            surface_a.clone(),
                             half_edge_b.clone(),
-                            surface_b.clone(),
                         )
-                        .any(|d| d > config.identical_max_distance)
-                        {
-                            errors.push(
-                                Self::IdenticalEdgesNotCoincident {
-                                    half_edge_a: half_edge_a.clone(),
-                                    surface_a: surface_a.clone(),
-                                    half_edge_b: half_edge_b.clone(),
-                                    surface_b: surface_b.clone(),
-                                }
-                                .into(),
-                            )
-                        }
-                    }
-                    false => {
-                        // If all points on distinct curves are within
-                        // `distinct_min_distance`, that's a problem.
-                        if distances(
-                            half_edge_a.clone(),
-                            surface_a.clone(),
-                            half_edge_b.clone(),
-                            surface_b.clone(),
-                        )
-                        .all(|d| d < config.distinct_min_distance)
-                        {
-                            errors.push(
-                                Self::CoincidentEdgesNotIdentical(
-                                    half_edge_a.clone(),
-                                    half_edge_b.clone(),
-                                )
-                                .into(),
-                            )
-                        }
-                    }
+                        .into(),
+                    )
                 }
             }
         }
