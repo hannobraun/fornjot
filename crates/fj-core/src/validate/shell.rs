@@ -20,7 +20,6 @@ impl Validate for Shell {
         ShellValidationError::check_curve_coordinates(self, config, errors);
         ShellValidationError::check_half_edge_pairs(self, errors);
         ShellValidationError::check_half_edge_coincidence(self, config, errors);
-        ShellValidationError::check_same_orientation(self, errors);
     }
 }
 
@@ -50,10 +49,6 @@ pub enum ShellValidationError {
         Edge 2: {1:#?}"
     )]
     CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
-
-    /// [`Shell`] contains faces of mixed orientation (inwards and outwards)
-    #[error("Shell has mixed face orientations")]
-    MixedOrientations,
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -274,46 +269,6 @@ impl ShellValidationError {
             }
         }
     }
-
-    fn check_same_orientation(
-        shell: &Shell,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let mut edges_by_coincidence = BTreeMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for edge in cycle.half_edges() {
-                    let curve = HandleWrapper::from(edge.curve().clone());
-                    let boundary = cycle
-                        .bounding_vertices_of_half_edge(edge)
-                        .expect(
-                            "Just got edge from this cycle; must be part of it",
-                        )
-                        .normalize();
-
-                    edges_by_coincidence
-                        .entry((curve, boundary))
-                        .or_insert(Vec::new())
-                        .push(edge.clone());
-                }
-            }
-        }
-
-        for (_, edges) in edges_by_coincidence {
-            let mut edges = edges.into_iter();
-
-            // We should have exactly two coincident edges here. This is
-            // verified in a different validation check, so let's just silently
-            // do nothing here, if that isn't the case.
-            if let (Some(a), Some(b)) = (edges.next(), edges.next()) {
-                if a.boundary().reverse() != b.boundary() {
-                    errors.push(Self::MixedOrientations.into());
-                    return;
-                }
-            }
-        }
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -332,8 +287,8 @@ mod tests {
         assert_contains_err,
         objects::{Curve, Shell},
         operations::{
-            BuildShell, Insert, Reverse, UpdateCycle, UpdateFace,
-            UpdateHalfEdge, UpdateRegion, UpdateShell,
+            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
+            UpdateRegion, UpdateShell,
         },
         services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
@@ -436,27 +391,6 @@ mod tests {
             ValidationError::Shell(
                 ShellValidationError::CoincidentHalfEdgesAreNotSiblings(..)
             )
-        );
-
-        Ok(())
-    }
-
-    #[test]
-    fn mixed_orientations() -> anyhow::Result<()> {
-        let mut services = Services::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
-        );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            face.reverse(&mut services).insert(&mut services)
-        });
-
-        valid.shell.validate_and_return_first_error()?;
-        assert_contains_err!(
-            invalid,
-            ValidationError::Shell(ShellValidationError::MixedOrientations)
         );
 
         Ok(())
