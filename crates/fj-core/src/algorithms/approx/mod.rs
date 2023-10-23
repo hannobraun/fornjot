@@ -1,6 +1,5 @@
 //! Approximation of objects
 
-pub mod curve;
 pub mod cycle;
 pub mod edge;
 pub mod face;
