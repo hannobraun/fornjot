@@ -140,8 +140,7 @@ pub struct CurveApproxCache {
 }
 
 impl CurveApproxCache {
-    /// Get an approximated curve from the cache
-    pub fn get(
+    fn get(
         &self,
         handle: &Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
@@ -158,8 +157,7 @@ impl CurveApproxCache {
         None
     }
 
-    /// Insert an approximated curve into the cache
-    pub fn insert(
+    fn insert(
         &mut self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
