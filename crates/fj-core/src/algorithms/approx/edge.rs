@@ -5,17 +5,18 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to deal with duplicate vertices.
 
-use std::collections::BTreeMap;
-
 use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
     objects::{Curve, HalfEdge, Surface},
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
 };
 
-use super::{vertex::VertexApproxCache, Approx, ApproxPoint, Tolerance};
+use super::{
+    curve::CurveApproxCache, vertex::VertexApproxCache, Approx, ApproxPoint,
+    Tolerance,
+};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -170,10 +171,7 @@ fn approx_curve(
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position: VertexApproxCache,
-    curve_approx: BTreeMap<
-        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
-        Vec<ApproxPoint<1>>,
-    >,
+    curve_approx: CurveApproxCache,
 }
 
 impl EdgeApproxCache {
@@ -182,22 +180,7 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<Vec<ApproxPoint<1>>> {
-        let curve = HandleWrapper::from(handle);
-
-        if let Some(approx) = self.curve_approx.get(&(curve.clone(), boundary))
-        {
-            return Some(approx.clone());
-        }
-        if let Some(approx) =
-            self.curve_approx.get(&(curve, boundary.reverse()))
-        {
-            let mut approx = approx.clone();
-            approx.reverse();
-
-            return Some(approx);
-        }
-
-        None
+        self.curve_approx.get(&handle, boundary)
     }
 
     fn insert_curve_approx(
@@ -206,8 +189,7 @@ impl EdgeApproxCache {
         boundary: CurveBoundary<Point<1>>,
         approx: Vec<ApproxPoint<1>>,
     ) {
-        let curve = HandleWrapper::from(handle);
-        self.curve_approx.insert((curve, boundary), approx);
+        self.curve_approx.insert(handle, boundary, approx);
     }
 }
 
