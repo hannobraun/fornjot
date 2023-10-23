@@ -19,6 +19,13 @@ pub struct CurveApprox {
     pub points: Vec<ApproxPoint<1>>,
 }
 
+impl CurveApprox {
+    fn reverse(mut self) -> Self {
+        self.points.reverse();
+        self
+    }
+}
+
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
@@ -39,10 +46,7 @@ impl CurveApproxCache {
             return Some(approx.clone());
         }
         if let Some(approx) = self.inner.get(&(handle, boundary.reverse())) {
-            let mut approx = approx.clone();
-            approx.points.reverse();
-
-            return Some(approx);
+            return Some(approx.clone().reverse());
         }
 
         None
