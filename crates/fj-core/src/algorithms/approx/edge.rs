@@ -170,7 +170,7 @@ fn approx_curve(
 /// Cache for edge approximations
 #[derive(Default)]
 pub struct EdgeApproxCache {
-    start_position_approx: VertexApproxCache,
+    start_position: VertexApproxCache,
     curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         Vec<ApproxPoint<1>>,
@@ -182,7 +182,7 @@ impl EdgeApproxCache {
         &self,
         handle: &Handle<Vertex>,
     ) -> Option<Point<3>> {
-        self.start_position_approx.get(handle)
+        self.start_position.get(handle)
     }
 
     fn insert_start_position_approx(
@@ -190,7 +190,7 @@ impl EdgeApproxCache {
         handle: &Handle<Vertex>,
         position: Point<3>,
     ) -> Point<3> {
-        self.start_position_approx.insert(handle.clone(), position)
+        self.start_position.insert(handle.clone(), position)
     }
 
     fn get_curve_approx(
