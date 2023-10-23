@@ -53,7 +53,7 @@ impl Approx for (&HalfEdge, &Surface) {
             let approx = match cached {
                 Some(approx) => approx,
                 None => {
-                    let segment = approx_curve(
+                    let approx = approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
@@ -63,10 +63,10 @@ impl Approx for (&HalfEdge, &Surface) {
                     cache.insert_curve_approx(
                         edge.curve().clone(),
                         edge.boundary(),
-                        segment.clone(),
+                        approx.clone(),
                     );
 
-                    segment
+                    approx
                 }
             };
 
