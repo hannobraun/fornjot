@@ -23,7 +23,7 @@ use super::{
 };
 
 impl Approx for (&HalfEdge, &Surface) {
-    type Approximation = EdgeApprox;
+    type Approximation = HalfEdgeApprox;
     type Cache = EdgeApproxCache;
 
     fn approx_with_cache(
@@ -105,13 +105,13 @@ impl Approx for (&HalfEdge, &Surface) {
                 .collect()
         };
 
-        EdgeApprox { first, rest }
+        HalfEdgeApprox { first, rest }
     }
 }
 
 /// An approximation of a [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct EdgeApprox {
+pub struct HalfEdgeApprox {
     /// The point that approximates the first vertex of the edge
     first: ApproxPoint<2>,
 
@@ -119,7 +119,7 @@ pub struct EdgeApprox {
     rest: Vec<ApproxPoint<2>>,
 }
 
-impl EdgeApprox {
+impl HalfEdgeApprox {
     /// Compute the points that approximate the edge
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
