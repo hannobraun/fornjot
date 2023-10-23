@@ -12,6 +12,36 @@ use crate::{
 
 use super::{Approx, ApproxPoint, Tolerance};
 
+impl Approx
+    for (
+        &Handle<Curve>,
+        SurfacePath,
+        &Surface,
+        CurveBoundary<Point<1>>,
+    )
+{
+    type Approximation = CurveApprox;
+    type Cache = CurveApproxCache;
+
+    fn approx_with_cache(
+        self,
+        tolerance: impl Into<Tolerance>,
+        cache: &mut Self::Cache,
+    ) -> Self::Approximation {
+        let (curve, surface_path, surface, boundary) = self;
+
+        match cache.get(curve, boundary) {
+            Some(approx) => approx,
+            None => {
+                let approx =
+                    approx_curve(&surface_path, surface, boundary, tolerance);
+
+                cache.insert(curve.clone(), boundary, approx)
+            }
+        }
+    }
+}
+
 pub(super) fn approx_curve(
     path: &SurfacePath,
     surface: &Surface,

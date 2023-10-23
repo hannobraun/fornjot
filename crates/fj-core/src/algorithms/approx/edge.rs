@@ -8,9 +8,8 @@
 use crate::objects::{HalfEdge, Surface};
 
 use super::{
-    curve::{approx_curve, CurveApproxCache},
-    vertex::VertexApproxCache,
-    Approx, ApproxPoint, Tolerance,
+    curve::CurveApproxCache, vertex::VertexApproxCache, Approx, ApproxPoint,
+    Tolerance,
 };
 
 impl Approx for (&HalfEdge, &Surface) {
@@ -42,26 +41,8 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            let cached =
-                cache.curve.get(&edge.curve().clone(), edge.boundary());
-
-            let approx = match cached {
-                Some(approx) => approx,
-                None => {
-                    let approx = approx_curve(
-                        &edge.path(),
-                        surface,
-                        edge.boundary(),
-                        tolerance,
-                    );
-
-                    cache.curve.insert(
-                        edge.curve().clone(),
-                        edge.boundary(),
-                        approx,
-                    )
-                }
-            };
+            let approx = (edge.curve(), edge.path(), surface, edge.boundary())
+                .approx_with_cache(tolerance, &mut cache.curve);
 
             approx.points.into_iter().map(|point| {
                 let point_surface =
