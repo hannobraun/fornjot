@@ -50,7 +50,7 @@ impl CycleApprox {
         let mut points = Vec::new();
 
         for approx in &self.edges {
-            points.extend(approx.points());
+            points.extend(approx.points.iter().copied());
         }
 
         if let Some(point) = points.first() {

@@ -119,17 +119,6 @@ pub struct HalfEdgeApprox {
     pub points: Vec<ApproxPoint<2>>,
 }
 
-impl HalfEdgeApprox {
-    /// Compute the points that approximate the edge
-    pub fn points(&self) -> Vec<ApproxPoint<2>> {
-        let mut points = Vec::new();
-
-        points.extend(self.points.iter().cloned());
-
-        points
-    }
-}
-
 fn approx_curve(
     path: &SurfacePath,
     surface: &Surface,
