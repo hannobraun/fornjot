@@ -121,7 +121,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 pub enum Error {
     /// Error initializing window
     #[error("Error initializing window")]
-    WindowInit(#[from] window::WindowError),
+    Window(#[from] window::WindowError),
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
