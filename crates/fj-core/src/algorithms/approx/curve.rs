@@ -12,13 +12,18 @@ use crate::{
 
 use super::ApproxPoint;
 
+/// Approximation of [`Curve`], within a specific boundary
+#[derive(Clone)]
+pub struct CurveApprox {
+    /// The points that approximate the curve within the boundary
+    pub points: Vec<ApproxPoint<1>>,
+}
+
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
-    inner: BTreeMap<
-        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
-        Vec<ApproxPoint<1>>,
-    >,
+    inner:
+        BTreeMap<(HandleWrapper<Curve>, CurveBoundary<Point<1>>), CurveApprox>,
 }
 
 impl CurveApproxCache {
@@ -27,7 +32,7 @@ impl CurveApproxCache {
         &self,
         handle: &Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> Option<Vec<ApproxPoint<1>>> {
+    ) -> Option<CurveApprox> {
         let handle = HandleWrapper::from(handle.clone());
 
         if let Some(approx) = self.inner.get(&(handle.clone(), boundary)) {
@@ -35,7 +40,7 @@ impl CurveApproxCache {
         }
         if let Some(approx) = self.inner.get(&(handle, boundary.reverse())) {
             let mut approx = approx.clone();
-            approx.reverse();
+            approx.points.reverse();
 
             return Some(approx);
         }
@@ -48,8 +53,8 @@ impl CurveApproxCache {
         &mut self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-        approx: Vec<ApproxPoint<1>>,
-    ) -> Vec<ApproxPoint<1>> {
+        approx: CurveApprox,
+    ) -> CurveApprox {
         let handle = HandleWrapper::from(handle);
         self.inner
             .insert((handle, boundary), approx.clone())
