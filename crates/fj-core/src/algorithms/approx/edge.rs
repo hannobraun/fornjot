@@ -92,17 +92,12 @@ impl Approx for (&HalfEdge, &Surface) {
                 // immediately, and it will be there on the second iteration.
             };
 
-            segment
-                .points
-                .inner
-                .into_iter()
-                .map(|point| {
-                    let point_surface =
-                        edge.path().point_from_path_coords(point.local_form);
+            segment.points.inner.into_iter().map(|point| {
+                let point_surface =
+                    edge.path().point_from_path_coords(point.local_form);
 
-                    ApproxPoint::new(point_surface, point.global_form)
-                })
-                .collect::<Vec<_>>()
+                ApproxPoint::new(point_surface, point.global_form)
+            })
         };
 
         let mut points = vec![first];
