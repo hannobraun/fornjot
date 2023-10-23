@@ -108,7 +108,7 @@ impl Approx for (&HalfEdge, &Surface) {
         let mut points = vec![first];
         points.extend(rest);
 
-        HalfEdgeApprox { rest: points }
+        HalfEdgeApprox { points }
     }
 }
 
@@ -116,7 +116,7 @@ impl Approx for (&HalfEdge, &Surface) {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdgeApprox {
     /// The approximation of the rest of the edge
-    rest: Vec<ApproxPoint<2>>,
+    points: Vec<ApproxPoint<2>>,
 }
 
 impl HalfEdgeApprox {
@@ -124,7 +124,7 @@ impl HalfEdgeApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        points.extend(self.rest.iter().cloned());
+        points.extend(self.points.iter().cloned());
 
         points
     }
@@ -282,7 +282,7 @@ mod tests {
             let point_surface = edge.start_position();
             ApproxPoint::from_surface_point(point_surface, &surface)
         }];
-        assert_eq!(approx.rest, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -303,7 +303,7 @@ mod tests {
             let point_surface = edge.start_position();
             ApproxPoint::from_surface_point(point_surface, &surface)
         }];
-        assert_eq!(approx.rest, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -339,7 +339,7 @@ mod tests {
                 },
             ),
         );
-        assert_eq!(approx.rest, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -364,6 +364,6 @@ mod tests {
                     ApproxPoint::from_surface_point(point_surface, &surface)
                 }),
         );
-        assert_eq!(approx.rest, expected_approx);
+        assert_eq!(approx.points, expected_approx);
     }
 }
