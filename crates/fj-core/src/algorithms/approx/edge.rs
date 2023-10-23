@@ -62,10 +62,8 @@ impl Approx for (&HalfEdge, &Surface) {
                     cache.curve.insert(
                         edge.curve().clone(),
                         edge.boundary(),
-                        approx.clone(),
-                    );
-
-                    approx
+                        approx,
+                    )
                 }
             };
 
