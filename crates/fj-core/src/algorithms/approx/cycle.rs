@@ -25,7 +25,7 @@ impl Approx for (&Cycle, &Surface) {
         let (cycle, surface) = self;
         let tolerance = tolerance.into();
 
-        let edges = cycle
+        let half_edges = cycle
             .half_edges()
             .iter()
             .map(|edge| {
@@ -33,7 +33,7 @@ impl Approx for (&Cycle, &Surface) {
             })
             .collect();
 
-        CycleApprox { half_edges: edges }
+        CycleApprox { half_edges }
     }
 }
 
