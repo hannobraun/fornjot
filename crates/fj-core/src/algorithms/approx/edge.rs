@@ -23,7 +23,7 @@ use super::{
 };
 
 impl Approx for (&HalfEdge, &Surface) {
-    type Approximation = EdgeApprox;
+    type Approximation = HalfEdgeApprox;
     type Cache = EdgeApproxCache;
 
     fn approx_with_cache(
@@ -92,43 +92,26 @@ impl Approx for (&HalfEdge, &Surface) {
                 // immediately, and it will be there on the second iteration.
             };
 
-            segment
-                .points
-                .inner
-                .into_iter()
-                .map(|point| {
-                    let point_surface =
-                        edge.path().point_from_path_coords(point.local_form);
+            segment.points.inner.into_iter().map(|point| {
+                let point_surface =
+                    edge.path().point_from_path_coords(point.local_form);
 
-                    ApproxPoint::new(point_surface, point.global_form)
-                })
-                .collect()
+                ApproxPoint::new(point_surface, point.global_form)
+            })
         };
 
-        EdgeApprox { first, rest }
+        let mut points = vec![first];
+        points.extend(rest);
+
+        HalfEdgeApprox { points }
     }
 }
 
 /// An approximation of a [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct EdgeApprox {
-    /// The point that approximates the first vertex of the edge
-    first: ApproxPoint<2>,
-
-    /// The approximation of the rest of the edge
-    rest: Vec<ApproxPoint<2>>,
-}
-
-impl EdgeApprox {
-    /// Compute the points that approximate the edge
-    pub fn points(&self) -> Vec<ApproxPoint<2>> {
-        let mut points = Vec::new();
-
-        points.push(self.first);
-        points.extend(self.rest.iter().cloned());
-
-        points
-    }
+pub struct HalfEdgeApprox {
+    /// The points that approximate the half-edge
+    pub points: Vec<ApproxPoint<2>>,
 }
 
 fn approx_curve(
@@ -279,7 +262,11 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, surface.deref()).approx(tolerance);
 
-        assert_eq!(approx.rest, Vec::new());
+        let expected_approx = vec![{
+            let point_surface = edge.start_position();
+            ApproxPoint::from_surface_point(point_surface, &surface)
+        }];
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -296,7 +283,11 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, &surface).approx(tolerance);
 
-        assert_eq!(approx.rest, Vec::new());
+        let expected_approx = vec![{
+            let point_surface = edge.start_position();
+            ApproxPoint::from_surface_point(point_surface, &surface)
+        }];
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -319,18 +310,20 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, &surface).approx(tolerance);
 
-        let expected_approx = (path, boundary)
-            .approx(tolerance)
-            .into_iter()
-            .map(|(point_local, _)| {
-                let point_surface =
-                    edge.path().point_from_path_coords(point_local);
-                let point_global =
-                    surface.geometry().point_from_surface_coords(point_surface);
-                ApproxPoint::new(point_surface, point_global)
-            })
-            .collect::<Vec<_>>();
-        assert_eq!(approx.rest, expected_approx);
+        let mut expected_approx = vec![{
+            let point_surface = edge.start_position();
+            ApproxPoint::from_surface_point(point_surface, &surface)
+        }];
+        expected_approx.extend(
+            (path, boundary).approx(tolerance).into_iter().map(
+                |(point_local, _)| {
+                    let point_surface =
+                        edge.path().point_from_path_coords(point_local);
+                    ApproxPoint::from_surface_point(point_surface, &surface)
+                },
+            ),
+        );
+        assert_eq!(approx.points, expected_approx);
     }
 
     #[test]
@@ -343,17 +336,18 @@ mod tests {
         let tolerance = 1.;
         let approx = (&edge, surface.deref()).approx(tolerance);
 
-        let expected_approx =
+        let mut expected_approx = vec![{
+            let point_surface = edge.start_position();
+            ApproxPoint::from_surface_point(point_surface, &surface)
+        }];
+        expected_approx.extend(
             (&edge.path(), CurveBoundary::from([[0.], [TAU]]))
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {
-                    let point_global = surface
-                        .geometry()
-                        .point_from_surface_coords(point_surface);
-                    ApproxPoint::new(point_surface, point_global)
-                })
-                .collect::<Vec<_>>();
-        assert_eq!(approx.rest, expected_approx);
+                    ApproxPoint::from_surface_point(point_surface, &surface)
+                }),
+        );
+        assert_eq!(approx.points, expected_approx);
     }
 }

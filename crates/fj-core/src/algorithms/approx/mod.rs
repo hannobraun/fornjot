@@ -18,6 +18,8 @@ use std::{
 
 use fj_math::Point;
 
+use crate::objects::Surface;
+
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
@@ -59,7 +61,7 @@ pub struct ApproxPoint<const D: usize> {
 }
 
 impl<const D: usize> ApproxPoint<D> {
-    /// Create an instance of `ApproxPoint`, without a source
+    /// Create an instance of `ApproxPoint`
     pub fn new(
         local_form: impl Into<Point<D>>,
         global_form: impl Into<Point<3>>,
@@ -68,6 +70,19 @@ impl<const D: usize> ApproxPoint<D> {
             local_form: local_form.into(),
             global_form: global_form.into(),
         }
+    }
+}
+
+impl ApproxPoint<2> {
+    /// Create an instance of `ApproxPoint` from a surface point
+    pub fn from_surface_point(
+        point_surface: impl Into<Point<2>>,
+        surface: &Surface,
+    ) -> Self {
+        let point_surface = point_surface.into();
+        let point_global =
+            surface.geometry().point_from_surface_coords(point_surface);
+        ApproxPoint::new(point_surface, point_global)
     }
 }
 
