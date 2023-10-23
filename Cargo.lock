@@ -513,9 +513,9 @@ dependencies = [
 
 [[package]]
 name = "cmd_lib_macros"
-version = "1.3.0"
+version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e66605092ff6c6e37e0246601ae6c3f62dc1880e0599359b5f303497c112dc0"
+checksum = "17ecb11cb01ddc021da0ab759f7357579cef58ac2f9b6c904967242eb7003e2d"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
