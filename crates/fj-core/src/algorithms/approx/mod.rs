@@ -59,7 +59,7 @@ pub struct ApproxPoint<const D: usize> {
 }
 
 impl<const D: usize> ApproxPoint<D> {
-    /// Create an instance of `ApproxPoint`, without a source
+    /// Create an instance of `ApproxPoint`
     pub fn new(
         local_form: impl Into<Point<D>>,
         global_form: impl Into<Point<3>>,
