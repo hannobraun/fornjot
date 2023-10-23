@@ -16,9 +16,7 @@ use crate::{
 };
 
 use super::{
-    curve::{
-        CurveApprox, CurveApproxCache, CurveApproxPoints, CurveApproxSegment,
-    },
+    curve::{CurveApprox, CurveApproxPoints, CurveApproxSegment},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -197,7 +195,10 @@ fn approx_curve(
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
-    curve_approx: CurveApproxCache,
+    curve_approx: BTreeMap<
+        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
+        CurveApproxSegment,
+    >,
 }
 
 impl EdgeApproxCache {
@@ -225,7 +226,22 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> CurveApprox {
-        self.curve_approx.get(&handle, boundary)
+        let curve = HandleWrapper::from(handle);
+
+        if let Some(approx) = self.curve_approx.get(&(curve.clone(), boundary))
+        {
+            return CurveApprox::from([approx.clone()]);
+        }
+        if let Some(approx) =
+            self.curve_approx.get(&(curve, boundary.reverse()))
+        {
+            let mut approx = approx.clone();
+            approx.reverse();
+
+            return CurveApprox::from([approx]);
+        }
+
+        CurveApprox::from([])
     }
 
     fn insert_curve_approx(
@@ -233,7 +249,8 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         approx: CurveApproxSegment,
     ) {
-        self.curve_approx.insert(handle, approx);
+        let curve = HandleWrapper::from(handle);
+        self.curve_approx.insert((curve, approx.boundary), approx);
     }
 }
 
