@@ -16,7 +16,7 @@ use crate::{
 };
 
 use super::{
-    curve::{CurveApprox, CurveApproxPoints, CurveApproxSegment},
+    curve::{CurveApproxPoints, CurveApproxSegment},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -58,9 +58,7 @@ impl Approx for (&HalfEdge, &Surface) {
                 // within the edge boundary. This approximation might or might
                 // not be complete.
 
-                if let Some(segment) =
-                    cached.into_single_segment(edge.boundary())
-                {
+                if let Some(segment) = cached {
                     // We've asked the approximation to give us a single
                     // segment that covers the boundary, and we got it. We
                     // can use it as-is.
@@ -225,12 +223,12 @@ impl EdgeApproxCache {
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> CurveApprox {
+    ) -> Option<CurveApproxSegment> {
         let curve = HandleWrapper::from(handle);
 
         if let Some(approx) = self.curve_approx.get(&(curve.clone(), boundary))
         {
-            return CurveApprox::from([approx.clone()]);
+            return Some(approx.clone());
         }
         if let Some(approx) =
             self.curve_approx.get(&(curve, boundary.reverse()))
@@ -238,10 +236,10 @@ impl EdgeApproxCache {
             let mut approx = approx.clone();
             approx.reverse();
 
-            return CurveApprox::from([approx]);
+            return Some(approx);
         }
 
-        CurveApprox::from([])
+        None
     }
 
     fn insert_curve_approx(
