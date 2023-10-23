@@ -50,30 +50,26 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            let segment = loop {
-                let cached = cache
-                    .get_curve_approx(edge.curve().clone(), edge.boundary());
+            let cached =
+                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                if let Some(segment) = cached {
-                    // We've asked the approximation to give us a single
-                    // segment that covers the boundary, and we got it. We
-                    // can use it as-is.
-                    break segment;
-                }
-
-                cache.insert_curve_approx(
-                    edge.curve().clone(),
-                    approx_curve(
+            let segment = match cached {
+                Some(segment) => segment,
+                None => {
+                    let segment = approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
                         tolerance,
-                    ),
-                );
+                    );
 
-                // We will never complete more than one full loop here. If we
-                // don't return the segment the first time, we'll insert it
-                // immediately, and it will be there on the second iteration.
+                    cache.insert_curve_approx(
+                        edge.curve().clone(),
+                        segment.clone(),
+                    );
+
+                    segment
+                }
             };
 
             segment.points.inner.into_iter().map(|point| {
