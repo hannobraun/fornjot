@@ -9,8 +9,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
-    objects::{Curve, HalfEdge, Surface},
-    storage::Handle,
+    objects::{HalfEdge, Surface},
 };
 
 use super::{
@@ -60,7 +59,7 @@ impl Approx for (&HalfEdge, &Surface) {
                         tolerance,
                     );
 
-                    cache.insert_curve_approx(
+                    cache.curve.insert(
                         edge.curve().clone(),
                         edge.boundary(),
                         approx.clone(),
@@ -172,17 +171,6 @@ fn approx_curve(
 pub struct EdgeApproxCache {
     start_position: VertexApproxCache,
     curve: CurveApproxCache,
-}
-
-impl EdgeApproxCache {
-    fn insert_curve_approx(
-        &mut self,
-        handle: Handle<Curve>,
-        boundary: CurveBoundary<Point<1>>,
-        approx: Vec<ApproxPoint<1>>,
-    ) {
-        self.curve.insert(handle, boundary, approx);
-    }
 }
 
 #[cfg(test)]
