@@ -66,14 +66,14 @@ impl Approx for (&HalfEdge, &Surface) {
                     cache.insert_curve_approx(
                         edge.curve().clone(),
                         edge.boundary(),
-                        segment.clone(),
+                        segment.points.clone(),
                     );
 
-                    segment
+                    segment.points
                 }
             };
 
-            segment.points.inner.into_iter().map(|point| {
+            segment.inner.into_iter().map(|point| {
                 let point_surface =
                     edge.path().point_from_path_coords(point.local_form);
 
@@ -180,7 +180,7 @@ pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
     curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
-        CurveApproxSegment,
+        CurveApproxPoints,
     >,
 }
 
@@ -208,7 +208,7 @@ impl EdgeApproxCache {
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> Option<CurveApproxSegment> {
+    ) -> Option<CurveApproxPoints> {
         let curve = HandleWrapper::from(handle);
 
         if let Some(approx) = self.curve_approx.get(&(curve.clone(), boundary))
@@ -231,7 +231,7 @@ impl EdgeApproxCache {
         &mut self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-        approx: CurveApproxSegment,
+        approx: CurveApproxPoints,
     ) {
         let curve = HandleWrapper::from(handle);
         self.curve_approx.insert((curve, boundary), approx);
