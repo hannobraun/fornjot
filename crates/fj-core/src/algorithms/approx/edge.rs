@@ -171,7 +171,7 @@ fn approx_curve(
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position: VertexApproxCache,
-    curve_approx: CurveApproxCache,
+    curve: CurveApproxCache,
 }
 
 impl EdgeApproxCache {
@@ -180,7 +180,7 @@ impl EdgeApproxCache {
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<Vec<ApproxPoint<1>>> {
-        self.curve_approx.get(&handle, boundary)
+        self.curve.get(&handle, boundary)
     }
 
     fn insert_curve_approx(
@@ -189,7 +189,7 @@ impl EdgeApproxCache {
         boundary: CurveBoundary<Point<1>>,
         approx: Vec<ApproxPoint<1>>,
     ) {
-        self.curve_approx.insert(handle, boundary, approx);
+        self.curve.insert(handle, boundary, approx);
     }
 }
 
