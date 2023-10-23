@@ -125,7 +125,7 @@ pub enum Error {
 
     /// Error initializing graphics
     #[error("Error initializing graphics")]
-    GraphicsInit(#[from] RendererInitError),
+    Graphics(#[from] RendererInitError),
 }
 
 fn input_event<T>(
