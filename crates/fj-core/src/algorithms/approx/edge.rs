@@ -14,7 +14,7 @@ use super::{
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
-    type Cache = EdgeApproxCache;
+    type Cache = HalfEdgeApproxCache;
 
     fn approx_with_cache(
         self,
@@ -68,7 +68,7 @@ pub struct HalfEdgeApprox {
 
 /// Cache for edge approximations
 #[derive(Default)]
-pub struct EdgeApproxCache {
+pub struct HalfEdgeApproxCache {
     start_position: VertexApproxCache,
     curve: CurveApproxCache,
 }
