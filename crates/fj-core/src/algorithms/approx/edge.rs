@@ -11,7 +11,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
-    objects::{Curve, HalfEdge, Surface, Vertex},
+    objects::{Curve, HalfEdge, Surface},
     storage::{Handle, HandleWrapper},
 };
 
@@ -37,10 +37,9 @@ impl Approx for (&HalfEdge, &Surface) {
                 let position_global = surface
                     .geometry()
                     .point_from_surface_coords(start_position_surface);
-                cache.insert_start_position_approx(
-                    edge.start_vertex(),
-                    position_global,
-                )
+                cache
+                    .start_position
+                    .insert(edge.start_vertex().clone(), position_global)
             }
         };
 
@@ -178,14 +177,6 @@ pub struct EdgeApproxCache {
 }
 
 impl EdgeApproxCache {
-    fn insert_start_position_approx(
-        &mut self,
-        handle: &Handle<Vertex>,
-        position: Point<3>,
-    ) -> Point<3> {
-        self.start_position.insert(handle.clone(), position)
-    }
-
     fn get_curve_approx(
         &self,
         handle: Handle<Curve>,
