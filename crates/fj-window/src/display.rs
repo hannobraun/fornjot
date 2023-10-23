@@ -52,13 +52,13 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                         input:
                             KeyboardInput {
                                 state: ElementState::Pressed,
-                                virtual_keycode: Some(virtual_key_code),
+                                virtual_keycode: Some(logical_key),
                                 ..
                             },
                         ..
                     },
                 ..
-            } => match virtual_key_code {
+            } => match logical_key {
                 VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
                 VirtualKeyCode::Key1 => {
                     viewer.toggle_draw_model();
