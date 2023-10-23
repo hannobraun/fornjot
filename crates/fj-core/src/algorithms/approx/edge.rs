@@ -1,7 +1,7 @@
 //! Edge approximation
 //!
 //! The approximation of a curve is its first vertex, combined with the
-//! approximation of its curve. The second vertex is left off, as edge
+//! approximation of its curve. The second vertex is left out, as edge
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to deal with duplicate vertices.
 
