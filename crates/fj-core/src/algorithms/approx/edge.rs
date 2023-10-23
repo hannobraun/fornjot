@@ -30,19 +30,19 @@ impl Approx for (&HalfEdge, &Surface) {
         let tolerance = tolerance.into();
 
         let start_position_surface = edge.start_position();
-        let start_position =
-            match cache.get_start_position_approx(edge.start_vertex()) {
-                Some(position) => position,
-                None => {
-                    let position_global = surface
-                        .geometry()
-                        .point_from_surface_coords(start_position_surface);
-                    cache.insert_start_position_approx(
-                        edge.start_vertex(),
-                        position_global,
-                    )
-                }
-            };
+        let start_position = match cache.start_position.get(edge.start_vertex())
+        {
+            Some(position) => position,
+            None => {
+                let position_global = surface
+                    .geometry()
+                    .point_from_surface_coords(start_position_surface);
+                cache.insert_start_position_approx(
+                    edge.start_vertex(),
+                    position_global,
+                )
+            }
+        };
 
         let first = ApproxPoint::new(start_position_surface, start_position);
 
@@ -178,13 +178,6 @@ pub struct EdgeApproxCache {
 }
 
 impl EdgeApproxCache {
-    fn get_start_position_approx(
-        &self,
-        handle: &Handle<Vertex>,
-    ) -> Option<Point<3>> {
-        self.start_position.get(handle)
-    }
-
     fn insert_start_position_approx(
         &mut self,
         handle: &Handle<Vertex>,
