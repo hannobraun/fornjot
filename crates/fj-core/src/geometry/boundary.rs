@@ -247,9 +247,7 @@ impl CurveBoundaryElement for Vertex {
 mod tests {
     use fj_math::Point;
 
-    use crate::geometry::{
-        boundary::single::OneOrTwoBoundaries, CurveBoundary,
-    };
+    use crate::geometry::{boundary::OneOrTwoBoundaries, CurveBoundary};
 
     #[test]
     fn overlaps() {

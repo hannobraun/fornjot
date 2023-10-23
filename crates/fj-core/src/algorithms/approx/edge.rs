@@ -15,12 +15,7 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::{
-    curve::{
-        CurveApprox, CurveApproxCache, CurveApproxPoints, CurveApproxSegment,
-    },
-    Approx, ApproxPoint, Tolerance,
-};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -52,47 +47,30 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            let segment = loop {
-                let cached = cache
-                    .get_curve_approx(edge.curve().clone(), edge.boundary());
+            let cached =
+                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                // `cached` is the approximation of the curve that is available
-                // within the edge boundary. This approximation might or might
-                // not be complete.
-
-                if let Some(segment) =
-                    cached.into_single_segment(edge.boundary())
-                {
-                    // We've asked the approximation to give us a single
-                    // segment that covers the boundary, and we got it. We
-                    // can use it as-is.
-                    break segment;
-                }
-
-                // If we make it here, there are holes in the approximation, in
-                // some way or another. We could be really surgical and fill in
-                // exactly those holes, and in the future we might want to, for
-                // performance reasons.
-                //
-                // For now, let's just approximate *all* we need and insert that
-                // into the cache. The cache takes care of merging that with
-                // whatever is already there.
-                cache.insert_curve_approx(
-                    edge.curve().clone(),
-                    approx_curve(
+            let approx = match cached {
+                Some(approx) => approx,
+                None => {
+                    let approx = approx_curve(
                         &edge.path(),
                         surface,
                         edge.boundary(),
                         tolerance,
-                    ),
-                );
+                    );
 
-                // We will never complete more than one full loop here. If we
-                // don't return the segment the first time, we'll insert it
-                // immediately, and it will be there on the second iteration.
+                    cache.insert_curve_approx(
+                        edge.curve().clone(),
+                        edge.boundary(),
+                        approx.clone(),
+                    );
+
+                    approx
+                }
             };
 
-            segment.points.inner.into_iter().map(|point| {
+            approx.into_iter().map(|point| {
                 let point_surface =
                     edge.path().point_from_path_coords(point.local_form);
 
@@ -119,7 +97,7 @@ fn approx_curve(
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-) -> CurveApproxSegment {
+) -> Vec<ApproxPoint<1>> {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
     //
@@ -181,23 +159,22 @@ fn approx_curve(
         }
     };
 
-    let points = points
+    points
         .into_iter()
         .map(|(point_curve, point_global)| {
             ApproxPoint::new(point_curve, point_global)
         })
-        .collect();
-    CurveApproxSegment {
-        boundary,
-        points: CurveApproxPoints { inner: points },
-    }
+        .collect()
 }
 
 /// Cache for edge approximations
 #[derive(Default)]
 pub struct EdgeApproxCache {
     start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
-    curve_approx: CurveApproxCache,
+    curve_approx: BTreeMap<
+        (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
+        Vec<ApproxPoint<1>>,
+    >,
 }
 
 impl EdgeApproxCache {
@@ -224,16 +201,33 @@ impl EdgeApproxCache {
         &self,
         handle: Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
-    ) -> CurveApprox {
-        self.curve_approx.get(&handle, boundary)
+    ) -> Option<Vec<ApproxPoint<1>>> {
+        let curve = HandleWrapper::from(handle);
+
+        if let Some(approx) = self.curve_approx.get(&(curve.clone(), boundary))
+        {
+            return Some(approx.clone());
+        }
+        if let Some(approx) =
+            self.curve_approx.get(&(curve, boundary.reverse()))
+        {
+            let mut approx = approx.clone();
+            approx.reverse();
+
+            return Some(approx);
+        }
+
+        None
     }
 
     fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
-        approx: CurveApproxSegment,
+        boundary: CurveBoundary<Point<1>>,
+        approx: Vec<ApproxPoint<1>>,
     ) {
-        self.curve_approx.insert(handle, approx);
+        let curve = HandleWrapper::from(handle);
+        self.curve_approx.insert((curve, boundary), approx);
     }
 }
 
