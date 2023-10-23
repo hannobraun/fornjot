@@ -115,7 +115,7 @@ impl Approx for (&HalfEdge, &Surface) {
 /// An approximation of a [`HalfEdge`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdgeApprox {
-    /// The approximation of the rest of the edge
+    /// The points that approximate the half-edge
     points: Vec<ApproxPoint<2>>,
 }
 
