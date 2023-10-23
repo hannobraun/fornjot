@@ -40,7 +40,7 @@ impl Approx for (&Cycle, &Surface) {
 /// An approximation of a [`Cycle`]
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
-    /// The approximated edges that make up the approximated cycle
+    /// The approximated half-edges that make up the approximated cycle
     pub half_edges: Vec<HalfEdgeApprox>,
 }
 
