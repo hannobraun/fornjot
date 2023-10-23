@@ -15,7 +15,7 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::{curve::CurveApproxPoints, Approx, ApproxPoint, Tolerance};
+use super::{Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -63,10 +63,10 @@ impl Approx for (&HalfEdge, &Surface) {
                     cache.insert_curve_approx(
                         edge.curve().clone(),
                         edge.boundary(),
-                        approx.inner.clone(),
+                        approx.clone(),
                     );
 
-                    approx.inner
+                    approx
                 }
             };
 
@@ -97,7 +97,7 @@ fn approx_curve(
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-) -> CurveApproxPoints {
+) -> Vec<ApproxPoint<1>> {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
     //
@@ -159,13 +159,12 @@ fn approx_curve(
         }
     };
 
-    let points = points
+    points
         .into_iter()
         .map(|(point_curve, point_global)| {
             ApproxPoint::new(point_curve, point_global)
         })
-        .collect();
-    CurveApproxPoints { inner: points }
+        .collect()
 }
 
 /// Cache for edge approximations
