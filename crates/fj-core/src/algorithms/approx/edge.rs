@@ -15,7 +15,7 @@ use crate::{
     storage::{Handle, HandleWrapper},
 };
 
-use super::{Approx, ApproxPoint, Tolerance};
+use super::{vertex::VertexApproxCache, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&HalfEdge, &Surface) {
     type Approximation = HalfEdgeApprox;
@@ -170,7 +170,7 @@ fn approx_curve(
 /// Cache for edge approximations
 #[derive(Default)]
 pub struct EdgeApproxCache {
-    start_position_approx: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
+    start_position_approx: VertexApproxCache,
     curve_approx: BTreeMap<
         (HandleWrapper<Curve>, CurveBoundary<Point<1>>),
         Vec<ApproxPoint<1>>,
@@ -182,9 +182,7 @@ impl EdgeApproxCache {
         &self,
         handle: &Handle<Vertex>,
     ) -> Option<Point<3>> {
-        self.start_position_approx
-            .get(&handle.clone().into())
-            .cloned()
+        self.start_position_approx.get(handle)
     }
 
     fn insert_start_position_approx(
@@ -192,9 +190,7 @@ impl EdgeApproxCache {
         handle: &Handle<Vertex>,
         position: Point<3>,
     ) -> Point<3> {
-        self.start_position_approx
-            .insert(handle.clone().into(), position)
-            .unwrap_or(position)
+        self.start_position_approx.insert(handle.clone(), position)
     }
 
     fn get_curve_approx(
