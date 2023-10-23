@@ -54,10 +54,6 @@ impl Approx for (&HalfEdge, &Surface) {
                 let cached = cache
                     .get_curve_approx(edge.curve().clone(), edge.boundary());
 
-                // `cached` is the approximation of the curve that is available
-                // within the edge boundary. This approximation might or might
-                // not be complete.
-
                 if let Some(segment) = cached {
                     // We've asked the approximation to give us a single
                     // segment that covers the boundary, and we got it. We
@@ -65,14 +61,6 @@ impl Approx for (&HalfEdge, &Surface) {
                     break segment;
                 }
 
-                // If we make it here, there are holes in the approximation, in
-                // some way or another. We could be really surgical and fill in
-                // exactly those holes, and in the future we might want to, for
-                // performance reasons.
-                //
-                // For now, let's just approximate *all* we need and insert that
-                // into the cache. The cache takes care of merging that with
-                // whatever is already there.
                 cache.insert_curve_approx(
                     edge.curve().clone(),
                     approx_curve(
