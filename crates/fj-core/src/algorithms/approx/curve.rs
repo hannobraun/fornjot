@@ -42,7 +42,7 @@ impl Approx
     }
 }
 
-pub(super) fn approx_curve(
+fn approx_curve(
     path: &SurfacePath,
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
