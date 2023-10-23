@@ -66,7 +66,7 @@ pub struct HalfEdgeApprox {
     pub points: Vec<ApproxPoint<2>>,
 }
 
-/// Cache for edge approximations
+/// Cache for half-edge approximations
 #[derive(Default)]
 pub struct HalfEdgeApproxCache {
     start_position: VertexApproxCache,
