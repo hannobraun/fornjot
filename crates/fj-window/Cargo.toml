@@ -10,10 +10,13 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
 futures = "0.3.28"
 thiserror = "1.0.50"
-winit = "0.28.7"
+
+[dependencies.winit]
+version = "0.28.7"
