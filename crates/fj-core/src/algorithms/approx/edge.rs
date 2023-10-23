@@ -48,7 +48,7 @@ impl Approx for (&HalfEdge, &Surface) {
 
         let rest = {
             let cached =
-                cache.get_curve_approx(edge.curve().clone(), edge.boundary());
+                cache.curve.get(&edge.curve().clone(), edge.boundary());
 
             let approx = match cached {
                 Some(approx) => approx,
@@ -175,14 +175,6 @@ pub struct EdgeApproxCache {
 }
 
 impl EdgeApproxCache {
-    fn get_curve_approx(
-        &self,
-        handle: Handle<Curve>,
-        boundary: CurveBoundary<Point<1>>,
-    ) -> Option<Vec<ApproxPoint<1>>> {
-        self.curve.get(&handle, boundary)
-    }
-
     fn insert_curve_approx(
         &mut self,
         handle: Handle<Curve>,
