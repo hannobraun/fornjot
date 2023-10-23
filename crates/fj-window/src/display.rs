@@ -6,18 +6,20 @@ use fj_viewer::{
 use futures::executor::block_on;
 use winit::{
     dpi::PhysicalPosition,
+    error::EventLoopError,
     event::{
-        ElementState, Event, KeyboardInput, MouseButton, MouseScrollDelta,
-        VirtualKeyCode, WindowEvent,
+        ElementState, Event, KeyEvent, MouseButton, MouseScrollDelta,
+        WindowEvent,
     },
-    event_loop::{ControlFlow, EventLoop},
+    event_loop::EventLoop,
+    keyboard::{Key, NamedKey},
 };
 
 use crate::window::{self, Window};
 
 /// Display the provided mesh in a window that processes input
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
-    let event_loop = EventLoop::new();
+    let event_loop = EventLoop::new()?;
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
@@ -27,7 +29,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let mut new_size = None;
     let mut stop_drawing = false;
 
-    event_loop.run(move |event, _, control_flow| {
+    event_loop.run(move |event, event_loop_window_target| {
         let input_event = input_event(
             &event,
             &window,
@@ -44,26 +46,28 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
-                *control_flow = ControlFlow::Exit;
+                event_loop_window_target.exit();
             }
             Event::WindowEvent {
                 event:
                     WindowEvent::KeyboardInput {
-                        input:
-                            KeyboardInput {
+                        event:
+                            KeyEvent {
+                                logical_key,
                                 state: ElementState::Pressed,
-                                virtual_keycode: Some(logical_key),
                                 ..
                             },
                         ..
                     },
                 ..
-            } => match logical_key {
-                VirtualKeyCode::Escape => *control_flow = ControlFlow::Exit,
-                VirtualKeyCode::Key1 => {
+            } => match logical_key.as_ref() {
+                Key::Named(NamedKey::Escape) => {
+                    event_loop_window_target.exit();
+                }
+                Key::Character("1") => {
                     viewer.toggle_draw_model();
                 }
-                VirtualKeyCode::Key2 => {
+                Key::Character("2") => {
                     viewer.toggle_draw_mesh();
                 }
                 _ => {}
@@ -94,10 +98,10 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 event: WindowEvent::MouseWheel { .. },
                 ..
             } => viewer.add_focus_point(),
-            Event::MainEventsCleared => {
-                window.window().request_redraw();
-            }
-            Event::RedrawRequested(_) => {
+            Event::WindowEvent {
+                event: WindowEvent::RedrawRequested,
+                ..
+            } => {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = new_size.take() {
@@ -113,12 +117,18 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             }
             _ => {}
         }
-    });
+    })?;
+
+    Ok(())
 }
 
 /// Main loop initialization error
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
+    /// Error initializing event loop
+    #[error("Error initializing event loop")]
+    EventLoop(#[from] EventLoopError),
+
     /// Error initializing window
     #[error("Error initializing window")]
     Window(#[from] window::WindowError),

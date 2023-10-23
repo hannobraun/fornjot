@@ -19,4 +19,5 @@ futures = "0.3.28"
 thiserror = "1.0.50"
 
 [dependencies.winit]
-version = "0.28.7"
+version = "0.29.2"
+features = ["rwh_05"]
