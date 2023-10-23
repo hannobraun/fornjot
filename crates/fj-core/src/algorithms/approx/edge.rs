@@ -325,9 +325,7 @@ mod tests {
             .map(|(point_local, _)| {
                 let point_surface =
                     edge.path().point_from_path_coords(point_local);
-                let point_global =
-                    surface.geometry().point_from_surface_coords(point_surface);
-                ApproxPoint::new(point_surface, point_global)
+                ApproxPoint::from_surface_point(point_surface, &surface)
             })
             .collect::<Vec<_>>();
         assert_eq!(approx.rest, expected_approx);
@@ -348,10 +346,7 @@ mod tests {
                 .approx(tolerance)
                 .into_iter()
                 .map(|(_, point_surface)| {
-                    let point_global = surface
-                        .geometry()
-                        .point_from_surface_coords(point_surface);
-                    ApproxPoint::new(point_surface, point_global)
+                    ApproxPoint::from_surface_point(point_surface, &surface)
                 })
                 .collect::<Vec<_>>();
         assert_eq!(approx.rest, expected_approx);
