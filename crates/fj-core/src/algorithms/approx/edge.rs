@@ -102,7 +102,7 @@ impl Approx for (&HalfEdge, &Surface) {
 
                     ApproxPoint::new(point_surface, point.global_form)
                 })
-                .collect()
+                .collect::<Vec<_>>()
         };
 
         HalfEdgeApprox { first, rest }
