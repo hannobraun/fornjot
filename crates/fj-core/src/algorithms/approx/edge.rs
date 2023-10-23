@@ -53,7 +53,7 @@ impl Approx for (&HalfEdge, &Surface) {
             let cached =
                 cache.get_curve_approx(edge.curve().clone(), edge.boundary());
 
-            let segment = match cached {
+            let approx = match cached {
                 Some(segment) => segment,
                 None => {
                     let segment = approx_curve(
@@ -73,7 +73,7 @@ impl Approx for (&HalfEdge, &Surface) {
                 }
             };
 
-            segment.inner.into_iter().map(|point| {
+            approx.inner.into_iter().map(|point| {
                 let point_surface =
                     edge.path().point_from_path_coords(point.local_form);
 
