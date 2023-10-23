@@ -33,7 +33,7 @@ impl Approx for (&Cycle, &Surface) {
             })
             .collect();
 
-        CycleApprox { edges }
+        CycleApprox { half_edges: edges }
     }
 }
 
@@ -41,7 +41,7 @@ impl Approx for (&Cycle, &Surface) {
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct CycleApprox {
     /// The approximated edges that make up the approximated cycle
-    pub edges: Vec<HalfEdgeApprox>,
+    pub half_edges: Vec<HalfEdgeApprox>,
 }
 
 impl CycleApprox {
@@ -49,7 +49,7 @@ impl CycleApprox {
     pub fn points(&self) -> Vec<ApproxPoint<2>> {
         let mut points = Vec::new();
 
-        for approx in &self.edges {
+        for approx in &self.half_edges {
             points.extend(approx.points.iter().copied());
         }
 
