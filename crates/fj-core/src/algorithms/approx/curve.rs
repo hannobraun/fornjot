@@ -227,11 +227,11 @@ mod tests {
     fn approx_line_on_curved_surface_along_curve() {
         let mut services = Services::new();
 
-        let path = GlobalPath::circle_from_radius(1.);
+        let global_path = GlobalPath::circle_from_radius(1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let surface = Surface::new(SurfaceGeometry {
-            u: path,
+            u: global_path,
             v: [0., 0., 1.].into(),
         });
         let edge = HalfEdge::line_segment(
@@ -248,7 +248,7 @@ mod tests {
             ApproxPoint::from_surface_point(point_surface, &surface)
         }];
         expected_approx.extend(
-            (path, boundary).approx(tolerance).into_iter().map(
+            (global_path, boundary).approx(tolerance).into_iter().map(
                 |(point_local, _)| {
                     let point_surface =
                         edge.path().point_from_path_coords(point_local);
