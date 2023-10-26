@@ -5,6 +5,7 @@ mod insert;
 mod join;
 mod merge;
 mod reverse;
+mod split;
 mod update;
 
 pub use self::{
@@ -22,6 +23,7 @@ pub use self::{
     join::cycle::JoinCycle,
     merge::Merge,
     reverse::Reverse,
+    split::edge::SplitHalfEdge,
     update::{
         cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
         region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
