@@ -273,7 +273,6 @@ impl Renderer {
         {
             let mut render_pass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    label: None,
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &self.frame_buffer,
@@ -295,6 +294,7 @@ impl Renderer {
                             stencil_ops: None,
                         },
                     ),
+                    ..Default::default()
                 });
             render_pass.set_bind_group(0, &self.bind_group, &[]);
 

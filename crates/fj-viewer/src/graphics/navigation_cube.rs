@@ -182,7 +182,7 @@ impl NavigationCubeRenderer {
                         store: true,
                     },
                 })],
-                depth_stencil_attachment: None,
+                ..Default::default()
             });
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(1, &self.mvp_matrix_bind_group, &[]);
