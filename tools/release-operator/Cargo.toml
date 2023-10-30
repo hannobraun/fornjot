@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 anyhow = "1.0.75"
 cargo_metadata = "0.18.1"
-cmd_lib = "1.5.0"
+cmd_lib = "1.6.1"
 env_logger = "0.10.0"
 log = "0.4.20"
 secstr = "0.5.0"
@@ -24,10 +24,10 @@ version = "0.11.20"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.4.6"
+version = "4.4.7"
 features = ["std", "derive", "env"]
 default_features = false
 
 [dependencies.serde]
-version = "1.0.189"
+version = "1.0.190"
 features = ["derive"]
