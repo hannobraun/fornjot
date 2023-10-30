@@ -280,7 +280,7 @@ impl Renderer {
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
                                 // Not necessary, due to MSAA being enabled.
-                                store: false,
+                                store: wgpu::StoreOp::Discard,
                             },
                         },
                     )],
@@ -289,7 +289,7 @@ impl Renderer {
                             view: &self.depth_view,
                             depth_ops: Some(wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(1.0),
-                                store: true,
+                                store: wgpu::StoreOp::Store,
                             }),
                             stencil_ops: None,
                         },
