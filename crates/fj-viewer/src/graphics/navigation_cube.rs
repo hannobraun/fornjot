@@ -173,16 +173,15 @@ impl NavigationCubeRenderer {
 
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: Some("Depth Visual Render Pass"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
                     view,
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Load,
-                        store: true,
+                        store: wgpu::StoreOp::Store,
                     },
                 })],
-                depth_stencil_attachment: None,
+                ..Default::default()
             });
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(1, &self.mvp_matrix_bind_group, &[]);
