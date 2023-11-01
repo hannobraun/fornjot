@@ -79,6 +79,10 @@
 //! [`Handle`]: crate::storage::Handle
 //! [update operations]: crate::operations::update
 
+mod vertex;
+
+pub use self::vertex::ReplaceVertex;
+
 /// The output of a replace operation
 ///
 /// See [module documentation] for more information.
