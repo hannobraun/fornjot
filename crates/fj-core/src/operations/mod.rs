@@ -15,7 +15,7 @@ pub use self::{
         TetrahedronShell,
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
-    join::cycle::JoinCycle,
+    join::JoinCycle,
     merge::Merge,
     reverse::Reverse,
     split::edge::SplitHalfEdge,
