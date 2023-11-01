@@ -5,8 +5,9 @@ use crate::{
     operations::{
         build::{BuildFace, Polygon},
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
+        join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
-        JoinCycle, UpdateCycle, UpdateFace, UpdateRegion,
+        UpdateCycle, UpdateFace, UpdateRegion,
     },
     services::Services,
 };

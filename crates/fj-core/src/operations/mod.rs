@@ -9,7 +9,6 @@ mod split;
 mod update;
 
 pub use self::{
-    join::JoinCycle,
     merge::Merge,
     reverse::Reverse,
     split::SplitHalfEdge,
