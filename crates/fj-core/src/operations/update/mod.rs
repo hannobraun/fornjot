@@ -1,3 +1,5 @@
+//! Operations to update objects
+
 mod cycle;
 mod edge;
 mod face;
