@@ -8,10 +8,7 @@ pub mod reverse;
 pub mod split;
 mod update;
 
-pub use self::{
-    split::SplitHalfEdge,
-    update::{
-        UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
-        UpdateSketch, UpdateSolid,
-    },
+pub use self::update::{
+    UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
+    UpdateSketch, UpdateSolid,
 };
