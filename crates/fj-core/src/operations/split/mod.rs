@@ -1,1 +1,3 @@
-pub mod edge;
+mod edge;
+
+pub use self::edge::SplitHalfEdge;

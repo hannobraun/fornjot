@@ -18,7 +18,7 @@ pub use self::{
     join::JoinCycle,
     merge::Merge,
     reverse::Reverse,
-    split::edge::SplitHalfEdge,
+    split::SplitHalfEdge,
     update::{
         cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
         region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
