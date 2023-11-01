@@ -4,7 +4,7 @@ use fj_math::{Arc, Point, Scalar};
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
 };
 

@@ -6,7 +6,7 @@ use crate::{
     algorithms::transform::TransformObject,
     geometry::GlobalPath,
     objects::{Cycle, Face, Region, Shell},
-    operations::{build::BuildCycle, Insert, JoinCycle, Reverse},
+    operations::{build::BuildCycle, insert::Insert, JoinCycle, Reverse},
     services::Services,
     storage::Handle,
 };

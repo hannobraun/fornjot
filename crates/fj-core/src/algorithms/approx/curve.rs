@@ -180,7 +180,7 @@ mod tests {
         algorithms::approx::{Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfaceGeometry, SurfacePath},
         objects::{Curve, Surface},
-        operations::Insert,
+        operations::insert::Insert,
         services::Services,
     };
 

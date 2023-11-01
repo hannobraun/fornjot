@@ -2,7 +2,7 @@ use fj_math::Point;
 
 use crate::{
     objects::{HalfEdge, Vertex},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
 };
 

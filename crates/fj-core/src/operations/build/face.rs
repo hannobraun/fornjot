@@ -7,7 +7,7 @@ use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
         build::{BuildCycle, BuildRegion, BuildSurface},
-        Insert, IsInserted, IsInsertedNo,
+        insert::{Insert, IsInserted, IsInsertedNo},
     },
     services::Services,
     storage::Handle,

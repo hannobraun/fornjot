@@ -4,7 +4,8 @@ use fj::{
         objects::{Region, Sketch, Solid},
         operations::{
             build::{BuildRegion, BuildSketch},
-            Insert, UpdateSketch,
+            insert::Insert,
+            UpdateSketch,
         },
         services::Services,
         storage::Handle,

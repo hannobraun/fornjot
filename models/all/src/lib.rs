@@ -2,7 +2,7 @@ use fj::{
     core::{
         algorithms::transform::TransformObject,
         objects::Solid,
-        operations::{Insert, Merge},
+        operations::{insert::Insert, Merge},
         services::Services,
         storage::Handle,
     },

@@ -2,7 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{Face, Sketch, Solid, Surface},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
     storage::Handle,
 };

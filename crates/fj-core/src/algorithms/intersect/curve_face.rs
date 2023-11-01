@@ -157,7 +157,8 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            Insert, UpdateFace, UpdateRegion,
+            insert::Insert,
+            UpdateFace, UpdateRegion,
         },
         services::Services,
     };

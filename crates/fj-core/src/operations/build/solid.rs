@@ -4,7 +4,8 @@ use crate::{
     objects::{Shell, Solid},
     operations::{
         build::{BuildShell, TetrahedronShell},
-        Insert, IsInsertedYes, UpdateSolid,
+        insert::{Insert, IsInsertedYes},
+        UpdateSolid,
     },
     services::Services,
 };

@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
 };
 

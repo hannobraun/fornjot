@@ -9,7 +9,6 @@ mod split;
 mod update;
 
 pub use self::{
-    insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
     merge::Merge,
     reverse::Reverse,
