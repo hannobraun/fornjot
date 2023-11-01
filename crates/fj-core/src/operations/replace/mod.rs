@@ -79,9 +79,10 @@
 //! [`Handle`]: crate::storage::Handle
 //! [update operations]: crate::operations::update
 
+mod curve;
 mod vertex;
 
-pub use self::vertex::ReplaceVertex;
+pub use self::{curve::ReplaceCurve, vertex::ReplaceVertex};
 
 /// The output of a replace operation
 ///
