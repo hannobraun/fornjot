@@ -1,7 +1,7 @@
 //! Operations to update shapes
 
 pub mod build;
-mod insert;
+pub mod insert;
 mod join;
 mod merge;
 mod reverse;

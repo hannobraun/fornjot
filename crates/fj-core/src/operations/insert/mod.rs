@@ -1,3 +1,5 @@
+//! Insert objects into their respective store
+
 mod insert_trait;
 mod is_inserted;
 
