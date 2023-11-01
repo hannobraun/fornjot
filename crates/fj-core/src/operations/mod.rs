@@ -5,7 +5,7 @@ pub mod insert;
 pub mod join;
 pub mod merge;
 pub mod reverse;
-mod split;
+pub mod split;
 mod update;
 
 pub use self::{
