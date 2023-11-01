@@ -20,8 +20,7 @@ pub use self::{
     reverse::Reverse,
     split::SplitHalfEdge,
     update::{
-        cycle::UpdateCycle, edge::UpdateHalfEdge, face::UpdateFace,
-        region::UpdateRegion, shell::UpdateShell, sketch::UpdateSketch,
-        solid::UpdateSolid,
+        UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
+        UpdateSketch, UpdateSolid,
     },
 };
