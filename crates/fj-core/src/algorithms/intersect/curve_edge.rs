@@ -72,8 +72,8 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        geometry::SurfacePath, objects::HalfEdge, operations::BuildHalfEdge,
-        services::Services,
+        geometry::SurfacePath, objects::HalfEdge,
+        operations::build::BuildHalfEdge, services::Services,
     };
 
     use super::CurveEdgeIntersection;

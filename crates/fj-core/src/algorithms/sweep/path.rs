@@ -3,7 +3,7 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
     storage::Handle,
 };

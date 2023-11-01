@@ -3,13 +3,18 @@ use fj_math::Point;
 use crate::{
     objects::{Shell, Solid},
     operations::{
-        build::shell::BuildShell, Insert, IsInsertedYes, TetrahedronShell,
-        UpdateSolid,
+        build::{BuildShell, TetrahedronShell},
+        insert::{Insert, IsInsertedYes},
+        update::UpdateSolid,
     },
     services::Services,
 };
 
 /// Build a [`Solid`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildSolid {
     /// Build an empty solid
     fn empty() -> Solid {

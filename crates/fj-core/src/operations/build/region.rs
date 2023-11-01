@@ -2,11 +2,15 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{Cycle, Region},
-    operations::{BuildCycle, Insert},
+    operations::{build::BuildCycle, insert::Insert},
     services::Services,
 };
 
 /// Build a [`Region`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildRegion {
     /// Build an empty region
     fn empty(services: &mut Services) -> Region {

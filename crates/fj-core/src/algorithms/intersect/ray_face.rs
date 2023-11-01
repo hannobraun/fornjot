@@ -153,7 +153,11 @@ mod tests {
             transform::TransformObject,
         },
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
+        operations::{
+            build::{BuildCycle, BuildFace},
+            insert::Insert,
+            update::{UpdateFace, UpdateRegion},
+        },
         services::Services,
     };
 

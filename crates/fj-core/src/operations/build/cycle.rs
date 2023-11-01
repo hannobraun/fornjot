@@ -3,11 +3,15 @@ use itertools::Itertools;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::{BuildHalfEdge, Insert, UpdateCycle},
+    operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
     services::Services,
 };
 
 /// Build a [`Cycle`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildCycle {
     /// Build an empty cycle
     fn empty() -> Cycle {

@@ -6,6 +6,10 @@ use crate::{
 };
 
 /// Build a [`Surface`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildSurface {
     /// Build a plane from the provided points
     fn plane_from_points(

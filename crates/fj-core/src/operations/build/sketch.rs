@@ -1,6 +1,10 @@
 use crate::objects::Sketch;
 
 /// Build a [`Sketch`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildSketch {
     /// Create a sketch with no regions
     fn empty() -> Sketch {

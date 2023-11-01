@@ -2,7 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     objects::{Face, Region},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
 };
 

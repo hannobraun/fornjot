@@ -6,13 +6,18 @@ use fj_math::Point;
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
-        BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
+        build::{BuildCycle, BuildRegion, BuildSurface},
+        insert::{Insert, IsInserted, IsInsertedNo},
     },
     services::Services,
     storage::Handle,
 };
 
 /// Build a [`Face`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {

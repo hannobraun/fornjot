@@ -3,14 +3,20 @@ use fj_math::Point;
 use crate::{
     objects::{Face, Shell},
     operations::{
-        reverse::ReverseCurveCoordinateSystems, update::region::UpdateRegion,
-        BuildFace, Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle,
-        Polygon, UpdateCycle, UpdateFace,
+        build::{BuildFace, Polygon},
+        insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
+        join::JoinCycle,
+        reverse::ReverseCurveCoordinateSystems,
+        update::{UpdateCycle, UpdateFace, UpdateRegion},
     },
     services::Services,
 };
 
 /// Build a [`Shell`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildShell {
     /// Build an empty shell
     fn empty() -> Shell {

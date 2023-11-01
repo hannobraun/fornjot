@@ -1,6 +1,11 @@
+//! # Operations to merge objects
+//!
+//! See [`Merge`], which is currently the only trait in this module, for more
+//! information.
+
 use crate::objects::Solid;
 
-use super::UpdateSolid;
+use super::update::UpdateSolid;
 
 /// Merge two [`Solid`]s
 pub trait Merge {

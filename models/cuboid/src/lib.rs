@@ -2,7 +2,11 @@ use fj::{
     core::{
         algorithms::sweep::Sweep,
         objects::{Region, Sketch, Solid},
-        operations::{BuildRegion, BuildSketch, Insert, UpdateSketch},
+        operations::{
+            build::{BuildRegion, BuildSketch},
+            insert::Insert,
+            update::UpdateSketch,
+        },
         services::Services,
         storage::Handle,
     },

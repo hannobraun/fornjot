@@ -4,11 +4,15 @@ use fj_math::{Arc, Point, Scalar};
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
-    operations::Insert,
+    operations::insert::Insert,
     services::Services,
 };
 
 /// Build a [`HalfEdge`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
     fn unjoined(
