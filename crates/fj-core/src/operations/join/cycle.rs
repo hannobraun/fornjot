@@ -7,7 +7,9 @@ use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Cycle, HalfEdge},
     operations::{
-        build::BuildHalfEdge, insert::Insert, UpdateCycle, UpdateHalfEdge,
+        build::BuildHalfEdge,
+        insert::Insert,
+        update::{UpdateCycle, UpdateHalfEdge},
     },
     services::Services,
     storage::Handle,

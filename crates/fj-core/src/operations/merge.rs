@@ -5,7 +5,7 @@
 
 use crate::objects::Solid;
 
-use super::UpdateSolid;
+use super::update::UpdateSolid;
 
 /// Merge two [`Solid`]s
 pub trait Merge {

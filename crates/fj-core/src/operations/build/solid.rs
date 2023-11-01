@@ -5,7 +5,7 @@ use crate::{
     operations::{
         build::{BuildShell, TetrahedronShell},
         insert::{Insert, IsInsertedYes},
-        UpdateSolid,
+        update::UpdateSolid,
     },
     services::Services,
 };

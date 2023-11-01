@@ -7,8 +7,3 @@ pub mod merge;
 pub mod reverse;
 pub mod split;
 pub mod update;
-
-pub use self::update::{
-    UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
-    UpdateSketch, UpdateSolid,
-};

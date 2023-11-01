@@ -6,7 +6,7 @@ use fj::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
-            UpdateRegion, UpdateSketch,
+            update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
         storage::Handle,

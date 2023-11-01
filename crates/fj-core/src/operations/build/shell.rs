@@ -7,7 +7,7 @@ use crate::{
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
         join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
-        UpdateCycle, UpdateFace, UpdateRegion,
+        update::{UpdateCycle, UpdateFace, UpdateRegion},
     },
     services::Services,
 };

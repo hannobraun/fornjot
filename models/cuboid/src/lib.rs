@@ -5,7 +5,7 @@ use fj::{
         operations::{
             build::{BuildRegion, BuildSketch},
             insert::Insert,
-            UpdateSketch,
+            update::UpdateSketch,
         },
         services::Services,
         storage::Handle,

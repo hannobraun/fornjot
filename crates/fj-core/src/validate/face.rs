@@ -77,7 +77,7 @@ mod tests {
             build::{BuildCycle, BuildFace},
             insert::Insert,
             reverse::Reverse,
-            UpdateFace, UpdateRegion,
+            update::{UpdateFace, UpdateRegion},
         },
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},

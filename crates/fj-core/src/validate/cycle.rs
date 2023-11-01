@@ -97,7 +97,7 @@ mod tests {
         operations::{
             build::{BuildCycle, BuildHalfEdge},
             insert::Insert,
-            UpdateCycle,
+            update::UpdateCycle,
         },
         services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
