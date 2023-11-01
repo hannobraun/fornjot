@@ -4,7 +4,7 @@ pub mod build;
 pub mod insert;
 pub mod join;
 pub mod merge;
-mod reverse;
+pub mod reverse;
 mod split;
 mod update;
 
