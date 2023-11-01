@@ -7,6 +7,10 @@ use crate::{
 };
 
 /// Build a [`Region`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildRegion {
     /// Build an empty region
     fn empty(services: &mut Services) -> Region {

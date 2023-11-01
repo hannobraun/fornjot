@@ -13,6 +13,10 @@ use crate::{
 };
 
 /// Build a [`Face`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {

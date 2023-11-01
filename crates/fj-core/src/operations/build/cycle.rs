@@ -8,6 +8,10 @@ use crate::{
 };
 
 /// Build a [`Cycle`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildCycle {
     /// Build an empty cycle
     fn empty() -> Cycle {

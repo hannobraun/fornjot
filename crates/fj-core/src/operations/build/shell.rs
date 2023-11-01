@@ -11,6 +11,10 @@ use crate::{
 };
 
 /// Build a [`Shell`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildShell {
     /// Build an empty shell
     fn empty() -> Shell {

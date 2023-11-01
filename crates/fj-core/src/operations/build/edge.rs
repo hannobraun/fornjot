@@ -9,6 +9,10 @@ use crate::{
 };
 
 /// Build a [`HalfEdge`]
+///
+/// See [module-level documentation] for context.
+///
+/// [module-level documentation]: super
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
     fn unjoined(
