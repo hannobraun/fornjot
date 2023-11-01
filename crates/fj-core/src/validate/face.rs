@@ -74,7 +74,8 @@ mod tests {
         assert_contains_err,
         objects::{Cycle, Face, Region},
         operations::{
-            BuildCycle, BuildFace, Insert, Reverse, UpdateFace, UpdateRegion,
+            build::{BuildCycle, BuildFace},
+            Insert, Reverse, UpdateFace, UpdateRegion,
         },
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},

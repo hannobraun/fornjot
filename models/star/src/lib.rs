@@ -5,8 +5,8 @@ use fj::{
         algorithms::sweep::Sweep,
         objects::{Cycle, Region, Sketch, Solid},
         operations::{
-            BuildCycle, BuildRegion, BuildSketch, Insert, Reverse,
-            UpdateRegion, UpdateSketch,
+            build::{BuildCycle, BuildRegion, BuildSketch},
+            Insert, Reverse, UpdateRegion, UpdateSketch,
         },
         services::Services,
         storage::Handle,

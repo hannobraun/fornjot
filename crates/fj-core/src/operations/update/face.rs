@@ -1,6 +1,6 @@
 use crate::{
     objects::{Face, Region},
-    operations::Polygon,
+    operations::build::Polygon,
     storage::Handle,
 };
 

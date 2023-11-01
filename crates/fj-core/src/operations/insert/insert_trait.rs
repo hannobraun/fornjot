@@ -3,7 +3,7 @@ use crate::{
         Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
         Vertex,
     },
-    operations::{Polygon, TetrahedronShell},
+    operations::build::{Polygon, TetrahedronShell},
     services::Services,
     storage::Handle,
 };

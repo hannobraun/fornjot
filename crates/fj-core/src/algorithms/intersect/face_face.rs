@@ -64,7 +64,10 @@ mod tests {
         algorithms::intersect::CurveFaceIntersection,
         geometry::SurfacePath,
         objects::{Cycle, Face},
-        operations::{BuildCycle, BuildFace, Insert, UpdateFace, UpdateRegion},
+        operations::{
+            build::{BuildCycle, BuildFace},
+            Insert, UpdateFace, UpdateRegion,
+        },
         services::Services,
     };
 

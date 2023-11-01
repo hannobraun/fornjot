@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 
 use crate::{
     objects::Face,
-    operations::{Insert, IsInsertedNo, IsInsertedYes, Polygon},
+    operations::{Insert, IsInsertedNo, IsInsertedYes, build::Polygon},
     services::Services,
 };
 

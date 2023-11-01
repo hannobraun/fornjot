@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::{BuildHalfEdge, Insert, UpdateCycle},
+    operations::{build::BuildHalfEdge, Insert, UpdateCycle},
     services::Services,
 };
 

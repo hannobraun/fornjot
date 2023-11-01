@@ -9,11 +9,6 @@ mod split;
 mod update;
 
 pub use self::{
-    build::{
-        BuildCycle, BuildFace, BuildHalfEdge, BuildRegion, BuildShell,
-        BuildSketch, BuildSolid, BuildSurface, Polygon, Tetrahedron,
-        TetrahedronShell,
-    },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::JoinCycle,
     merge::Merge,

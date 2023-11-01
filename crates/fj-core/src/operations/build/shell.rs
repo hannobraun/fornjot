@@ -3,9 +3,10 @@ use fj_math::Point;
 use crate::{
     objects::{Face, Shell},
     operations::{
-        reverse::ReverseCurveCoordinateSystems, BuildFace, Insert, IsInserted,
-        IsInsertedNo, IsInsertedYes, JoinCycle, Polygon, UpdateCycle,
-        UpdateFace, UpdateRegion,
+        build::{BuildFace, Polygon},
+        reverse::ReverseCurveCoordinateSystems,
+        Insert, IsInserted, IsInsertedNo, IsInsertedYes, JoinCycle,
+        UpdateCycle, UpdateFace, UpdateRegion,
     },
     services::Services,
 };

@@ -6,7 +6,8 @@ use fj_math::Point;
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
-        BuildCycle, BuildRegion, BuildSurface, Insert, IsInserted, IsInsertedNo,
+        build::{BuildCycle, BuildRegion, BuildSurface},
+        Insert, IsInserted, IsInsertedNo,
     },
     services::Services,
     storage::Handle,

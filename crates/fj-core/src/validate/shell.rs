@@ -289,7 +289,7 @@ mod tests {
         assert_contains_err,
         objects::{Curve, Shell},
         operations::{
-            BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
+            build::BuildShell, Insert, UpdateCycle, UpdateFace, UpdateHalfEdge,
             UpdateRegion, UpdateShell,
         },
         services::Services,

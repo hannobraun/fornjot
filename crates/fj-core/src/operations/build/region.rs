@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{Cycle, Region},
-    operations::{BuildCycle, Insert},
+    operations::{build::BuildCycle, Insert},
     services::Services,
 };
 
