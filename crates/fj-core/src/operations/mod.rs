@@ -9,7 +9,6 @@ mod split;
 mod update;
 
 pub use self::{
-    reverse::Reverse,
     split::SplitHalfEdge,
     update::{
         UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,

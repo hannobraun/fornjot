@@ -7,7 +7,8 @@ use fj::{
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
-            Reverse, UpdateRegion, UpdateSketch,
+            reverse::Reverse,
+            UpdateRegion, UpdateSketch,
         },
         services::Services,
         storage::Handle,
