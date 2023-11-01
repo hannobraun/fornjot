@@ -3,8 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{Shell, Solid},
     operations::{
-        build::shell::BuildShell, Insert, IsInsertedYes, TetrahedronShell,
-        UpdateSolid,
+        build::BuildShell, Insert, IsInsertedYes, TetrahedronShell, UpdateSolid,
     },
     services::Services,
 };
