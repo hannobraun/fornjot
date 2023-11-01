@@ -10,14 +10,9 @@ mod update;
 
 pub use self::{
     build::{
-        cycle::BuildCycle,
-        edge::BuildHalfEdge,
-        face::{BuildFace, Polygon},
-        region::BuildRegion,
-        shell::{BuildShell, TetrahedronShell},
-        sketch::BuildSketch,
-        solid::{BuildSolid, Tetrahedron},
-        surface::BuildSurface,
+        BuildCycle, BuildFace, BuildHalfEdge, BuildRegion, BuildShell,
+        BuildSketch, BuildSolid, BuildSurface, Polygon, Tetrahedron,
+        TetrahedronShell,
     },
     insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
     join::cycle::JoinCycle,
