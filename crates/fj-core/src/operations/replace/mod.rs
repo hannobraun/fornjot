@@ -80,9 +80,12 @@
 //! [update operations]: crate::operations::update
 
 mod curve;
+mod half_edge;
 mod vertex;
 
-pub use self::{curve::ReplaceCurve, vertex::ReplaceVertex};
+pub use self::{
+    curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
+};
 
 /// The output of a replace operation
 ///
