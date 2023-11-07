@@ -165,7 +165,7 @@ impl<T> Handles<T> {
     #[must_use]
     pub fn replace_with_multiple<const N: usize>(
         &self,
-        handle: &Handle<T>,
+        original: &Handle<T>,
         replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
     ) -> Self
     where
@@ -181,7 +181,7 @@ impl<T> Handles<T> {
                 None => panic!("Item not found"),
             };
 
-            if h.id() == handle.id() {
+            if h.id() == original.id() {
                 // Found the item we want to update. Remove it from the
                 // iterator, then move on.
                 iter.next();
@@ -192,7 +192,7 @@ impl<T> Handles<T> {
             before.push(next.clone());
         }
 
-        let replaced = replace(handle);
+        let replaced = replace(original);
         let after = iter;
 
         before.into_iter().chain(replaced).chain(after).collect()
