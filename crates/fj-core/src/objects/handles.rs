@@ -193,6 +193,8 @@ impl<T> Handles<T> {
             before.push(next.clone());
         }
 
+        // What's left in the iterator is what comes after the replaced item.
+        // Let's make that a bit more explicit by renaming the variable.
         let after = iter;
 
         Some(before.into_iter().chain(replacement).chain(after).collect())
