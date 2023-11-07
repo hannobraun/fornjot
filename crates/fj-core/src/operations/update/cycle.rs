@@ -16,9 +16,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn update_half_edge(
         &self,
@@ -61,7 +61,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let edges = self
             .half_edges()
-            .update(handle, update(handle))
+            .replace(handle, update(handle))
             .expect("Half-edge not found");
         Cycle::new(edges)
     }

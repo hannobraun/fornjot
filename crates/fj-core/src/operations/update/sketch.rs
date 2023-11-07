@@ -13,9 +13,9 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn update_region(
         &self,
@@ -54,7 +54,7 @@ impl UpdateSketch for Sketch {
     ) -> Self {
         let regions = self
             .regions()
-            .update(handle, update(handle))
+            .replace(handle, update(handle))
             .expect("Region not found");
         Sketch::new(regions)
     }

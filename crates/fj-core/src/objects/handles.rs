@@ -142,7 +142,7 @@ impl<T> Handles<T> {
     /// Panics, if the provided item is not present.
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn update(
+    pub fn replace(
         &self,
         original: &Handle<T>,
         replacement: Handle<T>,
@@ -157,7 +157,7 @@ impl<T> Handles<T> {
     ///
     /// Returns `None`, if the provided item is not present.
     ///
-    /// This is a more general version of [`Handles::update`] which can replace
+    /// This is a more general version of [`Handles::replace`] which can replace
     /// a single item with multiple others.
     ///
     /// # Panics

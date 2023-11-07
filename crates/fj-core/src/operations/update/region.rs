@@ -23,9 +23,9 @@ pub trait UpdateRegion {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn update_interior(
         &self,
@@ -76,7 +76,7 @@ impl UpdateRegion for Region {
     ) -> Self {
         let interiors = self
             .interiors()
-            .update(handle, update(handle))
+            .replace(handle, update(handle))
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }

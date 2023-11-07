@@ -16,9 +16,9 @@ pub trait UpdateSolid {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// [`Handles::replace`]: crate::objects::Handles::replace
     #[must_use]
     fn update_shell(
         &self,
@@ -61,7 +61,7 @@ impl UpdateSolid for Solid {
     ) -> Self {
         let shells = self
             .shells()
-            .update(handle, update(handle))
+            .replace(handle, update(handle))
             .expect("Shell not found");
         Solid::new(shells)
     }
