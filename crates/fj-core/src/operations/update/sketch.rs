@@ -13,9 +13,9 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_region(
         &self,
@@ -30,10 +30,9 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
-    /// same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_region<const N: usize>(
         &self,

@@ -16,9 +16,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_half_edge(
         &self,
@@ -33,10 +33,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
-    /// same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_half_edge<const N: usize>(
         &self,
