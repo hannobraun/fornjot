@@ -52,7 +52,7 @@ impl UpdateSketch for Sketch {
         handle: &Handle<Region>,
         update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        let regions = self.regions().update(handle, update);
+        let regions = self.regions().update(handle, update(handle));
         Sketch::new(regions)
     }
 

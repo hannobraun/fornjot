@@ -59,7 +59,7 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         update: impl FnOnce(&Handle<Shell>) -> Handle<Shell>,
     ) -> Self {
-        let shells = self.shells().update(handle, update);
+        let shells = self.shells().update(handle, update(handle));
         Solid::new(shells)
     }
 

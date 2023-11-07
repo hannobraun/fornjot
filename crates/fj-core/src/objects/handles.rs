@@ -142,15 +142,11 @@ impl<T> Handles<T> {
     /// Panics, if the provided item is not present.
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn update(
-        &self,
-        original: &Handle<T>,
-        update: impl FnOnce(&Handle<T>) -> Handle<T>,
-    ) -> Self
+    pub fn update(&self, original: &Handle<T>, replacement: Handle<T>) -> Self
     where
         T: Debug + Ord,
     {
-        self.replace_with_multiple(original, [update(original)])
+        self.replace_with_multiple(original, [replacement])
             .expect("Item not found")
     }
 

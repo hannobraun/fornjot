@@ -57,7 +57,7 @@ impl UpdateShell for Shell {
         handle: &Handle<Face>,
         update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self {
-        let faces = self.faces().update(handle, update);
+        let faces = self.faces().update(handle, update(handle));
         Shell::new(faces)
     }
 
