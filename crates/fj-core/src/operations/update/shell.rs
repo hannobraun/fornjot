@@ -66,7 +66,10 @@ impl UpdateShell for Shell {
         handle: &Handle<Face>,
         replace: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
     ) -> Self {
-        let faces = self.faces().replace_with_multiple(handle, replace);
+        let faces = self
+            .faces()
+            .replace_with_multiple(handle, replace)
+            .expect("Face not found");
         Shell::new(faces)
     }
 

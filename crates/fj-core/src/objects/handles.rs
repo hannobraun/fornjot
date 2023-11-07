@@ -151,6 +151,7 @@ impl<T> Handles<T> {
         T: Debug + Ord,
     {
         self.replace_with_multiple(handle, |handle| [update(handle)])
+            .expect("Item not found")
     }
 
     /// Create a new instance in which the provided item has been replaced
@@ -167,7 +168,7 @@ impl<T> Handles<T> {
         &self,
         original: &Handle<T>,
         replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
-    ) -> Self
+    ) -> Option<Self>
     where
         T: Debug + Ord,
     {
@@ -178,7 +179,11 @@ impl<T> Handles<T> {
         loop {
             let next = match iter.next() {
                 Some(handle) => handle,
-                None => panic!("Item not found"),
+                None => {
+                    // We went through the whole iterator without finding the
+                    // item we were looking for.
+                    return None;
+                }
             };
 
             if next.id() == original.id() {
@@ -191,7 +196,7 @@ impl<T> Handles<T> {
         let replaced = replace(original);
         let after = iter;
 
-        before.into_iter().chain(replaced).chain(after).collect()
+        Some(before.into_iter().chain(replaced).chain(after).collect())
     }
 }
 

@@ -61,7 +61,10 @@ impl UpdateSketch for Sketch {
         handle: &Handle<Region>,
         replace: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
     ) -> Self {
-        let regions = self.regions().replace_with_multiple(handle, replace);
+        let regions = self
+            .regions()
+            .replace_with_multiple(handle, replace)
+            .expect("Region not found");
         Sketch::new(regions)
     }
 }

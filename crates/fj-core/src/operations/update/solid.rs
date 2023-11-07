@@ -68,7 +68,10 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         replace: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
     ) -> Self {
-        let shells = self.shells().replace_with_multiple(handle, replace);
+        let shells = self
+            .shells()
+            .replace_with_multiple(handle, replace)
+            .expect("Shell not found");
         Solid::new(shells)
     }
 }

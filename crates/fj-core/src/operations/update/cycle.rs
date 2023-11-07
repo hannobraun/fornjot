@@ -68,7 +68,10 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self {
-        let edges = self.half_edges().replace_with_multiple(handle, replace);
+        let edges = self
+            .half_edges()
+            .replace_with_multiple(handle, replace)
+            .expect("Half-edge not found");
         Cycle::new(edges)
     }
 }

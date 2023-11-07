@@ -83,7 +83,10 @@ impl UpdateRegion for Region {
         handle: &Handle<Cycle>,
         replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
     ) -> Self {
-        let interiors = self.interiors().replace_with_multiple(handle, replace);
+        let interiors = self
+            .interiors()
+            .replace_with_multiple(handle, replace)
+            .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }
