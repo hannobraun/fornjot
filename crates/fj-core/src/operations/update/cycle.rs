@@ -70,7 +70,7 @@ impl UpdateCycle for Cycle {
     ) -> Self {
         let edges = self
             .half_edges()
-            .replace_with_multiple(handle, replace)
+            .replace_with_multiple(handle, replace(handle))
             .expect("Half-edge not found");
         Cycle::new(edges)
     }

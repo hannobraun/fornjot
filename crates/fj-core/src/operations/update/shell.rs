@@ -68,7 +68,7 @@ impl UpdateShell for Shell {
     ) -> Self {
         let faces = self
             .faces()
-            .replace_with_multiple(handle, replace)
+            .replace_with_multiple(handle, replace(handle))
             .expect("Face not found");
         Shell::new(faces)
     }

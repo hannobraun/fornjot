@@ -85,7 +85,7 @@ impl UpdateRegion for Region {
     ) -> Self {
         let interiors = self
             .interiors()
-            .replace_with_multiple(handle, replace)
+            .replace_with_multiple(handle, replace(handle))
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }

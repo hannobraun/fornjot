@@ -150,7 +150,7 @@ impl<T> Handles<T> {
     where
         T: Debug + Ord,
     {
-        self.replace_with_multiple(handle, |handle| [update(handle)])
+        self.replace_with_multiple(handle, [update(handle)])
             .expect("Item not found")
     }
 
@@ -167,7 +167,7 @@ impl<T> Handles<T> {
     pub fn replace_with_multiple<const N: usize>(
         &self,
         original: &Handle<T>,
-        replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
+        replacement: [Handle<T>; N],
     ) -> Option<Self>
     where
         T: Debug + Ord,
@@ -193,10 +193,9 @@ impl<T> Handles<T> {
             before.push(next.clone());
         }
 
-        let replaced = replace(original);
         let after = iter;
 
-        Some(before.into_iter().chain(replaced).chain(after).collect())
+        Some(before.into_iter().chain(replacement).chain(after).collect())
     }
 }
 

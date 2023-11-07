@@ -63,7 +63,7 @@ impl UpdateSketch for Sketch {
     ) -> Self {
         let regions = self
             .regions()
-            .replace_with_multiple(handle, replace)
+            .replace_with_multiple(handle, replace(handle))
             .expect("Region not found");
         Sketch::new(regions)
     }
