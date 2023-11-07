@@ -59,7 +59,10 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         update: impl FnOnce(&Handle<Shell>) -> Handle<Shell>,
     ) -> Self {
-        let shells = self.shells().update(handle, update(handle));
+        let shells = self
+            .shells()
+            .update(handle, update(handle))
+            .expect("Shell not found");
         Solid::new(shells)
     }
 

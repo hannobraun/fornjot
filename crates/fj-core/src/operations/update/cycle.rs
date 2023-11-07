@@ -59,7 +59,10 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Self {
-        let edges = self.half_edges().update(handle, update(handle));
+        let edges = self
+            .half_edges()
+            .update(handle, update(handle))
+            .expect("Half-edge not found");
         Cycle::new(edges)
     }
 
