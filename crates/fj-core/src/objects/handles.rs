@@ -135,11 +135,12 @@ impl<T> Handles<T> {
         self.iter().circular_tuple_windows()
     }
 
-    /// Create a new instance in which the provided item is updated
+    /// Create a new instance in which the provided item has been replaced
+    ///
+    /// Returns `None`, if the provided item is not present.
     ///
     /// # Panics
     ///
-    /// Panics, if the provided item is not present.
     /// Panics, if the update results in a duplicate item.
     #[must_use]
     pub fn replace(
