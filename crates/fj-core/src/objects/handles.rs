@@ -144,13 +144,13 @@ impl<T> Handles<T> {
     #[must_use]
     pub fn update(
         &self,
-        handle: &Handle<T>,
+        original: &Handle<T>,
         update: impl FnOnce(&Handle<T>) -> Handle<T>,
     ) -> Self
     where
         T: Debug + Ord,
     {
-        self.replace_with_multiple(handle, [update(handle)])
+        self.replace_with_multiple(original, [update(original)])
             .expect("Item not found")
     }
 
