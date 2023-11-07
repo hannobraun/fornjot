@@ -33,9 +33,10 @@ pub trait UpdateSolid {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
+    /// same reasons.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
     #[must_use]
     fn replace_shell<const N: usize>(
         &self,
@@ -67,7 +68,7 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         replace: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
     ) -> Self {
-        let shells = self.shells().replace(handle, replace);
+        let shells = self.shells().replace_with_multiple(handle, replace);
         Solid::new(shells)
     }
 }

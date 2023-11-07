@@ -150,7 +150,7 @@ impl<T> Handles<T> {
     where
         T: Debug + Ord,
     {
-        self.replace(handle, |handle| [update(handle)])
+        self.replace_with_multiple(handle, |handle| [update(handle)])
     }
 
     /// Create a new instance in which the provided item has been replaced
@@ -163,7 +163,7 @@ impl<T> Handles<T> {
     /// Panics, if the provided item is not present.
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn replace<const N: usize>(
+    pub fn replace_with_multiple<const N: usize>(
         &self,
         handle: &Handle<T>,
         replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],

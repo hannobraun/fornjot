@@ -30,9 +30,10 @@ pub trait UpdateShell {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
+    /// same reasons.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
     #[must_use]
     fn replace_face<const N: usize>(
         &self,
@@ -65,7 +66,7 @@ impl UpdateShell for Shell {
         handle: &Handle<Face>,
         replace: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
     ) -> Self {
-        let faces = self.faces().replace(handle, replace);
+        let faces = self.faces().replace_with_multiple(handle, replace);
         Shell::new(faces)
     }
 

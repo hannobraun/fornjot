@@ -40,9 +40,10 @@ pub trait UpdateRegion {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
+    /// same reasons.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
     #[must_use]
     fn replace_interior<const N: usize>(
         &self,
@@ -82,7 +83,7 @@ impl UpdateRegion for Region {
         handle: &Handle<Cycle>,
         replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
     ) -> Self {
-        let interiors = self.interiors().replace(handle, replace);
+        let interiors = self.interiors().replace_with_multiple(handle, replace);
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }

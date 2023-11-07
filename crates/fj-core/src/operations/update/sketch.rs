@@ -30,9 +30,10 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
+    /// same reasons.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
     #[must_use]
     fn replace_region<const N: usize>(
         &self,
@@ -60,7 +61,7 @@ impl UpdateSketch for Sketch {
         handle: &Handle<Region>,
         replace: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
     ) -> Self {
-        let regions = self.regions().replace(handle, replace);
+        let regions = self.regions().replace_with_multiple(handle, replace);
         Sketch::new(regions)
     }
 }

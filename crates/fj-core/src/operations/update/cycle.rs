@@ -33,9 +33,10 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Uses [`Handles::replace_with_multiple`] internally, and panics for the
+    /// same reasons.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// [`Handles::replace_with_multiple`]: crate::objects::Handles::replace_with_multiple
     #[must_use]
     fn replace_half_edge<const N: usize>(
         &self,
@@ -67,7 +68,7 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self {
-        let edges = self.half_edges().replace(handle, replace);
+        let edges = self.half_edges().replace_with_multiple(handle, replace);
         Cycle::new(edges)
     }
 }
