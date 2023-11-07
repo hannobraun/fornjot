@@ -13,9 +13,9 @@ pub trait UpdateShell {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_face(
         &self,
@@ -30,9 +30,9 @@ pub trait UpdateShell {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_face<const N: usize>(
         &self,
@@ -56,7 +56,10 @@ impl UpdateShell for Shell {
         handle: &Handle<Face>,
         update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
     ) -> Self {
-        let faces = self.faces().update(handle, update);
+        let faces = self
+            .faces()
+            .replace(handle, update(handle))
+            .expect("Face not found");
         Shell::new(faces)
     }
 
@@ -65,7 +68,10 @@ impl UpdateShell for Shell {
         handle: &Handle<Face>,
         replace: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
     ) -> Self {
-        let faces = self.faces().replace(handle, replace);
+        let faces = self
+            .faces()
+            .replace_with_multiple(handle, replace(handle))
+            .expect("Face not found");
         Shell::new(faces)
     }
 

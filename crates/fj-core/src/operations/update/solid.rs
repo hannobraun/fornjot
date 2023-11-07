@@ -16,9 +16,9 @@ pub trait UpdateSolid {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_shell(
         &self,
@@ -33,9 +33,9 @@ pub trait UpdateSolid {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_shell<const N: usize>(
         &self,
@@ -58,7 +58,10 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         update: impl FnOnce(&Handle<Shell>) -> Handle<Shell>,
     ) -> Self {
-        let shells = self.shells().update(handle, update);
+        let shells = self
+            .shells()
+            .replace(handle, update(handle))
+            .expect("Shell not found");
         Solid::new(shells)
     }
 
@@ -67,7 +70,10 @@ impl UpdateSolid for Solid {
         handle: &Handle<Shell>,
         replace: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
     ) -> Self {
-        let shells = self.shells().replace(handle, replace);
+        let shells = self
+            .shells()
+            .replace_with_multiple(handle, replace(handle))
+            .expect("Shell not found");
         Solid::new(shells)
     }
 }

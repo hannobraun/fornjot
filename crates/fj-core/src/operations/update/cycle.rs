@@ -16,9 +16,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_half_edge(
         &self,
@@ -33,9 +33,9 @@ pub trait UpdateCycle {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_half_edge<const N: usize>(
         &self,
@@ -58,7 +58,10 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         update: impl FnOnce(&Handle<HalfEdge>) -> Handle<HalfEdge>,
     ) -> Self {
-        let edges = self.half_edges().update(handle, update);
+        let edges = self
+            .half_edges()
+            .replace(handle, update(handle))
+            .expect("Half-edge not found");
         Cycle::new(edges)
     }
 
@@ -67,7 +70,10 @@ impl UpdateCycle for Cycle {
         handle: &Handle<HalfEdge>,
         replace: impl FnOnce(&Handle<HalfEdge>) -> [Handle<HalfEdge>; N],
     ) -> Self {
-        let edges = self.half_edges().replace(handle, replace);
+        let edges = self
+            .half_edges()
+            .replace_with_multiple(handle, replace(handle))
+            .expect("Half-edge not found");
         Cycle::new(edges)
     }
 }

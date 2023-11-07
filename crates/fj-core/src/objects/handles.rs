@@ -135,39 +135,41 @@ impl<T> Handles<T> {
         self.iter().circular_tuple_windows()
     }
 
-    /// Create a new instance in which the provided item is updated
+    /// Create a new instance in which the provided item has been replaced
+    ///
+    /// Returns `None`, if the provided item is not present.
     ///
     /// # Panics
     ///
-    /// Panics, if the provided item is not present.
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn update(
+    pub fn replace(
         &self,
-        handle: &Handle<T>,
-        update: impl FnOnce(&Handle<T>) -> Handle<T>,
-    ) -> Self
+        original: &Handle<T>,
+        replacement: Handle<T>,
+    ) -> Option<Self>
     where
         T: Debug + Ord,
     {
-        self.replace(handle, |handle| [update(handle)])
+        self.replace_with_multiple(original, [replacement])
     }
 
     /// Create a new instance in which the provided item has been replaced
     ///
-    /// This is a more general version of [`Handles::update`] which can replace
+    /// Returns `None`, if the provided item is not present.
+    ///
+    /// This is a more general version of [`Handles::replace`] which can replace
     /// a single item with multiple others.
     ///
     /// # Panics
     ///
-    /// Panics, if the provided item is not present.
-    /// Panics, if the update results in a duplicate item.
+    /// Panics, if the replacement results in a duplicate item.
     #[must_use]
-    pub fn replace<const N: usize>(
+    pub fn replace_with_multiple<const N: usize>(
         &self,
-        handle: &Handle<T>,
-        replace: impl FnOnce(&Handle<T>) -> [Handle<T>; N],
-    ) -> Self
+        original: &Handle<T>,
+        replacement: [Handle<T>; N],
+    ) -> Option<Self>
     where
         T: Debug + Ord,
     {
@@ -176,26 +178,27 @@ impl<T> Handles<T> {
         // Collect all items before the item we want to update.
         let mut before = Vec::new();
         loop {
-            let h = match iter.peek() {
-                Some(h) => h,
-                None => panic!("Item not found"),
+            let next = match iter.next() {
+                Some(handle) => handle,
+                None => {
+                    // We went through the whole iterator without finding the
+                    // item we were looking for.
+                    return None;
+                }
             };
 
-            if h.id() == handle.id() {
-                // Found the item we want to update. Remove it from the
-                // iterator, then move on.
-                iter.next();
+            if next.id() == original.id() {
                 break;
             }
 
-            let next = iter.next().expect("Peek just returned `Some`");
             before.push(next.clone());
         }
 
-        let replaced = replace(handle);
+        // What's left in the iterator is what comes after the replaced item.
+        // Let's make that a bit more explicit by renaming the variable.
         let after = iter;
 
-        before.into_iter().chain(replaced).chain(after).collect()
+        Some(before.into_iter().chain(replacement).chain(after).collect())
     }
 }
 

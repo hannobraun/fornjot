@@ -23,9 +23,9 @@ pub trait UpdateRegion {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_interior(
         &self,
@@ -40,9 +40,9 @@ pub trait UpdateRegion {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_interior<const N: usize>(
         &self,
@@ -73,7 +73,10 @@ impl UpdateRegion for Region {
         handle: &Handle<Cycle>,
         update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
     ) -> Self {
-        let interiors = self.interiors().update(handle, update);
+        let interiors = self
+            .interiors()
+            .replace(handle, update(handle))
+            .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 
@@ -82,7 +85,10 @@ impl UpdateRegion for Region {
         handle: &Handle<Cycle>,
         replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
     ) -> Self {
-        let interiors = self.interiors().replace(handle, replace);
+        let interiors = self
+            .interiors()
+            .replace_with_multiple(handle, replace(handle))
+            .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 }

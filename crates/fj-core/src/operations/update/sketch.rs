@@ -13,9 +13,9 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::update`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::update`]: crate::objects::Handles::update
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn update_region(
         &self,
@@ -30,9 +30,9 @@ pub trait UpdateSketch {
     ///
     /// # Panics
     ///
-    /// Uses [`Handles::replace`] internally, and panics for the same reasons.
+    /// Panics, if the object can't be found.
     ///
-    /// [`Handles::replace`]: crate::objects::Handles::replace
+    /// Panics, if the update results in a duplicate object.
     #[must_use]
     fn replace_region<const N: usize>(
         &self,
@@ -51,7 +51,10 @@ impl UpdateSketch for Sketch {
         handle: &Handle<Region>,
         update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
     ) -> Self {
-        let regions = self.regions().update(handle, update);
+        let regions = self
+            .regions()
+            .replace(handle, update(handle))
+            .expect("Region not found");
         Sketch::new(regions)
     }
 
@@ -60,7 +63,10 @@ impl UpdateSketch for Sketch {
         handle: &Handle<Region>,
         replace: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
     ) -> Self {
-        let regions = self.regions().replace(handle, replace);
+        let regions = self
+            .regions()
+            .replace_with_multiple(handle, replace(handle))
+            .expect("Region not found");
         Sketch::new(regions)
     }
 }
