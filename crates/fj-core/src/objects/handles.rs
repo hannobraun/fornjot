@@ -176,19 +176,15 @@ impl<T> Handles<T> {
         // Collect all items before the item we want to update.
         let mut before = Vec::new();
         loop {
-            let h = match iter.peek() {
-                Some(h) => h,
+            let next = match iter.next() {
+                Some(handle) => handle,
                 None => panic!("Item not found"),
             };
 
-            if h.id() == original.id() {
-                // Found the item we want to update. Remove it from the
-                // iterator, then move on.
-                iter.next();
+            if next.id() == original.id() {
                 break;
             }
 
-            let next = iter.next().expect("Peek just returned `Some`");
             before.push(next.clone());
         }
 
