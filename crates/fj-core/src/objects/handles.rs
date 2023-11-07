@@ -156,13 +156,14 @@ impl<T> Handles<T> {
 
     /// Create a new instance in which the provided item has been replaced
     ///
+    /// Returns `None`, if the provided item is not present.
+    ///
     /// This is a more general version of [`Handles::update`] which can replace
     /// a single item with multiple others.
     ///
     /// # Panics
     ///
-    /// Panics, if the provided item is not present.
-    /// Panics, if the update results in a duplicate item.
+    /// Panics, if the replacement results in a duplicate item.
     #[must_use]
     pub fn replace_with_multiple<const N: usize>(
         &self,
