@@ -60,7 +60,7 @@ impl UpdateSolid for Solid {
     ) -> Self {
         let shells = self
             .shells()
-            .replace(handle, update(handle))
+            .replace(handle, [update(handle)])
             .expect("Shell not found");
         Solid::new(shells)
     }
@@ -72,7 +72,7 @@ impl UpdateSolid for Solid {
     ) -> Self {
         let shells = self
             .shells()
-            .replace_with_multiple(handle, replace(handle))
+            .replace(handle, replace(handle))
             .expect("Shell not found");
         Solid::new(shells)
     }
