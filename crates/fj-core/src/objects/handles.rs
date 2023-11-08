@@ -168,7 +168,7 @@ impl<T> Handles<T> {
     pub fn replace_with_multiple<const N: usize>(
         &self,
         original: &Handle<T>,
-        replacement: [Handle<T>; N],
+        replacements: [Handle<T>; N],
     ) -> Option<Self>
     where
         T: Debug + Ord,
@@ -198,7 +198,13 @@ impl<T> Handles<T> {
         // Let's make that a bit more explicit by renaming the variable.
         let after = iter;
 
-        Some(before.into_iter().chain(replacement).chain(after).collect())
+        Some(
+            before
+                .into_iter()
+                .chain(replacements)
+                .chain(after)
+                .collect(),
+        )
     }
 }
 
