@@ -143,32 +143,10 @@ impl<T> Handles<T> {
     ///
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn replace(
+    pub fn replace<const N: usize>(
         &self,
         original: &Handle<T>,
-        replacement: Handle<T>,
-    ) -> Option<Self>
-    where
-        T: Debug + Ord,
-    {
-        self.replace_with_multiple(original, [replacement])
-    }
-
-    /// Create a new instance in which the provided item has been replaced
-    ///
-    /// Returns `None`, if the provided item is not present.
-    ///
-    /// This is a more general version of [`Handles::replace`] which can replace
-    /// a single item with multiple others.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the replacement results in a duplicate item.
-    #[must_use]
-    pub fn replace_with_multiple<const N: usize>(
-        &self,
-        original: &Handle<T>,
-        replacement: [Handle<T>; N],
+        replacements: [Handle<T>; N],
     ) -> Option<Self>
     where
         T: Debug + Ord,
@@ -198,7 +176,13 @@ impl<T> Handles<T> {
         // Let's make that a bit more explicit by renaming the variable.
         let after = iter;
 
-        Some(before.into_iter().chain(replacement).chain(after).collect())
+        Some(
+            before
+                .into_iter()
+                .chain(replacements)
+                .chain(after)
+                .collect(),
+        )
     }
 }
 
