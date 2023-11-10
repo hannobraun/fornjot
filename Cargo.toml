@@ -71,3 +71,15 @@ path = "crates/fj-viewer"
 [workspace.dependencies.fj-window]
 version = "0.47.0"
 path = "crates/fj-window"
+
+[profile.dev.package.'*']
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+lto = false
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
