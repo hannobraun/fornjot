@@ -71,6 +71,7 @@ impl<const D: usize> Circle<D> {
     }
 
     /// Access the center point of the circle
+    #[inline(always)]
     pub fn center(&self) -> Point<D> {
         self.center
     }
@@ -87,6 +88,7 @@ impl<const D: usize> Circle<D> {
     /// defines the circle's radius.
     ///
     /// Please also refer to [`Self::b`].
+    #[inline(always)]
     pub fn a(&self) -> Vector<D> {
         self.a
     }
@@ -96,6 +98,7 @@ impl<const D: usize> Circle<D> {
     /// Also defines the direction of the circle's coordinate system. The length
     /// is equal to the circle's radius, and this vector is perpendicular to
     /// [`Self::a`].
+    #[inline(always)]
     pub fn b(&self) -> Vector<D> {
         self.b
     }

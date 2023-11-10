@@ -17,6 +17,7 @@ impl<const D: usize> Line<D> {
     /// # Panics
     ///
     /// Panics, if `direction` has a length of zero.
+    #[inline]
     pub fn from_origin_and_direction(
         origin: Point<D>,
         direction: Vector<D>,
@@ -37,6 +38,7 @@ impl<const D: usize> Line<D> {
     /// # Panics
     ///
     /// Panics, if the points are coincident.
+    #[inline]
     pub fn from_points(
         points: [impl Into<Point<D>>; 2],
     ) -> (Self, [Point<1>; 2]) {
@@ -53,6 +55,7 @@ impl<const D: usize> Line<D> {
     /// # Panics
     ///
     /// Panics, if the points are coincident.
+    #[inline]
     pub fn from_points_with_line_coords(
         points: [(impl Into<Point<1>>, impl Into<Point<D>>); 2],
     ) -> Self {
@@ -72,6 +75,7 @@ impl<const D: usize> Line<D> {
     /// The origin is a point on the line which, together with the `direction`
     /// field, defines the line fully. The origin also defines the origin of the
     /// line's 1-dimensional coordinate system.
+    #[inline(always)]
     pub fn origin(&self) -> Point<D> {
         self.origin
     }
@@ -81,6 +85,7 @@ impl<const D: usize> Line<D> {
     /// The length of this vector defines the unit of the line's curve
     /// coordinate system. The coordinate `1.` is always where the direction
     /// vector points, from `origin`.
+    #[inline(always)]
     pub fn direction(&self) -> Vector<D> {
         self.direction
     }
@@ -93,13 +98,14 @@ impl<const D: usize> Line<D> {
     /// This will probably not be enough going forward, but it'll do for now.
     pub fn is_coincident_with(&self, other: &Self) -> bool {
         let other_origin_is_not_on_self = {
-            let a = other.origin;
-            let b = self.origin;
-            let c = self.origin + self.direction;
-
             // The triangle is valid only, if the three points are not on the
             // same line.
-            Triangle::from_points([a, b, c]).is_ok()
+            Triangle::from_points([
+                other.origin,
+                self.origin,
+                self.origin + self.direction,
+            ])
+            .is_ok()
         };
 
         if other_origin_is_not_on_self {
@@ -114,6 +120,7 @@ impl<const D: usize> Line<D> {
 
     /// Create a new instance that is reversed
     #[must_use]
+    #[inline]
     pub fn reverse(mut self) -> Self {
         self.origin += self.direction;
         self.direction = -self.direction;
@@ -128,6 +135,7 @@ impl<const D: usize> Line<D> {
     /// Callers are advised to be careful about the points they pass, as the
     /// point not being on the line, intentional or not, will never result in an
     /// error.
+    #[inline]
     pub fn point_to_line_coords(&self, point: impl Into<Point<D>>) -> Point<1> {
         Point {
             coords: self.vector_to_line_coords(point.into() - self.origin),

@@ -12,6 +12,7 @@ pub struct PolyChain<const D: usize> {
 
 impl<const D: usize> PolyChain<D> {
     /// Create an empty `PolyChain`
+    #[inline(always)]
     pub fn new() -> Self {
         Self::default()
     }

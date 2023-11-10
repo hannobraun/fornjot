@@ -11,45 +11,47 @@ pub struct Plane {
 
 impl Plane {
     /// Create a `Plane` from a parametric description
+    #[inline(always)]
     pub fn from_parametric(
         origin: impl Into<Point<3>>,
         u: impl Into<Vector<3>>,
         v: impl Into<Vector<3>>,
     ) -> Self {
-        let origin = origin.into();
-        let u = u.into();
-        let v = v.into();
-
-        Self { origin, u, v }
+        Self {
+            origin: origin.into(),
+            u: u.into(),
+            v: v.into(),
+        }
     }
 
     /// Access the origin of the plane
+    #[inline(always)]
     pub fn origin(&self) -> Point<3> {
         self.origin
     }
 
     /// Access the u-vector of the plane
+    #[inline(always)]
     pub fn u(&self) -> Vector<3> {
         self.u
     }
 
     /// Access the v-vector of the plane
+    #[inline(always)]
     pub fn v(&self) -> Vector<3> {
         self.v
     }
 
     /// Compute the normal of the plane
+    #[inline]
     pub fn normal(&self) -> Vector<3> {
         self.u().cross(&self.v()).normalize()
     }
 
     /// Convert the plane to three-point form
+    #[inline]
     pub fn three_point_form(&self) -> [Point<3>; 3] {
-        let a = self.origin();
-        let b = self.origin() + self.u();
-        let c = self.origin() + self.v();
-
-        [a, b, c]
+        [self.origin, self.origin + self.u, self.origin + self.v]
     }
 
     /// Convert the plane to constant-normal form
@@ -75,7 +77,7 @@ impl Plane {
     /// Project a vector into the plane
     pub fn project_vector(&self, vector: impl Into<Vector<3>>) -> Vector<2> {
         // The vector we want to project can be expressed as a linear
-        // combination of `self.u()`, `self.v()`, and `self.normal()`:
+        // combination of `self.u`, `self.v`, and `self.normal()`:
         // `v = a*u + b*v + c*n`
         //
         // All we need to do is to solve this equation. `a` and `b` are the
@@ -86,27 +88,26 @@ impl Plane {
         // form, then we can let nalgebra do the actual solving.
         let m =
             nalgebra::Matrix::<_, _, nalgebra::Const<3>, _>::from_columns(&[
-                self.u().to_na(),
-                self.v().to_na(),
+                self.u.to_na(),
+                self.v.to_na(),
                 self.normal().to_na(),
             ]);
-        let b = vector.into();
         let x = m
             .lu()
-            .solve(&b.to_na())
+            .solve(&vector.into().to_na())
             .expect("Expected matrix to be invertible");
 
         Vector::from([x.x, x.y])
     }
 
     /// Project a line into the plane
+    #[inline]
     pub fn project_line(&self, line: &Line<3>) -> Line<2> {
-        let line_origin_in_plane = self.project_point(line.origin());
-        let line_direction_in_plane = self.project_vector(line.direction());
-
         Line::from_origin_and_direction(
-            line_origin_in_plane,
-            line_direction_in_plane,
+            //line_origin_in_plane
+            self.project_point(line.origin()),
+            //line_direction_in_plane
+            self.project_vector(line.direction()),
         )
     }
 }

@@ -37,6 +37,7 @@ impl<const D: usize> Triangle<D> {
     }
 
     /// Access the triangle's points
+    #[inline(always)]
     pub fn points(&self) -> [Point<D>; 3] {
         self.points
     }
@@ -49,6 +50,7 @@ impl<const D: usize> Triangle<D> {
     ///
     /// This is useful for comparing triangles, where the order of points is not
     /// important.
+    #[inline]
     pub fn normalize(mut self) -> Self {
         self.points.sort();
         self

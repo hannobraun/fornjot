@@ -30,6 +30,7 @@ impl<const D: usize> Segment<D> {
     }
 
     /// Access the points of the segment
+    #[inline(always)]
     pub fn points(&self) -> [Point<D>; 2] {
         self.points
     }

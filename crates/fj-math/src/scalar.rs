@@ -1,5 +1,5 @@
 use std::{
-    cmp,
+    cmp::{self, Ordering},
     f64::consts::{PI, TAU},
     fmt,
     hash::Hash,
@@ -42,6 +42,7 @@ impl Scalar {
     /// # Panics
     ///
     /// Panics, if `scalar` is NaN.
+    #[inline(always)]
     pub fn from_f64(scalar: f64) -> Self {
         if scalar.is_nan() {
             panic!("Invalid scalar value: {scalar}");
@@ -51,36 +52,43 @@ impl Scalar {
     }
 
     /// Construct a `Scalar` from a `u64`
+    #[inline(always)]
     pub fn from_u64(scalar: u64) -> Self {
         Self::from_f64(scalar as f64)
     }
 
     /// Convert the scalar into an `f32`
+    #[inline(always)]
     pub fn into_f32(self) -> f32 {
         self.0 as f32
     }
 
     /// Convert the scalar into an `f64`
+    #[inline(always)]
     pub fn into_f64(self) -> f64 {
         self.0
     }
 
     /// Convert the scalar into a `u64`
+    #[inline(always)]
     pub fn into_u64(self) -> u64 {
         self.0 as u64
     }
 
     /// Indicate whether the scalar is negative
+    #[inline(always)]
     pub fn is_negative(self) -> bool {
         self < Self::ZERO
     }
 
     /// Indicate whether the scalar is positive
+    #[inline(always)]
     pub fn is_positive(self) -> bool {
         self > Self::ZERO
     }
 
     /// Indicate whether the scalar is zero
+    #[inline(always)]
     pub fn is_zero(self) -> bool {
         self == Self::ZERO
     }
@@ -89,26 +97,23 @@ impl Scalar {
     ///
     /// Return `Scalar::ZERO`, if the scalar is zero, `Scalar::ONE`, if it is
     /// positive, `-Scalar::ONE`, if it is negative.
+    #[inline]
     pub fn sign(self) -> Sign {
-        if self.is_negative() {
-            return Sign::Negative;
+        match self.cmp(&Self::ZERO) {
+            Ordering::Less => Sign::Negative,
+            Ordering::Greater => Sign::Positive,
+            Ordering::Equal => Sign::Zero,
         }
-        if self.is_positive() {
-            return Sign::Positive;
-        }
-        if self.is_zero() {
-            return Sign::Zero;
-        }
-
-        unreachable!("Sign is neither negative, nor positive, nor zero.")
     }
 
     /// Compute the absolute value of the scalar
+    #[inline(always)]
     pub fn abs(self) -> Self {
         self.0.abs().into()
     }
 
     /// Compute the maximum of this and another scalar
+    #[inline]
     pub fn max(self, other: impl Into<Self>) -> Self {
         self.0.max(other.into().0).into()
     }

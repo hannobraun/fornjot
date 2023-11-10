@@ -18,6 +18,7 @@ pub struct Vector<const D: usize> {
 
 impl<const D: usize> Vector<D> {
     /// Create a vector whose components are all equal
+    #[inline(always)]
     pub fn from_component(scalar: impl Into<Scalar>) -> Self {
         Self {
             components: [scalar.into(); D],
@@ -25,11 +26,13 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Convert the vector into an nalgebra vector
+    #[inline(always)]
     pub fn to_na(self) -> nalgebra::SVector<f64, D> {
         self.components.map(Scalar::into_f64).into()
     }
 
     /// Convert to a 1-dimensional vector
+    #[inline(always)]
     pub fn to_t(self) -> Vector<1> {
         Vector {
             components: [self.components[0]],
@@ -43,6 +46,7 @@ impl<const D: usize> Vector<D> {
     ///
     /// If the vector has higher dimensionality than two, the superfluous
     /// components will be discarded.
+    #[inline]
     pub fn to_uv(self) -> Vector<2> {
         let zero = Scalar::ZERO;
 
@@ -62,6 +66,7 @@ impl<const D: usize> Vector<D> {
     ///
     /// If the vector has higher dimensionality than three, the superfluous
     /// components will be discarded.
+    #[inline]
     pub fn to_xyz(self) -> Vector<3> {
         let zero = Scalar::ZERO;
 
@@ -76,21 +81,25 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Compute the magnitude of the vector
+    #[inline(always)]
     pub fn magnitude(&self) -> Scalar {
         self.to_na().magnitude().into()
     }
 
     /// Compute a normalized version of the vector
+    #[inline(always)]
     pub fn normalize(&self) -> Self {
         self.to_na().normalize().into()
     }
 
     /// Compute the dot product with another vector
+    #[inline]
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
     }
 
     /// Compute the scalar projection of this vector onto another
+    #[inline]
     pub fn scalar_projection_onto(&self, other: &Self) -> Scalar {
         if other.magnitude() == Scalar::ZERO {
             return Scalar::ZERO;
@@ -102,6 +111,7 @@ impl<const D: usize> Vector<D> {
 
 impl Vector<1> {
     /// Construct a `Vector` that represents the t-axis
+    #[inline(always)]
     pub fn unit_t() -> Self {
         Self::from([1.])
     }
@@ -109,11 +119,13 @@ impl Vector<1> {
 
 impl Vector<2> {
     /// Construct a `Vector` that represents the u-axis
+    #[inline(always)]
     pub fn unit_u() -> Self {
         Self::from([1., 0.])
     }
 
     /// Construct a `Vector` that represents the v-axis
+    #[inline(always)]
     pub fn unit_v() -> Self {
         Self::from([0., 1.])
     }
@@ -132,26 +144,31 @@ impl Vector<2> {
 
 impl Vector<3> {
     /// Construct a `Vector` that represents the x-axis
+    #[inline(always)]
     pub fn unit_x() -> Self {
         Self::from([1., 0., 0.])
     }
 
     /// Construct a `Vector` that represents the y-axis
+    #[inline(always)]
     pub fn unit_y() -> Self {
         Self::from([0., 1., 0.])
     }
 
     /// Construct a `Vector` that represents the z-axis
+    #[inline(always)]
     pub fn unit_z() -> Self {
         Self::from([0., 0., 1.])
     }
 
     /// Compute the cross product with another vector
+    #[inline]
     pub fn cross(&self, other: &Self) -> Self {
         self.to_na().cross(&other.to_na()).into()
     }
 
     /// Construct a new vector from this vector's x and y components
+    #[inline(always)]
     pub fn xy(&self) -> Vector<2> {
         Vector::from([self.x, self.y])
     }
