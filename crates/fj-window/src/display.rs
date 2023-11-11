@@ -98,6 +98,9 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 event: WindowEvent::MouseWheel { .. },
                 ..
             } => viewer.add_focus_point(),
+            Event::AboutToWait => {
+                window.window().request_redraw();
+            }
             Event::WindowEvent {
                 event: WindowEvent::RedrawRequested,
                 ..
