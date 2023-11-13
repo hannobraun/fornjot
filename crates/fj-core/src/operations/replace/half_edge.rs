@@ -71,13 +71,17 @@ impl ReplaceHalfEdge for Handle<Region> {
                 services,
             );
             replacement_happened |= cycle.was_updated();
-            interiors.push(cycle.into_inner());
+            interiors.push(cycle.into_inner(services));
         }
 
         if replacement_happened {
             ReplaceOutput::Updated(
-                Region::new(exterior.into_inner(), interiors, self.color())
-                    .insert(services),
+                Region::new(
+                    exterior.into_inner(services),
+                    interiors,
+                    self.color(),
+                )
+                .insert(services),
             )
         } else {
             ReplaceOutput::Original(self)
@@ -104,7 +108,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
                 services,
             );
             replacement_happened |= region.was_updated();
-            regions.push(region.into_inner());
+            regions.push(region.into_inner(services));
         }
 
         if replacement_happened {
@@ -132,7 +136,7 @@ impl ReplaceHalfEdge for Handle<Face> {
 
         if region.was_updated() {
             ReplaceOutput::Updated(
-                Face::new(self.surface().clone(), region.into_inner())
+                Face::new(self.surface().clone(), region.into_inner(services))
                     .insert(services),
             )
         } else {
@@ -160,7 +164,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
                 services,
             );
             replacement_happened |= face.was_updated();
-            faces.push(face.into_inner());
+            faces.push(face.into_inner(services));
         }
 
         if replacement_happened {
@@ -190,7 +194,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
                 services,
             );
             replacement_happened |= shell.was_updated();
-            shells.push(shell.into_inner());
+            shells.push(shell.into_inner(services));
         }
 
         if replacement_happened {

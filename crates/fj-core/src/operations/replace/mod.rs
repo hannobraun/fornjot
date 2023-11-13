@@ -87,7 +87,7 @@ pub use self::{
     curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
 };
 
-use crate::storage::Handle;
+use crate::{services::Services, storage::Handle};
 
 /// The output of a replace operation
 ///
@@ -115,7 +115,7 @@ impl<T> ReplaceOutput<T> {
     }
 
     /// Convert `self` into a `T`, regardless of variant
-    pub fn into_inner(self) -> Handle<T> {
+    pub fn into_inner(self, _: &mut Services) -> Handle<T> {
         match self {
             ReplaceOutput::Original(inner) => inner,
             ReplaceOutput::Updated(inner) => inner,
