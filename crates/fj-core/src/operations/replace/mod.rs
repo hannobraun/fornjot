@@ -24,6 +24,9 @@
 //!
 //! All replace operations follow the same structure:
 //!
+//! - They are implemented for `Handle<T>`, where `T` is a bare object type.
+//! - They have an associated type to identify `T`. See implementation note
+//!   below.
 //! - They take a reference to the [`Handle`] of the original object that
 //!   should be replaced.
 //! - Based on the specific replace operations, they take the [`Handle`] of the
@@ -75,6 +78,14 @@
 //! with objects being inserted or not, so it's probably not worth addressing
 //! this before doing a general revamp of how operations deal with inserting.
 //!
+//! All replace traits have an associated type. This is required, because the
+//! traits are implemented for `Handle<T>`, but they must refer to the bare
+//! object type (`T`) in their method return values. It should be possible to
+//! avoid this additional complexity by implementing the traits for `T`
+//! directly, but then we would need arbitrary self types to keep the current
+//! level of convenience:
+//! <https://doc.rust-lang.org/beta/unstable-book/language-features/arbitrary-self-types.html>
+//!
 //!
 //! [`Handle`]: crate::storage::Handle
 //! [update operations]: crate::operations::update
@@ -107,6 +118,13 @@ pub enum ReplaceOutput<T> {
     ///
     /// If this variant is returned, a replacement happened, and this is the new
     /// version of the object that reflects that.
+    ///
+    /// This is a bare object, not a `Handle`, to leave the decision of whether
+    /// to insert the object to the caller. This might be relevant, if the
+    /// result of the replacement is an invalid intermediate step in the
+    /// modeling process. The validation infrastructure currently provides no
+    /// good ways to deal with invalid intermediate results, even if the end
+    /// result ends up valid.
     Updated(T),
 }
 
@@ -116,7 +134,7 @@ impl<T> ReplaceOutput<T> {
         matches!(self, ReplaceOutput::Updated(_))
     }
 
-    /// Convert `self` into a `T`, regardless of variant
+    /// Return the original object, or insert the updated on and return handle
     pub fn into_inner(self, services: &mut Services) -> Handle<T>
     where
         T: Insert<Inserted = Handle<T>>,
