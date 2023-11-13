@@ -19,7 +19,7 @@ pub trait SplitHalfEdge {
     /// The caller is responsible for also split this half-edge's sibling, if
     /// appropriate, to preserve validity.
     #[must_use]
-    fn split(
+    fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
         services: &mut Services,
@@ -27,7 +27,7 @@ pub trait SplitHalfEdge {
 }
 
 impl SplitHalfEdge for HalfEdge {
-    fn split(
+    fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
         services: &mut Services,
