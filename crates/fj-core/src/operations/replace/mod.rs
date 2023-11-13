@@ -24,6 +24,9 @@
 //!
 //! All replace operations follow the same structure:
 //!
+//! - They are implemented for `Handle<T>`, where `T` is a bare object type.
+//! - They have an associated type to identify `T`. See implementation note
+//!   below.
 //! - They take a reference to the [`Handle`] of the original object that
 //!   should be replaced.
 //! - Based on the specific replace operations, they take the [`Handle`] of the
@@ -62,7 +65,7 @@
 //! Only a few replace operations are implemented so far. More can be added, as
 //! the need arises.
 //!
-//! As of this writing, replace operations are generally implemented in a most
+//! As of this writing, replace operations are generally implemented in the most
 //! simple and naive way possible: Iterating over all referenced objects and
 //! calling the replace operation recursively. This might have performance
 //! implications for large object graphs.
@@ -70,10 +73,18 @@
 //! There are some update operations that are straight-up redundant with what
 //! replace operations are doing. Some of the methods even have the same names.
 //! Those haven't been removed yet, as update operations generally require a
-//! reference to an object, while replace operations require a `Handle`. There
-//! are some open questions about how operations in general should deal with
-//! objects being inserted or not, so it's probably not worth to address this
-//! before doing a general revamp of how operations deal with inserting.
+//! reference to a bare object, while replace operations require a `Handle`.
+//! There are some open questions about how operations in general should deal
+//! with objects being inserted or not, so it's probably not worth addressing
+//! this before doing a general revamp of how operations deal with inserting.
+//!
+//! All replace traits have an associated type. This is required, because the
+//! traits are implemented for `Handle<T>`, but they must refer to the bare
+//! object type (`T`) in their method return values. It should be possible to
+//! avoid this additional complexity by implementing the traits for `T`
+//! directly, but then we would need arbitrary self types to keep the current
+//! level of convenience:
+//! <https://doc.rust-lang.org/beta/unstable-book/language-features/arbitrary-self-types.html>
 //!
 //!
 //! [`Handle`]: crate::storage::Handle
@@ -87,6 +98,10 @@ pub use self::{
     curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
 };
 
+use crate::{services::Services, storage::Handle};
+
+use super::insert::Insert;
+
 /// The output of a replace operation
 ///
 /// See [module documentation] for more information.
@@ -97,12 +112,19 @@ pub enum ReplaceOutput<T> {
     ///
     /// If this variant is returned, the object to be replaced was not
     /// referenced, and no replacement happened.
-    Original(T),
+    Original(Handle<T>),
 
     /// The updated version of the object that the operation was called on
     ///
     /// If this variant is returned, a replacement happened, and this is the new
     /// version of the object that reflects that.
+    ///
+    /// This is a bare object, not a `Handle`, to leave the decision of whether
+    /// to insert the object to the caller. This might be relevant, if the
+    /// result of the replacement is an invalid intermediate step in the
+    /// modeling process. The validation infrastructure currently provides no
+    /// good ways to deal with invalid intermediate results, even if the end
+    /// result ends up valid.
     Updated(T),
 }
 
@@ -112,11 +134,14 @@ impl<T> ReplaceOutput<T> {
         matches!(self, ReplaceOutput::Updated(_))
     }
 
-    /// Convert `self` into a `T`, regardless of variant
-    pub fn into_inner(self) -> T {
+    /// Return the original object, or insert the updated on and return handle
+    pub fn into_inner(self, services: &mut Services) -> Handle<T>
+    where
+        T: Insert<Inserted = Handle<T>>,
+    {
         match self {
             ReplaceOutput::Original(inner) => inner,
-            ReplaceOutput::Updated(inner) => inner,
+            ReplaceOutput::Updated(inner) => inner.insert(services),
         }
     }
 }

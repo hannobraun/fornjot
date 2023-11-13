@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
-    operations::{insert::Insert, update::UpdateHalfEdge},
+    operations::update::UpdateHalfEdge,
     services::Services,
     storage::Handle,
 };
@@ -13,6 +13,9 @@ use super::ReplaceOutput;
 ///
 /// [module documentation]: super
 pub trait ReplaceCurve: Sized {
+    /// The bare object type that this trait is implemented for
+    type BareObject;
+
     /// Replace the curve
     #[must_use]
     fn replace_curve(
@@ -20,20 +23,20 @@ pub trait ReplaceCurve: Sized {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self>;
+    ) -> ReplaceOutput<Self::BareObject>;
 }
 
 impl ReplaceCurve for Handle<HalfEdge> {
+    type BareObject = HalfEdge;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+        _: &mut Services,
+    ) -> ReplaceOutput<Self::BareObject> {
         if original.id() == self.curve().id() {
-            ReplaceOutput::Updated(
-                self.update_curve(|_| replacement).insert(services),
-            )
+            ReplaceOutput::Updated(self.update_curve(|_| replacement))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -41,12 +44,14 @@ impl ReplaceCurve for Handle<HalfEdge> {
 }
 
 impl ReplaceCurve for Handle<Cycle> {
+    type BareObject = Cycle;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut half_edges = Vec::new();
@@ -57,11 +62,11 @@ impl ReplaceCurve for Handle<Cycle> {
                 services,
             );
             replacement_happened |= half_edge.was_updated();
-            half_edges.push(half_edge.into_inner());
+            half_edges.push(half_edge.into_inner(services));
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Cycle::new(half_edges).insert(services))
+            ReplaceOutput::Updated(Cycle::new(half_edges))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -69,12 +74,14 @@ impl ReplaceCurve for Handle<Cycle> {
 }
 
 impl ReplaceCurve for Handle<Region> {
+    type BareObject = Region;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let exterior = self.exterior().clone().replace_curve(
@@ -92,14 +99,15 @@ impl ReplaceCurve for Handle<Region> {
                 services,
             );
             replacement_happened |= cycle.was_updated();
-            interiors.push(cycle.into_inner());
+            interiors.push(cycle.into_inner(services));
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(
-                Region::new(exterior.into_inner(), interiors, self.color())
-                    .insert(services),
-            )
+            ReplaceOutput::Updated(Region::new(
+                exterior.into_inner(services),
+                interiors,
+                self.color(),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -107,12 +115,14 @@ impl ReplaceCurve for Handle<Region> {
 }
 
 impl ReplaceCurve for Handle<Sketch> {
+    type BareObject = Sketch;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
@@ -123,11 +133,11 @@ impl ReplaceCurve for Handle<Sketch> {
                 services,
             );
             replacement_happened |= region.was_updated();
-            regions.push(region.into_inner());
+            regions.push(region.into_inner(services));
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Sketch::new(regions).insert(services))
+            ReplaceOutput::Updated(Sketch::new(regions))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -135,12 +145,14 @@ impl ReplaceCurve for Handle<Sketch> {
 }
 
 impl ReplaceCurve for Handle<Face> {
+    type BareObject = Face;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let region = self.region().clone().replace_curve(
             original,
             replacement,
@@ -148,10 +160,10 @@ impl ReplaceCurve for Handle<Face> {
         );
 
         if region.was_updated() {
-            ReplaceOutput::Updated(
-                Face::new(self.surface().clone(), region.into_inner())
-                    .insert(services),
-            )
+            ReplaceOutput::Updated(Face::new(
+                self.surface().clone(),
+                region.into_inner(services),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -159,12 +171,14 @@ impl ReplaceCurve for Handle<Face> {
 }
 
 impl ReplaceCurve for Handle<Shell> {
+    type BareObject = Shell;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
@@ -175,11 +189,11 @@ impl ReplaceCurve for Handle<Shell> {
                 services,
             );
             replacement_happened |= face.was_updated();
-            faces.push(face.into_inner());
+            faces.push(face.into_inner(services));
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Shell::new(faces).insert(services))
+            ReplaceOutput::Updated(Shell::new(faces))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -187,12 +201,14 @@ impl ReplaceCurve for Handle<Shell> {
 }
 
 impl ReplaceCurve for Handle<Solid> {
+    type BareObject = Solid;
+
     fn replace_curve(
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
@@ -203,11 +219,11 @@ impl ReplaceCurve for Handle<Solid> {
                 services,
             );
             replacement_happened |= shell.was_updated();
-            shells.push(shell.into_inner());
+            shells.push(shell.into_inner(services));
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Solid::new(shells).insert(services))
+            ReplaceOutput::Updated(Solid::new(shells))
         } else {
             ReplaceOutput::Original(self)
         }
