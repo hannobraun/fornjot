@@ -23,7 +23,7 @@ pub trait ReplaceHalfEdge: Sized {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self>;
+    ) -> ReplaceOutput<Self::BareObject>;
 }
 
 impl ReplaceHalfEdge for Handle<Cycle> {
@@ -34,7 +34,7 @@ impl ReplaceHalfEdge for Handle<Cycle> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         if let Some(half_edges) =
             self.half_edges().replace(original, replacements)
         {
@@ -53,7 +53,7 @@ impl ReplaceHalfEdge for Handle<Region> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let exterior = self.exterior().clone().replace_half_edge(
@@ -93,7 +93,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
@@ -123,7 +123,7 @@ impl ReplaceHalfEdge for Handle<Face> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let region = self.region().clone().replace_half_edge(
             original,
             replacements,
@@ -149,7 +149,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
@@ -179,7 +179,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();

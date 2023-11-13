@@ -23,7 +23,7 @@ pub trait ReplaceVertex: Sized {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self>;
+    ) -> ReplaceOutput<Self::BareObject>;
 }
 
 impl ReplaceVertex for Handle<HalfEdge> {
@@ -34,7 +34,7 @@ impl ReplaceVertex for Handle<HalfEdge> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         if original.id() == self.start_vertex().id() {
             ReplaceOutput::Updated(
                 self.update_start_vertex(|_| replacement).insert(services),
@@ -53,7 +53,7 @@ impl ReplaceVertex for Handle<Cycle> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut half_edges = Vec::new();
@@ -83,7 +83,7 @@ impl ReplaceVertex for Handle<Region> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let exterior = self.exterior().clone().replace_vertex(
@@ -123,7 +123,7 @@ impl ReplaceVertex for Handle<Sketch> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
@@ -153,7 +153,7 @@ impl ReplaceVertex for Handle<Face> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let region = self.region().clone().replace_vertex(
             original,
             replacement,
@@ -179,7 +179,7 @@ impl ReplaceVertex for Handle<Shell> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
@@ -209,7 +209,7 @@ impl ReplaceVertex for Handle<Solid> {
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self> {
+    ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();

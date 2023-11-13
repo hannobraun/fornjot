@@ -87,6 +87,8 @@ pub use self::{
     curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
 };
 
+use crate::storage::Handle;
+
 /// The output of a replace operation
 ///
 /// See [module documentation] for more information.
@@ -97,13 +99,13 @@ pub enum ReplaceOutput<T> {
     ///
     /// If this variant is returned, the object to be replaced was not
     /// referenced, and no replacement happened.
-    Original(T),
+    Original(Handle<T>),
 
     /// The updated version of the object that the operation was called on
     ///
     /// If this variant is returned, a replacement happened, and this is the new
     /// version of the object that reflects that.
-    Updated(T),
+    Updated(Handle<T>),
 }
 
 impl<T> ReplaceOutput<T> {
@@ -113,7 +115,7 @@ impl<T> ReplaceOutput<T> {
     }
 
     /// Convert `self` into a `T`, regardless of variant
-    pub fn into_inner(self) -> T {
+    pub fn into_inner(self) -> Handle<T> {
         match self {
             ReplaceOutput::Original(inner) => inner,
             ReplaceOutput::Updated(inner) => inner,
