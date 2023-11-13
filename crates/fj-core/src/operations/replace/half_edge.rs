@@ -13,6 +13,9 @@ use super::ReplaceOutput;
 ///
 /// [module documentation]: super
 pub trait ReplaceHalfEdge: Sized {
+    /// The bare object type that this trait is implemented for
+    type BareObject;
+
     /// Replace the half-edge
     #[must_use]
     fn replace_half_edge<const N: usize>(
@@ -24,6 +27,8 @@ pub trait ReplaceHalfEdge: Sized {
 }
 
 impl ReplaceHalfEdge for Handle<Cycle> {
+    type BareObject = Cycle;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
@@ -41,6 +46,8 @@ impl ReplaceHalfEdge for Handle<Cycle> {
 }
 
 impl ReplaceHalfEdge for Handle<Region> {
+    type BareObject = Region;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
@@ -79,6 +86,8 @@ impl ReplaceHalfEdge for Handle<Region> {
 }
 
 impl ReplaceHalfEdge for Handle<Sketch> {
+    type BareObject = Sketch;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
@@ -107,6 +116,8 @@ impl ReplaceHalfEdge for Handle<Sketch> {
 }
 
 impl ReplaceHalfEdge for Handle<Face> {
+    type BareObject = Face;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
@@ -131,6 +142,8 @@ impl ReplaceHalfEdge for Handle<Face> {
 }
 
 impl ReplaceHalfEdge for Handle<Shell> {
+    type BareObject = Shell;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
@@ -159,6 +172,8 @@ impl ReplaceHalfEdge for Handle<Shell> {
 }
 
 impl ReplaceHalfEdge for Handle<Solid> {
+    type BareObject = Solid;
+
     fn replace_half_edge<const N: usize>(
         self,
         original: &Handle<HalfEdge>,
