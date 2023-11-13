@@ -70,10 +70,10 @@
 //! There are some update operations that are straight-up redundant with what
 //! replace operations are doing. Some of the methods even have the same names.
 //! Those haven't been removed yet, as update operations generally require a
-//! reference to an object, while replace operations require a `Handle`. There
-//! are some open questions about how operations in general should deal with
-//! objects being inserted or not, so it's probably not worth to address this
-//! before doing a general revamp of how operations deal with inserting.
+//! reference to a bare object, while replace operations require a `Handle`.
+//! There are some open questions about how operations in general should deal
+//! with objects being inserted or not, so it's probably not worth addressing
+//! this before doing a general revamp of how operations deal with inserting.
 //!
 //!
 //! [`Handle`]: crate::storage::Handle
