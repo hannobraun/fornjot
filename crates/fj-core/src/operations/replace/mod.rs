@@ -89,6 +89,8 @@ pub use self::{
 
 use crate::{services::Services, storage::Handle};
 
+use super::insert::Insert;
+
 /// The output of a replace operation
 ///
 /// See [module documentation] for more information.
@@ -115,7 +117,10 @@ impl<T> ReplaceOutput<T> {
     }
 
     /// Convert `self` into a `T`, regardless of variant
-    pub fn into_inner(self, _: &mut Services) -> Handle<T> {
+    pub fn into_inner(self, _: &mut Services) -> Handle<T>
+    where
+        T: Insert<Inserted = Handle<T>>,
+    {
         match self {
             ReplaceOutput::Original(inner) => inner,
             ReplaceOutput::Updated(inner) => inner,
