@@ -1,6 +1,6 @@
 use crate::{
     objects::{Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
-    operations::{insert::Insert, update::UpdateHalfEdge},
+    operations::update::UpdateHalfEdge,
     services::Services,
     storage::Handle,
 };
@@ -33,12 +33,10 @@ impl ReplaceCurve for Handle<HalfEdge> {
         self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        services: &mut Services,
+        _: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
         if original.id() == self.curve().id() {
-            ReplaceOutput::Updated(
-                self.update_curve(|_| replacement).insert(services),
-            )
+            ReplaceOutput::Updated(self.update_curve(|_| replacement))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -68,7 +66,7 @@ impl ReplaceCurve for Handle<Cycle> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Cycle::new(half_edges).insert(services))
+            ReplaceOutput::Updated(Cycle::new(half_edges))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -105,14 +103,11 @@ impl ReplaceCurve for Handle<Region> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(
-                Region::new(
-                    exterior.into_inner(services),
-                    interiors,
-                    self.color(),
-                )
-                .insert(services),
-            )
+            ReplaceOutput::Updated(Region::new(
+                exterior.into_inner(services),
+                interiors,
+                self.color(),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -142,7 +137,7 @@ impl ReplaceCurve for Handle<Sketch> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Sketch::new(regions).insert(services))
+            ReplaceOutput::Updated(Sketch::new(regions))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -165,10 +160,10 @@ impl ReplaceCurve for Handle<Face> {
         );
 
         if region.was_updated() {
-            ReplaceOutput::Updated(
-                Face::new(self.surface().clone(), region.into_inner(services))
-                    .insert(services),
-            )
+            ReplaceOutput::Updated(Face::new(
+                self.surface().clone(),
+                region.into_inner(services),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -198,7 +193,7 @@ impl ReplaceCurve for Handle<Shell> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Shell::new(faces).insert(services))
+            ReplaceOutput::Updated(Shell::new(faces))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -228,7 +223,7 @@ impl ReplaceCurve for Handle<Solid> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Solid::new(shells).insert(services))
+            ReplaceOutput::Updated(Solid::new(shells))
         } else {
             ReplaceOutput::Original(self)
         }

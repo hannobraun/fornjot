@@ -1,6 +1,5 @@
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
-    operations::insert::Insert,
     services::Services,
     storage::Handle,
 };
@@ -33,12 +32,12 @@ impl ReplaceHalfEdge for Handle<Cycle> {
         self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        _: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
         if let Some(half_edges) =
             self.half_edges().replace(original, replacements)
         {
-            ReplaceOutput::Updated(Cycle::new(half_edges).insert(services))
+            ReplaceOutput::Updated(Cycle::new(half_edges))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -75,14 +74,11 @@ impl ReplaceHalfEdge for Handle<Region> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(
-                Region::new(
-                    exterior.into_inner(services),
-                    interiors,
-                    self.color(),
-                )
-                .insert(services),
-            )
+            ReplaceOutput::Updated(Region::new(
+                exterior.into_inner(services),
+                interiors,
+                self.color(),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -112,7 +108,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Sketch::new(regions).insert(services))
+            ReplaceOutput::Updated(Sketch::new(regions))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -135,10 +131,10 @@ impl ReplaceHalfEdge for Handle<Face> {
         );
 
         if region.was_updated() {
-            ReplaceOutput::Updated(
-                Face::new(self.surface().clone(), region.into_inner(services))
-                    .insert(services),
-            )
+            ReplaceOutput::Updated(Face::new(
+                self.surface().clone(),
+                region.into_inner(services),
+            ))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -168,7 +164,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Shell::new(faces).insert(services))
+            ReplaceOutput::Updated(Shell::new(faces))
         } else {
             ReplaceOutput::Original(self)
         }
@@ -198,7 +194,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Solid::new(shells).insert(services))
+            ReplaceOutput::Updated(Solid::new(shells))
         } else {
             ReplaceOutput::Original(self)
         }

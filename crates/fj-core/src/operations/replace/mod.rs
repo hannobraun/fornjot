@@ -107,7 +107,7 @@ pub enum ReplaceOutput<T> {
     ///
     /// If this variant is returned, a replacement happened, and this is the new
     /// version of the object that reflects that.
-    Updated(Handle<T>),
+    Updated(T),
 }
 
 impl<T> ReplaceOutput<T> {
@@ -117,13 +117,13 @@ impl<T> ReplaceOutput<T> {
     }
 
     /// Convert `self` into a `T`, regardless of variant
-    pub fn into_inner(self, _: &mut Services) -> Handle<T>
+    pub fn into_inner(self, services: &mut Services) -> Handle<T>
     where
         T: Insert<Inserted = Handle<T>>,
     {
         match self {
             ReplaceOutput::Original(inner) => inner,
-            ReplaceOutput::Updated(inner) => inner,
+            ReplaceOutput::Updated(inner) => inner.insert(services),
         }
     }
 }
