@@ -62,7 +62,7 @@
 //! Only a few replace operations are implemented so far. More can be added, as
 //! the need arises.
 //!
-//! As of this writing, replace operations are generally implemented in a most
+//! As of this writing, replace operations are generally implemented in the most
 //! simple and naive way possible: Iterating over all referenced objects and
 //! calling the replace operation recursively. This might have performance
 //! implications for large object graphs.
