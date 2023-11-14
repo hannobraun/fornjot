@@ -19,7 +19,7 @@ pub trait ReplaceCurve: Sized {
     /// Replace the curve
     #[must_use]
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -30,7 +30,7 @@ impl ReplaceCurve for Handle<HalfEdge> {
     type BareObject = HalfEdge;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         _: &mut Services,
@@ -38,7 +38,7 @@ impl ReplaceCurve for Handle<HalfEdge> {
         if original.id() == self.curve().id() {
             ReplaceOutput::Updated(self.update_curve(|_| replacement))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -47,7 +47,7 @@ impl ReplaceCurve for Handle<Cycle> {
     type BareObject = Cycle;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -68,7 +68,7 @@ impl ReplaceCurve for Handle<Cycle> {
         if replacement_happened {
             ReplaceOutput::Updated(Cycle::new(half_edges))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -77,7 +77,7 @@ impl ReplaceCurve for Handle<Region> {
     type BareObject = Region;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -109,7 +109,7 @@ impl ReplaceCurve for Handle<Region> {
                 self.color(),
             ))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -118,7 +118,7 @@ impl ReplaceCurve for Handle<Sketch> {
     type BareObject = Sketch;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -139,7 +139,7 @@ impl ReplaceCurve for Handle<Sketch> {
         if replacement_happened {
             ReplaceOutput::Updated(Sketch::new(regions))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -148,7 +148,7 @@ impl ReplaceCurve for Handle<Face> {
     type BareObject = Face;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -165,7 +165,7 @@ impl ReplaceCurve for Handle<Face> {
                 region.into_inner(services),
             ))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -174,7 +174,7 @@ impl ReplaceCurve for Handle<Shell> {
     type BareObject = Shell;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -195,7 +195,7 @@ impl ReplaceCurve for Handle<Shell> {
         if replacement_happened {
             ReplaceOutput::Updated(Shell::new(faces))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -204,7 +204,7 @@ impl ReplaceCurve for Handle<Solid> {
     type BareObject = Solid;
 
     fn replace_curve(
-        self,
+        &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
@@ -225,7 +225,7 @@ impl ReplaceCurve for Handle<Solid> {
         if replacement_happened {
             ReplaceOutput::Updated(Solid::new(shells))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
