@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Vertex},
-    operations::update::UpdateHalfEdge,
+    operations::{insert::Insert, update::UpdateHalfEdge},
     services::Services,
     storage::Handle,
 };
@@ -62,7 +62,11 @@ impl ReplaceVertex for Handle<Cycle> {
                 services,
             );
             replacement_happened |= half_edge.was_updated();
-            half_edges.push(half_edge.into_inner(services));
+            half_edges.push(
+                half_edge
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
         }
 
         if replacement_happened {
@@ -96,12 +100,18 @@ impl ReplaceVertex for Handle<Region> {
             let cycle =
                 cycle.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= cycle.was_updated();
-            interiors.push(cycle.into_inner(services));
+            interiors.push(
+                cycle
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
         }
 
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
-                exterior.into_inner(services),
+                exterior
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
                 interiors,
                 self.color(),
             ))
@@ -127,7 +137,11 @@ impl ReplaceVertex for Handle<Sketch> {
             let region =
                 region.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= region.was_updated();
-            regions.push(region.into_inner(services));
+            regions.push(
+                region
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
         }
 
         if replacement_happened {
@@ -154,7 +168,9 @@ impl ReplaceVertex for Handle<Face> {
         if region.was_updated() {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
-                region.into_inner(services),
+                region
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
             ))
         } else {
             ReplaceOutput::Original(self.clone())
@@ -178,7 +194,10 @@ impl ReplaceVertex for Handle<Shell> {
             let face =
                 face.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= face.was_updated();
-            faces.push(face.into_inner(services));
+            faces.push(
+                face.map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
         }
 
         if replacement_happened {
@@ -205,7 +224,11 @@ impl ReplaceVertex for Handle<Solid> {
             let shell =
                 shell.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= shell.was_updated();
-            shells.push(shell.into_inner(services));
+            shells.push(
+                shell
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
         }
 
         if replacement_happened {

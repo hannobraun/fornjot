@@ -98,10 +98,6 @@ pub use self::{
     curve::ReplaceCurve, half_edge::ReplaceHalfEdge, vertex::ReplaceVertex,
 };
 
-use crate::{services::Services, storage::Handle};
-
-use super::insert::Insert;
-
 /// The output of a replace operation
 ///
 /// See [module documentation] for more information.
@@ -146,15 +142,12 @@ impl<Original, Updated> ReplaceOutput<Original, Updated> {
     }
 }
 
-impl<T> ReplaceOutput<Handle<T>, T> {
+impl<T> ReplaceOutput<T, T> {
     /// Return the original object, or insert the updated on and return handle
-    pub fn into_inner(self, services: &mut Services) -> Handle<T>
-    where
-        T: Insert<Inserted = Handle<T>>,
-    {
+    pub fn into_inner(self) -> T {
         match self {
             Self::Original(inner) => inner,
-            Self::Updated(inner) => inner.insert(services),
+            Self::Updated(inner) => inner,
         }
     }
 }
