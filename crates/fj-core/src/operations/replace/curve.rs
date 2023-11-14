@@ -23,7 +23,7 @@ pub trait ReplaceCurve: Sized {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject>;
+    ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
 impl ReplaceCurve for Handle<HalfEdge> {
@@ -34,7 +34,7 @@ impl ReplaceCurve for Handle<HalfEdge> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         _: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         if original.id() == self.curve().id() {
             ReplaceOutput::Updated(self.update_curve(|_| replacement))
         } else {
@@ -51,7 +51,7 @@ impl ReplaceCurve for Handle<Cycle> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut half_edges = Vec::new();
@@ -81,7 +81,7 @@ impl ReplaceCurve for Handle<Region> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let exterior = self.exterior().replace_curve(
@@ -119,7 +119,7 @@ impl ReplaceCurve for Handle<Sketch> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
@@ -146,7 +146,7 @@ impl ReplaceCurve for Handle<Face> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let region =
             self.region().replace_curve(original, replacement, services);
 
@@ -169,7 +169,7 @@ impl ReplaceCurve for Handle<Shell> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
@@ -196,7 +196,7 @@ impl ReplaceCurve for Handle<Solid> {
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
         services: &mut Services,
-    ) -> ReplaceOutput<Self::BareObject> {
+    ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();

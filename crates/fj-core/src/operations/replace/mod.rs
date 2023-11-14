@@ -107,12 +107,12 @@ use super::insert::Insert;
 /// See [module documentation] for more information.
 ///
 /// [module documentation]: self
-pub enum ReplaceOutput<T> {
+pub enum ReplaceOutput<Original, Updated> {
     /// The original object that the replace operation was called on
     ///
     /// If this variant is returned, the object to be replaced was not
     /// referenced, and no replacement happened.
-    Original(Handle<T>),
+    Original(Original),
 
     /// The updated version of the object that the operation was called on
     ///
@@ -125,15 +125,17 @@ pub enum ReplaceOutput<T> {
     /// modeling process. The validation infrastructure currently provides no
     /// good ways to deal with invalid intermediate results, even if the end
     /// result ends up valid.
-    Updated(T),
+    Updated(Updated),
 }
 
-impl<T> ReplaceOutput<T> {
+impl<Original, Updated> ReplaceOutput<Original, Updated> {
     /// Indicate whether the original object was updated
     pub fn was_updated(&self) -> bool {
         matches!(self, ReplaceOutput::Updated(_))
     }
+}
 
+impl<T> ReplaceOutput<Handle<T>, T> {
     /// Return the original object, or insert the updated on and return handle
     pub fn into_inner(self, services: &mut Services) -> Handle<T>
     where
