@@ -153,8 +153,8 @@ impl<T> ReplaceOutput<Handle<T>, T> {
         T: Insert<Inserted = Handle<T>>,
     {
         match self {
-            ReplaceOutput::Original(inner) => inner,
-            ReplaceOutput::Updated(inner) => inner.insert(services),
+            Self::Original(inner) => inner,
+            Self::Updated(inner) => inner.insert(services),
         }
     }
 }
