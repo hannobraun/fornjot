@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use crate::{
     objects::{Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
     operations::{insert::Insert, update::UpdateHalfEdge},
@@ -26,8 +28,8 @@ pub trait ReplaceCurve: Sized {
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
-impl ReplaceCurve for Handle<HalfEdge> {
-    type BareObject = HalfEdge;
+impl ReplaceCurve for HalfEdge {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -43,8 +45,8 @@ impl ReplaceCurve for Handle<HalfEdge> {
     }
 }
 
-impl ReplaceCurve for Handle<Cycle> {
-    type BareObject = Cycle;
+impl ReplaceCurve for Cycle {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -77,8 +79,8 @@ impl ReplaceCurve for Handle<Cycle> {
     }
 }
 
-impl ReplaceCurve for Handle<Region> {
-    type BareObject = Region;
+impl ReplaceCurve for Region {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -121,8 +123,8 @@ impl ReplaceCurve for Handle<Region> {
     }
 }
 
-impl ReplaceCurve for Handle<Sketch> {
-    type BareObject = Sketch;
+impl ReplaceCurve for Sketch {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -152,8 +154,8 @@ impl ReplaceCurve for Handle<Sketch> {
     }
 }
 
-impl ReplaceCurve for Handle<Face> {
-    type BareObject = Face;
+impl ReplaceCurve for Face {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -177,8 +179,8 @@ impl ReplaceCurve for Handle<Face> {
     }
 }
 
-impl ReplaceCurve for Handle<Shell> {
-    type BareObject = Shell;
+impl ReplaceCurve for Shell {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -207,8 +209,8 @@ impl ReplaceCurve for Handle<Shell> {
     }
 }
 
-impl ReplaceCurve for Handle<Solid> {
-    type BareObject = Solid;
+impl ReplaceCurve for Solid {
+    type BareObject = Self;
 
     fn replace_curve(
         &self,
@@ -235,5 +237,110 @@ impl ReplaceCurve for Handle<Solid> {
         } else {
             ReplaceOutput::Original(self.clone())
         }
+    }
+}
+
+impl ReplaceCurve for Handle<HalfEdge> {
+    type BareObject = HalfEdge;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Cycle> {
+    type BareObject = Cycle;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Region> {
+    type BareObject = Region;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Sketch> {
+    type BareObject = Sketch;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Face> {
+    type BareObject = Face;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Shell> {
+    type BareObject = Shell;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceCurve for Handle<Solid> {
+    type BareObject = Solid;
+
+    fn replace_curve(
+        &self,
+        original: &Handle<Curve>,
+        replacement: Handle<Curve>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_curve(original, replacement, services)
+            .map_original(|_| self.clone())
     }
 }

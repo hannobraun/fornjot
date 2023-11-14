@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Vertex},
     operations::{insert::Insert, update::UpdateHalfEdge},
@@ -26,8 +28,8 @@ pub trait ReplaceVertex: Sized {
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
-impl ReplaceVertex for Handle<HalfEdge> {
-    type BareObject = HalfEdge;
+impl ReplaceVertex for HalfEdge {
+    type BareObject = Self;
 
     fn replace_vertex(
         &self,
@@ -43,8 +45,8 @@ impl ReplaceVertex for Handle<HalfEdge> {
     }
 }
 
-impl ReplaceVertex for Handle<Cycle> {
-    type BareObject = Cycle;
+impl ReplaceVertex for Cycle {
+    type BareObject = Self;
 
     fn replace_vertex(
         &self,
@@ -77,8 +79,8 @@ impl ReplaceVertex for Handle<Cycle> {
     }
 }
 
-impl ReplaceVertex for Handle<Region> {
-    type BareObject = Region;
+impl ReplaceVertex for Region {
+    type BareObject = Self;
 
     fn replace_vertex(
         &self,
@@ -118,6 +120,169 @@ impl ReplaceVertex for Handle<Region> {
         } else {
             ReplaceOutput::Original(self.clone())
         }
+    }
+}
+
+impl ReplaceVertex for Sketch {
+    type BareObject = Self;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        let mut replacement_happened = false;
+
+        let mut regions = Vec::new();
+        for region in self.regions() {
+            let region =
+                region.replace_vertex(original, replacement.clone(), services);
+            replacement_happened |= region.was_updated();
+            regions.push(
+                region
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
+        }
+
+        if replacement_happened {
+            ReplaceOutput::Updated(Sketch::new(regions))
+        } else {
+            ReplaceOutput::Original(self.clone())
+        }
+    }
+}
+
+impl ReplaceVertex for Face {
+    type BareObject = Self;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        let region =
+            self.region()
+                .replace_vertex(original, replacement, services);
+
+        if region.was_updated() {
+            ReplaceOutput::Updated(Face::new(
+                self.surface().clone(),
+                region
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            ))
+        } else {
+            ReplaceOutput::Original(self.clone())
+        }
+    }
+}
+
+impl ReplaceVertex for Shell {
+    type BareObject = Self;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        let mut replacement_happened = false;
+
+        let mut faces = Vec::new();
+        for face in self.faces() {
+            let face =
+                face.replace_vertex(original, replacement.clone(), services);
+            replacement_happened |= face.was_updated();
+            faces.push(
+                face.map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
+        }
+
+        if replacement_happened {
+            ReplaceOutput::Updated(Shell::new(faces))
+        } else {
+            ReplaceOutput::Original(self.clone())
+        }
+    }
+}
+
+impl ReplaceVertex for Solid {
+    type BareObject = Self;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        let mut replacement_happened = false;
+
+        let mut shells = Vec::new();
+        for shell in self.shells() {
+            let shell =
+                shell.replace_vertex(original, replacement.clone(), services);
+            replacement_happened |= shell.was_updated();
+            shells.push(
+                shell
+                    .map_updated(|updated| updated.insert(services))
+                    .into_inner(),
+            );
+        }
+
+        if replacement_happened {
+            ReplaceOutput::Updated(Solid::new(shells))
+        } else {
+            ReplaceOutput::Original(self.clone())
+        }
+    }
+}
+
+impl ReplaceVertex for Handle<HalfEdge> {
+    type BareObject = HalfEdge;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceVertex for Handle<Cycle> {
+    type BareObject = Cycle;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceVertex for Handle<Region> {
+    type BareObject = Region;
+
+    fn replace_vertex(
+        &self,
+        original: &Handle<Vertex>,
+        replacement: Handle<Vertex>,
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
     }
 }
 
@@ -161,20 +326,9 @@ impl ReplaceVertex for Handle<Face> {
         replacement: Handle<Vertex>,
         services: &mut Services,
     ) -> ReplaceOutput<Self, Self::BareObject> {
-        let region =
-            self.region()
-                .replace_vertex(original, replacement, services);
-
-        if region.was_updated() {
-            ReplaceOutput::Updated(Face::new(
-                self.surface().clone(),
-                region
-                    .map_updated(|updated| updated.insert(services))
-                    .into_inner(),
-            ))
-        } else {
-            ReplaceOutput::Original(self.clone())
-        }
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
     }
 }
 
@@ -187,24 +341,9 @@ impl ReplaceVertex for Handle<Shell> {
         replacement: Handle<Vertex>,
         services: &mut Services,
     ) -> ReplaceOutput<Self, Self::BareObject> {
-        let mut replacement_happened = false;
-
-        let mut faces = Vec::new();
-        for face in self.faces() {
-            let face =
-                face.replace_vertex(original, replacement.clone(), services);
-            replacement_happened |= face.was_updated();
-            faces.push(
-                face.map_updated(|updated| updated.insert(services))
-                    .into_inner(),
-            );
-        }
-
-        if replacement_happened {
-            ReplaceOutput::Updated(Shell::new(faces))
-        } else {
-            ReplaceOutput::Original(self.clone())
-        }
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
     }
 }
 
@@ -217,24 +356,8 @@ impl ReplaceVertex for Handle<Solid> {
         replacement: Handle<Vertex>,
         services: &mut Services,
     ) -> ReplaceOutput<Self, Self::BareObject> {
-        let mut replacement_happened = false;
-
-        let mut shells = Vec::new();
-        for shell in self.shells() {
-            let shell =
-                shell.replace_vertex(original, replacement.clone(), services);
-            replacement_happened |= shell.was_updated();
-            shells.push(
-                shell
-                    .map_updated(|updated| updated.insert(services))
-                    .into_inner(),
-            );
-        }
-
-        if replacement_happened {
-            ReplaceOutput::Updated(Solid::new(shells))
-        } else {
-            ReplaceOutput::Original(self.clone())
-        }
+        self.deref()
+            .replace_vertex(original, replacement, services)
+            .map_original(|_| self.clone())
     }
 }

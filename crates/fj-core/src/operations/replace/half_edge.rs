@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
     operations::insert::Insert,
@@ -26,8 +28,8 @@ pub trait ReplaceHalfEdge: Sized {
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
-impl ReplaceHalfEdge for Handle<Cycle> {
-    type BareObject = Cycle;
+impl ReplaceHalfEdge for Cycle {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -45,8 +47,8 @@ impl ReplaceHalfEdge for Handle<Cycle> {
     }
 }
 
-impl ReplaceHalfEdge for Handle<Region> {
-    type BareObject = Region;
+impl ReplaceHalfEdge for Region {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -92,8 +94,8 @@ impl ReplaceHalfEdge for Handle<Region> {
     }
 }
 
-impl ReplaceHalfEdge for Handle<Sketch> {
-    type BareObject = Sketch;
+impl ReplaceHalfEdge for Sketch {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -126,8 +128,8 @@ impl ReplaceHalfEdge for Handle<Sketch> {
     }
 }
 
-impl ReplaceHalfEdge for Handle<Face> {
-    type BareObject = Face;
+impl ReplaceHalfEdge for Face {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -152,8 +154,8 @@ impl ReplaceHalfEdge for Handle<Face> {
     }
 }
 
-impl ReplaceHalfEdge for Handle<Shell> {
-    type BareObject = Shell;
+impl ReplaceHalfEdge for Shell {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -185,8 +187,8 @@ impl ReplaceHalfEdge for Handle<Shell> {
     }
 }
 
-impl ReplaceHalfEdge for Handle<Solid> {
-    type BareObject = Solid;
+impl ReplaceHalfEdge for Solid {
+    type BareObject = Self;
 
     fn replace_half_edge<const N: usize>(
         &self,
@@ -216,5 +218,95 @@ impl ReplaceHalfEdge for Handle<Solid> {
         } else {
             ReplaceOutput::Original(self.clone())
         }
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Cycle> {
+    type BareObject = Cycle;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Region> {
+    type BareObject = Region;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Sketch> {
+    type BareObject = Sketch;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Face> {
+    type BareObject = Face;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Shell> {
+    type BareObject = Shell;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
+    }
+}
+
+impl ReplaceHalfEdge for Handle<Solid> {
+    type BareObject = Solid;
+
+    fn replace_half_edge<const N: usize>(
+        &self,
+        original: &Handle<HalfEdge>,
+        replacements: [Handle<HalfEdge>; N],
+        services: &mut Services,
+    ) -> ReplaceOutput<Self, Self::BareObject> {
+        self.deref()
+            .replace_half_edge(original, replacements, services)
+            .map_original(|_| self.clone())
     }
 }
