@@ -49,16 +49,12 @@ impl SplitEdge for Shell {
                 sibling.split_half_edge(point, services);
             let sibling_b = sibling_b
                 .update_start_vertex(|_| half_edge_b.start_vertex().clone());
-            [sibling_a, sibling_b]
+            [sibling_a, sibling_b].map(|half_edge| half_edge.insert(services))
         };
 
         self.replace_half_edge(half_edge, [half_edge_a, half_edge_b], services)
             .into_inner()
-            .replace_half_edge(
-                &sibling,
-                siblings.map(|half_edge| half_edge.insert(services)),
-                services,
-            )
+            .replace_half_edge(&sibling, siblings, services)
             .into_inner()
     }
 }
