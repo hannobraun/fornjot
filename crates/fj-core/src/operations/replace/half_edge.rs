@@ -55,7 +55,7 @@ impl ReplaceHalfEdge for Handle<Region> {
     ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
-        let exterior = self.exterior().clone().replace_half_edge(
+        let exterior = self.exterior().replace_half_edge(
             original,
             replacements.clone(),
             services,
@@ -64,7 +64,7 @@ impl ReplaceHalfEdge for Handle<Region> {
 
         let mut interiors = Vec::new();
         for cycle in self.interiors() {
-            let cycle = cycle.clone().replace_half_edge(
+            let cycle = cycle.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -98,7 +98,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
 
         let mut regions = Vec::new();
         for region in self.regions() {
-            let region = region.clone().replace_half_edge(
+            let region = region.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -124,11 +124,9 @@ impl ReplaceHalfEdge for Handle<Face> {
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
-        let region = self.region().clone().replace_half_edge(
-            original,
-            replacements,
-            services,
-        );
+        let region =
+            self.region()
+                .replace_half_edge(original, replacements, services);
 
         if region.was_updated() {
             ReplaceOutput::Updated(Face::new(
@@ -154,7 +152,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
 
         let mut faces = Vec::new();
         for face in self.faces() {
-            let face = face.clone().replace_half_edge(
+            let face = face.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -184,7 +182,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
 
         let mut shells = Vec::new();
         for shell in self.shells() {
-            let shell = shell.clone().replace_half_edge(
+            let shell = shell.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,

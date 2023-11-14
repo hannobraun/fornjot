@@ -56,7 +56,7 @@ impl ReplaceVertex for Handle<Cycle> {
 
         let mut half_edges = Vec::new();
         for half_edge in self.half_edges() {
-            let half_edge = half_edge.clone().replace_vertex(
+            let half_edge = half_edge.replace_vertex(
                 original,
                 replacement.clone(),
                 services,
@@ -84,7 +84,7 @@ impl ReplaceVertex for Handle<Region> {
     ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
-        let exterior = self.exterior().clone().replace_vertex(
+        let exterior = self.exterior().replace_vertex(
             original,
             replacement.clone(),
             services,
@@ -93,11 +93,8 @@ impl ReplaceVertex for Handle<Region> {
 
         let mut interiors = Vec::new();
         for cycle in self.interiors() {
-            let cycle = cycle.clone().replace_vertex(
-                original,
-                replacement.clone(),
-                services,
-            );
+            let cycle =
+                cycle.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= cycle.was_updated();
             interiors.push(cycle.into_inner(services));
         }
@@ -127,11 +124,8 @@ impl ReplaceVertex for Handle<Sketch> {
 
         let mut regions = Vec::new();
         for region in self.regions() {
-            let region = region.clone().replace_vertex(
-                original,
-                replacement.clone(),
-                services,
-            );
+            let region =
+                region.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= region.was_updated();
             regions.push(region.into_inner(services));
         }
@@ -153,11 +147,9 @@ impl ReplaceVertex for Handle<Face> {
         replacement: Handle<Vertex>,
         services: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
-        let region = self.region().clone().replace_vertex(
-            original,
-            replacement,
-            services,
-        );
+        let region =
+            self.region()
+                .replace_vertex(original, replacement, services);
 
         if region.was_updated() {
             ReplaceOutput::Updated(Face::new(
@@ -183,11 +175,8 @@ impl ReplaceVertex for Handle<Shell> {
 
         let mut faces = Vec::new();
         for face in self.faces() {
-            let face = face.clone().replace_vertex(
-                original,
-                replacement.clone(),
-                services,
-            );
+            let face =
+                face.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= face.was_updated();
             faces.push(face.into_inner(services));
         }
@@ -213,11 +202,8 @@ impl ReplaceVertex for Handle<Solid> {
 
         let mut shells = Vec::new();
         for shell in self.shells() {
-            let shell = shell.clone().replace_vertex(
-                original,
-                replacement.clone(),
-                services,
-            );
+            let shell =
+                shell.replace_vertex(original, replacement.clone(), services);
             replacement_happened |= shell.was_updated();
             shells.push(shell.into_inner(services));
         }
