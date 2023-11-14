@@ -7,6 +7,11 @@ use crate::{
 };
 
 /// Split a [`HalfEdge`] into two
+///
+/// This is a low-level operation that, by itself, leaves the containing shell
+/// in an invalid state. You probably want to use [`SplitEdge`] instead.
+///
+/// [`SplitEdge`]: super::SplitEdge
 pub trait SplitHalfEdge {
     /// Split the half-edge into two
     ///

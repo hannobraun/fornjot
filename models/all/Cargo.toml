@@ -12,5 +12,8 @@ path = "../cuboid"
 [dependencies.spacer]
 path = "../spacer"
 
+[dependencies.split]
+path = "../split"
+
 [dependencies.star]
 path = "../star"
