@@ -18,7 +18,7 @@ pub trait ReplaceHalfEdge: Sized {
     /// Replace the half-edge
     #[must_use]
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
@@ -29,7 +29,7 @@ impl ReplaceHalfEdge for Handle<Cycle> {
     type BareObject = Cycle;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         _: &mut Services,
@@ -39,7 +39,7 @@ impl ReplaceHalfEdge for Handle<Cycle> {
         {
             ReplaceOutput::Updated(Cycle::new(half_edges))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -48,14 +48,14 @@ impl ReplaceHalfEdge for Handle<Region> {
     type BareObject = Region;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
         let mut replacement_happened = false;
 
-        let exterior = self.exterior().clone().replace_half_edge(
+        let exterior = self.exterior().replace_half_edge(
             original,
             replacements.clone(),
             services,
@@ -64,7 +64,7 @@ impl ReplaceHalfEdge for Handle<Region> {
 
         let mut interiors = Vec::new();
         for cycle in self.interiors() {
-            let cycle = cycle.clone().replace_half_edge(
+            let cycle = cycle.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -80,7 +80,7 @@ impl ReplaceHalfEdge for Handle<Region> {
                 self.color(),
             ))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -89,7 +89,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
     type BareObject = Sketch;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
@@ -98,7 +98,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
 
         let mut regions = Vec::new();
         for region in self.regions() {
-            let region = region.clone().replace_half_edge(
+            let region = region.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -110,7 +110,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
         if replacement_happened {
             ReplaceOutput::Updated(Sketch::new(regions))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -119,16 +119,14 @@ impl ReplaceHalfEdge for Handle<Face> {
     type BareObject = Face;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
     ) -> ReplaceOutput<Self::BareObject> {
-        let region = self.region().clone().replace_half_edge(
-            original,
-            replacements,
-            services,
-        );
+        let region =
+            self.region()
+                .replace_half_edge(original, replacements, services);
 
         if region.was_updated() {
             ReplaceOutput::Updated(Face::new(
@@ -136,7 +134,7 @@ impl ReplaceHalfEdge for Handle<Face> {
                 region.into_inner(services),
             ))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -145,7 +143,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
     type BareObject = Shell;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
@@ -154,7 +152,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
 
         let mut faces = Vec::new();
         for face in self.faces() {
-            let face = face.clone().replace_half_edge(
+            let face = face.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -166,7 +164,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
         if replacement_happened {
             ReplaceOutput::Updated(Shell::new(faces))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
@@ -175,7 +173,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
     type BareObject = Solid;
 
     fn replace_half_edge<const N: usize>(
-        self,
+        &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
         services: &mut Services,
@@ -184,7 +182,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
 
         let mut shells = Vec::new();
         for shell in self.shells() {
-            let shell = shell.clone().replace_half_edge(
+            let shell = shell.replace_half_edge(
                 original,
                 replacements.clone(),
                 services,
@@ -196,7 +194,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
         if replacement_happened {
             ReplaceOutput::Updated(Solid::new(shells))
         } else {
-            ReplaceOutput::Original(self)
+            ReplaceOutput::Original(self.clone())
         }
     }
 }
