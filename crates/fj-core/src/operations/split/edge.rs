@@ -12,7 +12,7 @@ use crate::{
 };
 
 /// Split a pair of [`HalfEdge`]s into two
-pub trait SplitEdge {
+pub trait SplitEdge: Sized {
     /// Split the provided [`HalfEdge`], as well as its sibling, into two
     ///
     /// # Panics
