@@ -133,6 +133,17 @@ impl<Original, Updated> ReplaceOutput<Original, Updated> {
     pub fn was_updated(&self) -> bool {
         matches!(self, ReplaceOutput::Updated(_))
     }
+
+    /// Map the `Updated` variant using the provided function
+    pub fn map_updated<T>(
+        self,
+        f: impl FnOnce(Updated) -> T,
+    ) -> ReplaceOutput<Original, T> {
+        match self {
+            Self::Original(original) => ReplaceOutput::Original(original),
+            Self::Updated(updated) => ReplaceOutput::Updated(f(updated)),
+        }
+    }
 }
 
 impl<T> ReplaceOutput<Handle<T>, T> {
