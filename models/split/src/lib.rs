@@ -52,6 +52,7 @@ pub fn model(
                     [split_pos],
                     services,
                 )
+                .0
                 .insert(services)
         })
         .insert(services)

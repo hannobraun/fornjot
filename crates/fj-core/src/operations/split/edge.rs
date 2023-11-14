@@ -24,7 +24,7 @@ pub trait SplitEdge: Sized {
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         services: &mut Services,
-    ) -> Self;
+    ) -> (Self, [[Handle<HalfEdge>; 2]; 2]);
 }
 
 impl SplitEdge for Shell {
@@ -33,7 +33,7 @@ impl SplitEdge for Shell {
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         services: &mut Services,
-    ) -> Self {
+    ) -> (Self, [[Handle<HalfEdge>; 2]; 2]) {
         let point = point.into();
 
         let sibling = self
@@ -52,9 +52,16 @@ impl SplitEdge for Shell {
             [sibling_a, sibling_b].map(|half_edge| half_edge.insert(services))
         };
 
-        self.replace_half_edge(half_edge, [half_edge_a, half_edge_b], services)
+        let shell = self
+            .replace_half_edge(
+                half_edge,
+                [half_edge_a.clone(), half_edge_b.clone()],
+                services,
+            )
             .into_inner()
-            .replace_half_edge(&sibling, siblings, services)
-            .into_inner()
+            .replace_half_edge(&sibling, siblings.clone(), services)
+            .into_inner();
+
+        (shell, [[half_edge_a, half_edge_b], siblings])
     }
 }
