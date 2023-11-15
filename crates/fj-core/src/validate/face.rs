@@ -84,7 +84,7 @@ mod tests {
     };
 
     #[test]
-    fn face_invalid_interior_winding() -> anyhow::Result<()> {
+    fn interior_winding() -> anyhow::Result<()> {
         let mut services = Services::new();
 
         let valid =
