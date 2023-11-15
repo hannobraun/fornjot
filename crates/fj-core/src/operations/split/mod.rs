@@ -6,6 +6,7 @@
 //! leaving the rest unchanged.
 
 mod edge;
+mod face;
 mod half_edge;
 
-pub use self::{edge::SplitEdge, half_edge::SplitHalfEdge};
+pub use self::{edge::SplitEdge, face::SplitFace, half_edge::SplitHalfEdge};
