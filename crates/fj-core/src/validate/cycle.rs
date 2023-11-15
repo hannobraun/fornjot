@@ -10,8 +10,7 @@ impl Validate for Cycle {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        CycleValidationError::check_edges_disconnected(self, config, errors);
-        CycleValidationError::check_enough_edges(self, config, errors);
+        CycleValidationError::check_half_edge_connections(self, config, errors);
     }
 }
 
@@ -20,12 +19,13 @@ impl Validate for Cycle {
 pub enum CycleValidationError {
     /// [`Cycle`]'s edges are not connected
     #[error(
-        "Adjacent `Edge`s are distinct\n\
-        - End position of first `Edge`: {end_of_first:?}\n\
-        - Start position of second `Edge`: {start_of_second:?}\n\
-        - `Edge`s: {half_edges:#?}"
+        "Adjacent `HalfEdge`s are not connected\n\
+        - End position of first `HalfEdge`: {end_of_first:?}\n\
+        - Start position of second `HalfEdge`: {start_of_second:?}\n\
+        - Distance between vertices: {distance}\n\
+        - `HalfEdge`s: {half_edges:#?}"
     )]
-    EdgesDisconnected {
+    HalfEdgesNotConnected {
         /// The end position of the first [`HalfEdge`]
         end_of_first: Point<2>,
 
@@ -38,25 +38,10 @@ pub enum CycleValidationError {
         /// The edges
         half_edges: Box<(HalfEdge, HalfEdge)>,
     },
-
-    /// [`Cycle`]'s should have at least one [`HalfEdge`]
-    #[error("Expected at least one `Edge`\n")]
-    NotEnoughEdges,
 }
 
 impl CycleValidationError {
-    fn check_enough_edges(
-        cycle: &Cycle,
-        _config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        // If there are no half edges
-        if cycle.half_edges().iter().next().is_none() {
-            errors.push(Self::NotEnoughEdges.into());
-        }
-    }
-
-    fn check_edges_disconnected(
+    fn check_half_edge_connections(
         cycle: &Cycle,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
@@ -72,7 +57,7 @@ impl CycleValidationError {
 
             if distance > config.identical_max_distance {
                 errors.push(
-                    Self::EdgesDisconnected {
+                    Self::HalfEdgesNotConnected {
                         end_of_first,
                         start_of_second,
                         distance,
@@ -133,15 +118,10 @@ mod tests {
         assert_contains_err!(
             disconnected,
             ValidationError::Cycle(
-                CycleValidationError::EdgesDisconnected { .. }
+                CycleValidationError::HalfEdgesNotConnected { .. }
             )
         );
 
-        let empty = Cycle::new([]);
-        assert_contains_err!(
-            empty,
-            ValidationError::Cycle(CycleValidationError::NotEnoughEdges)
-        );
         Ok(())
     }
 }

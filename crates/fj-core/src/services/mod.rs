@@ -7,7 +7,7 @@ mod service;
 mod validation;
 
 use crate::{
-    objects::{Object, ObjectSet, Objects, WithHandle},
+    objects::{Object, Objects, WithHandle},
     validate::ValidationErrors,
 };
 
@@ -54,15 +54,6 @@ impl Services {
             };
             self.validation.execute(command, &mut Vec::new());
         }
-    }
-
-    /// Validate the provided objects and forget all other validation errors
-    pub fn only_validate(&mut self, objects: impl Into<ObjectSet>) {
-        let objects = objects.into();
-
-        let mut events = Vec::new();
-        self.validation
-            .execute(ValidationCommand::OnlyValidate { objects }, &mut events);
     }
 
     /// Drop `Services`; return any unhandled validation error

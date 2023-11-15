@@ -205,8 +205,6 @@ mod tests {
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);
         assert_eq!(CurveFaceIntersection::compute(&path, &face), expected);
-
-        services.only_validate(face);
     }
 
     #[test]

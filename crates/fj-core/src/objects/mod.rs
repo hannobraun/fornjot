@@ -42,7 +42,6 @@
 mod handles;
 mod kinds;
 mod object;
-mod set;
 mod stores;
 
 pub use self::{
@@ -60,6 +59,5 @@ pub use self::{
         vertex::Vertex,
     },
     object::{Bare, BehindHandle, Form, Object, WithHandle},
-    set::ObjectSet,
     stores::{Objects, Surfaces},
 };

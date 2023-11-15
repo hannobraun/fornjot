@@ -1,7 +1,7 @@
 use std::{collections::BTreeMap, error::Error, thread};
 
 use crate::{
-    objects::{BehindHandle, Object, ObjectSet},
+    objects::{BehindHandle, Object},
     storage::ObjectId,
     validate::ValidationError,
 };
@@ -31,9 +31,11 @@ impl Drop for Validation {
                 // https://doc.rust-lang.org/std/error/struct.Report.html
                 let mut source = err.source();
                 while let Some(err) = source {
-                    println!("Caused by:\n\t{err}");
+                    println!("\nCaused by:\n\t{err}");
                     source = err.source();
                 }
+
+                print!("\n\n");
             }
 
             if !thread::panicking() {
@@ -61,20 +63,6 @@ impl State for Validation {
                     });
                 }
             }
-            ValidationCommand::OnlyValidate { objects } => {
-                events.push(ValidationEvent::ClearErrors);
-
-                for object in objects {
-                    object.validate(&mut errors);
-
-                    for err in errors.drain(..) {
-                        events.push(ValidationEvent::ValidationFailed {
-                            object: object.clone(),
-                            err,
-                        });
-                    }
-                }
-            }
         }
     }
 
@@ -83,7 +71,6 @@ impl State for Validation {
             ValidationEvent::ValidationFailed { object, err } => {
                 self.errors.insert(object.id(), err.clone());
             }
-            ValidationEvent::ClearErrors => self.errors.clear(),
         }
     }
 }
@@ -94,12 +81,6 @@ pub enum ValidationCommand {
     ValidateObject {
         /// The object to validate
         object: Object<BehindHandle>,
-    },
-
-    /// Validate the provided objects, discard all other validation errors
-    OnlyValidate {
-        /// The objects to validate
-        objects: ObjectSet,
     },
 }
 
@@ -114,7 +95,4 @@ pub enum ValidationEvent {
         /// The validation error
         err: ValidationError,
     },
-
-    /// All stored validation errors are being cleared
-    ClearErrors,
 }

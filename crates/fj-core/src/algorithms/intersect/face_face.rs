@@ -102,8 +102,6 @@ mod tests {
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
         assert!(intersection.is_none());
-
-        services.only_validate([a, b]);
     }
 
     #[test]
@@ -147,7 +145,5 @@ mod tests {
                 intersection_intervals: expected_intervals
             })
         );
-
-        services.only_validate([a, b]);
     }
 }

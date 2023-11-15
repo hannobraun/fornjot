@@ -183,8 +183,6 @@ mod tests {
         let face = face.translate([-1., 0., 0.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -212,8 +210,6 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -238,8 +234,6 @@ mod tests {
         let face = face.translate([0., 0., 2.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -274,8 +268,6 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsEdge(edge.clone()))
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -311,8 +303,6 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsVertex(vertex))
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -339,8 +329,6 @@ mod tests {
             (&ray, &face).intersect(),
             Some(RayFaceIntersection::RayHitsFaceAndAreParallel)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -365,7 +353,5 @@ mod tests {
         let face = face.translate([0., 0., 1.], &mut services);
 
         assert_eq!((&ray, &face).intersect(), None);
-
-        services.only_validate(face);
     }
 }
