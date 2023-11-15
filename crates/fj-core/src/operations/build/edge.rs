@@ -6,6 +6,7 @@ use crate::{
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
     services::Services,
+    storage::Handle,
 };
 
 /// Build a [`HalfEdge`]
@@ -24,6 +25,19 @@ pub trait BuildHalfEdge {
         let start_vertex = Vertex::new().insert(services);
 
         HalfEdge::new(path, boundary, curve, start_vertex)
+    }
+
+    /// Create a half-edge from its sibling
+    fn from_sibling(
+        sibling: &HalfEdge,
+        start_vertex: Handle<Vertex>,
+    ) -> HalfEdge {
+        HalfEdge::new(
+            sibling.path(),
+            sibling.boundary().reverse(),
+            sibling.curve().clone(),
+            start_vertex,
+        )
     }
 
     /// Create an arc

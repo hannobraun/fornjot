@@ -61,6 +61,11 @@ impl<T> Handles<T> {
         self.inner.is_empty()
     }
 
+    /// Indicate whether the set contains the provided object
+    pub fn contains(&self, object: &Handle<T>) -> bool {
+        self.index_of(object).is_some()
+    }
+
     /// Return the only item
     ///
     /// # Panics

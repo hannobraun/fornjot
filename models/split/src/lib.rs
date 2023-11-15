@@ -5,7 +5,7 @@ use fj::{
         operations::{
             build::{BuildRegion, BuildSketch},
             insert::Insert,
-            split::SplitEdge,
+            split::SplitFace,
             update::{UpdateSketch, UpdateSolid},
         },
         services::Services,
@@ -40,20 +40,15 @@ pub fn model(
 
     solid
         .update_shell(solid.shells().only(), |shell| {
-            shell
-                .split_edge(
-                    shell
-                        .faces()
-                        .first()
-                        .region()
-                        .exterior()
-                        .half_edges()
-                        .first(),
-                    [split_pos],
-                    services,
-                )
-                .0
-                .insert(services)
+            let face = shell.faces().first();
+            let cycle = face.region().exterior();
+
+            let line = [
+                (cycle.half_edges().nth(0).unwrap(), [split_pos]),
+                (cycle.half_edges().nth(2).unwrap(), [split_pos]),
+            ];
+
+            shell.split_face(face, line, services).insert(services)
         })
         .insert(services)
 }
