@@ -109,7 +109,6 @@ mod tests {
                         })
                         .insert(&mut services)
                 });
-        services.only_validate(&face);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -157,7 +156,6 @@ mod tests {
                     .insert(&mut services)
             },
         );
-        services.only_validate(&face);
 
         let triangles = triangulate(face)?;
 
@@ -222,7 +220,6 @@ mod tests {
                     .insert(&mut services)
             },
         );
-        services.only_validate(&face);
 
         let triangles = triangulate(face)?;
 

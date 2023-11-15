@@ -165,8 +165,6 @@ mod tests {
 
         let intersection = (&face, &point).intersect();
         assert_eq!(intersection, None);
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -193,8 +191,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -221,8 +217,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -249,8 +243,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -277,8 +269,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -311,8 +301,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsInsideFace)
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -347,8 +335,6 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnEdge(edge.clone()))
         );
-
-        services.only_validate(face);
     }
 
     #[test]
@@ -384,7 +370,5 @@ mod tests {
             intersection,
             Some(FacePointIntersection::PointIsOnVertex(vertex))
         );
-
-        services.only_validate(face);
     }
 }

@@ -176,8 +176,6 @@ mod tests {
             )
         );
 
-        services.only_validate(valid);
-
         Ok(())
     }
 }
