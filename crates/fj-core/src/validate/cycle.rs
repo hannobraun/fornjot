@@ -1,6 +1,9 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::{Cycle, HalfEdge};
+use crate::{
+    objects::{Cycle, HalfEdge},
+    storage::Handle,
+};
 
 use super::{Validate, ValidationConfig, ValidationError};
 
@@ -36,7 +39,7 @@ pub enum CycleValidationError {
         distance: Scalar,
 
         /// The edges
-        half_edges: Box<(HalfEdge, HalfEdge)>,
+        half_edges: [Handle<HalfEdge>; 2],
     },
 }
 
@@ -61,10 +64,7 @@ impl CycleValidationError {
                         end_of_first,
                         start_of_second,
                         distance,
-                        half_edges: Box::new((
-                            first.clone_object(),
-                            second.clone_object(),
-                        )),
+                        half_edges: [first.clone(), second.clone()],
                     }
                     .into(),
                 );
