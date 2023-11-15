@@ -10,6 +10,7 @@ impl Validate for Face {
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        FaceValidationError::check_boundary(self, errors);
         FaceValidationError::check_interior_winding(self, errors);
     }
 }
@@ -17,6 +18,10 @@ impl Validate for Face {
 /// [`Face`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
+    /// The [`Face`] has no exterior cycle
+    #[error("The `Face` has no exterior cycle")]
+    MissingBoundary,
+
     /// Interior of [`Face`] has invalid winding; must be opposite of exterior
     #[error(
         "Interior of `Face` has invalid winding; must be opposite of exterior\n\
@@ -37,6 +42,15 @@ pub enum FaceValidationError {
 }
 
 impl FaceValidationError {
+    fn check_boundary(face: &Face, errors: &mut Vec<ValidationError>) {
+        if face.region().exterior().half_edges().is_empty() {
+            errors.push(ValidationError::from(Self::MissingBoundary));
+        }
+
+        // Checking *that* a boundary exists is enough. There are validation
+        // checks for `Cycle` to make sure that the cycle is closed properly.
+    }
+
     fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
         if face.region().exterior().half_edges().is_empty() {
             // Can't determine winding, if the cycle has no edges. Sounds like a
@@ -72,16 +86,46 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Cycle, Face, Region},
+        objects::{Cycle, Face, HalfEdge, Region},
         operations::{
-            build::{BuildCycle, BuildFace},
+            build::{BuildCycle, BuildFace, BuildHalfEdge},
             insert::Insert,
             reverse::Reverse,
-            update::{UpdateFace, UpdateRegion},
+            update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
         services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
     };
+
+    #[test]
+    fn boundary() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let invalid =
+            Face::unbound(services.objects.surfaces.xy_plane(), &mut services);
+        let valid = invalid.update_region(|region| {
+            region
+                .update_exterior(|cycle| {
+                    cycle
+                        .add_half_edges([HalfEdge::circle(
+                            [0., 0.],
+                            1.,
+                            &mut services,
+                        )
+                        .insert(&mut services)])
+                        .insert(&mut services)
+                })
+                .insert(&mut services)
+        });
+
+        valid.validate_and_return_first_error()?;
+        assert_contains_err!(
+            invalid,
+            ValidationError::Face(FaceValidationError::MissingBoundary)
+        );
+
+        Ok(())
+    }
 
     #[test]
     fn interior_winding() -> anyhow::Result<()> {
