@@ -36,7 +36,7 @@ pub enum CycleValidationError {
         distance: Scalar,
 
         /// The edges
-        half_edges: Box<(HalfEdge, HalfEdge)>,
+        half_edges: Box<[HalfEdge; 2]>,
     },
 }
 
@@ -61,10 +61,10 @@ impl CycleValidationError {
                         end_of_first,
                         start_of_second,
                         distance,
-                        half_edges: Box::new((
+                        half_edges: Box::new([
                             first.clone_object(),
                             second.clone_object(),
-                        )),
+                        ]),
                     }
                     .into(),
                 );
