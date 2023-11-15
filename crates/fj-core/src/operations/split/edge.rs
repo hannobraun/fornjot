@@ -12,7 +12,7 @@ use crate::{
 };
 
 /// Split a pair of [`HalfEdge`]s into two
-pub trait SplitEdge {
+pub trait SplitEdge: Sized {
     /// Split the provided [`HalfEdge`], as well as its sibling, into two
     ///
     /// # Panics
@@ -24,7 +24,7 @@ pub trait SplitEdge {
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         services: &mut Services,
-    ) -> Self;
+    ) -> (Self, [[Handle<HalfEdge>; 2]; 2]);
 }
 
 impl SplitEdge for Shell {
@@ -33,7 +33,7 @@ impl SplitEdge for Shell {
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         services: &mut Services,
-    ) -> Self {
+    ) -> (Self, [[Handle<HalfEdge>; 2]; 2]) {
         let point = point.into();
 
         let sibling = self
@@ -44,18 +44,24 @@ impl SplitEdge for Shell {
             .split_half_edge(point, services)
             .map(|half_edge| half_edge.insert(services));
 
-        let [sibling_a, sibling_b] = sibling.split_half_edge(point, services);
-        let sibling_b = sibling_b
-            .update_start_vertex(|_| half_edge_b.start_vertex().clone());
+        let siblings = {
+            let [sibling_a, sibling_b] =
+                sibling.split_half_edge(point, services);
+            let sibling_b = sibling_b
+                .update_start_vertex(|_| half_edge_b.start_vertex().clone());
+            [sibling_a, sibling_b].map(|half_edge| half_edge.insert(services))
+        };
 
-        self.replace_half_edge(half_edge, [half_edge_a, half_edge_b], services)
-            .into_inner()
+        let shell = self
             .replace_half_edge(
-                &sibling,
-                [sibling_a, sibling_b]
-                    .map(|half_edge| half_edge.insert(services)),
+                half_edge,
+                [half_edge_a.clone(), half_edge_b.clone()],
                 services,
             )
             .into_inner()
+            .replace_half_edge(&sibling, siblings.clone(), services)
+            .into_inner();
+
+        (shell, [[half_edge_a, half_edge_b], siblings])
     }
 }
