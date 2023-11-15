@@ -31,9 +31,11 @@ impl Drop for Validation {
                 // https://doc.rust-lang.org/std/error/struct.Report.html
                 let mut source = err.source();
                 while let Some(err) = source {
-                    println!("Caused by:\n\t{err}");
+                    println!("\nCaused by:\n\t{err}");
                     source = err.source();
                 }
+
+                print!("\n\n");
             }
 
             if !thread::panicking() {
