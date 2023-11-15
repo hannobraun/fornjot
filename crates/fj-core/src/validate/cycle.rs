@@ -11,7 +11,6 @@ impl Validate for Cycle {
         errors: &mut Vec<ValidationError>,
     ) {
         CycleValidationError::check_half_edge_connections(self, config, errors);
-        CycleValidationError::check_enough_edges(self, config, errors);
     }
 }
 
@@ -39,24 +38,9 @@ pub enum CycleValidationError {
         /// The edges
         half_edges: Box<(HalfEdge, HalfEdge)>,
     },
-
-    /// [`Cycle`]'s should have at least one [`HalfEdge`]
-    #[error("Expected at least one `HalfEdge`")]
-    NotEnoughEdges,
 }
 
 impl CycleValidationError {
-    fn check_enough_edges(
-        cycle: &Cycle,
-        _config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        // If there are no half edges
-        if cycle.half_edges().iter().next().is_none() {
-            errors.push(Self::NotEnoughEdges.into());
-        }
-    }
-
     fn check_half_edge_connections(
         cycle: &Cycle,
         config: &ValidationConfig,
@@ -138,11 +122,6 @@ mod tests {
             )
         );
 
-        let empty = Cycle::new([]);
-        assert_contains_err!(
-            empty,
-            ValidationError::Cycle(CycleValidationError::NotEnoughEdges)
-        );
         Ok(())
     }
 }
