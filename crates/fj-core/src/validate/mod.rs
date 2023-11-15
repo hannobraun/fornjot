@@ -59,9 +59,12 @@
 //! on, and this fact is taken into account by allowing for configuration via
 //! [`Validate::validate_with_config`] and [`ValidationConfig`].
 //!
-//! However, it is currently not possible to define this configuration for the
-//! background validation done by the [`Services`] API. If this is a problem for
-//! you, please comment on this issue:
+//!
+//! ## Implementation Note
+//!
+//! It is currently not possible to define this configuration for the background
+//! validation done by the [`Services`] API. If this is a problem for you,
+//! please comment on this issue:
 //! <https://github.com/hannobraun/fornjot/issues/2060>
 //!
 //!
