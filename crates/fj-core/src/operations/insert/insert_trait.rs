@@ -22,6 +22,11 @@ pub trait Insert: Sized {
     type Inserted;
 
     /// Insert the object into its respective store
+    ///
+    /// Inserted objects will automatically be validated in the background. You
+    /// should not insert an invalid object into the stores, unless you have a
+    /// specific reason to do so, and you are handling validation errors in a
+    /// non-standard way.
     #[must_use]
     fn insert(self, services: &mut Services) -> Self::Inserted;
 }
