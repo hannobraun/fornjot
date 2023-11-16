@@ -1,11 +1,11 @@
 use fj::{
     core::{
-        algorithms::sweep::Sweep,
         objects::{Cycle, Region, Sketch, Solid},
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
+            sweep::Sweep,
             update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
