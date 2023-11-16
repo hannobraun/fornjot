@@ -79,7 +79,7 @@ impl Sweep for Handle<Face> {
                 let (bottom_half_edge, bottom_half_edge_next) =
                     bottom_half_edge_pair;
 
-                let (face, top_edge) = (
+                let (side_face, top_edge) = (
                     bottom_half_edge.deref(),
                     bottom_half_edge_next.start_vertex(),
                     self.surface().deref(),
@@ -87,7 +87,7 @@ impl Sweep for Handle<Face> {
                 )
                     .sweep_with_cache(path, cache, services);
 
-                faces.push(face);
+                faces.push(side_face);
 
                 top_edges.push((
                     top_edge,
