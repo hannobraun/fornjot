@@ -41,28 +41,7 @@ impl Sweep for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let is_negative_sweep = {
-            let u = match self.surface().geometry().u {
-                GlobalPath::Circle(_) => todo!(
-                    "Sweeping from faces defined in round surfaces is not \
-                    supported"
-                ),
-                GlobalPath::Line(line) => line.direction(),
-            };
-            let v = self.surface().geometry().v;
-
-            let normal = u.cross(&v);
-
-            normal.dot(&path) < Scalar::ZERO
-        };
-
-        let bottom_face = {
-            if is_negative_sweep {
-                self
-            } else {
-                self.reverse(services).insert(services)
-            }
-        };
+        let bottom_face = bottom_face(self, path, services);
         faces.push(bottom_face.clone());
 
         let top_surface =
@@ -118,5 +97,32 @@ impl Sweep for Handle<Face> {
         faces.push(top_face);
 
         Shell::new(faces).insert(services)
+    }
+}
+
+fn bottom_face(
+    face: Handle<Face>,
+    path: Vector<3>,
+    services: &mut Services,
+) -> Handle<Face> {
+    let is_negative_sweep = {
+        let u = match face.surface().geometry().u {
+            GlobalPath::Circle(_) => todo!(
+                "Sweeping from faces defined in round surfaces is not \
+                    supported"
+            ),
+            GlobalPath::Line(line) => line.direction(),
+        };
+        let v = face.surface().geometry().v;
+
+        let normal = u.cross(&v);
+
+        normal.dot(&path) < Scalar::ZERO
+    };
+
+    if is_negative_sweep {
+        face
+    } else {
+        face.reverse(services).insert(services)
     }
 }
