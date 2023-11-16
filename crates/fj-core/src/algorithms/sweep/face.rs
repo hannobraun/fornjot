@@ -58,9 +58,9 @@ impl Sweep for Handle<Face> {
 
         let bottom_face = {
             if is_negative_sweep {
-                self.clone()
+                self
             } else {
-                self.clone().reverse(services).insert(services)
+                self.reverse(services).insert(services)
             }
         };
         faces.push(bottom_face.clone());
