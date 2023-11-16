@@ -104,9 +104,7 @@ impl Sweep for Handle<Face> {
             Region::new(exterior.unwrap(), interiors, self.region().color())
                 .insert(services);
 
-        let top_face = Face::new(top_surface, region);
-
-        let top_face = top_face.insert(services);
+        let top_face = Face::new(top_surface, region).insert(services);
         faces.push(top_face);
 
         Shell::new(faces).insert(services)
