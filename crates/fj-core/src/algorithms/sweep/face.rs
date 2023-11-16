@@ -24,57 +24,60 @@ impl Sweep for Handle<Face> {
         cache: &mut SweepCache,
         services: &mut Services,
     ) -> Self::Swept {
+        // Please note that this function uses the words "bottom" and "top" in a
+        // specific sense:
+        //
+        // - "Bottom" refers to the origin of the sweep. The bottom face is the
+        //   original face, or a face in the same place.
+        // - "Top" refers to the location of the face that was created by
+        //   translating the bottom face along the path.
+        // - "Side" refers to new faces created in between bottom and top.
+        //
+        // These words are specifically *not* meant in the sense of z-axis
+        // locations, and depending on the direction of `path`, the two meanings
+        // might actually be opposite.
+
         let path = path.into();
 
         let mut faces = Vec::new();
 
-        let is_negative_sweep = {
-            let u = match self.surface().geometry().u {
-                GlobalPath::Circle(_) => todo!(
-                    "Sweeping from faces defined in round surfaces is not \
-                    supported"
-                ),
-                GlobalPath::Line(line) => line.direction(),
-            };
-            let v = self.surface().geometry().v;
-
-            let normal = u.cross(&v);
-
-            normal.dot(&path) < Scalar::ZERO
-        };
-
-        let bottom_face = {
-            if is_negative_sweep {
-                self.clone()
-            } else {
-                self.clone().reverse(services).insert(services)
-            }
-        };
+        let bottom_face = bottom_face(self, path, services);
         faces.push(bottom_face.clone());
 
         let top_surface =
             bottom_face.surface().clone().translate(path, services);
 
-        let mut exterior = None;
-        let mut interiors = Vec::new();
+        let mut top_exterior = None;
+        let mut top_interiors = Vec::new();
 
-        for (i, cycle) in bottom_face.region().all_cycles().cloned().enumerate()
-        {
-            let cycle = cycle.reverse(services);
+        // This might not be the cleanest way to do it, but here we're creating
+        // the side faces, and all the ingredients for the top face, in one big
+        // loop. Reason is, the side faces need to be connected to the top face,
+        // and this seems like the most straight-forward way to make sure of
+        // that.
+        for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
+            let bottom_cycle = bottom_cycle.reverse(services);
 
             let mut top_edges = Vec::new();
-            for (edge, next) in cycle.half_edges().pairs() {
-                let (face, top_edge) = (
-                    edge.deref(),
-                    next.start_vertex(),
-                    self.surface().deref(),
-                    self.region().color(),
+            for bottom_half_edge_pair in bottom_cycle.half_edges().pairs() {
+                let (bottom_half_edge, bottom_half_edge_next) =
+                    bottom_half_edge_pair;
+
+                let (side_face, top_edge) = (
+                    bottom_half_edge.deref(),
+                    bottom_half_edge_next.start_vertex(),
+                    bottom_face.surface().deref(),
+                    bottom_face.region().color(),
                 )
                     .sweep_with_cache(path, cache, services);
 
-                faces.push(face);
+                faces.push(side_face);
 
-                top_edges.push((top_edge, edge.path(), edge.boundary()));
+                top_edges.push((
+                    top_edge,
+                    bottom_half_edge.path(),
+                    bottom_half_edge.boundary(),
+                ));
             }
 
             let top_cycle = Cycle::empty()
@@ -82,21 +85,49 @@ impl Sweep for Handle<Face> {
                 .insert(services);
 
             if i == 0 {
-                exterior = Some(top_cycle);
+                top_exterior = Some(top_cycle);
             } else {
-                interiors.push(top_cycle);
+                top_interiors.push(top_cycle);
             };
         }
 
-        let region =
-            Region::new(exterior.unwrap(), interiors, self.region().color())
-                .insert(services);
+        let top_region = Region::new(
+            top_exterior.unwrap(),
+            top_interiors,
+            bottom_face.region().color(),
+        )
+        .insert(services);
 
-        let top_face = Face::new(top_surface, region);
-
-        let top_face = top_face.insert(services);
+        let top_face = Face::new(top_surface, top_region).insert(services);
         faces.push(top_face);
 
         Shell::new(faces).insert(services)
+    }
+}
+
+fn bottom_face(
+    face: Handle<Face>,
+    path: Vector<3>,
+    services: &mut Services,
+) -> Handle<Face> {
+    let is_negative_sweep = {
+        let u = match face.surface().geometry().u {
+            GlobalPath::Circle(_) => todo!(
+                "Sweeping from faces defined in round surfaces is not \
+                    supported"
+            ),
+            GlobalPath::Line(line) => line.direction(),
+        };
+        let v = face.surface().geometry().v;
+
+        let normal = u.cross(&v);
+
+        normal.dot(&path) < Scalar::ZERO
+    };
+
+    if is_negative_sweep {
+        face
+    } else {
+        face.reverse(services).insert(services)
     }
 }
