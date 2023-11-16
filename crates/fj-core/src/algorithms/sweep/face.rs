@@ -50,6 +50,11 @@ impl Sweep for Handle<Face> {
         let mut top_exterior = None;
         let mut top_interiors = Vec::new();
 
+        // This might not be the cleanest way to do it, but here we're creating
+        // the side faces, and all the ingredients for the top face, in one big
+        // loop. Reason is, the side faces need to be connected to the top face,
+        // and this seems like the most straight-forward way to make sure of
+        // that.
         for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
             let bottom_cycle = bottom_cycle.reverse(services);
 
