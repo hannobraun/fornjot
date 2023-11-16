@@ -75,9 +75,9 @@ impl Sweep for Handle<Face> {
             let bottom_cycle = bottom_cycle.reverse(services);
 
             let mut top_edges = Vec::new();
-            for (edge, next) in bottom_cycle.half_edges().pairs() {
+            for (bottom_half_edge, next) in bottom_cycle.half_edges().pairs() {
                 let (face, top_edge) = (
-                    edge.deref(),
+                    bottom_half_edge.deref(),
                     next.start_vertex(),
                     self.surface().deref(),
                     self.region().color(),
@@ -86,7 +86,11 @@ impl Sweep for Handle<Face> {
 
                 faces.push(face);
 
-                top_edges.push((top_edge, edge.path(), edge.boundary()));
+                top_edges.push((
+                    top_edge,
+                    bottom_half_edge.path(),
+                    bottom_half_edge.boundary(),
+                ));
             }
 
             let top_cycle = Cycle::empty()
