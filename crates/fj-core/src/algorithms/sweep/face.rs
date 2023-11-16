@@ -68,7 +68,7 @@ impl Sweep for Handle<Face> {
         let top_surface =
             bottom_face.surface().clone().translate(path, services);
 
-        let mut exterior = None;
+        let mut top_exterior = None;
         let mut interiors = Vec::new();
 
         for (i, cycle) in bottom_face.region().all_cycles().enumerate() {
@@ -94,15 +94,18 @@ impl Sweep for Handle<Face> {
                 .insert(services);
 
             if i == 0 {
-                exterior = Some(top_cycle);
+                top_exterior = Some(top_cycle);
             } else {
                 interiors.push(top_cycle);
             };
         }
 
-        let top_region =
-            Region::new(exterior.unwrap(), interiors, self.region().color())
-                .insert(services);
+        let top_region = Region::new(
+            top_exterior.unwrap(),
+            interiors,
+            self.region().color(),
+        )
+        .insert(services);
 
         let top_face = Face::new(top_surface, top_region).insert(services);
         faces.push(top_face);
