@@ -82,8 +82,8 @@ impl Sweep for Handle<Face> {
                 let (side_face, top_edge) = (
                     bottom_half_edge.deref(),
                     bottom_half_edge_next.start_vertex(),
-                    self.surface().deref(),
-                    self.region().color(),
+                    bottom_face.surface().deref(),
+                    bottom_face.region().color(),
                 )
                     .sweep_with_cache(path, cache, services);
 
@@ -110,7 +110,7 @@ impl Sweep for Handle<Face> {
         let top_region = Region::new(
             top_exterior.unwrap(),
             top_interiors,
-            self.region().color(),
+            bottom_face.region().color(),
         )
         .insert(services);
 
