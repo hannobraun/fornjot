@@ -58,8 +58,7 @@ impl Sweep for Handle<Face> {
         let mut exterior = None;
         let mut interiors = Vec::new();
 
-        for (i, cycle) in bottom_face.region().all_cycles().cloned().enumerate()
-        {
+        for (i, cycle) in bottom_face.region().all_cycles().enumerate() {
             let cycle = cycle.reverse(services);
 
             let mut top_edges = Vec::new();
