@@ -30,5 +30,5 @@ pub fn model(
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., height]);
-    (&sketch, surface).sweep(path, services)
+    (&sketch, surface).sweep(path, services).insert(services)
 }
