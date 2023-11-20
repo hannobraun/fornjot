@@ -9,8 +9,8 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (Handle<Sketch>, Handle<Surface>) {
-    type Swept = Handle<Solid>;
+impl Sweep for (&Sketch, Handle<Surface>) {
+    type Swept = Solid;
 
     fn sweep_with_cache(
         self,
@@ -25,10 +25,12 @@ impl Sweep for (Handle<Sketch>, Handle<Surface>) {
         for region in sketch.regions() {
             let face =
                 Face::new(surface.clone(), region.clone()).insert(services);
-            let shell = face.sweep_with_cache(path, cache, services);
+            let shell = face
+                .sweep_with_cache(path, cache, services)
+                .insert(services);
             shells.push(shell);
         }
 
-        Solid::new(shells).insert(services)
+        Solid::new(shells)
     }
 }

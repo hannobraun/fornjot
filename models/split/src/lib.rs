@@ -1,11 +1,11 @@
 use fj::{
     core::{
-        algorithms::sweep::Sweep,
         objects::{Region, Sketch, Solid},
         operations::{
             build::{BuildRegion, BuildSketch},
             insert::Insert,
             split::SplitFace,
+            sweep::Sweep,
             update::{UpdateSketch, UpdateSolid},
         },
         services::Services,
@@ -19,24 +19,22 @@ pub fn model(
     split_pos: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
-    let sketch = Sketch::empty()
-        .add_region(
-            Region::polygon(
-                [
-                    [-size / 2., -size / 2.],
-                    [size / 2., -size / 2.],
-                    [size / 2., size / 2.],
-                    [-size / 2., size / 2.],
-                ],
-                services,
-            )
-            .insert(services),
+    let sketch = Sketch::empty().add_region(
+        Region::polygon(
+            [
+                [-size / 2., -size / 2.],
+                [size / 2., -size / 2.],
+                [size / 2., size / 2.],
+                [-size / 2., size / 2.],
+            ],
+            services,
         )
-        .insert(services);
+        .insert(services),
+    );
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., size]);
-    let solid = (sketch, surface).sweep(path, services);
+    let solid = (&sketch, surface).sweep(path, services);
 
     solid
         .update_shell(solid.shells().only(), |shell| {

@@ -3,21 +3,19 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
-    operations::insert::Insert,
     services::Services,
-    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
 impl Sweep for (SurfacePath, &Surface) {
-    type Swept = Handle<Surface>;
+    type Swept = Surface;
 
     fn sweep_with_cache(
         self,
         path: impl Into<Vector<3>>,
         _: &mut SweepCache,
-        services: &mut Services,
+        _: &mut Services,
     ) -> Self::Swept {
         let (curve, surface) = self;
 
@@ -72,6 +70,6 @@ impl Sweep for (SurfacePath, &Surface) {
             }
         };
 
-        Surface::new(SurfaceGeometry { u, v: path.into() }).insert(services)
+        Surface::new(SurfaceGeometry { u, v: path.into() })
     }
 }

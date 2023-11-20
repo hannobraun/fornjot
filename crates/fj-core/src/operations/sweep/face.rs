@@ -10,13 +10,12 @@ use crate::{
         build::BuildCycle, insert::Insert, join::JoinCycle, reverse::Reverse,
     },
     services::Services,
-    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Handle<Face> {
-    type Swept = Handle<Shell>;
+impl Sweep for &Face {
+    type Swept = Shell;
 
     fn sweep_with_cache(
         self,
@@ -41,7 +40,7 @@ impl Sweep for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let bottom_face = bottom_face(self, path, services);
+        let bottom_face = bottom_face(self, path, services).insert(services);
         faces.push(bottom_face.clone());
 
         let top_surface =
@@ -65,11 +64,13 @@ impl Sweep for Handle<Face> {
 
                 let (side_face, top_edge) = (
                     bottom_half_edge.deref(),
-                    bottom_half_edge_next.start_vertex(),
+                    bottom_half_edge_next.start_vertex().clone(),
                     bottom_face.surface().deref(),
                     bottom_face.region().color(),
                 )
                     .sweep_with_cache(path, cache, services);
+
+                let side_face = side_face.insert(services);
 
                 faces.push(side_face);
 
@@ -101,19 +102,15 @@ impl Sweep for Handle<Face> {
         let top_face = Face::new(top_surface, top_region).insert(services);
         faces.push(top_face);
 
-        Shell::new(faces).insert(services)
+        Shell::new(faces)
     }
 }
 
-fn bottom_face(
-    face: Handle<Face>,
-    path: Vector<3>,
-    services: &mut Services,
-) -> Handle<Face> {
+fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
     let is_negative_sweep = {
         let u = match face.surface().geometry().u {
             GlobalPath::Circle(_) => todo!(
-                "Sweeping from faces defined in round surfaces is not \
+                "Sweeping from faces defined in rounded surfaces is not \
                     supported"
             ),
             GlobalPath::Line(line) => line.direction(),
@@ -126,8 +123,8 @@ fn bottom_face(
     };
 
     if is_negative_sweep {
-        face
+        face.clone()
     } else {
-        face.reverse(services).insert(services)
+        face.reverse(services)
     }
 }

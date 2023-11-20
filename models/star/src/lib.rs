@@ -2,12 +2,12 @@ use std::f64::consts::PI;
 
 use fj::{
     core::{
-        algorithms::sweep::Sweep,
         objects::{Cycle, Region, Sketch, Solid},
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
+            sweep::Sweep,
             update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
@@ -43,17 +43,15 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let sketch = Sketch::empty()
-        .add_region(
-            Region::polygon(outer_points, services)
-                .add_interiors([Cycle::polygon(inner_points, services)
-                    .reverse(services)
-                    .insert(services)])
-                .insert(services),
-        )
-        .insert(services);
+    let sketch = Sketch::empty().add_region(
+        Region::polygon(outer_points, services)
+            .add_interiors([Cycle::polygon(inner_points, services)
+                .reverse(services)
+                .insert(services)])
+            .insert(services),
+    );
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., h]);
-    (sketch, surface).sweep(path, services)
+    (&sketch, surface).sweep(path, services).insert(services)
 }

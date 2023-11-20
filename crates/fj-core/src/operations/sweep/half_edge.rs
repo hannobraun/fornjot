@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
-        build::BuildHalfEdge,
+        build::{BuildCycle, BuildHalfEdge},
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
@@ -14,8 +14,8 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Handle<Face>, Handle<HalfEdge>);
+impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
+    type Swept = (Face, Handle<HalfEdge>);
 
     fn sweep_with_cache(
         self,
@@ -23,19 +23,20 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         cache: &mut SweepCache,
         services: &mut Services,
     ) -> Self::Swept {
-        let (edge, next_vertex, surface, color) = self;
+        let (edge, end_vertex, surface, color) = self;
         let path = path.into();
 
-        let surface =
-            (edge.path(), surface).sweep_with_cache(path, cache, services);
+        let surface = (edge.path(), surface)
+            .sweep_with_cache(path, cache, services)
+            .insert(services);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, curves) = {
-            let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
-            let (curve_up, [_, c]) =
+            let [a, b] = [edge.start_vertex().clone(), end_vertex];
+            let (curve_up, c) =
                 b.clone().sweep_with_cache(path, cache, services);
-            let (curve_down, [_, d]) =
+            let (curve_down, d) =
                 a.clone().sweep_with_cache(path, cache, services);
 
             (
@@ -75,7 +76,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
-        let mut exterior = Some(Cycle::new([]));
+        let mut exterior = Cycle::empty();
 
         // Armed with all of that, we're ready to create the edges.
         let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
@@ -101,21 +102,15 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     edge.insert(services)
                 };
 
-                exterior = Some(
-                    exterior.take().unwrap().add_half_edges([edge.clone()]),
-                );
+                exterior = exterior.add_half_edges([edge.clone()]);
 
                 edge
             });
 
-        let region = Region::new(exterior.unwrap().insert(services), [], color)
-            .insert(services);
-
+        let exterior = exterior.insert(services);
+        let region = Region::new(exterior, [], color).insert(services);
         let face = Face::new(surface, region);
 
-        // And we're done creating the face! All that's left to do is build our
-        // return values.
-        let face = face.insert(services);
         (face, edge_top)
     }
 }
