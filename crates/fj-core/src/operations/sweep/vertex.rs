@@ -24,12 +24,12 @@ impl Sweep for Handle<Vertex> {
             .or_insert_with(|| Curve::new().insert(services))
             .clone();
 
-        let b = cache
+        let vertex = cache
             .vertices
             .entry(self.id())
             .or_insert_with(|| Vertex::new().insert(services))
             .clone();
 
-        (curve, b)
+        (curve, vertex)
     }
 }
