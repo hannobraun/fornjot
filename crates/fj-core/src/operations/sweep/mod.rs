@@ -6,6 +6,8 @@ mod path;
 mod sketch;
 mod vertex;
 
+pub use self::vertex::SweepVertex;
+
 use std::collections::BTreeMap;
 
 use fj_math::Vector;
