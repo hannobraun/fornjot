@@ -114,8 +114,6 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         let face = Face::new(surface, region);
 
-        // And we're done creating the face! All that's left to do is build our
-        // return values.
         let face = face.insert(services);
         (face, edge_top)
     }
