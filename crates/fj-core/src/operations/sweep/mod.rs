@@ -6,7 +6,9 @@ mod path;
 mod sketch;
 mod vertex;
 
-pub use self::{path::SweepSurfacePath, vertex::SweepVertex};
+pub use self::{
+    half_edge::SweepHalfEdge, path::SweepSurfacePath, vertex::SweepVertex,
+};
 
 use std::collections::BTreeMap;
 
