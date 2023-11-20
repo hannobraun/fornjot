@@ -15,7 +15,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for Handle<Face> {
+impl Sweep for &Face {
     type Swept = Handle<Shell>;
 
     fn sweep_with_cache(
@@ -41,7 +41,7 @@ impl Sweep for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let bottom_face = bottom_face(&self, path, services).insert(services);
+        let bottom_face = bottom_face(self, path, services).insert(services);
         faces.push(bottom_face.clone());
 
         let top_surface =
