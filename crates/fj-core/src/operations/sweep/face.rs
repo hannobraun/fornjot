@@ -115,7 +115,7 @@ fn bottom_face(
     let is_negative_sweep = {
         let u = match face.surface().geometry().u {
             GlobalPath::Circle(_) => todo!(
-                "Sweeping from faces defined in round surfaces is not \
+                "Sweeping from faces defined in rounded surfaces is not \
                     supported"
             ),
             GlobalPath::Line(line) => line.direction(),
