@@ -15,7 +15,7 @@ use crate::{
 use super::{Sweep, SweepCache};
 
 impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Handle<Face>, Handle<HalfEdge>);
+    type Swept = (Face, Handle<HalfEdge>);
 
     fn sweep_with_cache(
         self,
@@ -114,7 +114,6 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
 
         let face = Face::new(surface, region);
 
-        let face = face.insert(services);
         (face, edge_top)
     }
 }

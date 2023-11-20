@@ -71,6 +71,8 @@ impl Sweep for Handle<Face> {
                 )
                     .sweep_with_cache(path, cache, services);
 
+                let side_face = side_face.insert(services);
+
                 faces.push(side_face);
 
                 top_edges.push((
