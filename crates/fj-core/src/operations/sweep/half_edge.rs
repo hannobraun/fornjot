@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     operations::{
-        build::BuildHalfEdge,
+        build::{BuildCycle, BuildHalfEdge},
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
@@ -76,7 +76,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
-        let mut exterior = Some(Cycle::new([]));
+        let mut exterior = Some(Cycle::empty());
 
         // Armed with all of that, we're ready to create the edges.
         let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
