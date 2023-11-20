@@ -76,7 +76,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
             [[a, b], [c, d], [b, a], [d, c]]
         };
 
-        let mut exterior = Some(Cycle::empty());
+        let mut exterior = Cycle::empty();
 
         // Armed with all of that, we're ready to create the edges.
         let [_edge_bottom, _edge_up, edge_top, _edge_down] = boundaries
@@ -102,15 +102,13 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
                     edge.insert(services)
                 };
 
-                exterior = Some(
-                    exterior.take().unwrap().add_half_edges([edge.clone()]),
-                );
+                exterior = exterior.add_half_edges([edge.clone()]);
 
                 edge
             });
 
-        let region = Region::new(exterior.unwrap().insert(services), [], color)
-            .insert(services);
+        let region =
+            Region::new(exterior.insert(services), [], color).insert(services);
 
         let face = Face::new(surface, region);
 
