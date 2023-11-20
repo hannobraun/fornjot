@@ -107,8 +107,8 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
                 edge
             });
 
-        let region =
-            Region::new(exterior.insert(services), [], color).insert(services);
+        let exterior = exterior.insert(services);
+        let region = Region::new(exterior, [], color).insert(services);
         let face = Face::new(surface, region);
 
         (face, edge_top)
