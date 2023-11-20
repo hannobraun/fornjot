@@ -1,7 +1,7 @@
 //! Sweeping objects along a path to create new objects
 
-mod edge;
 mod face;
+mod half_edge;
 mod path;
 mod sketch;
 mod vertex;
