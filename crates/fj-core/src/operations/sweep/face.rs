@@ -41,7 +41,7 @@ impl Sweep for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let bottom_face = bottom_face(self, path, services);
+        let bottom_face = bottom_face(&self, path, services).insert(services);
         faces.push(bottom_face.clone());
 
         let top_surface =
@@ -107,11 +107,7 @@ impl Sweep for Handle<Face> {
     }
 }
 
-fn bottom_face(
-    face: Handle<Face>,
-    path: Vector<3>,
-    services: &mut Services,
-) -> Handle<Face> {
+fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
     let is_negative_sweep = {
         let u = match face.surface().geometry().u {
             GlobalPath::Circle(_) => todo!(
@@ -128,8 +124,8 @@ fn bottom_face(
     };
 
     if is_negative_sweep {
-        face
+        face.clone()
     } else {
-        face.reverse(services).insert(services)
+        face.reverse(services)
     }
 }
