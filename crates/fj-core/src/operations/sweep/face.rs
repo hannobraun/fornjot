@@ -10,13 +10,12 @@ use crate::{
         build::BuildCycle, insert::Insert, join::JoinCycle, reverse::Reverse,
     },
     services::Services,
-    storage::Handle,
 };
 
 use super::{Sweep, SweepCache};
 
 impl Sweep for &Face {
-    type Swept = Handle<Shell>;
+    type Swept = Shell;
 
     fn sweep_with_cache(
         self,
@@ -103,7 +102,7 @@ impl Sweep for &Face {
         let top_face = Face::new(top_surface, top_region).insert(services);
         faces.push(top_face);
 
-        Shell::new(faces).insert(services)
+        Shell::new(faces)
     }
 }
 

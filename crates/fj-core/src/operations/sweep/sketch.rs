@@ -25,7 +25,9 @@ impl Sweep for (Handle<Sketch>, Handle<Surface>) {
         for region in sketch.regions() {
             let face =
                 Face::new(surface.clone(), region.clone()).insert(services);
-            let shell = face.sweep_with_cache(path, cache, services);
+            let shell = face
+                .sweep_with_cache(path, cache, services)
+                .insert(services);
             shells.push(shell);
         }
 
