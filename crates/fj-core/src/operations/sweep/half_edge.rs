@@ -14,7 +14,7 @@ use crate::{
 
 use super::{Sweep, SweepCache};
 
-impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
+impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
     type Swept = (Face, Handle<HalfEdge>);
 
     fn sweep_with_cache(
@@ -33,7 +33,7 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, curves) = {
-            let [a, b] = [edge.start_vertex(), next_vertex].map(Clone::clone);
+            let [a, b] = [edge.start_vertex().clone(), next_vertex];
             let (curve_up, c) =
                 b.clone().sweep_with_cache(path, cache, services);
             let (curve_down, d) =

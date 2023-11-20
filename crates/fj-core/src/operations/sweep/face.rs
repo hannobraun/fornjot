@@ -65,7 +65,7 @@ impl Sweep for Handle<Face> {
 
                 let (side_face, top_edge) = (
                     bottom_half_edge.deref(),
-                    bottom_half_edge_next.start_vertex(),
+                    bottom_half_edge_next.start_vertex().clone(),
                     bottom_face.surface().deref(),
                     bottom_face.region().color(),
                 )
