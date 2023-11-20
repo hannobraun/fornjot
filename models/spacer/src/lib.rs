@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use fj::{
     core::{
         objects::{Cycle, Region, Sketch, Solid},
@@ -22,21 +20,15 @@ pub fn model(
     height: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
-    let sketch = Sketch::empty()
-        .add_region(
-            Region::circle(Point::origin(), outer, services)
-                .add_interiors([Cycle::circle(
-                    Point::origin(),
-                    inner,
-                    services,
-                )
+    let sketch = Sketch::empty().add_region(
+        Region::circle(Point::origin(), outer, services)
+            .add_interiors([Cycle::circle(Point::origin(), inner, services)
                 .reverse(services)
                 .insert(services)])
-                .insert(services),
-        )
-        .insert(services);
+            .insert(services),
+    );
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., height]);
-    (sketch.deref(), surface).sweep(path, services)
+    (&sketch, surface).sweep(path, services)
 }

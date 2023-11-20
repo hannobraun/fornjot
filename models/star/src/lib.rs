@@ -1,4 +1,4 @@
-use std::{f64::consts::PI, ops::Deref};
+use std::f64::consts::PI;
 
 use fj::{
     core::{
@@ -43,17 +43,15 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let sketch = Sketch::empty()
-        .add_region(
-            Region::polygon(outer_points, services)
-                .add_interiors([Cycle::polygon(inner_points, services)
-                    .reverse(services)
-                    .insert(services)])
-                .insert(services),
-        )
-        .insert(services);
+    let sketch = Sketch::empty().add_region(
+        Region::polygon(outer_points, services)
+            .add_interiors([Cycle::polygon(inner_points, services)
+                .reverse(services)
+                .insert(services)])
+            .insert(services),
+    );
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., h]);
-    (sketch.deref(), surface).sweep(path, services)
+    (&sketch, surface).sweep(path, services)
 }
