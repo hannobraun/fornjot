@@ -26,8 +26,9 @@ impl Sweep for (&HalfEdge, &Handle<Vertex>, &Surface, Option<Color>) {
         let (edge, next_vertex, surface, color) = self;
         let path = path.into();
 
-        let surface =
-            (edge.path(), surface).sweep_with_cache(path, cache, services);
+        let surface = (edge.path(), surface)
+            .sweep_with_cache(path, cache, services)
+            .insert(services);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
