@@ -12,7 +12,7 @@ use crate::{
     storage::Handle,
 };
 
-use super::{vertex::SweepVertex, Sweep, SweepCache};
+use super::{vertex::SweepVertex, Sweep, SweepCache, SweepSurfacePath};
 
 impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
     type Swept = (Face, Handle<HalfEdge>);
@@ -26,8 +26,9 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
         let (edge, end_vertex, surface, color) = self;
         let path = path.into();
 
-        let surface = (edge.path(), surface)
-            .sweep_with_cache(path, cache, services)
+        let surface = edge
+            .path()
+            .sweep_surface_path(surface, path)
             .insert(services);
 
         // Next, we need to define the boundaries of the face. Let's start with

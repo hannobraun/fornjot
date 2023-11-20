@@ -3,22 +3,37 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
-    services::Services,
 };
 
-use super::{Sweep, SweepCache};
-
-impl Sweep for (SurfacePath, &Surface) {
-    type Swept = Surface;
-
-    fn sweep_with_cache(
-        self,
+/// # Sweep a [`SurfacePath`]
+///
+/// See [module documentation] for more information.
+///
+/// [module documentation]: super
+pub trait SweepSurfacePath {
+    /// # Sweep the surface path
+    ///
+    /// Requires a reference to the surface that the path is defined on.
+    ///
+    ///
+    /// ## Implementation Note
+    ///
+    /// Sweeping a `SurfacePath` that is defined on a curved surface is
+    /// currently not supported:
+    /// <https://github.com/hannobraun/fornjot/issues/1112>
+    fn sweep_surface_path(
+        &self,
+        surface: &Surface,
         path: impl Into<Vector<3>>,
-        _: &mut SweepCache,
-        _: &mut Services,
-    ) -> Self::Swept {
-        let (curve, surface) = self;
+    ) -> Surface;
+}
 
+impl SweepSurfacePath for SurfacePath {
+    fn sweep_surface_path(
+        &self,
+        surface: &Surface,
+        path: impl Into<Vector<3>>,
+    ) -> Surface {
         match surface.geometry().u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
@@ -43,7 +58,7 @@ impl Sweep for (SurfacePath, &Surface) {
             }
         }
 
-        let u = match curve {
+        let u = match self {
             SurfacePath::Circle(circle) => {
                 let center = surface
                     .geometry()
