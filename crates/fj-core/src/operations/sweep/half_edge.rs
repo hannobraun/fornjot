@@ -23,7 +23,7 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
         cache: &mut SweepCache,
         services: &mut Services,
     ) -> Self::Swept {
-        let (edge, next_vertex, surface, color) = self;
+        let (edge, end_vertex, surface, color) = self;
         let path = path.into();
 
         let surface = (edge.path(), surface)
@@ -33,7 +33,7 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, curves) = {
-            let [a, b] = [edge.start_vertex().clone(), next_vertex];
+            let [a, b] = [edge.start_vertex().clone(), end_vertex];
             let (curve_up, c) =
                 b.clone().sweep_with_cache(path, cache, services);
             let (curve_down, d) =
