@@ -1,4 +1,4 @@
-use std::f64::consts::PI;
+use std::{f64::consts::PI, ops::Deref};
 
 use fj::{
     core::{
@@ -55,5 +55,5 @@ pub fn model(
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., h]);
-    (sketch, surface).sweep(path, services)
+    (sketch.deref(), surface).sweep(path, services)
 }

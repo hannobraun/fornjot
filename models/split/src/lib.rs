@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use fj::{
     core::{
         objects::{Region, Sketch, Solid},
@@ -36,7 +38,7 @@ pub fn model(
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., size]);
-    let solid = (sketch, surface).sweep(path, services);
+    let solid = (sketch.deref(), surface).sweep(path, services);
 
     solid
         .update_shell(solid.shells().only(), |shell| {
