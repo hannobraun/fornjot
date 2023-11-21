@@ -45,6 +45,10 @@ keywords = ["cad", "programmatic", "code-cad"]
 categories = ["encoding", "mathematics", "rendering"]
 
 
+[workspace.lints.rust]
+missing_docs = "warn"
+
+
 [workspace.dependencies.fj]
 version = "0.47.0"
 path = "crates/fj"

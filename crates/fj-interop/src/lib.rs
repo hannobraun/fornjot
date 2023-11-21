@@ -9,8 +9,6 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![warn(missing_docs)]
-
 pub mod ext;
 pub mod mesh;
 pub mod model;

@@ -31,8 +31,6 @@
 //! [nalgebra]: https://nalgebra.org/
 //! [Parry]: https://www.parry.rs/
 
-#![warn(missing_docs)]
-
 mod aabb;
 mod arc;
 mod circle;

@@ -8,8 +8,6 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![warn(missing_docs)]
-
 use std::{fs::File, path::Path};
 
 use thiserror::Error;
