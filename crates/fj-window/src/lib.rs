@@ -8,8 +8,6 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![warn(missing_docs)]
-
 mod display;
 mod window;
 

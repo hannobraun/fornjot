@@ -9,8 +9,6 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-#![warn(missing_docs)]
-
 mod args;
 mod handle_model;
 

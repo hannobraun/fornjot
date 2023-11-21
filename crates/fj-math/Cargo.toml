@@ -10,6 +10,9 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+[lints]
+workspace = true
+
 [dependencies]
 approx = "0.5.1"
 decorum = "0.3.1"

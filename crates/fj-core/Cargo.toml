@@ -10,6 +10,9 @@ license.workspace = true
 keywords.workspace = true
 categories.workspace = true
 
+[lints]
+workspace = true
+
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
