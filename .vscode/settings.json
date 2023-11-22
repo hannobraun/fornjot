@@ -7,5 +7,6 @@
     "rust-analyzer.diagnostics.disabled": [
         "mismatched-arg-count"
     ],
-    "rust-analyzer.check.command": "clippy"
+    "rust-analyzer.check.command": "clippy",
+    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix"
 }
