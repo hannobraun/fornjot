@@ -7,7 +7,7 @@ use fj::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
-            sweep::Sweep,
+            sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
@@ -53,5 +53,7 @@ pub fn model(
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., h]);
-    (&sketch, surface).sweep(path, services).insert(services)
+    sketch
+        .sweep_sketch(surface, path, services)
+        .insert(services)
 }

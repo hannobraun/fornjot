@@ -8,7 +8,7 @@ mod vertex;
 
 pub use self::{
     face::SweepFace, half_edge::SweepHalfEdge, path::SweepSurfacePath,
-    vertex::SweepVertex,
+    sketch::SweepSketch, vertex::SweepVertex,
 };
 
 use std::collections::BTreeMap;

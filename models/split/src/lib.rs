@@ -5,7 +5,7 @@ use fj::{
             build::{BuildRegion, BuildSketch},
             insert::Insert,
             split::SplitFace,
-            sweep::Sweep,
+            sweep::SweepSketch,
             update::{UpdateSketch, UpdateSolid},
         },
         services::Services,
@@ -34,7 +34,7 @@ pub fn model(
 
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., size]);
-    let solid = (&sketch, surface).sweep(path, services);
+    let solid = sketch.sweep_sketch(surface, path, services);
 
     solid
         .update_shell(solid.shells().only(), |shell| {
