@@ -7,27 +7,39 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Sweep, SweepCache};
+use super::{face::SweepFace, SweepCache};
 
-impl Sweep for (&Sketch, Handle<Surface>) {
-    type Swept = Solid;
-
-    fn sweep_with_cache(
-        self,
+/// # Sweep a [`Sketch`]
+///
+/// See [module documentation] for more information.
+///
+/// [module documentation]: super
+pub trait SweepSketch {
+    /// # Sweep the [`Sketch`]
+    fn sweep_sketch(
+        &self,
+        surface: Handle<Surface>,
         path: impl Into<Vector<3>>,
-        cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Self::Swept {
-        let (sketch, surface) = self;
+    ) -> Solid;
+}
+
+impl SweepSketch for Sketch {
+    fn sweep_sketch(
+        &self,
+        surface: Handle<Surface>,
+        path: impl Into<Vector<3>>,
+        services: &mut Services,
+    ) -> Solid {
         let path = path.into();
+        let mut cache = SweepCache::default();
 
         let mut shells = Vec::new();
-        for region in sketch.regions() {
+        for region in self.regions() {
             let face =
                 Face::new(surface.clone(), region.clone()).insert(services);
-            let shell = face
-                .sweep_with_cache(path, cache, services)
-                .insert(services);
+            let shell =
+                face.sweep_face(path, &mut cache, services).insert(services);
             shells.push(shell);
         }
 

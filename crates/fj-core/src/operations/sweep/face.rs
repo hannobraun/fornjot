@@ -12,17 +12,30 @@ use crate::{
     services::Services,
 };
 
-use super::{Sweep, SweepCache};
+use super::{SweepCache, SweepHalfEdge};
 
-impl Sweep for &Face {
-    type Swept = Shell;
-
-    fn sweep_with_cache(
-        self,
+/// # Sweep a [`Face`]
+///
+/// See [module documentation] for more information.
+///
+/// [module documentation]: super
+pub trait SweepFace {
+    /// # Sweep the [`Face`]
+    fn sweep_face(
+        &self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Self::Swept {
+    ) -> Shell;
+}
+
+impl SweepFace for Face {
+    fn sweep_face(
+        &self,
+        path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
+        services: &mut Services,
+    ) -> Shell {
         // Please note that this function uses the words "bottom" and "top" in a
         // specific sense:
         //
@@ -62,13 +75,14 @@ impl Sweep for &Face {
                 let (bottom_half_edge, bottom_half_edge_next) =
                     bottom_half_edge_pair;
 
-                let (side_face, top_edge) = (
-                    bottom_half_edge.deref(),
+                let (side_face, top_edge) = bottom_half_edge.sweep_half_edge(
                     bottom_half_edge_next.start_vertex().clone(),
                     bottom_face.surface().deref(),
                     bottom_face.region().color(),
-                )
-                    .sweep_with_cache(path, cache, services);
+                    path,
+                    cache,
+                    services,
+                );
 
                 let side_face = side_face.insert(services);
 

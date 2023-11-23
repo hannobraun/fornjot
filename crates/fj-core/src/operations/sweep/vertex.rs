@@ -1,5 +1,3 @@
-use fj_math::Vector;
-
 use crate::{
     objects::{Curve, Vertex},
     operations::insert::Insert,
@@ -7,17 +5,45 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Sweep, SweepCache};
+use super::SweepCache;
 
-impl Sweep for Handle<Vertex> {
-    type Swept = (Handle<Curve>, Self);
-
-    fn sweep_with_cache(
-        self,
-        _: impl Into<Vector<3>>,
+/// # Sweep a [`Vertex`]
+///
+/// See [module documentation] for more information.
+///
+/// [module documentation]: super
+pub trait SweepVertex: Sized {
+    /// # Sweep the vertex
+    ///
+    /// Returns the curve that the vertex was swept along, as well as a new
+    /// vertex to represent the point at the end of the sweep.
+    ///
+    ///
+    /// ## Comparison to Other Sweep Operations
+    ///
+    /// This method is a bit weird, compared to most other sweep operations, in
+    /// that it doesn't actually do any sweeping. That is because because both
+    /// [`Vertex`] and [`Curve`] do not define any geometry (please refer to
+    /// their respective documentation). Because of that, this method doesn't
+    /// even take the sweep path as an argument.
+    ///
+    /// The reason this code still exists as part of the sweep infrastructure,
+    /// is to make sure that sweeping the same vertex multiple times always
+    /// results in the same curve. This is also the reason that this trait is
+    /// only implemented for `Handle<Vertex>` and produces a `Handle<Curve>`.
+    fn sweep_vertex(
+        &self,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Self::Swept {
+    ) -> (Handle<Curve>, Handle<Vertex>);
+}
+
+impl SweepVertex for Handle<Vertex> {
+    fn sweep_vertex(
+        &self,
+        cache: &mut SweepCache,
+        services: &mut Services,
+    ) -> (Handle<Curve>, Handle<Vertex>) {
         let curve = cache
             .curves
             .entry(self.id())

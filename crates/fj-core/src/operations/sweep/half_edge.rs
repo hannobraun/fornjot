@@ -12,37 +12,66 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Sweep, SweepCache};
+use super::{vertex::SweepVertex, SweepCache, SweepSurfacePath};
 
-impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
-    type Swept = (Face, Handle<HalfEdge>);
-
-    fn sweep_with_cache(
-        self,
+/// # Sweep a [`HalfEdge`]
+///
+/// See [module documentation] for more information.
+///
+/// [module documentation]: super
+pub trait SweepHalfEdge {
+    /// # Sweep the [`HalfEdge`]
+    ///
+    /// Returns a face, the result of sweeping the edge, as well as the top edge
+    /// of that face, i.e. the edge that is the version of the original edge
+    /// that was translated along the sweep path.
+    ///
+    /// In addition to the usual arguments that many sweep operations require,
+    /// some other ones are needed:
+    ///
+    /// - `end_vertex`, the vertex where the half-edge ends. This is the start
+    ///   vertex of the next half-edge in the cycle.
+    /// - The `surface` that the half-edge is defined on.
+    /// - The `color` of the resulting face, if applicable
+    fn sweep_half_edge(
+        &self,
+        end_vertex: Handle<Vertex>,
+        surface: &Surface,
+        color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Self::Swept {
-        let (edge, end_vertex, surface, color) = self;
+    ) -> (Face, Handle<HalfEdge>);
+}
+
+impl SweepHalfEdge for HalfEdge {
+    fn sweep_half_edge(
+        &self,
+        end_vertex: Handle<Vertex>,
+        surface: &Surface,
+        color: Option<Color>,
+        path: impl Into<Vector<3>>,
+        cache: &mut SweepCache,
+        services: &mut Services,
+    ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
-        let surface = (edge.path(), surface)
-            .sweep_with_cache(path, cache, services)
+        let surface = self
+            .path()
+            .sweep_surface_path(surface, path)
             .insert(services);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, curves) = {
-            let [a, b] = [edge.start_vertex().clone(), end_vertex];
-            let (curve_up, c) =
-                b.clone().sweep_with_cache(path, cache, services);
-            let (curve_down, d) =
-                a.clone().sweep_with_cache(path, cache, services);
+            let [a, b] = [self.start_vertex().clone(), end_vertex];
+            let (curve_up, c) = b.clone().sweep_vertex(cache, services);
+            let (curve_down, d) = a.clone().sweep_vertex(cache, services);
 
             (
                 [a, b, c, d],
                 [
-                    Some(edge.curve().clone()),
+                    Some(self.curve().clone()),
                     Some(curve_up),
                     None,
                     Some(curve_down),
@@ -52,7 +81,7 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
 
         // Let's figure out the surface coordinates of the edge vertices.
         let surface_points = {
-            let [a, b] = edge.boundary().inner;
+            let [a, b] = self.boundary().inner;
 
             [
                 [a.t, Scalar::ZERO],
@@ -70,7 +99,7 @@ impl Sweep for (&HalfEdge, Handle<Vertex>, &Surface, Option<Color>) {
 
         // Now, the boundaries of each edge.
         let boundaries = {
-            let [a, b] = edge.boundary().inner;
+            let [a, b] = self.boundary().inner;
             let [c, d] = [0., 1.].map(|coord| Point::from([coord]));
 
             [[a, b], [c, d], [b, a], [d, c]]
