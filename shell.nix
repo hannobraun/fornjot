@@ -7,6 +7,14 @@
 
 { pkgs ? import <nixpkgs> { } }:
 
+let
+  # `cargo run -p <some-model>` won't work without these libraries on the path.
+  libPath = with pkgs; lib.makeLibraryPath [
+    libxkbcommon
+    vulkan-loader
+    wayland
+  ];
+in
 pkgs.mkShell {
   packages = with pkgs; [
     # Used as a local build tool.
@@ -18,5 +26,5 @@ pkgs.mkShell {
   ];
 
   # Otherwise `export-validator` produces an error trying to link `libstdc++`.
-  LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+  LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib:${libPath}";
 }
