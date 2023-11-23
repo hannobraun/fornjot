@@ -90,12 +90,12 @@ impl Polygon {
         true
     }
 
-    pub fn contains_exterior_edge(&self, edge: Segment<2>) -> bool {
+    fn contains_exterior_edge(&self, edge: Segment<2>) -> bool {
         self.exterior.segments().contains(&edge)
             || self.exterior.segments().contains(&edge.reverse())
     }
 
-    pub fn contains_interior_edge(&self, edge: Segment<2>) -> bool {
+    fn contains_interior_edge(&self, edge: Segment<2>) -> bool {
         let mut contains = false;
 
         for chain in &self.interiors {
@@ -113,7 +113,7 @@ impl Polygon {
     /// This code is being duplicated by the `Contains<Point<2>>` implementation
     /// for `Face`. It would be nice to be able to consolidate the duplication,
     /// but this has turned out to be difficult.
-    pub fn contains_point(&self, point: impl Into<Point<2>>) -> bool {
+    fn contains_point(&self, point: impl Into<Point<2>>) -> bool {
         let ray = HorizontalRayToTheRight {
             origin: point.into(),
         };
