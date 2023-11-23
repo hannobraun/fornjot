@@ -1,4 +1,7 @@
-//! Sweeping objects along a path to create new objects
+//! Sweep objects along a path to create new objects
+//!
+//! Sweeps 1D or 2D objects along a straight path, creating a 2D or 3D object,
+//! respectively.
 
 mod face;
 mod half_edge;
