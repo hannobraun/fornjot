@@ -7,7 +7,7 @@ use crate::{
     storage::Handle,
 };
 
-use super::{Sweep, SweepCache};
+use super::{face::SweepFace, Sweep, SweepCache};
 
 impl Sweep for (&Sketch, Handle<Surface>) {
     type Swept = Solid;
@@ -25,9 +25,7 @@ impl Sweep for (&Sketch, Handle<Surface>) {
         for region in sketch.regions() {
             let face =
                 Face::new(surface.clone(), region.clone()).insert(services);
-            let shell = face
-                .sweep_with_cache(path, cache, services)
-                .insert(services);
+            let shell = face.sweep_face(path, cache, services).insert(services);
             shells.push(shell);
         }
 
