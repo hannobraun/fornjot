@@ -38,7 +38,7 @@ impl<T> ObjectSet<T> {
         for handle in handles {
             if added.contains(&handle) {
                 panic!(
-                    "Constructing `HandleSet` with duplicate handle: {:?}",
+                    "Constructing `ObjectSet` with duplicate handle: {:?}",
                     handle
                 );
             }
@@ -109,7 +109,7 @@ impl<T> ObjectSet<T> {
     ///
     /// Panics, if `ObjectSet` is empty.
     pub fn nth_circular(&self, index: usize) -> &Handle<T> {
-        assert!(!self.is_empty(), "`Handles` must not be empty");
+        assert!(!self.is_empty(), "`ObjectSet` must not be empty");
 
         let index = index % self.len();
         self.nth(index)
