@@ -59,9 +59,7 @@ impl SweepFace for Face {
         let mut top_interiors = Vec::new();
 
         for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
-            let bottom_cycle = bottom_cycle.reverse(services);
-
-            let swept_cycle = bottom_cycle.sweep_cycle(
+            let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
                 bottom_face.surface(),
                 bottom_face.region().color(),
                 path,
