@@ -3,6 +3,7 @@
 //! Sweeps 1D or 2D objects along a straight path, creating a 2D or 3D object,
 //! respectively.
 
+mod cycle;
 mod face;
 mod half_edge;
 mod path;
@@ -10,8 +11,12 @@ mod sketch;
 mod vertex;
 
 pub use self::{
-    face::SweepFace, half_edge::SweepHalfEdge, path::SweepSurfacePath,
-    sketch::SweepSketch, vertex::SweepVertex,
+    cycle::{SweepCycle, SweptCycle},
+    face::SweepFace,
+    half_edge::SweepHalfEdge,
+    path::SweepSurfacePath,
+    sketch::SweepSketch,
+    vertex::SweepVertex,
 };
 
 use std::collections::BTreeMap;
