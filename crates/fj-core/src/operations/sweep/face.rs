@@ -65,11 +65,11 @@ impl SweepFace for Face {
                 .into_iter()
                 .map(|side_face| side_face.insert(services)),
         );
-        let top_region = swept_region.top_region.insert(services);
 
         let top_face = {
             let top_surface =
                 bottom_face.surface().clone().translate(path, services);
+            let top_region = swept_region.top_region.insert(services);
 
             Face::new(top_surface, top_region).insert(services)
         };
