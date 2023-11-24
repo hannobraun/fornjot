@@ -59,12 +59,11 @@ impl SweepFace for Face {
             services,
         );
 
-        faces.extend(
-            swept_region
-                .faces
-                .into_iter()
-                .map(|side_face| side_face.insert(services)),
-        );
+        let side_faces = swept_region
+            .faces
+            .into_iter()
+            .map(|side_face| side_face.insert(services));
+        faces.extend(side_faces);
 
         let top_face = {
             let top_surface =
