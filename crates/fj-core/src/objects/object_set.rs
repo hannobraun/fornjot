@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 use crate::storage::Handle;
 
-/// An ordered set of object handles
+/// An ordered set of objects
 ///
 /// This is the data structure used by all objects that reference multiple
 /// objects of the same type. It is a set, not containing any duplicate
@@ -24,7 +24,7 @@ pub struct ObjectSet<T> {
 }
 
 impl<T> ObjectSet<T> {
-    /// Create a new instances of `Handles` from an iterator over `Handle<T>`
+    /// Create an instances of `ObjectSet` from an iterator over `Handle<T>`
     ///
     /// # Panics
     ///
@@ -51,7 +51,7 @@ impl<T> ObjectSet<T> {
         Self { inner }
     }
 
-    /// Return the number of handles in this set
+    /// Return the number of objects in this set
     pub fn len(&self) -> usize {
         self.inner.len()
     }
@@ -103,12 +103,12 @@ impl<T> ObjectSet<T> {
 
     /// Return the n-th item, treating the index space as circular
     ///
-    /// If the length of `Handles` is `i`, then retrieving the i-th edge using
-    /// this method, is the same as retrieving the 0-th one.
+    /// If the length of `ObjectSet` is `i`, then retrieving the i-th edge using
+    /// this method, is the same as retrieving the 0-th one, and so on.
     ///
     /// # Panics
     ///
-    /// Panics, if `Handles` is empty.
+    /// Panics, if `ObjectSet` is empty.
     pub fn nth_circular(&self, index: usize) -> &Handle<T> {
         assert!(!self.is_empty(), "`Handles` must not be empty");
 
@@ -130,17 +130,17 @@ impl<T> ObjectSet<T> {
             .map(|index| self.nth_circular(index + 1))
     }
 
-    /// Access an iterator over the handles
+    /// Access an iterator over the objects
     pub fn iter(&self) -> slice::Iter<Handle<T>> {
         self.inner.iter()
     }
 
-    /// Return iterator over the pairs of all handles
+    /// Access an iterator over the neighboring pairs of all contained objects
     pub fn pairs(&self) -> impl Iterator<Item = (&Handle<T>, &Handle<T>)> {
         self.iter().circular_tuple_windows()
     }
 
-    /// Create a new instance in which the provided item has been replaced
+    /// Create a new instance in which the provided object has been replaced
     ///
     /// Returns `None`, if the provided item is not present.
     ///
