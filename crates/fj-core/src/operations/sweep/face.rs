@@ -1,10 +1,9 @@
-use fj_math::{Scalar, Vector};
+use fj_math::Vector;
 
 use crate::{
     algorithms::transform::TransformObject,
-    geometry::GlobalPath,
     objects::{Face, Shell},
-    operations::{insert::Insert, reverse::Reverse},
+    operations::insert::Insert,
     services::Services,
     storage::Handle,
 };
@@ -50,7 +49,7 @@ impl SweepFace for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let bottom_face = bottom_face(self, path, services).insert(services);
+        let bottom_face = self.clone();
         faces.push(bottom_face.clone());
 
         let swept_region = bottom_face.region().sweep_region(
@@ -76,28 +75,5 @@ impl SweepFace for Handle<Face> {
         faces.push(top_face);
 
         Shell::new(faces)
-    }
-}
-
-fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
-    let is_negative_sweep = {
-        let u = match face.surface().geometry().u {
-            GlobalPath::Circle(_) => todo!(
-                "Sweeping from faces defined in rounded surfaces is not \
-                    supported"
-            ),
-            GlobalPath::Line(line) => line.direction(),
-        };
-        let v = face.surface().geometry().v;
-
-        let normal = u.cross(&v);
-
-        normal.dot(&path) < Scalar::ZERO
-    };
-
-    if is_negative_sweep {
-        face.clone()
-    } else {
-        face.reverse(services)
     }
 }
