@@ -2,7 +2,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{handles::Handles, Cycle},
+    objects::{Cycle, ObjectSet},
     storage::Handle,
 };
 
@@ -17,7 +17,7 @@ use crate::{
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Region {
     exterior: Handle<Cycle>,
-    interiors: Handles<Cycle>,
+    interiors: ObjectSet<Cycle>,
     color: Option<Color>,
 }
 
@@ -43,7 +43,7 @@ impl Region {
     /// Access the cycles that bound the region on the inside
     ///
     /// Each of these cycles defines a hole in the region .
-    pub fn interiors(&self) -> &Handles<Cycle> {
+    pub fn interiors(&self) -> &ObjectSet<Cycle> {
         &self.interiors
     }
 

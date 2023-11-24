@@ -1,12 +1,12 @@
 use crate::{
-    objects::{handles::Handles, Region},
+    objects::{ObjectSet, Region},
     storage::Handle,
 };
 
 /// A 2-dimensional shape
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Sketch {
-    regions: Handles<Region>,
+    regions: ObjectSet<Region>,
 }
 
 impl Sketch {
@@ -18,7 +18,7 @@ impl Sketch {
     }
 
     /// Access the regions of the sketch
-    pub fn regions(&self) -> &Handles<Region> {
+    pub fn regions(&self) -> &ObjectSet<Region> {
         &self.regions
     }
 }

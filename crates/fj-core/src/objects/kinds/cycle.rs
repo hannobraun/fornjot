@@ -2,14 +2,14 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::Handles, HalfEdge},
+    objects::{HalfEdge, ObjectSet},
     storage::Handle,
 };
 
 /// A cycle of connected edges
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Cycle {
-    half_edges: Handles<HalfEdge>,
+    half_edges: ObjectSet<HalfEdge>,
 }
 
 impl Cycle {
@@ -20,7 +20,7 @@ impl Cycle {
     }
 
     /// Access the edges that make up the cycle
-    pub fn half_edges(&self) -> &Handles<HalfEdge> {
+    pub fn half_edges(&self) -> &ObjectSet<HalfEdge> {
         &self.half_edges
     }
 

@@ -4,27 +4,26 @@ use itertools::Itertools;
 
 use crate::storage::Handle;
 
-/// An ordered set of object handles
+/// An ordered set of objects
 ///
 /// This is the data structure used by all objects that reference multiple
 /// objects of the same type. It is a set, not containing any duplicate
 /// elements, and it maintains the insertion order of those elements.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Handles<T> {
+pub struct ObjectSet<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
     // here? Well, it's here because we need it to preserve insertion order, but
     // that doesn't explain why it is here *alone*.
     //
     // If you look closely, you'll notice that this is an immutable data
     // structure (since it is used in objects, and objects themselves are
-    // immutable). We make sure there are no duplicates when this is
-    // constructed (see the `FromIterator` implementation below), but after
-    // that, we're fine.
+    // immutable). We need to make sure there are no duplicates when this is
+    // constructed (see the constructor below), but after that, we're fine.
     inner: Vec<Handle<T>>,
 }
 
-impl<T> Handles<T> {
-    /// Create a new instances of `Handles` from an iterator over `Handle<T>`
+impl<T> ObjectSet<T> {
+    /// Create an instances of `ObjectSet` from an iterator over `Handle<T>`
     ///
     /// # Panics
     ///
@@ -39,7 +38,7 @@ impl<T> Handles<T> {
         for handle in handles {
             if added.contains(&handle) {
                 panic!(
-                    "Constructing `HandleSet` with duplicate handle: {:?}",
+                    "Constructing `ObjectSet` with duplicate handle: {:?}",
                     handle
                 );
             }
@@ -51,7 +50,7 @@ impl<T> Handles<T> {
         Self { inner }
     }
 
-    /// Return the number of handles in this set
+    /// Return the number of objects in this set
     pub fn len(&self) -> usize {
         self.inner.len()
     }
@@ -103,14 +102,14 @@ impl<T> Handles<T> {
 
     /// Return the n-th item, treating the index space as circular
     ///
-    /// If the length of `Handles` is `i`, then retrieving the i-th edge using
-    /// this method, is the same as retrieving the 0-th one.
+    /// If the length of `ObjectSet` is `i`, then retrieving the i-th edge using
+    /// this method, is the same as retrieving the 0-th one, and so on.
     ///
     /// # Panics
     ///
-    /// Panics, if `Handles` is empty.
+    /// Panics, if `ObjectSet` is empty.
     pub fn nth_circular(&self, index: usize) -> &Handle<T> {
-        assert!(!self.is_empty(), "`Handles` must not be empty");
+        assert!(!self.is_empty(), "`ObjectSet` must not be empty");
 
         let index = index % self.len();
         self.nth(index)
@@ -130,17 +129,17 @@ impl<T> Handles<T> {
             .map(|index| self.nth_circular(index + 1))
     }
 
-    /// Access an iterator over the handles
+    /// Access an iterator over the objects
     pub fn iter(&self) -> slice::Iter<Handle<T>> {
         self.inner.iter()
     }
 
-    /// Return iterator over the pairs of all handles
+    /// Access an iterator over the neighboring pairs of all contained objects
     pub fn pairs(&self) -> impl Iterator<Item = (&Handle<T>, &Handle<T>)> {
         self.iter().circular_tuple_windows()
     }
 
-    /// Create a new instance in which the provided item has been replaced
+    /// Create a new instance in which the provided object has been replaced
     ///
     /// Returns `None`, if the provided item is not present.
     ///
@@ -191,7 +190,7 @@ impl<T> Handles<T> {
     }
 }
 
-impl<O> FromIterator<Handle<O>> for Handles<O>
+impl<O> FromIterator<Handle<O>> for ObjectSet<O>
 where
     O: Debug + Ord,
 {
@@ -200,7 +199,7 @@ where
     }
 }
 
-impl<T> IntoIterator for Handles<T> {
+impl<T> IntoIterator for ObjectSet<T> {
     type Item = Handle<T>;
     type IntoIter = vec::IntoIter<Handle<T>>;
 
@@ -209,7 +208,7 @@ impl<T> IntoIterator for Handles<T> {
     }
 }
 
-impl<'r, T> IntoIterator for &'r Handles<T> {
+impl<'r, T> IntoIterator for &'r ObjectSet<T> {
     // You might wonder why we're returning references to handles here, when
     // `Handle` already is kind of reference, and easily cloned.
     //
