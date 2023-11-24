@@ -3,13 +3,12 @@ use fj_math::{Scalar, Vector};
 use crate::{
     algorithms::transform::TransformObject,
     geometry::GlobalPath,
-    objects::{Cycle, Face, Region, Shell},
+    objects::{Face, Shell},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
-    storage::Handle,
 };
 
-use super::{SweepCache, SweepCycle};
+use super::{SweepCache, SweepRegion};
 
 /// # Sweep a [`Face`]
 ///
@@ -53,41 +52,26 @@ impl SweepFace for Face {
         let bottom_face = bottom_face(self, path, services).insert(services);
         faces.push(bottom_face.clone());
 
-        let top_surface =
-            bottom_face.surface().clone().translate(path, services);
-
-        let top_exterior = sweep_cycle(
-            bottom_face.region().exterior(),
-            &bottom_face,
-            &mut faces,
+        let swept_region = bottom_face.region().sweep_region(
+            bottom_face.surface(),
             path,
             cache,
             services,
         );
 
-        let mut top_interiors = Vec::new();
+        let side_faces = swept_region
+            .faces
+            .into_iter()
+            .map(|side_face| side_face.insert(services));
+        faces.extend(side_faces);
 
-        for bottom_cycle in bottom_face.region().interiors() {
-            let top_cycle = sweep_cycle(
-                bottom_cycle,
-                &bottom_face,
-                &mut faces,
-                path,
-                cache,
-                services,
-            );
+        let top_face = {
+            let top_surface =
+                bottom_face.surface().clone().translate(path, services);
+            let top_region = swept_region.top_region.insert(services);
 
-            top_interiors.push(top_cycle);
-        }
-
-        let top_region = Region::new(
-            top_exterior,
-            top_interiors,
-            bottom_face.region().color(),
-        )
-        .insert(services);
-
-        let top_face = Face::new(top_surface, top_region).insert(services);
+            Face::new(top_surface, top_region).insert(services)
+        };
         faces.push(top_face);
 
         Shell::new(faces)
@@ -115,30 +99,4 @@ fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
     } else {
         face.reverse(services)
     }
-}
-
-fn sweep_cycle(
-    bottom_cycle: &Cycle,
-    bottom_face: &Face,
-    faces: &mut Vec<Handle<Face>>,
-    path: Vector<3>,
-    cache: &mut SweepCache,
-    services: &mut Services,
-) -> Handle<Cycle> {
-    let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
-        bottom_face.surface(),
-        bottom_face.region().color(),
-        path,
-        cache,
-        services,
-    );
-
-    faces.extend(
-        swept_cycle
-            .faces
-            .into_iter()
-            .map(|side_face| side_face.insert(services)),
-    );
-
-    swept_cycle.top_cycle.insert(services)
 }

@@ -87,7 +87,7 @@ impl SweepCycle for Cycle {
     }
 }
 
-/// The result of sweeping a cycle
+/// The result of sweeping a [`Cycle`]
 ///
 /// See [`SweepCycle`].
 pub struct SweptCycle {
@@ -96,7 +96,7 @@ pub struct SweptCycle {
     /// See [`SweepCycle::sweep_cycle`] for more information.
     pub faces: Vec<Face>,
 
-    /// A cycle mad up of the "top" half-edges of the resulting faces
+    /// A cycle made up of the "top" half-edges of the resulting faces
     ///
     /// "Top" here refers to the place that the sweep path points to from the
     /// original cycle. Essentially, this is a translated (along the sweep path)
