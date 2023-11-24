@@ -17,9 +17,8 @@ pub struct ObjectSet<T> {
     //
     // If you look closely, you'll notice that this is an immutable data
     // structure (since it is used in objects, and objects themselves are
-    // immutable). We make sure there are no duplicates when this is
-    // constructed (see the `FromIterator` implementation below), but after
-    // that, we're fine.
+    // immutable). We need to make sure there are no duplicates when this is
+    // constructed (see the constructor below), but after that, we're fine.
     inner: Vec<Handle<T>>,
 }
 
