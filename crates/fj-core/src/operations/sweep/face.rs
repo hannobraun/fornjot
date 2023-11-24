@@ -56,10 +56,18 @@ impl SweepFace for Face {
         let top_surface =
             bottom_face.surface().clone().translate(path, services);
 
-        let mut top_exterior = None;
+        let top_exterior = sweep_cycle(
+            bottom_face.region().exterior(),
+            &bottom_face,
+            &mut faces,
+            path,
+            cache,
+            services,
+        );
+
         let mut top_interiors = Vec::new();
 
-        for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
+        for bottom_cycle in bottom_face.region().interiors() {
             let top_cycle = sweep_cycle(
                 bottom_cycle,
                 &bottom_face,
@@ -69,15 +77,11 @@ impl SweepFace for Face {
                 services,
             );
 
-            if i == 0 {
-                top_exterior = Some(top_cycle);
-            } else {
-                top_interiors.push(top_cycle);
-            };
+            top_interiors.push(top_cycle);
         }
 
         let top_region = Region::new(
-            top_exterior.unwrap(),
+            top_exterior,
             top_interiors,
             bottom_face.region().color(),
         )
