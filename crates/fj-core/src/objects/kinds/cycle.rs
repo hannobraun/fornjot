@@ -2,7 +2,7 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::SurfacePath,
-    objects::{handles::ObjectSet, HalfEdge},
+    objects::{HalfEdge, ObjectSet},
     storage::Handle,
 };
 

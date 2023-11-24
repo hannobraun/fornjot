@@ -1,5 +1,5 @@
 use crate::{
-    objects::{handles::ObjectSet, Region},
+    objects::{ObjectSet, Region},
     storage::Handle,
 };
 

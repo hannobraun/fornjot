@@ -2,7 +2,7 @@
 use fj_interop::mesh::Color;
 
 use crate::{
-    objects::{handles::ObjectSet, Cycle},
+    objects::{Cycle, ObjectSet},
     storage::Handle,
 };
 
