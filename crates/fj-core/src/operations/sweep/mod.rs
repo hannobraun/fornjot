@@ -7,6 +7,7 @@ mod cycle;
 mod face;
 mod half_edge;
 mod path;
+mod region;
 mod sketch;
 mod vertex;
 
@@ -15,6 +16,7 @@ pub use self::{
     face::SweepFace,
     half_edge::SweepHalfEdge,
     path::SweepSurfacePath,
+    region::{SweepRegion, SweptRegion},
     sketch::SweepSketch,
     vertex::SweepVertex,
 };
