@@ -3,9 +3,10 @@ use fj_math::{Scalar, Vector};
 use crate::{
     algorithms::transform::TransformObject,
     geometry::GlobalPath,
-    objects::{Face, Region, Shell},
+    objects::{Cycle, Face, Region, Shell},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
+    storage::Handle,
 };
 
 use super::{SweepCache, SweepCycle};
@@ -59,25 +60,19 @@ impl SweepFace for Face {
         let mut top_interiors = Vec::new();
 
         for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
-            let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
-                bottom_face.surface(),
-                bottom_face.region().color(),
+            let top_cycle = sweep_cycle(
+                bottom_cycle,
+                &bottom_face,
+                &mut faces,
                 path,
                 cache,
                 services,
             );
 
-            faces.extend(
-                swept_cycle
-                    .faces
-                    .into_iter()
-                    .map(|side_face| side_face.insert(services)),
-            );
-
             if i == 0 {
-                top_exterior = Some(swept_cycle.top_cycle.insert(services));
+                top_exterior = Some(top_cycle);
             } else {
-                top_interiors.push(swept_cycle.top_cycle.insert(services));
+                top_interiors.push(top_cycle);
             };
         }
 
@@ -116,4 +111,30 @@ fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
     } else {
         face.reverse(services)
     }
+}
+
+fn sweep_cycle(
+    bottom_cycle: &Cycle,
+    bottom_face: &Face,
+    faces: &mut Vec<Handle<Face>>,
+    path: Vector<3>,
+    cache: &mut SweepCache,
+    services: &mut Services,
+) -> Handle<Cycle> {
+    let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
+        bottom_face.surface(),
+        bottom_face.region().color(),
+        path,
+        cache,
+        services,
+    );
+
+    faces.extend(
+        swept_cycle
+            .faces
+            .into_iter()
+            .map(|side_face| side_face.insert(services)),
+    );
+
+    swept_cycle.top_cycle.insert(services)
 }
