@@ -87,7 +87,7 @@ impl SweepCycle for Cycle {
     }
 }
 
-/// The result of sweeping a cycle
+/// The result of sweeping a [`Cycle`]
 ///
 /// See [`SweepCycle`].
 pub struct SweptCycle {
