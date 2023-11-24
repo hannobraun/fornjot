@@ -6,6 +6,7 @@ use crate::{
     objects::{Face, Shell},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
+    storage::Handle,
 };
 
 use super::{SweepCache, SweepRegion};
@@ -25,7 +26,7 @@ pub trait SweepFace {
     ) -> Shell;
 }
 
-impl SweepFace for Face {
+impl SweepFace for Handle<Face> {
     fn sweep_face(
         &self,
         path: impl Into<Vector<3>>,
