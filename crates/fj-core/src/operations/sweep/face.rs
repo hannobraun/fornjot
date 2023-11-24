@@ -1,18 +1,14 @@
-use std::ops::Deref;
-
 use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::transform::TransformObject,
     geometry::GlobalPath,
-    objects::{Cycle, Face, Region, Shell},
-    operations::{
-        build::BuildCycle, insert::Insert, join::JoinCycle, reverse::Reverse,
-    },
+    objects::{Face, Region, Shell},
+    operations::{insert::Insert, reverse::Reverse},
     services::Services,
 };
 
-use super::{SweepCache, SweepHalfEdge};
+use super::{SweepCache, SweepCycle};
 
 /// # Sweep a [`Face`]
 ///
@@ -70,36 +66,25 @@ impl SweepFace for Face {
         for (i, bottom_cycle) in bottom_face.region().all_cycles().enumerate() {
             let bottom_cycle = bottom_cycle.reverse(services);
 
-            let mut top_edges = Vec::new();
-            for bottom_half_edge_pair in bottom_cycle.half_edges().pairs() {
-                let (bottom_half_edge, bottom_half_edge_next) =
-                    bottom_half_edge_pair;
+            let swept_cycle = bottom_cycle.sweep_cycle(
+                bottom_face.surface(),
+                bottom_face.region().color(),
+                path,
+                cache,
+                services,
+            );
 
-                let (side_face, top_edge) = bottom_half_edge.sweep_half_edge(
-                    bottom_half_edge_next.start_vertex().clone(),
-                    bottom_face.surface().deref(),
-                    bottom_face.region().color(),
-                    path,
-                    cache,
-                    services,
-                );
-
-                faces.push(side_face.insert(services));
-
-                top_edges.push((
-                    top_edge,
-                    bottom_half_edge.path(),
-                    bottom_half_edge.boundary(),
-                ));
-            }
-
-            let top_cycle =
-                Cycle::empty().add_joined_edges(top_edges, services);
+            faces.extend(
+                swept_cycle
+                    .faces
+                    .into_iter()
+                    .map(|side_face| side_face.insert(services)),
+            );
 
             if i == 0 {
-                top_exterior = Some(top_cycle.insert(services));
+                top_exterior = Some(swept_cycle.top_cycle.insert(services));
             } else {
-                top_interiors.push(top_cycle.insert(services));
+                top_interiors.push(swept_cycle.top_cycle.insert(services));
             };
         }
 
