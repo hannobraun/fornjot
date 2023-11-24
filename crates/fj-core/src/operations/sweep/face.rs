@@ -1,9 +1,10 @@
+use fj_interop::mesh::Color;
 use fj_math::{Scalar, Vector};
 
 use crate::{
     algorithms::transform::TransformObject,
     geometry::GlobalPath,
-    objects::{Cycle, Face, Region, Shell},
+    objects::{Cycle, Face, Region, Shell, Surface},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
     storage::Handle,
@@ -58,7 +59,8 @@ impl SweepFace for Face {
 
         let top_exterior = sweep_cycle(
             bottom_face.region().exterior(),
-            &bottom_face,
+            bottom_face.surface(),
+            bottom_face.region().color(),
             &mut faces,
             path,
             cache,
@@ -70,7 +72,8 @@ impl SweepFace for Face {
         for bottom_cycle in bottom_face.region().interiors() {
             let top_cycle = sweep_cycle(
                 bottom_cycle,
-                &bottom_face,
+                bottom_face.surface(),
+                bottom_face.region().color(),
                 &mut faces,
                 path,
                 cache,
@@ -119,15 +122,16 @@ fn bottom_face(face: &Face, path: Vector<3>, services: &mut Services) -> Face {
 
 fn sweep_cycle(
     bottom_cycle: &Cycle,
-    bottom_face: &Face,
+    bottom_surface: &Surface,
+    color: Option<Color>,
     faces: &mut Vec<Handle<Face>>,
     path: Vector<3>,
     cache: &mut SweepCache,
     services: &mut Services,
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
-        bottom_face.surface(),
-        bottom_face.region().color(),
+        bottom_surface,
+        color,
         path,
         cache,
         services,
