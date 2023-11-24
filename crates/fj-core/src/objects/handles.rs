@@ -10,7 +10,7 @@ use crate::storage::Handle;
 /// objects of the same type. It is a set, not containing any duplicate
 /// elements, and it maintains the insertion order of those elements.
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Handles<T> {
+pub struct ObjectSet<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
     // here? Well, it's here because we need it to preserve insertion order, but
     // that doesn't explain why it is here *alone*.
@@ -23,7 +23,7 @@ pub struct Handles<T> {
     inner: Vec<Handle<T>>,
 }
 
-impl<T> Handles<T> {
+impl<T> ObjectSet<T> {
     /// Create a new instances of `Handles` from an iterator over `Handle<T>`
     ///
     /// # Panics
@@ -191,7 +191,7 @@ impl<T> Handles<T> {
     }
 }
 
-impl<O> FromIterator<Handle<O>> for Handles<O>
+impl<O> FromIterator<Handle<O>> for ObjectSet<O>
 where
     O: Debug + Ord,
 {
@@ -200,7 +200,7 @@ where
     }
 }
 
-impl<T> IntoIterator for Handles<T> {
+impl<T> IntoIterator for ObjectSet<T> {
     type Item = Handle<T>;
     type IntoIter = vec::IntoIter<Handle<T>>;
 
@@ -209,7 +209,7 @@ impl<T> IntoIterator for Handles<T> {
     }
 }
 
-impl<'r, T> IntoIterator for &'r Handles<T> {
+impl<'r, T> IntoIterator for &'r ObjectSet<T> {
     // You might wonder why we're returning references to handles here, when
     // `Handle` already is kind of reference, and easily cloned.
     //

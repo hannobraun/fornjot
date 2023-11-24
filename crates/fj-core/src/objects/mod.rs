@@ -45,7 +45,7 @@ mod object;
 mod stores;
 
 pub use self::{
-    handles::Handles,
+    handles::ObjectSet,
     kinds::{
         curve::Curve,
         cycle::Cycle,
