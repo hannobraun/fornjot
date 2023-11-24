@@ -39,13 +39,12 @@
 //!
 //! [`Handle`]: crate::storage::Handle
 
-mod handles;
 mod kinds;
 mod object;
+mod object_set;
 mod stores;
 
 pub use self::{
-    handles::ObjectSet,
     kinds::{
         curve::Curve,
         cycle::Cycle,
@@ -59,5 +58,6 @@ pub use self::{
         vertex::Vertex,
     },
     object::{Bare, BehindHandle, Form, Object, WithHandle},
+    object_set::ObjectSet,
     stores::{Objects, Surfaces},
 };
