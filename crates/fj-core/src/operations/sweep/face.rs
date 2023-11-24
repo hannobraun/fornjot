@@ -95,14 +95,13 @@ impl SweepFace for Face {
                 ));
             }
 
-            let top_cycle = Cycle::empty()
-                .add_joined_edges(top_edges, services)
-                .insert(services);
+            let top_cycle =
+                Cycle::empty().add_joined_edges(top_edges, services);
 
             if i == 0 {
-                top_exterior = Some(top_cycle);
+                top_exterior = Some(top_cycle.insert(services));
             } else {
-                top_interiors.push(top_cycle);
+                top_interiors.push(top_cycle.insert(services));
             };
         }
 
