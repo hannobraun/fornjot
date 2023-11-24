@@ -84,9 +84,7 @@ impl SweepFace for Face {
                     services,
                 );
 
-                let side_face = side_face.insert(services);
-
-                faces.push(side_face);
+                faces.push(side_face.insert(services));
 
                 top_edges.push((
                     top_edge,
