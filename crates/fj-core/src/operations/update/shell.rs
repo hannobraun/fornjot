@@ -79,7 +79,7 @@ impl UpdateShell for Shell {
         let faces = self
             .faces()
             .iter()
-            .filter(|face| face.id() == handle.id())
+            .filter(|face| face.id() != handle.id())
             .cloned();
 
         Shell::new(faces)
