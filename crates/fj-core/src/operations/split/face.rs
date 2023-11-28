@@ -17,7 +17,7 @@ use crate::{
 };
 
 /// Split a face into two
-pub trait SplitFace {
+pub trait SplitFace: Sized {
     /// Split the face into two
     ///
     /// The line that splits the face is defined by two points, each specified
