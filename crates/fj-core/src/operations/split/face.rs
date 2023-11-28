@@ -40,7 +40,7 @@ pub trait SplitFace: Sized {
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
         services: &mut Services,
-    ) -> Self;
+    ) -> (Self, [Handle<Face>; 2]);
 }
 
 impl SplitFace for Shell {
@@ -49,7 +49,7 @@ impl SplitFace for Shell {
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
         services: &mut Services,
-    ) -> Self {
+    ) -> (Self, [Handle<Face>; 2]) {
         // The code below might assume that the half-edges that define the line
         // are part of the face's exterior. Let's make that explicit here.
         //
@@ -164,6 +164,9 @@ impl SplitFace for Shell {
         .insert(services);
 
         let faces = [split_face_a, split_face_b];
-        self_.replace_face(updated_face_after_split_edges, |_| faces)
+        let self_ = self_
+            .replace_face(updated_face_after_split_edges, |_| faces.clone());
+
+        (self_, faces)
     }
 }
