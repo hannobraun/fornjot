@@ -163,8 +163,7 @@ impl SplitFace for Shell {
         })
         .insert(services);
 
-        self_.replace_face(updated_face_after_split_edges, |_| {
-            [split_face_a, split_face_b]
-        })
+        let faces = [split_face_a, split_face_b];
+        self_.replace_face(updated_face_after_split_edges, |_| faces)
     }
 }
