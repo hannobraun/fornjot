@@ -132,8 +132,21 @@ pub struct NotATriangle<const D: usize> {
 pub enum Winding {
     /// Counter-clockwise
     Ccw,
+
     /// Clockwise
     Cw,
+}
+
+impl Winding {
+    /// Indicate whether the winding is counter-clockwise
+    pub fn is_ccw(&self) -> bool {
+        matches!(self, Self::Ccw)
+    }
+
+    /// Indicate whether the winding is clockwise
+    pub fn is_cw(&self) -> bool {
+        matches!(self, Self::Cw)
+    }
 }
 
 #[cfg(test)]
