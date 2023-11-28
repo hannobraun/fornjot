@@ -132,6 +132,7 @@ pub struct NotATriangle<const D: usize> {
 pub enum Winding {
     /// Counter-clockwise
     Ccw,
+
     /// Clockwise
     Cw,
 }
