@@ -46,7 +46,8 @@ pub fn model(
                 (cycle.half_edges().nth(2).unwrap(), [split_pos]),
             ];
 
-            shell.split_face(face, line, services).0.insert(services)
+            let (shell, _) = shell.split_face(face, line, services);
+            shell.insert(services)
         })
         .insert(services)
 }
