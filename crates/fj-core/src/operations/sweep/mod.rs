@@ -8,6 +8,7 @@ mod face;
 mod half_edge;
 mod path;
 mod region;
+mod shell_face;
 mod sketch;
 mod vertex;
 
@@ -17,6 +18,7 @@ pub use self::{
     half_edge::SweepHalfEdge,
     path::SweepSurfacePath,
     region::SweepRegion,
+    shell_face::SweepFaceOfShell,
     sketch::SweepSketch,
     vertex::SweepVertex,
 };
