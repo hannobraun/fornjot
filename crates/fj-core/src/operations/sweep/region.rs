@@ -20,23 +20,14 @@ pub trait SweepRegion {
     /// # Sweep the [`Region`]
     ///
     /// Sweep the region into multiple sets of faces. Each set of faces is
-    /// formed by sweeping one of the region's cycles
+    /// formed by sweeping one of the region's cycles, then adding a top face.
     ///
     /// Requires the surface that the face that the region belongs to is defined
     /// in.
     ///
-    /// There are no faces at the "top" (the end of the sweep path) or "bottom".
-    ///
-    /// There is no face at the "top" (the end of the sweep path). We *would*
-    /// have enough information to create that, as we have access to the surface
-    /// too and could translate that here. However, that we have access to that
-    /// surface is a bit incidental, and a weird artifact of how the object
-    /// graph currently works. For this reason, the creating the top face is
-    /// considered out of scope for this operation, and left to the caller.
-    ///
-    /// There also is no "bottom" face. Whether having one is desirable, depends
-    /// on the context of the caller of this operation, and there also falls
-    /// outside of its scope.
+    /// There no "bottom" face. Whether having one is desirable depends on the
+    /// context of the caller of this operation, and falls outside of this
+    /// operation's scope.
     fn sweep_region(
         &self,
         surface: &Surface,
