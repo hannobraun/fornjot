@@ -88,9 +88,10 @@ impl SweepRegion for Region {
             let top_surface =
                 surface.translate(path, services).insert(services);
             let top_region =
-                Region::new(top_exterior, top_interiors, self.color());
+                Region::new(top_exterior, top_interiors, self.color())
+                    .insert(services);
 
-            Face::new(top_surface, top_region.insert(services))
+            Face::new(top_surface, top_region)
         };
         faces.push(top_face);
 
