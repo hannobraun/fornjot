@@ -51,14 +51,14 @@ impl SweepFace for Handle<Face> {
         let bottom_face = self.clone();
         faces.push(bottom_face.clone());
 
-        let swept_region = bottom_face.region().sweep_region(
+        let side_faces = bottom_face.region().sweep_region(
             bottom_face.surface(),
             path,
             cache,
             services,
         );
 
-        let side_faces = swept_region
+        let side_faces = side_faces
             .into_iter()
             .map(|side_face| side_face.insert(services));
         faces.extend(side_faces);
