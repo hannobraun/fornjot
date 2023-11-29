@@ -1,7 +1,6 @@
 use fj_math::Vector;
 
 use crate::{
-    algorithms::transform::TransformObject,
     objects::{Face, Shell},
     operations::insert::Insert,
     services::Services,
@@ -64,15 +63,6 @@ impl SweepFace for Handle<Face> {
             .into_iter()
             .map(|side_face| side_face.insert(services));
         faces.extend(side_faces);
-
-        let top_face = {
-            let top_surface =
-                bottom_face.surface().clone().translate(path, services);
-            let top_region = swept_region.top_region.insert(services);
-
-            Face::new(top_surface, top_region).insert(services)
-        };
-        faces.push(top_face);
 
         Shell::new(faces)
     }

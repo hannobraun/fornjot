@@ -2,6 +2,7 @@ use fj_interop::mesh::Color;
 use fj_math::Vector;
 
 use crate::{
+    algorithms::transform::TransformObject,
     objects::{Cycle, Face, Region, Surface},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
@@ -84,6 +85,14 @@ impl SweepRegion for Region {
         }
 
         let top_region = Region::new(top_exterior, top_interiors, self.color());
+
+        let top_face = {
+            let top_surface =
+                surface.translate(path, services).insert(services);
+
+            Face::new(top_surface, top_region.clone().insert(services))
+        };
+        faces.push(top_face);
 
         SweptRegion { faces, top_region }
     }
