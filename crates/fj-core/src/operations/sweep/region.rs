@@ -90,11 +90,11 @@ impl SweepRegion for Region {
             let top_surface =
                 surface.translate(path, services).insert(services);
 
-            Face::new(top_surface, top_region.clone().insert(services))
+            Face::new(top_surface, top_region.insert(services))
         };
         faces.push(top_face);
 
-        SweptRegion { faces, top_region }
+        SweptRegion { faces }
     }
 }
 
@@ -104,12 +104,6 @@ impl SweepRegion for Region {
 pub struct SweptRegion {
     /// The faces created by sweeping each cycle of the region
     pub faces: Vec<Face>,
-
-    /// A region made up of the "top" cycles
-    ///
-    /// This is essentially a version of the original region, translated by the
-    /// sweep path.
-    pub top_region: Region,
 }
 
 fn sweep_cycle(
