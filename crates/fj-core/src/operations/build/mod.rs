@@ -18,8 +18,8 @@
 //! components.
 
 mod cycle;
-mod edge;
 mod face;
+mod half_edge;
 mod region;
 mod shell;
 mod sketch;
@@ -28,8 +28,8 @@ mod surface;
 
 pub use self::{
     cycle::BuildCycle,
-    edge::BuildHalfEdge,
     face::{BuildFace, Polygon},
+    half_edge::BuildHalfEdge,
     region::BuildRegion,
     shell::{BuildShell, TetrahedronShell},
     sketch::BuildSketch,
