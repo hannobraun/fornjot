@@ -84,11 +84,11 @@ impl SweepRegion for Region {
             top_interiors.push(top_cycle);
         }
 
-        let top_region = Region::new(top_exterior, top_interiors, self.color());
-
         let top_face = {
             let top_surface =
                 surface.translate(path, services).insert(services);
+            let top_region =
+                Region::new(top_exterior, top_interiors, self.color());
 
             Face::new(top_surface, top_region.insert(services))
         };
