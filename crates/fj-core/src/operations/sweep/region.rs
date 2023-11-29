@@ -2,6 +2,7 @@ use fj_interop::mesh::Color;
 use fj_math::Vector;
 
 use crate::{
+    algorithms::transform::TransformObject,
     objects::{Cycle, Face, Region, Surface},
     operations::{insert::Insert, reverse::Reverse},
     services::Services,
@@ -19,30 +20,21 @@ pub trait SweepRegion {
     /// # Sweep the [`Region`]
     ///
     /// Sweep the region into multiple sets of faces. Each set of faces is
-    /// formed by sweeping one of the region's cycles
+    /// formed by sweeping one of the region's cycles, then adding a top face.
     ///
     /// Requires the surface that the face that the region belongs to is defined
     /// in.
     ///
-    /// There are no faces at the "top" (the end of the sweep path) or "bottom".
-    ///
-    /// There is no face at the "top" (the end of the sweep path). We *would*
-    /// have enough information to create that, as we have access to the surface
-    /// too and could translate that here. However, that we have access to that
-    /// surface is a bit incidental, and a weird artifact of how the object
-    /// graph currently works. For this reason, the creating the top face is
-    /// considered out of scope for this operation, and left to the caller.
-    ///
-    /// There also is no "bottom" face. Whether having one is desirable, depends
-    /// on the context of the caller of this operation, and there also falls
-    /// outside of its scope.
+    /// There no "bottom" face. Whether having one is desirable depends on the
+    /// context of the caller of this operation, and falls outside of this
+    /// operation's scope.
     fn sweep_region(
         &self,
         surface: &Surface,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> SweptRegion;
+    ) -> Vec<Face>;
 }
 
 impl SweepRegion for Region {
@@ -52,7 +44,7 @@ impl SweepRegion for Region {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> SweptRegion {
+    ) -> Vec<Face> {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -83,24 +75,19 @@ impl SweepRegion for Region {
             top_interiors.push(top_cycle);
         }
 
-        let top_region = Region::new(top_exterior, top_interiors, self.color());
+        let top_face = {
+            let top_surface =
+                surface.translate(path, services).insert(services);
+            let top_region =
+                Region::new(top_exterior, top_interiors, self.color())
+                    .insert(services);
 
-        SweptRegion { faces, top_region }
+            Face::new(top_surface, top_region)
+        };
+        faces.push(top_face);
+
+        faces
     }
-}
-
-/// The result of sweeping a [`Region`]
-///
-/// See [`SweepRegion`].
-pub struct SweptRegion {
-    /// The faces created by sweeping each cycle of the region
-    pub faces: Vec<Face>,
-
-    /// A region made up of the "top" cycles
-    ///
-    /// This is essentially a version of the original region, translated by the
-    /// sweep path.
-    pub top_region: Region,
 }
 
 fn sweep_cycle(
