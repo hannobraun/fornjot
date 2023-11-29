@@ -16,7 +16,7 @@ pub use self::{
     face::SweepFace,
     half_edge::SweepHalfEdge,
     path::SweepSurfacePath,
-    region::{SweepRegion, SweptRegion},
+    region::SweepRegion,
     sketch::SweepSketch,
     vertex::SweepVertex,
 };

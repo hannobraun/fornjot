@@ -59,7 +59,6 @@ impl SweepFace for Handle<Face> {
         );
 
         let side_faces = swept_region
-            .faces
             .into_iter()
             .map(|side_face| side_face.insert(services));
         faces.extend(side_faces);
