@@ -17,7 +17,7 @@ use crate::{
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
-    /// Create a cycle that is joined to the provided edges
+    /// Add half-edges to the cycle that are joined to the provided ones
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
