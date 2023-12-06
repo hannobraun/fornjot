@@ -11,6 +11,7 @@ members = [
 
     "models/all",
     "models/cuboid",
+    "models/holes",
     "models/spacer",
     "models/split",
     "models/star",
