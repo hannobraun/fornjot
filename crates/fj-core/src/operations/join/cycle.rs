@@ -17,7 +17,7 @@ use crate::{
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
-    /// Create a cycle that is joined to the provided edges
+    /// Add half-edges to the cycle that are joined to the provided ones
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
     where
@@ -86,10 +86,12 @@ impl JoinCycle for Cycle {
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
-            |((prev, _, _), (edge, curve, boundary))| {
+            |((prev_half_edge, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, services)
-                    .update_curve(|_| edge.curve().clone())
-                    .update_start_vertex(|_| prev.start_vertex().clone())
+                    .update_curve(|_| half_edge.curve().clone())
+                    .update_start_vertex(|_| {
+                        prev_half_edge.start_vertex().clone()
+                    })
                     .insert(services)
             },
         ))
