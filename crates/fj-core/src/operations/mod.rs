@@ -39,6 +39,7 @@
 //! send a pull request!
 
 pub mod build;
+pub mod holes;
 pub mod insert;
 pub mod join;
 pub mod merge;
