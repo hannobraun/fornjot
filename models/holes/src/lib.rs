@@ -1,7 +1,11 @@
 use fj::{
     core::{
         objects::Solid,
-        operations::{holes::AddHole, insert::Insert, update::UpdateSolid},
+        operations::{
+            holes::{AddHole, HoleLocation},
+            insert::Insert,
+            update::UpdateSolid,
+        },
         services::Services,
         storage::Handle,
     },
@@ -26,8 +30,10 @@ pub fn model(
 
             shell
                 .add_blind_hole(
-                    bottom_face,
-                    hole_position,
+                    HoleLocation {
+                        face: bottom_face,
+                        position: hole_position.into(),
+                    },
                     radius,
                     [Scalar::ZERO, Scalar::ZERO, depth],
                     services,

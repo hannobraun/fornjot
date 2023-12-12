@@ -21,8 +21,7 @@ pub trait AddHole {
     /// Add a blind hole to the provided face of the shell
     fn add_blind_hole(
         &self,
-        face: &Handle<Face>,
-        position: impl Into<Point<2>>,
+        location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
         services: &mut Services,
@@ -32,14 +31,13 @@ pub trait AddHole {
 impl AddHole for Shell {
     fn add_blind_hole(
         &self,
-        face: &Handle<Face>,
-        position: impl Into<Point<2>>,
+        location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
-        let half_edge =
-            HalfEdge::circle(position, radius, services).insert(services);
+        let half_edge = HalfEdge::circle(location.position, radius, services)
+            .insert(services);
         let hole = Region::empty(services)
             .update_exterior(|_| {
                 Cycle::empty()
@@ -47,7 +45,7 @@ impl AddHole for Shell {
                     .insert(services)
             })
             .sweep_region(
-                face.surface(),
+                location.face.surface(),
                 path,
                 &mut SweepCache::default(),
                 services,
@@ -56,7 +54,7 @@ impl AddHole for Shell {
             .map(|face| face.insert(services))
             .collect::<Vec<_>>();
 
-        self.update_face(face, |face| {
+        self.update_face(location.face, |face| {
             face.update_region(|region| {
                 region
                     .add_interiors([Cycle::empty()
@@ -75,4 +73,13 @@ impl AddHole for Shell {
         })
         .add_faces(hole)
     }
+}
+
+/// Defines the location of a hole
+pub struct HoleLocation<'r> {
+    /// The face that the hole is in
+    pub face: &'r Handle<Face>,
+
+    /// The position of the hole within the face, in surface coordinates
+    pub position: Point<2>,
 }
