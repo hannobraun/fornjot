@@ -19,18 +19,19 @@ pub fn model(
     let radius = radius.into();
 
     let size = radius * 4.;
-    let cuboid = cuboid::model([size, size, size], services);
+    let cuboid = cuboid::model([size * 2., size, size], services);
 
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {
             let bottom_face = shell.faces().first();
+            let offset = size / 2.;
             let depth = size / 2.;
 
             shell
                 .add_blind_hole(
                     HoleLocation {
                         face: bottom_face,
-                        position: [0., 0.].into(),
+                        position: [-offset, Scalar::ZERO].into(),
                     },
                     radius,
                     [Scalar::ZERO, Scalar::ZERO, depth],
