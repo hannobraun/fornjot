@@ -8,12 +8,10 @@ use fj::core::{
 pub fn model(services: &mut Services) -> Handle<Solid> {
     let cuboid = cuboid::model(1., 1., 1., services);
 
-    let shell = cuboid.shells().first();
-
     let hole_radius = 0.25;
 
     cuboid
-        .update_shell(shell, |shell| {
+        .update_shell(cuboid.shells().first(), |shell| {
             let bottom_face = shell.faces().first();
 
             let hole_position = [0., 0.];
