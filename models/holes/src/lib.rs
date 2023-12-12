@@ -8,7 +8,7 @@ use fj::core::{
 pub fn model(services: &mut Services) -> Handle<Solid> {
     let radius = 0.25;
 
-    let size = 1.;
+    let size = radius * 4.;
     let cuboid = cuboid::model(size, size, size, services);
 
     cuboid
