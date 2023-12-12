@@ -9,6 +9,9 @@ path = "../../crates/fj"
 [dependencies.cuboid]
 path = "../cuboid"
 
+[dependencies.holes]
+path = "../holes"
+
 [dependencies.spacer]
 path = "../spacer"
 
