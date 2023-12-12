@@ -1,12 +1,15 @@
-use fj::core::{
-    objects::Solid,
-    operations::{holes::AddHole, insert::Insert, update::UpdateSolid},
-    services::Services,
-    storage::Handle,
+use fj::{
+    core::{
+        objects::Solid,
+        operations::{holes::AddHole, insert::Insert, update::UpdateSolid},
+        services::Services,
+        storage::Handle,
+    },
+    math::Scalar,
 };
 
 pub fn model(services: &mut Services) -> Handle<Solid> {
-    let radius = 0.25;
+    let radius = Scalar::from(0.25);
 
     let size = radius * 4.;
     let cuboid = cuboid::model([size, size, size], services);
@@ -23,7 +26,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
                     bottom_face,
                     hole_position,
                     radius,
-                    [0., 0., depth],
+                    [Scalar::ZERO, Scalar::ZERO, depth],
                     services,
                 )
                 .insert(services)
