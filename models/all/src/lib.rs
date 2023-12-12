@@ -27,7 +27,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let star = star::model(5, 2., 1., 1., services)
         .translate(offset * 3., services)
         .rotate(axis * angle_rad * 3., services);
-    let split = split::model(1., 0.5, services)
+    let split = split::model(1., 0.2, services)
         .translate(offset * 4., services)
         .rotate(axis * angle_rad * 4., services);
     let holes = holes::model(0.5, services)
