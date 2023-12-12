@@ -1,7 +1,11 @@
 use fj::{
     core::{
         objects::Solid,
-        operations::{holes::AddHole, insert::Insert, update::UpdateSolid},
+        operations::{
+            holes::{AddHole, HoleLocation},
+            insert::Insert,
+            update::UpdateSolid,
+        },
         services::Services,
         storage::Handle,
     },
@@ -20,14 +24,14 @@ pub fn model(
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {
             let bottom_face = shell.faces().first();
-
-            let hole_position = [0., 0.];
             let depth = size / 2.;
 
             shell
                 .add_blind_hole(
-                    bottom_face,
-                    hole_position,
+                    HoleLocation {
+                        face: bottom_face,
+                        position: [0., 0.].into(),
+                    },
                     radius,
                     [Scalar::ZERO, Scalar::ZERO, depth],
                     services,
