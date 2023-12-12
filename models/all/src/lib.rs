@@ -18,7 +18,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let axis = Vector::from([1., 1., 1.]).normalize();
     let angle_rad = Scalar::PI / 6.;
 
-    let cuboid = cuboid::model(1., 2., 3., services)
+    let cuboid = cuboid::model([1., 2., 3.], services)
         .translate(offset * 1., services)
         .rotate(axis * angle_rad * 1., services);
     let spacer = spacer::model(2., 1., 1., services)

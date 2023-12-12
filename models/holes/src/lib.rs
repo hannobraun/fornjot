@@ -9,7 +9,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let radius = 0.25;
 
     let size = radius * 4.;
-    let cuboid = cuboid::model(size, size, size, services);
+    let cuboid = cuboid::model([size, size, size], services);
 
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {

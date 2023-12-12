@@ -13,7 +13,7 @@ use fj::{
     math::Vector,
 };
 
-pub fn model(x: f64, y: f64, z: f64, services: &mut Services) -> Handle<Solid> {
+pub fn model([x, y, z]: [f64; 3], services: &mut Services) -> Handle<Solid> {
     let sketch = Sketch::empty().add_region(
         Region::polygon(
             [
