@@ -36,12 +36,12 @@ impl AddHole for Shell {
         path: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
-        let half_edge = HalfEdge::circle(location.position, radius, services)
+        let entry = HalfEdge::circle(location.position, radius, services)
             .insert(services);
         let hole = Region::empty(services)
             .update_exterior(|_| {
                 Cycle::empty()
-                    .add_half_edges([half_edge.clone()])
+                    .add_half_edges([entry.clone()])
                     .insert(services)
             })
             .sweep_region(
@@ -59,11 +59,7 @@ impl AddHole for Shell {
                 region
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
-                            [(
-                                half_edge.clone(),
-                                half_edge.path(),
-                                half_edge.boundary(),
-                            )],
+                            [(entry.clone(), entry.path(), entry.boundary())],
                             services,
                         )
                         .insert(services)])
