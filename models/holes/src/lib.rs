@@ -8,7 +8,8 @@ use fj::core::{
 pub fn model(services: &mut Services) -> Handle<Solid> {
     let radius = 0.25;
 
-    let cuboid = cuboid::model(1., 1., 1., services);
+    let size = 1.;
+    let cuboid = cuboid::model(size, size, size, services);
 
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {
