@@ -8,7 +8,7 @@ use fj::core::{
 pub fn model(services: &mut Services) -> Handle<Solid> {
     let cuboid = cuboid::model(1., 1., 1., services);
 
-    let hole_radius = 0.25;
+    let radius = 0.25;
 
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {
@@ -21,7 +21,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
                 .add_blind_hole(
                     bottom_face,
                     hole_position,
-                    hole_radius,
+                    radius,
                     hole_path,
                     services,
                 )
