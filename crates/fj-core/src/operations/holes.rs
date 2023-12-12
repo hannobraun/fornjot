@@ -18,7 +18,7 @@ use super::{
 
 /// Add a hole to a [`Shell`]
 pub trait AddHole {
-    /// Add a blind hole to the provided face of the shell
+    /// Add a blind hole at the provided location
     fn add_blind_hole(
         &self,
         location: HoleLocation,
