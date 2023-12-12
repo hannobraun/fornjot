@@ -30,10 +30,14 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let split = split::model(1., 0.5, services)
         .translate(offset * 4., services)
         .rotate(axis * angle_rad * 4., services);
+    let holes = holes::model(0.5, services)
+        .translate(offset * 5., services)
+        .rotate(axis * angle_rad * 5., services);
 
     cuboid
         .merge(&spacer)
         .merge(&star)
         .merge(&split)
+        .merge(&holes)
         .insert(services)
 }

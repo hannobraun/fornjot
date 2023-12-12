@@ -61,6 +61,7 @@ version = "0.1.0"
 dependencies = [
  "cuboid",
  "fj",
+ "holes",
  "spacer",
  "split",
  "star",
