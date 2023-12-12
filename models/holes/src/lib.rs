@@ -9,14 +9,16 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let cuboid = cuboid::model(1., 1., 1., services);
 
     let shell = cuboid.shells().first();
-    let bottom_face = shell.faces().first();
 
-    let hole_position = [0., 0.];
     let hole_radius = 0.25;
-    let hole_path = [0., 0., 0.5];
 
     cuboid
         .update_shell(shell, |shell| {
+            let bottom_face = shell.faces().first();
+
+            let hole_position = [0., 0.];
+            let hole_path = [0., 0., 0.5];
+
             shell
                 .add_blind_hole(
                     bottom_face,
