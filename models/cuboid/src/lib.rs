@@ -10,10 +10,15 @@ use fj::{
         services::Services,
         storage::Handle,
     },
-    math::Vector,
+    math::{Scalar, Vector},
 };
 
-pub fn model([x, y, z]: [f64; 3], services: &mut Services) -> Handle<Solid> {
+pub fn model(
+    size: impl Into<Vector<3>>,
+    services: &mut Services,
+) -> Handle<Solid> {
+    let [x, y, z] = size.into().components;
+
     let sketch = Sketch::empty().add_region(
         Region::polygon(
             [
@@ -28,7 +33,7 @@ pub fn model([x, y, z]: [f64; 3], services: &mut Services) -> Handle<Solid> {
     );
 
     let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., z]);
+    let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
     sketch
         .sweep_sketch(surface, path, services)
         .insert(services)
