@@ -17,14 +17,13 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
 
             let hole_position = [0., 0.];
             let depth = 0.5;
-            let hole_path = [0., 0., depth];
 
             shell
                 .add_blind_hole(
                     bottom_face,
                     hole_position,
                     radius,
-                    hole_path,
+                    [0., 0., depth],
                     services,
                 )
                 .insert(services)
