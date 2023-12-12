@@ -8,8 +8,11 @@ use fj::{
     math::Scalar,
 };
 
-pub fn model(services: &mut Services) -> Handle<Solid> {
-    let radius = Scalar::from(0.25);
+pub fn model(
+    radius: impl Into<Scalar>,
+    services: &mut Services,
+) -> Handle<Solid> {
+    let radius = radius.into();
 
     let size = radius * 4.;
     let cuboid = cuboid::model([size, size, size], services);
