@@ -111,3 +111,21 @@ fn sweep_cycle(
 
     swept_cycle.top_cycle.insert(services)
 }
+
+/// The result of sweeping a [`Region`]
+///
+/// See [`SweepRegion`].
+pub struct SweptRegion {
+    /// The side faces created by the sweep
+    pub side_faces: Vec<Face>,
+
+    /// The top face created by the sweep
+    pub top_face: Face,
+}
+
+impl SweptRegion {
+    /// Return an iterator over all of the faces
+    pub fn all_faces(self) -> impl Iterator<Item = Face> {
+        self.side_faces.into_iter().chain([self.top_face])
+    }
+}
