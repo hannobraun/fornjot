@@ -24,7 +24,6 @@ pub fn model(
     cuboid
         .update_shell(cuboid.shells().first(), |shell| {
             let bottom_face = shell.faces().first();
-
             let depth = size / 2.;
 
             shell
