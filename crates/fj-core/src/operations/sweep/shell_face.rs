@@ -57,7 +57,7 @@ impl SweepFaceOfShell for Shell {
         let region = Region::new(exterior, [], face.region().color());
         let faces = region
             .sweep_region(face.surface(), path, &mut cache, services)
-            .into_iter()
+            .all_faces()
             .map(|face| face.insert(services));
 
         self.remove_face(&face).add_faces(faces)
