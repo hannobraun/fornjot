@@ -34,7 +34,7 @@ pub trait SweepRegion {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Vec<Face>;
+    ) -> SweptRegion;
 }
 
 impl SweepRegion for Region {
@@ -44,7 +44,7 @@ impl SweepRegion for Region {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         services: &mut Services,
-    ) -> Vec<Face> {
+    ) -> SweptRegion {
         let path = path.into();
 
         let mut faces = Vec::new();
@@ -84,9 +84,11 @@ impl SweepRegion for Region {
 
             Face::new(top_surface, top_region)
         };
-        faces.push(top_face);
 
-        faces
+        SweptRegion {
+            top_face,
+            side_faces: faces,
+        }
     }
 }
 

@@ -50,7 +50,7 @@ impl AddHole for Shell {
                 &mut SweepCache::default(),
                 services,
             )
-            .into_iter()
+            .all_faces()
             .map(|face| face.insert(services))
             .collect::<Vec<_>>();
 
