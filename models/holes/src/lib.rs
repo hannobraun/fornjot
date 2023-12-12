@@ -12,12 +12,19 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
     let bottom_face = shell.faces().first();
 
     let hole_position = [0., 0.];
+    let hole_radius = 0.25;
     let hole_path = [0., 0., 0.5];
 
     cuboid
         .update_shell(shell, |shell| {
             shell
-                .add_blind_hole(bottom_face, hole_position, hole_path, services)
+                .add_blind_hole(
+                    bottom_face,
+                    hole_position,
+                    hole_radius,
+                    hole_path,
+                    services,
+                )
                 .insert(services)
         })
         .insert(services)

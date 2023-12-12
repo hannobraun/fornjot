@@ -1,6 +1,6 @@
 //! Add holes to shapes
 
-use fj_math::{Point, Vector};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell},
@@ -23,6 +23,7 @@ pub trait AddHole {
         &self,
         face: &Handle<Face>,
         position: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self;
@@ -33,11 +34,12 @@ impl AddHole for Shell {
         &self,
         face: &Handle<Face>,
         position: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
         let half_edge =
-            HalfEdge::circle(position, 0.25, services).insert(services);
+            HalfEdge::circle(position, radius, services).insert(services);
         let hole = Region::empty(services)
             .update_exterior(|_| {
                 Cycle::empty()
