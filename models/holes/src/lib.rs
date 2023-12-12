@@ -27,14 +27,35 @@ pub fn model(
             let offset = size / 2.;
             let depth = size / 2.;
 
+            let shell = shell.add_blind_hole(
+                HoleLocation {
+                    face: bottom_face,
+                    position: [-offset, Scalar::ZERO].into(),
+                },
+                radius,
+                [Scalar::ZERO, Scalar::ZERO, depth],
+                services,
+            );
+
+            let bottom_face = shell.faces().first();
+            let top_face = shell
+                .faces()
+                .nth(5)
+                .expect("Expected shell to have top face");
+
             shell
-                .add_blind_hole(
-                    HoleLocation {
-                        face: bottom_face,
-                        position: [-offset, Scalar::ZERO].into(),
-                    },
+                .add_through_hole(
+                    [
+                        HoleLocation {
+                            face: bottom_face,
+                            position: [offset, Scalar::ZERO].into(),
+                        },
+                        HoleLocation {
+                            face: top_face,
+                            position: [offset, Scalar::ZERO].into(),
+                        },
+                    ],
                     radius,
-                    [Scalar::ZERO, Scalar::ZERO, depth],
                     services,
                 )
                 .insert(services)
