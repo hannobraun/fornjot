@@ -16,7 +16,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
             let bottom_face = shell.faces().first();
 
             let hole_position = [0., 0.];
-            let depth = 0.5;
+            let depth = size / 2.;
 
             shell
                 .add_blind_hole(
