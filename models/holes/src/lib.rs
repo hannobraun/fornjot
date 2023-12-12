@@ -25,14 +25,13 @@ pub fn model(
         .update_shell(cuboid.shells().first(), |shell| {
             let bottom_face = shell.faces().first();
 
-            let hole_position = [0., 0.];
             let depth = size / 2.;
 
             shell
                 .add_blind_hole(
                     HoleLocation {
                         face: bottom_face,
-                        position: hole_position.into(),
+                        position: [0., 0.].into(),
                     },
                     radius,
                     [Scalar::ZERO, Scalar::ZERO, depth],
