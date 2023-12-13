@@ -1,5 +1,6 @@
 use std::{collections::HashSet, fmt::Write};
 
+use anyhow::Context;
 use map_macro::hash_set;
 use octocrab::Octocrab;
 use tokio::{fs::File, io::AsyncWriteExt};
@@ -17,7 +18,9 @@ pub async fn create_release_announcement(
     let date = util::now_ymd();
 
     let pull_requests_since_last_release =
-        PullRequestsSinceLastRelease::fetch(octocrab).await?;
+        PullRequestsSinceLastRelease::fetch(octocrab)
+            .await
+            .context("Failed to fetch pull requests since last release")?;
 
     let pull_requests =
         pull_requests_since_last_release.pull_requests.into_values();
@@ -33,12 +36,15 @@ pub async fn create_release_announcement(
     let min_dollars = 32;
     let for_readme = false;
     let sponsors = Sponsors::query(octocrab)
-        .await?
-        .as_markdown(min_dollars, for_readme)?;
+        .await
+        .context("Failed to query sponsors")?
+        .as_markdown(min_dollars, for_readme)
+        .context("Failed to convert sponsor data to Markdown")?;
 
     let mut file = util::create_blog_post_file("release", &version).await?;
     generate_announcement(date, version, sponsors, pull_requests, &mut file)
-        .await?;
+        .await
+        .context("Failed to generate release announcement")?;
 
     Ok(())
 }
