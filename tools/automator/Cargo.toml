@@ -12,6 +12,7 @@ octocrab = "0.32.0"
 semver = "1.0.20"
 serde = "1.0.193"
 serde_json = "1.0.108"
+tracing = "0.1.40"
 url = "2.5.0"
 
 [dependencies.autolib]
@@ -24,3 +25,7 @@ features = ["derive"]
 [dependencies.tokio]
 version = "1.35.0"
 features = ["full"]
+
+[dependencies.tracing-subscriber]
+version = "0.3.18"
+features = ["env-filter"]
