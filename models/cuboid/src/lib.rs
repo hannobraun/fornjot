@@ -19,7 +19,7 @@ pub fn model(
 ) -> Handle<Solid> {
     let [x, y, z] = size.into().components;
 
-    let surface = services.objects.surfaces.xy_plane();
+    let bottom_surface = services.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()
@@ -35,6 +35,6 @@ pub fn model(
             )
             .insert(services),
         )
-        .sweep_sketch(surface, sweep_path, services)
+        .sweep_sketch(bottom_surface, sweep_path, services)
         .insert(services)
 }
