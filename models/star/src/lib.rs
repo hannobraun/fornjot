@@ -43,6 +43,9 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
+    let surface = services.objects.surfaces.xy_plane();
+    let path = Vector::from([0., 0., h]);
+
     let sketch = Sketch::empty().add_region(
         Region::polygon(outer_points, services)
             .add_interiors([Cycle::polygon(inner_points, services)
@@ -51,8 +54,6 @@ pub fn model(
             .insert(services),
     );
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., h]);
     sketch
         .sweep_sketch(surface, path, services)
         .insert(services)
