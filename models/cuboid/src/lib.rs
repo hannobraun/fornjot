@@ -20,7 +20,7 @@ pub fn model(
     let [x, y, z] = size.into().components;
 
     let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
+    let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()
         .add_region(
@@ -35,6 +35,6 @@ pub fn model(
             )
             .insert(services),
         )
-        .sweep_sketch(surface, path, services)
+        .sweep_sketch(surface, sweep_path, services)
         .insert(services)
 }
