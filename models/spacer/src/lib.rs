@@ -20,6 +20,9 @@ pub fn model(
     height: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
+    let surface = services.objects.surfaces.xy_plane();
+    let path = Vector::from([0., 0., height]);
+
     let sketch = Sketch::empty().add_region(
         Region::circle(Point::origin(), outer, services)
             .add_interiors([Cycle::circle(Point::origin(), inner, services)
@@ -28,8 +31,6 @@ pub fn model(
             .insert(services),
     );
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., height]);
     sketch
         .sweep_sketch(surface, path, services)
         .insert(services)
