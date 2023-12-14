@@ -13,10 +13,10 @@ pub fn model(
     split_pos: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
-    let solid = cuboid::model([size, size, size], services);
+    let cuboid = cuboid::model([size, size, size], services);
 
-    solid
-        .update_shell(solid.shells().only(), |shell| {
+    cuboid
+        .update_shell(cuboid.shells().only(), |shell| {
             let face = shell.faces().first();
             let cycle = face.region().exterior();
 
