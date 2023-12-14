@@ -19,6 +19,9 @@ pub fn model(
 ) -> Handle<Solid> {
     let [x, y, z] = size.into().components;
 
+    let surface = services.objects.surfaces.xy_plane();
+    let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
+
     let sketch = Sketch::empty().add_region(
         Region::polygon(
             [
@@ -32,8 +35,6 @@ pub fn model(
         .insert(services),
     );
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
     sketch
         .sweep_sketch(surface, path, services)
         .insert(services)
