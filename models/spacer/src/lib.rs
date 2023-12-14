@@ -21,7 +21,7 @@ pub fn model(
     services: &mut Services,
 ) -> Handle<Solid> {
     let bottom_surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., height]);
+    let sweep_path = Vector::from([0., 0., height]);
 
     Sketch::empty()
         .add_region(
@@ -35,6 +35,6 @@ pub fn model(
                 .insert(services)])
                 .insert(services),
         )
-        .sweep_sketch(bottom_surface, path, services)
+        .sweep_sketch(bottom_surface, sweep_path, services)
         .insert(services)
 }
