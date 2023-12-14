@@ -22,20 +22,19 @@ pub fn model(
     let surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
-    let sketch = Sketch::empty().add_region(
-        Region::polygon(
-            [
-                [-x / 2., -y / 2.],
-                [x / 2., -y / 2.],
-                [x / 2., y / 2.],
-                [-x / 2., y / 2.],
-            ],
-            services,
+    Sketch::empty()
+        .add_region(
+            Region::polygon(
+                [
+                    [-x / 2., -y / 2.],
+                    [x / 2., -y / 2.],
+                    [x / 2., y / 2.],
+                    [-x / 2., y / 2.],
+                ],
+                services,
+            )
+            .insert(services),
         )
-        .insert(services),
-    );
-
-    sketch
         .sweep_sketch(surface, path, services)
         .insert(services)
 }
