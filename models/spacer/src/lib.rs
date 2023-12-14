@@ -20,7 +20,7 @@ pub fn model(
     height: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
-    let surface = services.objects.surfaces.xy_plane();
+    let bottom_surface = services.objects.surfaces.xy_plane();
     let path = Vector::from([0., 0., height]);
 
     Sketch::empty()
@@ -35,6 +35,6 @@ pub fn model(
                 .insert(services)])
                 .insert(services),
         )
-        .sweep_sketch(surface, path, services)
+        .sweep_sketch(bottom_surface, path, services)
         .insert(services)
 }
