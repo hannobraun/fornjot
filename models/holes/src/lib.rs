@@ -22,7 +22,7 @@ pub fn model(
     let cuboid = cuboid::model([size * 2., size, size], services);
 
     cuboid
-        .update_shell(cuboid.shells().first(), |shell| {
+        .update_shell(cuboid.shells().only(), |shell| {
             let bottom_face = shell.faces().first();
             let offset = size / 2.;
             let depth = size / 2.;

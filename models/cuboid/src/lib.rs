@@ -19,22 +19,22 @@ pub fn model(
 ) -> Handle<Solid> {
     let [x, y, z] = size.into().components;
 
-    let sketch = Sketch::empty().add_region(
-        Region::polygon(
-            [
-                [-x / 2., -y / 2.],
-                [x / 2., -y / 2.],
-                [x / 2., y / 2.],
-                [-x / 2., y / 2.],
-            ],
-            services,
-        )
-        .insert(services),
-    );
+    let bottom_surface = services.objects.surfaces.xy_plane();
+    let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
-    sketch
-        .sweep_sketch(surface, path, services)
+    Sketch::empty()
+        .add_region(
+            Region::polygon(
+                [
+                    [-x / 2., -y / 2.],
+                    [x / 2., -y / 2.],
+                    [x / 2., y / 2.],
+                    [-x / 2., y / 2.],
+                ],
+                services,
+            )
+            .insert(services),
+        )
+        .sweep_sketch(bottom_surface, sweep_path, services)
         .insert(services)
 }

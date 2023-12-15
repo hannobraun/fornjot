@@ -1,17 +1,11 @@
-use fj::{
-    core::{
-        objects::{Region, Sketch, Solid},
-        operations::{
-            build::{BuildRegion, BuildSketch},
-            insert::Insert,
-            split::SplitFace,
-            sweep::{SweepFaceOfShell, SweepSketch},
-            update::{UpdateSketch, UpdateSolid},
-        },
-        services::Services,
-        storage::Handle,
+use fj::core::{
+    objects::Solid,
+    operations::{
+        insert::Insert, split::SplitFace, sweep::SweepFaceOfShell,
+        update::UpdateSolid,
     },
-    math::Vector,
+    services::Services,
+    storage::Handle,
 };
 
 pub fn model(
@@ -19,25 +13,10 @@ pub fn model(
     split_pos: f64,
     services: &mut Services,
 ) -> Handle<Solid> {
-    let sketch = Sketch::empty().add_region(
-        Region::polygon(
-            [
-                [-size / 2., -size / 2.],
-                [size / 2., -size / 2.],
-                [size / 2., size / 2.],
-                [-size / 2., size / 2.],
-            ],
-            services,
-        )
-        .insert(services),
-    );
+    let cuboid = cuboid::model([size, size, size], services);
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., size]);
-    let solid = sketch.sweep_sketch(surface, path, services);
-
-    solid
-        .update_shell(solid.shells().only(), |shell| {
+    cuboid
+        .update_shell(cuboid.shells().only(), |shell| {
             let face = shell.faces().first();
             let cycle = face.region().exterior();
 

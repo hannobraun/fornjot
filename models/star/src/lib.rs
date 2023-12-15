@@ -43,17 +43,17 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let sketch = Sketch::empty().add_region(
-        Region::polygon(outer_points, services)
-            .add_interiors([Cycle::polygon(inner_points, services)
-                .reverse(services)
-                .insert(services)])
-            .insert(services),
-    );
+    let bottom_surface = services.objects.surfaces.xy_plane();
+    let sweep_path = Vector::from([0., 0., h]);
 
-    let surface = services.objects.surfaces.xy_plane();
-    let path = Vector::from([0., 0., h]);
-    sketch
-        .sweep_sketch(surface, path, services)
+    Sketch::empty()
+        .add_region(
+            Region::polygon(outer_points, services)
+                .add_interiors([Cycle::polygon(inner_points, services)
+                    .reverse(services)
+                    .insert(services)])
+                .insert(services),
+        )
+        .sweep_sketch(bottom_surface, sweep_path, services)
         .insert(services)
 }
