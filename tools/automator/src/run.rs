@@ -2,6 +2,7 @@ use std::env;
 
 use anyhow::Context;
 use octocrab::Octocrab;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::{
     args::{Args, Blog},
@@ -10,6 +11,11 @@ use crate::{
 };
 
 pub async fn run() -> anyhow::Result<()> {
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::fmt::layer())
+        .with(tracing_subscriber::EnvFilter::from_default_env())
+        .init();
+
     let token = env::var("GITHUB_TOKEN")
         .context("Loading env variable `GITHUB_TOKEN`")?;
     let octocrab = Octocrab::builder().personal_token(token).build()?;

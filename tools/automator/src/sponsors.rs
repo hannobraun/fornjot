@@ -3,6 +3,7 @@ use std::{cmp::Ordering, collections::HashMap, fmt::Write};
 use anyhow::Context;
 use chrono::{DateTime, Utc};
 use octocrab::Octocrab;
+use tracing::debug;
 
 #[derive(Debug)]
 pub struct Sponsors {
@@ -45,10 +46,15 @@ impl Sponsors {
         let mut json_object = HashMap::new();
         json_object.insert("query", graphql_query);
 
-        let response: QueryResult = octocrab
+        let response: serde_json::Value = octocrab
             .graphql(&json_object)
             .await
             .context("GraphQL query failed")?;
+
+        debug!("Response to GraphQL query for sponsors:\n{response}");
+
+        let response: QueryResult = serde_json::from_value(response)
+            .context("Failed to deserialize GraphQL query result")?;
 
         let mut sponsors = response
             .data
