@@ -20,17 +20,18 @@ The release announcement lives on the website, and needs to be created in the [w
 First, create the initial draft of the release announcement:
 
 ``` sh
-automator announcement
+automator blog release
 ```
 
 This will create an announcement that will initially not be published to the blog or RSS feed, but it will be available at its final URL.
 
 Now, edit this file to finish the release announcement:
 
-1. Add pull requests
-   A list of pull requests has been added to the draft automatically. Go through them, update and merge entries as appropriate, sort them into the correct categories.
+1. Curate pull requests
+   - A list of pull requests has been added to the draft automatically.
+   - Update and merge entries as appropriate, sort them into the categories.
 2. Write introduction
-   - Summarize the week's development.
+   - Summarize changes since last release.
    - Highlight contributions.
 3. Choose subtitle.
 
@@ -72,9 +73,9 @@ Create a pull request:
 - Label it as `release`.
 - Lock the pull request.
 
-The pull request needs to be locked, as anything that updates it (like comments), could confuse next week's release automation (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
+The pull request needs to be locked, as anything that updates it (like comments), could confuse the automation for the next release (because GitHub doesn't allow sorting pull requests by merge date, unfortunately).
 
-Once the CI build completed successfully, merge the pull request. The release automation will now compile binaries, create a release on GitHub, and publish to [crates.io](https://crates.io/).
+Once the CI build completed successfully, merge the pull request. The release automation will now create a release on GitHub, and publish to [crates.io](https://crates.io/).
 
 
 ## 7. Update release on GitHub
