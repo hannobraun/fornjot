@@ -63,48 +63,54 @@ impl SketchValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Cycle, HalfEdge, Region, Sketch},
-        operations::build::BuildHalfEdge,
+        objects::{Cycle, HalfEdge, Region, Sketch, Vertex},
+        operations::{build::BuildHalfEdge, insert::Insert},
         services::Services,
-        storage::Store,
         validate::{SketchValidationError, Validate, ValidationError},
     };
 
     #[test]
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
+        // Test setup
         let mut services = Services::new();
 
-        let mut cycle_store: Store<Cycle> = Store::new();
-        let mut region_store: Store<Region> = Store::new();
-        let mut half_edge_store: Store<HalfEdge> = Store::new();
+        let half_edge =
+            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services)
+                .insert(&mut services);
+        let sibling_edge = HalfEdge::from_sibling(
+            &half_edge,
+            Vertex::new().insert(&mut services),
+        )
+        .insert(&mut services);
 
-        let half_edge = half_edge_store.reserve();
-        half_edge_store.insert(
-            half_edge.clone(),
-            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services),
-        );
+        let exterior =
+            Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
+                .insert(&mut services);
 
-        let exterior = cycle_store.reserve();
-        cycle_store
-            .insert(exterior.clone(), Cycle::new(vec![half_edge.clone()]));
-        let interior = cycle_store.reserve();
-        cycle_store
-            .insert(interior.clone(), Cycle::new(vec![half_edge.clone()]));
+        let interior =
+            Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
+                .insert(&mut services);
 
-        let region = region_store.reserve();
-        region_store.insert(
-            region.clone(),
-            Region::new(exterior, vec![interior], None),
-        );
-
-        let sketch = Sketch::new(vec![region]);
-
+        // Test validation fails for invalid setup
+        let invalid_sketch = Sketch::new(vec![Region::new(
+            exterior.clone(),
+            vec![interior],
+            None,
+        )
+        .insert(&mut services)]);
         assert_contains_err!(
-            sketch,
+            invalid_sketch,
             ValidationError::Sketch(
                 SketchValidationError::HalfEdgeMultipleReferences
             )
         );
+
+        // Test validation succeeds for valid setup
+        let valid_sketch =
+            Sketch::new(vec![
+                Region::new(exterior, vec![], None).insert(&mut services)
+            ]);
+        valid_sketch.validate_and_return_first_error()?;
 
         Ok(())
     }
