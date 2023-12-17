@@ -1,5 +1,5 @@
 use crate::{
-    objects::{HalfEdge, Sketch},
+    objects::{Cycle, HalfEdge, Sketch},
     storage::Handle,
 };
 
@@ -32,13 +32,22 @@ impl SketchValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
+        // todo: store referencing objects instead of just a reference count so that we can surface
+        // them in the error message
         let mut referenced_edges =
             std::collections::HashMap::<Handle<HalfEdge>, i32>::new();
+        let mut referenced_cycles =
+            std::collections::HashMap::<Handle<Cycle>, i32>::new();
 
-        // Do we care about how many times each edge is used, or should we just return as soon as
-        // we find one that is used more than once?
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
+                referenced_cycles.insert(c.clone(), {
+                    if let Some(count) = referenced_cycles.get(c) {
+                        count + 1
+                    } else {
+                        1
+                    }
+                });
                 c.half_edges().into_iter().for_each(|e| {
                     referenced_edges.insert(e.clone(), {
                         if let Some(count) = referenced_edges.get(e) {
@@ -51,11 +60,16 @@ impl SketchValidationError {
             })
         });
 
+        referenced_cycles.iter().for_each(|(_, count)| {
+            if count > &1 {
+                errors.push(Self::CycleMultipleReferences.into());
+            }
+        });
         referenced_edges.iter().for_each(|(_, count)| {
             if count > &1 {
                 errors.push(Self::HalfEdgeMultipleReferences.into());
             }
-        })
+        });
     }
 }
 
@@ -70,8 +84,40 @@ mod tests {
     };
 
     #[test]
+    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let shared_cycle = Cycle::new(vec![]).insert(&mut services);
+
+        let invalid_sketch = Sketch::new(vec![
+            Region::new(
+                Cycle::new(vec![]).insert(&mut services),
+                vec![shared_cycle.clone()],
+                None,
+            )
+            .insert(&mut services),
+            Region::new(shared_cycle, vec![], None).insert(&mut services),
+        ]);
+        assert_contains_err!(
+            invalid_sketch,
+            ValidationError::Sketch(
+                SketchValidationError::CycleMultipleReferences
+            )
+        );
+
+        let valid_sketch = Sketch::new(vec![Region::new(
+            Cycle::new(vec![]).insert(&mut services),
+            vec![],
+            None,
+        )
+        .insert(&mut services)]);
+        valid_sketch.validate_and_return_first_error()?;
+
+        Ok(())
+    }
+
+    #[test]
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
-        // Test setup
         let mut services = Services::new();
 
         let half_edge =
@@ -91,7 +137,6 @@ mod tests {
             Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
                 .insert(&mut services);
 
-        // Test validation fails for invalid setup
         let invalid_sketch = Sketch::new(vec![Region::new(
             exterior.clone(),
             vec![interior],
@@ -105,7 +150,6 @@ mod tests {
             )
         );
 
-        // Test validation succeeds for valid setup
         let valid_sketch =
             Sketch::new(vec![
                 Region::new(exterior, vec![], None).insert(&mut services)
