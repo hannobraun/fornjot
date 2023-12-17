@@ -86,7 +86,7 @@ mod vertex;
 pub use self::{
     cycle::CycleValidationError, edge::EdgeValidationError,
     face::FaceValidationError, shell::ShellValidationError,
-    solid::SolidValidationError,
+    sketch::SketchValidationError, solid::SolidValidationError,
 };
 
 use std::{convert::Infallible, fmt};
@@ -190,6 +190,10 @@ pub enum ValidationError {
     /// `Solid` validation error
     #[error("`Solid` validation error")]
     Solid(#[from] SolidValidationError),
+
+    /// `Sketch` validation error
+    #[error("`Sketch` validation error")]
+    Sketch(#[from] SketchValidationError),
 }
 
 impl From<Infallible> for ValidationError {
