@@ -14,7 +14,7 @@ log = "0.4.20"
 secstr = "0.5.0"
 semver = "1.0.20"
 serde_json = "1.0.108"
-thiserror = "1.0.50"
+thiserror = "1.0.51"
 
 [dependencies.autolib]
 path = "../autolib"
