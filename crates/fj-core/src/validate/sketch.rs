@@ -21,7 +21,7 @@ pub enum SketchValidationError {
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
     #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
     HalfEdgeMultipleReferences,
-    /// [`Cycle`] referenced by more than one [`Region`]
+    /// [`Cycle`] referenced by more than one [`crate::objects::Region`]
     #[error("[`Cycle`] referenced by more than one [`Region`]")]
     CycleMultipleReferences,
 }
