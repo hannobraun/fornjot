@@ -61,11 +61,11 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
-    /// [`Region`] referenced by multiple faces
-    #[error("Region referenced by multiple faces")]
+    /// [`Region`] referenced by more than one [`Face`]
+    #[error("[`Region`] referenced by more than one [`Face`]")]
     RegionMultipleReferences,
-    /// [`Face`] referenced by multiple shells
-    #[error("Face referenced by multiple shells")]
+    /// [`Face`] referenced by more than one [`crate::objects::Shell`]
+    #[error("[`Face`] referenced by more than one [`crate::objects::Shell`]")]
     FaceMultipleReferences,
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
     #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
