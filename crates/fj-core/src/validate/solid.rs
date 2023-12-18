@@ -157,17 +157,6 @@ impl SolidValidationError {
         let mut referenced_cycles =
             std::collections::HashMap::<Handle<Cycle>, i32>::new();
 
-        referenced_cycles.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::CycleMultipleReferences.into());
-            }
-        });
-        referenced_edges.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::HalfEdgeMultipleReferences.into());
-            }
-        });
-
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
                 referenced_faces.insert(f.clone(), {
@@ -214,6 +203,16 @@ impl SolidValidationError {
         referenced_regions.iter().for_each(|(_, count)| {
             if count > &1 {
                 errors.push(Self::RegionMultipleReferences.into());
+            }
+        });
+        referenced_cycles.iter().for_each(|(_, count)| {
+            if count > &1 {
+                errors.push(Self::CycleMultipleReferences.into());
+            }
+        });
+        referenced_edges.iter().for_each(|(_, count)| {
+            if count > &1 {
+                errors.push(Self::HalfEdgeMultipleReferences.into());
             }
         });
     }
