@@ -49,8 +49,8 @@ impl UpdateCycle for Cycle {
         &self,
         half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
-        let edges = self.half_edges().iter().cloned().chain(half_edges);
-        Cycle::new(edges)
+        let half_edges = self.half_edges().iter().cloned().chain(half_edges);
+        Cycle::new(half_edges)
     }
 
     fn update_half_edge(
