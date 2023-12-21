@@ -1,10 +1,10 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt};
 
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::SurfaceGeometry,
-    objects::{HalfEdge, Shell, Surface},
+    geometry::{CurveBoundary, SurfaceGeometry},
+    objects::{HalfEdge, Shell, Surface, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -47,10 +47,14 @@ pub enum ShellValidationError {
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
         siblings\n\
+        {vertices}\
         Half-edge 1: {half_edge_a:#?}\n\
         Half-edge 2: {half_edge_b:#?}"
     )]
     CoincidentHalfEdgesAreNotSiblings {
+        /// The vertices of the half-edges
+        vertices: Box<CoincidentHalfEdgeVertices>,
+
         /// The first half-edge
         half_edge_a: Handle<HalfEdge>,
 
@@ -231,8 +235,19 @@ impl ShellValidationError {
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
+                    let vertices = Box::new(CoincidentHalfEdgeVertices {
+                        vertices: [half_edge_a, half_edge_b].map(|half_edge| {
+                            shell
+                                .bounding_vertices_of_half_edge(half_edge)
+                                .expect(
+                                    "Expected half-edge to be part of shell",
+                                )
+                        }),
+                    });
+
                     errors.push(
                         Self::CoincidentHalfEdgesAreNotSiblings {
+                            vertices,
                             half_edge_a: half_edge_a.clone(),
                             half_edge_b: half_edge_b.clone(),
                         }
@@ -252,6 +267,29 @@ pub struct CurveCoordinateSystemMismatch {
     pub point_a: Point<3>,
     pub point_b: Point<3>,
     pub distance: Scalar,
+}
+
+#[derive(Clone, Debug)]
+pub struct CoincidentHalfEdgeVertices {
+    pub vertices: [CurveBoundary<Vertex>; 2],
+}
+
+impl fmt::Display for CoincidentHalfEdgeVertices {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b] = &self.vertices;
+
+        if a != &b.clone().reverse() {
+            writeln!(
+                f,
+                "Vertices don't match.\n\
+                \tHalf-edge 1 is bounded by `{a:?}`\n\
+                \tHalf-edge 2 is bounded by `{b:?}`\n\
+                \t(expecting same vertices, but in reverse order)"
+            )?;
+        }
+
+        Ok(())
+    }
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
