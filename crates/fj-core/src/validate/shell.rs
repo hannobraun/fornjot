@@ -1,10 +1,10 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, fmt};
 
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::SurfaceGeometry,
-    objects::{HalfEdge, Shell, Surface},
+    geometry::{CurveBoundary, SurfaceGeometry},
+    objects::{Curve, HalfEdge, Shell, Surface, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -47,10 +47,28 @@ pub enum ShellValidationError {
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
         siblings\n\
-        Half-edge 1: {0:#?}\n\
-        Half-edge 2: {1:#?}"
+        {boundaries}\
+        {curves}\
+        {vertices}\
+        Half-edge 1: {half_edge_a:#?}\n\
+        Half-edge 2: {half_edge_b:#?}"
     )]
-    CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
+    CoincidentHalfEdgesAreNotSiblings {
+        /// The boundaries of the half-edges
+        boundaries: Box<CoincidentHalfEdgeBoundaries>,
+
+        /// The curves of the half-edges
+        curves: Box<CoincidentHalfEdgeCurves>,
+
+        /// The vertices of the half-edges
+        vertices: Box<CoincidentHalfEdgeVertices>,
+
+        /// The first half-edge
+        half_edge_a: Handle<HalfEdge>,
+
+        /// The second half-edge
+        half_edge_b: Handle<HalfEdge>,
+    },
 }
 
 impl ShellValidationError {
@@ -225,16 +243,83 @@ impl ShellValidationError {
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
+                    let boundaries = Box::new(CoincidentHalfEdgeBoundaries {
+                        boundaries: [half_edge_a, half_edge_b]
+                            .map(|half_edge| half_edge.boundary()),
+                    });
+                    let curves = Box::new(CoincidentHalfEdgeCurves {
+                        curves: [half_edge_a, half_edge_b]
+                            .map(|half_edge| half_edge.curve().clone()),
+                    });
+                    let vertices = Box::new(CoincidentHalfEdgeVertices {
+                        vertices: [half_edge_a, half_edge_b].map(|half_edge| {
+                            shell
+                                .bounding_vertices_of_half_edge(half_edge)
+                                .expect(
+                                    "Expected half-edge to be part of shell",
+                                )
+                        }),
+                    });
+
                     errors.push(
-                        Self::CoincidentHalfEdgesAreNotSiblings(
-                            half_edge_a.clone(),
-                            half_edge_b.clone(),
-                        )
+                        Self::CoincidentHalfEdgesAreNotSiblings {
+                            boundaries,
+                            curves,
+                            vertices,
+                            half_edge_a: half_edge_a.clone(),
+                            half_edge_b: half_edge_b.clone(),
+                        }
                         .into(),
                     )
                 }
             }
         }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct CoincidentHalfEdgeBoundaries {
+    pub boundaries: [CurveBoundary<Point<1>>; 2],
+}
+
+impl fmt::Display for CoincidentHalfEdgeBoundaries {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b] = &self.boundaries;
+
+        if a != &b.reverse() {
+            writeln!(
+                f,
+                "Boundaries don't match.\n\
+                \tHalf-edge 1 has boundary `{a:?}`\n\
+                \tHalf-edge 2 has boundary `{b:?}`\n\
+                \t(expecting same boundary, but reversed)"
+            )?;
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct CoincidentHalfEdgeCurves {
+    pub curves: [Handle<Curve>; 2],
+}
+
+impl fmt::Display for CoincidentHalfEdgeCurves {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b] = &self.curves;
+
+        if a.id() != b.id() {
+            writeln!(
+                f,
+                "Curves don't match.\n\
+                \tHalf-edge 1 lies on {a:?}\n\
+                \tHalf-edge 2 lies on {b:?}\n\
+                \t(must be the same)"
+            )?;
+        }
+
+        Ok(())
     }
 }
 
@@ -246,6 +331,29 @@ pub struct CurveCoordinateSystemMismatch {
     pub point_a: Point<3>,
     pub point_b: Point<3>,
     pub distance: Scalar,
+}
+
+#[derive(Clone, Debug)]
+pub struct CoincidentHalfEdgeVertices {
+    pub vertices: [CurveBoundary<Vertex>; 2],
+}
+
+impl fmt::Display for CoincidentHalfEdgeVertices {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b] = &self.vertices;
+
+        if a != &b.clone().reverse() {
+            writeln!(
+                f,
+                "Vertices don't match.\n\
+                \tHalf-edge 1 is bounded by `{a:?}`\n\
+                \tHalf-edge 2 is bounded by `{b:?}`\n\
+                \t(expecting same vertices, but in reverse order)"
+            )?;
+        }
+
+        Ok(())
+    }
 }
 
 /// Sample two edges at various (currently 3) points in 3D along them.
@@ -395,7 +503,7 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
-                ShellValidationError::CoincidentHalfEdgesAreNotSiblings(..)
+                ShellValidationError::CoincidentHalfEdgesAreNotSiblings { .. }
             )
         );
 
