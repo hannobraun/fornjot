@@ -47,10 +47,16 @@ pub enum ShellValidationError {
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
         siblings\n\
-        Half-edge 1: {0:#?}\n\
-        Half-edge 2: {1:#?}"
+        Half-edge 1: {half_edge_a:#?}\n\
+        Half-edge 2: {half_edge_b:#?}"
     )]
-    CoincidentHalfEdgesAreNotSiblings(Handle<HalfEdge>, Handle<HalfEdge>),
+    CoincidentHalfEdgesAreNotSiblings {
+        /// The first half-edge
+        half_edge_a: Handle<HalfEdge>,
+
+        /// The second half-edge
+        half_edge_b: Handle<HalfEdge>,
+    },
 }
 
 impl ShellValidationError {
@@ -226,10 +232,10 @@ impl ShellValidationError {
                 .all(|d| d < config.distinct_min_distance)
                 {
                     errors.push(
-                        Self::CoincidentHalfEdgesAreNotSiblings(
-                            half_edge_a.clone(),
-                            half_edge_b.clone(),
-                        )
+                        Self::CoincidentHalfEdgesAreNotSiblings {
+                            half_edge_a: half_edge_a.clone(),
+                            half_edge_b: half_edge_b.clone(),
+                        }
                         .into(),
                     )
                 }
@@ -395,7 +401,7 @@ mod tests {
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
-                ShellValidationError::CoincidentHalfEdgesAreNotSiblings(..)
+                ShellValidationError::CoincidentHalfEdgesAreNotSiblings { .. }
             )
         );
 
