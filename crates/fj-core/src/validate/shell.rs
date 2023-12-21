@@ -47,12 +47,16 @@ pub enum ShellValidationError {
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
         siblings\n\
+        {boundaries}\
         {curves}\
         {vertices}\
         Half-edge 1: {half_edge_a:#?}\n\
         Half-edge 2: {half_edge_b:#?}"
     )]
     CoincidentHalfEdgesAreNotSiblings {
+        /// The boundaries of the half-edges
+        boundaries: Box<CoincidentHalfEdgeBoundaries>,
+
         /// The curves of the half-edges
         curves: Box<CoincidentHalfEdgeCurves>,
 
@@ -239,6 +243,10 @@ impl ShellValidationError {
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
+                    let boundaries = Box::new(CoincidentHalfEdgeBoundaries {
+                        boundaries: [half_edge_a, half_edge_b]
+                            .map(|half_edge| half_edge.boundary()),
+                    });
                     let curves = Box::new(CoincidentHalfEdgeCurves {
                         curves: [half_edge_a, half_edge_b]
                             .map(|half_edge| half_edge.curve().clone()),
@@ -255,6 +263,7 @@ impl ShellValidationError {
 
                     errors.push(
                         Self::CoincidentHalfEdgesAreNotSiblings {
+                            boundaries,
                             curves,
                             vertices,
                             half_edge_a: half_edge_a.clone(),
@@ -265,6 +274,29 @@ impl ShellValidationError {
                 }
             }
         }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct CoincidentHalfEdgeBoundaries {
+    pub boundaries: [CurveBoundary<Point<1>>; 2],
+}
+
+impl fmt::Display for CoincidentHalfEdgeBoundaries {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b] = &self.boundaries;
+
+        if a != &b.reverse() {
+            writeln!(
+                f,
+                "Boundaries don't match.\n\
+                \tHalf-edge 1 has boundary `{a:?}`\n\
+                \tHalf-edge 2 has boundary `{b:?}`\n\
+                \t(expecting same boundary, but reversed)"
+            )?;
+        }
+
+        Ok(())
     }
 }
 
