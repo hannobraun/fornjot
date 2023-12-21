@@ -1,13 +1,19 @@
+use std::collections::BTreeMap;
+
+use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    objects::{Face, Shell},
+    geometry::CurveBoundary,
+    objects::{Curve, Face, HalfEdge, Shell, Surface, Vertex},
     operations::{
-        build::{BuildFace, Polygon},
+        build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
         join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
-        update::{UpdateCycle, UpdateFace, UpdateRegion},
+        update::{
+            UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
+        },
     },
     services::Services,
 };
@@ -21,6 +27,96 @@ pub trait BuildShell {
     /// Build an empty shell
     fn empty() -> Shell {
         Shell::new([])
+    }
+
+    /// Build a polyhedron by specifying its vertices and indices
+    fn from_vertices_and_indices(
+        vertices: impl IntoIterator<Item = impl Into<Point<3>>>,
+        indices: impl IntoIterator<Item = [usize; 3]>,
+        services: &mut Services,
+    ) -> Shell {
+        let vertices = vertices
+            .into_iter()
+            .enumerate()
+            .map(|(index, position)| {
+                let vertex = Vertex::new().insert(services);
+                let position = position.into();
+
+                (index, (vertex, position))
+            })
+            .collect::<BTreeMap<_, _>>();
+
+        let mut curves = BTreeMap::new();
+
+        let faces = indices
+            .into_iter()
+            .map(|indices| {
+                let [(a, a_pos), (b, b_pos), (c, c_pos)] = indices
+                    .map(|index| vertices.get(&index).expect("Invalid index"));
+
+                let (surface, _) = Surface::plane_from_points(
+                    [a_pos, b_pos, c_pos].map(Clone::clone),
+                );
+                let surface = surface.insert(services);
+
+                let curves_and_boundaries =
+                    [[a, b], [b, c], [c, a]].map(|vertices| {
+                        let vertices = vertices.map(Clone::clone);
+                        let vertices = CurveBoundary::<Vertex>::from(vertices);
+
+                        curves
+                            .get(&vertices.clone().reverse())
+                            .cloned()
+                            .unwrap_or_else(|| {
+                                let curve = Curve::new().insert(services);
+                                let boundary =
+                                    CurveBoundary::<Point<1>>::from([
+                                        [0.],
+                                        [1.],
+                                    ]);
+
+                                curves.insert(
+                                    vertices,
+                                    (curve.clone(), boundary),
+                                );
+
+                                (curve, boundary.reverse())
+                            })
+                    });
+
+                let half_edges = {
+                    let vertices = [a, b, c].map(Clone::clone);
+                    let [a, b, c] = [[0., 0.], [1., 0.], [0., 1.]];
+                    vertices
+                        .zip_ext([[a, b], [b, c], [c, a]])
+                        .zip_ext(curves_and_boundaries)
+                        .map(|((vertex, positions), (curve, boundary))| {
+                            HalfEdge::line_segment(
+                                positions,
+                                Some(boundary.reverse().inner),
+                                services,
+                            )
+                            .update_start_vertex(|_| vertex)
+                            .update_curve(|_| curve)
+                            .insert(services)
+                        })
+                };
+
+                Face::unbound(surface, services)
+                    .update_region(|region| {
+                        region
+                            .update_exterior(|cycle| {
+                                cycle
+                                    .add_half_edges(half_edges)
+                                    .insert(services)
+                            })
+                            .insert(services)
+                    })
+                    .insert(services)
+            })
+            .collect::<Vec<_>>();
+
+        Shell::empty().add_faces(faces)
     }
 
     /// Build a tetrahedron from the provided points

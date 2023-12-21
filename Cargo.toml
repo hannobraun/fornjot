@@ -15,6 +15,7 @@ members = [
     "models/spacer",
     "models/split",
     "models/star",
+    "models/vertices-indices",
 
     "tools/autolib",
     "tools/automator",
