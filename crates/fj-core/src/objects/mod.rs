@@ -48,8 +48,8 @@ pub use self::{
     kinds::{
         curve::Curve,
         cycle::Cycle,
-        edge::HalfEdge,
         face::{Face, Handedness},
+        half_edge::HalfEdge,
         region::Region,
         shell::Shell,
         sketch::Sketch,

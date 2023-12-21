@@ -9,7 +9,7 @@ pub trait UpdateCycle {
     #[must_use]
     fn add_half_edges(
         &self,
-        edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self;
 
     /// Update an edge of the cycle
@@ -47,10 +47,10 @@ pub trait UpdateCycle {
 impl UpdateCycle for Cycle {
     fn add_half_edges(
         &self,
-        edges: impl IntoIterator<Item = Handle<HalfEdge>>,
+        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
     ) -> Self {
-        let edges = self.half_edges().iter().cloned().chain(edges);
-        Cycle::new(edges)
+        let half_edges = self.half_edges().iter().cloned().chain(half_edges);
+        Cycle::new(half_edges)
     }
 
     fn update_half_edge(
