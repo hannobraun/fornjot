@@ -72,6 +72,10 @@ impl State for Validation {
 
         match command {
             ValidationCommand::ValidateObject { object } => {
+                match self.config {
+                    Some(c) => object.validate_with_config(&c, &mut errors),
+                    None => object.validate(&mut errors),
+                }
                 object.validate(&mut errors);
 
                 for err in errors {
