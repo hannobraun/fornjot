@@ -18,7 +18,7 @@ workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
-futures = "0.3.29"
+futures = "0.3.30"
 thiserror = "1.0.51"
 
 [dependencies.winit]
