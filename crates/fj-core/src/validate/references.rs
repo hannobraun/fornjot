@@ -3,33 +3,27 @@ use std::hash::Hash;
 
 use crate::storage::Handle;
 
-use super::ValidationError;
-
 #[derive(Default)]
-pub struct ReferenceCounter<T>(HashMap<Handle<T>, i32>);
+pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
 
-impl<T: Eq + PartialEq + Hash> ReferenceCounter<T> {
+impl<T: Eq + PartialEq + Hash, U> ReferenceCounter<T, U> {
     pub fn new() -> Self {
         Self(HashMap::new())
     }
 
-    pub fn add_count(&mut self, object: Handle<T>) {
+    pub fn add_count(&mut self, object: Handle<T>, found: Handle<U>) {
         self.0
             .entry(object)
-            .and_modify(|count| *count += 1)
-            .or_insert(1);
+            .and_modify(|references| references.push(found.clone()))
+            .or_insert(vec![found]);
     }
 
     pub fn has_multiple(&self) -> bool {
-        self.0.iter().any(|(_, count)| *count > 1)
+        self.0.iter().any(|(_, references)| references.len() > 1)
     }
 }
 
-pub trait ValidateReferences<T> {
-    fn validate(&self, errors: &mut Vec<ValidationError>);
-}
-
-/// Find errors and convert to [`ValidationError`]
+/// Find errors and convert to [`crate::validate::ValidationError`]
 #[macro_export]
 macro_rules! validate_references {
     ($errors:ident, $error_ty:ty;$($counter:ident, $err:expr;)*) => {

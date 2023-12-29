@@ -42,9 +42,9 @@ impl SketchValidationError {
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
-                referenced_cycles.add_count(c.clone());
+                referenced_cycles.add_count(c.clone(), r.clone());
                 c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges.add_count(e.clone());
+                    referenced_edges.add_count(e.clone(), c.clone());
                 })
             })
         });
