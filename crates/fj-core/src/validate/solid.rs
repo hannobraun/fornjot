@@ -7,7 +7,8 @@ use crate::{
 use fj_math::Point;
 
 use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
+    references::{ReferenceCounter, ValidateReferences},
+    Validate, ValidationConfig, ValidationError,
 };
 
 impl Validate for Solid {
@@ -63,18 +64,6 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
-    /// [`Region`] referenced by more than one [`Face`]
-    #[error("[`Region`] referenced by more than one [`Face`]")]
-    RegionMultipleReferences,
-    /// [`Face`] referenced by more than one [`crate::objects::Shell`]
-    #[error("[`Face`] referenced by more than one [`crate::objects::Shell`]")]
-    FaceMultipleReferences,
-    /// [`HalfEdge`] referenced by more than one [`Cycle`]
-    #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
-    HalfEdgeMultipleReferences,
-    /// [`Cycle`] referenced by more than one [`Region`]
-    #[error("[`Cycle`] referenced by more than one [`Region`]")]
-    CycleMultipleReferences,
 }
 
 impl SolidValidationError {
@@ -158,7 +147,6 @@ impl SolidValidationError {
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
                 referenced_faces.add_count(f.clone());
-
                 referenced_regions.add_count(f.region().clone());
                 f.region().all_cycles().for_each(|c| {
                     referenced_cycles.add_count(c.clone());
@@ -169,18 +157,10 @@ impl SolidValidationError {
             })
         });
 
-        if referenced_faces.has_multiple() {
-            errors.push(Self::FaceMultipleReferences.into());
-        }
-        if referenced_regions.has_multiple() {
-            errors.push(Self::RegionMultipleReferences.into());
-        };
-        if referenced_cycles.has_multiple() {
-            errors.push(Self::CycleMultipleReferences.into());
-        };
-        if referenced_edges.has_multiple() {
-            errors.push(Self::HalfEdgeMultipleReferences.into());
-        };
+        referenced_faces.validate(errors);
+        referenced_regions.validate(errors);
+        referenced_cycles.validate(errors);
+        referenced_edges.validate(errors);
     }
 }
 
@@ -195,7 +175,9 @@ mod tests {
             insert::Insert,
         },
         services::Services,
-        validate::{SolidValidationError, Validate, ValidationError},
+        validate::{
+            references::ReferenceCountError, Validate, ValidationError,
+        },
     };
 
     #[test]
@@ -236,9 +218,7 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::FaceMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::Face)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -287,9 +267,7 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::RegionMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::Region)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -335,9 +313,7 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::CycleMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::Cycle)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -376,9 +352,7 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::HalfEdgeMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::HalfEdge)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);

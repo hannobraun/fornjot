@@ -1,7 +1,8 @@
 use crate::objects::Sketch;
 
 use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
+    references::{ReferenceCounter, ValidateReferences},
+    Validate, ValidationConfig, ValidationError,
 };
 
 impl Validate for Sketch {
@@ -45,12 +46,8 @@ impl SketchValidationError {
             })
         });
 
-        if referenced_cycles.has_multiple() {
-            errors.push(Self::CycleMultipleReferences.into());
-        };
-        if referenced_edges.has_multiple() {
-            errors.push(Self::HalfEdgeMultipleReferences.into());
-        };
+        referenced_cycles.validate(errors);
+        referenced_edges.validate(errors);
     }
 }
 
@@ -61,7 +58,9 @@ mod tests {
         objects::{Cycle, HalfEdge, Region, Sketch, Vertex},
         operations::{build::BuildHalfEdge, insert::Insert},
         services::Services,
-        validate::{SketchValidationError, Validate, ValidationError},
+        validate::{
+            references::ReferenceCountError, Validate, ValidationError,
+        },
     };
 
     #[test]
@@ -81,9 +80,7 @@ mod tests {
         ]);
         assert_contains_err!(
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::CycleMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::Cycle)
         );
 
         let valid_sketch = Sketch::new(vec![Region::new(
@@ -126,9 +123,7 @@ mod tests {
         .insert(&mut services)]);
         assert_contains_err!(
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::HalfEdgeMultipleReferences
-            )
+            ValidationError::ReferenceCount(ReferenceCountError::HalfEdge)
         );
 
         let valid_sketch =
