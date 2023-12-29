@@ -76,6 +76,7 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
+mod references;
 mod region;
 mod shell;
 mod sketch;

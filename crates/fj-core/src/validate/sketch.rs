@@ -1,9 +1,8 @@
-use crate::{
-    objects::{Cycle, HalfEdge, Sketch},
-    storage::Handle,
-};
+use crate::objects::Sketch;
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::{
+    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
+};
 
 impl Validate for Sketch {
     fn validate_with_config(
@@ -34,36 +33,24 @@ impl SketchValidationError {
     ) {
         // todo: store referencing objects instead of just a reference count so that we can surface
         // them in the error message
-        let mut referenced_edges =
-            std::collections::HashMap::<Handle<HalfEdge>, i32>::new();
-        let mut referenced_cycles =
-            std::collections::HashMap::<Handle<Cycle>, i32>::new();
+        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_cycles = ReferenceCounter::new();
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
-                referenced_cycles
-                    .entry(c.clone())
-                    .and_modify(|count| *count += 1)
-                    .or_insert(1);
+                referenced_cycles.add_count(c.clone());
                 c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges
-                        .entry(e.clone())
-                        .and_modify(|count| *count += 1)
-                        .or_insert(1);
+                    referenced_edges.add_count(e.clone());
                 })
             })
         });
 
-        referenced_cycles.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::CycleMultipleReferences.into());
-            }
-        });
-        referenced_edges.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::HalfEdgeMultipleReferences.into());
-            }
-        });
+        if referenced_cycles.has_multiple() {
+            errors.push(Self::CycleMultipleReferences.into());
+        };
+        if referenced_edges.has_multiple() {
+            errors.push(Self::HalfEdgeMultipleReferences.into());
+        };
     }
 }
 

@@ -1,12 +1,14 @@
 use std::iter::repeat;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Solid, Vertex},
+    objects::{Solid, Vertex},
     storage::Handle,
 };
 use fj_math::Point;
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::{
+    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
+};
 
 impl Validate for Solid {
     fn validate_with_config(
@@ -148,61 +150,37 @@ impl SolidValidationError {
     ) {
         // todo: store referencing objects instead of just a reference count so that we can surface
         // them in the error message
-        let mut referenced_regions =
-            std::collections::HashMap::<Handle<Region>, i32>::new();
-        let mut referenced_faces =
-            std::collections::HashMap::<Handle<Face>, i32>::new();
-        let mut referenced_edges =
-            std::collections::HashMap::<Handle<HalfEdge>, i32>::new();
-        let mut referenced_cycles =
-            std::collections::HashMap::<Handle<Cycle>, i32>::new();
+        let mut referenced_regions = ReferenceCounter::new();
+        let mut referenced_faces = ReferenceCounter::new();
+        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_cycles = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
-                referenced_faces
-                    .entry(f.clone())
-                    .and_modify(|count| *count += 1)
-                    .or_insert(1);
+                referenced_faces.add_count(f.clone());
 
-                referenced_regions
-                    .entry(f.region().clone())
-                    .and_modify(|count| *count += 1)
-                    .or_insert(1);
+                referenced_regions.add_count(f.region().clone());
                 f.region().all_cycles().for_each(|c| {
-                    referenced_cycles
-                        .entry(c.clone())
-                        .and_modify(|count| *count += 1)
-                        .or_insert(1);
+                    referenced_cycles.add_count(c.clone());
                     c.half_edges().into_iter().for_each(|e| {
-                        referenced_edges
-                            .entry(e.clone())
-                            .and_modify(|count| *count += 1)
-                            .or_insert(1);
+                        referenced_edges.add_count(e.clone());
                     })
                 })
             })
         });
 
-        referenced_faces.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::FaceMultipleReferences.into());
-            }
-        });
-        referenced_regions.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::RegionMultipleReferences.into());
-            }
-        });
-        referenced_cycles.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::CycleMultipleReferences.into());
-            }
-        });
-        referenced_edges.iter().for_each(|(_, count)| {
-            if count > &1 {
-                errors.push(Self::HalfEdgeMultipleReferences.into());
-            }
-        });
+        if referenced_faces.has_multiple() {
+            errors.push(Self::FaceMultipleReferences.into());
+        }
+        if referenced_regions.has_multiple() {
+            errors.push(Self::RegionMultipleReferences.into());
+        };
+        if referenced_cycles.has_multiple() {
+            errors.push(Self::CycleMultipleReferences.into());
+        };
+        if referenced_edges.has_multiple() {
+            errors.push(Self::HalfEdgeMultipleReferences.into());
+        };
     }
 }
 
