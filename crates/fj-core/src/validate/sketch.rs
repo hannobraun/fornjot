@@ -25,7 +25,7 @@ pub enum SketchValidationError {
     #[error("[`Cycle`] referenced by more than one [`Region`]")]
     CycleMultipleReferences,
     /// Object within sketch referenced by more than one other object
-    #[error("Object referenced by more than one other Objects")]
+    #[error("Object within sketch referenced by more than one other Object")]
     MultipleReferences(#[from] ReferenceCountError),
 }
 

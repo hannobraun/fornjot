@@ -41,18 +41,20 @@ macro_rules! validate_references {
     };
 }
 
+/// Validation errors for when an object is referenced by multiple other objects. Each object
+/// should only be referenced by a single other object  
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ReferenceCountError {
-    /// [`Region`] referenced by more than one [`Face`]
+    /// [`crate::objects::Region`] referenced by more than one [`crate::objects::Face`]
     #[error("[`Region`] referenced by more than one [`Face`]")]
     Region,
-    /// [`Face`] referenced by more than one [`crate::objects::Shell`]
-    #[error("[`Face`] referenced by more than one [`crate::objects::Shell`]")]
+    /// [`crate::objects::Face`] referenced by more than one [`crate::objects::Shell`]
+    #[error("[`Face`] referenced by more than one [`Shell`]")]
     Face,
-    /// [`HalfEdge`] referenced by more than one [`Cycle`]
+    /// [`crate::objects::HalfEdge`] referenced by more than one [`crate::objects::Cycle`]
     #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
     HalfEdge,
-    /// [`Cycle`] referenced by more than one [`Region`]
+    /// [`crate::objects::Cycle`] referenced by more than one [`crate::objects::Region`]
     #[error("[`Cycle`] referenced by more than one [`Region`]")]
     Cycle,
 }

@@ -66,8 +66,8 @@ pub enum SolidValidationError {
         position_b: Point<3>,
     },
 
-    /// Object within sketch referenced by more than one other object
-    #[error("Object referenced by more than one other Objects")]
+    /// Object within solid referenced by more than one other object
+    #[error("Object within solid referenced by more than one other Object")]
     MultipleReferences(#[from] ReferenceCountError),
 }
 
