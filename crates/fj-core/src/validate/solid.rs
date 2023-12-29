@@ -159,37 +159,25 @@ impl SolidValidationError {
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
-                referenced_faces.insert(f.clone(), {
-                    if let Some(count) = referenced_faces.get(f) {
-                        count + 1
-                    } else {
-                        1
-                    }
-                });
+                referenced_faces
+                    .entry(f.clone())
+                    .and_modify(|count| *count += 1)
+                    .or_insert(1);
 
-                referenced_regions.insert(f.region().clone(), {
-                    if let Some(count) = referenced_regions.get(f.region()) {
-                        count + 1
-                    } else {
-                        1
-                    }
-                });
+                referenced_regions
+                    .entry(f.region().clone())
+                    .and_modify(|count| *count += 1)
+                    .or_insert(1);
                 f.region().all_cycles().for_each(|c| {
-                    referenced_cycles.insert(c.clone(), {
-                        if let Some(count) = referenced_cycles.get(c) {
-                            count + 1
-                        } else {
-                            1
-                        }
-                    });
+                    referenced_cycles
+                        .entry(c.clone())
+                        .and_modify(|count| *count += 1)
+                        .or_insert(1);
                     c.half_edges().into_iter().for_each(|e| {
-                        referenced_edges.insert(e.clone(), {
-                            if let Some(count) = referenced_edges.get(e) {
-                                count + 1
-                            } else {
-                                1
-                            }
-                        });
+                        referenced_edges
+                            .entry(e.clone())
+                            .and_modify(|count| *count += 1)
+                            .or_insert(1);
                     })
                 })
             })

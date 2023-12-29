@@ -41,21 +41,15 @@ impl SketchValidationError {
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
-                referenced_cycles.insert(c.clone(), {
-                    if let Some(count) = referenced_cycles.get(c) {
-                        count + 1
-                    } else {
-                        1
-                    }
-                });
+                referenced_cycles
+                    .entry(c.clone())
+                    .and_modify(|count| *count += 1)
+                    .or_insert(1);
                 c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges.insert(e.clone(), {
-                        if let Some(count) = referenced_edges.get(e) {
-                            count + 1
-                        } else {
-                            1
-                        }
-                    });
+                    referenced_edges
+                        .entry(e.clone())
+                        .and_modify(|count| *count += 1)
+                        .or_insert(1);
                 })
             })
         });
