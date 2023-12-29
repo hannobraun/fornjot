@@ -1,7 +1,7 @@
-use crate::objects::Sketch;
+use crate::{objects::Sketch, validate_references};
 
 use super::{
-    references::{ReferenceCounter, ValidateReferences},
+    references::{ReferenceCountError, ReferenceCounter},
     Validate, ValidationConfig, ValidationError,
 };
 
@@ -24,6 +24,9 @@ pub enum SketchValidationError {
     /// [`Cycle`] referenced by more than one [`crate::objects::Region`]
     #[error("[`Cycle`] referenced by more than one [`Region`]")]
     CycleMultipleReferences,
+    /// Object within sketch referenced by more than one other object
+    #[error("Object referenced by more than one other Objects")]
+    MultipleReferences(#[from] ReferenceCountError),
 }
 
 impl SketchValidationError {
@@ -46,8 +49,11 @@ impl SketchValidationError {
             })
         });
 
-        referenced_cycles.validate(errors);
-        referenced_edges.validate(errors);
+        validate_references!(
+            errors, SketchValidationError;
+            referenced_edges, ReferenceCountError::HalfEdge;
+            referenced_cycles, ReferenceCountError::Cycle;
+        );
     }
 }
 
@@ -59,7 +65,8 @@ mod tests {
         operations::{build::BuildHalfEdge, insert::Insert},
         services::Services,
         validate::{
-            references::ReferenceCountError, Validate, ValidationError,
+            references::ReferenceCountError, SketchValidationError, Validate,
+            ValidationError,
         },
     };
 
@@ -80,7 +87,9 @@ mod tests {
         ]);
         assert_contains_err!(
             invalid_sketch,
-            ValidationError::ReferenceCount(ReferenceCountError::Cycle)
+            ValidationError::Sketch(SketchValidationError::MultipleReferences(
+                ReferenceCountError::Cycle
+            ))
         );
 
         let valid_sketch = Sketch::new(vec![Region::new(
@@ -123,7 +132,9 @@ mod tests {
         .insert(&mut services)]);
         assert_contains_err!(
             invalid_sketch,
-            ValidationError::ReferenceCount(ReferenceCountError::HalfEdge)
+            ValidationError::Sketch(SketchValidationError::MultipleReferences(
+                ReferenceCountError::HalfEdge
+            ))
         );
 
         let valid_sketch =

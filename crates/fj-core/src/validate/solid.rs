@@ -3,11 +3,12 @@ use std::iter::repeat;
 use crate::{
     objects::{Solid, Vertex},
     storage::Handle,
+    validate_references,
 };
 use fj_math::Point;
 
 use super::{
-    references::{ReferenceCounter, ValidateReferences},
+    references::{ReferenceCountError, ReferenceCounter},
     Validate, ValidationConfig, ValidationError,
 };
 
@@ -64,6 +65,10 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
+
+    /// Object within sketch referenced by more than one other object
+    #[error("Object referenced by more than one other Objects")]
+    MultipleReferences(#[from] ReferenceCountError),
 }
 
 impl SolidValidationError {
@@ -157,10 +162,13 @@ impl SolidValidationError {
             })
         });
 
-        referenced_faces.validate(errors);
-        referenced_regions.validate(errors);
-        referenced_cycles.validate(errors);
-        referenced_edges.validate(errors);
+        validate_references!(
+            errors, SolidValidationError;
+            referenced_regions, ReferenceCountError::Region;
+            referenced_faces, ReferenceCountError::Face;
+            referenced_edges, ReferenceCountError::HalfEdge;
+            referenced_cycles, ReferenceCountError::Cycle;
+        );
     }
 }
 
@@ -176,7 +184,8 @@ mod tests {
         },
         services::Services,
         validate::{
-            references::ReferenceCountError, Validate, ValidationError,
+            references::ReferenceCountError, SolidValidationError, Validate,
+            ValidationError,
         },
     };
 
@@ -218,7 +227,9 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::ReferenceCount(ReferenceCountError::Face)
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Face
+            ))
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -267,7 +278,9 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::ReferenceCount(ReferenceCountError::Region)
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Region
+            ))
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -313,7 +326,9 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::ReferenceCount(ReferenceCountError::Cycle)
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Cycle
+            ))
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);
@@ -352,7 +367,9 @@ mod tests {
 
         assert_contains_err!(
             invalid_solid,
-            ValidationError::ReferenceCount(ReferenceCountError::HalfEdge)
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::HalfEdge
+            ))
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut services);

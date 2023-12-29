@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
-use crate::objects::{Cycle, Face, HalfEdge, Region};
 use crate::storage::Handle;
 
 use super::ValidationError;
@@ -20,32 +19,27 @@ impl<T: Eq + PartialEq + Hash> ReferenceCounter<T> {
             .and_modify(|count| *count += 1)
             .or_insert(1);
     }
+
+    pub fn has_multiple(&self) -> bool {
+        self.0.iter().any(|(_, count)| *count > 1)
+    }
 }
 
-pub trait ValidateReferences {
+pub trait ValidateReferences<T> {
     fn validate(&self, errors: &mut Vec<ValidationError>);
 }
 
-macro_rules! impl_validate {
-    ($($ty:ty, $err:path;)*) => {
+/// Find errors and convert to [`ValidationError`]
+#[macro_export]
+macro_rules! validate_references {
+    ($errors:ident, $error_ty:ty;$($counter:ident, $err:expr;)*) => {
         $(
-            impl ValidateReferences for ReferenceCounter<$ty> {
-                fn validate(&self, errors: &mut Vec<ValidationError>) {
-                    if self.0.iter().any(|(_, count)| *count > 1) {
-                        errors.push($err.into());
-                    }
-                }
+            if $counter.has_multiple() {
+                $errors.push(Into::<$error_ty>::into($err).into());
             }
         )*
     };
 }
-
-impl_validate!(
-    Region, ReferenceCountError::Region;
-    Face, ReferenceCountError::Face;
-    HalfEdge, ReferenceCountError::HalfEdge;
-    Cycle, ReferenceCountError::Cycle;
-);
 
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ReferenceCountError {

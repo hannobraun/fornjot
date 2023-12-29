@@ -84,7 +84,6 @@ mod solid;
 mod surface;
 mod vertex;
 
-use self::references::ReferenceCountError;
 pub use self::{
     cycle::CycleValidationError, edge::EdgeValidationError,
     face::FaceValidationError, shell::ShellValidationError,
@@ -196,10 +195,6 @@ pub enum ValidationError {
     /// `Sketch` validation error
     #[error("`Sketch` validation error")]
     Sketch(#[from] SketchValidationError),
-
-    /// Reference validation error
-    #[error("`Reference` validation error")]
-    ReferenceCount(#[from] ReferenceCountError),
 }
 
 impl From<Infallible> for ValidationError {
