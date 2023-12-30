@@ -18,12 +18,6 @@ impl Validate for Sketch {
 /// [`Sketch`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SketchValidationError {
-    /// [`HalfEdge`] referenced by more than one [`Cycle`]
-    #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
-    HalfEdgeMultipleReferences,
-    /// [`Cycle`] referenced by more than one [`crate::objects::Region`]
-    #[error("[`Cycle`] referenced by more than one [`Region`]")]
-    CycleMultipleReferences,
     /// Object within sketch referenced by more than one other object
     #[error("Object within sketch referenced by more than one other Object")]
     MultipleReferences(#[from] ReferenceCountError),
@@ -35,8 +29,6 @@ impl SketchValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        // todo: store referencing objects instead of just a reference count so that we can surface
-        // them in the error message
         let mut referenced_edges = ReferenceCounter::new();
         let mut referenced_cycles = ReferenceCounter::new();
 

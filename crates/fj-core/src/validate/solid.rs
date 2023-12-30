@@ -142,8 +142,6 @@ impl SolidValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        // todo: store referencing objects instead of just a reference count so that we can surface
-        // them in the error message
         let mut referenced_regions = ReferenceCounter::new();
         let mut referenced_faces = ReferenceCounter::new();
         let mut referenced_edges = ReferenceCounter::new();
