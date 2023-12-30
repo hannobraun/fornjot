@@ -164,10 +164,10 @@ impl SolidValidationError {
 
         validate_references!(
             errors, SolidValidationError;
-            referenced_regions, ReferenceCountError::Region;
-            referenced_faces, ReferenceCountError::Face;
-            referenced_edges, ReferenceCountError::HalfEdge;
-            referenced_cycles, ReferenceCountError::Cycle;
+            referenced_regions, Region;
+            referenced_faces, Face;
+            referenced_edges, HalfEdge;
+            referenced_cycles, Cycle;
         );
     }
 }
@@ -228,7 +228,7 @@ mod tests {
         assert_contains_err!(
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Face
+                ReferenceCountError::Face { references: _ }
             ))
         );
 
@@ -279,7 +279,7 @@ mod tests {
         assert_contains_err!(
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Region
+                ReferenceCountError::Region { references: _ }
             ))
         );
 
@@ -327,7 +327,7 @@ mod tests {
         assert_contains_err!(
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Cycle
+                ReferenceCountError::Cycle { references: _ }
             ))
         );
 
@@ -368,7 +368,7 @@ mod tests {
         assert_contains_err!(
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::HalfEdge
+                ReferenceCountError::HalfEdge { references: _ }
             ))
         );
 

@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
+use crate::objects::{Cycle, Face, HalfEdge, Region, Shell};
 use crate::storage::Handle;
 
 #[derive(Default)]
@@ -18,19 +19,27 @@ impl<T: Eq + PartialEq + Hash, U> ReferenceCounter<T, U> {
             .or_insert(vec![found]);
     }
 
-    pub fn has_multiple(&self) -> bool {
-        self.0.iter().any(|(_, references)| references.len() > 1)
+    pub fn get_multiples(&self) -> Vec<MultipleReferences<T, U>> {
+        self.0
+            .iter()
+            .filter(|(_, references)| references.len() > 1)
+            .map(|(referenced, references)| MultipleReferences {
+                referenced: referenced.clone(),
+                references: references.to_vec(),
+            })
+            .collect()
     }
 }
 
 /// Find errors and convert to [`crate::validate::ValidationError`]
 #[macro_export]
 macro_rules! validate_references {
-    ($errors:ident, $error_ty:ty;$($counter:ident, $err:expr;)*) => {
+    ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
         $(
-            if $counter.has_multiple() {
-                $errors.push(Into::<$error_ty>::into($err).into());
-            }
+            $counter.get_multiples().iter().for_each(|multiple| {
+                let reference_error = ReferenceCountError::$err { references: multiple.clone() };
+                $errors.push(Into::<$error_ty>::into(reference_error).into());
+            });
         )*
     };
 }
@@ -40,15 +49,55 @@ macro_rules! validate_references {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ReferenceCountError {
     /// [`crate::objects::Region`] referenced by more than one [`crate::objects::Face`]
-    #[error("[`Region`] referenced by more than one [`Face`]")]
-    Region,
+    #[error(
+        "[`Region`] referenced by more than one [`Face`]\n{references:#?}"
+    )]
+    Region {
+        references: MultipleReferences<Region, Face>,
+    },
     /// [`crate::objects::Face`] referenced by more than one [`crate::objects::Shell`]
-    #[error("[`Face`] referenced by more than one [`Shell`]")]
-    Face,
+    #[error("[`Face`] referenced by more than one [`Shell`]\n{references:#?}")]
+    Face {
+        references: MultipleReferences<Face, Shell>,
+    },
     /// [`crate::objects::HalfEdge`] referenced by more than one [`crate::objects::Cycle`]
-    #[error("[`HalfEdge`] referenced by more than one [`Cycle`]")]
-    HalfEdge,
+    #[error(
+        "[`HalfEdge`] referenced by more than one [`Cycle`]\n{references:#?}"
+    )]
+    HalfEdge {
+        references: MultipleReferences<HalfEdge, Cycle>,
+    },
     /// [`crate::objects::Cycle`] referenced by more than one [`crate::objects::Region`]
-    #[error("[`Cycle`] referenced by more than one [`Region`]")]
-    Cycle,
+    #[error(
+        "[`Cycle`] referenced by more than one [`Region`]\n{references:#?}"
+    )]
+    Cycle {
+        references: MultipleReferences<Cycle, Region>,
+    },
+}
+
+pub struct MultipleReferences<T, U> {
+    referenced: Handle<T>,
+    references: Vec<Handle<U>>,
+}
+
+use std::fmt::Debug;
+
+impl<T: Debug, U: Debug> Debug for MultipleReferences<T, U> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{:?} referenced by {:?}",
+            self.referenced, self.references
+        )
+    }
+}
+
+impl<T, U> Clone for MultipleReferences<T, U> {
+    fn clone(&self) -> Self {
+        Self {
+            referenced: self.referenced.clone(),
+            references: self.references.to_vec(),
+        }
+    }
 }

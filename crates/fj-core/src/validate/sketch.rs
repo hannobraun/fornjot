@@ -51,8 +51,8 @@ impl SketchValidationError {
 
         validate_references!(
             errors, SketchValidationError;
-            referenced_edges, ReferenceCountError::HalfEdge;
-            referenced_cycles, ReferenceCountError::Cycle;
+            referenced_edges, HalfEdge;
+            referenced_cycles, Cycle;
         );
     }
 }
@@ -88,7 +88,7 @@ mod tests {
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::Cycle
+                ReferenceCountError::Cycle { references: _ }
             ))
         );
 
@@ -133,7 +133,7 @@ mod tests {
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::HalfEdge
+                ReferenceCountError::HalfEdge { references: _ }
             ))
         );
 
