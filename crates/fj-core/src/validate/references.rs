@@ -12,11 +12,15 @@ impl<T: Eq + PartialEq + Hash, U> ReferenceCounter<T, U> {
         Self(HashMap::new())
     }
 
-    pub fn add_count(&mut self, object: Handle<T>, found: Handle<U>) {
+    pub fn add_reference(
+        &mut self,
+        referenced: Handle<T>,
+        reference: Handle<U>,
+    ) {
         self.0
-            .entry(object)
-            .and_modify(|references| references.push(found.clone()))
-            .or_insert(vec![found]);
+            .entry(referenced)
+            .and_modify(|references| references.push(reference.clone()))
+            .or_insert(vec![reference]);
     }
 
     pub fn get_multiples(&self) -> Vec<MultipleReferences<T, U>> {
