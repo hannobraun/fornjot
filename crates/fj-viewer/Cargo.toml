@@ -20,7 +20,7 @@ fj-math.workspace = true
 nalgebra = "0.32.3"
 tobj = "4.0.0"
 raw-window-handle = "0.5.2"
-thiserror = "1.0.51"
+thiserror = "1.0.53"
 tracing = "0.1.40"
 
 [dependencies.bytemuck]
