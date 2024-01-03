@@ -19,6 +19,6 @@ test:
 # probably be considered a bug in this file.
 ci: test
     cargo fmt --check
-    cargo clippy --all-features -- -D warnings
+    cargo clippy --workspace --all-features -- -D warnings
     cargo doc --no-deps --document-private-items --all-features --workspace
     cargo run --package cross-compiler
