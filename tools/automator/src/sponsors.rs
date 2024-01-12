@@ -21,6 +21,7 @@ impl Sponsors {
                             ... on User {
                                 login
                                 sponsorshipForViewerAsSponsorable {
+                                    privacyLevel
                                     createdAt
                                     tier {
                                         monthlyPriceInDollars
@@ -31,6 +32,7 @@ impl Sponsors {
                             ... on Organization {
                                 login
                                 sponsorshipForViewerAsSponsorable {
+                                    privacyLevel
                                     createdAt
                                     tier {
                                         monthlyPriceInDollars
@@ -63,6 +65,12 @@ impl Sponsors {
             .nodes
             .into_iter()
             .filter_map(|node| {
+                if let QueryResultSponsorshipPrivacy::Private =
+                    node.sponsorship_for_viewer_as_sponsorable.privacy_level
+                {
+                    return None;
+                }
+
                 if node
                     .sponsorship_for_viewer_as_sponsorable
                     .is_one_time_payment
@@ -190,6 +198,9 @@ pub struct QueryResultSponsorsNode {
 
 #[derive(Debug, serde::Deserialize)]
 pub struct QueryResultSponsorable {
+    #[serde(rename = "privacyLevel")]
+    pub privacy_level: QueryResultSponsorshipPrivacy,
+
     #[serde(rename = "createdAt")]
     pub created_at: DateTime<Utc>,
 
@@ -197,6 +208,15 @@ pub struct QueryResultSponsorable {
 
     #[serde(rename = "isOneTimePayment")]
     pub is_one_time_payment: bool,
+}
+
+#[derive(Debug, serde::Deserialize)]
+pub enum QueryResultSponsorshipPrivacy {
+    #[serde(rename = "PUBLIC")]
+    Public,
+
+    #[serde(rename = "PRIVATE")]
+    Private,
 }
 
 #[derive(Debug, serde::Deserialize)]
