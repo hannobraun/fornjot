@@ -193,7 +193,7 @@ impl Crate {
             serde_json::from_str::<CrateVersions>(resp.text()?.as_str())
                 .context("deserializing crates.io response")?;
 
-        Ok(versions.versions.get(0).unwrap().version.to_owned())
+        Ok(versions.versions.first().unwrap().version.to_owned())
     }
 
     fn determine_state(&self) -> anyhow::Result<CrateState> {

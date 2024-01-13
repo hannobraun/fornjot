@@ -20,10 +20,10 @@ iter_fixed = "0.3.1"
 itertools = "0.12.0"
 parking_lot = "0.12.0"
 robust = "1.1.0"
-spade = "2.4.1"
-thiserror = "1.0.51"
+spade = "2.5.1"
+thiserror = "1.0.53"
 type-map = "0.5.0"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-anyhow = "1.0.76"
+anyhow = "1.0.78"
