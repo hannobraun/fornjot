@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+use std::ops::Deref;
 
 /// A service that controls access to some state
 ///
@@ -59,12 +59,6 @@ impl<S: State> Deref for Service<S> {
 
     fn deref(&self) -> &Self::Target {
         &self.state
-    }
-}
-
-impl<S: State> DerefMut for Service<S> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.state
     }
 }
 

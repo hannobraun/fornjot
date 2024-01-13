@@ -43,11 +43,10 @@ impl Services {
     }
 
     /// Construct an instance of `Services` with a pre-defined configuration for the validation service
-    pub fn with_validation_config(config: &ValidationConfig) -> Self {
+    pub fn with_validation_config(config: ValidationConfig) -> Self {
         let objects = Service::<Objects>::default();
-        let mut validation = Service::<Validation>::default();
-        validation
-            .evolve(&ValidationEvent::ConfigurationDefined { config: *config });
+        let validation =
+            Service::new(Validation::with_validation_config(config));
         Self {
             objects,
             validation,

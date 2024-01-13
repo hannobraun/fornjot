@@ -12,24 +12,23 @@ use super::State;
 pub struct Validation {
     /// All unhandled validation errors
     pub errors: BTreeMap<ObjectId, ValidationError>,
-    /// Optional validation config
-    config: Option<ValidationConfig>,
+    /// Validation configuration for the validation service
+    config: ValidationConfig,
 }
 
 impl Validation {
-    fn with_validation_config(&mut self, config: &ValidationConfig) -> &Self {
-        self.config = Some(*config);
-        self
+    /// A constructor for the validation service that allows a validation configuration to be set for the service
+    pub fn with_validation_config(config: ValidationConfig) -> Self {
+        let errors = BTreeMap::new();
+        Self { errors, config }
     }
 }
 
 impl Default for Validation {
     fn default() -> Self {
         let errors = BTreeMap::new();
-        Self {
-            errors,
-            config: None,
-        }
+        let config: ValidationConfig = ValidationConfig::default();
+        Self { errors, config }
     }
 }
 
@@ -72,11 +71,7 @@ impl State for Validation {
 
         match command {
             ValidationCommand::ValidateObject { object } => {
-                match self.config {
-                    Some(c) => object.validate_with_config(&c, &mut errors),
-                    None => object.validate(&mut errors),
-                }
-                object.validate(&mut errors);
+                object.validate_with_config(&self.config, &mut errors);
 
                 for err in errors {
                     events.push(ValidationEvent::ValidationFailed {
@@ -92,9 +87,6 @@ impl State for Validation {
         match event {
             ValidationEvent::ValidationFailed { object, err } => {
                 self.errors.insert(object.id(), err.clone());
-            }
-            ValidationEvent::ConfigurationDefined { config } => {
-                self.with_validation_config(config);
             }
         }
     }
@@ -119,10 +111,5 @@ pub enum ValidationEvent {
 
         /// The validation error
         err: ValidationError,
-    },
-    /// A validation configuration has been defined
-    ConfigurationDefined {
-        /// The predefined validation configuration
-        config: ValidationConfig,
     },
 }
