@@ -62,6 +62,7 @@ impl<S: State> Deref for Service<S> {
     }
 }
 
+#[cfg(test)]
 impl<S: State> DerefMut for Service<S> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.state
