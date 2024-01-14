@@ -11,7 +11,7 @@ impl Validate for Sketch {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        SketchValidationError::check_obect_references(self, config, errors);
+        SketchValidationError::check_object_references(self, config, errors);
     }
 }
 
@@ -24,7 +24,7 @@ pub enum SketchValidationError {
 }
 
 impl SketchValidationError {
-    fn check_obect_references(
+    fn check_object_references(
         sketch: &Sketch,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
