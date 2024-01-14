@@ -3,10 +3,14 @@ use std::iter::repeat;
 use crate::{
     objects::{Solid, Vertex},
     storage::Handle,
+    validate_references,
 };
 use fj_math::Point;
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::{
+    references::{ReferenceCountError, ReferenceCounter},
+    Validate, ValidationConfig, ValidationError,
+};
 
 impl Validate for Solid {
     fn validate_with_config(
@@ -14,7 +18,8 @@ impl Validate for Solid {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        SolidValidationError::check_vertices(self, config, errors)
+        SolidValidationError::check_vertices(self, config, errors);
+        SolidValidationError::check_object_references(self, config, errors);
     }
 }
 
@@ -60,6 +65,10 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
+
+    /// Object within solid referenced by more than one other object
+    #[error("Object within solid referenced by more than one other Object")]
+    MultipleReferences(#[from] ReferenceCountError),
 }
 
 impl SolidValidationError {
@@ -126,5 +135,247 @@ impl SolidValidationError {
                 }
             }
         }
+    }
+
+    fn check_object_references(
+        solid: &Solid,
+        _config: &ValidationConfig,
+        errors: &mut Vec<ValidationError>,
+    ) {
+        let mut referenced_regions = ReferenceCounter::new();
+        let mut referenced_faces = ReferenceCounter::new();
+        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_cycles = ReferenceCounter::new();
+
+        solid.shells().iter().for_each(|s| {
+            s.faces().into_iter().for_each(|f| {
+                referenced_faces.add_reference(f.clone(), s.clone());
+                referenced_regions.add_reference(f.region().clone(), f.clone());
+                f.region().all_cycles().for_each(|c| {
+                    referenced_cycles
+                        .add_reference(c.clone(), f.region().clone());
+                    c.half_edges().into_iter().for_each(|e| {
+                        referenced_edges.add_reference(e.clone(), c.clone());
+                    })
+                })
+            })
+        });
+
+        validate_references!(
+            errors, SolidValidationError;
+            referenced_regions, Region;
+            referenced_faces, Face;
+            referenced_edges, HalfEdge;
+            referenced_cycles, Cycle;
+        );
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        assert_contains_err,
+        geometry::{GlobalPath, SurfaceGeometry},
+        objects::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
+        operations::{
+            build::{BuildFace, BuildHalfEdge},
+            insert::Insert,
+        },
+        services::Services,
+        validate::{
+            references::ReferenceCountError, SolidValidationError, Validate,
+            ValidationError,
+        },
+    };
+
+    #[test]
+    fn should_find_face_multiple_references() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let shared_face = Face::new(
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::circle_from_radius(1.),
+                v: [0., 1., 1.].into(),
+            })
+            .insert(&mut services),
+            Region::new(
+                Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut services)
+                    .insert(&mut services)])
+                .insert(&mut services),
+                vec![],
+                None,
+            )
+            .insert(&mut services),
+        )
+        .insert(&mut services);
+
+        let invalid_solid = Solid::new(vec![
+            Shell::new(vec![shared_face.clone()]).insert(&mut services),
+            Shell::new(vec![
+                shared_face,
+                Face::triangle(
+                    [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
+                    &mut services,
+                )
+                .insert(&mut services)
+                .face,
+            ])
+            .insert(&mut services),
+        ])
+        .insert(&mut services);
+
+        assert_contains_err!(
+            invalid_solid,
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Face { references: _ }
+            ))
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut services);
+        valid_solid.validate_and_return_first_error()?;
+
+        services.validation.errors.clear();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_region_multiple_references() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let shared_region = Region::new(
+            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut services)
+                .insert(&mut services)])
+            .insert(&mut services),
+            vec![],
+            None,
+        )
+        .insert(&mut services);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![
+            Face::new(
+                Surface::new(SurfaceGeometry {
+                    u: GlobalPath::circle_from_radius(1.),
+                    v: [0., 1., 1.].into(),
+                })
+                .insert(&mut services),
+                shared_region.clone(),
+            )
+            .insert(&mut services),
+            Face::new(
+                Surface::new(SurfaceGeometry {
+                    u: GlobalPath::circle_from_radius(1.),
+                    v: [0., 0., 1.].into(),
+                })
+                .insert(&mut services),
+                shared_region.clone(),
+            )
+            .insert(&mut services),
+        ])
+        .insert(&mut services)])
+        .insert(&mut services);
+
+        assert_contains_err!(
+            invalid_solid,
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Region { references: _ }
+            ))
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut services);
+        valid_solid.validate_and_return_first_error()?;
+
+        services.validation.errors.clear();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let shared_cycle =
+            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut services)
+                .insert(&mut services)])
+            .insert(&mut services);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![
+            Face::new(
+                Surface::new(SurfaceGeometry {
+                    u: GlobalPath::circle_from_radius(1.),
+                    v: [0., 1., 1.].into(),
+                })
+                .insert(&mut services),
+                Region::new(shared_cycle.clone(), vec![], None)
+                    .insert(&mut services),
+            )
+            .insert(&mut services),
+            Face::new(
+                Surface::new(SurfaceGeometry {
+                    u: GlobalPath::circle_from_radius(1.),
+                    v: [0., 0., 1.].into(),
+                })
+                .insert(&mut services),
+                Region::new(shared_cycle, vec![], None).insert(&mut services),
+            )
+            .insert(&mut services),
+        ])
+        .insert(&mut services)])
+        .insert(&mut services);
+
+        assert_contains_err!(
+            invalid_solid,
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::Cycle { references: _ }
+            ))
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut services);
+        valid_solid.validate_and_return_first_error()?;
+
+        services.validation.errors.clear();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
+        let mut services = Services::new();
+
+        let shared_edge =
+            HalfEdge::circle([0., 0.], 1., &mut services).insert(&mut services);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::circle_from_radius(1.),
+                v: [0., 0., 1.].into(),
+            })
+            .insert(&mut services),
+            Region::new(
+                Cycle::new(vec![shared_edge.clone()]).insert(&mut services),
+                vec![
+                    Cycle::new(vec![shared_edge.clone()]).insert(&mut services)
+                ],
+                None,
+            )
+            .insert(&mut services),
+        )
+        .insert(&mut services)])
+        .insert(&mut services)])
+        .insert(&mut services);
+
+        assert_contains_err!(
+            invalid_solid,
+            ValidationError::Solid(SolidValidationError::MultipleReferences(
+                ReferenceCountError::HalfEdge { references: _ }
+            ))
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut services);
+        valid_solid.validate_and_return_first_error()?;
+
+        services.validation.errors.clear();
+
+        Ok(())
     }
 }
