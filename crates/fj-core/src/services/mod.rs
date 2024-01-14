@@ -8,7 +8,7 @@ mod validation;
 
 use crate::{
     objects::{Object, Objects, WithHandle},
-    validate::ValidationErrors,
+    validate::{ValidationConfig, ValidationErrors},
 };
 
 pub use self::{
@@ -36,6 +36,17 @@ impl Services {
         let objects = Service::<Objects>::default();
         let validation = Service::default();
 
+        Self {
+            objects,
+            validation,
+        }
+    }
+
+    /// Construct an instance of `Services` with a pre-defined configuration for the validation service
+    pub fn with_validation_config(config: ValidationConfig) -> Self {
+        let objects = Service::<Objects>::default();
+        let validation =
+            Service::new(Validation::with_validation_config(config));
         Self {
             objects,
             validation,

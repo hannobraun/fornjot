@@ -3,16 +3,33 @@ use std::{collections::BTreeMap, error::Error, thread};
 use crate::{
     objects::{BehindHandle, Object},
     storage::ObjectId,
-    validate::ValidationError,
+    validate::{ValidationConfig, ValidationError},
 };
 
 use super::State;
 
 /// Errors that occurred while validating the objects inserted into the stores
-#[derive(Default)]
 pub struct Validation {
     /// All unhandled validation errors
     pub errors: BTreeMap<ObjectId, ValidationError>,
+    /// Validation configuration for the validation service
+    config: ValidationConfig,
+}
+
+impl Validation {
+    /// A constructor for the validation service that allows a validation configuration to be set for the service
+    pub fn with_validation_config(config: ValidationConfig) -> Self {
+        let errors = BTreeMap::new();
+        Self { errors, config }
+    }
+}
+
+impl Default for Validation {
+    fn default() -> Self {
+        let errors = BTreeMap::new();
+        let config: ValidationConfig = ValidationConfig::default();
+        Self { errors, config }
+    }
 }
 
 impl Drop for Validation {
@@ -54,7 +71,7 @@ impl State for Validation {
 
         match command {
             ValidationCommand::ValidateObject { object } => {
-                object.validate(&mut errors);
+                object.validate_with_config(&self.config, &mut errors);
 
                 for err in errors {
                     events.push(ValidationEvent::ValidationFailed {

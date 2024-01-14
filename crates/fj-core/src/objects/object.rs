@@ -4,7 +4,7 @@ use crate::{
         Surface, Vertex,
     },
     storage::{Handle, HandleWrapper, ObjectId},
-    validate::{Validate, ValidationError},
+    validate::{Validate, ValidationConfig, ValidationError},
 };
 
 macro_rules! object {
@@ -37,6 +37,15 @@ macro_rules! object {
                 match self {
                     $(
                         Self::$ty(object) => object.validate(errors),
+                    )*
+                }
+            }
+
+            /// Validate the object with a pre-defined validation configuration
+            pub fn validate_with_config(&self, config: &ValidationConfig, errors: &mut Vec<ValidationError>) {
+                match self {
+                    $(
+                        Self::$ty(object) => object.validate_with_config(config, errors),
                     )*
                 }
             }
