@@ -86,6 +86,7 @@ pub mod geometry;
 pub mod layers;
 pub mod objects;
 pub mod operations;
+pub mod presentation;
 pub mod queries;
 pub mod storage;
 pub mod validate;
