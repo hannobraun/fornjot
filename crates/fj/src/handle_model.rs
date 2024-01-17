@@ -9,7 +9,7 @@ use fj_core::{
     services::Services,
     validate::ValidationErrors,
 };
-use fj_interop::model::Model;
+use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};
 use tracing_subscriber::prelude::*;
 

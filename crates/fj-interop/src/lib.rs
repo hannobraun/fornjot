@@ -13,4 +13,7 @@ pub mod ext;
 mod mesh;
 pub mod model;
 
-pub use self::mesh::{Color, Index, Mesh, Triangle};
+pub use self::{
+    mesh::{Color, Index, Mesh, Triangle},
+    model::Model,
+};
