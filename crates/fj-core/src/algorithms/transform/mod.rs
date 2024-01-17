@@ -4,6 +4,7 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
+mod region;
 mod shell;
 mod solid;
 mod surface;
