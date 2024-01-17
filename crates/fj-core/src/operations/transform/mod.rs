@@ -4,6 +4,7 @@ mod curve;
 mod cycle;
 mod edge;
 mod face;
+mod region;
 mod shell;
 mod solid;
 mod surface;
@@ -31,14 +32,18 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    fn transform(self, transform: &Transform, services: &mut Services) -> Self {
+    fn transform(
+        &self,
+        transform: &Transform,
+        services: &mut Services,
+    ) -> Self {
         let mut cache = TransformCache::default();
         self.transform_with_cache(transform, services, &mut cache)
     }
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         services: &mut Services,
         cache: &mut TransformCache,
@@ -48,7 +53,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn translate(
-        self,
+        &self,
         offset: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
@@ -59,7 +64,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn rotate(
-        self,
+        &self,
         axis_angle: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
@@ -72,12 +77,12 @@ where
     T: Clone + Insert<Inserted = Handle<T>> + TransformObject + 'static,
 {
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
-        if let Some(object) = cache.get(&self) {
+        if let Some(object) = cache.get(self) {
             return object.clone();
         }
 
