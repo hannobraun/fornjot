@@ -1,4 +1,4 @@
-use fj_interop::model::Model;
+use fj_interop::Model;
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize, Viewer,

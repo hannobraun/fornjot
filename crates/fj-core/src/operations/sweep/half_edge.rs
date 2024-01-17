@@ -1,4 +1,4 @@
-use fj_interop::{ext::ArrayExt, mesh::Color};
+use fj_interop::{ext::ArrayExt, Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{

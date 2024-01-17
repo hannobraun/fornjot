@@ -1,7 +1,7 @@
 //! Viewer camera module
 use std::f64::consts::FRAC_PI_2;
 
-use fj_interop::{mesh::Mesh, model::Model};
+use fj_interop::{Mesh, Model};
 use fj_math::{Aabb, Point, Scalar, Transform, Vector};
 
 use crate::screen::NormalizedScreenPosition;

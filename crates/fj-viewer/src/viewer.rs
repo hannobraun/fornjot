@@ -1,4 +1,4 @@
-use fj_interop::model::Model;
+use fj_interop::Model;
 use tracing::warn;
 
 use crate::{

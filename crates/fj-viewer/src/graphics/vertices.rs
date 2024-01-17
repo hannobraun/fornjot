@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use fj_interop::mesh::{Index, Mesh};
+use fj_interop::{Index, Mesh};
 
 #[derive(Debug)]
 pub struct Vertices {
