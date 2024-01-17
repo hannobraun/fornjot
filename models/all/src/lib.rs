@@ -1,8 +1,9 @@
 use fj::{
     core::{
-        algorithms::transform::TransformObject,
         objects::Solid,
-        operations::{insert::Insert, merge::Merge},
+        operations::{
+            insert::Insert, merge::Merge, transform::TransformObject,
+        },
         services::Services,
         storage::Handle,
     },

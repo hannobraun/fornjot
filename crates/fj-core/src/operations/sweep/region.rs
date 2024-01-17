@@ -2,9 +2,10 @@ use fj_interop::Color;
 use fj_math::Vector;
 
 use crate::{
-    algorithms::transform::TransformObject,
     objects::{Cycle, Face, Region, Surface},
-    operations::{insert::Insert, reverse::Reverse},
+    operations::{
+        insert::Insert, reverse::Reverse, transform::TransformObject,
+    },
     services::Services,
     storage::Handle,
 };

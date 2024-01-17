@@ -76,7 +76,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::transform::TransformObject, geometry::SurfacePath,
+        geometry::SurfacePath, operations::transform::TransformObject,
         services::Services,
     };
 

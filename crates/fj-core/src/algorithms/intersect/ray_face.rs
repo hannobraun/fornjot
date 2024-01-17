@@ -145,17 +145,14 @@ mod tests {
     use fj_math::Point;
 
     use crate::{
-        algorithms::{
-            intersect::{
-                ray_face::RayFaceIntersection, HorizontalRayToTheRight,
-                Intersect,
-            },
-            transform::TransformObject,
+        algorithms::intersect::{
+            ray_face::RayFaceIntersection, HorizontalRayToTheRight, Intersect,
         },
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,
+            transform::TransformObject,
             update::{UpdateFace, UpdateRegion},
         },
         services::Services,
