@@ -2,6 +2,8 @@ use std::{collections::HashMap, hash::Hash};
 
 use fj_math::Point;
 
+use crate::Color;
+
 /// A triangle mesh
 #[derive(Clone, Debug)]
 pub struct Mesh<V> {
@@ -115,15 +117,4 @@ pub struct Triangle {
 
     /// The color of the triangle
     pub color: Color,
-}
-
-/// RGBA color
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct Color(pub [u8; 4]);
-
-impl Default for Color {
-    fn default() -> Self {
-        // The default color is red. This is an arbitrary choice.
-        Self([255, 0, 0, 255])
-    }
 }
