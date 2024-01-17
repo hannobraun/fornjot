@@ -6,7 +6,7 @@ use super::{TransformCache, TransformObject};
 
 impl TransformObject for Face {
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         services: &mut Services,
         cache: &mut TransformCache,

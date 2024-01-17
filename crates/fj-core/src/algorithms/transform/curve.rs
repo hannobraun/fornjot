@@ -6,7 +6,7 @@ use super::{TransformCache, TransformObject};
 
 impl TransformObject for Curve {
     fn transform_with_cache(
-        self,
+        &self,
         _: &Transform,
         _: &mut Services,
         _: &mut TransformCache,

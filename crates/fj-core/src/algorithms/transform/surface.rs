@@ -6,7 +6,7 @@ use super::{TransformCache, TransformObject};
 
 impl TransformObject for Surface {
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         _: &mut Services,
         _: &mut TransformCache,

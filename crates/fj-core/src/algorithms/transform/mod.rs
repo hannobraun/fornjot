@@ -39,7 +39,7 @@ pub trait TransformObject: Sized {
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         services: &mut Services,
         cache: &mut TransformCache,
@@ -73,12 +73,12 @@ where
     T: Clone + Insert<Inserted = Handle<T>> + TransformObject + 'static,
 {
     fn transform_with_cache(
-        self,
+        &self,
         transform: &Transform,
         services: &mut Services,
         cache: &mut TransformCache,
     ) -> Self {
-        if let Some(object) = cache.get(&self) {
+        if let Some(object) = cache.get(self) {
             return object.clone();
         }
 

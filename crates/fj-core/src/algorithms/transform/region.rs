@@ -4,7 +4,7 @@ use super::TransformObject;
 
 impl TransformObject for Region {
     fn transform_with_cache(
-        self,
+        &self,
         transform: &fj_math::Transform,
         services: &mut crate::services::Services,
         cache: &mut super::TransformCache,
