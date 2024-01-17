@@ -1,14 +1,12 @@
-use fj::{
-    core::{
-        objects::{Region, Solid},
-        operations::{
-            insert::Insert,
-            update::{UpdateFace, UpdateShell, UpdateSolid},
-        },
-        services::Services,
-        storage::Handle,
+use fj::core::{
+    objects::Solid,
+    operations::{
+        insert::Insert,
+        presentation::SetColor,
+        update::{UpdateFace, UpdateShell, UpdateSolid},
     },
-    interop::Color,
+    services::Services,
+    storage::Handle,
 };
 
 pub fn model(services: &mut Services) -> Handle<Solid> {
@@ -20,12 +18,7 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
             shell
                 .update_face(shell.faces().first(), |face| {
                     face.update_region(|region| {
-                        Region::new(
-                            region.exterior().clone(),
-                            region.interiors().into_iter().cloned(),
-                            Some(Color::from([0., 1., 0.])),
-                        )
-                        .insert(services)
+                        region.set_color([0., 1., 0.]).insert(services)
                     })
                     .insert(services)
                 })
