@@ -1,5 +1,3 @@
-//! An approximated model
-
 use fj_math::{Aabb, Point};
 
 use crate::mesh::Mesh;
