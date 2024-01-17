@@ -1,4 +1,5 @@
 //! A single, continues 2d region
+
 use fj_interop::mesh::Color;
 
 use crate::{
