@@ -3,7 +3,7 @@
 mod delaunay;
 mod polygon;
 
-use fj_interop::mesh::Mesh;
+use fj_interop::Mesh;
 use fj_math::Point;
 
 use self::polygon::Polygon;
@@ -74,7 +74,7 @@ impl Triangulate for FaceApprox {
 
 #[cfg(test)]
 mod tests {
-    use fj_interop::mesh::Mesh;
+    use fj_interop::Mesh;
     use fj_math::{Point, Scalar};
 
     use crate::{

@@ -12,7 +12,7 @@ use std::{fs::File, path::Path};
 
 use thiserror::Error;
 
-use fj_interop::mesh::Mesh;
+use fj_interop::Mesh;
 use fj_math::{Point, Triangle};
 
 /// Export the provided mesh to the file at the given path.
