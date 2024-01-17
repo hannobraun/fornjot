@@ -1,5 +1,3 @@
-//! A triangle mesh
-
 use std::{collections::HashMap, hash::Hash};
 
 use fj_math::Point;
