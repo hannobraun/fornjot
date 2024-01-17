@@ -32,7 +32,11 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    fn transform(self, transform: &Transform, services: &mut Services) -> Self {
+    fn transform(
+        &self,
+        transform: &Transform,
+        services: &mut Services,
+    ) -> Self {
         let mut cache = TransformCache::default();
         self.transform_with_cache(transform, services, &mut cache)
     }
@@ -49,7 +53,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn translate(
-        self,
+        &self,
         offset: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
@@ -60,7 +64,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn rotate(
-        self,
+        &self,
         axis_angle: impl Into<Vector<3>>,
         services: &mut Services,
     ) -> Self {
