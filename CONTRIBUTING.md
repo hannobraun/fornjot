@@ -218,6 +218,6 @@ The commit message as a whole ideally follows these guidelines:
 
 
 [issues]: https://github.com/hannobraun/Fornjot/issues
-[Matrix]: https://matrix.to/#/#fornjot:braun-odw.eu
+[Matrix]: https://matrix.to/#/#fornjot:pub.solar
 [Discussions]: https://github.com/hannobraun/Fornjot/discussions
 [@hannobraun]: https://github.com/hannobraun
