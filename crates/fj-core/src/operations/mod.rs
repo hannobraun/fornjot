@@ -43,6 +43,7 @@ pub mod holes;
 pub mod insert;
 pub mod join;
 pub mod merge;
+pub mod presentation;
 pub mod replace;
 pub mod reverse;
 pub mod split;
