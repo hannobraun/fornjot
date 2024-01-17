@@ -1,0 +1,11 @@
+[package]
+name = "color"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies.cuboid]
+path = "../cuboid"
+
+[dependencies.fj]
+path = "../../crates/fj"
