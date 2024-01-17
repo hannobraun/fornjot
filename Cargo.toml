@@ -10,6 +10,7 @@ members = [
     "crates/fj-window",
 
     "models/all",
+    "models/color",
     "models/cuboid",
     "models/holes",
     "models/spacer",
