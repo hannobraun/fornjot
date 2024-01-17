@@ -9,9 +9,10 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-pub mod ext;
 mod mesh;
 mod model;
+
+pub mod ext;
 
 pub use self::{
     mesh::{Color, Index, Mesh, Triangle},
