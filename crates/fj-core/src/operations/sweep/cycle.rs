@@ -1,4 +1,4 @@
-use fj_interop::mesh::Color;
+use fj_interop::Color;
 use fj_math::Vector;
 
 use crate::{

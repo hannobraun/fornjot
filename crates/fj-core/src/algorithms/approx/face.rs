@@ -4,7 +4,7 @@
 
 use std::{collections::BTreeSet, ops::Deref};
 
-use fj_interop::mesh::Color;
+use fj_interop::Color;
 
 use crate::{
     objects::{Face, Handedness, ObjectSet},
