@@ -13,4 +13,4 @@ pub mod ext;
 pub mod mesh;
 pub mod model;
 
-pub use self::mesh::{Index, Mesh};
+pub use self::mesh::{Index, Mesh, Triangle};
