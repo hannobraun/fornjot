@@ -6,5 +6,5 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.78"
 log = "0.4.20"
-regex = "1.10.2"
+regex = "1.10.3"
 semver = "1.0.21"
