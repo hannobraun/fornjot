@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Thank you for your interest in contributing to Fornjot. We appreciate the help!
+Thank you for your interest in contributing to Fornjot. I appreciate the help!
 
 This document teaches you how to...
 
@@ -75,14 +75,14 @@ There might be additional setup required, depending on the platform you develop 
 
 The purpose of `just build` is to run the same suite of checks and tests that the CI build runs, so you can figure out any issues in advance, without having to submit a pull request, and having to wait for a CI run to finish.
 
-This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration, and most deviations should be considered bugs in `justfile`.
+This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration. Most deviations should be considered bugs in `justfile`.
 
 
 ## Reporting Bugs
 
 To report a bug, please [open an issue](https://github.com/hannobraun/Fornjot/issues/new) in Fornjot's GitHub repository.
 
-Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. We'd rather deal with duplicate issues than not hear about a bug at all.
+Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. I'd rather deal with duplicate issues than not hear about a bug at all.
 
 ### Testing
 
@@ -102,12 +102,12 @@ There are two ways to suggest an improvement, like a new feature or changes to a
 
 We use issues to track work that is mostly actionable, so stuff that someone can work on right now, or at least soon. Having too many issues open that aren't actionable will make it harder to track the actionable work.
 
-If you think your request is an obvious improvement, open an issue. If want to discuss a larger addition, long-term plans, or just aren't sure, start a discussion. **Just use your judgement, this isn't a big deal.** Worst case, your issue will be closed, or you'll be asked to open one.
+If you think your request is an obvious improvement, open an issue. If you want to discuss a larger addition, long-term plans, or just aren't sure, start a discussion. **Just use your judgement, this isn't a big deal.** Worst case, your issue will be closed, or I'll ask you to open one.
 
 
 ## Making Improvements
 
-If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
+If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, I will review the pull request, give feedback and possibly request changes. Once everything is in order, I'll merge it.
 
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 
@@ -127,7 +127,7 @@ There are a lot of open issues, however. If you need some more guidance, there a
 
 Finally, feel free to just ask. If you have a specific issue in mind, just comment there. Or direct your query to [Matrix] or [Discussions].
 
-If you're not a programmer or are looking for some variety, you can also work on [the website](https://github.com/hannobraun/www.fornjot.app).
+If you're not a programmer, or are looking for some variety, you can also work on [the website](https://github.com/hannobraun/www.fornjot.app).
 
 
 ## Additional Guidelines
