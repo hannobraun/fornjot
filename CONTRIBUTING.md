@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Thank you for your interest in contributing to Fornjot. We appreciate the help!
+Thank you for your interest in contributing to Fornjot. I appreciate the help!
 
 This document teaches you how to...
 
@@ -17,23 +17,9 @@ Each of these topics is addressed in one of the following sections. After that, 
 
 ## Using Fornjot
 
-The README explains [how to install and use the Fornjot app](README.md#usage). While all of this applies for development as well, installing the app via `cargo install` to test every single change would be tedious. As a developer working in this repository, there are better ways to do things.
+### Displaying models
 
-### Running the app
-
-You can compile and run the Fornjot app like this:
-
-``` sh
-cargo run
-```
-
-Usually, you'd have to specify which model you want to load, but there is a [configuration file](fj.toml) in the Fornjot repository that specifies the [test model](models/test/) as the default model. The purpose of the test model is to use all features available, so it can serve as a testing ground for most development work.
-
-The same configuration file specifies the [`models/` directory](models/) as the default path. That means, if you want to run another model, you don't have to type the full path. To load the [cuboid model](models/cuboid/), for example, you can do this:
-
-``` sh
-cargo run -p cuboid
-```
+The README explains [how to to use Fornjot to run the example models](README.md#usage).
 
 ### Running tests
 
@@ -73,24 +59,16 @@ There might be additional setup required, depending on the platform you develop 
 - > To make `just build` work on Windows I had to install [`Visual Studio` with `clang`](https://www.wikihow.com/Install-Clang-on-Windows) and then [`MinGW` with `ar`](https://winlibs.com/) and add both tools to `PATH` env var to make `cross-compiler` work.
 - > On Linux, I had to install `libfontconfig-dev` and `clang`.
 
-The purpose of `just build` is to run the same suite of checks and tests that the CI build runs, so you can figure out any issues in advance, without having to submit a pull request, and having to wait for a CI run to finish.
+The purpose of `just ci` is to run the same suite of checks and tests that the CI build runs, so you can figure out any issues in advance, without having to submit a pull request, and having to wait for a CI run to finish.
 
-This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration, and most deviations should be considered bugs in `justfile`.
+This is defined in [`justfile`](justfile). Please note that `justfile` is maintained in parallel to the CI configuration. Most deviations should be considered bugs in `justfile`.
 
 
 ## Reporting Bugs
 
 To report a bug, please [open an issue](https://github.com/hannobraun/Fornjot/issues/new) in Fornjot's GitHub repository.
 
-Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. We'd rather deal with duplicate issues than not hear about a bug at all.
-
-### Testing
-
-Aside from setting up a development environment and testing Fornjot using that, you can also download pre-compiled binaries for various platforms.
-
-Every merged pull request will trigger a [*Continuous Deployment* build](https://github.com/hannobraun/Fornjot/actions/workflows/cd.yml), each of which has a number of binaries attached to it.
-
-Please note that these binaries don't have their executable bits set, after you download them. If that is required on your platform, you have to set it manually, before you can launch the binary.
+Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. I'd rather deal with duplicate issues than not hear about a bug at all.
 
 
 ## Suggesting Improvements
@@ -102,12 +80,12 @@ There are two ways to suggest an improvement, like a new feature or changes to a
 
 We use issues to track work that is mostly actionable, so stuff that someone can work on right now, or at least soon. Having too many issues open that aren't actionable will make it harder to track the actionable work.
 
-If you think your request is an obvious improvement, open an issue. If want to discuss a larger addition, long-term plans, or just aren't sure, start a discussion. **Just use your judgement, this isn't a big deal.** Worst case, your issue will be closed, or you'll be asked to open one.
+If you think your request is an obvious improvement, open an issue. If you want to discuss a larger addition, long-term plans, or just aren't sure, start a discussion. **Just use your judgement, this isn't a big deal.** Worst case, your issue will be closed, or I'll ask you to open one.
 
 
 ## Making Improvements
 
-If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, [@hannobraun] will review the pull request, give feedback and possibly request changes, and once everything is in order, merge it.
+If you want to fix a bug, add a new feature, or improve an existing one, just fork the repository, make your change, and submit a pull request. Once submitted, I will review the pull request, give feedback and possibly request changes. Once everything is in order, I'll merge it.
 
 Pull requests are always welcome. But of course, there's a risk that yours might not be accepted. Bug fixes and other obvious improvements are usually safe, but new features might be deemed out of scope.
 
@@ -123,11 +101,12 @@ There are a lot of open issues, however. If you need some more guidance, there a
 - Issues that are suitable for starting out are labeled as [`good first issue`](https://github.com/hannobraun/Fornjot/labels/good%20first%20issue). Those typically don't require any deep knowledge of the Fornjot code base, so they're ideal to get your feet wet.
 - Some issues that need extra attention are labeled as [`help wanted`](https://github.com/hannobraun/Fornjot/labels/help%20wanted). Don't take that too seriously though. Help is welcome everywhere, not just on issues explicitly labeled as such.
 - Issues are typically labeled by topic to indicate which part of the project they affect. Check out the [list of labels](https://github.com/hannobraun/Fornjot/labels), specifically the various `topic: ` labels.
-- We also track various [milestones](https://github.com/hannobraun/Fornjot/milestones). Feel free to check those out, pick one that seems most interesting to you, and browse through the list of issues assigned to it.
+
+There's also the [feature wishlist](https://github.com/hannobraun/fornjot/discussions/146), for things that are not as actionable right now, or that I didn't want to track as issues for other reasons.
 
 Finally, feel free to just ask. If you have a specific issue in mind, just comment there. Or direct your query to [Matrix] or [Discussions].
 
-If you're not a programmer or are looking for some variety, you can also work on [the website](https://github.com/hannobraun/www.fornjot.app).
+If you're not a programmer, or are looking for some variety, you can also work on [the website](https://github.com/hannobraun/www.fornjot.app).
 
 
 ## Additional Guidelines
