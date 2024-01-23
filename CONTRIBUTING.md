@@ -17,23 +17,9 @@ Each of these topics is addressed in one of the following sections. After that, 
 
 ## Using Fornjot
 
-The README explains [how to install and use the Fornjot app](README.md#usage). While all of this applies for development as well, installing the app via `cargo install` to test every single change would be tedious. As a developer working in this repository, there are better ways to do things.
+### Displaying models
 
-### Running the app
-
-You can compile and run the Fornjot app like this:
-
-``` sh
-cargo run
-```
-
-Usually, you'd have to specify which model you want to load, but there is a [configuration file](fj.toml) in the Fornjot repository that specifies the [test model](models/test/) as the default model. The purpose of the test model is to use all features available, so it can serve as a testing ground for most development work.
-
-The same configuration file specifies the [`models/` directory](models/) as the default path. That means, if you want to run another model, you don't have to type the full path. To load the [cuboid model](models/cuboid/), for example, you can do this:
-
-``` sh
-cargo run -p cuboid
-```
+The README explains [how to to use Fornjot to run the example models](README.md#usage).
 
 ### Running tests
 
@@ -84,14 +70,6 @@ To report a bug, please [open an issue](https://github.com/hannobraun/Fornjot/is
 
 Feel free to first check the [list of open issues][issues], and if you find an existing one for your bug, add your voice there. If you're not sure or don't have the time, **don't worry, just open an issue**. I'd rather deal with duplicate issues than not hear about a bug at all.
 
-### Testing
-
-Aside from setting up a development environment and testing Fornjot using that, you can also download pre-compiled binaries for various platforms.
-
-Every merged pull request will trigger a [*Continuous Deployment* build](https://github.com/hannobraun/Fornjot/actions/workflows/cd.yml), each of which has a number of binaries attached to it.
-
-Please note that these binaries don't have their executable bits set, after you download them. If that is required on your platform, you have to set it manually, before you can launch the binary.
-
 
 ## Suggesting Improvements
 
@@ -123,7 +101,6 @@ There are a lot of open issues, however. If you need some more guidance, there a
 - Issues that are suitable for starting out are labeled as [`good first issue`](https://github.com/hannobraun/Fornjot/labels/good%20first%20issue). Those typically don't require any deep knowledge of the Fornjot code base, so they're ideal to get your feet wet.
 - Some issues that need extra attention are labeled as [`help wanted`](https://github.com/hannobraun/Fornjot/labels/help%20wanted). Don't take that too seriously though. Help is welcome everywhere, not just on issues explicitly labeled as such.
 - Issues are typically labeled by topic to indicate which part of the project they affect. Check out the [list of labels](https://github.com/hannobraun/Fornjot/labels), specifically the various `topic: ` labels.
-- We also track various [milestones](https://github.com/hannobraun/Fornjot/milestones). Feel free to check those out, pick one that seems most interesting to you, and browse through the list of issues assigned to it.
 
 Finally, feel free to just ask. If you have a specific issue in mind, just comment there. Or direct your query to [Matrix] or [Discussions].
 
