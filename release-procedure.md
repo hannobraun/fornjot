@@ -109,6 +109,8 @@ Additionally, post it in the following places:
   https://twitter.com/hannobraun
 - This Week in Rust
   https://github.com/rust-lang/this-week-in-rust
+- Reddit
+  https://www.reddit.com/r/rust/
 
 
 ## 10. Improve release procedure
