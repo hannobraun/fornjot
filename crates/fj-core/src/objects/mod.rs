@@ -39,12 +39,14 @@
 //!
 //! [`Handle`]: crate::storage::Handle
 
+mod is_object;
 mod kinds;
 mod object;
 mod object_set;
 mod stores;
 
 pub use self::{
+    is_object::IsObject,
     kinds::{
         curve::Curve,
         cycle::Cycle,
