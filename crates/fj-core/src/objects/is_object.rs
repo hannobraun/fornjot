@@ -18,6 +18,46 @@ pub trait IsObject {
     type BareObject;
 }
 
+impl IsObject for Curve {
+    type BareObject = Curve;
+}
+
+impl IsObject for Cycle {
+    type BareObject = Cycle;
+}
+
+impl IsObject for Face {
+    type BareObject = Face;
+}
+
+impl IsObject for HalfEdge {
+    type BareObject = HalfEdge;
+}
+
+impl IsObject for Region {
+    type BareObject = Region;
+}
+
+impl IsObject for Shell {
+    type BareObject = Shell;
+}
+
+impl IsObject for Sketch {
+    type BareObject = Sketch;
+}
+
+impl IsObject for Solid {
+    type BareObject = Solid;
+}
+
+impl IsObject for Surface {
+    type BareObject = Surface;
+}
+
+impl IsObject for Vertex {
+    type BareObject = Vertex;
+}
+
 impl IsObject for Handle<Curve> {
     type BareObject = Curve;
 }
