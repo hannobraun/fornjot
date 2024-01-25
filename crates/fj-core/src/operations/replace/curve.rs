@@ -1,7 +1,9 @@
 use std::ops::Deref;
 
 use crate::{
-    objects::{Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
+    objects::{
+        Curve, Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid,
+    },
     operations::{insert::Insert, update::UpdateHalfEdge},
     services::Services,
     storage::Handle,
@@ -14,10 +16,7 @@ use super::ReplaceOutput;
 /// See [module documentation] for more information.
 ///
 /// [module documentation]: super
-pub trait ReplaceCurve: Sized {
-    /// The bare object type that this trait is implemented for
-    type BareObject;
-
+pub trait ReplaceCurve: IsObject + Sized {
     /// Replace the curve
     #[must_use]
     fn replace_curve(
@@ -29,8 +28,6 @@ pub trait ReplaceCurve: Sized {
 }
 
 impl ReplaceCurve for HalfEdge {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -46,8 +43,6 @@ impl ReplaceCurve for HalfEdge {
 }
 
 impl ReplaceCurve for Cycle {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -80,8 +75,6 @@ impl ReplaceCurve for Cycle {
 }
 
 impl ReplaceCurve for Region {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -124,8 +117,6 @@ impl ReplaceCurve for Region {
 }
 
 impl ReplaceCurve for Sketch {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -155,8 +146,6 @@ impl ReplaceCurve for Sketch {
 }
 
 impl ReplaceCurve for Face {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -180,8 +169,6 @@ impl ReplaceCurve for Face {
 }
 
 impl ReplaceCurve for Shell {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -210,8 +197,6 @@ impl ReplaceCurve for Shell {
 }
 
 impl ReplaceCurve for Solid {
-    type BareObject = Self;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -241,8 +226,6 @@ impl ReplaceCurve for Solid {
 }
 
 impl ReplaceCurve for Handle<HalfEdge> {
-    type BareObject = HalfEdge;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -256,8 +239,6 @@ impl ReplaceCurve for Handle<HalfEdge> {
 }
 
 impl ReplaceCurve for Handle<Cycle> {
-    type BareObject = Cycle;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -271,8 +252,6 @@ impl ReplaceCurve for Handle<Cycle> {
 }
 
 impl ReplaceCurve for Handle<Region> {
-    type BareObject = Region;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -286,8 +265,6 @@ impl ReplaceCurve for Handle<Region> {
 }
 
 impl ReplaceCurve for Handle<Sketch> {
-    type BareObject = Sketch;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -301,8 +278,6 @@ impl ReplaceCurve for Handle<Sketch> {
 }
 
 impl ReplaceCurve for Handle<Face> {
-    type BareObject = Face;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -316,8 +291,6 @@ impl ReplaceCurve for Handle<Face> {
 }
 
 impl ReplaceCurve for Handle<Shell> {
-    type BareObject = Shell;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
@@ -331,8 +304,6 @@ impl ReplaceCurve for Handle<Shell> {
 }
 
 impl ReplaceCurve for Handle<Solid> {
-    type BareObject = Solid;
-
     fn replace_curve(
         &self,
         original: &Handle<Curve>,
