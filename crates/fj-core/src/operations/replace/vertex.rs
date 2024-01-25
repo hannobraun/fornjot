@@ -1,7 +1,9 @@
 use std::ops::Deref;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Vertex},
+    objects::{
+        Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid, Vertex,
+    },
     operations::{insert::Insert, update::UpdateHalfEdge},
     services::Services,
     storage::Handle,
@@ -14,10 +16,7 @@ use super::ReplaceOutput;
 /// See [module documentation] for more information.
 ///
 /// [module documentation]: super
-pub trait ReplaceVertex: Sized {
-    /// The bare object type that this trait is implemented for
-    type BareObject;
-
+pub trait ReplaceVertex: IsObject + Sized {
     /// Replace the vertex
     #[must_use]
     fn replace_vertex(
@@ -29,8 +28,6 @@ pub trait ReplaceVertex: Sized {
 }
 
 impl ReplaceVertex for HalfEdge {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -46,8 +43,6 @@ impl ReplaceVertex for HalfEdge {
 }
 
 impl ReplaceVertex for Cycle {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -80,8 +75,6 @@ impl ReplaceVertex for Cycle {
 }
 
 impl ReplaceVertex for Region {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -124,8 +117,6 @@ impl ReplaceVertex for Region {
 }
 
 impl ReplaceVertex for Sketch {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -155,8 +146,6 @@ impl ReplaceVertex for Sketch {
 }
 
 impl ReplaceVertex for Face {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -181,8 +170,6 @@ impl ReplaceVertex for Face {
 }
 
 impl ReplaceVertex for Shell {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -211,8 +198,6 @@ impl ReplaceVertex for Shell {
 }
 
 impl ReplaceVertex for Solid {
-    type BareObject = Self;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -242,8 +227,6 @@ impl ReplaceVertex for Solid {
 }
 
 impl ReplaceVertex for Handle<HalfEdge> {
-    type BareObject = HalfEdge;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -257,8 +240,6 @@ impl ReplaceVertex for Handle<HalfEdge> {
 }
 
 impl ReplaceVertex for Handle<Cycle> {
-    type BareObject = Cycle;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -272,8 +253,6 @@ impl ReplaceVertex for Handle<Cycle> {
 }
 
 impl ReplaceVertex for Handle<Region> {
-    type BareObject = Region;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -287,8 +266,6 @@ impl ReplaceVertex for Handle<Region> {
 }
 
 impl ReplaceVertex for Handle<Sketch> {
-    type BareObject = Sketch;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -318,8 +295,6 @@ impl ReplaceVertex for Handle<Sketch> {
 }
 
 impl ReplaceVertex for Handle<Face> {
-    type BareObject = Face;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -333,8 +308,6 @@ impl ReplaceVertex for Handle<Face> {
 }
 
 impl ReplaceVertex for Handle<Shell> {
-    type BareObject = Shell;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
@@ -348,8 +321,6 @@ impl ReplaceVertex for Handle<Shell> {
 }
 
 impl ReplaceVertex for Handle<Solid> {
-    type BareObject = Solid;
-
     fn replace_vertex(
         &self,
         original: &Handle<Vertex>,
