@@ -132,18 +132,20 @@ impl SplitFace for Shell {
             services,
         )
         .update_region(|region| {
-            let mut region = region.update_exterior(|cycle| {
-                cycle
-                    .add_half_edges(half_edges_b_to_c_inclusive)
-                    .add_half_edges([dividing_half_edge_c_to_b])
-                    .insert(services)
-            });
+            let mut region = region
+                .update_exterior(|cycle| {
+                    cycle
+                        .add_half_edges(half_edges_b_to_c_inclusive)
+                        .add_half_edges([dividing_half_edge_c_to_b])
+                        .insert(services)
+                })
+                .insert(services);
 
             if let Some(color) = face.region().color() {
-                region = region.set_color(color);
+                region = region.set_color(color).insert(services);
             }
 
-            region.insert(services)
+            region
         })
         .insert(services);
 
@@ -157,18 +159,20 @@ impl SplitFace for Shell {
             services,
         )
         .update_region(|region| {
-            let mut region = region.update_exterior(|cycle| {
-                cycle
-                    .add_half_edges(half_edges_d_to_a_inclusive)
-                    .add_half_edges([dividing_half_edge_a_to_d])
-                    .insert(services)
-            });
+            let mut region = region
+                .update_exterior(|cycle| {
+                    cycle
+                        .add_half_edges(half_edges_d_to_a_inclusive)
+                        .add_half_edges([dividing_half_edge_a_to_d])
+                        .insert(services)
+                })
+                .insert(services);
 
             if let Some(color) = face.region().color() {
-                region = region.set_color(color);
+                region = region.set_color(color).insert(services);
             }
 
-            region.insert(services)
+            region
         })
         .insert(services);
 
