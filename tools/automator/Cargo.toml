@@ -6,12 +6,12 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.78"
-chrono = "0.4.31"
+chrono = "0.4.33"
 map-macro = "0.2.6"
-octocrab = "0.33.1"
+octocrab = "0.33.3"
 semver = "1.0.21"
-serde = "1.0.195"
-serde_json = "1.0.111"
+serde = "1.0.196"
+serde_json = "1.0.113"
 tracing = "0.1.40"
 url = "2.5.0"
 
