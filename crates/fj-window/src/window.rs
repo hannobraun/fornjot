@@ -2,7 +2,9 @@ use fj_viewer::{Screen, ScreenSize};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 /// A window that can be used with `fj-viewer`
-pub struct Window(winit::window::Window);
+pub struct Window {
+    inner: winit::window::Window,
+}
 
 impl Window {
     /// Create an instance of `Window` from the given `EventLoop`
@@ -33,7 +35,7 @@ impl Window {
             .with_transparent(false)
             .build(event_loop)?;
 
-        Ok(Self(window))
+        Ok(Self { inner: window })
     }
 }
 
@@ -41,7 +43,7 @@ impl Screen for Window {
     type Window = winit::window::Window;
 
     fn size(&self) -> ScreenSize {
-        let size = self.0.inner_size();
+        let size = self.inner.inner_size();
 
         ScreenSize {
             width: size.width,
@@ -50,7 +52,7 @@ impl Screen for Window {
     }
 
     fn window(&self) -> &Self::Window {
-        &self.0
+        &self.inner
     }
 }
 
