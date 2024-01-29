@@ -9,7 +9,7 @@ pub struct Device {
 impl Device {
     pub async fn from_preferred_adapter(
         instance: &wgpu::Instance,
-        surface: &wgpu::Surface,
+        surface: &wgpu::Surface<'_>,
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -30,8 +30,9 @@ impl Device {
     pub async fn try_from_all_adapters(
         instance: &wgpu::Instance,
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
-        let mut all_adapters =
-            instance.enumerate_adapters(wgpu::Backends::all());
+        let mut all_adapters = instance
+            .enumerate_adapters(wgpu::Backends::all())
+            .into_iter();
 
         let result = loop {
             let Some(adapter) = all_adapters.next() else {
@@ -67,7 +68,7 @@ impl Device {
     pub async fn new(
         adapter: &wgpu::Adapter,
     ) -> Result<(Self, wgpu::Features), DeviceError> {
-        let features = {
+        let required_features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
             let available_features = adapter.features();
 
@@ -82,7 +83,7 @@ impl Device {
             desired_features.intersection(available_features)
         };
 
-        let limits = {
+        let required_limits = {
             // This is the lowest of the available defaults. It should guarantee
             // that we can run pretty much everywhere.
             let lowest_limits = wgpu::Limits::downlevel_webgl2_defaults();
@@ -98,14 +99,14 @@ impl Device {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    features,
-                    limits,
+                    required_features,
+                    required_limits,
                 },
                 None,
             )
             .await?;
 
-        Ok((Device { device, queue }, features))
+        Ok((Device { device, queue }, required_features))
     }
 }
 

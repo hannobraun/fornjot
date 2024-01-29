@@ -1,8 +1,12 @@
+use std::sync::Arc;
+
 use fj_viewer::{Screen, ScreenSize};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 /// A window that can be used with `fj-viewer`
-pub struct Window(winit::window::Window);
+pub struct Window {
+    inner: Arc<winit::window::Window>,
+}
 
 impl Window {
     /// Create an instance of `Window` from the given `EventLoop`
@@ -33,7 +37,9 @@ impl Window {
             .with_transparent(false)
             .build(event_loop)?;
 
-        Ok(Self(window))
+        Ok(Self {
+            inner: Arc::new(window),
+        })
     }
 }
 
@@ -41,7 +47,7 @@ impl Screen for Window {
     type Window = winit::window::Window;
 
     fn size(&self) -> ScreenSize {
-        let size = self.0.inner_size();
+        let size = self.inner.inner_size();
 
         ScreenSize {
             width: size.width,
@@ -49,8 +55,8 @@ impl Screen for Window {
         }
     }
 
-    fn window(&self) -> &winit::window::Window {
-        &self.0
+    fn window(&self) -> Arc<Self::Window> {
+        self.inner.clone()
     }
 }
 

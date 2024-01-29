@@ -19,7 +19,7 @@ use super::{
 /// Graphics rendering state and target abstraction
 #[derive(Debug)]
 pub struct Renderer {
-    surface: wgpu::Surface,
+    surface: wgpu::Surface<'static>,
     device: Device,
 
     surface_config: wgpu::SurfaceConfiguration,
@@ -44,7 +44,7 @@ impl Renderer {
         });
 
         // This is sound, as `window` is an object to create a surface upon.
-        let surface = unsafe { instance.create_surface(screen.window()) }?;
+        let surface = instance.create_surface(screen.window())?;
 
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
             debug!("Available adapter: {:?}", adapter.get_info());
@@ -106,6 +106,7 @@ impl Renderer {
             width,
             height,
             present_mode: wgpu::PresentMode::AutoVsync,
+            desired_maximum_frame_latency: 2,
             // I don't understand what this option does. It was introduced with
             // wgpu 0.14, but we had already been using premultiplied alpha
             // blending before that. See the `BlendState` configuration of the
