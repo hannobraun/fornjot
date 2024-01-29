@@ -49,7 +49,7 @@ impl Screen for Window {
         }
     }
 
-    fn window(&self) -> &winit::window::Window {
+    fn window(&self) -> &Self::Window {
         &self.0
     }
 }
