@@ -68,7 +68,7 @@ impl Device {
     pub async fn new(
         adapter: &wgpu::Adapter,
     ) -> Result<(Self, wgpu::Features), DeviceError> {
-        let features = {
+        let required_features = {
             let desired_features = wgpu::Features::POLYGON_MODE_LINE;
             let available_features = adapter.features();
 
@@ -99,14 +99,14 @@ impl Device {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    required_features: features,
+                    required_features,
                     required_limits: limits,
                 },
                 None,
             )
             .await?;
 
-        Ok((Device { device, queue }, features))
+        Ok((Device { device, queue }, required_features))
     }
 }
 
