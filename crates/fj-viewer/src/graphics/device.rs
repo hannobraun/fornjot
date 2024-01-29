@@ -83,7 +83,7 @@ impl Device {
             desired_features.intersection(available_features)
         };
 
-        let limits = {
+        let required_limits = {
             // This is the lowest of the available defaults. It should guarantee
             // that we can run pretty much everywhere.
             let lowest_limits = wgpu::Limits::downlevel_webgl2_defaults();
@@ -100,7 +100,7 @@ impl Device {
                 &wgpu::DeviceDescriptor {
                     label: None,
                     required_features,
-                    required_limits: limits,
+                    required_limits,
                 },
                 None,
             )
