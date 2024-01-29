@@ -9,7 +9,7 @@ pub struct Device {
 impl Device {
     pub async fn from_preferred_adapter(
         instance: &wgpu::Instance,
-        surface: &wgpu::Surface,
+        surface: &wgpu::Surface<'_>,
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -30,8 +30,9 @@ impl Device {
     pub async fn try_from_all_adapters(
         instance: &wgpu::Instance,
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
-        let mut all_adapters =
-            instance.enumerate_adapters(wgpu::Backends::all());
+        let mut all_adapters = instance
+            .enumerate_adapters(wgpu::Backends::all())
+            .into_iter();
 
         let result = loop {
             let Some(adapter) = all_adapters.next() else {
@@ -98,8 +99,8 @@ impl Device {
             .request_device(
                 &wgpu::DeviceDescriptor {
                     label: None,
-                    features,
-                    limits,
+                    required_features: features,
+                    required_limits: limits,
                 },
                 None,
             )
