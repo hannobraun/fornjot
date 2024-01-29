@@ -55,8 +55,8 @@ impl Screen for Window {
         }
     }
 
-    fn window(&self) -> &Self::Window {
-        &self.inner
+    fn window(&self) -> Arc<Self::Window> {
+        self.inner.clone()
     }
 }
 

@@ -46,7 +46,7 @@ impl Renderer {
         // This is sound, as `window` is an object to create a surface upon.
         let surface = unsafe {
             instance.create_surface_unsafe(
-                wgpu::SurfaceTargetUnsafe::from_window(screen.window())
+                wgpu::SurfaceTargetUnsafe::from_window(&screen.window())
                     .unwrap(),
             )
         }?;
