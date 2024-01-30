@@ -8,15 +8,11 @@ use fj::{
             update::UpdateSketch,
         },
         services::Services,
-        storage::Handle,
     },
     math::{Scalar, Vector},
 };
 
-pub fn model(
-    size: impl Into<Vector<3>>,
-    services: &mut Services,
-) -> Handle<Solid> {
+pub fn model(size: impl Into<Vector<3>>, services: &mut Services) -> Solid {
     let [x, y, z] = size.into().components;
 
     let bottom_surface = services.objects.surfaces.xy_plane();
@@ -36,5 +32,4 @@ pub fn model(
             .insert(services),
         )
         .sweep_sketch(bottom_surface, sweep_path, services)
-        .insert(services)
 }
