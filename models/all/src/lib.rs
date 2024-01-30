@@ -19,6 +19,7 @@ pub fn model(services: &mut Services) -> Solid {
     let angle_rad = Scalar::PI / 6.;
 
     let models = [
+        color::model(services),
         cuboid::model([1., 2., 3.], services),
         holes::model(0.5, services),
         spacer::model(2., 1., 1., services),
