@@ -11,7 +11,6 @@ use fj::{
             update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
-        storage::Handle,
     },
     math::Vector,
 };
@@ -22,7 +21,7 @@ pub fn model(
     r2: f64,
     h: f64,
     services: &mut Services,
-) -> Handle<Solid> {
+) -> Solid {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
         let angle_rad = 2. * PI / num_vertices as f64 * i as f64;
@@ -55,5 +54,4 @@ pub fn model(
                 .insert(services),
         )
         .sweep_sketch(bottom_surface, sweep_path, services)
-        .insert(services)
 }
