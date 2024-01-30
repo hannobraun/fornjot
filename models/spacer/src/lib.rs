@@ -9,7 +9,6 @@ use fj::{
             update::{UpdateRegion, UpdateSketch},
         },
         services::Services,
-        storage::Handle,
     },
     math::{Point, Vector},
 };
@@ -19,7 +18,7 @@ pub fn model(
     inner: f64,
     height: f64,
     services: &mut Services,
-) -> Handle<Solid> {
+) -> Solid {
     let bottom_surface = services.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., height]);
 
@@ -36,5 +35,4 @@ pub fn model(
                 .insert(services),
         )
         .sweep_sketch(bottom_surface, sweep_path, services)
-        .insert(services)
 }
