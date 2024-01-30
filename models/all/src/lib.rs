@@ -1,16 +1,13 @@
 use fj::{
     core::{
         objects::Solid,
-        operations::{
-            insert::Insert, merge::Merge, transform::TransformObject,
-        },
+        operations::{merge::Merge, transform::TransformObject},
         services::Services,
-        storage::Handle,
     },
     math::{Scalar, Vector},
 };
 
-pub fn model(services: &mut Services) -> Handle<Solid> {
+pub fn model(services: &mut Services) -> Solid {
     // Just combine all the other models using offsets/rotations that won't
     // result in neat vertex positions or axis-aligned edges/faces. This is
     // useful for testing.
@@ -40,5 +37,4 @@ pub fn model(services: &mut Services) -> Handle<Solid> {
         .merge(&star)
         .merge(&split)
         .merge(&holes)
-        .insert(services)
 }
