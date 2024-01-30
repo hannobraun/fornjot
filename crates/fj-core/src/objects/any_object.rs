@@ -129,7 +129,7 @@ impl Form for Bare {
     type Form<T> = T;
 }
 
-/// Implementation of [`Form`] for objects behind a handle
+/// Implementation of [`Form`] for stored objects
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Stored;
 
