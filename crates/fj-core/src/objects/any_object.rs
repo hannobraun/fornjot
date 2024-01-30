@@ -22,7 +22,7 @@ macro_rules! any_object {
             )*
         }
 
-        impl AnyObject<BehindHandle> {
+        impl AnyObject<Stored> {
             /// Access the ID of the object
             pub fn id(&self) -> ObjectId {
                 match self {
@@ -53,9 +53,7 @@ macro_rules! any_object {
 
         impl AnyObject<WithHandle> {
             /// Insert the object into its respective store
-            pub fn insert(self, objects: &mut Objects) ->
-                AnyObject<BehindHandle>
-            {
+            pub fn insert(self, objects: &mut Objects) -> AnyObject<Stored> {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
@@ -69,7 +67,7 @@ macro_rules! any_object {
             }
         }
 
-        impl From<AnyObject<WithHandle>> for AnyObject<BehindHandle> {
+        impl From<AnyObject<WithHandle>> for AnyObject<Stored> {
             fn from(object: AnyObject<WithHandle>) -> Self {
                 match object {
                     $(
@@ -86,7 +84,7 @@ macro_rules! any_object {
                 }
             }
 
-            impl From<Handle<$ty>> for AnyObject<BehindHandle> {
+            impl From<Handle<$ty>> for AnyObject<Stored> {
                 fn from(object: Handle<$ty>) -> Self {
                     Self::$ty(object.into())
                 }
@@ -116,8 +114,8 @@ any_object!(
 
 /// The form that an object can take
 ///
-/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`BehindHandle`]), or
-/// can take the form of a handle *and* an object [`WithHandle`].
+/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`Stored`]), or can
+/// take the form of a handle *and* an object [`WithHandle`].
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
@@ -133,9 +131,9 @@ impl Form for Bare {
 
 /// Implementation of [`Form`] for objects behind a handle
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct BehindHandle;
+pub struct Stored;
 
-impl Form for BehindHandle {
+impl Form for Stored {
     type Form<T> = HandleWrapper<T>;
 }
 
