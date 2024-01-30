@@ -59,7 +59,7 @@ pub use self::{
         surface::Surface,
         vertex::Vertex,
     },
-    object::{Bare, BehindHandle, Form, Object, WithHandle},
+    object::{AnyObject, Bare, BehindHandle, Form, WithHandle},
     object_set::ObjectSet,
     stores::{Objects, Surfaces},
 };

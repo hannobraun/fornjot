@@ -7,22 +7,22 @@ use crate::{
     validate::{Validate, ValidationConfig, ValidationError},
 };
 
-macro_rules! object {
+macro_rules! any_object {
     ($($ty:ident, $name:expr, $store:ident;)*) => {
-        /// An object
+        /// An enum that can hold object
         ///
         /// This enum is generic over the form that the object takes. An
-        /// `Object<Bare>` contains bare objects, like `Curve`. An
-        /// `Object<BehindHandle>` contains handles, like `Handle<Curve>`.
+        /// `AnyObject<Bare>` contains bare objects, like `Curve`. An
+        /// `AnyObject<BehindHandle>` contains handles, like `Handle<Curve>`.
         #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-        pub enum Object<F: Form> {
+        pub enum AnyObject<F: Form> {
             $(
                 #[doc = concat!("A ", $name)]
                 $ty(F::Form<$ty>),
             )*
         }
 
-        impl Object<BehindHandle> {
+        impl AnyObject<BehindHandle> {
             /// Access the ID of the object
             pub fn id(&self) -> ObjectId {
                 match self {
@@ -51,9 +51,11 @@ macro_rules! object {
             }
         }
 
-        impl Object<WithHandle> {
+        impl AnyObject<WithHandle> {
             /// Insert the object into its respective store
-            pub fn insert(self, objects: &mut Objects) -> Object<BehindHandle> {
+            pub fn insert(self, objects: &mut Objects) ->
+                AnyObject<BehindHandle>
+            {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
@@ -67,30 +69,30 @@ macro_rules! object {
             }
         }
 
-        impl From<Object<WithHandle>> for Object<BehindHandle> {
-            fn from(object: Object<WithHandle>) -> Self {
+        impl From<AnyObject<WithHandle>> for AnyObject<BehindHandle> {
+            fn from(object: AnyObject<WithHandle>) -> Self {
                 match object {
                     $(
-                        Object::$ty((handle, _)) => Self::$ty(handle.into()),
+                        AnyObject::$ty((handle, _)) => Self::$ty(handle.into()),
                     )*
                 }
             }
         }
 
         $(
-            impl From<$ty> for Object<Bare> {
+            impl From<$ty> for AnyObject<Bare> {
                 fn from(object: $ty) -> Self {
                     Self::$ty(object)
                 }
             }
 
-            impl From<Handle<$ty>> for Object<BehindHandle> {
+            impl From<Handle<$ty>> for AnyObject<BehindHandle> {
                 fn from(object: Handle<$ty>) -> Self {
                     Self::$ty(object.into())
                 }
             }
 
-            impl From<(Handle<$ty>, $ty)> for Object<WithHandle> {
+            impl From<(Handle<$ty>, $ty)> for AnyObject<WithHandle> {
                 fn from((handle, object): (Handle<$ty>, $ty)) -> Self {
                     Self::$ty((handle.into(), object))
                 }
@@ -99,7 +101,7 @@ macro_rules! object {
     };
 }
 
-object!(
+any_object!(
     Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;

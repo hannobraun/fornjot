@@ -1,7 +1,7 @@
 use std::{collections::BTreeMap, error::Error, thread};
 
 use crate::{
-    objects::{BehindHandle, Object},
+    objects::{AnyObject, BehindHandle},
     storage::ObjectId,
     validate::{ValidationConfig, ValidationError},
 };
@@ -97,7 +97,7 @@ pub enum ValidationCommand {
     /// Validate the provided object
     ValidateObject {
         /// The object to validate
-        object: Object<BehindHandle>,
+        object: AnyObject<BehindHandle>,
     },
 }
 
@@ -107,7 +107,7 @@ pub enum ValidationEvent {
     /// Validation of an object failed
     ValidationFailed {
         /// The object for which validation failed
-        object: Object<BehindHandle>,
+        object: AnyObject<BehindHandle>,
 
         /// The validation error
         err: ValidationError,
