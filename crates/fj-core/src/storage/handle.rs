@@ -10,6 +10,17 @@ use super::{blocks::Index, store::StoreInner};
 /// handle dereferences to the object it points to, via its [`Deref`]
 /// implementation.
 ///
+/// ## Bare objects and stored objects
+///
+/// A bare object is just that: an instance of a bare object type. Once a bare
+/// objects is inserted into storage, it becomes a stored object. A stored
+/// object is owned by the store, and can be referenced through instances of
+/// `Handle`.
+///
+/// The point of doing this, is to provide objects with a unique identity, via
+/// their location within storage. The importance of this is expanded upon in
+/// the next section.
+///
 /// ## Equality and Identity
 ///
 /// Equality of `Handle`s is defined by the equality of the stored objects they
