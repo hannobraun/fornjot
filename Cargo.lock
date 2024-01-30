@@ -59,12 +59,14 @@ dependencies = [
 name = "all"
 version = "0.1.0"
 dependencies = [
+ "color",
  "cuboid",
  "fj",
  "holes",
  "spacer",
  "split",
  "star",
+ "vertices-indices",
 ]
 
 [[package]]

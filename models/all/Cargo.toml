@@ -6,6 +6,9 @@ edition = "2021"
 [dependencies.fj]
 path = "../../crates/fj"
 
+[dependencies.color]
+path = "../color"
+
 [dependencies.cuboid]
 path = "../cuboid"
 
@@ -20,3 +23,6 @@ path = "../split"
 
 [dependencies.star]
 path = "../star"
+
+[dependencies.vertices-indices]
+path = "../vertices-indices"
