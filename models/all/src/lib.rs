@@ -25,6 +25,7 @@ pub fn model(services: &mut Services) -> Solid {
         spacer::model(2., 1., 1., services),
         split::model(1., 0.2, services),
         star::model(5, 2., 1., 1., services),
+        vertices_indices::model(services),
     ];
 
     let mut all = Solid::empty();

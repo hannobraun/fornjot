@@ -66,6 +66,7 @@ dependencies = [
  "spacer",
  "split",
  "star",
+ "vertices-indices",
 ]
 
 [[package]]
