@@ -20,10 +20,10 @@ pub fn model(services: &mut Services) -> Solid {
 
     let models = [
         cuboid::model([1., 2., 3.], services),
-        spacer::model(2., 1., 1., services),
-        star::model(5, 2., 1., 1., services),
-        split::model(1., 0.2, services),
         holes::model(0.5, services),
+        spacer::model(2., 1., 1., services),
+        split::model(1., 0.2, services),
+        star::model(5, 2., 1., 1., services),
     ];
 
     let mut all = Solid::empty();
