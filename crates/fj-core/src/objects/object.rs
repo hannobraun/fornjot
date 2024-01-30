@@ -7,7 +7,7 @@ use crate::{
     validate::{Validate, ValidationConfig, ValidationError},
 };
 
-macro_rules! object {
+macro_rules! any_object {
     ($($ty:ident, $name:expr, $store:ident;)*) => {
         /// An enum that can hold object
         ///
@@ -101,7 +101,7 @@ macro_rules! object {
     };
 }
 
-object!(
+any_object!(
     Curve, "curve", curves;
     Cycle, "cycle", cycles;
     Face, "face", faces;
