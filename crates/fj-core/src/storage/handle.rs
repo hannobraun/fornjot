@@ -197,9 +197,10 @@ impl<T> From<HandleWrapper<T>> for Handle<T> {
 unsafe impl<T> Send for Handle<T> {}
 unsafe impl<T> Sync for Handle<T> {}
 
-/// Represents the ID of an object
+/// The unique ID of a stored object
 ///
-/// See [`Handle::id`].
+/// You can access a stored object's ID via [`Handle::id`]. Please refer to the
+/// documentation of [`Handle`] for an explanation of object identity.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct ObjectId(pub(crate) u64);
 
