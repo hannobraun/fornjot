@@ -9,11 +9,12 @@ use crate::{
 
 macro_rules! any_object {
     ($($ty:ident, $name:expr, $store:ident;)*) => {
-        /// An enum that can hold object
+        /// An enum that can hold any object
         ///
         /// This enum is generic over the form that the object takes. An
-        /// `AnyObject<Bare>` contains bare objects, like `Curve`. An
-        /// `AnyObject<BehindHandle>` contains handles, like `Handle<Curve>`.
+        /// `AnyObject<Bare>` contains a bare objects, for example `Curve`. An
+        /// `AnyObject<Stored>` contains a handle referencing a stored object,
+        /// for example `Handle<Curve>`.
         #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
         pub enum AnyObject<F: Form> {
             $(
