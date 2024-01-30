@@ -4,18 +4,18 @@ use std::{
 
 use super::{blocks::Index, store::StoreInner};
 
-/// A handle for an object
+/// # A handle that references a stored object
 ///
 /// You can get an instance of `Handle` by inserting an object into a store. A
 /// handle dereferences to the object it points to, via its [`Deref`]
 /// implementation.
 ///
-/// # Equality and Identity
+/// ## Equality and Identity
 ///
-/// Equality of `Handle`s is defined via the objects they reference. If those
-/// objects are equal, the `Handle`s are considered equal.
+/// Equality of `Handle`s is defined by the equality of the stored objects they
+/// reference. If those objects are equal, the `Handle`s are considered equal.
 ///
-/// This is distinct from the *identity* of the referenced objects. Two objects
+/// This is distinct from the *identity* of the stored objects. Two objects
 /// might be equal, but they might be have been created at different times, for
 /// different reasons, and thus live in different slots in the storage. This is
 /// a relevant distinction when validating objects, as equal but not identical
@@ -30,12 +30,12 @@ pub struct Handle<T> {
 }
 
 impl<T> Handle<T> {
-    /// Access this pointer's unique id
+    /// Access the object's unique id
     pub fn id(&self) -> ObjectId {
         ObjectId::from_ptr(self.ptr)
     }
 
-    /// Return a clone of the object this handle refers to
+    /// Return a bare object, which is a clone of the referenced stored object
     pub fn clone_object(&self) -> T
     where
         T: Clone,
