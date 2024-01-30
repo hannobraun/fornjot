@@ -217,22 +217,22 @@ impl fmt::Debug for ObjectId {
     }
 }
 
-/// A wrapper around [`Handle`] to define equality based on identity
+/// A wrapper around [`Handle`] that defines equality based on identity
 ///
-/// This is a utility type that implements [`Eq`]/[`PartialEq`] and other common
-/// traits that are based on those, based on the identity of object that the
-/// wrapped handle references. This is useful, if a type of object doesn't
-/// implement `Eq`/`PartialEq`, which means handles referencing it won't
-/// implement those types either.
+/// `HandleWrapper` implements [`Eq`]/[`PartialEq`] and other common traits
+/// that are based on those, based on the identity of a stored object that the
+/// wrapped [`Handle`] references.
 ///
-/// Typically, if an object doesn't implement [`Eq`]/[`PartialEq`], it will do
-/// so for good reason. If you need something that represents the object and
-/// implements those missing traits, you might want to be explicit about what
-/// you're doing, and access its ID via [`Handle::id`] instead.
+/// This is useful, since some objects are empty (meaning, they don't contain
+/// any data, and don't reference other objects). Such objects only exist to be
+/// distinguished based on their identity. But since a bare object doesn't have
+/// an identity yet, there's no meaningful way to implement [`Eq`]/[`PartialEq`]
+/// for such a bare object type.
 ///
-/// But if you have a struct that owns a [`Handle`] to such an object, and you
-/// want to be able to derive various traits that are not available for the
-/// [`Handle`] itself, this wrapper is for you.
+/// However, such objects are referenced by other objects, and if we want to
+/// derive [`Eq`]/[`PartialEq`] for a referencing object, we need something that
+/// can provide [`Eq`]/[`PartialEq`] implementations for the empty objects. That
+/// is the purpose of `HandleWrapper`.
 pub struct HandleWrapper<T>(pub Handle<T>);
 
 impl<T> Deref for HandleWrapper<T> {
