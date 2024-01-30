@@ -137,7 +137,13 @@ impl Form for Stored {
     type Form<T> = HandleWrapper<T>;
 }
 
-/// Implementation of [`Form`] for objects that are paired with their handle
+/// Implementation of [`Form`] for objects that are about to be stored
+///
+/// When storing an object, a [`Handle`] instance is generated first. Then both
+/// that [`Handle`] instance and the bare object are sent to the object service,
+/// for storage.
+///
+/// This is the one use case where this form is required.
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct AboutToBeStored;
 
