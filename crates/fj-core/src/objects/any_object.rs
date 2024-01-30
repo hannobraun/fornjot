@@ -115,8 +115,10 @@ any_object!(
 
 /// The form that an object can take
 ///
-/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`Stored`]), or can
-/// take the form of a handle *and* an object [`AboutToBeStored`].
+/// This is used together with [`AnyObject`].
+///
+/// An object can be bare ([`Bare`]), stored ([`Stored`]), or it can be about to
+/// be - but not yet - stored ([`AboutToBeStored`]).
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
