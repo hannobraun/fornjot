@@ -51,7 +51,7 @@ macro_rules! any_object {
             }
         }
 
-        impl AnyObject<WithHandle> {
+        impl AnyObject<AboutToBeStored> {
             /// Insert the object into its respective store
             pub fn insert(self, objects: &mut Objects) -> AnyObject<Stored> {
                 match self {
@@ -67,8 +67,8 @@ macro_rules! any_object {
             }
         }
 
-        impl From<AnyObject<WithHandle>> for AnyObject<Stored> {
-            fn from(object: AnyObject<WithHandle>) -> Self {
+        impl From<AnyObject<AboutToBeStored>> for AnyObject<Stored> {
+            fn from(object: AnyObject<AboutToBeStored>) -> Self {
                 match object {
                     $(
                         AnyObject::$ty((handle, _)) => Self::$ty(handle.into()),
@@ -90,7 +90,7 @@ macro_rules! any_object {
                 }
             }
 
-            impl From<(Handle<$ty>, $ty)> for AnyObject<WithHandle> {
+            impl From<(Handle<$ty>, $ty)> for AnyObject<AboutToBeStored> {
                 fn from((handle, object): (Handle<$ty>, $ty)) -> Self {
                     Self::$ty((handle.into(), object))
                 }
@@ -115,7 +115,7 @@ any_object!(
 /// The form that an object can take
 ///
 /// An object can be bare ([`Bare`]), behind a [`Handle`] ([`Stored`]), or can
-/// take the form of a handle *and* an object [`WithHandle`].
+/// take the form of a handle *and* an object [`AboutToBeStored`].
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
@@ -139,8 +139,8 @@ impl Form for Stored {
 
 /// Implementation of [`Form`] for objects that are paired with their handle
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct WithHandle;
+pub struct AboutToBeStored;
 
-impl Form for WithHandle {
+impl Form for AboutToBeStored {
     type Form<T> = (HandleWrapper<T>, T);
 }

@@ -1,4 +1,4 @@
-use crate::objects::{AnyObject, Objects, WithHandle};
+use crate::objects::{AboutToBeStored, AnyObject, Objects};
 
 use super::State;
 
@@ -25,7 +25,7 @@ pub enum Operation {
     /// upon.
     InsertObject {
         /// The object to insert
-        object: AnyObject<WithHandle>,
+        object: AnyObject<AboutToBeStored>,
     },
 }
 
@@ -33,5 +33,5 @@ pub enum Operation {
 #[derive(Clone, Debug)]
 pub struct InsertObject {
     /// The object to insert
-    pub object: AnyObject<WithHandle>,
+    pub object: AnyObject<AboutToBeStored>,
 }

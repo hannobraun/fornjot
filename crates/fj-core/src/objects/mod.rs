@@ -46,7 +46,7 @@ mod object_set;
 mod stores;
 
 pub use self::{
-    any_object::{AnyObject, Bare, Form, Stored, WithHandle},
+    any_object::{AboutToBeStored, AnyObject, Bare, Form, Stored},
     is_object::IsObject,
     kinds::{
         curve::Curve,
