@@ -1,4 +1,4 @@
-use std::{error::Error as _, fmt, mem, ops::Deref};
+use std::{error::Error as _, fmt, mem};
 
 use fj_core::{
     algorithms::{
@@ -23,10 +23,7 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(
-    model: impl Deref<Target = M>,
-    services: Services,
-) -> Result
+pub fn handle_model<M>(model: &M, services: Services) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
@@ -68,7 +65,7 @@ where
         Some(user_defined_tolerance) => user_defined_tolerance,
     };
 
-    let mesh = (model.deref(), tolerance).triangulate();
+    let mesh = (model, tolerance).triangulate();
 
     if let Some(path) = args.export {
         crate::export::export(&mesh, &path)?;
