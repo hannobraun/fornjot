@@ -39,13 +39,14 @@
 //!
 //! [`Handle`]: crate::storage::Handle
 
+mod any_object;
 mod is_object;
 mod kinds;
-mod object;
 mod object_set;
 mod stores;
 
 pub use self::{
+    any_object::{AnyObject, Bare, BehindHandle, Form, WithHandle},
     is_object::IsObject,
     kinds::{
         curve::Curve,
@@ -59,7 +60,6 @@ pub use self::{
         surface::Surface,
         vertex::Vertex,
     },
-    object::{AnyObject, Bare, BehindHandle, Form, WithHandle},
     object_set::ObjectSet,
     stores::{Objects, Surfaces},
 };
