@@ -23,7 +23,7 @@ pub struct ObjectSet<T> {
 }
 
 impl<T> ObjectSet<T> {
-    /// Create an instances of `ObjectSet` from an iterator over `Handle<T>`
+    /// Create an instance of `ObjectSet` from an iterator over `Handle<T>`
     ///
     /// # Panics
     ///
