@@ -102,8 +102,8 @@ impl<T> Deref for Handle<T> {
         // which I've run successfully under Miri.
         let slot = unsafe { &*self.ptr };
 
-        // Can only panic, if the object has been reserved, but the reservation
-        // was never completed.
+        // Can only panic, if the object was reserved, but the reservation has
+        // never been completed.
         slot.as_ref()
             .expect("Handle references non-existing object")
     }
