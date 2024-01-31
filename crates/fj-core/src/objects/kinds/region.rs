@@ -50,8 +50,8 @@ impl Region {
 
     /// Access all cycles of the region (both exterior and interior)
     pub fn all_cycles(&self) -> impl Iterator<Item = &Handle<Cycle>> {
-        // It would be nice to return `&Handles` here, but I don't see a way for
-        // doing that here *and* in `interiors`.
+        // It would be nice to return `&ObjectSet` here, but I don't see a way
+        // for doing that here *and* in `interiors`.
         [self.exterior()].into_iter().chain(self.interiors())
     }
 
