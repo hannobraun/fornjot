@@ -67,7 +67,7 @@
 ///
 /// ## Equality
 ///
-/// `Vertex` contains no data and exists purely to be used within a `Handle`,
+/// `Vertex` contains no data and exists purely to be referenced via a `Handle`,
 /// where `Handle::id` can be used to compare different instances of `Vertex`.
 ///
 /// If `Vertex` had `Eq`/`PartialEq` implementations, it containing no data
