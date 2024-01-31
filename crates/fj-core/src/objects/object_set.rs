@@ -209,8 +209,8 @@ impl<T> IntoIterator for ObjectSet<T> {
 }
 
 impl<'r, T> IntoIterator for &'r ObjectSet<T> {
-    // You might wonder why we're returning references to handles here, when
-    // `Handle` already is kind of reference, and easily cloned.
+    // You might wonder why we're returning references to `Handle`s here, when
+    // `Handle` already is a kind of reference, and easily cloned.
     //
     // Most of the time that doesn't make a difference, but there are use cases
     // where dealing with owned `Handle`s is inconvenient, for example when
