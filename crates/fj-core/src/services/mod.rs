@@ -7,7 +7,7 @@ mod service;
 mod validation;
 
 use crate::{
-    objects::{AnyObject, Objects, WithHandle},
+    objects::{AboutToBeStored, AnyObject, Objects},
     validate::{ValidationConfig, ValidationErrors},
 };
 
@@ -54,7 +54,7 @@ impl Services {
     }
 
     /// Insert an object into the stores
-    pub fn insert_object(&mut self, object: AnyObject<WithHandle>) {
+    pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
         let mut object_events = Vec::new();
         self.objects
             .execute(Operation::InsertObject { object }, &mut object_events);

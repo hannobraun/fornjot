@@ -9,11 +9,12 @@ use crate::{
 
 macro_rules! any_object {
     ($($ty:ident, $name:expr, $store:ident;)*) => {
-        /// An enum that can hold object
+        /// An enum that can hold any object
         ///
         /// This enum is generic over the form that the object takes. An
-        /// `AnyObject<Bare>` contains bare objects, like `Curve`. An
-        /// `AnyObject<BehindHandle>` contains handles, like `Handle<Curve>`.
+        /// `AnyObject<Bare>` contains a bare objects, for example `Curve`. An
+        /// `AnyObject<Stored>` contains a handle referencing a stored object,
+        /// for example `Handle<Curve>`.
         #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
         pub enum AnyObject<F: Form> {
             $(
@@ -22,7 +23,7 @@ macro_rules! any_object {
             )*
         }
 
-        impl AnyObject<BehindHandle> {
+        impl AnyObject<Stored> {
             /// Access the ID of the object
             pub fn id(&self) -> ObjectId {
                 match self {
@@ -42,7 +43,10 @@ macro_rules! any_object {
             }
 
             /// Validate the object with a pre-defined validation configuration
-            pub fn validate_with_config(&self, config: &ValidationConfig, errors: &mut Vec<ValidationError>) {
+            pub fn validate_with_config(&self,
+                    config: &ValidationConfig,
+                    errors: &mut Vec<ValidationError>
+            ) {
                 match self {
                     $(
                         Self::$ty(object) => object.validate_with_config(config, errors),
@@ -51,11 +55,9 @@ macro_rules! any_object {
             }
         }
 
-        impl AnyObject<WithHandle> {
+        impl AnyObject<AboutToBeStored> {
             /// Insert the object into its respective store
-            pub fn insert(self, objects: &mut Objects) ->
-                AnyObject<BehindHandle>
-            {
+            pub fn insert(self, objects: &mut Objects) -> AnyObject<Stored> {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
@@ -69,8 +71,8 @@ macro_rules! any_object {
             }
         }
 
-        impl From<AnyObject<WithHandle>> for AnyObject<BehindHandle> {
-            fn from(object: AnyObject<WithHandle>) -> Self {
+        impl From<AnyObject<AboutToBeStored>> for AnyObject<Stored> {
+            fn from(object: AnyObject<AboutToBeStored>) -> Self {
                 match object {
                     $(
                         AnyObject::$ty((handle, _)) => Self::$ty(handle.into()),
@@ -86,13 +88,13 @@ macro_rules! any_object {
                 }
             }
 
-            impl From<Handle<$ty>> for AnyObject<BehindHandle> {
+            impl From<Handle<$ty>> for AnyObject<Stored> {
                 fn from(object: Handle<$ty>) -> Self {
                     Self::$ty(object.into())
                 }
             }
 
-            impl From<(Handle<$ty>, $ty)> for AnyObject<WithHandle> {
+            impl From<(Handle<$ty>, $ty)> for AnyObject<AboutToBeStored> {
                 fn from((handle, object): (Handle<$ty>, $ty)) -> Self {
                     Self::$ty((handle.into(), object))
                 }
@@ -116,8 +118,10 @@ any_object!(
 
 /// The form that an object can take
 ///
-/// An object can be bare ([`Bare`]), behind a [`Handle`] ([`BehindHandle`]), or
-/// can take the form of a handle *and* an object [`WithHandle`].
+/// This is used together with [`AnyObject`].
+///
+/// An object can be bare ([`Bare`]), stored ([`Stored`]), or it can be about to
+/// be - but not yet - stored ([`AboutToBeStored`]).
 pub trait Form {
     /// The form that the object takes
     type Form<T>;
@@ -131,18 +135,24 @@ impl Form for Bare {
     type Form<T> = T;
 }
 
-/// Implementation of [`Form`] for objects behind a handle
+/// Implementation of [`Form`] for stored objects
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct BehindHandle;
+pub struct Stored;
 
-impl Form for BehindHandle {
+impl Form for Stored {
     type Form<T> = HandleWrapper<T>;
 }
 
-/// Implementation of [`Form`] for objects that are paired with their handle
+/// Implementation of [`Form`] for objects that are about to be stored
+///
+/// When storing an object, a [`Handle`] instance is generated first. Then both
+/// that [`Handle`] instance and the bare object are sent to the object service,
+/// for storage.
+///
+/// This is the one use case where this form is required.
 #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
-pub struct WithHandle;
+pub struct AboutToBeStored;
 
-impl Form for WithHandle {
+impl Form for AboutToBeStored {
     type Form<T> = (HandleWrapper<T>, T);
 }
