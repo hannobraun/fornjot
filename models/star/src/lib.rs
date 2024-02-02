@@ -10,7 +10,6 @@ use fj::{
             sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
         },
-        services::Services,
     },
     math::Vector,
 };
@@ -20,7 +19,7 @@ pub fn model(
     r1: f64,
     r2: f64,
     h: f64,
-    services: &mut Services,
+    core: &mut fj::core::Instance,
 ) -> Solid {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {
@@ -42,16 +41,19 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let bottom_surface = services.objects.surfaces.xy_plane();
+    let bottom_surface = core.services.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., h]);
 
     Sketch::empty()
         .add_region(
-            Region::polygon(outer_points, services)
-                .add_interiors([Cycle::polygon(inner_points, services)
-                    .reverse(services)
-                    .insert(services)])
-                .insert(services),
+            Region::polygon(outer_points, &mut core.services)
+                .add_interiors([Cycle::polygon(
+                    inner_points,
+                    &mut core.services,
+                )
+                .reverse(&mut core.services)
+                .insert(&mut core.services)])
+                .insert(&mut core.services),
         )
-        .sweep_sketch(bottom_surface, sweep_path, services)
+        .sweep_sketch(bottom_surface, sweep_path, &mut core.services)
 }

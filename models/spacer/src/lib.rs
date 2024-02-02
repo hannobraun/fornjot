@@ -8,7 +8,6 @@ use fj::{
             sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
         },
-        services::Services,
     },
     math::{Point, Vector},
 };
@@ -17,22 +16,22 @@ pub fn model(
     outer: f64,
     inner: f64,
     height: f64,
-    services: &mut Services,
+    core: &mut fj::core::Instance,
 ) -> Solid {
-    let bottom_surface = services.objects.surfaces.xy_plane();
+    let bottom_surface = core.services.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., height]);
 
     Sketch::empty()
         .add_region(
-            Region::circle(Point::origin(), outer, services)
+            Region::circle(Point::origin(), outer, &mut core.services)
                 .add_interiors([Cycle::circle(
                     Point::origin(),
                     inner,
-                    services,
+                    &mut core.services,
                 )
-                .reverse(services)
-                .insert(services)])
-                .insert(services),
+                .reverse(&mut core.services)
+                .insert(&mut core.services)])
+                .insert(&mut core.services),
         )
-        .sweep_sketch(bottom_surface, sweep_path, services)
+        .sweep_sketch(bottom_surface, sweep_path, &mut core.services)
 }

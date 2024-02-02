@@ -4,11 +4,14 @@ use fj::core::{
         insert::Insert, split::SplitFace, sweep::SweepFaceOfShell,
         update::UpdateSolid,
     },
-    services::Services,
 };
 
-pub fn model(size: f64, split_pos: f64, services: &mut Services) -> Solid {
-    let cuboid = cuboid::model([size, size, size], services);
+pub fn model(
+    size: f64,
+    split_pos: f64,
+    core: &mut fj::core::Instance,
+) -> Solid {
+    let cuboid = cuboid::model([size, size, size], core);
 
     cuboid.update_shell(cuboid.shells().only(), |shell| {
         let face = shell.faces().first();
@@ -19,10 +22,11 @@ pub fn model(size: f64, split_pos: f64, services: &mut Services) -> Solid {
             (cycle.half_edges().nth(2).unwrap(), [split_pos]),
         ];
 
-        let (shell, [face, _]) = shell.split_face(face, line, services);
+        let (shell, [face, _]) =
+            shell.split_face(face, line, &mut core.services);
 
         shell
-            .sweep_face_of_shell(face, [0., 0., -size / 2.], services)
-            .insert(services)
+            .sweep_face_of_shell(face, [0., 0., -size / 2.], &mut core.services)
+            .insert(&mut core.services)
     })
 }

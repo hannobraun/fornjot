@@ -6,19 +6,18 @@ use fj::core::{
         split::SplitFace,
         update::{UpdateFace, UpdateShell, UpdateSolid},
     },
-    services::Services,
 };
 
-pub fn model(services: &mut Services) -> Solid {
+pub fn model(core: &mut fj::core::Instance) -> Solid {
     let size = 1.;
-    let cuboid = cuboid::model([size, size, size], services);
+    let cuboid = cuboid::model([size, size, size], core);
 
     cuboid.update_shell(cuboid.shells().only(), |shell| {
         let shell = shell.update_face(shell.faces().first(), |face| {
             face.update_region(|region| {
-                region.set_color([0., 1., 0.]).insert(services)
+                region.set_color([0., 1., 0.]).insert(&mut core.services)
             })
-            .insert(services)
+            .insert(&mut core.services)
         });
 
         // Split colored face, to make sure the same color is applied to the
@@ -34,10 +33,10 @@ pub fn model(services: &mut Services) -> Solid {
                 ]
             };
 
-            let (shell, _) = shell.split_face(face, line, services);
+            let (shell, _) = shell.split_face(face, line, &mut core.services);
             shell
         };
 
-        shell.insert(services)
+        shell.insert(&mut core.services)
     })
 }
