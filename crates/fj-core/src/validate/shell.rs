@@ -404,17 +404,17 @@ mod tests {
                 UpdateShell,
             },
         },
-        services::Services,
         validate::{shell::ShellValidationError, Validate, ValidationError},
+        Instance,
     };
 
     #[test]
     fn curve_coordinate_system_mismatch() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
+            &mut core.services,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             face.update_region(|region| {
@@ -428,14 +428,14 @@ mod tests {
                                         .update_boundary(|boundary| {
                                             boundary.reverse()
                                         })
-                                        .insert(&mut services)
+                                        .insert(&mut core.services)
                                 },
                             )
-                            .insert(&mut services)
+                            .insert(&mut core.services)
                     })
-                    .insert(&mut services)
+                    .insert(&mut core.services)
             })
-            .insert(&mut services)
+            .insert(&mut core.services)
         });
 
         valid.shell.validate_and_return_first_error()?;
@@ -451,11 +451,11 @@ mod tests {
 
     #[test]
     fn half_edge_has_no_sibling() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
+            &mut core.services,
         );
         let invalid = valid.shell.remove_face(&valid.abc.face);
 
@@ -472,11 +472,11 @@ mod tests {
 
     #[test]
     fn coincident_half_edges_are_not_siblings() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut services,
+            &mut core.services,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             face.update_region(|region| {
@@ -487,16 +487,16 @@ mod tests {
                                 cycle.half_edges().nth_circular(0),
                                 |edge| {
                                     edge.update_curve(|_| {
-                                        Curve::new().insert(&mut services)
+                                        Curve::new().insert(&mut core.services)
                                     })
-                                    .insert(&mut services)
+                                    .insert(&mut core.services)
                                 },
                             )
-                            .insert(&mut services)
+                            .insert(&mut core.services)
                     })
-                    .insert(&mut services)
+                    .insert(&mut core.services)
             })
-            .insert(&mut services)
+            .insert(&mut core.services)
         });
 
         valid.shell.validate_and_return_first_error()?;

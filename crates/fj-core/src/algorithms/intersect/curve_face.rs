@@ -160,14 +160,14 @@ mod tests {
             insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
-        services::Services,
+        Instance,
     };
 
     use super::CurveFaceIntersection;
 
     #[test]
     fn compute() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let (path, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 
@@ -186,21 +186,23 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(exterior_points, &mut services)
-                                .insert(&mut services)
-                        })
-                        .add_interiors([Cycle::polygon(
-                            interior_points,
-                            &mut services,
-                        )
-                        .insert(&mut services)])
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(exterior_points, &mut core.services)
+                        .insert(&mut core.services)
+                })
+                .add_interiors([Cycle::polygon(
+                    interior_points,
+                    &mut core.services,
+                )
+                .insert(&mut core.services)])
+                .insert(&mut core.services)
+        });
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

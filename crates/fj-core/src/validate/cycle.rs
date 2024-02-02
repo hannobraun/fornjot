@@ -84,16 +84,18 @@ mod tests {
             insert::Insert,
             update::UpdateCycle,
         },
-        services::Services,
         validate::{cycle::CycleValidationError, Validate, ValidationError},
+        Instance,
     };
 
     #[test]
     fn edges_connected() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let valid =
-            Cycle::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]], &mut services);
+        let valid = Cycle::polygon(
+            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
+            &mut core.services,
+        );
 
         valid.validate_and_return_first_error()?;
 
@@ -102,15 +104,15 @@ mod tests {
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services,
+                    &mut core.services,
                 ),
                 HalfEdge::line_segment(
                     [[0., 0.], [1., 0.]],
                     None,
-                    &mut services,
+                    &mut core.services,
                 ),
             ];
-            let edges = edges.map(|edge| edge.insert(&mut services));
+            let edges = edges.map(|edge| edge.insert(&mut core.services));
 
             Cycle::empty().add_half_edges(edges)
         };

@@ -69,14 +69,14 @@ mod tests {
             insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
-        services::Services,
+        Instance,
     };
 
     use super::FaceFaceIntersection;
 
     #[test]
     fn compute_no_intersection() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         #[rustfmt::skip]
         let points = [
@@ -86,17 +86,17 @@ mod tests {
             [1., 2.],
         ];
         let [a, b] = [
-            services.objects.surfaces.xy_plane(),
-            services.objects.surfaces.xz_plane(),
+            core.services.objects.surfaces.xy_plane(),
+            core.services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            Face::unbound(surface, &mut services).update_region(|region| {
+            Face::unbound(surface, &mut core.services).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut services)
-                            .insert(&mut services)
+                        Cycle::polygon(points, &mut core.services)
+                            .insert(&mut core.services)
                     })
-                    .insert(&mut services)
+                    .insert(&mut core.services)
             })
         });
 
@@ -106,7 +106,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         #[rustfmt::skip]
         let points = [
@@ -116,17 +116,17 @@ mod tests {
             [-1.,  1.],
         ];
         let surfaces = [
-            services.objects.surfaces.xy_plane(),
-            services.objects.surfaces.xz_plane(),
+            core.services.objects.surfaces.xy_plane(),
+            core.services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::unbound(surface, &mut services).update_region(|region| {
+            Face::unbound(surface, &mut core.services).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut services)
-                            .insert(&mut services)
+                        Cycle::polygon(points, &mut core.services)
+                            .insert(&mut core.services)
                     })
-                    .insert(&mut services)
+                    .insert(&mut core.services)
             })
         });
 

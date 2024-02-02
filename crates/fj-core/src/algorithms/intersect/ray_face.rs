@@ -155,53 +155,57 @@ mod tests {
             transform::TransformObject,
             update::{UpdateFace, UpdateRegion},
         },
-        services::Services,
+        Instance,
     };
 
     #[test]
     fn ray_misses_whole_surface() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([-1., 0., 0.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.yz_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([-1., 0., 0.], &mut core.services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_face() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([1., 0., 0.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.yz_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([1., 0., 0.], &mut core.services);
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -211,48 +215,52 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([0., 0., 2.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.yz_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([0., 0., 2.], &mut core.services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }
 
     #[test]
     fn ray_hits_edge() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([1., 1., 0.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.yz_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([1., 1., 0.], &mut core.services);
 
         let edge = face
             .region()
@@ -269,24 +277,26 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.yz_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([1., 1., 1.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.yz_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([1., 1., 1.], &mut core.services);
 
         let vertex = face
             .region()
@@ -304,23 +314,25 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -330,24 +342,26 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
-        let face = face.translate([0., 0., 1.], &mut services);
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
+        let face = face.translate([0., 0., 1.], &mut core.services);
 
         assert_eq!((&ray, &face).intersect(), None);
     }

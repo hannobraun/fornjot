@@ -73,18 +73,21 @@ mod tests {
 
     use crate::{
         geometry::SurfacePath, objects::HalfEdge,
-        operations::build::BuildHalfEdge, services::Services,
+        operations::build::BuildHalfEdge, Instance,
     };
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge =
-            HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut services);
+        let edge = HalfEdge::line_segment(
+            [[1., -1.], [1., 1.]],
+            None,
+            &mut core.services,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
@@ -98,13 +101,13 @@ mod tests {
 
     #[test]
     fn compute_edge_behind_curve_origin() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
         let edge = HalfEdge::line_segment(
             [[-1., -1.], [-1., 1.]],
             None,
-            &mut services,
+            &mut core.services,
         );
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
@@ -119,13 +122,13 @@ mod tests {
 
     #[test]
     fn compute_edge_parallel_to_curve() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
         let edge = HalfEdge::line_segment(
             [[-1., -1.], [1., -1.]],
             None,
-            &mut services,
+            &mut core.services,
         );
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
@@ -135,11 +138,14 @@ mod tests {
 
     #[test]
     fn compute_edge_on_curve() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge =
-            HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut services);
+        let edge = HalfEdge::line_segment(
+            [[-1., 0.], [1., 0.]],
+            None,
+            &mut core.services,
+        );
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 

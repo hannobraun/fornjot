@@ -70,16 +70,19 @@ mod tests {
         assert_contains_err,
         objects::HalfEdge,
         operations::build::BuildHalfEdge,
-        services::Services,
         validate::{EdgeValidationError, Validate, ValidationError},
+        Instance,
     };
 
     #[test]
     fn edge_vertices_are_coincident() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let valid =
-            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut services);
+        let valid = HalfEdge::line_segment(
+            [[0., 0.], [1., 0.]],
+            None,
+            &mut core.services,
+        );
         let invalid = {
             let boundary = [Point::from([0.]); 2];
 

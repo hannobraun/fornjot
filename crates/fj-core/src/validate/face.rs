@@ -93,16 +93,18 @@ mod tests {
             reverse::Reverse,
             update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
-        services::Services,
         validate::{FaceValidationError, Validate, ValidationError},
+        Instance,
     };
 
     #[test]
     fn boundary() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let invalid =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services);
+        let invalid = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        );
         let valid = invalid.update_region(|region| {
             region
                 .update_exterior(|cycle| {
@@ -110,12 +112,12 @@ mod tests {
                         .add_half_edges([HalfEdge::circle(
                             [0., 0.],
                             1.,
-                            &mut services,
+                            &mut core.services,
                         )
-                        .insert(&mut services)])
-                        .insert(&mut services)
+                        .insert(&mut core.services)])
+                        .insert(&mut core.services)
                 })
-                .insert(&mut services)
+                .insert(&mut core.services)
         });
 
         valid.validate_and_return_first_error()?;
@@ -129,33 +131,37 @@ mod tests {
 
     #[test]
     fn interior_winding() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let valid =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [3., 0.], [0., 3.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .add_interiors([Cycle::polygon(
-                            [[1., 1.], [1., 2.], [2., 1.]],
-                            &mut services,
-                        )
-                        .insert(&mut services)])
-                        .insert(&mut services)
-                });
+        let valid = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [3., 0.], [0., 3.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .add_interiors([Cycle::polygon(
+                    [[1., 1.], [1., 2.], [2., 1.]],
+                    &mut core.services,
+                )
+                .insert(&mut core.services)])
+                .insert(&mut core.services)
+        });
         let invalid = {
             let interiors = valid
                 .region()
                 .interiors()
                 .iter()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut services).insert(&mut services))
+                .map(|cycle| {
+                    cycle.reverse(&mut core.services).insert(&mut core.services)
+                })
                 .collect::<Vec<_>>();
 
             let region = Region::new(
@@ -163,7 +169,7 @@ mod tests {
                 interiors,
                 valid.region().color(),
             )
-            .insert(&mut services);
+            .insert(&mut core.services);
 
             Face::new(valid.surface().clone(), region)
         };
