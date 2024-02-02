@@ -89,3 +89,7 @@ pub mod queries;
 pub mod services;
 pub mod storage;
 pub mod validate;
+
+mod instance;
+
+pub use self::instance::Instance;
