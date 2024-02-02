@@ -9,7 +9,7 @@
 ///
 /// # Equality
 ///
-/// `Curve` contains no data and exists purely to be used within a `Handle`,
+/// `Curve` contains no data and exists purely to be referenced via a `Handle`,
 /// where `Handle::id` can be used to compare different instances of `Curve`.
 ///
 /// If `Curve` had `Eq`/`PartialEq` implementations, it containing no data would

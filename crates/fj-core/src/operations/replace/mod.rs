@@ -154,7 +154,7 @@ impl<Original, Updated> ReplaceOutput<Original, Updated> {
 }
 
 impl<T> ReplaceOutput<T, T> {
-    /// Return the original object, or insert the updated on and return handle
+    /// Return the wrapped object, whether it's the original or was updated
     pub fn into_inner(self) -> T {
         match self {
             Self::Original(inner) => inner,

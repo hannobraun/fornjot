@@ -4,25 +4,50 @@ use std::{
 
 use super::{blocks::Index, store::StoreInner};
 
-/// A handle for an object
+/// # A handle that references a stored object
 ///
 /// You can get an instance of `Handle` by inserting an object into a store. A
 /// handle dereferences to the object it points to, via its [`Deref`]
 /// implementation.
 ///
-/// # Equality and Identity
+/// ## Bare objects and stored objects
 ///
-/// Equality of `Handle`s is defined via the objects they reference. If those
-/// objects are equal, the `Handle`s are considered equal.
+/// A bare object is just that: an instance of a bare object type. Once a bare
+/// objects is inserted into storage, it becomes a stored object. A stored
+/// object is owned by the store, and can be referenced through instances of
+/// `Handle`.
 ///
-/// This is distinct from the *identity* of the referenced objects. Two objects
-/// might be equal, but they might be have been created at different times, for
-/// different reasons, and thus live in different slots in the storage. This is
-/// a relevant distinction when validating objects, as equal but not identical
-/// objects might be a sign of a bug.
+/// The point of doing this, is to provide objects with a unique identity, via
+/// their location within storage. The importance of this is expanded upon in
+/// the next section.
 ///
-/// You can compare the identity of two objects through their `Handle`s, by
-/// comparing the values returned by [`Handle::id`].
+/// ## Equality and Identity
+///
+/// Most objects have [`Eq`]/[`PartialEq`] implementations that can be used to
+/// determine equality. Those implementations are derived, meaning two objects
+/// are equal, if all of their fields are equal. This can be used to compare
+/// objects structurally. [`Handle`]'s own [`Eq`]/[`PartialEq`] implementations
+/// defer to those of the stored object it references.
+///
+/// However, that two objects are *equal* does not mean they are *identical*.
+///
+/// This distinction is relevant, because non-identical objects that are
+/// *supposed* to be equal can in fact end up equal, if they are created based
+/// on simple input data (as you might have in a unit test). But they might end
+/// up slightly different, if they are created based on complex input data (as
+/// you might have in a real-world scenario). This situation would most likely
+/// result in a bug that is not easily caught in testing.
+///
+/// You can compare the identity of two `Handle`s, by comparing the values
+/// returned by [`Handle::id`].
+///
+/// ### Validation Must Use Identity
+///
+/// To prevent situations where everything looks fine during development, but
+/// you end up with a bug in production, any validation code that compares
+/// objects and expects them to be the same, must do that comparison based on
+/// identity, not equality. That way, this problem can never happen, because we
+/// never expect non-identical objects to be equal.
 pub struct Handle<T> {
     pub(super) store: StoreInner<T>,
     pub(super) index: Index,
@@ -30,12 +55,12 @@ pub struct Handle<T> {
 }
 
 impl<T> Handle<T> {
-    /// Access this pointer's unique id
+    /// Access the object's unique id
     pub fn id(&self) -> ObjectId {
         ObjectId::from_ptr(self.ptr)
     }
 
-    /// Return a clone of the object this handle refers to
+    /// Return a bare object, which is a clone of the referenced stored object
     pub fn clone_object(&self) -> T
     where
         T: Clone,
@@ -77,8 +102,8 @@ impl<T> Deref for Handle<T> {
         // which I've run successfully under Miri.
         let slot = unsafe { &*self.ptr };
 
-        // Can only panic, if the object has been reserved, but the reservation
-        // was never completed.
+        // Can only panic, if the object was reserved, but the reservation has
+        // never been completed.
         slot.as_ref()
             .expect("Handle references non-existing object")
     }
@@ -172,9 +197,10 @@ impl<T> From<HandleWrapper<T>> for Handle<T> {
 unsafe impl<T> Send for Handle<T> {}
 unsafe impl<T> Sync for Handle<T> {}
 
-/// Represents the ID of an object
+/// The unique ID of a stored object
 ///
-/// See [`Handle::id`].
+/// You can access a stored object's ID via [`Handle::id`]. Please refer to the
+/// documentation of [`Handle`] for an explanation of object identity.
 #[derive(Clone, Copy, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct ObjectId(pub(crate) u64);
 
@@ -191,22 +217,22 @@ impl fmt::Debug for ObjectId {
     }
 }
 
-/// A wrapper around [`Handle`] to define equality based on identity
+/// A wrapper around [`Handle`] that defines equality based on identity
 ///
-/// This is a utility type that implements [`Eq`]/[`PartialEq`] and other common
-/// traits that are based on those, based on the identity of object that the
-/// wrapped handle references. This is useful, if a type of object doesn't
-/// implement `Eq`/`PartialEq`, which means handles referencing it won't
-/// implement those types either.
+/// `HandleWrapper` implements [`Eq`]/[`PartialEq`] and other common traits
+/// that are based on those, based on the identity of a stored object that the
+/// wrapped [`Handle`] references.
 ///
-/// Typically, if an object doesn't implement [`Eq`]/[`PartialEq`], it will do
-/// so for good reason. If you need something that represents the object and
-/// implements those missing traits, you might want to be explicit about what
-/// you're doing, and access its ID via [`Handle::id`] instead.
+/// This is useful, since some objects are empty (meaning, they don't contain
+/// any data, and don't reference other objects). Such objects only exist to be
+/// distinguished based on their identity. But since a bare object doesn't have
+/// an identity yet, there's no meaningful way to implement [`Eq`]/[`PartialEq`]
+/// for such a bare object type.
 ///
-/// But if you have a struct that owns a [`Handle`] to such an object, and you
-/// want to be able to derive various traits that are not available for the
-/// [`Handle`] itself, this wrapper is for you.
+/// However, such objects are referenced by other objects, and if we want to
+/// derive [`Eq`]/[`PartialEq`] for a referencing object, we need something that
+/// can provide [`Eq`]/[`PartialEq`] implementations for the empty objects. That
+/// is the purpose of `HandleWrapper`.
 pub struct HandleWrapper<T>(pub Handle<T>);
 
 impl<T> Deref for HandleWrapper<T> {

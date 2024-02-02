@@ -56,14 +56,14 @@ impl<T> Store<T> {
 
     /// Reserve a slot for an object in the store
     ///
-    /// This method returns a handle to the reserved slot. That handle does not
-    /// refer to an object yet! Attempting to dereference the handle before it
-    /// has been used to insert an object into the store, will result in a
-    /// panic.
+    /// This method returns a [`Handle`] that references the reserved slot. That
+    /// `Handle` does not refer to an object yet! Attempting to dereference the
+    /// `Handle` before it has been used to insert an object into the store will
+    /// result in a panic.
     ///
-    /// Usually, you'd acquire one handle, then immediately use it to insert an
+    /// Usually, you'd acquire a `Handle`, then immediately use it to insert an
     /// object using [`Store::insert`]. The methods are separate to support more
-    /// advanced use cases, like inserting objects that refer to each other.
+    /// advanced use cases, like inserting objects that reference each other.
     pub fn reserve(&self) -> Handle<T> {
         let mut inner = self.inner.write();
 

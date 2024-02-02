@@ -15,12 +15,12 @@
 //! misunderstanding this principle.
 //!
 //!
-//! ### Bare Objects vs `Handle`
+//! ### Bare Objects vs Stored Objects
 //!
 //! Extension traits are mostly implemented for bare object types (i.e. for
 //! `Vertex` instead of `Handle<Vertex>`). This makes those operations more
-//! flexible, as a `Handle` might not be available, but a bare object can always
-//! be produced from a `Handle`.
+//! flexible, as a `Handle` might not be available, but a reference to the bare
+//! object can always be produced from a `Handle`.
 //!
 //! They also mostly return bare objects, which also provides more flexibility
 //! to the user. An inserted object must always be valid, but in a series of
