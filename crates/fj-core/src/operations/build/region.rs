@@ -28,8 +28,8 @@ pub trait BuildRegion {
         radius: impl Into<Scalar>,
         core: &mut Instance,
     ) -> Region {
-        let exterior = Cycle::circle(center, radius, &mut core.services)
-            .insert(&mut core.services);
+        let exterior =
+            Cycle::circle(center, radius, core).insert(&mut core.services);
         Region::new(exterior, [], None)
     }
 

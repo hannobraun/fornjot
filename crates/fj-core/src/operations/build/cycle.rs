@@ -5,6 +5,7 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
     services::Services,
+    Instance,
 };
 
 /// Build a [`Cycle`]
@@ -22,10 +23,10 @@ pub trait BuildCycle {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Cycle {
-        let circle =
-            HalfEdge::circle(center, radius, services).insert(services);
+        let circle = HalfEdge::circle(center, radius, &mut core.services)
+            .insert(&mut core.services);
         Cycle::empty().add_half_edges([circle])
     }
 
