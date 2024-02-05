@@ -68,7 +68,7 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(entry.clone(), entry.path(), entry.boundary())],
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)])
                     .insert(&mut core.services)
@@ -136,7 +136,7 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(entry.clone(), entry.path(), entry.boundary())],
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)])
                     .insert(&mut core.services)
@@ -149,7 +149,7 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(exit.clone(), exit.path(), exit.boundary())],
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)])
                     .insert(&mut core.services)

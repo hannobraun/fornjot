@@ -81,8 +81,7 @@ impl SweepCycle for Cycle {
             ));
         }
 
-        let top_cycle =
-            Cycle::empty().add_joined_edges(top_edges, &mut core.services);
+        let top_cycle = Cycle::empty().add_joined_edges(top_edges, core);
 
         SweptCycle { faces, top_cycle }
     }
