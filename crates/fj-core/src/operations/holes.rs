@@ -6,6 +6,7 @@ use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell},
     services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{
@@ -24,7 +25,7 @@ pub trait AddHole {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self;
 
     /// Add a through hole between the provided locations
@@ -42,24 +43,25 @@ impl AddHole for Shell {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        let entry = HalfEdge::circle(location.position, radius, services)
-            .insert(services);
-        let hole = Region::empty(services)
+        let entry =
+            HalfEdge::circle(location.position, radius, &mut core.services)
+                .insert(&mut core.services);
+        let hole = Region::empty(&mut core.services)
             .update_exterior(|_| {
                 Cycle::empty()
                     .add_half_edges([entry.clone()])
-                    .insert(services)
+                    .insert(&mut core.services)
             })
             .sweep_region(
                 location.face.surface(),
                 path,
                 &mut SweepCache::default(),
-                services,
+                &mut core.services,
             )
             .all_faces()
-            .map(|face| face.insert(services))
+            .map(|face| face.insert(&mut core.services))
             .collect::<Vec<_>>();
 
         self.update_face(location.face, |face| {
@@ -68,12 +70,12 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(entry.clone(), entry.path(), entry.boundary())],
-                            services,
+                            &mut core.services,
                         )
-                        .insert(services)])
-                    .insert(services)
+                        .insert(&mut core.services)])
+                    .insert(&mut core.services)
             })
-            .insert(services)
+            .insert(&mut core.services)
         })
         .add_faces(hole)
     }

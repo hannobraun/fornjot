@@ -31,7 +31,7 @@ pub fn model(
             },
             radius,
             [Scalar::ZERO, Scalar::ZERO, depth],
-            &mut core.services,
+            core,
         );
 
         let bottom_face = shell.faces().first();
