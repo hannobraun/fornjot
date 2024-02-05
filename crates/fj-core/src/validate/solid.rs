@@ -219,7 +219,7 @@ mod tests {
                 shared_face,
                 Face::triangle(
                     [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
-                    &mut core.services,
+                    &mut core,
                 )
                 .insert(&mut core.services)
                 .face,

@@ -11,6 +11,7 @@ use crate::{
     },
     services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Build a [`Face`]
@@ -29,12 +30,12 @@ pub trait BuildFace {
     /// Build a triangle
     fn triangle(
         points: [impl Into<Point<3>>; 3],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Polygon<3> {
         let (surface, points_surface) = Surface::plane_from_points(points);
-        let surface = surface.insert(services);
+        let surface = surface.insert(&mut core.services);
 
-        let face = Face::polygon(surface, points_surface, services);
+        let face = Face::polygon(surface, points_surface, &mut core.services);
 
         let half_edges = {
             let mut edges =
