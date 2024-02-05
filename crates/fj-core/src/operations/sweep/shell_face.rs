@@ -8,8 +8,8 @@ use crate::{
         sweep::{SweepCache, SweepRegion},
         update::UpdateShell,
     },
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// # Sweep a [`Face`] that is part of a [`Shell`]
@@ -30,7 +30,7 @@ pub trait SweepFaceOfShell {
         &self,
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -39,7 +39,7 @@ impl SweepFaceOfShell for Shell {
         &self,
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
         let path = path.into();
 
@@ -52,13 +52,16 @@ impl SweepFaceOfShell for Shell {
 
         let mut cache = SweepCache::default();
 
-        let exterior =
-            face.region().exterior().reverse(services).insert(services);
+        let exterior = face
+            .region()
+            .exterior()
+            .reverse(&mut core.services)
+            .insert(&mut core.services);
         let region = Region::new(exterior, [], face.region().color());
         let faces = region
-            .sweep_region(face.surface(), path, &mut cache, services)
+            .sweep_region(face.surface(), path, &mut cache, &mut core.services)
             .all_faces()
-            .map(|face| face.insert(services));
+            .map(|face| face.insert(&mut core.services));
 
         self.remove_face(&face).add_faces(faces)
     }
