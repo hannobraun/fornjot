@@ -108,7 +108,7 @@ fn sweep_cycle(
         color,
         path,
         cache,
-        &mut core.services,
+        core,
     );
 
     faces.extend(swept_cycle.faces);
