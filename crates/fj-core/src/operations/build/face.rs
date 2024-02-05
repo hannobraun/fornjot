@@ -35,7 +35,7 @@ pub trait BuildFace {
         let (surface, points_surface) = Surface::plane_from_points(points);
         let surface = surface.insert(&mut core.services);
 
-        let face = Face::polygon(surface, points_surface, &mut core.services);
+        let face = Face::polygon(surface, points_surface, core);
 
         let half_edges = {
             let mut edges =
@@ -64,14 +64,15 @@ pub trait BuildFace {
     fn polygon<P, Ps>(
         surface: Handle<Surface>,
         points: Ps,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Face
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let region = Region::polygon(points, services).insert(services);
+        let region = Region::polygon(points, &mut core.services)
+            .insert(&mut core.services);
         Face::new(surface, region)
     }
 }
