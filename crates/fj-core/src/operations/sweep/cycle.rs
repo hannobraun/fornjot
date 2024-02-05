@@ -69,7 +69,7 @@ impl SweepCycle for Cycle {
                 color,
                 path,
                 cache,
-                &mut core.services,
+                core,
             );
 
             faces.push(side_face);
