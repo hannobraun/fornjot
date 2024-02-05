@@ -13,8 +13,8 @@ use crate::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
     },
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Split a face into two
@@ -40,7 +40,7 @@ pub trait SplitFace: Sized {
         &self,
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Self, [Handle<Face>; 2]);
 }
 
@@ -49,7 +49,7 @@ impl SplitFace for Shell {
         &self,
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Self, [Handle<Face>; 2]) {
         // The code below might assume that the half-edges that define the line
         // are part of the face's exterior. Let's make that explicit here.
@@ -74,7 +74,7 @@ impl SplitFace for Shell {
 
         let [[a, b], [c, d]] = line.map(|(half_edge, point)| {
             let (shell, [[a, b], _]) =
-                self_.split_edge(half_edge, point, services);
+                self_.split_edge(half_edge, point, &mut core.services);
             self_ = shell;
             [a, b]
         });
@@ -105,15 +105,15 @@ impl SplitFace for Shell {
         let dividing_half_edge_a_to_d = HalfEdge::line_segment(
             [b.start_position(), d.start_position()],
             None,
-            services,
+            &mut core.services,
         )
         .update_start_vertex(|_| b.start_vertex().clone())
-        .insert(services);
+        .insert(&mut core.services);
         let dividing_half_edge_c_to_b = HalfEdge::from_sibling(
             &dividing_half_edge_a_to_d,
             d.start_vertex().clone(),
         )
-        .insert(services);
+        .insert(&mut core.services);
 
         let mut half_edges_of_face_starting_at_b =
             updated_face_after_split_edges
@@ -129,7 +129,7 @@ impl SplitFace for Shell {
             .take_while_ref(|half_edge| half_edge != &d);
         let split_face_a = Face::unbound(
             updated_face_after_split_edges.surface().clone(),
-            services,
+            &mut core.services,
         )
         .update_region(|region| {
             let mut region = region
@@ -137,17 +137,17 @@ impl SplitFace for Shell {
                     cycle
                         .add_half_edges(half_edges_b_to_c_inclusive)
                         .add_half_edges([dividing_half_edge_c_to_b])
-                        .insert(services)
+                        .insert(&mut core.services)
                 })
-                .insert(services);
+                .insert(&mut core.services);
 
             if let Some(color) = face.region().color() {
-                region = region.set_color(color).insert(services);
+                region = region.set_color(color).insert(&mut core.services);
             }
 
             region
         })
-        .insert(services);
+        .insert(&mut core.services);
 
         // The previous operation has moved the iterator along.
         let half_edges_of_face_starting_at_d = half_edges_of_face_starting_at_b;
@@ -156,7 +156,7 @@ impl SplitFace for Shell {
             .take_while(|half_edge| half_edge != &b);
         let split_face_b = Face::unbound(
             updated_face_after_split_edges.surface().clone(),
-            services,
+            &mut core.services,
         )
         .update_region(|region| {
             let mut region = region
@@ -164,17 +164,17 @@ impl SplitFace for Shell {
                     cycle
                         .add_half_edges(half_edges_d_to_a_inclusive)
                         .add_half_edges([dividing_half_edge_a_to_d])
-                        .insert(services)
+                        .insert(&mut core.services)
                 })
-                .insert(services);
+                .insert(&mut core.services);
 
             if let Some(color) = face.region().color() {
-                region = region.set_color(color).insert(services);
+                region = region.set_color(color).insert(&mut core.services);
             }
 
             region
         })
-        .insert(services);
+        .insert(&mut core.services);
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_
