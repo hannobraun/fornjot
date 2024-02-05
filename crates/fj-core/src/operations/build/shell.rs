@@ -95,7 +95,7 @@ pub trait BuildShell {
                             HalfEdge::line_segment(
                                 positions,
                                 Some(boundary.reverse().inner),
-                                &mut core.services,
+                                core,
                             )
                             .update_start_vertex(|_| vertex)
                             .update_curve(|_| curve)

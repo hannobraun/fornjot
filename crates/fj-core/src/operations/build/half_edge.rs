@@ -84,7 +84,7 @@ pub trait BuildHalfEdge {
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
@@ -92,7 +92,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, &mut core.services)
     }
 }
 

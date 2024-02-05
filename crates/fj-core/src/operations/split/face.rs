@@ -105,7 +105,7 @@ impl SplitFace for Shell {
         let dividing_half_edge_a_to_d = HalfEdge::line_segment(
             [b.start_position(), d.start_position()],
             None,
-            &mut core.services,
+            core,
         )
         .update_start_vertex(|_| b.start_vertex().clone())
         .insert(&mut core.services);

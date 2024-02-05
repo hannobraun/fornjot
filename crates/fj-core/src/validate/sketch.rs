@@ -99,12 +99,9 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let half_edge = HalfEdge::line_segment(
-            [[0., 0.], [1., 0.]],
-            None,
-            &mut core.services,
-        )
-        .insert(&mut core.services);
+        let half_edge =
+            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core)
+                .insert(&mut core.services);
         let sibling_edge = HalfEdge::from_sibling(
             &half_edge,
             Vertex::new().insert(&mut core.services),

@@ -120,7 +120,7 @@ impl SweepHalfEdge for HalfEdge {
                     let edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
-                        &mut core.services,
+                        core,
                     )
                     .update_start_vertex(|_| start_vertex);
 

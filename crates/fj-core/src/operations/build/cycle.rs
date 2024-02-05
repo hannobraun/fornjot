@@ -41,7 +41,7 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, &mut core.services)
+                HalfEdge::line_segment([start, end], None, core)
                     .insert(&mut core.services)
             });
 
