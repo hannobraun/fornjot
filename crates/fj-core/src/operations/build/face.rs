@@ -9,7 +9,6 @@ use crate::{
         build::{BuildCycle, BuildRegion, BuildSurface},
         insert::{Insert, IsInserted, IsInsertedNo},
     },
-    services::Services,
     storage::Handle,
     Instance,
 };
@@ -21,9 +20,9 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
-    fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {
-        let exterior = Cycle::empty().insert(services);
-        let region = Region::new(exterior, [], None).insert(services);
+    fn unbound(surface: Handle<Surface>, core: &mut Instance) -> Face {
+        let exterior = Cycle::empty().insert(&mut core.services);
+        let region = Region::new(exterior, [], None).insert(&mut core.services);
         Face::new(surface, region)
     }
 

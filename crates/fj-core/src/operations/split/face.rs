@@ -129,7 +129,7 @@ impl SplitFace for Shell {
             .take_while_ref(|half_edge| half_edge != &d);
         let split_face_a = Face::unbound(
             updated_face_after_split_edges.surface().clone(),
-            &mut core.services,
+            core,
         )
         .update_region(|region| {
             let mut region = region
@@ -156,7 +156,7 @@ impl SplitFace for Shell {
             .take_while(|half_edge| half_edge != &b);
         let split_face_b = Face::unbound(
             updated_face_after_split_edges.surface().clone(),
-            &mut core.services,
+            core,
         )
         .update_region(|region| {
             let mut region = region

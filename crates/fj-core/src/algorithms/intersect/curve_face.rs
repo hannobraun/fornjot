@@ -186,20 +186,21 @@ mod tests {
             [ 1., -1.],
         ];
 
-        let face = Face::unbound(
-            core.services.objects.surfaces.xy_plane(),
-            &mut core.services,
-        )
-        .update_region(|region| {
-            region
-                .update_exterior(|_| {
-                    Cycle::polygon(exterior_points, &mut core)
+        let face =
+            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(exterior_points, &mut core)
+                                .insert(&mut core.services)
+                        })
+                        .add_interiors([Cycle::polygon(
+                            interior_points,
+                            &mut core,
+                        )
+                        .insert(&mut core.services)])
                         .insert(&mut core.services)
-                })
-                .add_interiors([Cycle::polygon(interior_points, &mut core)
-                    .insert(&mut core.services)])
-                .insert(&mut core.services)
-        });
+                });
 
         let expected =
             CurveFaceIntersection::from_intervals([[[1.], [2.]], [[4.], [5.]]]);

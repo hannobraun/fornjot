@@ -101,10 +101,8 @@ mod tests {
     fn boundary() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let invalid = Face::unbound(
-            core.services.objects.surfaces.xy_plane(),
-            &mut core.services,
-        );
+        let invalid =
+            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core);
         let valid = invalid.update_region(|region| {
             region
                 .update_exterior(|cycle| {
@@ -133,23 +131,24 @@ mod tests {
     fn interior_winding() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let valid = Face::unbound(
-            core.services.objects.surfaces.xy_plane(),
-            &mut core.services,
-        )
-        .update_region(|region| {
-            region
-                .update_exterior(|_| {
-                    Cycle::polygon([[0., 0.], [3., 0.], [0., 3.]], &mut core)
+        let valid =
+            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon(
+                                [[0., 0.], [3., 0.], [0., 3.]],
+                                &mut core,
+                            )
+                            .insert(&mut core.services)
+                        })
+                        .add_interiors([Cycle::polygon(
+                            [[1., 1.], [1., 2.], [2., 1.]],
+                            &mut core,
+                        )
+                        .insert(&mut core.services)])
                         .insert(&mut core.services)
-                })
-                .add_interiors([Cycle::polygon(
-                    [[1., 1.], [1., 2.], [2., 1.]],
-                    &mut core,
-                )
-                .insert(&mut core.services)])
-                .insert(&mut core.services)
-        });
+                });
         let invalid = {
             let interiors = valid
                 .region()

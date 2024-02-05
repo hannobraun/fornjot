@@ -99,18 +99,16 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face = Face::unbound(
-            core.services.objects.surfaces.xy_plane(),
-            &mut core.services,
-        )
-        .update_region(|region| {
-            region
-                .update_exterior(|_| {
-                    Cycle::polygon([a, b, c, d], &mut core)
+        let face =
+            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+                .update_region(|region| {
+                    region
+                        .update_exterior(|_| {
+                            Cycle::polygon([a, b, c, d], &mut core)
+                                .insert(&mut core.services)
+                        })
                         .insert(&mut core.services)
-                })
-                .insert(&mut core.services)
-        });
+                });
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -143,8 +141,8 @@ mod tests {
 
         let surface = core.services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut core.services)
-            .update_region(|region| {
+        let face =
+            Face::unbound(surface.clone(), &mut core).update_region(|region| {
                 region
                     .update_exterior(|_| {
                         Cycle::polygon([a, b, c, d], &mut core)
@@ -208,8 +206,8 @@ mod tests {
 
         let surface = core.services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut core.services)
-            .update_region(|region| {
+        let face =
+            Face::unbound(surface.clone(), &mut core).update_region(|region| {
                 region
                     .update_exterior(|_| {
                         Cycle::polygon([a, b, c, d, e], &mut core)

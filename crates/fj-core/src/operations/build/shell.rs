@@ -103,7 +103,7 @@ pub trait BuildShell {
                         })
                 };
 
-                Face::unbound(surface, &mut core.services)
+                Face::unbound(surface, core)
                     .update_region(|region| {
                         region
                             .update_exterior(|cycle| {
