@@ -3,7 +3,6 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{Cycle, Region},
     operations::{build::BuildCycle, insert::Insert},
-    services::Services,
     Instance,
 };
 
@@ -14,8 +13,8 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildRegion {
     /// Build an empty region
-    fn empty(services: &mut Services) -> Region {
-        let exterior = Cycle::empty().insert(services);
+    fn empty(core: &mut Instance) -> Region {
+        let exterior = Cycle::empty().insert(&mut core.services);
         let interiors = [];
         let color = None;
 
