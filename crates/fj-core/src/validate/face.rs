@@ -110,7 +110,7 @@ mod tests {
                         .add_half_edges([HalfEdge::circle(
                             [0., 0.],
                             1.,
-                            &mut core.services,
+                            &mut core,
                         )
                         .insert(&mut core.services)])
                         .insert(&mut core.services)

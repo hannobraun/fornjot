@@ -71,13 +71,13 @@ pub trait BuildHalfEdge {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, &mut core.services)
     }
 
     /// Create a line segment
