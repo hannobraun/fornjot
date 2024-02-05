@@ -53,7 +53,7 @@ pub fn model(
                     },
                 ],
                 radius,
-                &mut core.services,
+                core,
             )
             .insert(&mut core.services)
     })
