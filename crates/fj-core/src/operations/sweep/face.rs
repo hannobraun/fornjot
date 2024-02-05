@@ -3,8 +3,8 @@ use fj_math::Vector;
 use crate::{
     objects::{Face, Shell},
     operations::insert::Insert,
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{SweepCache, SweepRegion};
@@ -20,7 +20,7 @@ pub trait SweepFace {
         &self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Shell;
 }
 
@@ -29,7 +29,7 @@ impl SweepFace for Handle<Face> {
         &self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Shell {
         // Please note that this function uses the words "bottom" and "top" in a
         // specific sense:
@@ -53,9 +53,14 @@ impl SweepFace for Handle<Face> {
 
         let side_faces = bottom_face
             .region()
-            .sweep_region(bottom_face.surface(), path, cache, services)
+            .sweep_region(
+                bottom_face.surface(),
+                path,
+                cache,
+                &mut core.services,
+            )
             .all_faces()
-            .map(|side_face| side_face.insert(services));
+            .map(|side_face| side_face.insert(&mut core.services));
         faces.extend(side_faces);
 
         Shell::new(faces)

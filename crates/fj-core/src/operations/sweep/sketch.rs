@@ -69,7 +69,7 @@ impl SweepSketch for Sketch {
             let face = Face::new(surface.clone(), region.clone())
                 .insert(&mut core.services);
             let shell = face
-                .sweep_face(path, &mut cache, &mut core.services)
+                .sweep_face(path, &mut cache, core)
                 .insert(&mut core.services);
             shells.push(shell);
         }
