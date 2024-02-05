@@ -41,12 +41,11 @@ impl SplitEdge for Shell {
             .expect("Expected half-edge and its sibling to be part of shell");
 
         let [half_edge_a, half_edge_b] = half_edge
-            .split_half_edge(point, &mut core.services)
+            .split_half_edge(point, core)
             .map(|half_edge| half_edge.insert(&mut core.services));
 
         let siblings = {
-            let [sibling_a, sibling_b] =
-                sibling.split_half_edge(point, &mut core.services);
+            let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
             let sibling_b = sibling_b
                 .update_start_vertex(|_| half_edge_b.start_vertex().clone());
             [sibling_a, sibling_b]
