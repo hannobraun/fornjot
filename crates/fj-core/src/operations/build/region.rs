@@ -4,6 +4,7 @@ use crate::{
     objects::{Cycle, Region},
     operations::{build::BuildCycle, insert::Insert},
     services::Services,
+    Instance,
 };
 
 /// Build a [`Region`]
@@ -25,9 +26,10 @@ pub trait BuildRegion {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Region {
-        let exterior = Cycle::circle(center, radius, services).insert(services);
+        let exterior = Cycle::circle(center, radius, &mut core.services)
+            .insert(&mut core.services);
         Region::new(exterior, [], None)
     }
 

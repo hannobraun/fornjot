@@ -23,7 +23,7 @@ pub fn model(
 
     Sketch::empty()
         .add_region(
-            Region::circle(Point::origin(), outer, &mut core.services)
+            Region::circle(Point::origin(), outer, core)
                 .add_interiors([Cycle::circle(
                     Point::origin(),
                     inner,
