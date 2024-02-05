@@ -155,11 +155,8 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [1., 1.], [0., 2.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[0., 0.], [1., 1.], [0., 2.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
         });
@@ -180,11 +177,8 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [2., 1.], [0., 2.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[0., 0.], [2., 1.], [0., 2.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
         });
@@ -208,11 +202,8 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[4., 2.], [0., 4.], [0., 0.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[4., 2.], [0., 4.], [0., 0.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
         });
@@ -238,7 +229,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -266,7 +257,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -294,7 +285,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -320,11 +311,8 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [2., 0.], [0., 1.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[0., 0.], [2., 0.], [0., 1.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
         });
@@ -356,11 +344,8 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [1., 0.], [0., 1.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[0., 0.], [1., 0.], [0., 1.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
         });

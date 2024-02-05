@@ -92,10 +92,8 @@ mod tests {
     fn edges_connected() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let valid = Cycle::polygon(
-            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-            &mut core.services,
-        );
+        let valid =
+            Cycle::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]], &mut core);
 
         valid.validate_and_return_first_error()?;
 

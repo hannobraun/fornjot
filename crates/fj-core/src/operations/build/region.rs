@@ -40,8 +40,7 @@ pub trait BuildRegion {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let exterior = Cycle::polygon(points, &mut core.services)
-            .insert(&mut core.services);
+        let exterior = Cycle::polygon(points, core).insert(&mut core.services);
         Region::new(exterior, [], None)
     }
 }

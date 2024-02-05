@@ -47,12 +47,9 @@ pub fn model(
     Sketch::empty()
         .add_region(
             Region::polygon(outer_points, core)
-                .add_interiors([Cycle::polygon(
-                    inner_points,
-                    &mut core.services,
-                )
-                .reverse(&mut core.services)
-                .insert(&mut core.services)])
+                .add_interiors([Cycle::polygon(inner_points, core)
+                    .reverse(&mut core.services)
+                    .insert(&mut core.services)])
                 .insert(&mut core.services),
         )
         .sweep_sketch(bottom_surface, sweep_path, &mut core.services)

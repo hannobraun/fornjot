@@ -93,7 +93,7 @@ mod tests {
             Face::unbound(surface, &mut core.services).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core.services)
+                        Cycle::polygon(points, &mut core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)
@@ -123,7 +123,7 @@ mod tests {
             Face::unbound(surface, &mut core.services).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core.services)
+                        Cycle::polygon(points, &mut core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)

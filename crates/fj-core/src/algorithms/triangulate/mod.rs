@@ -106,7 +106,7 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon([a, b, c, d], &mut core.services)
+                    Cycle::polygon([a, b, c, d], &mut core)
                         .insert(&mut core.services)
                 })
                 .insert(&mut core.services)
@@ -147,14 +147,11 @@ mod tests {
             .update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d], &mut core.services)
+                        Cycle::polygon([a, b, c, d], &mut core)
                             .insert(&mut core.services)
                     })
-                    .add_interiors([Cycle::polygon(
-                        [e, f, g, h],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)])
+                    .add_interiors([Cycle::polygon([e, f, g, h], &mut core)
+                        .insert(&mut core.services)])
                     .insert(&mut core.services)
             });
 
@@ -215,7 +212,7 @@ mod tests {
             .update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d, e], &mut core.services)
+                        Cycle::polygon([a, b, c, d, e], &mut core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)

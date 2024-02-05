@@ -140,15 +140,12 @@ mod tests {
         .update_region(|region| {
             region
                 .update_exterior(|_| {
-                    Cycle::polygon(
-                        [[0., 0.], [3., 0.], [0., 3.]],
-                        &mut core.services,
-                    )
-                    .insert(&mut core.services)
+                    Cycle::polygon([[0., 0.], [3., 0.], [0., 3.]], &mut core)
+                        .insert(&mut core.services)
                 })
                 .add_interiors([Cycle::polygon(
                     [[1., 1.], [1., 2.], [2., 1.]],
-                    &mut core.services,
+                    &mut core,
                 )
                 .insert(&mut core.services)])
                 .insert(&mut core.services)

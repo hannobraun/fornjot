@@ -173,7 +173,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -199,7 +199,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -228,7 +228,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -254,7 +254,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -290,7 +290,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -327,7 +327,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })
@@ -355,7 +355,7 @@ mod tests {
                 .update_exterior(|_| {
                     Cycle::polygon(
                         [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                        &mut core.services,
+                        &mut core,
                     )
                     .insert(&mut core.services)
                 })

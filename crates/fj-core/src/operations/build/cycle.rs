@@ -4,7 +4,6 @@ use itertools::Itertools;
 use crate::{
     objects::{Cycle, HalfEdge},
     operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
-    services::Services,
     Instance,
 };
 
@@ -31,7 +30,7 @@ pub trait BuildCycle {
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Cycle
+    fn polygon<P, Ps>(points: Ps, core: &mut Instance) -> Cycle
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
@@ -42,8 +41,8 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, services)
-                    .insert(services)
+                HalfEdge::line_segment([start, end], None, &mut core.services)
+                    .insert(&mut core.services)
             });
 
         Cycle::new(edges)
