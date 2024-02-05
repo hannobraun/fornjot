@@ -56,7 +56,7 @@ impl AddHole for Shell {
                 location.face.surface(),
                 path,
                 &mut SweepCache::default(),
-                &mut core.services,
+                core,
             )
             .all_faces()
             .map(|face| face.insert(&mut core.services))
@@ -114,7 +114,7 @@ impl AddHole for Shell {
                 entry_location.face.surface(),
                 path,
                 &mut SweepCache::default(),
-                &mut core.services,
+                core,
             );
 
         let hole = swept_region

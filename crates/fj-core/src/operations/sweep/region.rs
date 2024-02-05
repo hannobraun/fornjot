@@ -8,6 +8,7 @@ use crate::{
     },
     services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{SweepCache, SweepCycle};
@@ -34,7 +35,7 @@ pub trait SweepRegion {
         surface: &Surface,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> SweptRegion;
 }
 
@@ -44,7 +45,7 @@ impl SweepRegion for Region {
         surface: &Surface,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> SweptRegion {
         let path = path.into();
 
@@ -57,7 +58,7 @@ impl SweepRegion for Region {
             &mut faces,
             path,
             cache,
-            services,
+            &mut core.services,
         );
 
         let mut top_interiors = Vec::new();
@@ -70,18 +71,19 @@ impl SweepRegion for Region {
                 &mut faces,
                 path,
                 cache,
-                services,
+                &mut core.services,
             );
 
             top_interiors.push(top_cycle);
         }
 
         let top_face = {
-            let top_surface =
-                surface.translate(path, services).insert(services);
+            let top_surface = surface
+                .translate(path, &mut core.services)
+                .insert(&mut core.services);
             let top_region =
                 Region::new(top_exterior, top_interiors, self.color())
-                    .insert(services);
+                    .insert(&mut core.services);
 
             Face::new(top_surface, top_region)
         };

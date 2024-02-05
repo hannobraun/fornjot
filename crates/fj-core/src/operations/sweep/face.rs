@@ -53,12 +53,7 @@ impl SweepFace for Handle<Face> {
 
         let side_faces = bottom_face
             .region()
-            .sweep_region(
-                bottom_face.surface(),
-                path,
-                cache,
-                &mut core.services,
-            )
+            .sweep_region(bottom_face.surface(), path, cache, core)
             .all_faces()
             .map(|side_face| side_face.insert(&mut core.services));
         faces.extend(side_faces);
