@@ -73,8 +73,7 @@ impl SplitFace for Shell {
         let mut self_ = self.clone();
 
         let [[a, b], [c, d]] = line.map(|(half_edge, point)| {
-            let (shell, [[a, b], _]) =
-                self_.split_edge(half_edge, point, &mut core.services);
+            let (shell, [[a, b], _]) = self_.split_edge(half_edge, point, core);
             self_ = shell;
             [a, b]
         });
