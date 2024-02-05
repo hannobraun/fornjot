@@ -4,8 +4,8 @@ use crate::{
     geometry::GlobalPath,
     objects::{Face, Sketch, Solid, Surface},
     operations::{insert::Insert, reverse::Reverse},
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{face::SweepFace, SweepCache};
@@ -21,7 +21,7 @@ pub trait SweepSketch {
         &self,
         surface: Handle<Surface>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Solid;
 }
 
@@ -30,7 +30,7 @@ impl SweepSketch for Sketch {
         &self,
         surface: Handle<Surface>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Solid {
         let path = path.into();
         let mut cache = SweepCache::default();
@@ -60,14 +60,15 @@ impl SweepSketch for Sketch {
                 if is_negative_sweep {
                     region.clone()
                 } else {
-                    region.reverse(services).insert(services)
+                    region.reverse(core).insert(&mut core.services)
                 }
             };
 
-            let face =
-                Face::new(surface.clone(), region.clone()).insert(services);
-            let shell =
-                face.sweep_face(path, &mut cache, services).insert(services);
+            let face = Face::new(surface.clone(), region.clone())
+                .insert(&mut core.services);
+            let shell = face
+                .sweep_face(path, &mut cache, core)
+                .insert(&mut core.services);
             shells.push(shell);
         }
 

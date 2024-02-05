@@ -199,12 +199,8 @@ mod tests {
             })
             .insert(&mut core.services),
             Region::new(
-                Cycle::new(vec![HalfEdge::circle(
-                    [0., 0.],
-                    1.,
-                    &mut core.services,
-                )
-                .insert(&mut core.services)])
+                Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
+                    .insert(&mut core.services)])
                 .insert(&mut core.services),
                 vec![],
                 None,
@@ -219,7 +215,7 @@ mod tests {
                 shared_face,
                 Face::triangle(
                     [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
-                    &mut core.services,
+                    &mut core,
                 )
                 .insert(&mut core.services)
                 .face,
@@ -248,12 +244,8 @@ mod tests {
         let mut core = Instance::new();
 
         let shared_region = Region::new(
-            Cycle::new(vec![HalfEdge::circle(
-                [0., 0.],
-                1.,
-                &mut core.services,
-            )
-            .insert(&mut core.services)])
+            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
+                .insert(&mut core.services)])
             .insert(&mut core.services),
             vec![],
             None,
@@ -302,13 +294,10 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let shared_cycle = Cycle::new(vec![HalfEdge::circle(
-            [0., 0.],
-            1.,
-            &mut core.services,
-        )
-        .insert(&mut core.services)])
-        .insert(&mut core.services);
+        let shared_cycle =
+            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
+                .insert(&mut core.services)])
+            .insert(&mut core.services);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
@@ -354,7 +343,7 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let shared_edge = HalfEdge::circle([0., 0.], 1., &mut core.services)
+        let shared_edge = HalfEdge::circle([0., 0.], 1., &mut core)
             .insert(&mut core.services);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(

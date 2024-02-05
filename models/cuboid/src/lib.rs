@@ -29,9 +29,9 @@ pub fn model(
                     [x / 2., y / 2.],
                     [-x / 2., y / 2.],
                 ],
-                &mut core.services,
+                core,
             )
             .insert(&mut core.services),
         )
-        .sweep_sketch(bottom_surface, sweep_path, &mut core.services)
+        .sweep_sketch(bottom_surface, sweep_path, core)
 }

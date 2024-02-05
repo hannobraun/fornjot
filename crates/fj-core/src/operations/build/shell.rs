@@ -15,7 +15,7 @@ use crate::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
     },
-    services::Services,
+    Instance,
 };
 
 /// Build a [`Shell`]
@@ -33,13 +33,13 @@ pub trait BuildShell {
     fn from_vertices_and_indices(
         vertices: impl IntoIterator<Item = impl Into<Point<3>>>,
         indices: impl IntoIterator<Item = [usize; 3]>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Shell {
         let vertices = vertices
             .into_iter()
             .enumerate()
             .map(|(index, position)| {
-                let vertex = Vertex::new().insert(services);
+                let vertex = Vertex::new().insert(&mut core.services);
                 let position = position.into();
 
                 (index, (vertex, position))
@@ -57,7 +57,7 @@ pub trait BuildShell {
                 let (surface, _) = Surface::plane_from_points(
                     [a_pos, b_pos, c_pos].map(Clone::clone),
                 );
-                let surface = surface.insert(services);
+                let surface = surface.insert(&mut core.services);
 
                 let curves_and_boundaries =
                     [[a, b], [b, c], [c, a]].map(|vertices| {
@@ -68,7 +68,8 @@ pub trait BuildShell {
                             .get(&vertices.clone().reverse())
                             .cloned()
                             .unwrap_or_else(|| {
-                                let curve = Curve::new().insert(services);
+                                let curve =
+                                    Curve::new().insert(&mut core.services);
                                 let boundary =
                                     CurveBoundary::<Point<1>>::from([
                                         [0.],
@@ -94,25 +95,25 @@ pub trait BuildShell {
                             HalfEdge::line_segment(
                                 positions,
                                 Some(boundary.reverse().inner),
-                                services,
+                                core,
                             )
                             .update_start_vertex(|_| vertex)
                             .update_curve(|_| curve)
-                            .insert(services)
+                            .insert(&mut core.services)
                         })
                 };
 
-                Face::unbound(surface, services)
+                Face::unbound(surface, core)
                     .update_region(|region| {
                         region
                             .update_exterior(|cycle| {
                                 cycle
                                     .add_half_edges(half_edges)
-                                    .insert(services)
+                                    .insert(&mut core.services)
                             })
-                            .insert(services)
+                            .insert(&mut core.services)
                     })
-                    .insert(services)
+                    .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
 
@@ -139,116 +140,128 @@ pub trait BuildShell {
     /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> TetrahedronShell {
         let [a, b, c, d] = points.map(Into::into);
 
-        let abc = Face::triangle([a, b, c], services);
-        let bad = Face::triangle([b, a, d], services).update_region(|region| {
+        let abc = Face::triangle([a, b, c], core);
+        let bad = Face::triangle([b, a, d], core).update_region(|region| {
             region
                 .update_exterior(|cycle| {
                     cycle
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
                             0..=0,
-                            services,
+                            &mut core.services,
                         )
-                        .insert(services)
+                        .insert(&mut core.services)
                 })
-                .insert(services)
+                .insert(&mut core.services)
         });
-        let dac = Face::triangle([d, a, c], services).update_region(|region| {
+        let dac = Face::triangle([d, a, c], core).update_region(|region| {
             region
                 .update_exterior(|cycle| {
                     cycle
                         .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .join_to(
                             abc.face.region().exterior(),
                             1..=1,
                             2..=2,
-                            services,
+                            &mut core.services,
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .join_to(
                             bad.face.region().exterior(),
                             0..=0,
                             1..=1,
-                            services,
+                            &mut core.services,
                         )
-                        .insert(services)
+                        .insert(&mut core.services)
                 })
-                .insert(services)
+                .insert(&mut core.services)
         });
-        let cbd = Face::triangle([c, b, d], services).update_region(|region| {
+        let cbd = Face::triangle([c, b, d], core).update_region(|region| {
             region
                 .update_exterior(|cycle| {
                     cycle
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(2),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(services)
-                                    .insert(services)
+                                edge.reverse_curve_coordinate_systems(
+                                    &mut core.services,
+                                )
+                                .insert(&mut core.services)
                             },
                         )
                         .join_to(
                             abc.face.region().exterior(),
                             0..=0,
                             1..=1,
-                            services,
+                            &mut core.services,
                         )
                         .join_to(
                             bad.face.region().exterior(),
                             1..=1,
                             2..=2,
-                            services,
+                            &mut core.services,
                         )
                         .join_to(
                             dac.face.region().exterior(),
                             2..=2,
                             2..=2,
-                            services,
+                            &mut core.services,
                         )
-                        .insert(services)
+                        .insert(&mut core.services)
                 })
-                .insert(services)
+                .insert(&mut core.services)
         });
 
-        let triangles =
-            [abc, bad, dac, cbd].map(|triangle| triangle.insert(services));
+        let triangles = [abc, bad, dac, cbd]
+            .map(|triangle| triangle.insert(&mut core.services));
         let shell =
             Shell::new(triangles.iter().map(|triangle| triangle.face.clone()));
 

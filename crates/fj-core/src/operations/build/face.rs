@@ -9,8 +9,8 @@ use crate::{
         build::{BuildCycle, BuildRegion, BuildSurface},
         insert::{Insert, IsInserted, IsInsertedNo},
     },
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Build a [`Face`]
@@ -20,21 +20,21 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
-    fn unbound(surface: Handle<Surface>, services: &mut Services) -> Face {
-        let exterior = Cycle::empty().insert(services);
-        let region = Region::new(exterior, [], None).insert(services);
+    fn unbound(surface: Handle<Surface>, core: &mut Instance) -> Face {
+        let exterior = Cycle::empty().insert(&mut core.services);
+        let region = Region::new(exterior, [], None).insert(&mut core.services);
         Face::new(surface, region)
     }
 
     /// Build a triangle
     fn triangle(
         points: [impl Into<Point<3>>; 3],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Polygon<3> {
         let (surface, points_surface) = Surface::plane_from_points(points);
-        let surface = surface.insert(services);
+        let surface = surface.insert(&mut core.services);
 
-        let face = Face::polygon(surface, points_surface, services);
+        let face = Face::polygon(surface, points_surface, core);
 
         let half_edges = {
             let mut edges =
@@ -63,14 +63,14 @@ pub trait BuildFace {
     fn polygon<P, Ps>(
         surface: Handle<Surface>,
         points: Ps,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Face
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let region = Region::polygon(points, services).insert(services);
+        let region = Region::polygon(points, core).insert(&mut core.services);
         Face::new(surface, region)
     }
 }

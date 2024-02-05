@@ -8,8 +8,8 @@ use crate::{
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{vertex::SweepVertex, SweepCache, SweepSurfacePath};
@@ -40,7 +40,7 @@ pub trait SweepHalfEdge {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Face, Handle<HalfEdge>);
 }
 
@@ -52,21 +52,21 @@ impl SweepHalfEdge for HalfEdge {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
         let surface = self
             .path()
             .sweep_surface_path(surface, path)
-            .insert(services);
+            .insert(&mut core.services);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
         let (vertices, curves) = {
             let [a, b] = [self.start_vertex().clone(), end_vertex];
-            let (curve_up, c) = b.clone().sweep_vertex(cache, services);
-            let (curve_down, d) = a.clone().sweep_vertex(cache, services);
+            let (curve_up, c) = b.clone().sweep_vertex(cache, core);
+            let (curve_down, d) = a.clone().sweep_vertex(cache, core);
 
             (
                 [a, b, c, d],
@@ -118,7 +118,7 @@ impl SweepHalfEdge for HalfEdge {
                     let edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
-                        services,
+                        core,
                     )
                     .update_start_vertex(|_| start_vertex);
 
@@ -128,7 +128,7 @@ impl SweepHalfEdge for HalfEdge {
                         edge
                     };
 
-                    edge.insert(services)
+                    edge.insert(&mut core.services)
                 };
 
                 exterior = exterior.add_half_edges([edge.clone()]);
@@ -136,8 +136,9 @@ impl SweepHalfEdge for HalfEdge {
                 edge
             });
 
-        let exterior = exterior.insert(services);
-        let region = Region::new(exterior, [], color).insert(services);
+        let exterior = exterior.insert(&mut core.services);
+        let region =
+            Region::new(exterior, [], color).insert(&mut core.services);
         let face = Face::new(surface, region);
 
         (face, edge_top)

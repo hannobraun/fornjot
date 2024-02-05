@@ -13,13 +13,14 @@ use crate::{
     },
     services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
     /// Add half-edges to the cycle that are joined to the provided ones
     #[must_use]
-    fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
+    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Instance) -> Self
     where
         Es: IntoIterator<
             Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
@@ -78,7 +79,7 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(&self, edges: Es, services: &mut Services) -> Self
+    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Instance) -> Self
     where
         Es: IntoIterator<
             Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
@@ -87,12 +88,12 @@ impl JoinCycle for Cycle {
     {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev_half_edge, _, _), (half_edge, curve, boundary))| {
-                HalfEdge::unjoined(curve, boundary, services)
+                HalfEdge::unjoined(curve, boundary, core)
                     .update_curve(|_| half_edge.curve().clone())
                     .update_start_vertex(|_| {
                         prev_half_edge.start_vertex().clone()
                     })
-                    .insert(services)
+                    .insert(&mut core.services)
             },
         ))
     }

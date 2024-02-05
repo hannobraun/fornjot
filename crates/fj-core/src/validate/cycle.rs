@@ -92,25 +92,15 @@ mod tests {
     fn edges_connected() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let valid = Cycle::polygon(
-            [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]],
-            &mut core.services,
-        );
+        let valid =
+            Cycle::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]], &mut core);
 
         valid.validate_and_return_first_error()?;
 
         let disconnected = {
             let edges = [
-                HalfEdge::line_segment(
-                    [[0., 0.], [1., 0.]],
-                    None,
-                    &mut core.services,
-                ),
-                HalfEdge::line_segment(
-                    [[0., 0.], [1., 0.]],
-                    None,
-                    &mut core.services,
-                ),
+                HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core),
+                HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core),
             ];
             let edges = edges.map(|edge| edge.insert(&mut core.services));
 

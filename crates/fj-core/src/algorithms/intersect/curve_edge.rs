@@ -83,11 +83,8 @@ mod tests {
         let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge = HalfEdge::line_segment(
-            [[1., -1.], [1., 1.]],
-            None,
-            &mut core.services,
-        );
+        let edge =
+            HalfEdge::line_segment([[1., -1.], [1., 1.]], None, &mut core);
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
@@ -104,11 +101,8 @@ mod tests {
         let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge = HalfEdge::line_segment(
-            [[-1., -1.], [-1., 1.]],
-            None,
-            &mut core.services,
-        );
+        let edge =
+            HalfEdge::line_segment([[-1., -1.], [-1., 1.]], None, &mut core);
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
@@ -125,11 +119,8 @@ mod tests {
         let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge = HalfEdge::line_segment(
-            [[-1., -1.], [1., -1.]],
-            None,
-            &mut core.services,
-        );
+        let edge =
+            HalfEdge::line_segment([[-1., -1.], [1., -1.]], None, &mut core);
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 
@@ -141,11 +132,8 @@ mod tests {
         let mut core = Instance::new();
 
         let path = SurfacePath::u_axis();
-        let edge = HalfEdge::line_segment(
-            [[-1., 0.], [1., 0.]],
-            None,
-            &mut core.services,
-        );
+        let edge =
+            HalfEdge::line_segment([[-1., 0.], [1., 0.]], None, &mut core);
 
         let intersection = CurveEdgeIntersection::compute(&path, &edge);
 

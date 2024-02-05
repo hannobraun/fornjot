@@ -5,8 +5,8 @@ use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Build a [`HalfEdge`]
@@ -19,10 +19,10 @@ pub trait BuildHalfEdge {
     fn unjoined(
         path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
-        let curve = Curve::new().insert(services);
-        let start_vertex = Vertex::new().insert(services);
+        let curve = Curve::new().insert(&mut core.services);
+        let start_vertex = Vertex::new().insert(&mut core.services);
 
         HalfEdge::new(path, boundary, curve, start_vertex)
     }
@@ -49,7 +49,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
@@ -63,27 +63,27 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 
     /// Create a circle
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 
     /// Create a line segment
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
@@ -91,7 +91,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 }
 

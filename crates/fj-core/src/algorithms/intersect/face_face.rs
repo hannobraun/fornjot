@@ -90,10 +90,10 @@ mod tests {
             core.services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            Face::unbound(surface, &mut core.services).update_region(|region| {
+            Face::unbound(surface, &mut core).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core.services)
+                        Cycle::polygon(points, &mut core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)
@@ -120,10 +120,10 @@ mod tests {
             core.services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::unbound(surface, &mut core.services).update_region(|region| {
+            Face::unbound(surface, &mut core).update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core.services)
+                        Cycle::polygon(points, &mut core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)

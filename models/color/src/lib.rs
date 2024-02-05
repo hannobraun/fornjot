@@ -33,7 +33,7 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
                 ]
             };
 
-            let (shell, _) = shell.split_face(face, line, &mut core.services);
+            let (shell, _) = shell.split_face(face, line, core);
             shell
         };
 

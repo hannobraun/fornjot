@@ -2,12 +2,13 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::insert::Insert,
     services::Services,
+    Instance,
 };
 
 use super::{Reverse, ReverseCurveCoordinateSystems};
 
 impl Reverse for Cycle {
-    fn reverse(&self, services: &mut Services) -> Self {
+    fn reverse(&self, core: &mut Instance) -> Self {
         let mut edges = self
             .half_edges()
             .pairs()
@@ -18,7 +19,7 @@ impl Reverse for Cycle {
                     current.curve().clone(),
                     next.start_vertex().clone(),
                 )
-                .insert(services)
+                .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
 

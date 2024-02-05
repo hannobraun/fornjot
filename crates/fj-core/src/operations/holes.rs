@@ -4,8 +4,8 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell},
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{
@@ -24,7 +24,7 @@ pub trait AddHole {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self;
 
     /// Add a through hole between the provided locations
@@ -32,7 +32,7 @@ pub trait AddHole {
         &self,
         locations: [HoleLocation; 2],
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -42,24 +42,24 @@ impl AddHole for Shell {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        let entry = HalfEdge::circle(location.position, radius, services)
-            .insert(services);
-        let hole = Region::empty(services)
+        let entry = HalfEdge::circle(location.position, radius, core)
+            .insert(&mut core.services);
+        let hole = Region::empty(core)
             .update_exterior(|_| {
                 Cycle::empty()
                     .add_half_edges([entry.clone()])
-                    .insert(services)
+                    .insert(&mut core.services)
             })
             .sweep_region(
                 location.face.surface(),
                 path,
                 &mut SweepCache::default(),
-                services,
+                core,
             )
             .all_faces()
-            .map(|face| face.insert(services))
+            .map(|face| face.insert(&mut core.services))
             .collect::<Vec<_>>();
 
         self.update_face(location.face, |face| {
@@ -68,12 +68,12 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(entry.clone(), entry.path(), entry.boundary())],
-                            services,
+                            core,
                         )
-                        .insert(services)])
-                    .insert(services)
+                        .insert(&mut core.services)])
+                    .insert(&mut core.services)
             })
-            .insert(services)
+            .insert(&mut core.services)
         })
         .add_faces(hole)
     }
@@ -82,12 +82,12 @@ impl AddHole for Shell {
         &self,
         [entry_location, exit_location]: [HoleLocation; 2],
         radius: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
         let radius = radius.into();
 
-        let entry = HalfEdge::circle(entry_location.position, radius, services)
-            .insert(services);
+        let entry = HalfEdge::circle(entry_location.position, radius, core)
+            .insert(&mut core.services);
 
         let path = {
             let point = |location: &HoleLocation| {
@@ -104,23 +104,23 @@ impl AddHole for Shell {
             exit_point - entry_point
         };
 
-        let swept_region = Region::empty(services)
+        let swept_region = Region::empty(core)
             .update_exterior(|_| {
                 Cycle::empty()
                     .add_half_edges([entry.clone()])
-                    .insert(services)
+                    .insert(&mut core.services)
             })
             .sweep_region(
                 entry_location.face.surface(),
                 path,
                 &mut SweepCache::default(),
-                services,
+                core,
             );
 
         let hole = swept_region
             .side_faces
             .into_iter()
-            .map(|face| face.insert(services))
+            .map(|face| face.insert(&mut core.services))
             .collect::<Vec<_>>();
 
         let exit = swept_region
@@ -136,12 +136,12 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(entry.clone(), entry.path(), entry.boundary())],
-                            services,
+                            core,
                         )
-                        .insert(services)])
-                    .insert(services)
+                        .insert(&mut core.services)])
+                    .insert(&mut core.services)
             })
-            .insert(services)
+            .insert(&mut core.services)
         })
         .update_face(exit_location.face, |face| {
             face.update_region(|region| {
@@ -149,12 +149,12 @@ impl AddHole for Shell {
                     .add_interiors([Cycle::empty()
                         .add_joined_edges(
                             [(exit.clone(), exit.path(), exit.boundary())],
-                            services,
+                            core,
                         )
-                        .insert(services)])
-                    .insert(services)
+                        .insert(&mut core.services)])
+                    .insert(&mut core.services)
             })
-            .insert(services)
+            .insert(&mut core.services)
         })
         .add_faces(hole)
     }
