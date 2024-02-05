@@ -5,7 +5,6 @@ use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
-    services::Services,
     storage::Handle,
     Instance,
 };
@@ -20,10 +19,10 @@ pub trait BuildHalfEdge {
     fn unjoined(
         path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
-        let curve = Curve::new().insert(services);
-        let start_vertex = Vertex::new().insert(services);
+        let curve = Curve::new().insert(&mut core.services);
+        let start_vertex = Vertex::new().insert(&mut core.services);
 
         HalfEdge::new(path, boundary, curve, start_vertex)
     }
@@ -64,7 +63,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, &mut core.services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 
     /// Create a circle
@@ -77,7 +76,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, &mut core.services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 
     /// Create a line segment
@@ -92,7 +91,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, &mut core.services)
+        HalfEdge::unjoined(path, boundary, core)
     }
 }
 
