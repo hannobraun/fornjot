@@ -33,5 +33,5 @@ pub fn model(
             )
             .insert(&mut core.services),
         )
-        .sweep_sketch(bottom_surface, sweep_path, &mut core.services)
+        .sweep_sketch(bottom_surface, sweep_path, core)
 }
