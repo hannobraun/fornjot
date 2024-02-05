@@ -71,8 +71,7 @@ pub trait BuildFace {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let region = Region::polygon(points, &mut core.services)
-            .insert(&mut core.services);
+        let region = Region::polygon(points, core).insert(&mut core.services);
         Face::new(surface, region)
     }
 }

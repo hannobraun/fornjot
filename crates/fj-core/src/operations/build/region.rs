@@ -34,13 +34,14 @@ pub trait BuildRegion {
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, services: &mut Services) -> Region
+    fn polygon<P, Ps>(points: Ps, core: &mut Instance) -> Region
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let exterior = Cycle::polygon(points, services).insert(services);
+        let exterior = Cycle::polygon(points, &mut core.services)
+            .insert(&mut core.services);
         Region::new(exterior, [], None)
     }
 }

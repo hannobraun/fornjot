@@ -46,7 +46,7 @@ pub fn model(
 
     Sketch::empty()
         .add_region(
-            Region::polygon(outer_points, &mut core.services)
+            Region::polygon(outer_points, core)
                 .add_interiors([Cycle::polygon(
                     inner_points,
                     &mut core.services,
