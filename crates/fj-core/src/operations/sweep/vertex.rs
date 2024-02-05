@@ -1,8 +1,8 @@
 use crate::{
     objects::{Curve, Vertex},
     operations::insert::Insert,
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::SweepCache;
@@ -34,7 +34,7 @@ pub trait SweepVertex: Sized {
     fn sweep_vertex(
         &self,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Handle<Curve>, Handle<Vertex>);
 }
 
@@ -42,18 +42,18 @@ impl SweepVertex for Handle<Vertex> {
     fn sweep_vertex(
         &self,
         cache: &mut SweepCache,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> (Handle<Curve>, Handle<Vertex>) {
         let curve = cache
             .curves
             .entry(self.id())
-            .or_insert_with(|| Curve::new().insert(services))
+            .or_insert_with(|| Curve::new().insert(&mut core.services))
             .clone();
 
         let vertex = cache
             .vertices
             .entry(self.id())
-            .or_insert_with(|| Vertex::new().insert(services))
+            .or_insert_with(|| Vertex::new().insert(&mut core.services))
             .clone();
 
         (curve, vertex)

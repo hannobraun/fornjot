@@ -65,10 +65,8 @@ impl SweepHalfEdge for HalfEdge {
         // the global vertices and edges.
         let (vertices, curves) = {
             let [a, b] = [self.start_vertex().clone(), end_vertex];
-            let (curve_up, c) =
-                b.clone().sweep_vertex(cache, &mut core.services);
-            let (curve_down, d) =
-                a.clone().sweep_vertex(cache, &mut core.services);
+            let (curve_up, c) = b.clone().sweep_vertex(cache, core);
+            let (curve_down, d) = a.clone().sweep_vertex(cache, core);
 
             (
                 [a, b, c, d],
