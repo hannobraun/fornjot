@@ -414,7 +414,7 @@ mod tests {
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core.services,
+            &mut core,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             face.update_region(|region| {
@@ -455,7 +455,7 @@ mod tests {
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core.services,
+            &mut core,
         );
         let invalid = valid.shell.remove_face(&valid.abc.face);
 
@@ -476,7 +476,7 @@ mod tests {
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core.services,
+            &mut core,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             face.update_region(|region| {
