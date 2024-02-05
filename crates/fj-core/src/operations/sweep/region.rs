@@ -103,7 +103,7 @@ fn sweep_cycle(
     cache: &mut SweepCache,
     core: &mut Instance,
 ) -> Handle<Cycle> {
-    let swept_cycle = bottom_cycle.reverse(&mut core.services).sweep_cycle(
+    let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
         bottom_surface,
         color,
         path,

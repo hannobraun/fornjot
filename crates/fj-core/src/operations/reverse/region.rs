@@ -1,14 +1,16 @@
-use crate::{objects::Region, operations::insert::Insert, services::Services};
+use crate::{
+    objects::Region, operations::insert::Insert, services::Services, Instance,
+};
 
 use super::{Reverse, ReverseCurveCoordinateSystems};
 
 impl Reverse for Region {
-    fn reverse(&self, services: &mut Services) -> Self {
-        let exterior = self.exterior().reverse(services).insert(services);
+    fn reverse(&self, core: &mut Instance) -> Self {
+        let exterior = self.exterior().reverse(core).insert(&mut core.services);
         let interiors = self
             .interiors()
             .iter()
-            .map(|cycle| cycle.reverse(services).insert(services));
+            .map(|cycle| cycle.reverse(core).insert(&mut core.services));
 
         Region::new(exterior, interiors, self.color())
     }

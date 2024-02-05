@@ -48,7 +48,7 @@ pub fn model(
         .add_region(
             Region::polygon(outer_points, core)
                 .add_interiors([Cycle::polygon(inner_points, core)
-                    .reverse(&mut core.services)
+                    .reverse(core)
                     .insert(&mut core.services)])
                 .insert(&mut core.services),
         )

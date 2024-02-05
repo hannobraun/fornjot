@@ -156,7 +156,7 @@ mod tests {
                 .iter()
                 .cloned()
                 .map(|cycle| {
-                    cycle.reverse(&mut core.services).insert(&mut core.services)
+                    cycle.reverse(&mut core).insert(&mut core.services)
                 })
                 .collect::<Vec<_>>();
 

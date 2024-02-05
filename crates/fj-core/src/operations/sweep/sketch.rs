@@ -60,9 +60,7 @@ impl SweepSketch for Sketch {
                 if is_negative_sweep {
                     region.clone()
                 } else {
-                    region
-                        .reverse(&mut core.services)
-                        .insert(&mut core.services)
+                    region.reverse(core).insert(&mut core.services)
                 }
             };
 

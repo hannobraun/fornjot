@@ -55,7 +55,7 @@ impl SweepFaceOfShell for Shell {
         let exterior = face
             .region()
             .exterior()
-            .reverse(&mut core.services)
+            .reverse(core)
             .insert(&mut core.services);
         let region = Region::new(exterior, [], face.region().color());
         let faces = region

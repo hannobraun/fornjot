@@ -25,7 +25,7 @@ pub fn model(
         .add_region(
             Region::circle(Point::origin(), outer, core)
                 .add_interiors([Cycle::circle(Point::origin(), inner, core)
-                    .reverse(&mut core.services)
+                    .reverse(core)
                     .insert(&mut core.services)])
                 .insert(&mut core.services),
         )
