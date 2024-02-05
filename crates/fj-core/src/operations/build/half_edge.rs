@@ -7,6 +7,7 @@ use crate::{
     operations::insert::Insert,
     services::Services,
     storage::Handle,
+    Instance,
 };
 
 /// Build a [`HalfEdge`]
@@ -49,7 +50,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> HalfEdge {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
@@ -63,7 +64,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, services)
+        HalfEdge::unjoined(path, boundary, &mut core.services)
     }
 
     /// Create a circle
