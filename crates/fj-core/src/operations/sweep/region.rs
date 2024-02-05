@@ -6,7 +6,6 @@ use crate::{
     operations::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
     },
-    services::Services,
     storage::Handle,
     Instance,
 };
@@ -58,7 +57,7 @@ impl SweepRegion for Region {
             &mut faces,
             path,
             cache,
-            &mut core.services,
+            core,
         );
 
         let mut top_interiors = Vec::new();
@@ -71,7 +70,7 @@ impl SweepRegion for Region {
                 &mut faces,
                 path,
                 cache,
-                &mut core.services,
+                core,
             );
 
             top_interiors.push(top_cycle);
@@ -102,19 +101,19 @@ fn sweep_cycle(
     faces: &mut Vec<Face>,
     path: Vector<3>,
     cache: &mut SweepCache,
-    services: &mut Services,
+    core: &mut Instance,
 ) -> Handle<Cycle> {
-    let swept_cycle = bottom_cycle.reverse(services).sweep_cycle(
+    let swept_cycle = bottom_cycle.reverse(&mut core.services).sweep_cycle(
         bottom_surface,
         color,
         path,
         cache,
-        services,
+        &mut core.services,
     );
 
     faces.extend(swept_cycle.faces);
 
-    swept_cycle.top_cycle.insert(services)
+    swept_cycle.top_cycle.insert(&mut core.services)
 }
 
 /// The result of sweeping a [`Region`]
