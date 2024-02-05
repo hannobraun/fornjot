@@ -15,7 +15,6 @@ use crate::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
     },
-    services::Services,
     Instance,
 };
 
@@ -34,13 +33,13 @@ pub trait BuildShell {
     fn from_vertices_and_indices(
         vertices: impl IntoIterator<Item = impl Into<Point<3>>>,
         indices: impl IntoIterator<Item = [usize; 3]>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Shell {
         let vertices = vertices
             .into_iter()
             .enumerate()
             .map(|(index, position)| {
-                let vertex = Vertex::new().insert(services);
+                let vertex = Vertex::new().insert(&mut core.services);
                 let position = position.into();
 
                 (index, (vertex, position))
@@ -58,7 +57,7 @@ pub trait BuildShell {
                 let (surface, _) = Surface::plane_from_points(
                     [a_pos, b_pos, c_pos].map(Clone::clone),
                 );
-                let surface = surface.insert(services);
+                let surface = surface.insert(&mut core.services);
 
                 let curves_and_boundaries =
                     [[a, b], [b, c], [c, a]].map(|vertices| {
@@ -69,7 +68,8 @@ pub trait BuildShell {
                             .get(&vertices.clone().reverse())
                             .cloned()
                             .unwrap_or_else(|| {
-                                let curve = Curve::new().insert(services);
+                                let curve =
+                                    Curve::new().insert(&mut core.services);
                                 let boundary =
                                     CurveBoundary::<Point<1>>::from([
                                         [0.],
@@ -95,25 +95,25 @@ pub trait BuildShell {
                             HalfEdge::line_segment(
                                 positions,
                                 Some(boundary.reverse().inner),
-                                services,
+                                &mut core.services,
                             )
                             .update_start_vertex(|_| vertex)
                             .update_curve(|_| curve)
-                            .insert(services)
+                            .insert(&mut core.services)
                         })
                 };
 
-                Face::unbound(surface, services)
+                Face::unbound(surface, &mut core.services)
                     .update_region(|region| {
                         region
                             .update_exterior(|cycle| {
                                 cycle
                                     .add_half_edges(half_edges)
-                                    .insert(services)
+                                    .insert(&mut core.services)
                             })
-                            .insert(services)
+                            .insert(&mut core.services)
                     })
-                    .insert(services)
+                    .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
 
