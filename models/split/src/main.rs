@@ -1,8 +1,8 @@
-use fj::{core::services::Services, handle_model};
+use fj::handle_model;
 
 fn main() -> fj::Result {
-    let mut services = Services::new();
-    let model = split::model(1.0, 0.2, &mut services);
-    handle_model(&model, services)?;
+    let mut core = fj::core::Instance::new();
+    let model = split::model(1.0, 0.2, &mut core);
+    handle_model(&model, core.services)?;
     Ok(())
 }

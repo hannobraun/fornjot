@@ -42,7 +42,7 @@ impl Services {
         }
     }
 
-    /// Construct an instance of `Services` with a pre-defined configuration for the validation service
+    /// Construct an instance of `Services`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         let objects = Service::<Objects>::default();
         let validation =

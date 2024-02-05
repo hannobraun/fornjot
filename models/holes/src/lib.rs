@@ -6,16 +6,18 @@ use fj::{
             insert::Insert,
             update::UpdateSolid,
         },
-        services::Services,
     },
     math::Scalar,
 };
 
-pub fn model(radius: impl Into<Scalar>, services: &mut Services) -> Solid {
+pub fn model(
+    radius: impl Into<Scalar>,
+    core: &mut fj::core::Instance,
+) -> Solid {
     let radius = radius.into();
 
     let size = radius * 4.;
-    let cuboid = cuboid::model([size * 2., size, size], services);
+    let cuboid = cuboid::model([size * 2., size, size], core);
 
     cuboid.update_shell(cuboid.shells().only(), |shell| {
         let bottom_face = shell.faces().first();
@@ -29,7 +31,7 @@ pub fn model(radius: impl Into<Scalar>, services: &mut Services) -> Solid {
             },
             radius,
             [Scalar::ZERO, Scalar::ZERO, depth],
-            services,
+            &mut core.services,
         );
 
         let bottom_face = shell.faces().first();
@@ -51,8 +53,8 @@ pub fn model(radius: impl Into<Scalar>, services: &mut Services) -> Solid {
                     },
                 ],
                 radius,
-                services,
+                &mut core.services,
             )
-            .insert(services)
+            .insert(&mut core.services)
     })
 }

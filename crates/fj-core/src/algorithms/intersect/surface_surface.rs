@@ -76,18 +76,17 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        geometry::SurfacePath, operations::transform::TransformObject,
-        services::Services,
+        geometry::SurfacePath, operations::transform::TransformObject, Instance,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let xy = services.objects.surfaces.xy_plane();
-        let xz = services.objects.surfaces.xz_plane();
+        let xy = core.services.objects.surfaces.xy_plane();
+        let xz = core.services.objects.surfaces.xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
@@ -95,7 +94,7 @@ mod tests {
                 xy.clone(),
                 xy.clone().transform(
                     &Transform::translation([0., 0., 1.],),
-                    &mut services
+                    &mut core.services
                 )
             ],),
             None,

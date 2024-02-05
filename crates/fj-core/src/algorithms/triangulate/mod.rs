@@ -85,30 +85,32 @@ mod tests {
             insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
-        services::Services,
+        Instance,
     };
 
     use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let a = [0., 0.];
         let b = [2., 0.];
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon([a, b, c, d], &mut services)
-                                .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon([a, b, c, d], &mut core.services)
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -127,7 +129,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -139,23 +141,22 @@ mod tests {
         let g = [3., 3.];
         let h = [3., 1.];
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = core.services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut services).update_region(
-            |region| {
+        let face = Face::unbound(surface.clone(), &mut core.services)
+            .update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d], &mut services)
-                            .insert(&mut services)
+                        Cycle::polygon([a, b, c, d], &mut core.services)
+                            .insert(&mut core.services)
                     })
                     .add_interiors([Cycle::polygon(
                         [e, f, g, h],
-                        &mut services,
+                        &mut core.services,
                     )
-                    .insert(&mut services)])
-                    .insert(&mut services)
-            },
-        );
+                    .insert(&mut core.services)])
+                    .insert(&mut core.services)
+            });
 
         let triangles = triangulate(face)?;
 
@@ -189,7 +190,7 @@ mod tests {
 
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
         //   e       c
         //   |\     /|
@@ -208,18 +209,17 @@ mod tests {
         let d = [1., 1.];
         let e = [0., 9.];
 
-        let surface = services.objects.surfaces.xy_plane();
+        let surface = core.services.objects.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut services).update_region(
-            |region| {
+        let face = Face::unbound(surface.clone(), &mut core.services)
+            .update_region(|region| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d, e], &mut services)
-                            .insert(&mut services)
+                        Cycle::polygon([a, b, c, d, e], &mut core.services)
+                            .insert(&mut core.services)
                     })
-                    .insert(&mut services)
-            },
-        );
+                    .insert(&mut core.services)
+            });
 
         let triangles = triangulate(face)?;
 

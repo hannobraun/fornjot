@@ -4,12 +4,11 @@ use fj::{
         operations::{
             build::BuildSolid, merge::Merge, transform::TransformObject,
         },
-        services::Services,
     },
     math::{Scalar, Vector},
 };
 
-pub fn model(services: &mut Services) -> Solid {
+pub fn model(core: &mut fj::core::Instance) -> Solid {
     // Just combine all the other models using offsets/rotations that won't
     // result in neat vertex positions or axis-aligned edges/faces. This is
     // useful for testing.
@@ -19,13 +18,13 @@ pub fn model(services: &mut Services) -> Solid {
     let angle_rad = Scalar::PI / 6.;
 
     let models = [
-        color::model(services),
-        cuboid::model([1., 2., 3.], services),
-        holes::model(0.5, services),
-        spacer::model(2., 1., 1., services),
-        split::model(1., 0.2, services),
-        star::model(5, 2., 1., 1., services),
-        vertices_indices::model(services),
+        color::model(core),
+        cuboid::model([1., 2., 3.], core),
+        holes::model(0.5, core),
+        spacer::model(2., 1., 1., core),
+        split::model(1., 0.2, core),
+        star::model(5, 2., 1., 1., core),
+        vertices_indices::model(core),
     ];
 
     let mut all = Solid::empty();
@@ -34,8 +33,8 @@ pub fn model(services: &mut Services) -> Solid {
         let f = i as f64;
 
         let model = model
-            .translate(offset * f, services)
-            .rotate(axis * angle_rad * f, services);
+            .translate(offset * f, &mut core.services)
+            .rotate(axis * angle_rad * f, &mut core.services);
 
         all = all.merge(&model);
     }

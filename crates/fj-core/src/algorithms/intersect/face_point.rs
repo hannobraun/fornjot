@@ -141,26 +141,28 @@ mod tests {
             insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
-        services::Services,
+        Instance,
     };
 
     #[test]
     fn point_is_outside_face() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [1., 1.], [0., 2.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [1., 1.], [0., 2.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([2., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -169,21 +171,23 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 1.], [0., 2.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [2., 1.], [0., 2.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -195,21 +199,23 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[4., 2.], [0., 4.], [0., 0.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[4., 2.], [0., 4.], [0., 0.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 2.]);
 
         let intersection = (&face, &point).intersect();
@@ -221,21 +227,23 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -247,21 +255,23 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -273,27 +283,23 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [
-                                    [0., 0.],
-                                    [2., 1.],
-                                    [3., 1.],
-                                    [4., 0.],
-                                    [4., 5.],
-                                ],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [2., 1.], [3., 1.], [4., 0.], [4., 5.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 1.]);
 
         let intersection = (&face, &point).intersect();
@@ -305,21 +311,23 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 0.], [0., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [2., 0.], [0., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
@@ -339,21 +347,23 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() {
-        let mut services = Services::new();
+        let mut core = Instance::new();
 
-        let face =
-            Face::unbound(services.objects.surfaces.xy_plane(), &mut services)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [1., 0.], [0., 1.]],
-                                &mut services,
-                            )
-                            .insert(&mut services)
-                        })
-                        .insert(&mut services)
-                });
+        let face = Face::unbound(
+            core.services.objects.surfaces.xy_plane(),
+            &mut core.services,
+        )
+        .update_region(|region| {
+            region
+                .update_exterior(|_| {
+                    Cycle::polygon(
+                        [[0., 0.], [1., 0.], [0., 1.]],
+                        &mut core.services,
+                    )
+                    .insert(&mut core.services)
+                })
+                .insert(&mut core.services)
+        });
         let point = Point::from([1., 0.]);
 
         let intersection = (&face, &point).intersect();
