@@ -60,21 +60,21 @@ impl SweepRegion for Region {
             core,
         );
 
-        let mut top_interiors = Vec::new();
-
-        for bottom_cycle in self.interiors() {
-            let top_cycle = sweep_cycle(
-                bottom_cycle,
-                surface,
-                self.color(),
-                &mut faces,
-                path,
-                cache,
-                core,
-            );
-
-            top_interiors.push(top_cycle);
-        }
+        let top_interiors = self
+            .interiors()
+            .iter()
+            .map(|bottom_cycle| {
+                sweep_cycle(
+                    bottom_cycle,
+                    surface,
+                    self.color(),
+                    &mut faces,
+                    path,
+                    cache,
+                    core,
+                )
+            })
+            .collect::<Vec<_>>();
 
         let top_face = {
             let top_surface = surface
