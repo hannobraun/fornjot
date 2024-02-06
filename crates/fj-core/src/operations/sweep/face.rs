@@ -15,7 +15,7 @@ use super::{SweepCache, SweepRegion};
 ///
 /// [module documentation]: super
 pub trait SweepFace {
-    /// # Sweep the [`Face`]
+    /// # Sweep the [`Face`] into a [`Shell`]
     fn sweep_face(
         &self,
         path: impl Into<Vector<3>>,
