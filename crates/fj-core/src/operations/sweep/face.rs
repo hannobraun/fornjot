@@ -51,12 +51,12 @@ impl SweepFace for Handle<Face> {
         let bottom_face = self.clone();
         faces.push(bottom_face.clone());
 
-        let side_faces = bottom_face
+        let other_faces = bottom_face
             .region()
             .sweep_region(bottom_face.surface(), path, cache, core)
             .all_faces()
             .map(|side_face| side_face.insert(&mut core.services));
-        faces.extend(side_faces);
+        faces.extend(other_faces);
 
         Shell::new(faces)
     }
