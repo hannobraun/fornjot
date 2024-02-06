@@ -162,7 +162,7 @@ pub trait BuildShell {
                             abc.face.region().exterior(),
                             0..=0,
                             0..=0,
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)
                 })
@@ -185,7 +185,7 @@ pub trait BuildShell {
                             abc.face.region().exterior(),
                             1..=1,
                             2..=2,
-                            &mut core.services,
+                            core,
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
@@ -200,7 +200,7 @@ pub trait BuildShell {
                             bad.face.region().exterior(),
                             0..=0,
                             1..=1,
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)
                 })
@@ -241,19 +241,19 @@ pub trait BuildShell {
                             abc.face.region().exterior(),
                             0..=0,
                             1..=1,
-                            &mut core.services,
+                            core,
                         )
                         .join_to(
                             bad.face.region().exterior(),
                             1..=1,
                             2..=2,
-                            &mut core.services,
+                            core,
                         )
                         .join_to(
                             dac.face.region().exterior(),
                             2..=2,
                             2..=2,
-                            &mut core.services,
+                            core,
                         )
                         .insert(&mut core.services)
                 })

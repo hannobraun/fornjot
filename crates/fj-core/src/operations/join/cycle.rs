@@ -11,7 +11,6 @@ use crate::{
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
-    services::Services,
     storage::Handle,
     Instance,
 };
@@ -74,7 +73,7 @@ pub trait JoinCycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         other_range: RangeInclusive<usize>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -103,7 +102,7 @@ impl JoinCycle for Cycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         range_other: RangeInclusive<usize>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
         assert_eq!(
             range.end() - range.start(),
@@ -128,7 +127,7 @@ impl JoinCycle for Cycle {
                                         .start_vertex()
                                         .clone()
                                 })
-                                .insert(services)
+                                .insert(&mut core.services)
                         },
                     )
                     .update_half_edge(
@@ -137,7 +136,7 @@ impl JoinCycle for Cycle {
                             edge.update_start_vertex(|_| {
                                 edge_other.start_vertex().clone()
                             })
-                            .insert(services)
+                            .insert(&mut core.services)
                         },
                     )
             },
