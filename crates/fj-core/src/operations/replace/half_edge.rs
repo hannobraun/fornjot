@@ -3,8 +3,8 @@ use std::ops::Deref;
 use crate::{
     objects::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
     operations::insert::Insert,
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::ReplaceOutput;
@@ -21,7 +21,7 @@ pub trait ReplaceHalfEdge: IsObject + Sized {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
@@ -30,7 +30,7 @@ impl ReplaceHalfEdge for Cycle {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        _: &mut Services,
+        _: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if let Some(half_edges) =
             self.half_edges().replace(original, replacements)
@@ -47,28 +47,25 @@ impl ReplaceHalfEdge for Region {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let exterior = self.exterior().replace_half_edge(
             original,
             replacements.clone(),
-            services,
+            core,
         );
         replacement_happened |= exterior.was_updated();
 
         let mut interiors = Vec::new();
         for cycle in self.interiors() {
-            let cycle = cycle.replace_half_edge(
-                original,
-                replacements.clone(),
-                services,
-            );
+            let cycle =
+                cycle.replace_half_edge(original, replacements.clone(), core);
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
-                    .map_updated(|updated| updated.insert(services))
+                    .map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
             );
         }
@@ -76,7 +73,7 @@ impl ReplaceHalfEdge for Region {
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
                 exterior
-                    .map_updated(|updated| updated.insert(services))
+                    .map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
                 interiors,
                 self.color(),
@@ -92,21 +89,18 @@ impl ReplaceHalfEdge for Sketch {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
         for region in self.regions() {
-            let region = region.replace_half_edge(
-                original,
-                replacements.clone(),
-                services,
-            );
+            let region =
+                region.replace_half_edge(original, replacements.clone(), core);
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(services))
+                    .map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
             );
         }
@@ -124,17 +118,17 @@ impl ReplaceHalfEdge for Face {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let region =
             self.region()
-                .replace_half_edge(original, replacements, services);
+                .replace_half_edge(original, replacements, core);
 
         if region.was_updated() {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
                 region
-                    .map_updated(|updated| updated.insert(services))
+                    .map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
             ))
         } else {
@@ -148,20 +142,17 @@ impl ReplaceHalfEdge for Shell {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
         for face in self.faces() {
-            let face = face.replace_half_edge(
-                original,
-                replacements.clone(),
-                services,
-            );
+            let face =
+                face.replace_half_edge(original, replacements.clone(), core);
             replacement_happened |= face.was_updated();
             faces.push(
-                face.map_updated(|updated| updated.insert(services))
+                face.map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
             );
         }
@@ -179,21 +170,18 @@ impl ReplaceHalfEdge for Solid {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
         for shell in self.shells() {
-            let shell = shell.replace_half_edge(
-                original,
-                replacements.clone(),
-                services,
-            );
+            let shell =
+                shell.replace_half_edge(original, replacements.clone(), core);
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
-                    .map_updated(|updated| updated.insert(services))
+                    .map_updated(|updated| updated.insert(&mut core.services))
                     .into_inner(),
             );
         }
@@ -211,10 +199,10 @@ impl ReplaceHalfEdge for Handle<Cycle> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }
@@ -224,10 +212,10 @@ impl ReplaceHalfEdge for Handle<Region> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }
@@ -237,10 +225,10 @@ impl ReplaceHalfEdge for Handle<Sketch> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }
@@ -250,10 +238,10 @@ impl ReplaceHalfEdge for Handle<Face> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }
@@ -263,10 +251,10 @@ impl ReplaceHalfEdge for Handle<Shell> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }
@@ -276,10 +264,10 @@ impl ReplaceHalfEdge for Handle<Solid> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        services: &mut Services,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
-            .replace_half_edge(original, replacements, services)
+            .replace_half_edge(original, replacements, core)
             .map_original(|_| self.clone())
     }
 }

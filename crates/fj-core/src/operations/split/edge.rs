@@ -56,10 +56,10 @@ impl SplitEdge for Shell {
             .replace_half_edge(
                 half_edge,
                 [half_edge_a.clone(), half_edge_b.clone()],
-                &mut core.services,
+                core,
             )
             .into_inner()
-            .replace_half_edge(&sibling, siblings.clone(), &mut core.services)
+            .replace_half_edge(&sibling, siblings.clone(), core)
             .into_inner();
 
         (shell, [[half_edge_a, half_edge_b], siblings])
