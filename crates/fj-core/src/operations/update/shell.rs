@@ -48,9 +48,7 @@ impl UpdateShell for Shell {
     where
         T: Insert<Inserted = Handle<Face>>,
     {
-        let faces = faces
-            .into_iter()
-            .map(|face| face.insert(&mut core.services));
+        let faces = faces.into_iter().map(|face| face.insert(core));
         let faces = self.faces().iter().cloned().chain(faces);
         Shell::new(faces)
     }
@@ -68,8 +66,7 @@ impl UpdateShell for Shell {
             .faces()
             .replace(
                 handle,
-                update(handle, core)
-                    .map(|object| object.insert(&mut core.services)),
+                update(handle, core).map(|object| object.insert(core)),
             )
             .expect("Face not found");
         Shell::new(faces)

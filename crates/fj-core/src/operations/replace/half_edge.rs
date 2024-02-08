@@ -65,7 +65,7 @@ impl ReplaceHalfEdge for Region {
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
-                    .map_updated(|updated| updated.insert(&mut core.services))
+                    .map_updated(|updated| updated.insert(core))
                     .into_inner(),
             );
         }
@@ -73,7 +73,7 @@ impl ReplaceHalfEdge for Region {
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
                 exterior
-                    .map_updated(|updated| updated.insert(&mut core.services))
+                    .map_updated(|updated| updated.insert(core))
                     .into_inner(),
                 interiors,
                 self.color(),
@@ -100,7 +100,7 @@ impl ReplaceHalfEdge for Sketch {
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(&mut core.services))
+                    .map_updated(|updated| updated.insert(core))
                     .into_inner(),
             );
         }
@@ -128,7 +128,7 @@ impl ReplaceHalfEdge for Face {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
                 region
-                    .map_updated(|updated| updated.insert(&mut core.services))
+                    .map_updated(|updated| updated.insert(core))
                     .into_inner(),
             ))
         } else {
@@ -152,7 +152,7 @@ impl ReplaceHalfEdge for Shell {
                 face.replace_half_edge(original, replacements.clone(), core);
             replacement_happened |= face.was_updated();
             faces.push(
-                face.map_updated(|updated| updated.insert(&mut core.services))
+                face.map_updated(|updated| updated.insert(core))
                     .into_inner(),
             );
         }
@@ -181,7 +181,7 @@ impl ReplaceHalfEdge for Solid {
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
-                    .map_updated(|updated| updated.insert(&mut core.services))
+                    .map_updated(|updated| updated.insert(core))
                     .into_inner(),
             );
         }

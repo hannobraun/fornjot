@@ -197,32 +197,33 @@ mod tests {
                 u: GlobalPath::circle_from_radius(1.),
                 v: [0., 1., 1.].into(),
             })
-            .insert(&mut core.services),
+            .insert(&mut core),
             Region::new(
-                Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
-                    .insert(&mut core.services)])
-                .insert(&mut core.services),
+                Cycle::new(vec![
+                    HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core)
+                ])
+                .insert(&mut core),
                 vec![],
                 None,
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
         )
-        .insert(&mut core.services);
+        .insert(&mut core);
 
         let invalid_solid = Solid::new(vec![
-            Shell::new(vec![shared_face.clone()]).insert(&mut core.services),
+            Shell::new(vec![shared_face.clone()]).insert(&mut core),
             Shell::new(vec![
                 shared_face,
                 Face::triangle(
                     [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
                     &mut core,
                 )
-                .insert(&mut core.services)
+                .insert(&mut core)
                 .face,
             ])
-            .insert(&mut core.services),
+            .insert(&mut core),
         ])
-        .insert(&mut core.services);
+        .insert(&mut core);
 
         assert_contains_err!(
             invalid_solid,
@@ -231,7 +232,7 @@ mod tests {
             ))
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core.services);
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
         core.services.validation.errors.clear();
@@ -244,13 +245,14 @@ mod tests {
         let mut core = Instance::new();
 
         let shared_region = Region::new(
-            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
-                .insert(&mut core.services)])
-            .insert(&mut core.services),
+            Cycle::new(vec![
+                HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core)
+            ])
+            .insert(&mut core),
             vec![],
             None,
         )
-        .insert(&mut core.services);
+        .insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
@@ -258,22 +260,22 @@ mod tests {
                     u: GlobalPath::circle_from_radius(1.),
                     v: [0., 1., 1.].into(),
                 })
-                .insert(&mut core.services),
+                .insert(&mut core),
                 shared_region.clone(),
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
             Face::new(
                 Surface::new(SurfaceGeometry {
                     u: GlobalPath::circle_from_radius(1.),
                     v: [0., 0., 1.].into(),
                 })
-                .insert(&mut core.services),
+                .insert(&mut core),
                 shared_region.clone(),
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
         ])
-        .insert(&mut core.services)])
-        .insert(&mut core.services);
+        .insert(&mut core)])
+        .insert(&mut core);
 
         assert_contains_err!(
             invalid_solid,
@@ -282,7 +284,7 @@ mod tests {
             ))
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core.services);
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
         core.services.validation.errors.clear();
@@ -295,9 +297,10 @@ mod tests {
         let mut core = Instance::new();
 
         let shared_cycle =
-            Cycle::new(vec![HalfEdge::circle([0., 0.], 1., &mut core)
-                .insert(&mut core.services)])
-            .insert(&mut core.services);
+            Cycle::new(vec![
+                HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core)
+            ])
+            .insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
@@ -305,24 +308,23 @@ mod tests {
                     u: GlobalPath::circle_from_radius(1.),
                     v: [0., 1., 1.].into(),
                 })
-                .insert(&mut core.services),
+                .insert(&mut core),
                 Region::new(shared_cycle.clone(), vec![], None)
-                    .insert(&mut core.services),
+                    .insert(&mut core),
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
             Face::new(
                 Surface::new(SurfaceGeometry {
                     u: GlobalPath::circle_from_radius(1.),
                     v: [0., 0., 1.].into(),
                 })
-                .insert(&mut core.services),
-                Region::new(shared_cycle, vec![], None)
-                    .insert(&mut core.services),
+                .insert(&mut core),
+                Region::new(shared_cycle, vec![], None).insert(&mut core),
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
         ])
-        .insert(&mut core.services)])
-        .insert(&mut core.services);
+        .insert(&mut core)])
+        .insert(&mut core);
 
         assert_contains_err!(
             invalid_solid,
@@ -331,7 +333,7 @@ mod tests {
             ))
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core.services);
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
         core.services.validation.errors.clear();
@@ -343,27 +345,25 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let shared_edge = HalfEdge::circle([0., 0.], 1., &mut core)
-            .insert(&mut core.services);
+        let shared_edge =
+            HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
             Surface::new(SurfaceGeometry {
                 u: GlobalPath::circle_from_radius(1.),
                 v: [0., 0., 1.].into(),
             })
-            .insert(&mut core.services),
+            .insert(&mut core),
             Region::new(
-                Cycle::new(vec![shared_edge.clone()])
-                    .insert(&mut core.services),
-                vec![Cycle::new(vec![shared_edge.clone()])
-                    .insert(&mut core.services)],
+                Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
+                vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
                 None,
             )
-            .insert(&mut core.services),
+            .insert(&mut core),
         )
-        .insert(&mut core.services)])
-        .insert(&mut core.services)])
-        .insert(&mut core.services);
+        .insert(&mut core)])
+        .insert(&mut core)])
+        .insert(&mut core);
 
         assert_contains_err!(
             invalid_solid,
@@ -372,7 +372,7 @@ mod tests {
             ))
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core.services);
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
         core.services.validation.errors.clear();

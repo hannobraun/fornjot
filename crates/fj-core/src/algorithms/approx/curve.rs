@@ -188,7 +188,7 @@ mod tests {
     fn approx_line_on_flat_surface() {
         let mut core = Instance::new();
 
-        let curve = Curve::new().insert(&mut core.services);
+        let curve = Curve::new().insert(&mut core);
         let (surface_path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
@@ -205,7 +205,7 @@ mod tests {
     fn approx_line_on_curved_surface_but_not_along_curve() {
         let mut core = Instance::new();
 
-        let curve = Curve::new().insert(&mut core.services);
+        let curve = Curve::new().insert(&mut core);
         let (surface_path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
@@ -226,7 +226,7 @@ mod tests {
         let mut core = Instance::new();
 
         let global_path = GlobalPath::circle_from_radius(1.);
-        let curve = Curve::new().insert(&mut core.services);
+        let curve = Curve::new().insert(&mut core);
         let surface_path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
@@ -259,7 +259,7 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let mut core = Instance::new();
 
-        let curve = Curve::new().insert(&mut core.services);
+        let curve = Curve::new().insert(&mut core);
         let surface_path =
             SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);

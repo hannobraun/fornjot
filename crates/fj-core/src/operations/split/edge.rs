@@ -42,7 +42,7 @@ impl SplitEdge for Shell {
 
         let [half_edge_a, half_edge_b] = half_edge
             .split_half_edge(point, core)
-            .map(|half_edge| half_edge.insert(&mut core.services));
+            .map(|half_edge| half_edge.insert(core));
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
@@ -50,8 +50,7 @@ impl SplitEdge for Shell {
                 |_, _| half_edge_b.start_vertex().clone(),
                 core,
             );
-            [sibling_a, sibling_b]
-                .map(|half_edge| half_edge.insert(&mut core.services))
+            [sibling_a, sibling_b].map(|half_edge| half_edge.insert(core))
         };
 
         let shell = self

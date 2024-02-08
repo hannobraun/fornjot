@@ -18,7 +18,7 @@ impl Reverse for Cycle {
                     current.curve().clone(),
                     next.start_vertex().clone(),
                 )
-                .insert(&mut core.services)
+                .insert(core)
             })
             .collect::<Vec<_>>();
 
@@ -31,8 +31,7 @@ impl Reverse for Cycle {
 impl ReverseCurveCoordinateSystems for Cycle {
     fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self {
         let edges = self.half_edges().iter().map(|edge| {
-            edge.reverse_curve_coordinate_systems(core)
-                .insert(&mut core.services)
+            edge.reverse_curve_coordinate_systems(core).insert(core)
         });
 
         Cycle::new(edges)

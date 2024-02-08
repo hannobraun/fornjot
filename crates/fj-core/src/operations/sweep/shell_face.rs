@@ -52,11 +52,7 @@ impl SweepFaceOfShell for Shell {
 
         let mut cache = SweepCache::default();
 
-        let exterior = face
-            .region()
-            .exterior()
-            .reverse(core)
-            .insert(&mut core.services);
+        let exterior = face.region().exterior().reverse(core).insert(core);
         let region = Region::new(exterior, [], face.region().color());
         let faces = region
             .sweep_region(face.surface(), path, &mut cache, core)

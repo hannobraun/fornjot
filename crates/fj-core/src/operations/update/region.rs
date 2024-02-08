@@ -54,7 +54,7 @@ impl UpdateRegion for Region {
     where
         T: Insert<Inserted = Handle<Cycle>>,
     {
-        let exterior = update(self.exterior(), core).insert(&mut core.services);
+        let exterior = update(self.exterior(), core).insert(core);
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 
@@ -66,9 +66,7 @@ impl UpdateRegion for Region {
     where
         T: Insert<Inserted = Handle<Cycle>>,
     {
-        let interiors = interiors
-            .into_iter()
-            .map(|cycle| cycle.insert(&mut core.services));
+        let interiors = interiors.into_iter().map(|cycle| cycle.insert(core));
         let interiors = self.interiors().iter().cloned().chain(interiors);
         Region::new(self.exterior().clone(), interiors, self.color())
     }
@@ -86,8 +84,7 @@ impl UpdateRegion for Region {
             .interiors()
             .replace(
                 handle,
-                update(handle, core)
-                    .map(|object| object.insert(&mut core.services)),
+                update(handle, core).map(|object| object.insert(core)),
             )
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())

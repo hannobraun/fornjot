@@ -46,7 +46,7 @@ impl UpdateCycle for Cycle {
     {
         let half_edges = half_edges
             .into_iter()
-            .map(|half_edge| half_edge.insert(&mut core.services));
+            .map(|half_edge| half_edge.insert(core));
         let half_edges = self.half_edges().iter().cloned().chain(half_edges);
         Cycle::new(half_edges)
     }
@@ -64,8 +64,7 @@ impl UpdateCycle for Cycle {
             .half_edges()
             .replace(
                 handle,
-                update(handle, core)
-                    .map(|object| object.insert(&mut core.services)),
+                update(handle, core).map(|object| object.insert(core)),
             )
             .expect("Half-edge not found");
         Cycle::new(edges)

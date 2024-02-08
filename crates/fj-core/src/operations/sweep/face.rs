@@ -51,7 +51,7 @@ impl SweepFace for Handle<Face> {
             .region()
             .sweep_region(bottom_face.surface(), path, cache, core)
             .all_faces()
-            .map(|side_face| side_face.insert(&mut core.services));
+            .map(|side_face| side_face.insert(core));
 
         let mut faces = Vec::new();
         faces.push(bottom_face.clone());

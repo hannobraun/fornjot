@@ -56,10 +56,8 @@ impl SweepHalfEdge for HalfEdge {
     ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
-        let surface = self
-            .path()
-            .sweep_surface_path(surface, path)
-            .insert(&mut core.services);
+        let surface =
+            self.path().sweep_surface_path(surface, path).insert(core);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
@@ -128,7 +126,7 @@ impl SweepHalfEdge for HalfEdge {
                         edge
                     };
 
-                    edge.insert(&mut core.services)
+                    edge.insert(core)
                 };
 
                 exterior = exterior.add_half_edges([edge.clone()], core);
@@ -136,9 +134,8 @@ impl SweepHalfEdge for HalfEdge {
                 edge
             });
 
-        let exterior = exterior.insert(&mut core.services);
-        let region =
-            Region::new(exterior, [], color).insert(&mut core.services);
+        let exterior = exterior.insert(core);
+        let region = Region::new(exterior, [], color).insert(core);
         let face = Face::new(surface, region);
 
         (face, edge_top)

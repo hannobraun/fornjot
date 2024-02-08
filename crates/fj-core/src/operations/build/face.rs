@@ -21,8 +21,8 @@ use crate::{
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, core: &mut Instance) -> Face {
-        let exterior = Cycle::empty().insert(&mut core.services);
-        let region = Region::new(exterior, [], None).insert(&mut core.services);
+        let exterior = Cycle::empty().insert(core);
+        let region = Region::new(exterior, [], None).insert(core);
         Face::new(surface, region)
     }
 
@@ -32,7 +32,7 @@ pub trait BuildFace {
         core: &mut Instance,
     ) -> Polygon<3> {
         let (surface, points_surface) = Surface::plane_from_points(points);
-        let surface = surface.insert(&mut core.services);
+        let surface = surface.insert(core);
 
         let face = Face::polygon(surface, points_surface, core);
 
@@ -70,7 +70,7 @@ pub trait BuildFace {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let region = Region::polygon(points, core).insert(&mut core.services);
+        let region = Region::polygon(points, core).insert(core);
         Face::new(surface, region)
     }
 }

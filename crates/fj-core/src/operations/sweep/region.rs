@@ -77,11 +77,10 @@ impl SweepRegion for Region {
             .collect::<Vec<_>>();
 
         let top_face = {
-            let top_surface =
-                surface.translate(path, core).insert(&mut core.services);
+            let top_surface = surface.translate(path, core).insert(core);
             let top_region =
                 Region::new(top_exterior, top_interiors, self.color())
-                    .insert(&mut core.services);
+                    .insert(core);
 
             Face::new(top_surface, top_region)
         };
@@ -112,7 +111,7 @@ fn sweep_cycle(
 
     faces.extend(swept_cycle.faces);
 
-    swept_cycle.top_cycle.insert(&mut core.services)
+    swept_cycle.top_cycle.insert(core)
 }
 
 /// The result of sweeping a [`Region`]

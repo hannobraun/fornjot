@@ -39,7 +39,7 @@ pub trait BuildShell {
             .into_iter()
             .enumerate()
             .map(|(index, position)| {
-                let vertex = Vertex::new().insert(&mut core.services);
+                let vertex = Vertex::new().insert(core);
                 let position = position.into();
 
                 (index, (vertex, position))
@@ -57,7 +57,7 @@ pub trait BuildShell {
                 let (surface, _) = Surface::plane_from_points(
                     [a_pos, b_pos, c_pos].map(Clone::clone),
                 );
-                let surface = surface.insert(&mut core.services);
+                let surface = surface.insert(core);
 
                 let curves_and_boundaries =
                     [[a, b], [b, c], [c, a]].map(|vertices| {
@@ -68,8 +68,7 @@ pub trait BuildShell {
                             .get(&vertices.clone().reverse())
                             .cloned()
                             .unwrap_or_else(|| {
-                                let curve =
-                                    Curve::new().insert(&mut core.services);
+                                let curve = Curve::new().insert(core);
                                 let boundary =
                                     CurveBoundary::<Point<1>>::from([
                                         [0.],
@@ -262,8 +261,8 @@ pub trait BuildShell {
             core,
         );
 
-        let triangles = [abc, bad, dac, cbd]
-            .map(|triangle| triangle.insert(&mut core.services));
+        let triangles =
+            [abc, bad, dac, cbd].map(|triangle| triangle.insert(core));
         let shell =
             Shell::new(triangles.iter().map(|triangle| triangle.face.clone()));
 

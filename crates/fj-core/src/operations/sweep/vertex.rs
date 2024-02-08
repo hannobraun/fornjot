@@ -47,13 +47,13 @@ impl SweepVertex for Handle<Vertex> {
         let curve = cache
             .curves
             .entry(self.id())
-            .or_insert_with(|| Curve::new().insert(&mut core.services))
+            .or_insert_with(|| Curve::new().insert(core))
             .clone();
 
         let vertex = cache
             .vertices
             .entry(self.id())
-            .or_insert_with(|| Vertex::new().insert(&mut core.services))
+            .or_insert_with(|| Vertex::new().insert(core))
             .clone();
 
         (curve, vertex)

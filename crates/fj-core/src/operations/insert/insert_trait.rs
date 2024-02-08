@@ -4,8 +4,8 @@ use crate::{
         Vertex,
     },
     operations::build::{Polygon, TetrahedronShell},
-    services::Services,
     storage::Handle,
+    Instance,
 };
 
 use super::{IsInsertedNo, IsInsertedYes};
@@ -28,7 +28,7 @@ pub trait Insert: Sized {
     /// specific reason to do so, and you are handling validation errors in a
     /// non-standard way.
     #[must_use]
-    fn insert(self, services: &mut Services) -> Self::Inserted;
+    fn insert(self, core: &mut Instance) -> Self::Inserted;
 }
 
 macro_rules! impl_insert {
@@ -37,10 +37,10 @@ macro_rules! impl_insert {
             impl Insert for $ty {
                 type Inserted = Handle<Self>;
 
-                fn insert(self, services: &mut Services) -> Self::Inserted {
-                    let handle = services.objects.$store.reserve();
+                fn insert(self, core: &mut Instance) -> Self::Inserted {
+                    let handle = core.services.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
-                    services.insert_object(object);
+                    core.services.insert_object(object);
                     handle
                 }
             }
@@ -70,7 +70,7 @@ where
 {
     type Inserted = Self;
 
-    fn insert(self, _: &mut Services) -> Self::Inserted {
+    fn insert(self, _: &mut Instance) -> Self::Inserted {
         self
     }
 }
@@ -78,9 +78,9 @@ where
 impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
     type Inserted = Polygon<D, IsInsertedYes>;
 
-    fn insert(self, services: &mut Services) -> Self::Inserted {
+    fn insert(self, core: &mut Instance) -> Self::Inserted {
         Polygon {
-            face: self.face.insert(services),
+            face: self.face.insert(core),
             half_edges: self.half_edges,
             vertices: self.vertices,
         }
@@ -90,9 +90,9 @@ impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
 impl Insert for TetrahedronShell<IsInsertedNo> {
     type Inserted = TetrahedronShell<IsInsertedYes>;
 
-    fn insert(self, services: &mut Services) -> Self::Inserted {
+    fn insert(self, core: &mut Instance) -> Self::Inserted {
         TetrahedronShell {
-            shell: self.shell.insert(services),
+            shell: self.shell.insert(core),
             abc: self.abc,
             bad: self.bad,
             dac: self.dac,
