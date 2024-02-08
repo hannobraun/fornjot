@@ -17,7 +17,6 @@ use type_map::TypeMap;
 
 use crate::{
     operations::insert::Insert,
-    services::Services,
     storage::{Handle, ObjectId},
     Instance,
 };
@@ -35,14 +34,14 @@ pub trait TransformObject: Sized {
     /// Transform the object
     fn transform(&self, transform: &Transform, core: &mut Instance) -> Self {
         let mut cache = TransformCache::default();
-        self.transform_with_cache(transform, &mut core.services, &mut cache)
+        self.transform_with_cache(transform, core, &mut cache)
     }
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        services: &mut Services,
+        core: &mut Instance,
         cache: &mut TransformCache,
     ) -> Self;
 
@@ -76,7 +75,7 @@ where
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        services: &mut Services,
+        core: &mut Instance,
         cache: &mut TransformCache,
     ) -> Self {
         if let Some(object) = cache.get(self) {
@@ -85,8 +84,8 @@ where
 
         let transformed = self
             .clone_object()
-            .transform_with_cache(transform, services, cache)
-            .insert(services);
+            .transform_with_cache(transform, core, cache)
+            .insert(&mut core.services);
 
         cache.insert(self.clone(), transformed.clone());
 
