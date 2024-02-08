@@ -19,6 +19,7 @@ use crate::{
     operations::insert::Insert,
     services::Services,
     storage::{Handle, ObjectId},
+    Instance,
 };
 
 /// Transform an object
@@ -55,9 +56,9 @@ pub trait TransformObject: Sized {
     fn translate(
         &self,
         offset: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        self.transform(&Transform::translation(offset), services)
+        self.transform(&Transform::translation(offset), &mut core.services)
     }
 
     /// Rotate the object

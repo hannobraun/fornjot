@@ -77,9 +77,8 @@ impl SweepRegion for Region {
             .collect::<Vec<_>>();
 
         let top_face = {
-            let top_surface = surface
-                .translate(path, &mut core.services)
-                .insert(&mut core.services);
+            let top_surface =
+                surface.translate(path, core).insert(&mut core.services);
             let top_region =
                 Region::new(top_exterior, top_interiors, self.color())
                     .insert(&mut core.services);

@@ -33,7 +33,7 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
         let f = i as f64;
 
         let model = model
-            .translate(offset * f, &mut core.services)
+            .translate(offset * f, core)
             .rotate(axis * angle_rad * f, &mut core.services);
 
         all = all.merge(&model);
