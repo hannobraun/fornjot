@@ -6,7 +6,6 @@ use crate::{
         build::Polygon,
         insert::{Insert, IsInsertedNo, IsInsertedYes},
     },
-    services::Services,
     Instance,
 };
 
@@ -36,14 +35,11 @@ impl<const D: usize> Reverse for Polygon<D, IsInsertedYes> {
 }
 
 impl ReverseCurveCoordinateSystems for Face {
-    fn reverse_curve_coordinate_systems(
-        &self,
-        services: &mut Services,
-    ) -> Self {
+    fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self {
         let region = self
             .region()
-            .reverse_curve_coordinate_systems(services)
-            .insert(services);
+            .reverse_curve_coordinate_systems(core)
+            .insert(&mut core.services);
         Face::new(self.surface().clone(), region)
     }
 }
@@ -51,14 +47,8 @@ impl ReverseCurveCoordinateSystems for Face {
 impl<const D: usize> ReverseCurveCoordinateSystems
     for Polygon<D, IsInsertedNo>
 {
-    fn reverse_curve_coordinate_systems(
-        &self,
-        services: &mut Services,
-    ) -> Self {
-        let face = self
-            .face
-            .borrow()
-            .reverse_curve_coordinate_systems(services);
+    fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self {
+        let face = self.face.borrow().reverse_curve_coordinate_systems(core);
         self.replace_face(face)
     }
 }
@@ -66,14 +56,11 @@ impl<const D: usize> ReverseCurveCoordinateSystems
 impl<const D: usize> ReverseCurveCoordinateSystems
     for Polygon<D, IsInsertedYes>
 {
-    fn reverse_curve_coordinate_systems(
-        &self,
-        services: &mut Services,
-    ) -> Self {
+    fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self {
         let face: &Face = self.face.borrow();
         let face = face
-            .reverse_curve_coordinate_systems(services)
-            .insert(services);
+            .reverse_curve_coordinate_systems(core)
+            .insert(&mut core.services);
 
         self.replace_face(face)
     }

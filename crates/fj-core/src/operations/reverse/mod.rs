@@ -1,6 +1,6 @@
 //! Reverse the direction/orientation of objects
 
-use crate::{services::Services, Instance};
+use crate::Instance;
 
 mod cycle;
 mod edge;
@@ -20,6 +20,5 @@ pub trait ReverseCurveCoordinateSystems {
     ///
     /// This will not have any effect on object positions in global coordinates.
     #[must_use]
-    fn reverse_curve_coordinate_systems(&self, services: &mut Services)
-        -> Self;
+    fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self;
 }
