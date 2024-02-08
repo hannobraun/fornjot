@@ -17,8 +17,8 @@ use type_map::TypeMap;
 
 use crate::{
     operations::insert::Insert,
-    services::Services,
     storage::{Handle, ObjectId},
+    Instance,
 };
 
 /// Transform an object
@@ -32,20 +32,16 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    fn transform(
-        &self,
-        transform: &Transform,
-        services: &mut Services,
-    ) -> Self {
+    fn transform(&self, transform: &Transform, core: &mut Instance) -> Self {
         let mut cache = TransformCache::default();
-        self.transform_with_cache(transform, services, &mut cache)
+        self.transform_with_cache(transform, core, &mut cache)
     }
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        services: &mut Services,
+        core: &mut Instance,
         cache: &mut TransformCache,
     ) -> Self;
 
@@ -55,9 +51,9 @@ pub trait TransformObject: Sized {
     fn translate(
         &self,
         offset: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        self.transform(&Transform::translation(offset), services)
+        self.transform(&Transform::translation(offset), core)
     }
 
     /// Rotate the object
@@ -66,9 +62,9 @@ pub trait TransformObject: Sized {
     fn rotate(
         &self,
         axis_angle: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        self.transform(&Transform::rotation(axis_angle), services)
+        self.transform(&Transform::rotation(axis_angle), core)
     }
 }
 
@@ -79,7 +75,7 @@ where
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        services: &mut Services,
+        core: &mut Instance,
         cache: &mut TransformCache,
     ) -> Self {
         if let Some(object) = cache.get(self) {
@@ -88,8 +84,8 @@ where
 
         let transformed = self
             .clone_object()
-            .transform_with_cache(transform, services, cache)
-            .insert(services);
+            .transform_with_cache(transform, core, cache)
+            .insert(&mut core.services);
 
         cache.insert(self.clone(), transformed.clone());
 
