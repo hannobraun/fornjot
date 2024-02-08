@@ -67,9 +67,9 @@ pub trait TransformObject: Sized {
     fn rotate(
         &self,
         axis_angle: impl Into<Vector<3>>,
-        services: &mut Services,
+        core: &mut Instance,
     ) -> Self {
-        self.transform(&Transform::rotation(axis_angle), services)
+        self.transform(&Transform::rotation(axis_angle), &mut core.services)
     }
 }
 
