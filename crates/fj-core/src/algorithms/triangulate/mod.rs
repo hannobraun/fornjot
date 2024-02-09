@@ -104,10 +104,7 @@ mod tests {
                 .update_region(
                     |region, core| {
                         region.update_exterior(
-                            |_, core| {
-                                Cycle::polygon([a, b, c, d], core)
-                                    .insert(&mut core.services)
-                            },
+                            |_, core| Cycle::polygon([a, b, c, d], core),
                             core,
                         )
                     },
@@ -149,10 +146,7 @@ mod tests {
             |region, core| {
                 region
                     .update_exterior(
-                        |_, core| {
-                            Cycle::polygon([a, b, c, d], core)
-                                .insert(&mut core.services)
-                        },
+                        |_, core| Cycle::polygon([a, b, c, d], core),
                         core,
                     )
                     .add_interiors([Cycle::polygon([e, f, g, h], core)
@@ -217,10 +211,7 @@ mod tests {
         let face = Face::unbound(surface.clone(), &mut core).update_region(
             |region, core| {
                 region.update_exterior(
-                    |_, core| {
-                        Cycle::polygon([a, b, c, d, e], core)
-                            .insert(&mut core.services)
-                    },
+                    |_, core| Cycle::polygon([a, b, c, d, e], core),
                     core,
                 )
             },

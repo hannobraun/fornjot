@@ -151,7 +151,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             transform::TransformObject,
             update::{UpdateFace, UpdateRegion},
         },
@@ -179,7 +178,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -212,7 +210,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -248,7 +245,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -281,7 +277,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -324,7 +319,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -368,7 +362,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -403,7 +396,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )

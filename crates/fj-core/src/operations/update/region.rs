@@ -1,5 +1,6 @@
 use crate::{
     objects::{Cycle, Region},
+    operations::insert::Insert,
     storage::Handle,
     Instance,
 };
@@ -8,11 +9,13 @@ use crate::{
 pub trait UpdateRegion {
     /// Update the exterior of the region
     #[must_use]
-    fn update_exterior(
+    fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>;
 
     /// Add the provided interiors to the region
     #[must_use]
@@ -37,12 +40,15 @@ pub trait UpdateRegion {
 }
 
 impl UpdateRegion for Region {
-    fn update_exterior(
+    fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
         core: &mut Instance,
-    ) -> Self {
-        let exterior = update(self.exterior(), core);
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>,
+    {
+        let exterior = update(self.exterior(), core).insert(&mut core.services);
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 

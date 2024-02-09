@@ -48,11 +48,7 @@ impl AddHole for Shell {
             .insert(&mut core.services);
         let hole = Region::empty(core)
             .update_exterior(
-                |_, core| {
-                    Cycle::empty()
-                        .add_half_edges([entry.clone()])
-                        .insert(&mut core.services)
-                },
+                |_, _| Cycle::empty().add_half_edges([entry.clone()]),
                 core,
             )
             .sweep_region(
@@ -115,11 +111,7 @@ impl AddHole for Shell {
 
         let swept_region = Region::empty(core)
             .update_exterior(
-                |_, core| {
-                    Cycle::empty()
-                        .add_half_edges([entry.clone()])
-                        .insert(&mut core.services)
-                },
+                |_, _| Cycle::empty().add_half_edges([entry.clone()]),
                 core,
             )
             .sweep_region(

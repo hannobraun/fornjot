@@ -66,7 +66,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
         Instance,
@@ -93,10 +92,7 @@ mod tests {
             Face::unbound(surface, &mut core).update_region(
                 |region, core| {
                     region.update_exterior(
-                        |_, core| {
-                            Cycle::polygon(points, core)
-                                .insert(&mut core.services)
-                        },
+                        |_, core| Cycle::polygon(points, core),
                         core,
                     )
                 },
@@ -127,10 +123,7 @@ mod tests {
             Face::unbound(surface, &mut core).update_region(
                 |region, core| {
                     region.update_exterior(
-                        |_, core| {
-                            Cycle::polygon(points, core)
-                                .insert(&mut core.services)
-                        },
+                        |_, core| Cycle::polygon(points, core),
                         core,
                     )
                 },

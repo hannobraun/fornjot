@@ -192,10 +192,7 @@ mod tests {
                     |region, core| {
                         region
                             .update_exterior(
-                                |_, core| {
-                                    Cycle::polygon(exterior_points, core)
-                                        .insert(&mut core.services)
-                                },
+                                |_, core| Cycle::polygon(exterior_points, core),
                                 core,
                             )
                             .add_interiors([Cycle::polygon(

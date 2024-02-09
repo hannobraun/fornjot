@@ -138,7 +138,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
         Instance,
@@ -158,7 +157,6 @@ mod tests {
                                     [[0., 0.], [1., 1.], [0., 2.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -185,7 +183,6 @@ mod tests {
                                     [[0., 0.], [2., 1.], [0., 2.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -215,7 +212,6 @@ mod tests {
                                     [[4., 2.], [0., 4.], [0., 0.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -245,7 +241,6 @@ mod tests {
                                     [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -275,7 +270,6 @@ mod tests {
                                     [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -311,7 +305,6 @@ mod tests {
                                     ],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -341,7 +334,6 @@ mod tests {
                                     [[0., 0.], [2., 0.], [0., 1.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )
@@ -379,7 +371,6 @@ mod tests {
                                     [[0., 0.], [1., 0.], [0., 1.]],
                                     core,
                                 )
-                                .insert(&mut core.services)
                             },
                             core,
                         )

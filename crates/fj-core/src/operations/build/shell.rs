@@ -107,11 +107,7 @@ pub trait BuildShell {
                     .update_region(
                         |region, core| {
                             region.update_exterior(
-                                |cycle, core| {
-                                    cycle
-                                        .add_half_edges(half_edges)
-                                        .insert(&mut core.services)
-                                },
+                                |cycle, _| cycle.add_half_edges(half_edges),
                                 core,
                             )
                         },
@@ -168,7 +164,6 @@ pub trait BuildShell {
                                 0..=0,
                                 core,
                             )
-                            .insert(&mut core.services)
                     },
                     core,
                 )
@@ -208,7 +203,6 @@ pub trait BuildShell {
                                 1..=1,
                                 core,
                             )
-                            .insert(&mut core.services)
                     },
                     core,
                 )
@@ -262,7 +256,6 @@ pub trait BuildShell {
                                 2..=2,
                                 core,
                             )
-                            .insert(&mut core.services)
                     },
                     core,
                 )

@@ -422,21 +422,17 @@ mod tests {
                     |region, core| {
                         region.update_exterior(
                             |cycle, core| {
-                                cycle
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |edge, _| {
-                                            [edge
-                                                .update_path(|path| {
-                                                    path.reverse()
-                                                })
-                                                .update_boundary(|boundary| {
-                                                    boundary.reverse()
-                                                })]
-                                        },
-                                        core,
-                                    )
-                                    .insert(&mut core.services)
+                                cycle.update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge, _| {
+                                        [edge
+                                            .update_path(|path| path.reverse())
+                                            .update_boundary(|boundary| {
+                                                boundary.reverse()
+                                            })]
+                                    },
+                                    core,
+                                )
                             },
                             core,
                         )
@@ -492,18 +488,16 @@ mod tests {
                     |region, core| {
                         region.update_exterior(
                             |cycle, core| {
-                                cycle
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |edge, core| {
-                                            [edge.update_curve(
-                                                |_, _| Curve::new(),
-                                                core,
-                                            )]
-                                        },
-                                        core,
-                                    )
-                                    .insert(&mut core.services)
+                                cycle.update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge, core| {
+                                        [edge.update_curve(
+                                            |_, _| Curve::new(),
+                                            core,
+                                        )]
+                                    },
+                                    core,
+                                )
                             },
                             core,
                         )
