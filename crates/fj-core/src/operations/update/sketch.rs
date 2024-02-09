@@ -1,5 +1,6 @@
 use crate::{
     objects::{Region, Sketch},
+    operations::insert::Insert,
     storage::Handle,
     Instance,
 };
@@ -21,12 +22,14 @@ pub trait UpdateSketch {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_region<const N: usize>(
+    fn update_region<T, const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [Handle<Region>; N],
+        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [T; N],
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Region>>;
 }
 
 impl UpdateSketch for Sketch {
@@ -37,15 +40,22 @@ impl UpdateSketch for Sketch {
         Sketch::new(self.regions().iter().cloned().chain(regions))
     }
 
-    fn update_region<const N: usize>(
+    fn update_region<T, const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [Handle<Region>; N],
+        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [T; N],
         core: &mut Instance,
-    ) -> Self {
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Region>>,
+    {
         let regions = self
             .regions()
-            .replace(handle, update(handle, core))
+            .replace(
+                handle,
+                update(handle, core)
+                    .map(|object| object.insert(&mut core.services)),
+            )
             .expect("Region not found");
         Sketch::new(regions)
     }
