@@ -101,14 +101,17 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon([a, b, c, d], &mut core)
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region
+                            .update_exterior(|_| {
+                                Cycle::polygon([a, b, c, d], core)
+                                    .insert(&mut core.services)
+                            })
+                            .insert(&mut core.services)
+                    },
+                    &mut core,
+                );
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -141,17 +144,19 @@ mod tests {
 
         let surface = core.services.objects.surfaces.xy_plane();
 
-        let face =
-            Face::unbound(surface.clone(), &mut core).update_region(|region| {
+        let face = Face::unbound(surface.clone(), &mut core).update_region(
+            |region, core| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d], &mut core)
+                        Cycle::polygon([a, b, c, d], core)
                             .insert(&mut core.services)
                     })
-                    .add_interiors([Cycle::polygon([e, f, g, h], &mut core)
+                    .add_interiors([Cycle::polygon([e, f, g, h], core)
                         .insert(&mut core.services)])
                     .insert(&mut core.services)
-            });
+            },
+            &mut core,
+        );
 
         let triangles = triangulate(face)?;
 
@@ -206,15 +211,17 @@ mod tests {
 
         let surface = core.services.objects.surfaces.xy_plane();
 
-        let face =
-            Face::unbound(surface.clone(), &mut core).update_region(|region| {
+        let face = Face::unbound(surface.clone(), &mut core).update_region(
+            |region, core| {
                 region
                     .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d, e], &mut core)
+                        Cycle::polygon([a, b, c, d, e], core)
                             .insert(&mut core.services)
                     })
                     .insert(&mut core.services)
-            });
+            },
+            &mut core,
+        );
 
         let triangles = triangulate(face)?;
 

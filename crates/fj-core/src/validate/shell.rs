@@ -418,25 +418,30 @@ mod tests {
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             [face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |edge, _| {
-                                        [edge
-                                            .update_path(|path| path.reverse())
-                                            .update_boundary(|boundary| {
-                                                boundary.reverse()
-                                            })]
-                                    },
-                                    &mut core,
-                                )
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                })
+                .update_region(
+                    |region, core| {
+                        region
+                            .update_exterior(|cycle| {
+                                cycle
+                                    .update_half_edge(
+                                        cycle.half_edges().nth_circular(0),
+                                        |edge, _| {
+                                            [edge
+                                                .update_path(|path| {
+                                                    path.reverse()
+                                                })
+                                                .update_boundary(|boundary| {
+                                                    boundary.reverse()
+                                                })]
+                                        },
+                                        core,
+                                    )
+                                    .insert(&mut core.services)
+                            })
+                            .insert(&mut core.services)
+                    },
+                    &mut core,
+                )
                 .insert(&mut core.services)]
         });
 
@@ -482,24 +487,27 @@ mod tests {
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
             [face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |edge, core| {
-                                        [edge.update_curve(
-                                            |_, _| Curve::new(),
-                                            core,
-                                        )]
-                                    },
-                                    &mut core,
-                                )
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                })
+                .update_region(
+                    |region, core| {
+                        region
+                            .update_exterior(|cycle| {
+                                cycle
+                                    .update_half_edge(
+                                        cycle.half_edges().nth_circular(0),
+                                        |edge, core| {
+                                            [edge.update_curve(
+                                                |_, _| Curve::new(),
+                                                core,
+                                            )]
+                                        },
+                                        core,
+                                    )
+                                    .insert(&mut core.services)
+                            })
+                            .insert(&mut core.services)
+                    },
+                    &mut core,
+                )
                 .insert(&mut core.services)]
         });
 
