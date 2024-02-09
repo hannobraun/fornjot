@@ -61,6 +61,20 @@ impl_insert!(
     Vertex, vertices;
 );
 
+// Implement `Insert` for `Handle` as a no-op. This is useful for code that
+// needs a `Handle` in the end, but doesn't care if it gets that directly or
+// inserts a bare object itself.
+impl<T> Insert for Handle<T>
+where
+    T: Insert,
+{
+    type Inserted = Self;
+
+    fn insert(self, _: &mut Services) -> Self::Inserted {
+        self
+    }
+}
+
 impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
     type Inserted = Polygon<D, IsInsertedYes>;
 
