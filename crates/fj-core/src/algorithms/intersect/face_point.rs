@@ -152,10 +152,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([[0., 0.], [1., 1.], [0., 2.]], core)
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [1., 1.], [0., 2.]],
+                                    core,
+                                )
                                 .insert(&mut core.services)
-                        })
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -173,10 +179,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([[0., 0.], [2., 1.], [0., 2.]], core)
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [2., 1.], [0., 2.]],
+                                    core,
+                                )
                                 .insert(&mut core.services)
-                        })
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -197,10 +209,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([[4., 2.], [0., 4.], [0., 0.]], core)
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[4., 2.], [0., 4.], [0., 0.]],
+                                    core,
+                                )
                                 .insert(&mut core.services)
-                        })
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -221,13 +239,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
-                                core,
-                            )
-                            .insert(&mut core.services)
-                        })
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [2., 1.], [3., 0.], [3., 4.]],
+                                    core,
+                                )
+                                .insert(&mut core.services)
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -248,13 +269,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
-                                core,
-                            )
-                            .insert(&mut core.services)
-                        })
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [2., 1.], [3., 1.], [0., 2.]],
+                                    core,
+                                )
+                                .insert(&mut core.services)
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -275,19 +299,22 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon(
-                                [
-                                    [0., 0.],
-                                    [2., 1.],
-                                    [3., 1.],
-                                    [4., 0.],
-                                    [4., 5.],
-                                ],
-                                core,
-                            )
-                            .insert(&mut core.services)
-                        })
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [0., 0.],
+                                        [2., 1.],
+                                        [3., 1.],
+                                        [4., 0.],
+                                        [4., 5.],
+                                    ],
+                                    core,
+                                )
+                                .insert(&mut core.services)
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -308,10 +335,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([[0., 0.], [2., 0.], [0., 1.]], core)
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [2., 0.], [0., 1.]],
+                                    core,
+                                )
                                 .insert(&mut core.services)
-                        })
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -340,10 +373,16 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([[0., 0.], [1., 0.], [0., 1.]], core)
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [[0., 0.], [1., 0.], [0., 1.]],
+                                    core,
+                                )
                                 .insert(&mut core.services)
-                        })
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );

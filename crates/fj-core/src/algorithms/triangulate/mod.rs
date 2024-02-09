@@ -103,10 +103,13 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
-                        region.update_exterior(|_| {
-                            Cycle::polygon([a, b, c, d], core)
-                                .insert(&mut core.services)
-                        })
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon([a, b, c, d], core)
+                                    .insert(&mut core.services)
+                            },
+                            core,
+                        )
                     },
                     &mut core,
                 );
@@ -145,10 +148,13 @@ mod tests {
         let face = Face::unbound(surface.clone(), &mut core).update_region(
             |region, core| {
                 region
-                    .update_exterior(|_| {
-                        Cycle::polygon([a, b, c, d], core)
-                            .insert(&mut core.services)
-                    })
+                    .update_exterior(
+                        |_, core| {
+                            Cycle::polygon([a, b, c, d], core)
+                                .insert(&mut core.services)
+                        },
+                        core,
+                    )
                     .add_interiors([Cycle::polygon([e, f, g, h], core)
                         .insert(&mut core.services)])
             },
@@ -210,10 +216,13 @@ mod tests {
 
         let face = Face::unbound(surface.clone(), &mut core).update_region(
             |region, core| {
-                region.update_exterior(|_| {
-                    Cycle::polygon([a, b, c, d, e], core)
-                        .insert(&mut core.services)
-                })
+                region.update_exterior(
+                    |_, core| {
+                        Cycle::polygon([a, b, c, d, e], core)
+                            .insert(&mut core.services)
+                    },
+                    core,
+                )
             },
             &mut core,
         );

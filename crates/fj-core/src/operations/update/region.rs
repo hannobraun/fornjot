@@ -1,6 +1,7 @@
 use crate::{
     objects::{Cycle, Region},
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Region`]
@@ -9,7 +10,8 @@ pub trait UpdateRegion {
     #[must_use]
     fn update_exterior(
         &self,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> Handle<Cycle>,
+        core: &mut Instance,
     ) -> Self;
 
     /// Add the provided interiors to the region
@@ -37,9 +39,10 @@ pub trait UpdateRegion {
 impl UpdateRegion for Region {
     fn update_exterior(
         &self,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> Handle<Cycle>,
+        core: &mut Instance,
     ) -> Self {
-        let exterior = update(self.exterior());
+        let exterior = update(self.exterior(), core);
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 

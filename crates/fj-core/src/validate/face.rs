@@ -105,12 +105,19 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core);
         let valid = invalid.update_region(
             |region, core| {
-                region.update_exterior(|cycle| {
-                    cycle
-                        .add_half_edges([HalfEdge::circle([0., 0.], 1., core)
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle
+                            .add_half_edges([HalfEdge::circle(
+                                [0., 0.],
+                                1.,
+                                core,
+                            )
                             .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                })
+                            .insert(&mut core.services)
+                    },
+                    core,
+                )
             },
             &mut core,
         );
@@ -133,13 +140,16 @@ mod tests {
                 .update_region(
                     |region, core| {
                         region
-                            .update_exterior(|_| {
-                                Cycle::polygon(
-                                    [[0., 0.], [3., 0.], [0., 3.]],
-                                    core,
-                                )
-                                .insert(&mut core.services)
-                            })
+                            .update_exterior(
+                                |_, core| {
+                                    Cycle::polygon(
+                                        [[0., 0.], [3., 0.], [0., 3.]],
+                                        core,
+                                    )
+                                    .insert(&mut core.services)
+                                },
+                                core,
+                            )
                             .add_interiors([Cycle::polygon(
                                 [[1., 1.], [1., 2.], [2., 1.]],
                                 core,

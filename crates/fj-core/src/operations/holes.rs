@@ -47,11 +47,14 @@ impl AddHole for Shell {
         let entry = HalfEdge::circle(location.position, radius, core)
             .insert(&mut core.services);
         let hole = Region::empty(core)
-            .update_exterior(|_| {
-                Cycle::empty()
-                    .add_half_edges([entry.clone()])
-                    .insert(&mut core.services)
-            })
+            .update_exterior(
+                |_, core| {
+                    Cycle::empty()
+                        .add_half_edges([entry.clone()])
+                        .insert(&mut core.services)
+                },
+                core,
+            )
             .sweep_region(
                 location.face.surface(),
                 path,
@@ -111,11 +114,14 @@ impl AddHole for Shell {
         };
 
         let swept_region = Region::empty(core)
-            .update_exterior(|_| {
-                Cycle::empty()
-                    .add_half_edges([entry.clone()])
-                    .insert(&mut core.services)
-            })
+            .update_exterior(
+                |_, core| {
+                    Cycle::empty()
+                        .add_half_edges([entry.clone()])
+                        .insert(&mut core.services)
+                },
+                core,
+            )
             .sweep_region(
                 entry_location.face.surface(),
                 path,
