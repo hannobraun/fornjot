@@ -27,27 +27,10 @@ pub trait UpdateRegion {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_interior(
+    fn update_interior<const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Self;
-
-    /// Replace an interior cycle of the region
-    ///
-    /// This is a more general version of [`UpdateRegion::update_interior`]
-    /// which can replace a single cycle with multiple others.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the object can't be found.
-    ///
-    /// Panics, if the update results in a duplicate object.
-    #[must_use]
-    fn replace_interior<const N: usize>(
-        &self,
-        handle: &Handle<Cycle>,
-        replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
+        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
     ) -> Self;
 }
 
@@ -68,26 +51,14 @@ impl UpdateRegion for Region {
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 
-    fn update_interior(
+    fn update_interior<const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
+        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
     ) -> Self {
         let interiors = self
             .interiors()
-            .replace(handle, [update(handle)])
-            .expect("Cycle not found");
-        Region::new(self.exterior().clone(), interiors, self.color())
-    }
-
-    fn replace_interior<const N: usize>(
-        &self,
-        handle: &Handle<Cycle>,
-        replace: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
-    ) -> Self {
-        let interiors = self
-            .interiors()
-            .replace(handle, replace(handle))
+            .replace(handle, update(handle))
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }
