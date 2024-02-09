@@ -490,10 +490,7 @@ mod tests {
                                     cycle.half_edges().nth_circular(0),
                                     |edge, core| {
                                         [edge.update_curve(
-                                            |_, core| {
-                                                Curve::new()
-                                                    .insert(&mut core.services)
-                                            },
+                                            |_, _| Curve::new(),
                                             core,
                                         )]
                                     },
