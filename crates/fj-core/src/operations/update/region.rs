@@ -35,7 +35,8 @@ pub trait UpdateRegion {
     fn update_interior<const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [Handle<Cycle>; N],
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -63,11 +64,12 @@ impl UpdateRegion for Region {
     fn update_interior<const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [Handle<Cycle>; N],
+        core: &mut Instance,
     ) -> Self {
         let interiors = self
             .interiors()
-            .replace(handle, update(handle))
+            .replace(handle, update(handle, core))
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }
