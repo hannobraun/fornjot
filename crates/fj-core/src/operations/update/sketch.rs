@@ -17,27 +17,10 @@ pub trait UpdateSketch {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_region(
+    fn update_region<const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
-    ) -> Self;
-
-    /// Replace a region of the sketch
-    ///
-    /// This is a more general version of [`UpdateSketch::update_region`] which
-    /// can replace a single edge with multiple others.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the object can't be found.
-    ///
-    /// Panics, if the update results in a duplicate object.
-    #[must_use]
-    fn replace_region<const N: usize>(
-        &self,
-        handle: &Handle<Region>,
-        replace: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
+        update: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
     ) -> Self;
 }
 
@@ -46,26 +29,14 @@ impl UpdateSketch for Sketch {
         Sketch::new(self.regions().iter().cloned().chain([region]))
     }
 
-    fn update_region(
+    fn update_region<const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>) -> Handle<Region>,
+        update: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
     ) -> Self {
         let regions = self
             .regions()
-            .replace(handle, [update(handle)])
-            .expect("Region not found");
-        Sketch::new(regions)
-    }
-
-    fn replace_region<const N: usize>(
-        &self,
-        handle: &Handle<Region>,
-        replace: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
-    ) -> Self {
-        let regions = self
-            .regions()
-            .replace(handle, replace(handle))
+            .replace(handle, update(handle))
             .expect("Region not found");
         Sketch::new(regions)
     }
