@@ -1,6 +1,7 @@
 use crate::{
     objects::{Region, Sketch},
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Sketch`]
@@ -23,7 +24,8 @@ pub trait UpdateSketch {
     fn update_region<const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
+        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [Handle<Region>; N],
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -38,11 +40,12 @@ impl UpdateSketch for Sketch {
     fn update_region<const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>) -> [Handle<Region>; N],
+        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [Handle<Region>; N],
+        core: &mut Instance,
     ) -> Self {
         let regions = self
             .regions()
-            .replace(handle, update(handle))
+            .replace(handle, update(handle, core))
             .expect("Region not found");
         Sketch::new(regions)
     }
