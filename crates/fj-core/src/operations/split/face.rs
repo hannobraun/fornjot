@@ -106,7 +106,7 @@ impl SplitFace for Shell {
             None,
             core,
         )
-        .update_start_vertex(|_| b.start_vertex().clone())
+        .update_start_vertex(|_, _| b.start_vertex().clone(), core)
         .insert(&mut core.services);
         let dividing_half_edge_c_to_b = HalfEdge::from_sibling(
             &dividing_half_edge_a_to_d,

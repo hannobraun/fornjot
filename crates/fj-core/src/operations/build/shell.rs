@@ -97,7 +97,7 @@ pub trait BuildShell {
                                 Some(boundary.reverse().inner),
                                 core,
                             )
-                            .update_start_vertex(|_| vertex)
+                            .update_start_vertex(|_, _| vertex, core)
                             .update_curve(|_, _| curve, core)
                             .insert(&mut core.services)
                         })

@@ -89,9 +89,10 @@ impl JoinCycle for Cycle {
             |((prev_half_edge, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
-                    .update_start_vertex(|_| {
-                        prev_half_edge.start_vertex().clone()
-                    })
+                    .update_start_vertex(
+                        |_, _| prev_half_edge.start_vertex().clone(),
+                        core,
+                    )
                     .insert(&mut core.services)
             },
         ))
@@ -124,22 +125,26 @@ impl JoinCycle for Cycle {
                                     |_, _| edge_other.curve().clone(),
                                     core,
                                 )
-                                .update_start_vertex(|_| {
-                                    other
-                                        .half_edges()
-                                        .nth_circular(index_other + 1)
-                                        .start_vertex()
-                                        .clone()
-                                })]
+                                .update_start_vertex(
+                                    |_, _| {
+                                        other
+                                            .half_edges()
+                                            .nth_circular(index_other + 1)
+                                            .start_vertex()
+                                            .clone()
+                                    },
+                                    core,
+                                )]
                         },
                         core,
                     )
                     .update_half_edge(
                         self.half_edges().nth_circular(index + 1),
-                        |edge, _| {
-                            [edge.update_start_vertex(|_| {
-                                edge_other.start_vertex().clone()
-                            })]
+                        |edge, core| {
+                            [edge.update_start_vertex(
+                                |_, _| edge_other.start_vertex().clone(),
+                                core,
+                            )]
                         },
                         core,
                     )

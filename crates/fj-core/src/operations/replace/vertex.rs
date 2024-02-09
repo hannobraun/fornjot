@@ -32,10 +32,12 @@ impl ReplaceVertex for HalfEdge {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        _: &mut Instance,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if original.id() == self.start_vertex().id() {
-            ReplaceOutput::Updated(self.update_start_vertex(|_| replacement))
+            ReplaceOutput::Updated(
+                self.update_start_vertex(|_, _| replacement, core),
+            )
         } else {
             ReplaceOutput::Original(self.clone())
         }
