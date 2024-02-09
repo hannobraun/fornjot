@@ -3,7 +3,6 @@ use fj::{
         objects::Solid,
         operations::{
             holes::{AddHole, HoleLocation},
-            insert::Insert,
             update::UpdateSolid,
         },
     },
@@ -42,22 +41,20 @@ pub fn model(
                 .nth(5)
                 .expect("Expected shell to have top face");
 
-            [shell
-                .add_through_hole(
-                    [
-                        HoleLocation {
-                            face: bottom_face,
-                            position: [offset, Scalar::ZERO].into(),
-                        },
-                        HoleLocation {
-                            face: top_face,
-                            position: [offset, Scalar::ZERO].into(),
-                        },
-                    ],
-                    radius,
-                    core,
-                )
-                .insert(&mut core.services)]
+            [shell.add_through_hole(
+                [
+                    HoleLocation {
+                        face: bottom_face,
+                        position: [offset, Scalar::ZERO].into(),
+                    },
+                    HoleLocation {
+                        face: top_face,
+                        position: [offset, Scalar::ZERO].into(),
+                    },
+                ],
+                radius,
+                core,
+            )]
         },
         core,
     )

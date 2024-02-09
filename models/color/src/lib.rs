@@ -1,7 +1,6 @@
 use fj::core::{
     objects::Solid,
     operations::{
-        insert::Insert,
         presentation::SetColor,
         split::SplitFace,
         update::{UpdateFace, UpdateShell, UpdateSolid},
@@ -43,7 +42,7 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
                 shell
             };
 
-            [shell.insert(&mut core.services)]
+            [shell]
         },
         core,
     )
