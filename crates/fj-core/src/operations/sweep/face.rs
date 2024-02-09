@@ -48,7 +48,7 @@ impl SweepFace for Handle<Face> {
 
         let mut faces = Vec::new();
 
-        let bottom_face = self.clone();
+        let bottom_face = self;
 
         let other_faces = bottom_face
             .region()
