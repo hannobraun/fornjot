@@ -4,6 +4,7 @@ use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`HalfEdge`]
@@ -26,7 +27,8 @@ pub trait UpdateHalfEdge {
     #[must_use]
     fn update_curve(
         &self,
-        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
+        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> Handle<Curve>,
+        core: &mut Instance,
     ) -> Self;
 
     /// Update the start vertex of the edge
@@ -64,12 +66,13 @@ impl UpdateHalfEdge for HalfEdge {
 
     fn update_curve(
         &self,
-        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
+        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> Handle<Curve>,
+        core: &mut Instance,
     ) -> Self {
         HalfEdge::new(
             self.path(),
             self.boundary(),
-            update(self.curve()),
+            update(self.curve(), core),
             self.start_vertex().clone(),
         )
     }

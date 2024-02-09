@@ -88,7 +88,7 @@ impl JoinCycle for Cycle {
         self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
             |((prev_half_edge, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, core)
-                    .update_curve(|_| half_edge.curve().clone())
+                    .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(|_| {
                         prev_half_edge.start_vertex().clone()
                     })
@@ -118,9 +118,12 @@ impl JoinCycle for Cycle {
                 cycle
                     .update_half_edge(
                         self.half_edges().nth_circular(index),
-                        |edge, _| {
+                        |edge, core| {
                             [edge
-                                .update_curve(|_| edge_other.curve().clone())
+                                .update_curve(
+                                    |_, _| edge_other.curve().clone(),
+                                    core,
+                                )
                                 .update_start_vertex(|_| {
                                     other
                                         .half_edges()

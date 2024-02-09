@@ -98,7 +98,7 @@ pub trait BuildShell {
                                 core,
                             )
                             .update_start_vertex(|_| vertex)
-                            .update_curve(|_| curve)
+                            .update_curve(|_, _| curve, core)
                             .insert(&mut core.services)
                         })
                 };

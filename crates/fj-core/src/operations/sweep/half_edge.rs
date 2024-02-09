@@ -123,7 +123,7 @@ impl SweepHalfEdge for HalfEdge {
                     .update_start_vertex(|_| start_vertex);
 
                     let edge = if let Some(curve) = curve {
-                        edge.update_curve(|_| curve)
+                        edge.update_curve(|_, _| curve, core)
                     } else {
                         edge
                     };
