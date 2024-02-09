@@ -13,11 +13,18 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
     let cuboid = cuboid::model([size, size, size], core);
 
     cuboid.update_shell(cuboid.shells().only(), |shell| {
-        let shell = shell.update_face(shell.faces().first(), |face| {
-            [face
-                .update_region(|region, _| region.set_color([0., 1., 0.]), core)
-                .insert(&mut core.services)]
-        });
+        let shell = shell.update_face(
+            shell.faces().first(),
+            |face, core| {
+                [face
+                    .update_region(
+                        |region, _| region.set_color([0., 1., 0.]),
+                        core,
+                    )
+                    .insert(&mut core.services)]
+            },
+            core,
+        );
 
         // Split colored face, to make sure the same color is applied to the
         // two derived faces.

@@ -416,31 +416,37 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            [face
-                .update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle.update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |edge, _| {
-                                        [edge
-                                            .update_path(|path| path.reverse())
-                                            .update_boundary(|boundary| {
-                                                boundary.reverse()
-                                            })]
-                                    },
-                                    core,
-                                )
-                            },
-                            core,
-                        )
-                    },
-                    &mut core,
-                )
-                .insert(&mut core.services)]
-        });
+        let invalid = valid.shell.update_face(
+            &valid.abc.face,
+            |face, core| {
+                [face
+                    .update_region(
+                        |region, core| {
+                            region.update_exterior(
+                                |cycle, core| {
+                                    cycle.update_half_edge(
+                                        cycle.half_edges().nth_circular(0),
+                                        |edge, _| {
+                                            [edge
+                                                .update_path(|path| {
+                                                    path.reverse()
+                                                })
+                                                .update_boundary(|boundary| {
+                                                    boundary.reverse()
+                                                })]
+                                        },
+                                        core,
+                                    )
+                                },
+                                core,
+                            )
+                        },
+                        core,
+                    )
+                    .insert(&mut core.services)]
+            },
+            &mut core,
+        );
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
@@ -482,30 +488,34 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            [face
-                .update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle.update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |edge, core| {
-                                        [edge.update_curve(
-                                            |_, _| Curve::new(),
-                                            core,
-                                        )]
-                                    },
-                                    core,
-                                )
-                            },
-                            core,
-                        )
-                    },
-                    &mut core,
-                )
-                .insert(&mut core.services)]
-        });
+        let invalid = valid.shell.update_face(
+            &valid.abc.face,
+            |face, core| {
+                [face
+                    .update_region(
+                        |region, core| {
+                            region.update_exterior(
+                                |cycle, core| {
+                                    cycle.update_half_edge(
+                                        cycle.half_edges().nth_circular(0),
+                                        |edge, core| {
+                                            [edge.update_curve(
+                                                |_, _| Curve::new(),
+                                                core,
+                                            )]
+                                        },
+                                        core,
+                                    )
+                                },
+                                core,
+                            )
+                        },
+                        core,
+                    )
+                    .insert(&mut core.services)]
+            },
+            &mut core,
+        );
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(

@@ -186,8 +186,11 @@ impl SplitFace for Shell {
         .insert(&mut core.services);
 
         let faces = [split_face_a, split_face_b];
-        let self_ = self_
-            .update_face(updated_face_after_split_edges, |_| faces.clone());
+        let self_ = self_.update_face(
+            updated_face_after_split_edges,
+            |_, _| faces.clone(),
+            core,
+        );
 
         (self_, faces)
     }

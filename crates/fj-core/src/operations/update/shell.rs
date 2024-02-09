@@ -1,6 +1,7 @@
 use crate::{
     objects::{Face, Shell},
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Shell`]
@@ -20,7 +21,8 @@ pub trait UpdateShell {
     fn update_face<const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
+        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [Handle<Face>; N],
+        core: &mut Instance,
     ) -> Self;
 
     /// Remove a face from the shell
@@ -37,11 +39,12 @@ impl UpdateShell for Shell {
     fn update_face<const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
+        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [Handle<Face>; N],
+        core: &mut Instance,
     ) -> Self {
         let faces = self
             .faces()
-            .replace(handle, update(handle))
+            .replace(handle, update(handle, core))
             .expect("Face not found");
         Shell::new(faces)
     }
