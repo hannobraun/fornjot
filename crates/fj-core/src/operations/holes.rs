@@ -64,23 +64,21 @@ impl AddHole for Shell {
         self.update_face(
             location.face,
             |face, core| {
-                [face
-                    .update_region(
-                        |region, core| {
-                            region.add_interiors([Cycle::empty()
-                                .add_joined_edges(
-                                    [(
-                                        entry.clone(),
-                                        entry.path(),
-                                        entry.boundary(),
-                                    )],
-                                    core,
-                                )
-                                .insert(&mut core.services)])
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(
+                                    entry.clone(),
+                                    entry.path(),
+                                    entry.boundary(),
+                                )],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                    },
+                    core,
+                )]
             },
             core,
         )
@@ -141,46 +139,38 @@ impl AddHole for Shell {
         self.update_face(
             entry_location.face,
             |face, core| {
-                [face
-                    .update_region(
-                        |region, core| {
-                            region.add_interiors([Cycle::empty()
-                                .add_joined_edges(
-                                    [(
-                                        entry.clone(),
-                                        entry.path(),
-                                        entry.boundary(),
-                                    )],
-                                    core,
-                                )
-                                .insert(&mut core.services)])
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(
+                                    entry.clone(),
+                                    entry.path(),
+                                    entry.boundary(),
+                                )],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                    },
+                    core,
+                )]
             },
             core,
         )
         .update_face(
             exit_location.face,
             |face, core| {
-                [face
-                    .update_region(
-                        |region, core| {
-                            region.add_interiors([Cycle::empty()
-                                .add_joined_edges(
-                                    [(
-                                        exit.clone(),
-                                        exit.path(),
-                                        exit.boundary(),
-                                    )],
-                                    core,
-                                )
-                                .insert(&mut core.services)])
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(exit.clone(), exit.path(), exit.boundary())],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                    },
+                    core,
+                )]
             },
             core,
         )

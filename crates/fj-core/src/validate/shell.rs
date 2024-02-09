@@ -398,7 +398,6 @@ mod tests {
         objects::{Curve, Shell},
         operations::{
             build::BuildShell,
-            insert::Insert,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
                 UpdateShell,
@@ -419,31 +418,27 @@ mod tests {
         let invalid = valid.shell.update_face(
             &valid.abc.face,
             |face, core| {
-                [face
-                    .update_region(
-                        |region, core| {
-                            region.update_exterior(
-                                |cycle, core| {
-                                    cycle.update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |edge, _| {
-                                            [edge
-                                                .update_path(|path| {
-                                                    path.reverse()
-                                                })
-                                                .update_boundary(|boundary| {
-                                                    boundary.reverse()
-                                                })]
-                                        },
-                                        core,
-                                    )
-                                },
-                                core,
-                            )
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge, _| {
+                                        [edge
+                                            .update_path(|path| path.reverse())
+                                            .update_boundary(|boundary| {
+                                                boundary.reverse()
+                                            })]
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )]
             },
             &mut core,
         );
@@ -491,28 +486,26 @@ mod tests {
         let invalid = valid.shell.update_face(
             &valid.abc.face,
             |face, core| {
-                [face
-                    .update_region(
-                        |region, core| {
-                            region.update_exterior(
-                                |cycle, core| {
-                                    cycle.update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |edge, core| {
-                                            [edge.update_curve(
-                                                |_, _| Curve::new(),
-                                                core,
-                                            )]
-                                        },
-                                        core,
-                                    )
-                                },
-                                core,
-                            )
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge, core| {
+                                        [edge.update_curve(
+                                            |_, _| Curve::new(),
+                                            core,
+                                        )]
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )]
             },
             &mut core,
         );

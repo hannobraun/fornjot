@@ -16,12 +16,10 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
         let shell = shell.update_face(
             shell.faces().first(),
             |face, core| {
-                [face
-                    .update_region(
-                        |region, _| region.set_color([0., 1., 0.]),
-                        core,
-                    )
-                    .insert(&mut core.services)]
+                [face.update_region(
+                    |region, _| region.set_color([0., 1., 0.]),
+                    core,
+                )]
             },
             core,
         );
