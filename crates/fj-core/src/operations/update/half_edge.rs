@@ -36,11 +36,13 @@ pub trait UpdateHalfEdge {
 
     /// Update the start vertex of the edge
     #[must_use]
-    fn update_start_vertex(
+    fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> Handle<Vertex>,
+        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Vertex>>;
 }
 
 impl UpdateHalfEdge for HalfEdge {
@@ -84,16 +86,19 @@ impl UpdateHalfEdge for HalfEdge {
         )
     }
 
-    fn update_start_vertex(
+    fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> Handle<Vertex>,
+        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
         core: &mut Instance,
-    ) -> Self {
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Vertex>>,
+    {
         HalfEdge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),
-            update(self.start_vertex(), core),
+            update(self.start_vertex(), core).insert(&mut core.services),
         )
     }
 }
