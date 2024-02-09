@@ -38,6 +38,6 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
             shell
         };
 
-        shell.insert(&mut core.services)
+        [shell.insert(&mut core.services)]
     })
 }

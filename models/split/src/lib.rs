@@ -24,8 +24,8 @@ pub fn model(
 
         let (shell, [face, _]) = shell.split_face(face, line, core);
 
-        shell
+        [shell
             .sweep_face_of_shell(face, [0., 0., -size / 2.], core)
-            .insert(&mut core.services)
+            .insert(&mut core.services)]
     })
 }

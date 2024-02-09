@@ -40,7 +40,7 @@ pub fn model(
             .nth(5)
             .expect("Expected shell to have top face");
 
-        shell
+        [shell
             .add_through_hole(
                 [
                     HoleLocation {
@@ -55,6 +55,6 @@ pub fn model(
                 radius,
                 core,
             )
-            .insert(&mut core.services)
+            .insert(&mut core.services)]
     })
 }

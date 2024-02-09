@@ -20,27 +20,10 @@ pub trait UpdateSolid {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_shell(
+    fn update_shell<const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> Handle<Shell>,
-    ) -> Self;
-
-    /// Replace a shell of the solid
-    ///
-    /// This is a more general version of [`UpdateSolid::update_shell`] which
-    /// can replace a single edge with multiple others.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the object can't be found.
-    ///
-    /// Panics, if the update results in a duplicate object.
-    #[must_use]
-    fn replace_shell<const N: usize>(
-        &self,
-        handle: &Handle<Shell>,
-        replace: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
+        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
     ) -> Self;
 }
 
@@ -53,26 +36,14 @@ impl UpdateSolid for Solid {
         Solid::new(shells)
     }
 
-    fn update_shell(
+    fn update_shell<const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> Handle<Shell>,
+        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
     ) -> Self {
         let shells = self
             .shells()
-            .replace(handle, [update(handle)])
-            .expect("Shell not found");
-        Solid::new(shells)
-    }
-
-    fn replace_shell<const N: usize>(
-        &self,
-        handle: &Handle<Shell>,
-        replace: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
-    ) -> Self {
-        let shells = self
-            .shells()
-            .replace(handle, replace(handle))
+            .replace(handle, update(handle))
             .expect("Shell not found");
         Solid::new(shells)
     }
