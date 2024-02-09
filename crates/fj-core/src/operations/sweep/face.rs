@@ -47,7 +47,6 @@ impl SweepFace for Handle<Face> {
         let path = path.into();
 
         let bottom_face = self;
-
         let other_faces = bottom_face
             .region()
             .sweep_region(bottom_face.surface(), path, cache, core)
