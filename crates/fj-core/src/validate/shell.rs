@@ -424,7 +424,7 @@ mod tests {
                             cycle
                                 .update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge| {
+                                    |edge, core| {
                                         [edge
                                             .update_path(|path| path.reverse())
                                             .update_boundary(|boundary| {
@@ -432,6 +432,7 @@ mod tests {
                                             })
                                             .insert(&mut core.services)]
                                     },
+                                    &mut core,
                                 )
                                 .insert(&mut core.services)
                         })
@@ -488,7 +489,7 @@ mod tests {
                             cycle
                                 .update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge| {
+                                    |edge, core| {
                                         [edge
                                             .update_curve(|_| {
                                                 Curve::new()
@@ -496,6 +497,7 @@ mod tests {
                                             })
                                             .insert(&mut core.services)]
                                     },
+                                    &mut core,
                                 )
                                 .insert(&mut core.services)
                         })
