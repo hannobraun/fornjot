@@ -417,26 +417,27 @@ mod tests {
             &mut core,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            face.update_region(|region| {
-                region
-                    .update_exterior(|cycle| {
-                        cycle
-                            .update_half_edge(
-                                cycle.half_edges().nth_circular(0),
-                                |edge| {
-                                    [edge
-                                        .update_path(|path| path.reverse())
-                                        .update_boundary(|boundary| {
-                                            boundary.reverse()
-                                        })
-                                        .insert(&mut core.services)]
-                                },
-                            )
-                            .insert(&mut core.services)
-                    })
-                    .insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region
+                        .update_exterior(|cycle| {
+                            cycle
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge| {
+                                        [edge
+                                            .update_path(|path| path.reverse())
+                                            .update_boundary(|boundary| {
+                                                boundary.reverse()
+                                            })
+                                            .insert(&mut core.services)]
+                                    },
+                                )
+                                .insert(&mut core.services)
+                        })
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         });
 
         valid.shell.validate_and_return_first_error()?;
@@ -480,26 +481,27 @@ mod tests {
             &mut core,
         );
         let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            face.update_region(|region| {
-                region
-                    .update_exterior(|cycle| {
-                        cycle
-                            .update_half_edge(
-                                cycle.half_edges().nth_circular(0),
-                                |edge| {
-                                    [edge
-                                        .update_curve(|_| {
-                                            Curve::new()
-                                                .insert(&mut core.services)
-                                        })
-                                        .insert(&mut core.services)]
-                                },
-                            )
-                            .insert(&mut core.services)
-                    })
-                    .insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region
+                        .update_exterior(|cycle| {
+                            cycle
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge| {
+                                        [edge
+                                            .update_curve(|_| {
+                                                Curve::new()
+                                                    .insert(&mut core.services)
+                                            })
+                                            .insert(&mut core.services)]
+                                    },
+                                )
+                                .insert(&mut core.services)
+                        })
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         });
 
         valid.shell.validate_and_return_first_error()?;

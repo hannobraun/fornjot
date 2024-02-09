@@ -63,17 +63,22 @@ impl AddHole for Shell {
             .collect::<Vec<_>>();
 
         self.update_face(location.face, |face| {
-            face.update_region(|region| {
-                region
-                    .add_interiors([Cycle::empty()
-                        .add_joined_edges(
-                            [(entry.clone(), entry.path(), entry.boundary())],
-                            core,
-                        )
-                        .insert(&mut core.services)])
-                    .insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region
+                        .add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(
+                                    entry.clone(),
+                                    entry.path(),
+                                    entry.boundary(),
+                                )],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         })
         .add_faces(hole)
     }
@@ -131,30 +136,36 @@ impl AddHole for Shell {
             .only();
 
         self.update_face(entry_location.face, |face| {
-            face.update_region(|region| {
-                region
-                    .add_interiors([Cycle::empty()
-                        .add_joined_edges(
-                            [(entry.clone(), entry.path(), entry.boundary())],
-                            core,
-                        )
-                        .insert(&mut core.services)])
-                    .insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region
+                        .add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(
+                                    entry.clone(),
+                                    entry.path(),
+                                    entry.boundary(),
+                                )],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         })
         .update_face(exit_location.face, |face| {
-            face.update_region(|region| {
-                region
-                    .add_interiors([Cycle::empty()
-                        .add_joined_edges(
-                            [(exit.clone(), exit.path(), exit.boundary())],
-                            core,
-                        )
-                        .insert(&mut core.services)])
-                    .insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region
+                        .add_interiors([Cycle::empty()
+                            .add_joined_edges(
+                                [(exit.clone(), exit.path(), exit.boundary())],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                        .insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         })
         .add_faces(hole)
     }
