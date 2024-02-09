@@ -105,18 +105,12 @@ mod tests {
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core);
         let valid = invalid.update_region(
             |region, core| {
-                region
-                    .update_exterior(|cycle| {
-                        cycle
-                            .add_half_edges([HalfEdge::circle(
-                                [0., 0.],
-                                1.,
-                                core,
-                            )
+                region.update_exterior(|cycle| {
+                    cycle
+                        .add_half_edges([HalfEdge::circle([0., 0.], 1., core)
                             .insert(&mut core.services)])
-                            .insert(&mut core.services)
-                    })
-                    .insert(&mut core.services)
+                        .insert(&mut core.services)
+                })
             },
             &mut core,
         );
@@ -151,7 +145,6 @@ mod tests {
                                 core,
                             )
                             .insert(&mut core.services)])
-                            .insert(&mut core.services)
                     },
                     &mut core,
                 );

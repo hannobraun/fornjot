@@ -15,14 +15,7 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
     cuboid.update_shell(cuboid.shells().only(), |shell| {
         let shell = shell.update_face(shell.faces().first(), |face| {
             [face
-                .update_region(
-                    |region, core| {
-                        region
-                            .set_color([0., 1., 0.])
-                            .insert(&mut core.services)
-                    },
-                    core,
-                )
+                .update_region(|region, _| region.set_color([0., 1., 0.]), core)
                 .insert(&mut core.services)]
         });
 

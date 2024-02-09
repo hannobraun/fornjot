@@ -92,12 +92,9 @@ mod tests {
         .map(|surface| {
             Face::unbound(surface, &mut core).update_region(
                 |region, core| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(points, core)
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
+                    region.update_exterior(|_| {
+                        Cycle::polygon(points, core).insert(&mut core.services)
+                    })
                 },
                 &mut core,
             )
@@ -125,12 +122,9 @@ mod tests {
         let [a, b] = surfaces.clone().map(|surface| {
             Face::unbound(surface, &mut core).update_region(
                 |region, core| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(points, core)
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
+                    region.update_exterior(|_| {
+                        Cycle::polygon(points, core).insert(&mut core.services)
+                    })
                 },
                 &mut core,
             )

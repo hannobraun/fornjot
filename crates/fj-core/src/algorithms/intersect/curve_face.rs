@@ -200,7 +200,6 @@ mod tests {
                                 core,
                             )
                             .insert(&mut core.services)])
-                            .insert(&mut core.services)
                     },
                     &mut core,
                 );
