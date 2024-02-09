@@ -1,5 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge},
+    operations::insert::Insert,
     storage::Handle,
     Instance,
 };
@@ -21,15 +22,14 @@ pub trait UpdateCycle {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_half_edge<const N: usize>(
+    fn update_half_edge<T, const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(
-            &Handle<HalfEdge>,
-            &mut Instance,
-        ) -> [Handle<HalfEdge>; N],
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Instance) -> [T; N],
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<HalfEdge>>;
 }
 
 impl UpdateCycle for Cycle {
@@ -41,18 +41,22 @@ impl UpdateCycle for Cycle {
         Cycle::new(half_edges)
     }
 
-    fn update_half_edge<const N: usize>(
+    fn update_half_edge<T, const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(
-            &Handle<HalfEdge>,
-            &mut Instance,
-        ) -> [Handle<HalfEdge>; N],
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Instance) -> [T; N],
         core: &mut Instance,
-    ) -> Self {
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<HalfEdge>>,
+    {
         let edges = self
             .half_edges()
-            .replace(handle, update(handle, core))
+            .replace(
+                handle,
+                update(handle, core)
+                    .map(|object| object.insert(&mut core.services)),
+            )
             .expect("Half-edge not found");
         Cycle::new(edges)
     }
