@@ -177,7 +177,7 @@ impl SplitFace for Shell {
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_
-            .replace_face(updated_face_after_split_edges, |_| faces.clone());
+            .update_face(updated_face_after_split_edges, |_| faces.clone());
 
         (self_, faces)
     }

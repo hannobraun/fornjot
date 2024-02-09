@@ -14,10 +14,11 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
 
     cuboid.update_shell(cuboid.shells().only(), |shell| {
         let shell = shell.update_face(shell.faces().first(), |face| {
-            face.update_region(|region| {
-                region.set_color([0., 1., 0.]).insert(&mut core.services)
-            })
-            .insert(&mut core.services)
+            [face
+                .update_region(|region| {
+                    region.set_color([0., 1., 0.]).insert(&mut core.services)
+                })
+                .insert(&mut core.services)]
         });
 
         // Split colored face, to make sure the same color is applied to the
@@ -37,6 +38,6 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
             shell
         };
 
-        shell.insert(&mut core.services)
+        [shell.insert(&mut core.services)]
     })
 }

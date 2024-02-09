@@ -152,8 +152,9 @@ pub trait BuildShell {
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .join_to(
@@ -173,8 +174,9 @@ pub trait BuildShell {
                         .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .join_to(
@@ -186,8 +188,9 @@ pub trait BuildShell {
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .join_to(
@@ -207,22 +210,25 @@ pub trait BuildShell {
                         .update_half_edge(
                             cycle.half_edges().nth_circular(0),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(1),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .update_half_edge(
                             cycle.half_edges().nth_circular(2),
                             |edge| {
-                                edge.reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)
+                                [edge
+                                    .reverse_curve_coordinate_systems(core)
+                                    .insert(&mut core.services)]
                             },
                         )
                         .join_to(

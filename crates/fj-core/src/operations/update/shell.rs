@@ -17,27 +17,10 @@ pub trait UpdateShell {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_face(
+    fn update_face<const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
-    ) -> Self;
-
-    /// Replace a face of the shell
-    ///
-    /// This is a more general version of [`UpdateShell::update_face`] which can
-    /// replace a single face with multiple others.
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the object can't be found.
-    ///
-    /// Panics, if the update results in a duplicate object.
-    #[must_use]
-    fn replace_face<const N: usize>(
-        &self,
-        handle: &Handle<Face>,
-        replace: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
+        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
     ) -> Self;
 
     /// Remove a face from the shell
@@ -51,26 +34,14 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn update_face(
+    fn update_face<const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> Handle<Face>,
+        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
     ) -> Self {
         let faces = self
             .faces()
-            .replace(handle, [update(handle)])
-            .expect("Face not found");
-        Shell::new(faces)
-    }
-
-    fn replace_face<const N: usize>(
-        &self,
-        handle: &Handle<Face>,
-        replace: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
-    ) -> Self {
-        let faces = self
-            .faces()
-            .replace(handle, replace(handle))
+            .replace(handle, update(handle))
             .expect("Face not found");
         Shell::new(faces)
     }
