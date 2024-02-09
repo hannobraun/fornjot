@@ -1,6 +1,7 @@
 use crate::{
     objects::{Shell, Solid},
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Solid`]
@@ -23,7 +24,8 @@ pub trait UpdateSolid {
     fn update_shell<const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
+        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [Handle<Shell>; N],
+        core: &mut Instance,
     ) -> Self;
 }
 
@@ -39,11 +41,12 @@ impl UpdateSolid for Solid {
     fn update_shell<const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
+        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [Handle<Shell>; N],
+        core: &mut Instance,
     ) -> Self {
         let shells = self
             .shells()
-            .replace(handle, update(handle))
+            .replace(handle, update(handle, core))
             .expect("Shell not found");
         Solid::new(shells)
     }
