@@ -3,7 +3,6 @@ use fj::{
         objects::{Region, Sketch, Solid},
         operations::{
             build::{BuildRegion, BuildSketch},
-            insert::Insert,
             sweep::SweepSketch,
             update::UpdateSketch,
         },
@@ -30,8 +29,7 @@ pub fn model(
                     [-x / 2., y / 2.],
                 ],
                 core,
-            )
-            .insert(&mut core.services)],
+            )],
             core,
         )
         .sweep_sketch(bottom_surface, sweep_path, core)
