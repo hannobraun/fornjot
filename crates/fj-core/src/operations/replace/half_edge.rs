@@ -59,9 +59,12 @@ impl ReplaceHalfEdge for Region {
         replacement_happened |= exterior.was_updated();
 
         let mut interiors = Vec::new();
-        for cycle in self.interiors() {
-            let cycle =
-                cycle.replace_half_edge(original, replacements.clone(), core);
+        for original_cycle in self.interiors() {
+            let cycle = original_cycle.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
@@ -94,9 +97,12 @@ impl ReplaceHalfEdge for Sketch {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
-        for region in self.regions() {
-            let region =
-                region.replace_half_edge(original, replacements.clone(), core);
+        for original_region in self.regions() {
+            let region = original_region.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= region.was_updated();
             regions.push(
                 region
@@ -147,9 +153,12 @@ impl ReplaceHalfEdge for Shell {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
-        for face in self.faces() {
-            let face =
-                face.replace_half_edge(original, replacements.clone(), core);
+        for original_face in self.faces() {
+            let face = original_face.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= face.was_updated();
             faces.push(
                 face.map_updated(|updated| updated.insert(core))
@@ -175,9 +184,12 @@ impl ReplaceHalfEdge for Solid {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
-        for shell in self.shells() {
-            let shell =
-                shell.replace_half_edge(original, replacements.clone(), core);
+        for original_shell in self.shells() {
+            let shell = original_shell.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell

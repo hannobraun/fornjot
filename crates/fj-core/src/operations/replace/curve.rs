@@ -52,9 +52,12 @@ impl ReplaceCurve for Cycle {
         let mut replacement_happened = false;
 
         let mut half_edges = Vec::new();
-        for half_edge in self.half_edges() {
-            let half_edge =
-                half_edge.replace_curve(original, replacement.clone(), core);
+        for original_half_edge in self.half_edges() {
+            let half_edge = original_half_edge.replace_curve(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= half_edge.was_updated();
             half_edges.push(
                 half_edge
@@ -86,9 +89,12 @@ impl ReplaceCurve for Region {
         replacement_happened |= exterior.was_updated();
 
         let mut interiors = Vec::new();
-        for cycle in self.interiors() {
-            let cycle =
-                cycle.replace_curve(original, replacement.clone(), core);
+        for original_cycle in self.interiors() {
+            let cycle = original_cycle.replace_curve(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
@@ -121,9 +127,12 @@ impl ReplaceCurve for Sketch {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
-        for region in self.regions() {
-            let region =
-                region.replace_curve(original, replacement.clone(), core);
+        for original_region in self.regions() {
+            let region = original_region.replace_curve(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= region.was_updated();
             regions.push(
                 region
@@ -172,8 +181,12 @@ impl ReplaceCurve for Shell {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
-        for face in self.faces() {
-            let face = face.replace_curve(original, replacement.clone(), core);
+        for original_face in self.faces() {
+            let face = original_face.replace_curve(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= face.was_updated();
             faces.push(
                 face.map_updated(|updated| updated.insert(core))
@@ -199,9 +212,12 @@ impl ReplaceCurve for Solid {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
-        for shell in self.shells() {
-            let shell =
-                shell.replace_curve(original, replacement.clone(), core);
+        for original_shell in self.shells() {
+            let shell = original_shell.replace_curve(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
