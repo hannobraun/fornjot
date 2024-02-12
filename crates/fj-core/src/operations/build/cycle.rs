@@ -26,7 +26,7 @@ pub trait BuildCycle {
     ) -> Cycle {
         let circle =
             HalfEdge::circle(center, radius, core).insert(&mut core.services);
-        Cycle::empty().add_half_edges([circle])
+        Cycle::empty().add_half_edges([circle], core)
     }
 
     /// Build a polygon

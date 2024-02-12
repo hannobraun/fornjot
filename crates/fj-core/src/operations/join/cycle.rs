@@ -98,7 +98,7 @@ impl JoinCycle for Cycle {
                     .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
-        self.add_half_edges(half_edges)
+        self.add_half_edges(half_edges, core)
     }
 
     fn join_to(

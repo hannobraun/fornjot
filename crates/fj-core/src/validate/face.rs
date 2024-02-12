@@ -107,12 +107,11 @@ mod tests {
             |region, core| {
                 region.update_exterior(
                     |cycle, core| {
-                        cycle.add_half_edges([HalfEdge::circle(
-                            [0., 0.],
-                            1.,
+                        cycle.add_half_edges(
+                            [HalfEdge::circle([0., 0.], 1., core)
+                                .insert(&mut core.services)],
                             core,
                         )
-                        .insert(&mut core.services)])
                     },
                     core,
                 )

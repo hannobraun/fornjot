@@ -104,7 +104,7 @@ mod tests {
             ];
             let edges = edges.map(|edge| edge.insert(&mut core.services));
 
-            Cycle::empty().add_half_edges(edges)
+            Cycle::empty().add_half_edges(edges, &mut core)
         };
 
         assert_contains_err!(

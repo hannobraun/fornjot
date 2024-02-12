@@ -107,7 +107,9 @@ pub trait BuildShell {
                     .update_region(
                         |region, core| {
                             region.update_exterior(
-                                |cycle, _| cycle.add_half_edges(half_edges),
+                                |cycle, core| {
+                                    cycle.add_half_edges(half_edges, core)
+                                },
                                 core,
                             )
                         },
