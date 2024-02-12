@@ -36,7 +36,7 @@ pub fn model(core: &mut fj::core::Instance) -> Solid {
             .translate(offset * f, core)
             .rotate(axis * angle_rad * f, core);
 
-        all = all.merge(&model);
+        all = all.merge(&model, core);
     }
 
     all
