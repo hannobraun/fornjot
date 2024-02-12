@@ -12,6 +12,7 @@ pub trait UpdateSolid {
     fn add_shells(
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,
+        core: &mut Instance,
     ) -> Self;
 
     /// Update a shell of the solid
@@ -36,6 +37,7 @@ impl UpdateSolid for Solid {
     fn add_shells(
         &self,
         shells: impl IntoIterator<Item = Handle<Shell>>,
+        _: &mut Instance,
     ) -> Self {
         let shells = self.shells().iter().cloned().chain(shells);
         Solid::new(shells)

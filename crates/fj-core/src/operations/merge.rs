@@ -15,7 +15,7 @@ pub trait Merge {
 }
 
 impl Merge for Solid {
-    fn merge(&self, other: &Self, _: &mut Instance) -> Self {
-        self.add_shells(other.shells().iter().cloned())
+    fn merge(&self, other: &Self, core: &mut Instance) -> Self {
+        self.add_shells(other.shells().iter().cloned(), core)
     }
 }
