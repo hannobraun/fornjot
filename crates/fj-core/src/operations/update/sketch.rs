@@ -7,7 +7,10 @@ use crate::{
 pub trait UpdateSketch {
     /// Add a region to the sketch
     #[must_use]
-    fn add_region(&self, region: Handle<Region>) -> Self;
+    fn add_regions(
+        &self,
+        regions: impl IntoIterator<Item = Handle<Region>>,
+    ) -> Self;
 
     /// Update a region of the sketch
     ///
@@ -25,8 +28,11 @@ pub trait UpdateSketch {
 }
 
 impl UpdateSketch for Sketch {
-    fn add_region(&self, region: Handle<Region>) -> Self {
-        Sketch::new(self.regions().iter().cloned().chain([region]))
+    fn add_regions(
+        &self,
+        regions: impl IntoIterator<Item = Handle<Region>>,
+    ) -> Self {
+        Sketch::new(self.regions().iter().cloned().chain(regions))
     }
 
     fn update_region<const N: usize>(

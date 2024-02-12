@@ -21,17 +21,15 @@ pub fn model(
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()
-        .add_region(
-            Region::polygon(
-                [
-                    [-x / 2., -y / 2.],
-                    [x / 2., -y / 2.],
-                    [x / 2., y / 2.],
-                    [-x / 2., y / 2.],
-                ],
-                core,
-            )
-            .insert(&mut core.services),
+        .add_regions([Region::polygon(
+            [
+                [-x / 2., -y / 2.],
+                [x / 2., -y / 2.],
+                [x / 2., y / 2.],
+                [-x / 2., y / 2.],
+            ],
+            core,
         )
+        .insert(&mut core.services)])
         .sweep_sketch(bottom_surface, sweep_path, core)
 }
