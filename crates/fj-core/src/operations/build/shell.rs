@@ -118,7 +118,7 @@ pub trait BuildShell {
             })
             .collect::<Vec<_>>();
 
-        Shell::empty().add_faces(faces)
+        Shell::empty().add_faces(faces, core)
     }
 
     /// Build a tetrahedron from the provided points

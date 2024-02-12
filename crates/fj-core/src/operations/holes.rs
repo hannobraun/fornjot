@@ -83,7 +83,7 @@ impl AddHole for Shell {
             },
             core,
         )
-        .add_faces(hole)
+        .add_faces(hole, core)
     }
 
     fn add_through_hole(
@@ -177,7 +177,7 @@ impl AddHole for Shell {
             },
             core,
         )
-        .add_faces(hole)
+        .add_faces(hole, core)
     }
 }
 
