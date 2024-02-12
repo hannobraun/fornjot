@@ -149,8 +149,7 @@ mod tests {
                                 [Cycle::polygon(
                                     [[1., 1.], [1., 2.], [2., 1.]],
                                     core,
-                                )
-                                .insert(&mut core.services)],
+                                )],
                                 core,
                             )
                     },

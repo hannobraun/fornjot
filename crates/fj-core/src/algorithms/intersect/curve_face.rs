@@ -157,7 +157,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
         Instance,
@@ -196,8 +195,7 @@ mod tests {
                                 core,
                             )
                             .add_interiors(
-                                [Cycle::polygon(interior_points, core)
-                                    .insert(&mut core.services)],
+                                [Cycle::polygon(interior_points, core)],
                                 core,
                             )
                     },

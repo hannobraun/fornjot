@@ -19,11 +19,13 @@ pub trait UpdateRegion {
 
     /// Add the provided interiors to the region
     #[must_use]
-    fn add_interiors(
+    fn add_interiors<T>(
         &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        interiors: impl IntoIterator<Item = T>,
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>;
 
     /// Update an interior cycle of the region
     ///
@@ -56,11 +58,17 @@ impl UpdateRegion for Region {
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 
-    fn add_interiors(
+    fn add_interiors<T>(
         &self,
-        interiors: impl IntoIterator<Item = Handle<Cycle>>,
-        _: &mut Instance,
-    ) -> Self {
+        interiors: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>,
+    {
+        let interiors = interiors
+            .into_iter()
+            .map(|cycle| cycle.insert(&mut core.services));
         let interiors = self.interiors().iter().cloned().chain(interiors);
         Region::new(self.exterior().clone(), interiors, self.color())
     }

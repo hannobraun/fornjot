@@ -24,9 +24,7 @@ pub fn model(
     Sketch::empty()
         .add_regions([Region::circle(Point::origin(), outer, core)
             .add_interiors(
-                [Cycle::circle(Point::origin(), inner, core)
-                    .reverse(core)
-                    .insert(&mut core.services)],
+                [Cycle::circle(Point::origin(), inner, core).reverse(core)],
                 core,
             )
             .insert(&mut core.services)])
