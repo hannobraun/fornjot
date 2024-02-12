@@ -9,11 +9,13 @@ use crate::{
 pub trait UpdateSolid {
     /// Add a shell to the solid
     #[must_use]
-    fn add_shells(
+    fn add_shells<T>(
         &self,
-        shells: impl IntoIterator<Item = Handle<Shell>>,
+        shells: impl IntoIterator<Item = T>,
         core: &mut Instance,
-    ) -> Self;
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Shell>>;
 
     /// Update a shell of the solid
     ///
@@ -34,11 +36,17 @@ pub trait UpdateSolid {
 }
 
 impl UpdateSolid for Solid {
-    fn add_shells(
+    fn add_shells<T>(
         &self,
-        shells: impl IntoIterator<Item = Handle<Shell>>,
-        _: &mut Instance,
-    ) -> Self {
+        shells: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Shell>>,
+    {
+        let shells = shells
+            .into_iter()
+            .map(|shell| shell.insert(&mut core.services));
         let shells = self.shells().iter().cloned().chain(shells);
         Solid::new(shells)
     }
