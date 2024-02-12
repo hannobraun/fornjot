@@ -12,6 +12,7 @@ pub trait UpdateSketch {
     fn add_regions(
         &self,
         regions: impl IntoIterator<Item = Handle<Region>>,
+        core: &mut Instance,
     ) -> Self;
 
     /// Update a region of the sketch
@@ -36,6 +37,7 @@ impl UpdateSketch for Sketch {
     fn add_regions(
         &self,
         regions: impl IntoIterator<Item = Handle<Region>>,
+        _: &mut Instance,
     ) -> Self {
         Sketch::new(self.regions().iter().cloned().chain(regions))
     }

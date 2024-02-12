@@ -45,11 +45,14 @@ pub fn model(
     let sweep_path = Vector::from([0., 0., h]);
 
     Sketch::empty()
-        .add_regions([Region::polygon(outer_points, core)
-            .add_interiors(
-                [Cycle::polygon(inner_points, core).reverse(core)],
-                core,
-            )
-            .insert(&mut core.services)])
+        .add_regions(
+            [Region::polygon(outer_points, core)
+                .add_interiors(
+                    [Cycle::polygon(inner_points, core).reverse(core)],
+                    core,
+                )
+                .insert(&mut core.services)],
+            core,
+        )
         .sweep_sketch(bottom_surface, sweep_path, core)
 }
