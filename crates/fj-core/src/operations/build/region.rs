@@ -14,7 +14,7 @@ use crate::{
 pub trait BuildRegion {
     /// Build an empty region
     fn empty(core: &mut Instance) -> Region {
-        let exterior = Cycle::empty().insert(&mut core.services);
+        let exterior = Cycle::empty().insert(core);
         let interiors = [];
         let color = None;
 
@@ -27,8 +27,7 @@ pub trait BuildRegion {
         radius: impl Into<Scalar>,
         core: &mut Instance,
     ) -> Region {
-        let exterior =
-            Cycle::circle(center, radius, core).insert(&mut core.services);
+        let exterior = Cycle::circle(center, radius, core).insert(core);
         Region::new(exterior, [], None)
     }
 
@@ -39,7 +38,7 @@ pub trait BuildRegion {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let exterior = Cycle::polygon(points, core).insert(&mut core.services);
+        let exterior = Cycle::polygon(points, core).insert(core);
         Region::new(exterior, [], None)
     }
 }

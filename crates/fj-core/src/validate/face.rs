@@ -161,9 +161,7 @@ mod tests {
                 .interiors()
                 .iter()
                 .cloned()
-                .map(|cycle| {
-                    cycle.reverse(&mut core).insert(&mut core.services)
-                })
+                .map(|cycle| cycle.reverse(&mut core).insert(&mut core))
                 .collect::<Vec<_>>();
 
             let region = Region::new(
@@ -171,7 +169,7 @@ mod tests {
                 interiors,
                 valid.region().color(),
             )
-            .insert(&mut core.services);
+            .insert(&mut core);
 
             Face::new(valid.surface().clone(), region)
         };

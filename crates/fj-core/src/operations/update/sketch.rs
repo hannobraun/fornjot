@@ -44,9 +44,7 @@ impl UpdateSketch for Sketch {
     where
         T: Insert<Inserted = Handle<Region>>,
     {
-        let regions = regions
-            .into_iter()
-            .map(|region| region.insert(&mut core.services));
+        let regions = regions.into_iter().map(|region| region.insert(core));
         let regions = self.regions().iter().cloned().chain(regions);
         Sketch::new(regions)
     }
@@ -64,8 +62,7 @@ impl UpdateSketch for Sketch {
             .regions()
             .replace(
                 handle,
-                update(handle, core)
-                    .map(|object| object.insert(&mut core.services)),
+                update(handle, core).map(|object| object.insert(core)),
             )
             .expect("Region not found");
         Sketch::new(regions)

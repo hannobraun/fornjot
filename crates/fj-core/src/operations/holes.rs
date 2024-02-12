@@ -44,8 +44,8 @@ impl AddHole for Shell {
         path: impl Into<Vector<3>>,
         core: &mut Instance,
     ) -> Self {
-        let entry = HalfEdge::circle(location.position, radius, core)
-            .insert(&mut core.services);
+        let entry =
+            HalfEdge::circle(location.position, radius, core).insert(core);
         let hole = Region::empty(core)
             .update_exterior(
                 |_, core| Cycle::empty().add_half_edges([entry.clone()], core),
@@ -94,7 +94,7 @@ impl AddHole for Shell {
         let radius = radius.into();
 
         let entry = HalfEdge::circle(entry_location.position, radius, core)
-            .insert(&mut core.services);
+            .insert(core);
 
         let path = {
             let point = |location: &HoleLocation| {

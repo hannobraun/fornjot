@@ -145,17 +145,17 @@ impl SplitFace for Shell {
                         },
                         core,
                     )
-                    .insert(&mut core.services);
+                    .insert(core);
 
                 if let Some(color) = face.region().color() {
-                    region = region.set_color(color).insert(&mut core.services);
+                    region = region.set_color(color).insert(core);
                 }
 
                 region
             },
             core,
         )
-        .insert(&mut core.services);
+        .insert(core);
 
         // The previous operation has moved the iterator along.
         let half_edges_of_face_starting_at_d = half_edges_of_face_starting_at_b;
@@ -183,17 +183,17 @@ impl SplitFace for Shell {
                         },
                         core,
                     )
-                    .insert(&mut core.services);
+                    .insert(core);
 
                 if let Some(color) = face.region().color() {
-                    region = region.set_color(color).insert(&mut core.services);
+                    region = region.set_color(color).insert(core);
                 }
 
                 region
             },
             core,
         )
-        .insert(&mut core.services);
+        .insert(core);
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_.update_face(

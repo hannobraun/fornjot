@@ -44,9 +44,7 @@ impl UpdateSolid for Solid {
     where
         T: Insert<Inserted = Handle<Shell>>,
     {
-        let shells = shells
-            .into_iter()
-            .map(|shell| shell.insert(&mut core.services));
+        let shells = shells.into_iter().map(|shell| shell.insert(core));
         let shells = self.shells().iter().cloned().chain(shells);
         Solid::new(shells)
     }
@@ -64,8 +62,7 @@ impl UpdateSolid for Solid {
             .shells()
             .replace(
                 handle,
-                update(handle, core)
-                    .map(|object| object.insert(&mut core.services)),
+                update(handle, core).map(|object| object.insert(core)),
             )
             .expect("Shell not found");
         Solid::new(shells)

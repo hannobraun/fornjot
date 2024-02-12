@@ -28,7 +28,7 @@ impl UpdateFace for Face {
         T: Insert<Inserted = Handle<Region>>,
     {
         let region = update(self.region(), core);
-        Face::new(self.surface().clone(), region.insert(&mut core.services))
+        Face::new(self.surface().clone(), region.insert(core))
     }
 }
 

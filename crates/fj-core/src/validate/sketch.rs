@@ -66,16 +66,16 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Instance::new();
 
-        let shared_cycle = Cycle::new(vec![]).insert(&mut core.services);
+        let shared_cycle = Cycle::new(vec![]).insert(&mut core);
 
         let invalid_sketch = Sketch::new(vec![
             Region::new(
-                Cycle::new(vec![]).insert(&mut core.services),
+                Cycle::new(vec![]).insert(&mut core),
                 vec![shared_cycle.clone()],
                 None,
             )
-            .insert(&mut core.services),
-            Region::new(shared_cycle, vec![], None).insert(&mut core.services),
+            .insert(&mut core),
+            Region::new(shared_cycle, vec![], None).insert(&mut core),
         ]);
         assert_contains_err!(
             invalid_sketch,
@@ -85,11 +85,11 @@ mod tests {
         );
 
         let valid_sketch = Sketch::new(vec![Region::new(
-            Cycle::new(vec![]).insert(&mut core.services),
+            Cycle::new(vec![]).insert(&mut core),
             vec![],
             None,
         )
-        .insert(&mut core.services)]);
+        .insert(&mut core)]);
         valid_sketch.validate_and_return_first_error()?;
 
         Ok(())
@@ -101,27 +101,25 @@ mod tests {
 
         let half_edge =
             HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core)
-                .insert(&mut core.services);
-        let sibling_edge = HalfEdge::from_sibling(
-            &half_edge,
-            Vertex::new().insert(&mut core.services),
-        )
-        .insert(&mut core.services);
+                .insert(&mut core);
+        let sibling_edge =
+            HalfEdge::from_sibling(&half_edge, Vertex::new().insert(&mut core))
+                .insert(&mut core);
 
         let exterior =
             Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
-                .insert(&mut core.services);
+                .insert(&mut core);
 
         let interior =
             Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
-                .insert(&mut core.services);
+                .insert(&mut core);
 
         let invalid_sketch = Sketch::new(vec![Region::new(
             exterior.clone(),
             vec![interior],
             None,
         )
-        .insert(&mut core.services)]);
+        .insert(&mut core)]);
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
@@ -131,7 +129,7 @@ mod tests {
 
         let valid_sketch =
             Sketch::new(vec![
-                Region::new(exterior, vec![], None).insert(&mut core.services)
+                Region::new(exterior, vec![], None).insert(&mut core)
             ]);
         valid_sketch.validate_and_return_first_error()?;
 

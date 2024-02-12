@@ -51,7 +51,7 @@ impl SplitHalfEdge for HalfEdge {
             self.path(),
             [point, end],
             self.curve().clone(),
-            Vertex::new().insert(&mut core.services),
+            Vertex::new().insert(core),
         );
 
         [a, b]

@@ -81,7 +81,7 @@ impl UpdateHalfEdge for HalfEdge {
         HalfEdge::new(
             self.path(),
             self.boundary(),
-            update(self.curve(), core).insert(&mut core.services),
+            update(self.curve(), core).insert(core),
             self.start_vertex().clone(),
         )
     }
@@ -98,7 +98,7 @@ impl UpdateHalfEdge for HalfEdge {
             self.path(),
             self.boundary(),
             self.curve().clone(),
-            update(self.start_vertex(), core).insert(&mut core.services),
+            update(self.start_vertex(), core).insert(core),
         )
     }
 }

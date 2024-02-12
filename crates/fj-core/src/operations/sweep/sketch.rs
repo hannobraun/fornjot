@@ -60,15 +60,12 @@ impl SweepSketch for Sketch {
                 if is_negative_sweep {
                     region.clone()
                 } else {
-                    region.reverse(core).insert(&mut core.services)
+                    region.reverse(core).insert(core)
                 }
             };
 
-            let face = Face::new(surface.clone(), region.clone())
-                .insert(&mut core.services);
-            let shell = face
-                .sweep_face(path, &mut cache, core)
-                .insert(&mut core.services);
+            let face = Face::new(surface.clone(), region.clone()).insert(core);
+            let shell = face.sweep_face(path, &mut cache, core).insert(core);
             shells.push(shell);
         }
 

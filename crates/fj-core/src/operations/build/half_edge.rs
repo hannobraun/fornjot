@@ -21,8 +21,8 @@ pub trait BuildHalfEdge {
         boundary: impl Into<CurveBoundary<Point<1>>>,
         core: &mut Instance,
     ) -> HalfEdge {
-        let curve = Curve::new().insert(&mut core.services);
-        let start_vertex = Vertex::new().insert(&mut core.services);
+        let curve = Curve::new().insert(core);
+        let start_vertex = Vertex::new().insert(core);
 
         HalfEdge::new(path, boundary, curve, start_vertex)
     }
