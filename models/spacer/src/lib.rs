@@ -23,9 +23,12 @@ pub fn model(
 
     Sketch::empty()
         .add_regions([Region::circle(Point::origin(), outer, core)
-            .add_interiors([Cycle::circle(Point::origin(), inner, core)
-                .reverse(core)
-                .insert(&mut core.services)])
+            .add_interiors(
+                [Cycle::circle(Point::origin(), inner, core)
+                    .reverse(core)
+                    .insert(&mut core.services)],
+                core,
+            )
             .insert(&mut core.services)])
         .sweep_sketch(bottom_surface, sweep_path, core)
 }

@@ -195,11 +195,11 @@ mod tests {
                                 |_, core| Cycle::polygon(exterior_points, core),
                                 core,
                             )
-                            .add_interiors([Cycle::polygon(
-                                interior_points,
+                            .add_interiors(
+                                [Cycle::polygon(interior_points, core)
+                                    .insert(&mut core.services)],
                                 core,
                             )
-                            .insert(&mut core.services)])
                     },
                     &mut core,
                 );

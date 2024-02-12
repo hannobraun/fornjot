@@ -149,8 +149,11 @@ mod tests {
                         |_, core| Cycle::polygon([a, b, c, d], core),
                         core,
                     )
-                    .add_interiors([Cycle::polygon([e, f, g, h], core)
-                        .insert(&mut core.services)])
+                    .add_interiors(
+                        [Cycle::polygon([e, f, g, h], core)
+                            .insert(&mut core.services)],
+                        core,
+                    )
             },
             &mut core,
         );

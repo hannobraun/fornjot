@@ -22,6 +22,7 @@ pub trait UpdateRegion {
     fn add_interiors(
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        core: &mut Instance,
     ) -> Self;
 
     /// Update an interior cycle of the region
@@ -58,6 +59,7 @@ impl UpdateRegion for Region {
     fn add_interiors(
         &self,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
+        _: &mut Instance,
     ) -> Self {
         let interiors = self.interiors().iter().cloned().chain(interiors);
         Region::new(self.exterior().clone(), interiors, self.color())

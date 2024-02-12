@@ -66,16 +66,19 @@ impl AddHole for Shell {
             |face, core| {
                 [face.update_region(
                     |region, core| {
-                        region.add_interiors([Cycle::empty()
-                            .add_joined_edges(
-                                [(
-                                    entry.clone(),
-                                    entry.path(),
-                                    entry.boundary(),
-                                )],
-                                core,
-                            )
-                            .insert(&mut core.services)])
+                        region.add_interiors(
+                            [Cycle::empty()
+                                .add_joined_edges(
+                                    [(
+                                        entry.clone(),
+                                        entry.path(),
+                                        entry.boundary(),
+                                    )],
+                                    core,
+                                )
+                                .insert(&mut core.services)],
+                            core,
+                        )
                     },
                     core,
                 )]
@@ -141,16 +144,19 @@ impl AddHole for Shell {
             |face, core| {
                 [face.update_region(
                     |region, core| {
-                        region.add_interiors([Cycle::empty()
-                            .add_joined_edges(
-                                [(
-                                    entry.clone(),
-                                    entry.path(),
-                                    entry.boundary(),
-                                )],
-                                core,
-                            )
-                            .insert(&mut core.services)])
+                        region.add_interiors(
+                            [Cycle::empty()
+                                .add_joined_edges(
+                                    [(
+                                        entry.clone(),
+                                        entry.path(),
+                                        entry.boundary(),
+                                    )],
+                                    core,
+                                )
+                                .insert(&mut core.services)],
+                            core,
+                        )
                     },
                     core,
                 )]
@@ -162,12 +168,19 @@ impl AddHole for Shell {
             |face, core| {
                 [face.update_region(
                     |region, core| {
-                        region.add_interiors([Cycle::empty()
-                            .add_joined_edges(
-                                [(exit.clone(), exit.path(), exit.boundary())],
-                                core,
-                            )
-                            .insert(&mut core.services)])
+                        region.add_interiors(
+                            [Cycle::empty()
+                                .add_joined_edges(
+                                    [(
+                                        exit.clone(),
+                                        exit.path(),
+                                        exit.boundary(),
+                                    )],
+                                    core,
+                                )
+                                .insert(&mut core.services)],
+                            core,
+                        )
                     },
                     core,
                 )]
