@@ -39,7 +39,8 @@ impl UpdateSketch for Sketch {
         regions: impl IntoIterator<Item = Handle<Region>>,
         _: &mut Instance,
     ) -> Self {
-        Sketch::new(self.regions().iter().cloned().chain(regions))
+        let regions = self.regions().iter().cloned().chain(regions);
+        Sketch::new(regions)
     }
 
     fn update_region<T, const N: usize>(
