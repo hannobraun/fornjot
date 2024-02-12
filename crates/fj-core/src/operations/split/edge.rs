@@ -42,7 +42,7 @@ impl SplitEdge for Shell {
 
         let [half_edge_a, half_edge_b] = half_edge
             .split_half_edge(point, core)
-            .map(|half_edge| half_edge.insert(core));
+            .map(|half_edge_part| half_edge_part.insert(core));
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
