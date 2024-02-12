@@ -398,7 +398,6 @@ mod tests {
         objects::{Curve, Shell},
         operations::{
             build::BuildShell,
-            insert::Insert,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
                 UpdateShell,
@@ -416,29 +415,33 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            [face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_half_edge(
+        let invalid = valid.shell.update_face(
+            &valid.abc.face,
+            |face, core| {
+                [face.update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge| {
+                                    |edge, _| {
                                         [edge
                                             .update_path(|path| path.reverse())
                                             .update_boundary(|boundary| {
                                                 boundary.reverse()
-                                            })
-                                            .insert(&mut core.services)]
+                                            })]
                                     },
+                                    core,
                                 )
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)]
-        });
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )]
+            },
+            &mut core,
+        );
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(
@@ -480,29 +483,32 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
-        let invalid = valid.shell.update_face(&valid.abc.face, |face| {
-            [face
-                .update_region(|region| {
-                    region
-                        .update_exterior(|cycle| {
-                            cycle
-                                .update_half_edge(
+        let invalid = valid.shell.update_face(
+            &valid.abc.face,
+            |face, core| {
+                [face.update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge| {
-                                        [edge
-                                            .update_curve(|_| {
-                                                Curve::new()
-                                                    .insert(&mut core.services)
-                                            })
-                                            .insert(&mut core.services)]
+                                    |edge, core| {
+                                        [edge.update_curve(
+                                            |_, _| Curve::new(),
+                                            core,
+                                        )]
                                     },
+                                    core,
                                 )
-                                .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)]
-        });
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )]
+            },
+            &mut core,
+        );
 
         valid.shell.validate_and_return_first_error()?;
         assert_contains_err!(

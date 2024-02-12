@@ -3,7 +3,6 @@ use fj::{
         objects::Solid,
         operations::{
             holes::{AddHole, HoleLocation},
-            insert::Insert,
             update::UpdateSolid,
         },
     },
@@ -19,29 +18,30 @@ pub fn model(
     let size = radius * 4.;
     let cuboid = cuboid::model([size * 2., size, size], core);
 
-    cuboid.update_shell(cuboid.shells().only(), |shell| {
-        let bottom_face = shell.faces().first();
-        let offset = size / 2.;
-        let depth = size / 2.;
+    cuboid.update_shell(
+        cuboid.shells().only(),
+        |shell, core| {
+            let bottom_face = shell.faces().first();
+            let offset = size / 2.;
+            let depth = size / 2.;
 
-        let shell = shell.add_blind_hole(
-            HoleLocation {
-                face: bottom_face,
-                position: [-offset, Scalar::ZERO].into(),
-            },
-            radius,
-            [Scalar::ZERO, Scalar::ZERO, depth],
-            core,
-        );
+            let shell = shell.add_blind_hole(
+                HoleLocation {
+                    face: bottom_face,
+                    position: [-offset, Scalar::ZERO].into(),
+                },
+                radius,
+                [Scalar::ZERO, Scalar::ZERO, depth],
+                core,
+            );
 
-        let bottom_face = shell.faces().first();
-        let top_face = shell
-            .faces()
-            .nth(5)
-            .expect("Expected shell to have top face");
+            let bottom_face = shell.faces().first();
+            let top_face = shell
+                .faces()
+                .nth(5)
+                .expect("Expected shell to have top face");
 
-        [shell
-            .add_through_hole(
+            [shell.add_through_hole(
                 [
                     HoleLocation {
                         face: bottom_face,
@@ -54,7 +54,8 @@ pub fn model(
                 ],
                 radius,
                 core,
-            )
-            .insert(&mut core.services)]
-    })
+            )]
+        },
+        core,
+    )
 }

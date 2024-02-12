@@ -3,7 +3,9 @@ use fj_math::Point;
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
+    operations::insert::Insert,
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`HalfEdge`]
@@ -24,17 +26,23 @@ pub trait UpdateHalfEdge {
 
     /// Update the curve of the edge
     #[must_use]
-    fn update_curve(
+    fn update_curve<T>(
         &self,
-        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
-    ) -> Self;
+        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Curve>>;
 
     /// Update the start vertex of the edge
     #[must_use]
-    fn update_start_vertex(
+    fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>) -> Handle<Vertex>,
-    ) -> Self;
+        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Vertex>>;
 }
 
 impl UpdateHalfEdge for HalfEdge {
@@ -62,27 +70,35 @@ impl UpdateHalfEdge for HalfEdge {
         )
     }
 
-    fn update_curve(
+    fn update_curve<T>(
         &self,
-        update: impl FnOnce(&Handle<Curve>) -> Handle<Curve>,
-    ) -> Self {
+        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Curve>>,
+    {
         HalfEdge::new(
             self.path(),
             self.boundary(),
-            update(self.curve()),
+            update(self.curve(), core).insert(&mut core.services),
             self.start_vertex().clone(),
         )
     }
 
-    fn update_start_vertex(
+    fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>) -> Handle<Vertex>,
-    ) -> Self {
+        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Vertex>>,
+    {
         HalfEdge::new(
             self.path(),
             self.boundary(),
             self.curve().clone(),
-            update(self.start_vertex()),
+            update(self.start_vertex(), core).insert(&mut core.services),
         )
     }
 }

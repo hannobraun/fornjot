@@ -1,6 +1,8 @@
 use crate::{
     objects::{Shell, Solid},
+    operations::insert::Insert,
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Solid`]
@@ -20,11 +22,14 @@ pub trait UpdateSolid {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_shell<const N: usize>(
+    fn update_shell<T, const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
-    ) -> Self;
+        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Shell>>;
 }
 
 impl UpdateSolid for Solid {
@@ -36,14 +41,22 @@ impl UpdateSolid for Solid {
         Solid::new(shells)
     }
 
-    fn update_shell<const N: usize>(
+    fn update_shell<T, const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>) -> [Handle<Shell>; N],
-    ) -> Self {
+        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Shell>>,
+    {
         let shells = self
             .shells()
-            .replace(handle, update(handle))
+            .replace(
+                handle,
+                update(handle, core)
+                    .map(|object| object.insert(&mut core.services)),
+            )
             .expect("Shell not found");
         Solid::new(shells)
     }

@@ -103,20 +103,22 @@ mod tests {
 
         let invalid =
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core);
-        let valid = invalid.update_region(|region| {
-            region
-                .update_exterior(|cycle| {
-                    cycle
-                        .add_half_edges([HalfEdge::circle(
+        let valid = invalid.update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle.add_half_edges([HalfEdge::circle(
                             [0., 0.],
                             1.,
-                            &mut core,
+                            core,
                         )
                         .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)
-        });
+                    },
+                    core,
+                )
+            },
+            &mut core,
+        );
 
         valid.validate_and_return_first_error()?;
         assert_contains_err!(
@@ -133,22 +135,26 @@ mod tests {
 
         let valid =
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[0., 0.], [3., 0.], [0., 3.]],
-                                &mut core,
+                .update_region(
+                    |region, core| {
+                        region
+                            .update_exterior(
+                                |_, core| {
+                                    Cycle::polygon(
+                                        [[0., 0.], [3., 0.], [0., 3.]],
+                                        core,
+                                    )
+                                },
+                                core,
                             )
-                            .insert(&mut core.services)
-                        })
-                        .add_interiors([Cycle::polygon(
-                            [[1., 1.], [1., 2.], [2., 1.]],
-                            &mut core,
-                        )
-                        .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                });
+                            .add_interiors([Cycle::polygon(
+                                [[1., 1.], [1., 2.], [2., 1.]],
+                                core,
+                            )
+                            .insert(&mut core.services)])
+                    },
+                    &mut core,
+                );
         let invalid = {
             let interiors = valid
                 .region()

@@ -1,16 +1,21 @@
 use crate::{
     objects::{Cycle, Region},
+    operations::insert::Insert,
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Region`]
 pub trait UpdateRegion {
     /// Update the exterior of the region
     #[must_use]
-    fn update_exterior(
+    fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Self;
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>;
 
     /// Add the provided interiors to the region
     #[must_use]
@@ -27,19 +32,26 @@ pub trait UpdateRegion {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_interior<const N: usize>(
+    fn update_interior<T, const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
-    ) -> Self;
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>;
 }
 
 impl UpdateRegion for Region {
-    fn update_exterior(
+    fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>) -> Handle<Cycle>,
-    ) -> Self {
-        let exterior = update(self.exterior());
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>,
+    {
+        let exterior = update(self.exterior(), core).insert(&mut core.services);
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 
@@ -51,14 +63,22 @@ impl UpdateRegion for Region {
         Region::new(self.exterior().clone(), interiors, self.color())
     }
 
-    fn update_interior<const N: usize>(
+    fn update_interior<T, const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>) -> [Handle<Cycle>; N],
-    ) -> Self {
+        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Cycle>>,
+    {
         let interiors = self
             .interiors()
-            .replace(handle, update(handle))
+            .replace(
+                handle,
+                update(handle, core)
+                    .map(|object| object.insert(&mut core.services)),
+            )
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())
     }

@@ -97,22 +97,22 @@ pub trait BuildShell {
                                 Some(boundary.reverse().inner),
                                 core,
                             )
-                            .update_start_vertex(|_| vertex)
-                            .update_curve(|_| curve)
+                            .update_start_vertex(|_, _| vertex, core)
+                            .update_curve(|_, _| curve, core)
                             .insert(&mut core.services)
                         })
                 };
 
                 Face::unbound(surface, core)
-                    .update_region(|region| {
-                        region
-                            .update_exterior(|cycle| {
-                                cycle
-                                    .add_half_edges(half_edges)
-                                    .insert(&mut core.services)
-                            })
-                            .insert(&mut core.services)
-                    })
+                    .update_region(
+                        |region, core| {
+                            region.update_exterior(
+                                |cycle, _| cycle.add_half_edges(half_edges),
+                                core,
+                            )
+                        },
+                        core,
+                    )
                     .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
@@ -145,114 +145,123 @@ pub trait BuildShell {
         let [a, b, c, d] = points.map(Into::into);
 
         let abc = Face::triangle([a, b, c], core);
-        let bad = Face::triangle([b, a, d], core).update_region(|region| {
-            region
-                .update_exterior(|cycle| {
-                    cycle
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(0),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .join_to(
-                            abc.face.region().exterior(),
-                            0..=0,
-                            0..=0,
-                            core,
-                        )
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)
-        });
-        let dac = Face::triangle([d, a, c], core).update_region(|region| {
-            region
-                .update_exterior(|cycle| {
-                    cycle
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(1),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .join_to(
-                            abc.face.region().exterior(),
-                            1..=1,
-                            2..=2,
-                            core,
-                        )
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(0),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .join_to(
-                            bad.face.region().exterior(),
-                            0..=0,
-                            1..=1,
-                            core,
-                        )
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)
-        });
-        let cbd = Face::triangle([c, b, d], core).update_region(|region| {
-            region
-                .update_exterior(|cycle| {
-                    cycle
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(0),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(1),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .update_half_edge(
-                            cycle.half_edges().nth_circular(2),
-                            |edge| {
-                                [edge
-                                    .reverse_curve_coordinate_systems(core)
-                                    .insert(&mut core.services)]
-                            },
-                        )
-                        .join_to(
-                            abc.face.region().exterior(),
-                            0..=0,
-                            1..=1,
-                            core,
-                        )
-                        .join_to(
-                            bad.face.region().exterior(),
-                            1..=1,
-                            2..=2,
-                            core,
-                        )
-                        .join_to(
-                            dac.face.region().exterior(),
-                            2..=2,
-                            2..=2,
-                            core,
-                        )
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)
-        });
+        let bad = Face::triangle([b, a, d], core).update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(0),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .join_to(
+                                abc.face.region().exterior(),
+                                0..=0,
+                                0..=0,
+                                core,
+                            )
+                    },
+                    core,
+                )
+            },
+            core,
+        );
+        let dac = Face::triangle([d, a, c], core).update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(1),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .join_to(
+                                abc.face.region().exterior(),
+                                1..=1,
+                                2..=2,
+                                core,
+                            )
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(0),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .join_to(
+                                bad.face.region().exterior(),
+                                0..=0,
+                                1..=1,
+                                core,
+                            )
+                    },
+                    core,
+                )
+            },
+            core,
+        );
+        let cbd = Face::triangle([c, b, d], core).update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(0),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(1),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .update_half_edge(
+                                cycle.half_edges().nth_circular(2),
+                                |edge, core| {
+                                    [edge
+                                        .reverse_curve_coordinate_systems(core)]
+                                },
+                                core,
+                            )
+                            .join_to(
+                                abc.face.region().exterior(),
+                                0..=0,
+                                1..=1,
+                                core,
+                            )
+                            .join_to(
+                                bad.face.region().exterior(),
+                                1..=1,
+                                2..=2,
+                                core,
+                            )
+                            .join_to(
+                                dac.face.region().exterior(),
+                                2..=2,
+                                2..=2,
+                                core,
+                            )
+                    },
+                    core,
+                )
+            },
+            core,
+        );
 
         let triangles = [abc, bad, dac, cbd]
             .map(|triangle| triangle.insert(&mut core.services));

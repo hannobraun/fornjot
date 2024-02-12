@@ -1,6 +1,8 @@
 use crate::{
     objects::{Face, Shell},
+    operations::insert::Insert,
     storage::Handle,
+    Instance,
 };
 
 /// Update a [`Shell`]
@@ -17,11 +19,14 @@ pub trait UpdateShell {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_face<const N: usize>(
+    fn update_face<T, const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
-    ) -> Self;
+        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Face>>;
 
     /// Remove a face from the shell
     #[must_use]
@@ -34,14 +39,22 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn update_face<const N: usize>(
+    fn update_face<T, const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>) -> [Handle<Face>; N],
-    ) -> Self {
+        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [T; N],
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Face>>,
+    {
         let faces = self
             .faces()
-            .replace(handle, update(handle))
+            .replace(
+                handle,
+                update(handle, core)
+                    .map(|object| object.insert(&mut core.services)),
+            )
             .expect("Face not found");
         Shell::new(faces)
     }

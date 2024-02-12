@@ -66,7 +66,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
         Instance,
@@ -90,14 +89,15 @@ mod tests {
             core.services.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
-            Face::unbound(surface, &mut core).update_region(|region| {
-                region
-                    .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core)
-                            .insert(&mut core.services)
-                    })
-                    .insert(&mut core.services)
-            })
+            Face::unbound(surface, &mut core).update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |_, core| Cycle::polygon(points, core),
+                        core,
+                    )
+                },
+                &mut core,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);
@@ -120,14 +120,15 @@ mod tests {
             core.services.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
-            Face::unbound(surface, &mut core).update_region(|region| {
-                region
-                    .update_exterior(|_| {
-                        Cycle::polygon(points, &mut core)
-                            .insert(&mut core.services)
-                    })
-                    .insert(&mut core.services)
-            })
+            Face::unbound(surface, &mut core).update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |_, core| Cycle::polygon(points, core),
+                        core,
+                    )
+                },
+                &mut core,
+            )
         });
 
         let intersection = FaceFaceIntersection::compute([&a, &b]);

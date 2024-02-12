@@ -47,11 +47,10 @@ impl AddHole for Shell {
         let entry = HalfEdge::circle(location.position, radius, core)
             .insert(&mut core.services);
         let hole = Region::empty(core)
-            .update_exterior(|_| {
-                Cycle::empty()
-                    .add_half_edges([entry.clone()])
-                    .insert(&mut core.services)
-            })
+            .update_exterior(
+                |_, _| Cycle::empty().add_half_edges([entry.clone()]),
+                core,
+            )
             .sweep_region(
                 location.face.surface(),
                 path,
@@ -62,11 +61,12 @@ impl AddHole for Shell {
             .map(|face| face.insert(&mut core.services))
             .collect::<Vec<_>>();
 
-        self.update_face(location.face, |face| {
-            [face
-                .update_region(|region| {
-                    region
-                        .add_interiors([Cycle::empty()
+        self.update_face(
+            location.face,
+            |face, core| {
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
                             .add_joined_edges(
                                 [(
                                     entry.clone(),
@@ -76,10 +76,12 @@ impl AddHole for Shell {
                                 core,
                             )
                             .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)]
-        })
+                    },
+                    core,
+                )]
+            },
+            core,
+        )
         .add_faces(hole)
     }
 
@@ -110,11 +112,10 @@ impl AddHole for Shell {
         };
 
         let swept_region = Region::empty(core)
-            .update_exterior(|_| {
-                Cycle::empty()
-                    .add_half_edges([entry.clone()])
-                    .insert(&mut core.services)
-            })
+            .update_exterior(
+                |_, _| Cycle::empty().add_half_edges([entry.clone()]),
+                core,
+            )
             .sweep_region(
                 entry_location.face.surface(),
                 path,
@@ -135,11 +136,12 @@ impl AddHole for Shell {
             .half_edges()
             .only();
 
-        self.update_face(entry_location.face, |face| {
-            [face
-                .update_region(|region| {
-                    region
-                        .add_interiors([Cycle::empty()
+        self.update_face(
+            entry_location.face,
+            |face, core| {
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
                             .add_joined_edges(
                                 [(
                                     entry.clone(),
@@ -149,24 +151,29 @@ impl AddHole for Shell {
                                 core,
                             )
                             .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)]
-        })
-        .update_face(exit_location.face, |face| {
-            [face
-                .update_region(|region| {
-                    region
-                        .add_interiors([Cycle::empty()
+                    },
+                    core,
+                )]
+            },
+            core,
+        )
+        .update_face(
+            exit_location.face,
+            |face, core| {
+                [face.update_region(
+                    |region, core| {
+                        region.add_interiors([Cycle::empty()
                             .add_joined_edges(
                                 [(exit.clone(), exit.path(), exit.boundary())],
                                 core,
                             )
                             .insert(&mut core.services)])
-                        .insert(&mut core.services)
-                })
-                .insert(&mut core.services)]
-        })
+                    },
+                    core,
+                )]
+            },
+            core,
+        )
         .add_faces(hole)
     }
 }

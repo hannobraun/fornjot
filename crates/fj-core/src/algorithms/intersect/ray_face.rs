@@ -151,7 +151,6 @@ mod tests {
         objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
-            insert::Insert,
             transform::TransformObject,
             update::{UpdateFace, UpdateRegion},
         },
@@ -166,17 +165,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([-1., 0., 0.], &mut core);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -190,17 +197,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([1., 0., 0.], &mut core);
 
         assert_eq!(
@@ -217,17 +232,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([0., 0., 2.], &mut core);
 
         assert_eq!((&ray, &face).intersect(), None);
@@ -241,17 +264,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([1., 1., 0.], &mut core);
 
         let edge = face
@@ -275,17 +306,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([1., 1., 1.], &mut core);
 
         let vertex = face
@@ -310,17 +349,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
 
         assert_eq!(
             (&ray, &face).intersect(),
@@ -336,17 +383,25 @@ mod tests {
 
         let face =
             Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
-                .update_region(|region| {
-                    region
-                        .update_exterior(|_| {
-                            Cycle::polygon(
-                                [[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]],
-                                &mut core,
-                            )
-                            .insert(&mut core.services)
-                        })
-                        .insert(&mut core.services)
-                });
+                .update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |_, core| {
+                                Cycle::polygon(
+                                    [
+                                        [-1., -1.],
+                                        [1., -1.],
+                                        [1., 1.],
+                                        [-1., 1.],
+                                    ],
+                                    core,
+                                )
+                            },
+                            core,
+                        )
+                    },
+                    &mut core,
+                );
         let face = face.translate([0., 0., 1.], &mut core);
 
         assert_eq!((&ray, &face).intersect(), None);

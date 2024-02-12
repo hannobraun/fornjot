@@ -32,10 +32,10 @@ impl ReplaceCurve for HalfEdge {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        _: &mut Instance,
+        core: &mut Instance,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if original.id() == self.curve().id() {
-            ReplaceOutput::Updated(self.update_curve(|_| replacement))
+            ReplaceOutput::Updated(self.update_curve(|_, _| replacement, core))
         } else {
             ReplaceOutput::Original(self.clone())
         }
