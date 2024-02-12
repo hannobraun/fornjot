@@ -21,6 +21,8 @@ use crate::{
     Core,
 };
 
+use super::derive::DeriveFrom;
+
 /// Transform an object
 ///
 /// # Implementation Note
@@ -81,7 +83,8 @@ where
         let transformed = self
             .clone_object()
             .transform_with_cache(transform, core, cache)
-            .insert(core);
+            .insert(core)
+            .derive_from(self, core);
 
         cache.insert(self.clone(), transformed.clone());
 

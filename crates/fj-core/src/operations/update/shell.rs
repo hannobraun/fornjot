@@ -1,6 +1,6 @@
 use crate::{
     objects::{Face, Shell},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -66,7 +66,9 @@ impl UpdateShell for Shell {
             .faces()
             .replace(
                 handle,
-                update(handle, core).map(|object| object.insert(core)),
+                update(handle, core).map(|object| {
+                    object.insert(core).derive_from(handle, core)
+                }),
             )
             .expect("Face not found");
         Shell::new(faces)

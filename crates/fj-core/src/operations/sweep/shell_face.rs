@@ -3,6 +3,7 @@ use fj_math::Vector;
 use crate::{
     objects::{Face, Region, Shell},
     operations::{
+        derive::DeriveFrom,
         insert::Insert,
         reverse::Reverse,
         sweep::{SweepCache, SweepRegion},
@@ -56,7 +57,12 @@ impl SweepFaceOfShell for Shell {
 
         let mut cache = SweepCache::default();
 
-        let exterior = face.region().exterior().reverse(core).insert(core);
+        let exterior = face
+            .region()
+            .exterior()
+            .reverse(core)
+            .insert(core)
+            .derive_from(face.region().exterior(), core);
         let region = Region::new(exterior, [], face.region().color());
         let faces = region
             .sweep_region(face.surface(), path, &mut cache, core)

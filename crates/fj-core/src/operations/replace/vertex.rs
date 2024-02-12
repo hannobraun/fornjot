@@ -4,7 +4,7 @@ use crate::{
     objects::{
         Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid, Vertex,
     },
-    operations::{insert::Insert, update::UpdateHalfEdge},
+    operations::{derive::DeriveFrom, insert::Insert, update::UpdateHalfEdge},
     storage::Handle,
     Core,
 };
@@ -63,7 +63,11 @@ impl ReplaceVertex for Cycle {
             replacement_happened |= half_edge.was_updated();
             half_edges.push(
                 half_edge
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated
+                            .insert(core)
+                            .derive_from(original_half_edge, core)
+                    })
                     .into_inner(),
             );
         }
@@ -100,7 +104,9 @@ impl ReplaceVertex for Region {
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_cycle, core)
+                    })
                     .into_inner(),
             );
         }
@@ -108,7 +114,9 @@ impl ReplaceVertex for Region {
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
                 exterior
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.exterior(), core)
+                    })
                     .into_inner(),
                 interiors,
                 self.color(),
@@ -138,7 +146,9 @@ impl ReplaceVertex for Sketch {
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_region, core)
+                    })
                     .into_inner(),
             );
         }
@@ -164,7 +174,9 @@ impl ReplaceVertex for Face {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.region(), core)
+                    })
                     .into_inner(),
             ))
         } else {
@@ -191,8 +203,10 @@ impl ReplaceVertex for Shell {
             );
             replacement_happened |= face.was_updated();
             faces.push(
-                face.map_updated(|updated| updated.insert(core))
-                    .into_inner(),
+                face.map_updated(|updated| {
+                    updated.insert(core).derive_from(original_face, core)
+                })
+                .into_inner(),
             );
         }
 
@@ -223,7 +237,9 @@ impl ReplaceVertex for Solid {
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_shell, core)
+                    })
                     .into_inner(),
             );
         }
@@ -294,7 +310,9 @@ impl ReplaceVertex for Handle<Sketch> {
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_region, core)
+                    })
                     .into_inner(),
             );
         }

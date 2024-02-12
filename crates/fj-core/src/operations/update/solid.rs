@@ -1,6 +1,6 @@
 use crate::{
     objects::{Shell, Solid},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -62,7 +62,9 @@ impl UpdateSolid for Solid {
             .shells()
             .replace(
                 handle,
-                update(handle, core).map(|object| object.insert(core)),
+                update(handle, core).map(|object| {
+                    object.insert(core).derive_from(handle, core)
+                }),
             )
             .expect("Shell not found");
         Solid::new(shells)
