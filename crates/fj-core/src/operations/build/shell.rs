@@ -99,25 +99,24 @@ pub trait BuildShell {
                             )
                             .update_start_vertex(|_, _| vertex, core)
                             .update_curve(|_, _| curve, core)
-                            .insert(&mut core.services)
                         })
                 };
 
-                Face::unbound(surface, core)
-                    .update_region(
-                        |region, core| {
-                            region.update_exterior(
-                                |cycle, _| cycle.add_half_edges(half_edges),
-                                core,
-                            )
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)
+                Face::unbound(surface, core).update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.add_half_edges(half_edges, core)
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )
             })
             .collect::<Vec<_>>();
 
-        Shell::empty().add_faces(faces)
+        Shell::empty().add_faces(faces, core)
     }
 
     /// Build a tetrahedron from the provided points

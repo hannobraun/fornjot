@@ -8,7 +8,6 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
-        insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
@@ -85,17 +84,19 @@ impl JoinCycle for Cycle {
         >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
-        self.add_half_edges(edges.into_iter().circular_tuple_windows().map(
-            |((prev_half_edge, _, _), (half_edge, curve, boundary))| {
+        let half_edges = edges
+            .into_iter()
+            .circular_tuple_windows()
+            .map(|((prev_half_edge, _, _), (half_edge, curve, boundary))| {
                 HalfEdge::unjoined(curve, boundary, core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
                         |_, _| prev_half_edge.start_vertex().clone(),
                         core,
                     )
-                    .insert(&mut core.services)
-            },
-        ))
+            })
+            .collect::<Vec<_>>();
+        self.add_half_edges(half_edges, core)
     }
 
     fn join_to(

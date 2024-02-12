@@ -9,7 +9,13 @@ use crate::{
 pub trait UpdateShell {
     /// Add faces to the shell
     #[must_use]
-    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self;
+    fn add_faces<T>(
+        &self,
+        faces: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Face>>;
 
     /// Update a face of the shell
     ///
@@ -34,7 +40,17 @@ pub trait UpdateShell {
 }
 
 impl UpdateShell for Shell {
-    fn add_faces(&self, faces: impl IntoIterator<Item = Handle<Face>>) -> Self {
+    fn add_faces<T>(
+        &self,
+        faces: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<Face>>,
+    {
+        let faces = faces
+            .into_iter()
+            .map(|face| face.insert(&mut core.services));
         let faces = self.faces().iter().cloned().chain(faces);
         Shell::new(faces)
     }

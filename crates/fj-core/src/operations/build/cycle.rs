@@ -24,9 +24,8 @@ pub trait BuildCycle {
         radius: impl Into<Scalar>,
         core: &mut Instance,
     ) -> Cycle {
-        let circle =
-            HalfEdge::circle(center, radius, core).insert(&mut core.services);
-        Cycle::empty().add_half_edges([circle])
+        let circle = HalfEdge::circle(center, radius, core);
+        Cycle::empty().add_half_edges([circle], core)
     }
 
     /// Build a polygon

@@ -61,8 +61,8 @@ impl SweepFaceOfShell for Shell {
         let faces = region
             .sweep_region(face.surface(), path, &mut cache, core)
             .all_faces()
-            .map(|face| face.insert(&mut core.services));
+            .collect::<Vec<_>>();
 
-        self.remove_face(&face).add_faces(faces)
+        self.remove_face(&face).add_faces(faces, core)
     }
 }

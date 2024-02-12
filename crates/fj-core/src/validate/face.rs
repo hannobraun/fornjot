@@ -107,12 +107,10 @@ mod tests {
             |region, core| {
                 region.update_exterior(
                     |cycle, core| {
-                        cycle.add_half_edges([HalfEdge::circle(
-                            [0., 0.],
-                            1.,
+                        cycle.add_half_edges(
+                            [HalfEdge::circle([0., 0.], 1., core)],
                             core,
                         )
-                        .insert(&mut core.services)])
                     },
                     core,
                 )
@@ -147,11 +145,13 @@ mod tests {
                                 },
                                 core,
                             )
-                            .add_interiors([Cycle::polygon(
-                                [[1., 1.], [1., 2.], [2., 1.]],
+                            .add_interiors(
+                                [Cycle::polygon(
+                                    [[1., 1.], [1., 2.], [2., 1.]],
+                                    core,
+                                )],
                                 core,
                             )
-                            .insert(&mut core.services)])
                     },
                     &mut core,
                 );

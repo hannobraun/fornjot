@@ -9,10 +9,13 @@ use crate::{
 pub trait UpdateCycle {
     /// Add edges to the cycle
     #[must_use]
-    fn add_half_edges(
+    fn add_half_edges<T>(
         &self,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
-    ) -> Self;
+        half_edges: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<HalfEdge>>;
 
     /// Update an edge of the cycle
     ///
@@ -33,10 +36,17 @@ pub trait UpdateCycle {
 }
 
 impl UpdateCycle for Cycle {
-    fn add_half_edges(
+    fn add_half_edges<T>(
         &self,
-        half_edges: impl IntoIterator<Item = Handle<HalfEdge>>,
-    ) -> Self {
+        half_edges: impl IntoIterator<Item = T>,
+        core: &mut Instance,
+    ) -> Self
+    where
+        T: Insert<Inserted = Handle<HalfEdge>>,
+    {
+        let half_edges = half_edges
+            .into_iter()
+            .map(|half_edge| half_edge.insert(&mut core.services));
         let half_edges = self.half_edges().iter().cloned().chain(half_edges);
         Cycle::new(half_edges)
     }

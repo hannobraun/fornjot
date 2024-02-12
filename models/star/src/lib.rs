@@ -5,7 +5,6 @@ use fj::{
         objects::{Cycle, Region, Sketch, Solid},
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
-            insert::Insert,
             reverse::Reverse,
             sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
@@ -45,10 +44,12 @@ pub fn model(
     let sweep_path = Vector::from([0., 0., h]);
 
     Sketch::empty()
-        .add_regions([Region::polygon(outer_points, core)
-            .add_interiors([Cycle::polygon(inner_points, core)
-                .reverse(core)
-                .insert(&mut core.services)])
-            .insert(&mut core.services)])
+        .add_regions(
+            [Region::polygon(outer_points, core).add_interiors(
+                [Cycle::polygon(inner_points, core).reverse(core)],
+                core,
+            )],
+            core,
+        )
         .sweep_sketch(bottom_surface, sweep_path, core)
 }

@@ -29,7 +29,7 @@ pub trait BuildSolid {
         core: &mut Instance,
     ) -> Tetrahedron {
         let shell = Shell::tetrahedron(points, core).insert(&mut core.services);
-        let solid = Solid::empty().add_shells([shell.shell.clone()]);
+        let solid = Solid::empty().add_shells([shell.shell.clone()], core);
 
         Tetrahedron { solid, shell }
     }

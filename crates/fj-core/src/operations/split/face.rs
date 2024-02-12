@@ -106,13 +106,11 @@ impl SplitFace for Shell {
             None,
             core,
         )
-        .update_start_vertex(|_, _| b.start_vertex().clone(), core)
-        .insert(&mut core.services);
+        .update_start_vertex(|_, _| b.start_vertex().clone(), core);
         let dividing_half_edge_c_to_b = HalfEdge::from_sibling(
             &dividing_half_edge_a_to_d,
             d.start_vertex().clone(),
-        )
-        .insert(&mut core.services);
+        );
 
         let mut half_edges_of_face_starting_at_b =
             updated_face_after_split_edges
@@ -134,10 +132,16 @@ impl SplitFace for Shell {
             |region, core| {
                 let mut region = region
                     .update_exterior(
-                        |cycle, _| {
+                        |cycle, core| {
                             cycle
-                                .add_half_edges(half_edges_b_to_c_inclusive)
-                                .add_half_edges([dividing_half_edge_c_to_b])
+                                .add_half_edges(
+                                    half_edges_b_to_c_inclusive,
+                                    core,
+                                )
+                                .add_half_edges(
+                                    [dividing_half_edge_c_to_b],
+                                    core,
+                                )
                         },
                         core,
                     )
@@ -166,10 +170,16 @@ impl SplitFace for Shell {
             |region, core| {
                 let mut region = region
                     .update_exterior(
-                        |cycle, _| {
+                        |cycle, core| {
                             cycle
-                                .add_half_edges(half_edges_d_to_a_inclusive)
-                                .add_half_edges([dividing_half_edge_a_to_d])
+                                .add_half_edges(
+                                    half_edges_d_to_a_inclusive,
+                                    core,
+                                )
+                                .add_half_edges(
+                                    [dividing_half_edge_a_to_d],
+                                    core,
+                                )
                         },
                         core,
                     )

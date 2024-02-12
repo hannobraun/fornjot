@@ -131,7 +131,7 @@ impl SweepHalfEdge for HalfEdge {
                     edge.insert(&mut core.services)
                 };
 
-                exterior = exterior.add_half_edges([edge.clone()]);
+                exterior = exterior.add_half_edges([edge.clone()], core);
 
                 edge
             });

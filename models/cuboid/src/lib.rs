@@ -3,7 +3,6 @@ use fj::{
         objects::{Region, Sketch, Solid},
         operations::{
             build::{BuildRegion, BuildSketch},
-            insert::Insert,
             sweep::SweepSketch,
             update::UpdateSketch,
         },
@@ -21,15 +20,17 @@ pub fn model(
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()
-        .add_regions([Region::polygon(
-            [
-                [-x / 2., -y / 2.],
-                [x / 2., -y / 2.],
-                [x / 2., y / 2.],
-                [-x / 2., y / 2.],
-            ],
+        .add_regions(
+            [Region::polygon(
+                [
+                    [-x / 2., -y / 2.],
+                    [x / 2., -y / 2.],
+                    [x / 2., y / 2.],
+                    [-x / 2., y / 2.],
+                ],
+                core,
+            )],
             core,
         )
-        .insert(&mut core.services)])
         .sweep_sketch(bottom_surface, sweep_path, core)
 }
