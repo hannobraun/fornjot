@@ -58,7 +58,6 @@ impl AddHole for Shell {
                 core,
             )
             .all_faces()
-            .map(|face| face.insert(&mut core.services))
             .collect::<Vec<_>>();
 
         self.update_face(
@@ -124,11 +123,7 @@ impl AddHole for Shell {
                 core,
             );
 
-        let hole = swept_region
-            .side_faces
-            .into_iter()
-            .map(|face| face.insert(&mut core.services))
-            .collect::<Vec<_>>();
+        let hole = swept_region.side_faces.into_iter().collect::<Vec<_>>();
 
         let exit = swept_region
             .top_face

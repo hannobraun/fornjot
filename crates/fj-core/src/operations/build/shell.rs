@@ -102,19 +102,17 @@ pub trait BuildShell {
                         })
                 };
 
-                Face::unbound(surface, core)
-                    .update_region(
-                        |region, core| {
-                            region.update_exterior(
-                                |cycle, core| {
-                                    cycle.add_half_edges(half_edges, core)
-                                },
-                                core,
-                            )
-                        },
-                        core,
-                    )
-                    .insert(&mut core.services)
+                Face::unbound(surface, core).update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle.add_half_edges(half_edges, core)
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )
             })
             .collect::<Vec<_>>();
 
