@@ -81,7 +81,6 @@ mod tests {
         objects::{Cycle, HalfEdge},
         operations::{
             build::{BuildCycle, BuildHalfEdge},
-            insert::Insert,
             update::UpdateCycle,
         },
         validate::{cycle::CycleValidationError, Validate, ValidationError},
@@ -102,7 +101,6 @@ mod tests {
                 HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core),
                 HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core),
             ];
-            let edges = edges.map(|edge| edge.insert(&mut core.services));
 
             Cycle::empty().add_half_edges(edges, &mut core)
         };

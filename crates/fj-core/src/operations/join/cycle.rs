@@ -8,7 +8,6 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
-        insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
@@ -95,7 +94,6 @@ impl JoinCycle for Cycle {
                         |_, _| prev_half_edge.start_vertex().clone(),
                         core,
                     )
-                    .insert(&mut core.services)
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)

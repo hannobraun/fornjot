@@ -108,8 +108,7 @@ mod tests {
                 region.update_exterior(
                     |cycle, core| {
                         cycle.add_half_edges(
-                            [HalfEdge::circle([0., 0.], 1., core)
-                                .insert(&mut core.services)],
+                            [HalfEdge::circle([0., 0.], 1., core)],
                             core,
                         )
                     },
