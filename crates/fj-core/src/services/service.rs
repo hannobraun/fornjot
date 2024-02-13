@@ -33,7 +33,7 @@ impl<S: State> Service<S> {
     ///
     /// The command is executed synchronously. When this method returns, the
     /// state has been updated and any events have been logged.
-    pub fn execute(&mut self, command: S::Command, events: &mut Vec<S::Event>) {
+    pub fn process(&mut self, command: S::Command, events: &mut Vec<S::Event>) {
         self.state.decide(command, events);
 
         for event in events {
@@ -41,16 +41,9 @@ impl<S: State> Service<S> {
         }
     }
 
-    /// Replay the provided events on the given state
-    pub fn replay<'event>(
-        state: &mut S,
-        events: impl IntoIterator<Item = &'event S::Event>,
-    ) where
-        <S as State>::Event: 'event,
-    {
-        for event in events {
-            state.evolve(event);
-        }
+    /// Drop this instance, returning the wrapped state
+    pub fn into_state(self) -> S {
+        self.state
     }
 }
 
@@ -59,13 +52,6 @@ impl<S: State> Deref for Service<S> {
 
     fn deref(&self) -> &Self::Target {
         &self.state
-    }
-}
-
-#[cfg(test)]
-impl<S: State> std::ops::DerefMut for Service<S> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.state
     }
 }
 

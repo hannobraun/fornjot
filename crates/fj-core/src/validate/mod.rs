@@ -60,14 +60,6 @@
 //! [`Validate::validate_with_config`] and [`ValidationConfig`].
 //!
 //!
-//! ## Implementation Note
-//!
-//! It is currently not possible to define this configuration for the background
-//! validation done by the [`Services`] API. If this is a problem for you,
-//! please comment on this issue:
-//! <https://github.com/hannobraun/fornjot/issues/2060>
-//!
-//!
 //! [`fj-export`]: https://crates.io/crates/fj-export
 //! [issue tracker]: https://github.com/hannobraun/fornjot/issues
 //! [`Services`]: crate::services::Services

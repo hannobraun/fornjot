@@ -235,7 +235,8 @@ mod tests {
         let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
-        core.services.validation.errors.clear();
+        // Ignore remaining validation errors.
+        let _ = core.services.drop_and_validate();
 
         Ok(())
     }
@@ -287,7 +288,8 @@ mod tests {
         let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
-        core.services.validation.errors.clear();
+        // Ignore remaining validation errors.
+        let _ = core.services.drop_and_validate();
 
         Ok(())
     }
@@ -336,7 +338,8 @@ mod tests {
         let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
-        core.services.validation.errors.clear();
+        // Ignore remaining validation errors.
+        let _ = core.services.drop_and_validate();
 
         Ok(())
     }
@@ -375,7 +378,8 @@ mod tests {
         let valid_solid = Solid::new(vec![]).insert(&mut core);
         valid_solid.validate_and_return_first_error()?;
 
-        core.services.validation.errors.clear();
+        // Ignore remaining validation errors.
+        let _ = core.services.drop_and_validate();
 
         Ok(())
     }

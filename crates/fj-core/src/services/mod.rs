@@ -18,6 +18,7 @@ pub use self::{
 };
 
 /// The kernel services
+#[derive(Default)]
 pub struct Services {
     /// The objects service
     ///
@@ -33,20 +34,15 @@ pub struct Services {
 impl Services {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
-        let objects = Service::<Objects>::default();
-        let validation = Service::default();
-
-        Self {
-            objects,
-            validation,
-        }
+        Self::default()
     }
 
     /// Construct an instance of `Services`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let objects = Service::<Objects>::default();
+        let objects = Service::default();
         let validation =
             Service::new(Validation::with_validation_config(config));
+
         Self {
             objects,
             validation,
@@ -57,32 +53,24 @@ impl Services {
     pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
         let mut object_events = Vec::new();
         self.objects
-            .execute(Operation::InsertObject { object }, &mut object_events);
+            .process(Operation::InsertObject { object }, &mut object_events);
 
         for object_event in object_events {
             let command = ValidationCommand::ValidateObject {
                 object: object_event.object.into(),
             };
-            self.validation.execute(command, &mut Vec::new());
+            self.validation.process(command, &mut Vec::new());
         }
     }
 
     /// Drop `Services`; return any unhandled validation error
     pub fn drop_and_validate(self) -> Result<(), ValidationErrors> {
-        let errors = ValidationErrors(
-            self.validation.errors.values().cloned().collect(),
-        );
+        let errors = self.validation.into_state().into_errors();
 
         if errors.0.is_empty() {
             Ok(())
         } else {
             Err(errors)
         }
-    }
-}
-
-impl Default for Services {
-    fn default() -> Self {
-        Self::new()
     }
 }
