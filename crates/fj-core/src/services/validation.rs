@@ -12,6 +12,7 @@ use super::State;
 pub struct Validation {
     /// All unhandled validation errors
     pub errors: BTreeMap<ObjectId, ValidationError>,
+
     /// Validation configuration for the validation service
     config: ValidationConfig,
 }
