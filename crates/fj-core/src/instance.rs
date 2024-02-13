@@ -2,7 +2,7 @@
 //!
 //! See [`Instance`].
 
-use crate::{services::Services, validate::ValidationConfig};
+use crate::{layers::Services, validate::ValidationConfig};
 
 /// An instance of the Fornjot core
 ///

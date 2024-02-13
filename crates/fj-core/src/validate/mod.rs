@@ -62,7 +62,7 @@
 //!
 //! [`fj-export`]: https://crates.io/crates/fj-export
 //! [issue tracker]: https://github.com/hannobraun/fornjot/issues
-//! [`Services`]: crate::services::Services
+//! [`Services`]: crate::layers::Services
 
 mod curve;
 mod cycle;
