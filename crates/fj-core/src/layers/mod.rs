@@ -2,8 +2,8 @@
 //!
 //! See [`Layers`].
 
+mod layer;
 mod objects;
-mod service;
 mod validation;
 
 use crate::{
@@ -12,8 +12,8 @@ use crate::{
 };
 
 pub use self::{
+    layer::{Layer, State},
     objects::{InsertObject, Operation},
-    service::{Layer, State},
     validation::{Validation, ValidationCommand, ValidationEvent},
 };
 
