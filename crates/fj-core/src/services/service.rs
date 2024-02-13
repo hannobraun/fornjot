@@ -55,13 +55,6 @@ impl<S: State> Deref for Service<S> {
     }
 }
 
-#[cfg(test)]
-impl<S: State> std::ops::DerefMut for Service<S> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.state
-    }
-}
-
 impl<S: State> Default for Service<S>
 where
     S: Default,
