@@ -40,18 +40,6 @@ impl<S: State> Service<S> {
             self.state.evolve(event);
         }
     }
-
-    /// Replay the provided events on the given state
-    pub fn replay<'event>(
-        state: &mut S,
-        events: impl IntoIterator<Item = &'event S::Event>,
-    ) where
-        <S as State>::Event: 'event,
-    {
-        for event in events {
-            state.evolve(event);
-        }
-    }
 }
 
 impl<S: State> Deref for Service<S> {
