@@ -9,6 +9,7 @@ use crate::{
 use super::State;
 
 /// Errors that occurred while validating the objects inserted into the stores
+#[derive(Default)]
 pub struct Validation {
     /// All unhandled validation errors
     errors: HashMap<ObjectId, ValidationError>,
@@ -27,14 +28,6 @@ impl Validation {
     /// Drop this instance, returning the errors it contained
     pub fn into_errors(mut self) -> ValidationErrors {
         ValidationErrors(self.errors.drain().map(|(_, error)| error).collect())
-    }
-}
-
-impl Default for Validation {
-    fn default() -> Self {
-        let errors = HashMap::new();
-        let config: ValidationConfig = ValidationConfig::default();
-        Self { errors, config }
     }
 }
 
