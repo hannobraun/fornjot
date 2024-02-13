@@ -69,9 +69,7 @@ impl Services {
 
     /// Drop `Services`; return any unhandled validation error
     pub fn drop_and_validate(self) -> Result<(), ValidationErrors> {
-        let errors = ValidationErrors(
-            self.validation.errors.values().cloned().collect(),
-        );
+        let errors = self.validation.into_state().into_errors();
 
         if errors.0.is_empty() {
             Ok(())
