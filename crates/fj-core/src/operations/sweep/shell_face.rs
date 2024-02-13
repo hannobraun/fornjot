@@ -22,6 +22,10 @@ pub trait SweepFaceOfShell {
     ///
     /// Extends the shell, adding the new faces to it.
     ///
+    /// # Limitation
+    ///
+    ///  When generating new faces, these must NOT coincide with any existing faces in the shell.
+    ///
     /// # Panics
     ///
     /// Panics, if the face has interior cycles. This is not a fundamental
