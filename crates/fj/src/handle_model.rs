@@ -6,8 +6,8 @@ use fj_core::{
         bounding_volume::BoundingVolume,
         triangulate::Triangulate,
     },
-    services::Services,
     validate::ValidationErrors,
+    Instance,
 };
 use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};
@@ -23,7 +23,7 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(model: &M, services: Services) -> Result
+pub fn handle_model<M>(model: &M, core: Instance) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
@@ -36,9 +36,9 @@ where
     let args = Args::parse();
 
     if args.ignore_validation {
-        mem::forget(services);
+        mem::forget(core);
     } else {
-        services.drop_and_validate()?;
+        core.services.drop_and_validate()?;
     }
 
     let aabb = model.aabb().unwrap_or(Aabb {
