@@ -40,6 +40,11 @@ impl<S: State> Service<S> {
             self.state.evolve(event);
         }
     }
+
+    /// Drop this instance, returning the wrapped state
+    pub fn into_state(self) -> S {
+        self.state
+    }
 }
 
 impl<S: State> Deref for Service<S> {
