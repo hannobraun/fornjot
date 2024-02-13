@@ -47,6 +47,7 @@ impl Services {
         let objects = Service::default();
         let validation =
             Service::new(Validation::with_validation_config(config));
+
         Self {
             objects,
             validation,
