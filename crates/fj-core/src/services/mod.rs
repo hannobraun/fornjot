@@ -53,13 +53,13 @@ impl Services {
     pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
         let mut object_events = Vec::new();
         self.objects
-            .execute(Operation::InsertObject { object }, &mut object_events);
+            .process(Operation::InsertObject { object }, &mut object_events);
 
         for object_event in object_events {
             let command = ValidationCommand::ValidateObject {
                 object: object_event.object.into(),
             };
-            self.validation.execute(command, &mut Vec::new());
+            self.validation.process(command, &mut Vec::new());
         }
     }
 
