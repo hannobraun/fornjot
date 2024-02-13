@@ -33,7 +33,7 @@ pub struct Services {
 impl Services {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
-        let objects = Service::<Objects>::default();
+        let objects = Service::default();
         let validation = Service::default();
 
         Self {
@@ -44,7 +44,7 @@ impl Services {
 
     /// Construct an instance of `Services`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let objects = Service::<Objects>::default();
+        let objects = Service::default();
         let validation =
             Service::new(Validation::with_validation_config(config));
         Self {
