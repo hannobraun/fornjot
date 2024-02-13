@@ -16,7 +16,7 @@ pub fn model(
 ) -> Solid {
     let [x, y, z] = size.into().components;
 
-    let bottom_surface = core.services.objects.surfaces.xy_plane();
+    let bottom_surface = core.layers.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()

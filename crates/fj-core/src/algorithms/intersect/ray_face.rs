@@ -164,7 +164,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.yz_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -196,7 +196,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.yz_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -231,7 +231,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.yz_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -263,7 +263,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.yz_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -305,7 +305,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.yz_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.yz_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -348,7 +348,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -382,7 +382,7 @@ mod tests {
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(

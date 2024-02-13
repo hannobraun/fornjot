@@ -40,7 +40,7 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let bottom_surface = core.services.objects.surfaces.xy_plane();
+    let bottom_surface = core.layers.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., h]);
 
     Sketch::empty()

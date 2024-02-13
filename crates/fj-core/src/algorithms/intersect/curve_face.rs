@@ -186,7 +186,7 @@ mod tests {
         ];
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region

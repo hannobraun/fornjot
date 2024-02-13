@@ -9,20 +9,20 @@ use crate::{layers::Layers, validate::ValidationConfig};
 /// This is the main entry point to `fj-core`'s API.
 pub struct Instance {
     /// Event-sourced background services
-    pub services: Layers,
+    pub layers: Layers,
 }
 
 impl Instance {
     /// Construct an instance of `Instance`
     pub fn new() -> Self {
-        let services = Layers::new();
-        Self { services }
+        let layers = Layers::new();
+        Self { layers }
     }
 
     /// Construct an instance of `Instance`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let services = Layers::with_validation_config(config);
-        Self { services }
+        let layers = Layers::with_validation_config(config);
+        Self { layers }
     }
 }
 

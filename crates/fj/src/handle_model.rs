@@ -38,7 +38,7 @@ where
     if args.ignore_validation {
         mem::forget(core);
     } else {
-        core.services.drop_and_validate()?;
+        core.layers.drop_and_validate()?;
     }
 
     let aabb = model.aabb().unwrap_or(Aabb {

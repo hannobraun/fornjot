@@ -85,8 +85,8 @@ mod tests {
     fn plane_plane() {
         let mut core = Instance::new();
 
-        let xy = core.services.objects.surfaces.xy_plane();
-        let xz = core.services.objects.surfaces.xz_plane();
+        let xy = core.layers.objects.surfaces.xy_plane();
+        let xz = core.layers.objects.surfaces.xz_plane();
 
         // Coincident and parallel planes don't have an intersection curve.
         assert_eq!(
