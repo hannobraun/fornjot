@@ -1,6 +1,6 @@
 //! Service API that promotes monitoring and interactivity
 //!
-//! See [`Service`].
+//! See [`Layers`].
 
 mod objects;
 mod service;
