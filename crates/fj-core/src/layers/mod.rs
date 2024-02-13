@@ -19,7 +19,7 @@ pub use self::{
 
 /// The kernel services
 #[derive(Default)]
-pub struct Services {
+pub struct Layers {
     /// The objects service
     ///
     /// Allows for inserting objects into a store after they were created.
@@ -31,7 +31,7 @@ pub struct Services {
     pub validation: Service<Validation>,
 }
 
-impl Services {
+impl Layers {
     /// Construct an instance of `Services`
     pub fn new() -> Self {
         Self::default()

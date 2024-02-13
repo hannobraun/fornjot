@@ -40,10 +40,10 @@
 //! validation errors are collected in the background, to be processed when the
 //! whole shape has been finished.
 //!
-//! This is set up within the [`Services`] API, and validation errors result in
-//! a panic, when the [`Services`] instance is dropped. Unless you want to
-//! handle validation errors in a different way, you don't have to do anything
-//! special to use the validation infrastructure.
+//! This is set up within the [`Layers`] API, and validation errors result in a
+//! panic, when the [`Layers`] instance is dropped. Unless you want to handle
+//! validation errors in a different way, you don't have to do anything special
+//! to use the validation infrastructure.
 //!
 //!
 //! ## Configuration
@@ -62,7 +62,7 @@
 //!
 //! [`fj-export`]: https://crates.io/crates/fj-export
 //! [issue tracker]: https://github.com/hannobraun/fornjot/issues
-//! [`Services`]: crate::layers::Services
+//! [`Layers`]: crate::layers::Layers
 
 mod curve;
 mod cycle;
