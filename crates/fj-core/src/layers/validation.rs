@@ -19,7 +19,7 @@ pub struct Validation {
 }
 
 impl Validation {
-    /// A constructor for the validation service that allows a validation configuration to be set for the service
+    /// Construct an instance of `Validation`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         let errors = HashMap::new();
         Self { errors, config }
@@ -91,7 +91,7 @@ impl State for Validation {
     }
 }
 
-/// The command accepted by the validation service
+/// Command for `Layer<Validation>`
 pub enum ValidationCommand {
     /// Validate the provided object
     ValidateObject {
@@ -100,7 +100,7 @@ pub enum ValidationCommand {
     },
 }
 
-/// The event produced by the validation service
+/// Event produced by `Layer<Validation>`
 #[derive(Clone)]
 pub enum ValidationEvent {
     /// Validation of an object failed

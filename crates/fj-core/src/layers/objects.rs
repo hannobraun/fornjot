@@ -16,7 +16,7 @@ impl State for Objects {
     }
 }
 
-/// Command for `Service<Objects>`
+/// Command for `Layer<Objects>`
 #[derive(Debug)]
 pub enum Operation {
     /// Insert an object into the stores
@@ -29,7 +29,7 @@ pub enum Operation {
     },
 }
 
-/// Event produced by `Service<Objects>`
+/// Event produced by `Layer<Objects>`
 #[derive(Clone, Debug)]
 pub struct InsertObject {
     /// The object to insert
