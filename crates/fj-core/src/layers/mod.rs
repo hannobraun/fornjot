@@ -13,7 +13,7 @@ use crate::{
 
 pub use self::{
     objects::{InsertObject, Operation},
-    service::{Service, State},
+    service::{Layer, State},
     validation::{Validation, ValidationCommand, ValidationEvent},
 };
 
@@ -23,12 +23,12 @@ pub struct Layers {
     /// The objects service
     ///
     /// Allows for inserting objects into a store after they were created.
-    pub objects: Service<Objects>,
+    pub objects: Layer<Objects>,
 
     /// The validation service
     ///
     /// Validates objects that are inserted using the objects service.
-    pub validation: Service<Validation>,
+    pub validation: Layer<Validation>,
 }
 
 impl Layers {
@@ -39,9 +39,8 @@ impl Layers {
 
     /// Construct an instance of `Services`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let objects = Service::default();
-        let validation =
-            Service::new(Validation::with_validation_config(config));
+        let objects = Layer::default();
+        let validation = Layer::new(Validation::with_validation_config(config));
 
         Self {
             objects,
