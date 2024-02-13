@@ -8,7 +8,7 @@ use crate::{layers::Layers, validate::ValidationConfig};
 ///
 /// This is the main entry point to `fj-core`'s API.
 pub struct Instance {
-    /// Event-sourced background services
+    /// The layers of data that make up the state of a core instance
     pub layers: Layers,
 }
 
