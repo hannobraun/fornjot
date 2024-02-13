@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, error::Error, thread};
+use std::{collections::HashMap, error::Error, thread};
 
 use crate::{
     objects::{AnyObject, Stored},
@@ -11,7 +11,7 @@ use super::State;
 /// Errors that occurred while validating the objects inserted into the stores
 pub struct Validation {
     /// All unhandled validation errors
-    pub errors: BTreeMap<ObjectId, ValidationError>,
+    pub errors: HashMap<ObjectId, ValidationError>,
 
     /// Validation configuration for the validation service
     config: ValidationConfig,
@@ -20,14 +20,14 @@ pub struct Validation {
 impl Validation {
     /// A constructor for the validation service that allows a validation configuration to be set for the service
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let errors = BTreeMap::new();
+        let errors = HashMap::new();
         Self { errors, config }
     }
 }
 
 impl Default for Validation {
     fn default() -> Self {
-        let errors = BTreeMap::new();
+        let errors = HashMap::new();
         let config: ValidationConfig = ValidationConfig::default();
         Self { errors, config }
     }
