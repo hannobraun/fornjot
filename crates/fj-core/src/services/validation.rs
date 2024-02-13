@@ -11,7 +11,7 @@ use super::State;
 /// Errors that occurred while validating the objects inserted into the stores
 pub struct Validation {
     /// All unhandled validation errors
-    pub errors: HashMap<ObjectId, ValidationError>,
+    errors: HashMap<ObjectId, ValidationError>,
 
     /// Validation configuration for the validation service
     config: ValidationConfig,
