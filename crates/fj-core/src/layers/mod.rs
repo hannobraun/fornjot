@@ -10,6 +10,4 @@ mod validation;
 pub use self::{
     layer::{Layer, State},
     layers::Layers,
-    objects::InsertObject,
-    validation::ValidationEvent,
 };
