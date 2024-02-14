@@ -3,7 +3,7 @@ use crate::{
     validate::{Validation, ValidationConfig, ValidationErrors},
 };
 
-use super::{objects::ObjectsCommand, Layer};
+use super::Layer;
 
 /// # Loosely coupled layers, that together define shapes
 ///
@@ -52,15 +52,7 @@ impl Layers {
 
     /// Insert an object into the stores
     pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
-        let mut objects_events = Vec::new();
-        self.objects.process(
-            ObjectsCommand::InsertObject { object },
-            &mut objects_events,
-        );
-
-        for objects_event in objects_events {
-            self.validation.on_objects_event(objects_event);
-        }
+        self.objects.insert(object, &mut self.validation);
     }
 
     /// Drop `Layers`; return any unhandled validation error

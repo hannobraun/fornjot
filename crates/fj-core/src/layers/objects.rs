@@ -1,8 +1,27 @@
 //! Layer infrastructure for [`Objects`]
 
-use crate::objects::{AboutToBeStored, AnyObject, Objects};
+use crate::{
+    objects::{AboutToBeStored, AnyObject, Objects},
+    validate::Validation,
+};
 
-use super::State;
+use super::{Layer, State};
+
+impl Layer<Objects> {
+    /// Insert and object into the stores
+    pub fn insert(
+        &mut self,
+        object: AnyObject<AboutToBeStored>,
+        validation: &mut Layer<Validation>,
+    ) {
+        let mut events = Vec::new();
+        self.process(ObjectsCommand::InsertObject { object }, &mut events);
+
+        for event in events {
+            validation.on_objects_event(event);
+        }
+    }
+}
 
 impl State for Objects {
     type Command = ObjectsCommand;
