@@ -1,5 +1,5 @@
 use crate::{
-    objects::{AboutToBeStored, AnyObject, Objects},
+    objects::Objects,
     validate::{Validation, ValidationConfig, ValidationErrors},
 };
 
@@ -48,11 +48,6 @@ impl Layers {
             objects,
             validation,
         }
-    }
-
-    /// Insert an object into the stores
-    pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
-        self.objects.insert(object, &mut self.validation);
     }
 
     /// Drop `Layers`; return any unhandled validation error
