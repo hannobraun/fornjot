@@ -15,10 +15,12 @@ pub trait SetColor: IsObject {
 
 impl SetColor for Handle<Region> {
     fn set_color(&self, color: impl Into<Color>) -> Self::BareObject {
+        let color = color.into();
+
         Region::new(
             self.exterior().clone(),
             self.interiors().into_iter().cloned(),
-            Some(color.into()),
+            Some(color),
         )
     }
 }
