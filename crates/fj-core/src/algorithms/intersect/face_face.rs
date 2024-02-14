@@ -85,8 +85,8 @@ mod tests {
             [1., 2.],
         ];
         let [a, b] = [
-            core.services.objects.surfaces.xy_plane(),
-            core.services.objects.surfaces.xz_plane(),
+            core.layers.objects.surfaces.xy_plane(),
+            core.layers.objects.surfaces.xz_plane(),
         ]
         .map(|surface| {
             Face::unbound(surface, &mut core).update_region(
@@ -116,8 +116,8 @@ mod tests {
             [-1.,  1.],
         ];
         let surfaces = [
-            core.services.objects.surfaces.xy_plane(),
-            core.services.objects.surfaces.xz_plane(),
+            core.layers.objects.surfaces.xy_plane(),
+            core.layers.objects.surfaces.xz_plane(),
         ];
         let [a, b] = surfaces.clone().map(|surface| {
             Face::unbound(surface, &mut core).update_region(

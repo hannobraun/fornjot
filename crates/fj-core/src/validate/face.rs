@@ -102,7 +102,7 @@ mod tests {
         let mut core = Instance::new();
 
         let invalid =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core);
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core);
         let valid = invalid.update_region(
             |region, core| {
                 region.update_exterior(
@@ -132,7 +132,7 @@ mod tests {
         let mut core = Instance::new();
 
         let valid =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region

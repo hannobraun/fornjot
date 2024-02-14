@@ -2,27 +2,27 @@
 //!
 //! See [`Instance`].
 
-use crate::{services::Services, validate::ValidationConfig};
+use crate::{layers::Layers, validate::ValidationConfig};
 
 /// An instance of the Fornjot core
 ///
 /// This is the main entry point to `fj-core`'s API.
 pub struct Instance {
-    /// Event-sourced background services
-    pub services: Services,
+    /// The layers of data that make up the state of a core instance
+    pub layers: Layers,
 }
 
 impl Instance {
     /// Construct an instance of `Instance`
     pub fn new() -> Self {
-        let services = Services::new();
-        Self { services }
+        let layers = Layers::new();
+        Self { layers }
     }
 
     /// Construct an instance of `Instance`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let services = Services::with_validation_config(config);
-        Self { services }
+        let layers = Layers::with_validation_config(config);
+        Self { layers }
     }
 }
 

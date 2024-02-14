@@ -148,7 +148,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -174,7 +174,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -203,7 +203,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -232,7 +232,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -261,7 +261,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -290,7 +290,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -325,7 +325,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -362,7 +362,7 @@ mod tests {
         let mut core = Instance::new();
 
         let face =
-            Face::unbound(core.services.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
