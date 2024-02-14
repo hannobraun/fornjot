@@ -151,7 +151,7 @@ impl SplitFace for Shell {
 
                 if let Some(color) = face.region().color() {
                     region = region
-                        .set_color(color)
+                        .set_color(color, core)
                         .insert(core)
                         .derive_from(&region, core);
                 }
@@ -194,7 +194,7 @@ impl SplitFace for Shell {
 
                 if let Some(color) = face.region().color() {
                     region = region
-                        .set_color(color)
+                        .set_color(color, core)
                         .insert(core)
                         .derive_from(&region, core);
                 }
