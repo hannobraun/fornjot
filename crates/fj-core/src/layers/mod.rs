@@ -2,10 +2,11 @@
 //!
 //! See [`Layers`].
 
-mod layer;
-mod layers;
 mod objects;
 mod validation;
+
+mod layer;
+mod layers;
 
 pub use self::{
     layer::{Layer, State},
