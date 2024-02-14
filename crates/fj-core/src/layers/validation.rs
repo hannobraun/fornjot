@@ -1,62 +1,30 @@
-use std::{collections::HashMap, error::Error, thread};
+//! Layer infrastructure for [`Validation`]
 
 use crate::{
     objects::{AnyObject, Stored},
-    storage::ObjectId,
-    validate::{ValidationConfig, ValidationError, ValidationErrors},
+    validate::{Validation, ValidationError, ValidationErrors},
 };
 
-use super::State;
+use super::{objects::ObjectsEvent, Layer, State};
 
-/// Errors that occurred while validating the objects inserted into the stores
-#[derive(Default)]
-pub struct Validation {
-    /// All unhandled validation errors
-    errors: HashMap<ObjectId, ValidationError>,
-
-    /// Validation configuration for the validation service
-    config: ValidationConfig,
-}
-
-impl Validation {
-    /// Construct an instance of `Validation`, using the provided configuration
-    pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let errors = HashMap::new();
-        Self { errors, config }
+impl Layer<Validation> {
+    /// Handler for [`ObjectsEvent`]
+    pub fn on_objects_event(&mut self, event: ObjectsEvent) {
+        let ObjectsEvent::InsertObject { object } = event;
+        let command = ValidationCommand::ValidateObject {
+            object: object.into(),
+        };
+        self.process(command, &mut Vec::new());
     }
 
-    /// Drop this instance, returning the errors it contained
-    pub fn into_errors(mut self) -> ValidationErrors {
-        ValidationErrors(self.errors.drain().map(|(_, error)| error).collect())
-    }
-}
+    /// Consume the validation layer, returning any validation errors
+    pub fn into_result(self) -> Result<(), ValidationErrors> {
+        let errors = self.into_state().into_errors();
 
-impl Drop for Validation {
-    fn drop(&mut self) {
-        let num_errors = self.errors.len();
-        if num_errors > 0 {
-            println!(
-                "Dropping `Validation` with {num_errors} unhandled validation \
-                errors:"
-            );
-
-            for err in self.errors.values() {
-                println!("{}", err);
-
-                // Once `Report` is stable, we can replace this:
-                // https://doc.rust-lang.org/std/error/struct.Report.html
-                let mut source = err.source();
-                while let Some(err) = source {
-                    println!("\nCaused by:\n\t{err}");
-                    source = err.source();
-                }
-
-                print!("\n\n");
-            }
-
-            if !thread::panicking() {
-                panic!();
-            }
+        if errors.0.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
         }
     }
 }

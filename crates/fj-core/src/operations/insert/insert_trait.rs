@@ -40,7 +40,10 @@ macro_rules! impl_insert {
                 fn insert(self, core: &mut Instance) -> Self::Inserted {
                     let handle = core.layers.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
-                    core.layers.insert_object(object);
+                    core.layers.objects.insert(
+                        object,
+                        &mut core.layers.validation,
+                    );
                     handle
                 }
             }
