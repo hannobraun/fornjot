@@ -1,4 +1,4 @@
-use std::{error::Error as _, fmt, mem};
+use std::{error::Error as _, fmt};
 
 use fj_core::{
     algorithms::{
@@ -35,9 +35,7 @@ where
 
     let args = Args::parse();
 
-    if args.ignore_validation {
-        mem::forget(core);
-    } else {
+    if !args.ignore_validation {
         core.layers.validation.into_result()?;
     }
 
