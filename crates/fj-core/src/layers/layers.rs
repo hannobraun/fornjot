@@ -4,7 +4,9 @@ use crate::{
 };
 
 use super::{
-    objects::Operation, validation::Validation, Layer, ValidationCommand,
+    objects::Operation,
+    validation::{Validation, ValidationCommand},
+    Layer,
 };
 
 /// # Loosely coupled layers, that together define shapes
