@@ -1,6 +1,6 @@
 use crate::{
     objects::Objects,
-    validate::{Validation, ValidationConfig, ValidationErrors},
+    validate::{Validation, ValidationConfig},
 };
 
 use super::Layer;
@@ -48,10 +48,5 @@ impl Layers {
             objects,
             validation,
         }
-    }
-
-    /// Drop `Layers`; return any unhandled validation error
-    pub fn drop_and_validate(self) -> Result<(), ValidationErrors> {
-        self.validation.into_result()
     }
 }
