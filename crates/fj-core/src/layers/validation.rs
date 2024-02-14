@@ -12,10 +12,10 @@ use super::State;
 #[derive(Default)]
 pub struct Validation {
     /// All unhandled validation errors
-    errors: HashMap<ObjectId, ValidationError>,
+    pub errors: HashMap<ObjectId, ValidationError>,
 
     /// Validation configuration for the validation service
-    config: ValidationConfig,
+    pub config: ValidationConfig,
 }
 
 impl Validation {
