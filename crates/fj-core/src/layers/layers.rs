@@ -1,13 +1,9 @@
 use crate::{
     objects::{AboutToBeStored, AnyObject, Objects},
-    validate::{ValidationConfig, ValidationErrors},
+    validate::{Validation, ValidationConfig, ValidationErrors},
 };
 
-use super::{
-    objects::Operation,
-    validation::{Validation, ValidationCommand},
-    Layer,
-};
+use super::{objects::Operation, validation::ValidationCommand, Layer};
 
 /// # Loosely coupled layers, that together define shapes
 ///
