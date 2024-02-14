@@ -3,7 +3,7 @@ use crate::{
     validate::{ValidationConfig, ValidationErrors},
 };
 
-use super::{Layer, Operation, Validation, ValidationCommand};
+use super::{objects::Operation, Layer, Validation, ValidationCommand};
 
 /// # Loosely coupled layers, that together define shapes
 ///
