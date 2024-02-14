@@ -2,7 +2,7 @@
 
 use crate::{
     objects::{AnyObject, Stored},
-    validate::{Validation, ValidationError},
+    validate::{Validation, ValidationError, ValidationErrors},
 };
 
 use super::{objects::ObjectsEvent, Layer, State};
@@ -15,6 +15,17 @@ impl Layer<Validation> {
             object: object.into(),
         };
         self.process(command, &mut Vec::new());
+    }
+
+    /// Consume the validation layer, returning any validation errors
+    pub fn into_result(self) -> Result<(), ValidationErrors> {
+        let errors = self.into_state().into_errors();
+
+        if errors.0.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
     }
 }
 

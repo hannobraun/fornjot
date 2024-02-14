@@ -52,12 +52,6 @@ impl Layers {
 
     /// Drop `Layers`; return any unhandled validation error
     pub fn drop_and_validate(self) -> Result<(), ValidationErrors> {
-        let errors = self.validation.into_state().into_errors();
-
-        if errors.0.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
+        self.validation.into_result()
     }
 }
