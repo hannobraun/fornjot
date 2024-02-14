@@ -5,7 +5,18 @@ use crate::{
     validate::{Validation, ValidationError},
 };
 
-use super::State;
+use super::{objects::ObjectsEvent, Layer, State};
+
+impl Layer<Validation> {
+    /// Handler for [`ObjectsEvent`]
+    pub fn on_objects_event(&mut self, event: ObjectsEvent) {
+        let ObjectsEvent::InsertObject { object } = event;
+        let command = ValidationCommand::ValidateObject {
+            object: object.into(),
+        };
+        self.process(command, &mut Vec::new());
+    }
+}
 
 impl State for Validation {
     type Command = ValidationCommand;

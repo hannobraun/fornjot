@@ -3,11 +3,7 @@ use crate::{
     validate::{Validation, ValidationConfig, ValidationErrors},
 };
 
-use super::{
-    objects::{ObjectsCommand, ObjectsEvent},
-    validation::ValidationCommand,
-    Layer,
-};
+use super::{objects::ObjectsCommand, Layer};
 
 /// # Loosely coupled layers, that together define shapes
 ///
@@ -63,11 +59,7 @@ impl Layers {
         );
 
         for objects_event in objects_events {
-            let ObjectsEvent::InsertObject { object } = objects_event;
-            let command = ValidationCommand::ValidateObject {
-                object: object.into(),
-            };
-            self.validation.process(command, &mut Vec::new());
+            self.validation.on_objects_event(objects_event);
         }
     }
 
