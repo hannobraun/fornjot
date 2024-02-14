@@ -51,6 +51,12 @@ categories = ["encoding", "mathematics", "rendering"]
 [workspace.lints.rust]
 missing_docs = "warn"
 
+[workspace.lints.clippy]
+# I really don't see any point in this. It can make a public API ugly, but
+# a) that will be obvious, even without a lint, and
+# b) it provides benefits in private APIs with top-level re-exports.
+module_inception = "allow"
+
 
 [workspace.dependencies.fj]
 version = "0.48.0"
