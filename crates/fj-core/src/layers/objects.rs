@@ -6,11 +6,11 @@ use super::State;
 
 impl State for Objects {
     type Command = ObjectsCommand;
-    type Event = InsertObject;
+    type Event = ObjectsEvent;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
         let ObjectsCommand::InsertObject { object } = command;
-        events.push(InsertObject { object });
+        events.push(ObjectsEvent { object });
     }
 
     fn evolve(&mut self, event: &Self::Event) {
@@ -33,7 +33,7 @@ pub enum ObjectsCommand {
 
 /// Event produced by `Layer<Objects>`
 #[derive(Clone, Debug)]
-pub struct InsertObject {
+pub struct ObjectsEvent {
     /// The object to insert
     pub object: AnyObject<AboutToBeStored>,
 }
