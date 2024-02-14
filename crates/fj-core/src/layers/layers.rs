@@ -62,8 +62,8 @@ impl Layers {
             &mut object_events,
         );
 
-        for object_event in object_events {
-            let ObjectsEvent::InsertObject { object } = object_event;
+        for objects_event in object_events {
+            let ObjectsEvent::InsertObject { object } = objects_event;
             let command = ValidationCommand::ValidateObject {
                 object: object.into(),
             };
