@@ -2,8 +2,8 @@
 //!
 //! See [`Layers`].
 
-mod objects;
-mod validation;
+pub mod objects;
+pub mod validation;
 
 mod layer;
 mod layers;

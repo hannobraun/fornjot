@@ -1,3 +1,5 @@
+//! Layer infrastructure for [`Validation`]
+
 use crate::{
     objects::{AnyObject, Stored},
     validate::{Validation, ValidationError},

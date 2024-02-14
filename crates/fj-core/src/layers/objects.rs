@@ -1,3 +1,5 @@
+//! Layer infrastructure for [`Objects`]
+
 use crate::objects::{AboutToBeStored, AnyObject, Objects};
 
 use super::State;
