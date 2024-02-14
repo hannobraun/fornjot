@@ -11,5 +11,5 @@ pub use self::{
     layer::{Layer, State},
     layers::Layers,
     objects::InsertObject,
-    validation::{ValidationCommand, ValidationEvent},
+    validation::ValidationEvent,
 };
