@@ -5,11 +5,11 @@ use crate::objects::{AboutToBeStored, AnyObject, Objects};
 use super::State;
 
 impl State for Objects {
-    type Command = Operation;
+    type Command = ObjectsCommand;
     type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let Operation::InsertObject { object } = command;
+        let ObjectsCommand::InsertObject { object } = command;
         events.push(InsertObject { object });
     }
 
@@ -20,7 +20,7 @@ impl State for Objects {
 
 /// Command for `Layer<Objects>`
 #[derive(Debug)]
-pub enum Operation {
+pub enum ObjectsCommand {
     /// Insert an object into the stores
     ///
     /// This is the one primitive operation that all other operations are built
