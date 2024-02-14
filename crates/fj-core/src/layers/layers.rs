@@ -56,13 +56,13 @@ impl Layers {
 
     /// Insert an object into the stores
     pub fn insert_object(&mut self, object: AnyObject<AboutToBeStored>) {
-        let mut object_events = Vec::new();
+        let mut objects_events = Vec::new();
         self.objects.process(
             ObjectsCommand::InsertObject { object },
-            &mut object_events,
+            &mut objects_events,
         );
 
-        for objects_event in object_events {
+        for objects_event in objects_events {
             let ObjectsEvent::InsertObject { object } = objects_event;
             let command = ValidationCommand::ValidateObject {
                 object: object.into(),
