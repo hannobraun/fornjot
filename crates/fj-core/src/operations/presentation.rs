@@ -22,9 +22,11 @@ impl SetColor for Handle<Region> {
     fn set_color(
         &self,
         color: impl Into<Color>,
-        _core: &mut Core,
+        core: &mut Core,
     ) -> Self::BareObject {
         let color = color.into();
+
+        core.layers.presentation.set_color(self.clone(), color);
 
         Region::new(
             self.exterior().clone(),
