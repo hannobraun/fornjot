@@ -41,10 +41,8 @@ impl Layers {
 
     /// Construct an instance of `Layers`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let validation = Layer::new(Validation::with_validation_config(config));
-
         Self {
-            validation,
+            validation: Layer::new(Validation::with_validation_config(config)),
             ..Default::default()
         }
     }
