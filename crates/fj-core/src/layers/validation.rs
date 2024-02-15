@@ -9,7 +9,7 @@ use super::{objects::InsertObject, Event, Layer, State};
 
 impl Layer<Validation> {
     /// Handler for [`InsertObject`]
-    pub fn on_objects_event(&mut self, event: InsertObject) {
+    pub fn on_insert_object(&mut self, event: InsertObject) {
         let command = ValidationCommand::ValidateObject {
             object: event.object.into(),
         };
