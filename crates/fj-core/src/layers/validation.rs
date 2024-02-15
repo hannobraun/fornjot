@@ -41,7 +41,7 @@ impl State for Validation {
                 object.validate_with_config(&self.config, &mut errors);
 
                 for err in errors {
-                    events.push(ValidationEvent::ValidationFailed {
+                    events.push(ValidationEvent {
                         object: object.clone(),
                         err,
                     });
@@ -62,20 +62,16 @@ pub enum ValidationCommand {
 
 /// Event produced by `Layer<Validation>`
 #[derive(Clone)]
-pub enum ValidationEvent {
-    /// Validation of an object failed
-    ValidationFailed {
-        /// The object for which validation failed
-        object: AnyObject<Stored>,
+pub struct ValidationEvent {
+    /// The object for which validation failed
+    pub object: AnyObject<Stored>,
 
-        /// The validation error
-        err: ValidationError,
-    },
+    /// The validation error
+    pub err: ValidationError,
 }
 
 impl Event<Validation> for ValidationEvent {
     fn evolve(&self, state: &mut Validation) {
-        let ValidationEvent::ValidationFailed { object, err } = self;
-        state.errors.insert(object.id(), err.clone());
+        state.errors.insert(self.object.id(), self.err.clone());
     }
 }
