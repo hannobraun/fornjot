@@ -5,11 +5,11 @@ use crate::{
     validate::{Validation, ValidationError, ValidationErrors},
 };
 
-use super::{objects::ObjectsEvent, Event, Layer, State};
+use super::{objects::InsertObject, Event, Layer, State};
 
 impl Layer<Validation> {
-    /// Handler for [`ObjectsEvent`]
-    pub fn on_objects_event(&mut self, event: ObjectsEvent) {
+    /// Handler for [`InsertObject`]
+    pub fn on_objects_event(&mut self, event: InsertObject) {
         let command = ValidationCommand::ValidateObject {
             object: event.object.into(),
         };

@@ -25,11 +25,11 @@ impl Layer<Objects> {
 
 impl State for Objects {
     type Command = ObjectsCommand;
-    type Event = ObjectsEvent;
+    type Event = InsertObject;
 
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
         let ObjectsCommand::InsertObject { object } = command;
-        events.push(ObjectsEvent { object });
+        events.push(InsertObject { object });
     }
 }
 
@@ -50,12 +50,12 @@ pub enum ObjectsCommand {
 ///
 /// Event produced by `Layer<Objects>`.
 #[derive(Clone, Debug)]
-pub struct ObjectsEvent {
+pub struct InsertObject {
     /// The object to insert
     pub object: AnyObject<AboutToBeStored>,
 }
 
-impl Event<Objects> for ObjectsEvent {
+impl Event<Objects> for InsertObject {
     fn evolve(&self, state: &mut Objects) {
         self.object.clone().insert(state);
     }
