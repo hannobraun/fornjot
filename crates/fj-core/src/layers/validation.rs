@@ -30,7 +30,6 @@ impl Layer<Validation> {
 
 impl State for Validation {
     type Command = ValidationCommand;
-    type Event = ValidationFailed;
 }
 
 /// Command for `Layer<Validation>`
@@ -43,11 +42,9 @@ pub enum ValidationCommand {
 }
 
 impl Command<Validation> for ValidationCommand {
-    fn decide(
-        self,
-        state: &Validation,
-        events: &mut Vec<<Validation as State>::Event>,
-    ) {
+    type Event = ValidationFailed;
+
+    fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
 
         match self {

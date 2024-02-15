@@ -30,7 +30,11 @@ impl<S: State> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process(&mut self, command: S::Command, events: &mut Vec<S::Event>) {
+    pub fn process(
+        &mut self,
+        command: S::Command,
+        events: &mut Vec<<S::Command as Command<S>>::Event>,
+    ) {
         command.decide(&self.state, events);
 
         for event in events {
@@ -72,21 +76,21 @@ pub trait State: Sized {
     ///
     /// Commands are processed by [`Command::decide`].
     type Command: Command<Self>;
-
-    /// An event that encodes a change to the state
-    ///
-    /// Events are produced by [`Command::decide`] and processed by
-    /// [`Event::evolve`].
-    type Event: Event<Self>;
 }
 
 /// A command that encodes a request to update a layer's state
 pub trait Command<S: State> {
+    /// An event that encodes a change to the state
+    ///
+    /// Events are produced by [`Command::decide`] and processed by
+    /// [`Event::evolve`].
+    type Event: Event<S>;
+
     /// Decide which events to produce, given the command and provided state
     ///
     /// If the command must result in changes to the state, any number of events
     /// that describe these state changes can be produced.
-    fn decide(self, state: &S, events: &mut Vec<S::Event>);
+    fn decide(self, state: &S, events: &mut Vec<Self::Event>);
 }
 
 /// An event that encodes a change to a layer's state
