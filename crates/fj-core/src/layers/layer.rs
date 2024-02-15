@@ -31,7 +31,7 @@ impl<S: State> Layer<S> {
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
     pub fn process(&mut self, command: S::Command, events: &mut Vec<S::Event>) {
-        self.state.decide(command, events);
+        command.decide(&self.state, events);
 
         for event in events {
             event.evolve(&mut self.state);
@@ -70,24 +70,24 @@ where
 pub trait State: Sized {
     /// A command that encodes a request to update the state
     ///
-    /// Commands are processed by [`State::decide`].
+    /// Commands are processed by [`Command::decide`].
     type Command: Command<Self>;
 
     /// An event that encodes a change to the state
     ///
-    /// Events are produced by [`State::decide`] and processed by
+    /// Events are produced by [`Command::decide`] and processed by
     /// [`Event::evolve`].
     type Event: Event<Self>;
-
-    /// Decide how to react to the provided command
-    ///
-    /// If the command must result in changes to the state, any number of events
-    /// that describe these state changes can be produced.
-    fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>);
 }
 
 /// A command that encodes a request to update a layer's state
-pub trait Command<S: State> {}
+pub trait Command<S: State> {
+    /// Decide which events to produce, given the command and provided state
+    ///
+    /// If the command must result in changes to the state, any number of events
+    /// that describe these state changes can be produced.
+    fn decide(self, state: &S, events: &mut Vec<S::Event>);
+}
 
 /// An event that encodes a change to a layer's state
 pub trait Event<S> {
@@ -98,6 +98,6 @@ pub trait Event<S> {
     ///
     /// Implementations of this method are supposed to be relatively dumb. Any
     /// decisions that go into updating the state should be made in
-    /// [`State::decide`], and encoded into the event.
+    /// [`Command::decide`], and encoded into the event.
     fn evolve(&self, state: &mut S);
 }

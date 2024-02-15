@@ -26,11 +26,6 @@ impl Layer<Objects> {
 impl State for Objects {
     type Command = ObjectsCommand;
     type Event = InsertObject;
-
-    fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let ObjectsCommand::InsertObject { object } = command;
-        events.push(InsertObject { object });
-    }
 }
 
 /// Command for `Layer<Objects>`
@@ -46,7 +41,12 @@ pub enum ObjectsCommand {
     },
 }
 
-impl Command<Objects> for ObjectsCommand {}
+impl Command<Objects> for ObjectsCommand {
+    fn decide(self, _: &Objects, events: &mut Vec<<Objects as State>::Event>) {
+        let ObjectsCommand::InsertObject { object } = self;
+        events.push(InsertObject { object });
+    }
+}
 
 /// Insert an object into the stores
 ///

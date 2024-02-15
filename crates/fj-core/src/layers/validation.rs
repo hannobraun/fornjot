@@ -31,23 +31,6 @@ impl Layer<Validation> {
 impl State for Validation {
     type Command = ValidationCommand;
     type Event = ValidationFailed;
-
-    fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>) {
-        let mut errors = Vec::new();
-
-        match command {
-            ValidationCommand::ValidateObject { object } => {
-                object.validate_with_config(&self.config, &mut errors);
-
-                for err in errors {
-                    events.push(ValidationFailed {
-                        object: object.clone(),
-                        err,
-                    });
-                }
-            }
-        }
-    }
 }
 
 /// Command for `Layer<Validation>`
@@ -59,7 +42,28 @@ pub enum ValidationCommand {
     },
 }
 
-impl Command<Validation> for ValidationCommand {}
+impl Command<Validation> for ValidationCommand {
+    fn decide(
+        self,
+        state: &Validation,
+        events: &mut Vec<<Validation as State>::Event>,
+    ) {
+        let mut errors = Vec::new();
+
+        match self {
+            ValidationCommand::ValidateObject { object } => {
+                object.validate_with_config(&state.config, &mut errors);
+
+                for err in errors {
+                    events.push(ValidationFailed {
+                        object: object.clone(),
+                        err,
+                    });
+                }
+            }
+        }
+    }
+}
 
 /// Validation of an object failed
 ///
