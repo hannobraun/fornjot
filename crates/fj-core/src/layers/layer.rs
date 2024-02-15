@@ -73,7 +73,7 @@ where
 pub trait State: Sized {}
 
 /// A command that encodes a request to update a layer's state
-pub trait Command<S: State> {
+pub trait Command<S> {
     /// An event that encodes a change to the state
     ///
     /// Events are produced by [`Command::decide`] and processed by
