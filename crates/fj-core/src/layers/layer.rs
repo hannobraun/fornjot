@@ -10,17 +10,14 @@ use std::ops::Deref;
 /// processed by [`Layer::process`]. Processing a command can result in any
 /// number of events, which can then be used as commands for other layers.
 ///
-/// All of this is mediated through [`State`], which the wrapped state must
-/// implement.
-///
 /// This design takes inspiration from, and uses the nomenclature of, this
 /// article:
 /// <https://thinkbeforecoding.com/post/2021/12/17/functional-event-sourcing-decider>
-pub struct Layer<S: State> {
+pub struct Layer<S> {
     state: S,
 }
 
-impl<S: State> Layer<S> {
+impl<S> Layer<S> {
     /// Create an instance of `Layer`
     pub fn new(state: S) -> Self {
         Self { state }
@@ -30,11 +27,14 @@ impl<S: State> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process(&mut self, command: S::Command, events: &mut Vec<S::Event>) {
-        self.state.decide(command, events);
+    pub fn process<C>(&mut self, command: C, events: &mut Vec<C::Event>)
+    where
+        C: Command<S>,
+    {
+        command.decide(&self.state, events);
 
         for event in events {
-            self.state.evolve(event);
+            event.evolve(&mut self.state);
         }
     }
 
@@ -44,7 +44,7 @@ impl<S: State> Layer<S> {
     }
 }
 
-impl<S: State> Deref for Layer<S> {
+impl<S> Deref for Layer<S> {
     type Target = S;
 
     fn deref(&self) -> &Self::Target {
@@ -52,7 +52,7 @@ impl<S: State> Deref for Layer<S> {
     }
 }
 
-impl<S: State> Default for Layer<S>
+impl<S> Default for Layer<S>
 where
     S: Default,
 {
@@ -61,37 +61,30 @@ where
     }
 }
 
-/// The state of a specific layer
-///
-/// Implementations of this trait are wrapped by the generic [`Layer`], which is
-/// the consumer of this trait's API.
-///
-/// See [`Layer`] for a more detailed explanation.
-pub trait State {
-    /// A command that encodes a request to update the state
-    ///
-    /// Commands are processed by [`State::decide`].
-    type Command;
-
+/// A command that encodes a request to update a layer's state
+pub trait Command<S> {
     /// An event that encodes a change to the state
     ///
-    /// Events are produced by [`State::decide`] and processed by
-    /// [`State::evolve`].
-    type Event;
+    /// Events are produced by [`Command::decide`] and processed by
+    /// [`Event::evolve`].
+    type Event: Event<S>;
 
-    /// Decide how to react to the provided command
+    /// Decide which events to produce, given the command and provided state
     ///
     /// If the command must result in changes to the state, any number of events
     /// that describe these state changes can be produced.
-    fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>);
+    fn decide(self, state: &S, events: &mut Vec<Self::Event>);
+}
 
-    /// Evolve the state according to the provided event
+/// An event that encodes a change to a layer's state
+pub trait Event<S> {
+    /// Evolve the provided state
     ///
-    /// This is the only method that gets mutable access to the state, making
-    /// sure that all changes to the state are captured as events.
+    /// This is the only method that [`Layer`] gives mutable access to the
+    /// state, making sure that all changes to the state are captured as events.
     ///
     /// Implementations of this method are supposed to be relatively dumb. Any
     /// decisions that go into updating the state should be made in
-    /// [`State::decide`], and encoded into the event.
-    fn evolve(&mut self, event: &Self::Event);
+    /// [`Command::decide`], and encoded into the event.
+    fn evolve(&self, state: &mut S);
 }

@@ -9,6 +9,6 @@ mod layer;
 mod layers;
 
 pub use self::{
-    layer::{Layer, State},
+    layer::{Command, Event, Layer},
     layers::Layers,
 };
