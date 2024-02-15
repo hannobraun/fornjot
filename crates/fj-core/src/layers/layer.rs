@@ -81,7 +81,7 @@ pub trait Command<S> {
     ///
     /// If the command must result in changes to the state, any number of events
     /// that describe these state changes can be produced.
-    fn decide(self, state: &S, events: &mut Vec<Self::Event>);
+    fn decide(self, state: &S, events: &mut Vec<Self::Event>) -> Self::Result;
 }
 
 /// An event that encodes a change to a layer's state
