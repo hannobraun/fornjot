@@ -5,7 +5,7 @@ use crate::{
     validate::Validation,
 };
 
-use super::{Command, Event, Layer, State};
+use super::{Command, Event, Layer};
 
 impl Layer<Objects> {
     /// Insert and object into the stores
@@ -22,8 +22,6 @@ impl Layer<Objects> {
         }
     }
 }
-
-impl State for Objects {}
 
 /// Command for `Layer<Objects>`
 #[derive(Debug)]

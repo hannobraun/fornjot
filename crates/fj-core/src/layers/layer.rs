@@ -10,9 +10,6 @@ use std::ops::Deref;
 /// processed by [`Layer::process`]. Processing a command can result in any
 /// number of events, which can then be used as commands for other layers.
 ///
-/// All of this is mediated through [`State`], which the wrapped state must
-/// implement.
-///
 /// This design takes inspiration from, and uses the nomenclature of, this
 /// article:
 /// <https://thinkbeforecoding.com/post/2021/12/17/functional-event-sourcing-decider>
@@ -63,14 +60,6 @@ where
         Self::new(S::default())
     }
 }
-
-/// The state of a specific layer
-///
-/// Implementations of this trait are wrapped by the generic [`Layer`], which is
-/// the consumer of this trait's API.
-///
-/// See [`Layer`] for a more detailed explanation.
-pub trait State: Sized {}
 
 /// A command that encodes a request to update a layer's state
 pub trait Command<S> {
