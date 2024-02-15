@@ -27,15 +27,21 @@ impl<S> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process<C>(&mut self, command: C, events: &mut Vec<C::Event>)
+    pub fn process<C>(
+        &mut self,
+        command: C,
+        events: &mut Vec<C::Event>,
+    ) -> C::Result
     where
         C: Command<S>,
     {
-        command.decide(&self.state, events);
+        let result = command.decide(&self.state, events);
 
         for event in events {
             event.evolve(&mut self.state);
         }
+
+        result
     }
 
     /// Drop this instance, returning the wrapped state
