@@ -60,7 +60,9 @@ pub enum ValidationCommand {
     },
 }
 
-/// Event produced by `Layer<Validation>`
+/// Validation of an object failed
+///
+/// Event produced by `Layer<Validation>`.
 #[derive(Clone)]
 pub struct ValidationEvent {
     /// The object for which validation failed
