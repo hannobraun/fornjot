@@ -67,7 +67,7 @@ where
 /// the consumer of this trait's API.
 ///
 /// See [`Layer`] for a more detailed explanation.
-pub trait State {
+pub trait State: Sized {
     /// A command that encodes a request to update the state
     ///
     /// Commands are processed by [`State::decide`].
