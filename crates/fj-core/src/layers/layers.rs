@@ -21,7 +21,7 @@ use super::Layer;
 /// That can be changed, once necessary.
 #[derive(Default)]
 pub struct Layers {
-    /// The objects layers
+    /// The objects layer
     ///
     /// Manages the stores of topological and geometric objects that make up
     /// shapes.

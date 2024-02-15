@@ -80,8 +80,8 @@ pub trait Command<S> {
 pub trait Event<S> {
     /// Evolve the provided state
     ///
-    /// This is the only method that gets mutable access to the state, making
-    /// sure that all changes to the state are captured as events.
+    /// This is the only method that [`Layer`] gives mutable access to the
+    /// state, making sure that all changes to the state are captured as events.
     ///
     /// Implementations of this method are supposed to be relatively dumb. Any
     /// decisions that go into updating the state should be made in
