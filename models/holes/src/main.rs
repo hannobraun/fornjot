@@ -1,8 +1,8 @@
 use fj::handle_model;
 
 fn main() -> fj::Result {
-    let mut core = fj::core::Instance::new();
-    let model = holes::model(0.25, &mut core);
-    handle_model(&model, core)?;
+    let mut fj = fj::Instance::new();
+    let model = holes::model(0.25, &mut fj.core);
+    handle_model(&model, fj.core)?;
     Ok(())
 }
