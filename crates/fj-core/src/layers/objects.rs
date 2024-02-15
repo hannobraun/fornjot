@@ -36,6 +36,7 @@ pub struct InsertObject {
 }
 
 impl Command<Objects> for InsertObject {
+    type Result = ();
     type Event = InsertObject;
 
     fn decide(self, _: &Objects, events: &mut Vec<Self::Event>) {

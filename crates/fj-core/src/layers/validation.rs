@@ -21,6 +21,7 @@ impl Layer<Validation> {
 }
 
 impl Command<Validation> for InsertObject {
+    type Result = ();
     type Event = ValidationFailed;
 
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {

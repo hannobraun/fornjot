@@ -27,15 +27,21 @@ impl<S> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process<C>(&mut self, command: C, events: &mut Vec<C::Event>)
+    pub fn process<C>(
+        &mut self,
+        command: C,
+        events: &mut Vec<C::Event>,
+    ) -> C::Result
     where
         C: Command<S>,
     {
-        command.decide(&self.state, events);
+        let result = command.decide(&self.state, events);
 
         for event in events {
             event.evolve(&mut self.state);
         }
+
+        result
     }
 
     /// Drop this instance, returning the wrapped state
@@ -63,6 +69,14 @@ where
 
 /// A command that encodes a request to update a layer's state
 pub trait Command<S> {
+    /// The direct result of processing a command that is returned to the caller
+    ///
+    /// Changes to the state that result from a command are encoded as events
+    /// (see [`Command::Event`]). In addition to that, a command may return
+    /// information to the caller, and `Result` defines the type of that
+    /// information.
+    type Result;
+
     /// An event that encodes a change to the state
     ///
     /// Events are produced by [`Command::decide`] and processed by
@@ -73,7 +87,7 @@ pub trait Command<S> {
     ///
     /// If the command must result in changes to the state, any number of events
     /// that describe these state changes can be produced.
-    fn decide(self, state: &S, events: &mut Vec<Self::Event>);
+    fn decide(self, state: &S, events: &mut Vec<Self::Event>) -> Self::Result;
 }
 
 /// An event that encodes a change to a layer's state
