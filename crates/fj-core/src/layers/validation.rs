@@ -8,11 +8,6 @@ use crate::{
 use super::{objects::InsertObject, Command, Event, Layer};
 
 impl Layer<Validation> {
-    /// Handler for [`InsertObject`]
-    pub fn on_insert_object(&mut self, event: InsertObject) {
-        self.process(event, &mut Vec::new());
-    }
-
     /// Consume the validation layer, returning any validation errors
     pub fn into_result(self) -> Result<(), ValidationErrors> {
         let errors = self.into_state().into_errors();

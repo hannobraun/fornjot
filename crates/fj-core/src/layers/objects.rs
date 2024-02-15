@@ -18,7 +18,7 @@ impl Layer<Objects> {
         self.process(ObjectsCommand::InsertObject { object }, &mut events);
 
         for event in events {
-            validation.on_insert_object(event);
+            validation.process(event, &mut Vec::new());
         }
     }
 }
