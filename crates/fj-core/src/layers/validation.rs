@@ -12,17 +12,6 @@ impl Layer<Validation> {
     pub fn take_errors(&mut self) -> Result<(), ValidationErrors> {
         self.process(TakeErrors, &mut Vec::new())
     }
-
-    /// Consume the validation layer, returning any validation errors
-    pub fn into_result(self) -> Result<(), ValidationErrors> {
-        let errors = self.into_state().into_errors();
-
-        if errors.0.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
-    }
 }
 
 impl Command<Validation> for InsertObject {
