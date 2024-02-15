@@ -10,9 +10,7 @@ use super::{objects::InsertObject, Command, Event, Layer};
 impl Layer<Validation> {
     /// Handler for [`InsertObject`]
     pub fn on_insert_object(&mut self, event: InsertObject) {
-        let command = ValidationCommand::ValidateObject {
-            object: event.object.into(),
-        };
+        let command = event;
         self.process(command, &mut Vec::new());
     }
 
@@ -28,23 +26,13 @@ impl Layer<Validation> {
     }
 }
 
-/// Command for `Layer<Validation>`
-pub enum ValidationCommand {
-    /// Validate the provided object
-    ValidateObject {
-        /// The object to validate
-        object: AnyObject<Stored>,
-    },
-}
-
-impl Command<Validation> for ValidationCommand {
+impl Command<Validation> for InsertObject {
     type Event = ValidationFailed;
 
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
 
-        let ValidationCommand::ValidateObject { object } = self;
-
+        let object: AnyObject<Stored> = self.object.into();
         object.validate_with_config(&state.config, &mut errors);
 
         for err in errors {
