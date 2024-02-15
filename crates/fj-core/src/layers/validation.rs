@@ -75,10 +75,7 @@ pub enum ValidationEvent {
 
 impl Event<Validation> for ValidationEvent {
     fn evolve(&self, state: &mut Validation) {
-        match self {
-            ValidationEvent::ValidationFailed { object, err } => {
-                state.errors.insert(object.id(), err.clone());
-            }
-        }
+        let ValidationEvent::ValidationFailed { object, err } = self;
+        state.errors.insert(object.id(), err.clone());
     }
 }
