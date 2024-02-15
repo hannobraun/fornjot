@@ -77,7 +77,7 @@ pub trait State: Sized {
     ///
     /// Events are produced by [`State::decide`] and processed by
     /// [`State::evolve`].
-    type Event;
+    type Event: Event<Self>;
 
     /// Decide how to react to the provided command
     ///

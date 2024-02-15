@@ -5,7 +5,7 @@ use crate::{
     validate::{Validation, ValidationError, ValidationErrors},
 };
 
-use super::{objects::ObjectsEvent, Layer, State};
+use super::{objects::ObjectsEvent, Event, Layer, State};
 
 impl Layer<Validation> {
     /// Handler for [`ObjectsEvent`]
@@ -80,3 +80,5 @@ pub enum ValidationEvent {
         err: ValidationError,
     },
 }
+
+impl Event<Validation> for ValidationEvent {}
