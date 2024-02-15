@@ -30,11 +30,10 @@ impl<S: State> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process(
-        &mut self,
-        command: S::Command,
-        events: &mut Vec<<S::Command as Command<S>>::Event>,
-    ) {
+    pub fn process<C>(&mut self, command: C, events: &mut Vec<C::Event>)
+    where
+        C: Command<S>,
+    {
         command.decide(&self.state, events);
 
         for event in events {
