@@ -34,7 +34,7 @@ impl<S: State> Layer<S> {
         self.state.decide(command, events);
 
         for event in events {
-            self.state.evolve(event);
+            event.evolve(&mut self.state);
         }
     }
 
@@ -76,7 +76,7 @@ pub trait State: Sized {
     /// An event that encodes a change to the state
     ///
     /// Events are produced by [`State::decide`] and processed by
-    /// [`State::evolve`].
+    /// [`Event::evolve`].
     type Event: Event<Self>;
 
     /// Decide how to react to the provided command
@@ -84,8 +84,11 @@ pub trait State: Sized {
     /// If the command must result in changes to the state, any number of events
     /// that describe these state changes can be produced.
     fn decide(&self, command: Self::Command, events: &mut Vec<Self::Event>);
+}
 
-    /// Evolve the state according to the provided event
+/// An event that encodes a change to a layer's state
+pub trait Event<S> {
+    /// Evolve the provided state
     ///
     /// This is the only method that gets mutable access to the state, making
     /// sure that all changes to the state are captured as events.
@@ -93,8 +96,5 @@ pub trait State: Sized {
     /// Implementations of this method are supposed to be relatively dumb. Any
     /// decisions that go into updating the state should be made in
     /// [`State::decide`], and encoded into the event.
-    fn evolve(&mut self, event: &Self::Event);
+    fn evolve(&self, state: &mut S);
 }
-
-/// An event that encodes a change to a layer's state
-pub trait Event<S> {}

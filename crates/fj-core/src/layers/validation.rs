@@ -49,14 +49,6 @@ impl State for Validation {
             }
         }
     }
-
-    fn evolve(&mut self, event: &Self::Event) {
-        match event {
-            ValidationEvent::ValidationFailed { object, err } => {
-                self.errors.insert(object.id(), err.clone());
-            }
-        }
-    }
 }
 
 /// Command for `Layer<Validation>`
@@ -81,4 +73,12 @@ pub enum ValidationEvent {
     },
 }
 
-impl Event<Validation> for ValidationEvent {}
+impl Event<Validation> for ValidationEvent {
+    fn evolve(&self, state: &mut Validation) {
+        match self {
+            ValidationEvent::ValidationFailed { object, err } => {
+                state.errors.insert(object.id(), err.clone());
+            }
+        }
+    }
+}

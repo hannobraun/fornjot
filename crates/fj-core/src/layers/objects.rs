@@ -31,11 +31,6 @@ impl State for Objects {
         let ObjectsCommand::InsertObject { object } = command;
         events.push(ObjectsEvent::InsertObject { object });
     }
-
-    fn evolve(&mut self, event: &Self::Event) {
-        let ObjectsEvent::InsertObject { object } = event;
-        object.clone().insert(self);
-    }
 }
 
 /// Command for `Layer<Objects>`
@@ -61,4 +56,9 @@ pub enum ObjectsEvent {
     },
 }
 
-impl Event<Objects> for ObjectsEvent {}
+impl Event<Objects> for ObjectsEvent {
+    fn evolve(&self, state: &mut Objects) {
+        let ObjectsEvent::InsertObject { object } = self;
+        object.clone().insert(state);
+    }
+}
