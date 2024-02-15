@@ -10,8 +10,7 @@ use super::{objects::InsertObject, Command, Event, Layer};
 impl Layer<Validation> {
     /// Handler for [`InsertObject`]
     pub fn on_insert_object(&mut self, event: InsertObject) {
-        let command = event;
-        self.process(command, &mut Vec::new());
+        self.process(event, &mut Vec::new());
     }
 
     /// Consume the validation layer, returning any validation errors
