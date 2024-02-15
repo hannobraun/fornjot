@@ -23,9 +23,7 @@ impl Layer<Objects> {
     }
 }
 
-impl State for Objects {
-    type Command = ObjectsCommand;
-}
+impl State for Objects {}
 
 /// Command for `Layer<Objects>`
 #[derive(Debug)]

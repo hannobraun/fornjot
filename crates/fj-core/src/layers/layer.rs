@@ -70,12 +70,7 @@ where
 /// the consumer of this trait's API.
 ///
 /// See [`Layer`] for a more detailed explanation.
-pub trait State: Sized {
-    /// A command that encodes a request to update the state
-    ///
-    /// Commands are processed by [`Command::decide`].
-    type Command: Command<Self>;
-}
+pub trait State: Sized {}
 
 /// A command that encodes a request to update a layer's state
 pub trait Command<S: State> {

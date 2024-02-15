@@ -28,9 +28,7 @@ impl Layer<Validation> {
     }
 }
 
-impl State for Validation {
-    type Command = ValidationCommand;
-}
+impl State for Validation {}
 
 /// Command for `Layer<Validation>`
 pub enum ValidationCommand {
