@@ -10,9 +10,8 @@ use super::{objects::ObjectsEvent, Event, Layer, State};
 impl Layer<Validation> {
     /// Handler for [`ObjectsEvent`]
     pub fn on_objects_event(&mut self, event: ObjectsEvent) {
-        let ObjectsEvent::InsertObject { object } = event;
         let command = ValidationCommand::ValidateObject {
-            object: object.into(),
+            object: event.object.into(),
         };
         self.process(command, &mut Vec::new());
     }
