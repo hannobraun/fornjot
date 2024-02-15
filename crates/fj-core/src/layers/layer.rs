@@ -16,11 +16,11 @@ use std::ops::Deref;
 /// This design takes inspiration from, and uses the nomenclature of, this
 /// article:
 /// <https://thinkbeforecoding.com/post/2021/12/17/functional-event-sourcing-decider>
-pub struct Layer<S: State> {
+pub struct Layer<S> {
     state: S,
 }
 
-impl<S: State> Layer<S> {
+impl<S> Layer<S> {
     /// Create an instance of `Layer`
     pub fn new(state: S) -> Self {
         Self { state }
@@ -47,7 +47,7 @@ impl<S: State> Layer<S> {
     }
 }
 
-impl<S: State> Deref for Layer<S> {
+impl<S> Deref for Layer<S> {
     type Target = S;
 
     fn deref(&self) -> &Self::Target {
@@ -55,7 +55,7 @@ impl<S: State> Deref for Layer<S> {
     }
 }
 
-impl<S: State> Default for Layer<S>
+impl<S> Default for Layer<S>
 where
     S: Default,
 {
