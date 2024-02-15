@@ -5,7 +5,7 @@ use crate::{
     validate::{Validation, ValidationError, ValidationErrors},
 };
 
-use super::{objects::InsertObject, Event, Layer, State};
+use super::{objects::InsertObject, Command, Event, Layer, State};
 
 impl Layer<Validation> {
     /// Handler for [`InsertObject`]
@@ -58,6 +58,8 @@ pub enum ValidationCommand {
         object: AnyObject<Stored>,
     },
 }
+
+impl Command<Validation> for ValidationCommand {}
 
 /// Validation of an object failed
 ///

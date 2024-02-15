@@ -71,7 +71,7 @@ pub trait State: Sized {
     /// A command that encodes a request to update the state
     ///
     /// Commands are processed by [`State::decide`].
-    type Command;
+    type Command: Command<Self>;
 
     /// An event that encodes a change to the state
     ///

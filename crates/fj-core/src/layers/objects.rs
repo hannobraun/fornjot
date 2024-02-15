@@ -5,7 +5,7 @@ use crate::{
     validate::Validation,
 };
 
-use super::{Event, Layer, State};
+use super::{Command, Event, Layer, State};
 
 impl Layer<Objects> {
     /// Insert and object into the stores
@@ -45,6 +45,8 @@ pub enum ObjectsCommand {
         object: AnyObject<AboutToBeStored>,
     },
 }
+
+impl Command<Objects> for ObjectsCommand {}
 
 /// Insert an object into the stores
 ///
