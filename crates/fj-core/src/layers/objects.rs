@@ -46,7 +46,9 @@ pub enum ObjectsCommand {
     },
 }
 
-/// Event produced by `Layer<Objects>`
+/// Insert an object into the stores
+///
+/// Event produced by `Layer<Objects>`.
 #[derive(Clone, Debug)]
 pub struct ObjectsEvent {
     /// The object to insert
