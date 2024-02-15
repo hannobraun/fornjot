@@ -95,3 +95,6 @@ pub trait State {
     /// [`State::decide`], and encoded into the event.
     fn evolve(&mut self, event: &Self::Event);
 }
+
+/// An event that encodes a change to a layer's state
+pub trait Event<S> {}
