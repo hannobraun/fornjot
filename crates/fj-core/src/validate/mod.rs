@@ -119,11 +119,6 @@ impl Validation {
         let errors = HashMap::new();
         Self { errors, config }
     }
-
-    /// Drop this instance, returning the errors it contained
-    pub fn into_errors(mut self) -> ValidationErrors {
-        ValidationErrors(self.errors.drain().map(|(_, error)| error).collect())
-    }
 }
 
 impl Drop for Validation {

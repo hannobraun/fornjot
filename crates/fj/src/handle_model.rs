@@ -23,7 +23,7 @@ use crate::Args;
 ///
 /// This function is used by Fornjot's own testing infrastructure, but is useful
 /// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(model: &M, core: Instance) -> Result
+pub fn handle_model<M>(model: &M, mut core: Instance) -> Result
 where
     for<'r> (&'r M, Tolerance): Triangulate,
     M: BoundingVolume<3>,
@@ -36,7 +36,7 @@ where
     let args = Args::parse();
 
     if !args.ignore_validation {
-        core.layers.validation.into_result()?;
+        core.layers.validation.take_errors()?;
     }
 
     let aabb = model.aabb().unwrap_or(Aabb {

@@ -236,7 +236,7 @@ mod tests {
         valid_solid.validate_and_return_first_error()?;
 
         // Ignore remaining validation errors.
-        let _ = core.layers.validation.into_result();
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }
@@ -289,7 +289,7 @@ mod tests {
         valid_solid.validate_and_return_first_error()?;
 
         // Ignore remaining validation errors.
-        let _ = core.layers.validation.into_result();
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }
@@ -339,7 +339,7 @@ mod tests {
         valid_solid.validate_and_return_first_error()?;
 
         // Ignore remaining validation errors.
-        let _ = core.layers.validation.into_result();
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }
@@ -379,7 +379,7 @@ mod tests {
         valid_solid.validate_and_return_first_error()?;
 
         // Ignore remaining validation errors.
-        let _ = core.layers.validation.into_result();
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }

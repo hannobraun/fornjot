@@ -8,15 +8,9 @@ use crate::{
 use super::{objects::InsertObject, Command, Event, Layer};
 
 impl Layer<Validation> {
-    /// Consume the validation layer, returning any validation errors
-    pub fn into_result(self) -> Result<(), ValidationErrors> {
-        let errors = self.into_state().into_errors();
-
-        if errors.0.is_empty() {
-            Ok(())
-        } else {
-            Err(errors)
-        }
+    /// Take all errors stored in the validation layer
+    pub fn take_errors(&mut self) -> Result<(), ValidationErrors> {
+        self.process(TakeErrors, &mut Vec::new())
     }
 }
 
@@ -36,6 +30,38 @@ impl Command<Validation> for InsertObject {
                 err,
             });
         }
+    }
+}
+
+/// Take all errors stored in the validation layer
+///
+/// Serves both as a command for and event produced by `Layer<Validation>`.
+pub struct TakeErrors;
+
+impl Command<Validation> for TakeErrors {
+    type Result = Result<(), ValidationErrors>;
+    type Event = Self;
+
+    fn decide(
+        self,
+        state: &Validation,
+        events: &mut Vec<Self::Event>,
+    ) -> Self::Result {
+        let errors = ValidationErrors(state.errors.values().cloned().collect());
+
+        events.push(self);
+
+        if errors.0.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
+    }
+}
+
+impl Event<Validation> for TakeErrors {
+    fn evolve(&self, state: &mut Validation) {
+        state.errors.clear();
     }
 }
 
