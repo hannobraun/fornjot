@@ -39,6 +39,38 @@ impl Command<Validation> for InsertObject {
     }
 }
 
+/// Take all errors stored in the validation layer
+///
+/// Serves both as a command for and event produced by `Layer<Validation>`.
+pub struct TakeErrors;
+
+impl Command<Validation> for TakeErrors {
+    type Result = Result<(), ValidationErrors>;
+    type Event = Self;
+
+    fn decide(
+        self,
+        state: &Validation,
+        events: &mut Vec<Self::Event>,
+    ) -> Self::Result {
+        let errors = ValidationErrors(state.errors.values().cloned().collect());
+
+        events.push(self);
+
+        if errors.0.is_empty() {
+            Ok(())
+        } else {
+            Err(errors)
+        }
+    }
+}
+
+impl Event<Validation> for TakeErrors {
+    fn evolve(&self, state: &mut Validation) {
+        state.errors.clear();
+    }
+}
+
 /// Validation of an object failed
 ///
 /// Event produced by `Layer<Validation>`.
