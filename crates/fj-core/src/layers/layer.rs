@@ -63,6 +63,14 @@ where
 
 /// A command that encodes a request to update a layer's state
 pub trait Command<S> {
+    /// The direct result of processing a command that is returned to the caller
+    ///
+    /// Changes to the state that result from a command are encoded as events
+    /// (see [`Command::Event`]). In addition to that, a command may return
+    /// information to the caller, and `Result` defines the type of that
+    /// information.
+    type Result;
+
     /// An event that encodes a change to the state
     ///
     /// Events are produced by [`Command::decide`] and processed by
