@@ -43,17 +43,15 @@ impl Command<Validation> for ValidationCommand {
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
 
-        match self {
-            ValidationCommand::ValidateObject { object } => {
-                object.validate_with_config(&state.config, &mut errors);
+        let ValidationCommand::ValidateObject { object } = self;
 
-                for err in errors {
-                    events.push(ValidationFailed {
-                        object: object.clone(),
-                        err,
-                    });
-                }
-            }
+        object.validate_with_config(&state.config, &mut errors);
+
+        for err in errors {
+            events.push(ValidationFailed {
+                object: object.clone(),
+                err,
+            });
         }
     }
 }
