@@ -84,7 +84,7 @@ impl Instance {
             Some(user_defined_tolerance) => user_defined_tolerance,
         };
 
-        let mesh = (model, tolerance).triangulate();
+        let mesh = (model, tolerance).triangulate(&mut self.core);
 
         if let Some(path) = args.export {
             crate::export::export(&mesh, &path)?;

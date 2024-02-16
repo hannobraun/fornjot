@@ -6,6 +6,8 @@ mod polygon;
 use fj_interop::Mesh;
 use fj_math::Point;
 
+use crate::Core;
+
 use self::polygon::Polygon;
 
 use super::approx::{face::FaceApprox, Approx, Tolerance};
@@ -13,7 +15,7 @@ use super::approx::{face::FaceApprox, Approx, Tolerance};
 /// Triangulate a shape
 pub trait Triangulate: Sized {
     /// Triangulate the shape
-    fn triangulate(self) -> Mesh<Point<3>> {
+    fn triangulate(self, _core: &mut Core) -> Mesh<Point<3>> {
         let mut mesh = Mesh::new();
         self.triangulate_into_mesh(&mut mesh);
         mesh
@@ -115,7 +117,7 @@ mod tests {
         let c = Point::from(c).to_xyz();
         let d = Point::from(d).to_xyz();
 
-        let triangles = triangulate(face)?;
+        let triangles = triangulate(face, &mut core)?;
 
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([b, c, d]));
@@ -153,7 +155,7 @@ mod tests {
             &mut core,
         );
 
-        let triangles = triangulate(face)?;
+        let triangles = triangulate(face, &mut core)?;
 
         let a = surface.geometry().point_from_surface_coords(a);
         let b = surface.geometry().point_from_surface_coords(b);
@@ -216,7 +218,7 @@ mod tests {
             &mut core,
         );
 
-        let triangles = triangulate(face)?;
+        let triangles = triangulate(face, &mut core)?;
 
         let a = surface.geometry().point_from_surface_coords(a);
         let b = surface.geometry().point_from_surface_coords(b);
@@ -231,8 +233,11 @@ mod tests {
         Ok(())
     }
 
-    fn triangulate(face: Face) -> anyhow::Result<Mesh<Point<3>>> {
+    fn triangulate(
+        face: Face,
+        core: &mut Core,
+    ) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(face.approx(tolerance).triangulate())
+        Ok(face.approx(tolerance).triangulate(core))
     }
 }
