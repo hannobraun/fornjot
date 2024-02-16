@@ -103,7 +103,7 @@ impl Approx for &Face {
         FaceApprox {
             exterior,
             interiors,
-            color: self.region().color(),
+            color: core.layers.presentation.color.get(self.region()).copied(),
             coord_handedness: self.coord_handedness(),
         }
     }
