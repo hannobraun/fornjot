@@ -8,6 +8,7 @@ use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfacePath},
     objects::{Curve, Surface},
     storage::{Handle, HandleWrapper},
+    Core,
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
@@ -27,14 +28,20 @@ impl Approx
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let (curve, surface_path, surface, boundary) = self;
 
         match cache.get(curve, boundary) {
             Some(approx) => approx,
             None => {
-                let approx =
-                    approx_curve(&surface_path, surface, boundary, tolerance);
+                let approx = approx_curve(
+                    &surface_path,
+                    surface,
+                    boundary,
+                    tolerance,
+                    core,
+                );
 
                 cache.insert(curve.clone(), boundary, approx)
             }
@@ -47,6 +54,7 @@ fn approx_curve(
     surface: &Surface,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
+    core: &mut Core,
 ) -> CurveApprox {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
@@ -54,60 +62,63 @@ fn approx_curve(
     // This will probably all be unified eventually, as `SurfacePath` and
     // `GlobalPath` grow APIs that are better suited to implementing this code
     // in a more abstract way.
-    let points = match (path, surface.geometry().u) {
-        (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
-            todo!(
+    let points =
+        match (path, surface.geometry().u) {
+            (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
+                todo!(
                 "Approximating a circle on a curved surface not supported yet."
             )
-        }
-        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (path, boundary)
-                .approx_with_cache(tolerance, &mut ())
-                .into_iter()
-                .map(|(point_curve, point_surface)| {
-                    // We're throwing away `point_surface` here, which is a bit
-                    // weird, as we're recomputing it later (outside of this
-                    // function).
-                    //
-                    // It should be fine though:
-                    //
-                    // 1. We're throwing this version away, so there's no danger
-                    //    of inconsistency between this and the later version.
-                    // 2. This version should have been computed using the same
-                    //    path and parameters and the later version will be, so
-                    //    they should be the same anyway.
-                    // 3. Not all other cases handled in this function have a
-                    //    surface point available, so it needs to be computed
-                    //    later anyway, in the general case.
+            }
+            (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
+                (path, boundary)
+                    .approx_with_cache(tolerance, &mut (), core)
+                    .into_iter()
+                    .map(|(point_curve, point_surface)| {
+                        // We're throwing away `point_surface` here, which is a
+                        // bit weird, as we're recomputing it later (outside of
+                        // this function).
+                        //
+                        // It should be fine though:
+                        //
+                        // 1. We're throwing this version away, so there's no
+                        //    danger of inconsistency between this and the later
+                        //    version.
+                        // 2. This version should have been computed using the
+                        //    same path and parameters and the later version
+                        //    will be, so they should be the same anyway.
+                        // 3. Not all other cases handled in this function have
+                        //    a surface point available, so it needs to be
+                        //    computed later anyway, in the general case.
 
+                        let point_global = surface
+                            .geometry()
+                            .point_from_surface_coords(point_surface);
+                        (point_curve, point_global)
+                    })
+                    .collect()
+            }
+            (SurfacePath::Line(line), _) => {
+                let range_u =
+                    CurveBoundary::from(boundary.inner.map(|point_curve| {
+                        [path.point_from_path_coords(point_curve).u]
+                    }));
+
+                let approx_u = (surface.geometry().u, range_u)
+                    .approx_with_cache(tolerance, &mut (), core);
+
+                let mut points = Vec::new();
+                for (u, _) in approx_u {
+                    let t = (u.t - line.origin().u) / line.direction().u;
+                    let point_surface = path.point_from_path_coords([t]);
                     let point_global = surface
                         .geometry()
                         .point_from_surface_coords(point_surface);
-                    (point_curve, point_global)
-                })
-                .collect()
-        }
-        (SurfacePath::Line(line), _) => {
-            let range_u =
-                CurveBoundary::from(boundary.inner.map(|point_curve| {
-                    [path.point_from_path_coords(point_curve).u]
-                }));
+                    points.push((u, point_global));
+                }
 
-            let approx_u = (surface.geometry().u, range_u)
-                .approx_with_cache(tolerance, &mut ());
-
-            let mut points = Vec::new();
-            for (u, _) in approx_u {
-                let t = (u.t - line.origin().u) / line.direction().u;
-                let point_surface = path.point_from_path_coords([t]);
-                let point_global =
-                    surface.geometry().point_from_surface_coords(point_surface);
-                points.push((u, point_global));
+                points
             }
-
-            points
-        }
-    };
+        };
 
     let points = points
         .into_iter()
@@ -195,8 +206,8 @@ mod tests {
         let surface = core.layers.objects.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, surface.deref(), boundary).approx(tolerance);
+        let approx = (&curve, surface_path, surface.deref(), boundary)
+            .approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -215,8 +226,8 @@ mod tests {
         });
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, &surface, boundary).approx(tolerance);
+        let approx = (&curve, surface_path, &surface, boundary)
+            .approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -238,11 +249,11 @@ mod tests {
         });
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, &surface, boundary).approx(tolerance);
+        let approx = (&curve, surface_path, &surface, boundary)
+            .approx(tolerance, &mut core);
 
         let expected_approx = (global_path, boundary)
-            .approx(tolerance)
+            .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
@@ -266,11 +277,11 @@ mod tests {
         let surface = core.layers.objects.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, surface.deref(), boundary).approx(tolerance);
+        let approx = (&curve, surface_path, surface.deref(), boundary)
+            .approx(tolerance, &mut core);
 
         let expected_approx = (&surface_path, boundary)
-            .approx(tolerance)
+            .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =

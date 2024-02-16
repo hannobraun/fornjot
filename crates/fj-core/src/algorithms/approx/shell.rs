@@ -2,7 +2,7 @@
 
 use std::collections::BTreeSet;
 
-use crate::objects::Shell;
+use crate::{objects::Shell, Core};
 
 use super::{edge::HalfEdgeApproxCache, face::FaceApprox, Approx, Tolerance};
 
@@ -14,7 +14,8 @@ impl Approx for &Shell {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
-        self.faces().approx_with_cache(tolerance, cache)
+        self.faces().approx_with_cache(tolerance, cache, core)
     }
 }

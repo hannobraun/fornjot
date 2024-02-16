@@ -6,7 +6,10 @@ use std::ops::Deref;
 
 use fj_math::Segment;
 
-use crate::objects::{Cycle, Surface};
+use crate::{
+    objects::{Cycle, Surface},
+    Core,
+};
 
 use super::{
     edge::{HalfEdgeApprox, HalfEdgeApproxCache},
@@ -21,6 +24,7 @@ impl Approx for (&Cycle, &Surface) {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let (cycle, surface) = self;
         let tolerance = tolerance.into();
@@ -29,7 +33,8 @@ impl Approx for (&Cycle, &Surface) {
             .half_edges()
             .iter()
             .map(|edge| {
-                (edge.deref(), surface).approx_with_cache(tolerance, cache)
+                (edge.deref(), surface)
+                    .approx_with_cache(tolerance, cache, core)
             })
             .collect();
 
