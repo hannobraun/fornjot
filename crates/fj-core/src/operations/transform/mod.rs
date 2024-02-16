@@ -16,6 +16,7 @@ use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
+    objects::{AnyObject, Stored},
     operations::insert::Insert,
     storage::{Handle, ObjectId},
     Core,
@@ -69,6 +70,7 @@ pub trait TransformObject: Sized {
 impl<T> TransformObject for Handle<T>
 where
     T: Clone + Insert<Inserted = Handle<T>> + TransformObject + 'static,
+    Handle<T>: Into<AnyObject<Stored>>,
 {
     fn transform_with_cache(
         &self,

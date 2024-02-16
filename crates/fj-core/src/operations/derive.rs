@@ -2,7 +2,11 @@
 //!
 //! See [`DeriveFrom`].
 
-use crate::{storage::Handle, Core};
+use crate::{
+    objects::{AnyObject, Stored},
+    storage::Handle,
+    Core,
+};
 
 /// Mark a store object as derived from another
 pub trait DeriveFrom {
@@ -10,7 +14,10 @@ pub trait DeriveFrom {
     fn derive_from(self, other: &Self, core: &mut Core) -> Self;
 }
 
-impl<T> DeriveFrom for Handle<T> {
+impl<T> DeriveFrom for Handle<T>
+where
+    Self: Into<AnyObject<Stored>>,
+{
     fn derive_from(self, _other: &Self, _core: &mut Core) -> Self {
         // This is currently a no-op. Eventually, it will trigger a command to
         // the layers that this information is relevant for.
