@@ -2,7 +2,7 @@
 
 use std::collections::BTreeSet;
 
-use crate::objects::Sketch;
+use crate::{objects::Sketch, Core};
 
 use super::{edge::HalfEdgeApproxCache, face::FaceApprox, Approx, Tolerance};
 
@@ -14,6 +14,7 @@ impl Approx for &Sketch {
         self,
         _tolerance: impl Into<Tolerance>,
         _cache: &mut Self::Cache,
+        _core: &mut Core,
     ) -> Self::Approximation {
         todo!()
     }

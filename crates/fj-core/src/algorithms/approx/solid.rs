@@ -2,7 +2,7 @@
 
 use std::collections::BTreeSet;
 
-use crate::objects::Solid;
+use crate::{objects::Solid, Core};
 
 use super::{edge::HalfEdgeApproxCache, face::FaceApprox, Approx, Tolerance};
 
@@ -14,12 +14,13 @@ impl Approx for &Solid {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
         self.shells()
             .iter()
-            .flat_map(|shell| shell.approx_with_cache(tolerance, cache))
+            .flat_map(|shell| shell.approx_with_cache(tolerance, cache, core))
             .collect()
     }
 }

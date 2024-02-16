@@ -5,7 +5,10 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to deal with duplicate vertices.
 
-use crate::objects::{HalfEdge, Surface};
+use crate::{
+    objects::{HalfEdge, Surface},
+    Core,
+};
 
 use super::{
     curve::CurveApproxCache, vertex::VertexApproxCache, Approx, ApproxPoint,
@@ -20,6 +23,7 @@ impl Approx for (&HalfEdge, &Surface) {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let (edge, surface) = self;
         let tolerance = tolerance.into();
@@ -42,7 +46,7 @@ impl Approx for (&HalfEdge, &Surface) {
 
         let rest = {
             let approx = (edge.curve(), edge.path(), surface, edge.boundary())
-                .approx_with_cache(tolerance, &mut cache.curve);
+                .approx_with_cache(tolerance, &mut cache.curve, core);
 
             approx.points.into_iter().map(|point| {
                 let point_surface =

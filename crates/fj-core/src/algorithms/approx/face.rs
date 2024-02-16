@@ -9,6 +9,7 @@ use fj_interop::Color;
 use crate::{
     objects::{Face, Handedness, ObjectSet},
     validate::ValidationConfig,
+    Core,
 };
 
 use super::{
@@ -24,12 +25,13 @@ impl Approx for &ObjectSet<Face> {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
         let approx = self
             .into_iter()
-            .map(|face| face.approx_with_cache(tolerance, cache))
+            .map(|face| face.approx_with_cache(tolerance, cache, core))
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -70,6 +72,7 @@ impl Approx for &Face {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
@@ -88,12 +91,12 @@ impl Approx for &Face {
 
         let exterior =
             (self.region().exterior().deref(), self.surface().deref())
-                .approx_with_cache(tolerance, cache);
+                .approx_with_cache(tolerance, cache, core);
 
         let mut interiors = BTreeSet::new();
         for cycle in self.region().interiors() {
             let cycle = (cycle.deref(), self.surface().deref())
-                .approx_with_cache(tolerance, cache);
+                .approx_with_cache(tolerance, cache, core);
             interiors.insert(cycle);
         }
 

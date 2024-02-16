@@ -38,10 +38,10 @@ pub trait Approx: Sized {
     fn approx(
         self,
         tolerance: impl Into<Tolerance>,
-        _core: &mut Core,
+        core: &mut Core,
     ) -> Self::Approximation {
         let mut cache = Self::Cache::default();
-        self.approx_with_cache(tolerance, &mut cache)
+        self.approx_with_cache(tolerance, &mut cache, core)
     }
 
     /// Approximate the object, using the provided cache
@@ -52,6 +52,7 @@ pub trait Approx: Sized {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
+        core: &mut Core,
     ) -> Self::Approximation;
 }
 

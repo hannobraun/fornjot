@@ -32,7 +32,10 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{CurveBoundary, GlobalPath, SurfacePath};
+use crate::{
+    geometry::{CurveBoundary, GlobalPath, SurfacePath},
+    Core,
+};
 
 use super::{Approx, Tolerance};
 
@@ -44,6 +47,7 @@ impl Approx for (&SurfacePath, CurveBoundary<Point<1>>) {
         self,
         tolerance: impl Into<Tolerance>,
         (): &mut Self::Cache,
+        _core: &mut Core,
     ) -> Self::Approximation {
         let (path, range) = self;
 
@@ -64,6 +68,7 @@ impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
         self,
         tolerance: impl Into<Tolerance>,
         (): &mut Self::Cache,
+        _core: &mut Core,
     ) -> Self::Approximation {
         let (path, range) = self;
 
