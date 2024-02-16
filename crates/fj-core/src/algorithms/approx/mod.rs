@@ -19,7 +19,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::objects::Surface;
+use crate::{objects::Surface, Core};
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
@@ -35,7 +35,11 @@ pub trait Approx: Sized {
     ///
     /// `tolerance` defines how far the approximation is allowed to deviate from
     /// the actual object.
-    fn approx(self, tolerance: impl Into<Tolerance>) -> Self::Approximation {
+    fn approx(
+        self,
+        tolerance: impl Into<Tolerance>,
+        _core: &mut Core,
+    ) -> Self::Approximation {
         let mut cache = Self::Cache::default();
         self.approx_with_cache(tolerance, &mut cache)
     }

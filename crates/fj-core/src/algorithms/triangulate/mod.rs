@@ -36,7 +36,7 @@ where
     fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>, core: &mut Core) {
         let (approx, tolerance) = self;
 
-        let approx = approx.approx(tolerance);
+        let approx = approx.approx(tolerance, core);
 
         for approx in approx {
             approx.triangulate_into_mesh(mesh, core);
@@ -242,6 +242,6 @@ mod tests {
         core: &mut Core,
     ) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(face.approx(tolerance).triangulate(core))
+        Ok(face.approx(tolerance, core).triangulate(core))
     }
 }

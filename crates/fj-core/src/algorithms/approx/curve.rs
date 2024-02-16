@@ -195,8 +195,8 @@ mod tests {
         let surface = core.layers.objects.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, surface.deref(), boundary).approx(tolerance);
+        let approx = (&curve, surface_path, surface.deref(), boundary)
+            .approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -215,8 +215,8 @@ mod tests {
         });
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, &surface, boundary).approx(tolerance);
+        let approx = (&curve, surface_path, &surface, boundary)
+            .approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -238,11 +238,11 @@ mod tests {
         });
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, &surface, boundary).approx(tolerance);
+        let approx = (&curve, surface_path, &surface, boundary)
+            .approx(tolerance, &mut core);
 
         let expected_approx = (global_path, boundary)
-            .approx(tolerance)
+            .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
@@ -266,11 +266,11 @@ mod tests {
         let surface = core.layers.objects.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, surface_path, surface.deref(), boundary).approx(tolerance);
+        let approx = (&curve, surface_path, surface.deref(), boundary)
+            .approx(tolerance, &mut core);
 
         let expected_approx = (&surface_path, boundary)
-            .approx(tolerance)
+            .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface =
