@@ -1,81 +1,8 @@
 use std::{error::Error as _, fmt};
 
 use fj_core::{
-    algorithms::{
-        approx::{InvalidTolerance, Tolerance},
-        bounding_volume::BoundingVolume,
-        triangulate::Triangulate,
-    },
-    validate::ValidationErrors,
-    Instance,
+    algorithms::approx::InvalidTolerance, validate::ValidationErrors,
 };
-use fj_interop::Model;
-use fj_math::{Aabb, Point, Scalar};
-use tracing_subscriber::prelude::*;
-
-use crate::Args;
-
-/// Export or display a model, according to CLI arguments
-///
-/// This function is intended to be called by applications that define a model
-/// and want to provide a standardized CLI interface for dealing with that
-/// model.
-///
-/// This function is used by Fornjot's own testing infrastructure, but is useful
-/// beyond that, when using Fornjot directly to define a model.
-pub fn handle_model<M>(model: &M, core: &mut Instance) -> Result
-where
-    for<'r> (&'r M, Tolerance): Triangulate,
-    M: BoundingVolume<3>,
-{
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer())
-        .with(tracing_subscriber::EnvFilter::from_default_env())
-        .init();
-
-    let args = Args::parse();
-
-    if !args.ignore_validation {
-        core.layers.validation.take_errors()?;
-    }
-
-    let aabb = model.aabb().unwrap_or(Aabb {
-        min: Point::origin(),
-        max: Point::origin(),
-    });
-
-    let tolerance = match args.tolerance {
-        None => {
-            // Compute a reasonable default for the tolerance value. To do
-            // this, we just look at the smallest non-zero extent of the
-            // bounding box and divide that by some value.
-
-            let mut min_extent = Scalar::MAX;
-            for extent in aabb.size().components {
-                if extent > Scalar::ZERO && extent < min_extent {
-                    min_extent = extent;
-                }
-            }
-
-            let tolerance = min_extent / Scalar::from_f64(1000.);
-            Tolerance::from_scalar(tolerance)?
-        }
-        Some(user_defined_tolerance) => user_defined_tolerance,
-    };
-
-    let mesh = (model, tolerance).triangulate();
-
-    if let Some(path) = args.export {
-        crate::export::export(&mesh, &path)?;
-        return Ok(());
-    }
-
-    let model = Model { mesh, aabb };
-
-    crate::window::display(model, false)?;
-
-    Ok(())
-}
 
 /// Return value of [`Instance::process_model`]
 ///

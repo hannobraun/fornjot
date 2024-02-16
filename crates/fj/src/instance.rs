@@ -5,8 +5,11 @@ use fj_core::{
     },
     validate::ValidationConfig,
 };
+use fj_interop::Model;
+use fj_math::{Aabb, Point, Scalar};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::{handle_model::handle_model, Result};
+use crate::{Args, Result};
 
 /// An instance of Fornjot
 ///
@@ -42,6 +45,52 @@ impl Instance {
         for<'r> (&'r M, Tolerance): Triangulate,
         M: BoundingVolume<3>,
     {
-        handle_model(model, &mut self.core)
+        tracing_subscriber::registry()
+            .with(tracing_subscriber::fmt::layer())
+            .with(tracing_subscriber::EnvFilter::from_default_env())
+            .init();
+
+        let args = Args::parse();
+
+        if !args.ignore_validation {
+            self.core.layers.validation.take_errors()?;
+        }
+
+        let aabb = model.aabb().unwrap_or(Aabb {
+            min: Point::origin(),
+            max: Point::origin(),
+        });
+
+        let tolerance = match args.tolerance {
+            None => {
+                // Compute a reasonable default for the tolerance value. To do
+                // this, we just look at the smallest non-zero extent of the
+                // bounding box and divide that by some value.
+
+                let mut min_extent = Scalar::MAX;
+                for extent in aabb.size().components {
+                    if extent > Scalar::ZERO && extent < min_extent {
+                        min_extent = extent;
+                    }
+                }
+
+                let tolerance = min_extent / Scalar::from_f64(1000.);
+                Tolerance::from_scalar(tolerance)?
+            }
+            Some(user_defined_tolerance) => user_defined_tolerance,
+        };
+
+        let mesh = (model, tolerance).triangulate();
+
+        if let Some(path) = args.export {
+            crate::export::export(&mesh, &path)?;
+            return Ok(());
+        }
+
+        let model = Model { mesh, aabb };
+
+        crate::window::display(model, false)?;
+
+        Ok(())
     }
 }
