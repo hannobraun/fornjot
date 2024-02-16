@@ -1,8 +1,6 @@
-use fj::handle_model;
-
 fn main() -> fj::Result {
-    let mut core = fj::core::Instance::new();
-    let model = vertices_indices::model(&mut core);
-    handle_model(&model, core)?;
+    let mut fj = fj::Instance::new();
+    let model = vertices_indices::model(&mut fj.core);
+    fj.process_model(&model)?;
     Ok(())
 }

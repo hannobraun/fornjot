@@ -10,10 +10,10 @@ use fj_math::Scalar;
 /// interface for viewing and exporting models, and is used for Fornjot's
 /// example models and the testing infrastructure they are part of.
 ///
-/// You might not want to use this struct directly. [`handle_model`] Provides a
-/// more high-level and convenient interface.
+/// You might not want to use this struct directly. [`Instance::process_model`]
+/// provides a more high-level and convenient interface.
 ///
-/// [`handle_model`]: crate::handle_model()
+/// [`Instance::process_model`]: crate::Instance::process_model
 #[derive(clap::Parser)]
 pub struct Args {
     /// Export model to this path
