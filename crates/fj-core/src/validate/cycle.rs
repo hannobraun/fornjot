@@ -84,12 +84,12 @@ mod tests {
             update::UpdateCycle,
         },
         validate::{cycle::CycleValidationError, Validate, ValidationError},
-        Instance,
+        Core,
     };
 
     #[test]
     fn edges_connected() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid =
             Cycle::polygon([[0.0, 0.0], [1.0, 0.0], [1.0, 1.0]], &mut core);

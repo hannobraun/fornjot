@@ -59,12 +59,12 @@ mod tests {
             references::ReferenceCountError, SketchValidationError, Validate,
             ValidationError,
         },
-        Instance,
+        Core,
     };
 
     #[test]
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let shared_cycle = Cycle::new(vec![]).insert(&mut core);
 
@@ -97,7 +97,7 @@ mod tests {
 
     #[test]
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let half_edge =
             HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core)

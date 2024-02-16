@@ -404,12 +404,12 @@ mod tests {
             },
         },
         validate::{shell::ShellValidationError, Validate, ValidationError},
-        Instance,
+        Core,
     };
 
     #[test]
     fn curve_coordinate_system_mismatch() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
@@ -456,7 +456,7 @@ mod tests {
 
     #[test]
     fn half_edge_has_no_sibling() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
@@ -477,7 +477,7 @@ mod tests {
 
     #[test]
     fn coincident_half_edges_are_not_siblings() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid = Shell::tetrahedron(
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],

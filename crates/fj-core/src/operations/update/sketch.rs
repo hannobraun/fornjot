@@ -2,7 +2,7 @@ use crate::{
     objects::{Region, Sketch},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Sketch`]
@@ -12,7 +12,7 @@ pub trait UpdateSketch {
     fn add_regions<T>(
         &self,
         regions: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>;
@@ -28,8 +28,8 @@ pub trait UpdateSketch {
     fn update_region<T, const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>;
@@ -39,7 +39,7 @@ impl UpdateSketch for Sketch {
     fn add_regions<T>(
         &self,
         regions: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>,
@@ -52,8 +52,8 @@ impl UpdateSketch for Sketch {
     fn update_region<T, const N: usize>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>,

@@ -2,7 +2,7 @@ use crate::{
     objects::{Cycle, Region},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Region`]
@@ -11,8 +11,8 @@ pub trait UpdateRegion {
     #[must_use]
     fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>;
@@ -22,7 +22,7 @@ pub trait UpdateRegion {
     fn add_interiors<T>(
         &self,
         interiors: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>;
@@ -38,8 +38,8 @@ pub trait UpdateRegion {
     fn update_interior<T, const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>;
@@ -48,8 +48,8 @@ pub trait UpdateRegion {
 impl UpdateRegion for Region {
     fn update_exterior<T>(
         &self,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>,
@@ -61,7 +61,7 @@ impl UpdateRegion for Region {
     fn add_interiors<T>(
         &self,
         interiors: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>,
@@ -74,8 +74,8 @@ impl UpdateRegion for Region {
     fn update_interior<T, const N: usize>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>,

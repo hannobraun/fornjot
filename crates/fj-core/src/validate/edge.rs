@@ -71,12 +71,12 @@ mod tests {
         objects::HalfEdge,
         operations::build::BuildHalfEdge,
         validate::{EdgeValidationError, Validate, ValidationError},
-        Instance,
+        Core,
     };
 
     #[test]
     fn edge_vertices_are_coincident() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid =
             HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core);

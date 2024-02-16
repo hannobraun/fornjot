@@ -154,12 +154,12 @@ mod tests {
             transform::TransformObject,
             update::{UpdateFace, UpdateRegion},
         },
-        Instance,
+        Core,
     };
 
     #[test]
     fn ray_misses_whole_surface() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -191,7 +191,7 @@ mod tests {
 
     #[test]
     fn ray_hits_face() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -226,7 +226,7 @@ mod tests {
 
     #[test]
     fn ray_hits_surface_but_misses_face() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -258,7 +258,7 @@ mod tests {
 
     #[test]
     fn ray_hits_edge() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -300,7 +300,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -343,7 +343,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_hits() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 
@@ -377,7 +377,7 @@ mod tests {
 
     #[test]
     fn ray_is_parallel_to_surface_and_misses() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let ray = HorizontalRayToTheRight::from([0., 0., 0.]);
 

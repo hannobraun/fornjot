@@ -90,6 +90,6 @@ pub mod queries;
 pub mod storage;
 pub mod validate;
 
-mod instance;
+mod core;
 
-pub use self::instance::Instance;
+pub use self::core::Core;

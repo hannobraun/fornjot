@@ -76,14 +76,14 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        geometry::SurfacePath, operations::transform::TransformObject, Instance,
+        geometry::SurfacePath, operations::transform::TransformObject, Core,
     };
 
     use super::SurfaceSurfaceIntersection;
 
     #[test]
     fn plane_plane() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let xy = core.layers.objects.surfaces.xy_plane();
         let xz = core.layers.objects.surfaces.xz_plane();

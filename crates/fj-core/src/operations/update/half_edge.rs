@@ -5,7 +5,7 @@ use crate::{
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`HalfEdge`]
@@ -28,8 +28,8 @@ pub trait UpdateHalfEdge {
     #[must_use]
     fn update_curve<T>(
         &self,
-        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Curve>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Curve>>;
@@ -38,8 +38,8 @@ pub trait UpdateHalfEdge {
     #[must_use]
     fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Vertex>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Vertex>>;
@@ -72,8 +72,8 @@ impl UpdateHalfEdge for HalfEdge {
 
     fn update_curve<T>(
         &self,
-        update: impl FnOnce(&Handle<Curve>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Curve>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Curve>>,
@@ -88,8 +88,8 @@ impl UpdateHalfEdge for HalfEdge {
 
     fn update_start_vertex<T>(
         &self,
-        update: impl FnOnce(&Handle<Vertex>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Vertex>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Vertex>>,

@@ -18,7 +18,7 @@ pub fn model(
     r1: f64,
     r2: f64,
     h: f64,
-    core: &mut fj::core::Instance,
+    core: &mut fj::core::Core,
 ) -> Solid {
     let num_vertices = num_points * 2;
     let vertex_iter = (0..num_vertices).map(|i| {

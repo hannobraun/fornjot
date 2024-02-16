@@ -6,7 +6,7 @@ use crate::{
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Build a [`HalfEdge`]
@@ -19,7 +19,7 @@ pub trait BuildHalfEdge {
     fn unjoined(
         path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> HalfEdge {
         let curve = Curve::new().insert(core);
         let start_vertex = Vertex::new().insert(core);
@@ -49,7 +49,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> HalfEdge {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
@@ -70,7 +70,7 @@ pub trait BuildHalfEdge {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> HalfEdge {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
@@ -83,7 +83,7 @@ pub trait BuildHalfEdge {
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> HalfEdge {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));

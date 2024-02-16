@@ -159,14 +159,14 @@ mod tests {
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
-        Instance,
+        Core,
     };
 
     use super::CurveFaceIntersection;
 
     #[test]
     fn compute() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let (path, _) = SurfacePath::line_from_points([[-3., 0.], [-2., 0.]]);
 

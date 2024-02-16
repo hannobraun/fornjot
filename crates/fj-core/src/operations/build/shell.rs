@@ -15,7 +15,7 @@ use crate::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
     },
-    Instance,
+    Core,
 };
 
 /// Build a [`Shell`]
@@ -33,7 +33,7 @@ pub trait BuildShell {
     fn from_vertices_and_indices(
         vertices: impl IntoIterator<Item = impl Into<Point<3>>>,
         indices: impl IntoIterator<Item = [usize; 3]>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Shell {
         let vertices = vertices
             .into_iter()
@@ -138,7 +138,7 @@ pub trait BuildShell {
     /// build a correct tetrahedron, regardless of that order.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> TetrahedronShell {
         let [a, b, c, d] = points.map(Into::into);
 

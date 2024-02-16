@@ -2,7 +2,7 @@ use crate::{
     objects::{Shell, Solid},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Solid`]
@@ -12,7 +12,7 @@ pub trait UpdateSolid {
     fn add_shells<T>(
         &self,
         shells: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Shell>>;
@@ -28,8 +28,8 @@ pub trait UpdateSolid {
     fn update_shell<T, const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Shell>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Shell>>;
@@ -39,7 +39,7 @@ impl UpdateSolid for Solid {
     fn add_shells<T>(
         &self,
         shells: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Shell>>,
@@ -52,8 +52,8 @@ impl UpdateSolid for Solid {
     fn update_shell<T, const N: usize>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Shell>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Shell>>,

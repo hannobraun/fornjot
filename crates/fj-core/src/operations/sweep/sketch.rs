@@ -5,7 +5,7 @@ use crate::{
     objects::{Face, Sketch, Solid, Surface},
     operations::{insert::Insert, reverse::Reverse},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{face::SweepFace, SweepCache};
@@ -21,7 +21,7 @@ pub trait SweepSketch {
         &self,
         surface: Handle<Surface>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Solid;
 }
 
@@ -30,7 +30,7 @@ impl SweepSketch for Sketch {
         &self,
         surface: Handle<Surface>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Solid {
         let path = path.into();
         let mut cache = SweepCache::default();

@@ -7,7 +7,7 @@ use fj::core::{
     },
 };
 
-pub fn model(core: &mut fj::core::Instance) -> Solid {
+pub fn model(core: &mut fj::core::Core) -> Solid {
     let size = 1.;
     let cuboid = cuboid::model([size, size, size], core);
 

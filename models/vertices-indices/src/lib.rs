@@ -6,7 +6,7 @@ use fj::core::{
     },
 };
 
-pub fn model(core: &mut fj::core::Instance) -> Solid {
+pub fn model(core: &mut fj::core::Core) -> Solid {
     Solid::empty().add_shells(
         [Shell::from_vertices_and_indices(
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],

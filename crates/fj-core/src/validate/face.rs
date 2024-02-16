@@ -94,12 +94,12 @@ mod tests {
             update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
         validate::{FaceValidationError, Validate, ValidationError},
-        Instance,
+        Core,
     };
 
     #[test]
     fn boundary() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let invalid =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core);
@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn interior_winding() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let valid =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)

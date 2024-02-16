@@ -68,14 +68,14 @@ mod tests {
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
-        Instance,
+        Core,
     };
 
     use super::FaceFaceIntersection;
 
     #[test]
     fn compute_no_intersection() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         #[rustfmt::skip]
         let points = [
@@ -106,7 +106,7 @@ mod tests {
 
     #[test]
     fn compute_one_intersection() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         #[rustfmt::skip]
         let points = [

@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Cycle, Instance};
+use crate::{objects::Cycle, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for Cycle {
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
         let edges = self.half_edges().iter().map(|edge| {

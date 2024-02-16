@@ -7,7 +7,7 @@ use crate::{
         insert::{Insert, IsInsertedYes},
         update::UpdateSolid,
     },
-    Instance,
+    Core,
 };
 
 /// Build a [`Solid`]
@@ -26,7 +26,7 @@ pub trait BuildSolid {
     /// See [`BuildShell::tetrahedron`] for more information.
     fn tetrahedron(
         points: [impl Into<Point<3>>; 4],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Tetrahedron {
         let shell = Shell::tetrahedron(points, core).insert(core);
         let solid = Solid::empty().add_shells([shell.shell.clone()], core);

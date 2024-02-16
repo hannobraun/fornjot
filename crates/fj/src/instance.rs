@@ -7,6 +7,7 @@ use fj_core::{
         triangulate::Triangulate,
     },
     validate::{ValidationConfig, ValidationErrors},
+    Core,
 };
 use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};
@@ -20,7 +21,7 @@ use crate::Args;
 #[derive(Default)]
 pub struct Instance {
     /// The instance of the Fornjot core
-    pub core: fj_core::Instance,
+    pub core: Core,
 }
 
 impl Instance {
@@ -31,7 +32,7 @@ impl Instance {
 
     /// Construct an instance of `Instance`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let core = fj_core::Instance::with_validation_config(config);
+        let core = fj_core::Core::with_validation_config(config);
         Self { core }
     }
 

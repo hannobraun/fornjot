@@ -4,7 +4,7 @@ use crate::{
     objects::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::ReplaceOutput;
@@ -21,7 +21,7 @@ pub trait ReplaceHalfEdge: IsObject + Sized {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
@@ -30,7 +30,7 @@ impl ReplaceHalfEdge for Cycle {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        _: &mut Instance,
+        _: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if let Some(half_edges) =
             self.half_edges().replace(original, replacements)
@@ -47,7 +47,7 @@ impl ReplaceHalfEdge for Region {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -89,7 +89,7 @@ impl ReplaceHalfEdge for Sketch {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -118,7 +118,7 @@ impl ReplaceHalfEdge for Face {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let region =
             self.region()
@@ -142,7 +142,7 @@ impl ReplaceHalfEdge for Shell {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -170,7 +170,7 @@ impl ReplaceHalfEdge for Solid {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -199,7 +199,7 @@ impl ReplaceHalfEdge for Handle<Cycle> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)
@@ -212,7 +212,7 @@ impl ReplaceHalfEdge for Handle<Region> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)
@@ -225,7 +225,7 @@ impl ReplaceHalfEdge for Handle<Sketch> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)
@@ -238,7 +238,7 @@ impl ReplaceHalfEdge for Handle<Face> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)
@@ -251,7 +251,7 @@ impl ReplaceHalfEdge for Handle<Shell> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)
@@ -264,7 +264,7 @@ impl ReplaceHalfEdge for Handle<Solid> {
         &self,
         original: &Handle<HalfEdge>,
         replacements: [Handle<HalfEdge>; N],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_half_edge(original, replacements, core)

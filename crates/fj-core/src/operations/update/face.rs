@@ -2,7 +2,7 @@ use crate::{
     objects::{Face, Region},
     operations::{build::Polygon, insert::Insert},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Face`]
@@ -11,8 +11,8 @@ pub trait UpdateFace {
     #[must_use]
     fn update_region<T>(
         &self,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>;
@@ -21,8 +21,8 @@ pub trait UpdateFace {
 impl UpdateFace for Face {
     fn update_region<T>(
         &self,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>,
@@ -35,8 +35,8 @@ impl UpdateFace for Face {
 impl<const D: usize> UpdateFace for Polygon<D> {
     fn update_region<T>(
         &self,
-        update: impl FnOnce(&Handle<Region>, &mut Instance) -> T,
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> T,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>,

@@ -185,12 +185,12 @@ mod tests {
             references::ReferenceCountError, SolidValidationError, Validate,
             ValidationError,
         },
-        Instance,
+        Core,
     };
 
     #[test]
     fn should_find_face_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let shared_face = Face::new(
             Surface::new(SurfaceGeometry {
@@ -243,7 +243,7 @@ mod tests {
 
     #[test]
     fn should_find_region_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let shared_region = Region::new(
             Cycle::new(vec![
@@ -296,7 +296,7 @@ mod tests {
 
     #[test]
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let shared_cycle =
             Cycle::new(vec![
@@ -346,7 +346,7 @@ mod tests {
 
     #[test]
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let shared_edge =
             HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core);

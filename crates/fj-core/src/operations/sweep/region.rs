@@ -7,7 +7,7 @@ use crate::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{SweepCache, SweepCycle};
@@ -34,7 +34,7 @@ pub trait SweepRegion {
         surface: &Surface,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> SweptRegion;
 }
 
@@ -44,7 +44,7 @@ impl SweepRegion for Region {
         surface: &Surface,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> SweptRegion {
         let path = path.into();
 
@@ -99,7 +99,7 @@ fn sweep_cycle(
     faces: &mut Vec<Face>,
     path: Vector<3>,
     cache: &mut SweepCache,
-    core: &mut Instance,
+    core: &mut Core,
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
         bottom_surface,

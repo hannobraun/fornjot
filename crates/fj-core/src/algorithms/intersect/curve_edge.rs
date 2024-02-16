@@ -73,14 +73,14 @@ mod tests {
 
     use crate::{
         geometry::SurfacePath, objects::HalfEdge,
-        operations::build::BuildHalfEdge, Instance,
+        operations::build::BuildHalfEdge, Core,
     };
 
     use super::CurveEdgeIntersection;
 
     #[test]
     fn compute_edge_in_front_of_curve_origin() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let path = SurfacePath::u_axis();
         let edge =
@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn compute_edge_behind_curve_origin() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let path = SurfacePath::u_axis();
         let edge =
@@ -116,7 +116,7 @@ mod tests {
 
     #[test]
     fn compute_edge_parallel_to_curve() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let path = SurfacePath::u_axis();
         let edge =
@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn compute_edge_on_curve() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let path = SurfacePath::u_axis();
         let edge =

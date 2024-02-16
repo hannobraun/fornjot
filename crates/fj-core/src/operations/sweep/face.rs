@@ -4,7 +4,7 @@ use crate::{
     objects::{Face, Shell},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{SweepCache, SweepRegion};
@@ -20,7 +20,7 @@ pub trait SweepFace {
         &self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Shell;
 }
 
@@ -29,7 +29,7 @@ impl SweepFace for Handle<Face> {
         &self,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Shell {
         // Please note that this function uses the words "bottom" and "top" in a
         // specific sense:

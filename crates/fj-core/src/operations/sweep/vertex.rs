@@ -2,7 +2,7 @@ use crate::{
     objects::{Curve, Vertex},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::SweepCache;
@@ -34,7 +34,7 @@ pub trait SweepVertex: Sized {
     fn sweep_vertex(
         &self,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Handle<Curve>, Handle<Vertex>);
 }
 
@@ -42,7 +42,7 @@ impl SweepVertex for Handle<Vertex> {
     fn sweep_vertex(
         &self,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Handle<Curve>, Handle<Vertex>) {
         let curve = cache
             .curves

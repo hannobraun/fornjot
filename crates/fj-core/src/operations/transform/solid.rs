@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Solid, Instance};
+use crate::{objects::Solid, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for Solid {
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
         let shells =

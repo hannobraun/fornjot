@@ -1,6 +1,6 @@
 //! Main entry point to the `fj-core` API
 //!
-//! See [`Instance`].
+//! See [`Core`].
 
 use crate::{layers::Layers, validate::ValidationConfig};
 
@@ -8,12 +8,12 @@ use crate::{layers::Layers, validate::ValidationConfig};
 ///
 /// This is the main entry point to `fj-core`'s API.
 #[derive(Default)]
-pub struct Instance {
+pub struct Core {
     /// The layers of data that make up the state of a core instance
     pub layers: Layers,
 }
 
-impl Instance {
+impl Core {
     /// Construct an instance of `Instance`
     pub fn new() -> Self {
         Self::default()
