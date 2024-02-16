@@ -8,6 +8,7 @@ use fj_interop::Color;
 
 use crate::{
     objects::{Face, Handedness, ObjectSet},
+    operations::presentation::GetColor,
     validate::ValidationConfig,
     Core,
 };
@@ -103,7 +104,7 @@ impl Approx for &Face {
         FaceApprox {
             exterior,
             interiors,
-            color: core.layers.presentation.color.get(self.region()).copied(),
+            color: self.region().get_color(core),
             coord_handedness: self.coord_handedness(),
         }
     }
