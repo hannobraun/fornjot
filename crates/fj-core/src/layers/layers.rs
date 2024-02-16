@@ -1,5 +1,6 @@
 use crate::{
     objects::Objects,
+    presentation::Presentation,
     validate::{Validation, ValidationConfig},
 };
 
@@ -31,6 +32,11 @@ pub struct Layers {
     ///
     /// Monitors objects and validates them, as they are inserted.
     pub validation: Layer<Validation>,
+
+    /// The presentation layer
+    ///
+    /// Stores data concerning the presentation of objects.
+    pub presentation: Layer<Presentation>,
 }
 
 impl Layers {

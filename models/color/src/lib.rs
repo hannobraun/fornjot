@@ -18,7 +18,7 @@ pub fn model(core: &mut fj::core::Core) -> Solid {
                 shell.faces().first(),
                 |face, core| {
                     [face.update_region(
-                        |region, _| region.set_color([0., 1., 0.]),
+                        |region, core| region.set_color([0., 1., 0.], core),
                         core,
                     )]
                 },
