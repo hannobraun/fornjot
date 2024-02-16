@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     Core,
 };
 
@@ -19,6 +19,7 @@ impl Reverse for Cycle {
                     next.start_vertex().clone(),
                 )
                 .insert(core)
+                .derive_from(current, core)
             })
             .collect::<Vec<_>>();
 
@@ -31,7 +32,9 @@ impl Reverse for Cycle {
 impl ReverseCurveCoordinateSystems for Cycle {
     fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self {
         let edges = self.half_edges().iter().map(|edge| {
-            edge.reverse_curve_coordinate_systems(core).insert(core)
+            edge.reverse_curve_coordinate_systems(core)
+                .insert(core)
+                .derive_from(edge, core)
         });
 
         Cycle::new(edges)

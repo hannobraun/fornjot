@@ -3,8 +3,8 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Shell},
     operations::{
-        insert::Insert, replace::ReplaceHalfEdge, split::SplitHalfEdge,
-        update::UpdateHalfEdge,
+        derive::DeriveFrom, insert::Insert, replace::ReplaceHalfEdge,
+        split::SplitHalfEdge, update::UpdateHalfEdge,
     },
     queries::SiblingOfHalfEdge,
     storage::Handle,
@@ -42,7 +42,9 @@ impl SplitEdge for Shell {
 
         let [half_edge_a, half_edge_b] = half_edge
             .split_half_edge(point, core)
-            .map(|half_edge| half_edge.insert(core));
+            .map(|half_edge_part| {
+                half_edge_part.insert(core).derive_from(half_edge, core)
+            });
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
@@ -50,7 +52,9 @@ impl SplitEdge for Shell {
                 |_, _| half_edge_b.start_vertex().clone(),
                 core,
             );
-            [sibling_a, sibling_b].map(|half_edge| half_edge.insert(core))
+            [sibling_a, sibling_b].map(|half_edge| {
+                half_edge.insert(core).derive_from(&sibling, core)
+            })
         };
 
         let shell = self

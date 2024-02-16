@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     geometry::{CurveBoundary, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -81,7 +81,9 @@ impl UpdateHalfEdge for HalfEdge {
         HalfEdge::new(
             self.path(),
             self.boundary(),
-            update(self.curve(), core).insert(core),
+            update(self.curve(), core)
+                .insert(core)
+                .derive_from(self.curve(), core),
             self.start_vertex().clone(),
         )
     }
@@ -98,7 +100,9 @@ impl UpdateHalfEdge for HalfEdge {
             self.path(),
             self.boundary(),
             self.curve().clone(),
-            update(self.start_vertex(), core).insert(core),
+            update(self.start_vertex(), core)
+                .insert(core)
+                .derive_from(self.start_vertex(), core),
         )
     }
 }

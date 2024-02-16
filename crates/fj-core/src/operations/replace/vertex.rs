@@ -4,7 +4,7 @@ use crate::{
     objects::{
         Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid, Vertex,
     },
-    operations::{insert::Insert, update::UpdateHalfEdge},
+    operations::{derive::DeriveFrom, insert::Insert, update::UpdateHalfEdge},
     storage::Handle,
     Core,
 };
@@ -54,13 +54,20 @@ impl ReplaceVertex for Cycle {
         let mut replacement_happened = false;
 
         let mut half_edges = Vec::new();
-        for half_edge in self.half_edges() {
-            let half_edge =
-                half_edge.replace_vertex(original, replacement.clone(), core);
+        for original_half_edge in self.half_edges() {
+            let half_edge = original_half_edge.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= half_edge.was_updated();
             half_edges.push(
                 half_edge
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated
+                            .insert(core)
+                            .derive_from(original_half_edge, core)
+                    })
                     .into_inner(),
             );
         }
@@ -88,13 +95,18 @@ impl ReplaceVertex for Region {
         replacement_happened |= exterior.was_updated();
 
         let mut interiors = Vec::new();
-        for cycle in self.interiors() {
-            let cycle =
-                cycle.replace_vertex(original, replacement.clone(), core);
+        for original_cycle in self.interiors() {
+            let cycle = original_cycle.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_cycle, core)
+                    })
                     .into_inner(),
             );
         }
@@ -102,7 +114,9 @@ impl ReplaceVertex for Region {
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
                 exterior
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.exterior(), core)
+                    })
                     .into_inner(),
                 interiors,
                 self.color(),
@@ -123,13 +137,18 @@ impl ReplaceVertex for Sketch {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
-        for region in self.regions() {
-            let region =
-                region.replace_vertex(original, replacement.clone(), core);
+        for original_region in self.regions() {
+            let region = original_region.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_region, core)
+                    })
                     .into_inner(),
             );
         }
@@ -155,7 +174,9 @@ impl ReplaceVertex for Face {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.region(), core)
+                    })
                     .into_inner(),
             ))
         } else {
@@ -174,12 +195,18 @@ impl ReplaceVertex for Shell {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
-        for face in self.faces() {
-            let face = face.replace_vertex(original, replacement.clone(), core);
+        for original_face in self.faces() {
+            let face = original_face.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= face.was_updated();
             faces.push(
-                face.map_updated(|updated| updated.insert(core))
-                    .into_inner(),
+                face.map_updated(|updated| {
+                    updated.insert(core).derive_from(original_face, core)
+                })
+                .into_inner(),
             );
         }
 
@@ -201,13 +228,18 @@ impl ReplaceVertex for Solid {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
-        for shell in self.shells() {
-            let shell =
-                shell.replace_vertex(original, replacement.clone(), core);
+        for original_shell in self.shells() {
+            let shell = original_shell.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_shell, core)
+                    })
                     .into_inner(),
             );
         }
@@ -269,13 +301,18 @@ impl ReplaceVertex for Handle<Sketch> {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
-        for region in self.regions() {
-            let region =
-                region.replace_vertex(original, replacement.clone(), core);
+        for original_region in self.regions() {
+            let region = original_region.replace_vertex(
+                original,
+                replacement.clone(),
+                core,
+            );
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_region, core)
+                    })
                     .into_inner(),
             );
         }

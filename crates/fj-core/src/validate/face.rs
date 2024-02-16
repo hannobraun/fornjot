@@ -89,6 +89,7 @@ mod tests {
         objects::{Cycle, Face, HalfEdge, Region},
         operations::{
             build::{BuildCycle, BuildFace, BuildHalfEdge},
+            derive::DeriveFrom,
             insert::Insert,
             reverse::Reverse,
             update::{UpdateCycle, UpdateFace, UpdateRegion},
@@ -161,7 +162,12 @@ mod tests {
                 .interiors()
                 .iter()
                 .cloned()
-                .map(|cycle| cycle.reverse(&mut core).insert(&mut core))
+                .map(|cycle| {
+                    cycle
+                        .reverse(&mut core)
+                        .insert(&mut core)
+                        .derive_from(&cycle, &mut core)
+                })
                 .collect::<Vec<_>>();
 
             let region = Region::new(

@@ -1,6 +1,6 @@
 use crate::{
     objects::{Face, Region},
-    operations::{build::Polygon, insert::Insert},
+    operations::{build::Polygon, derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -28,7 +28,10 @@ impl UpdateFace for Face {
         T: Insert<Inserted = Handle<Region>>,
     {
         let region = update(self.region(), core);
-        Face::new(self.surface().clone(), region.insert(core))
+        Face::new(
+            self.surface().clone(),
+            region.insert(core).derive_from(self.region(), core),
+        )
     }
 }
 

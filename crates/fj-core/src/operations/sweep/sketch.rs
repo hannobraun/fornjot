@@ -3,7 +3,7 @@ use fj_math::{Scalar, Vector};
 use crate::{
     geometry::GlobalPath,
     objects::{Face, Sketch, Solid, Surface},
-    operations::{insert::Insert, reverse::Reverse},
+    operations::{derive::DeriveFrom, insert::Insert, reverse::Reverse},
     storage::Handle,
     Core,
 };
@@ -60,7 +60,7 @@ impl SweepSketch for Sketch {
                 if is_negative_sweep {
                     region.clone()
                 } else {
-                    region.reverse(core).insert(core)
+                    region.reverse(core).insert(core).derive_from(region, core)
                 }
             };
 

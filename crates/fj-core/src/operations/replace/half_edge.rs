@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -59,13 +59,18 @@ impl ReplaceHalfEdge for Region {
         replacement_happened |= exterior.was_updated();
 
         let mut interiors = Vec::new();
-        for cycle in self.interiors() {
-            let cycle =
-                cycle.replace_half_edge(original, replacements.clone(), core);
+        for original_cycle in self.interiors() {
+            let cycle = original_cycle.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= cycle.was_updated();
             interiors.push(
                 cycle
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_cycle, core)
+                    })
                     .into_inner(),
             );
         }
@@ -73,7 +78,9 @@ impl ReplaceHalfEdge for Region {
         if replacement_happened {
             ReplaceOutput::Updated(Region::new(
                 exterior
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.exterior(), core)
+                    })
                     .into_inner(),
                 interiors,
                 self.color(),
@@ -94,13 +101,18 @@ impl ReplaceHalfEdge for Sketch {
         let mut replacement_happened = false;
 
         let mut regions = Vec::new();
-        for region in self.regions() {
-            let region =
-                region.replace_half_edge(original, replacements.clone(), core);
+        for original_region in self.regions() {
+            let region = original_region.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= region.was_updated();
             regions.push(
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_region, core)
+                    })
                     .into_inner(),
             );
         }
@@ -128,7 +140,9 @@ impl ReplaceHalfEdge for Face {
             ReplaceOutput::Updated(Face::new(
                 self.surface().clone(),
                 region
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(self.region(), core)
+                    })
                     .into_inner(),
             ))
         } else {
@@ -147,13 +161,18 @@ impl ReplaceHalfEdge for Shell {
         let mut replacement_happened = false;
 
         let mut faces = Vec::new();
-        for face in self.faces() {
-            let face =
-                face.replace_half_edge(original, replacements.clone(), core);
+        for original_face in self.faces() {
+            let face = original_face.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= face.was_updated();
             faces.push(
-                face.map_updated(|updated| updated.insert(core))
-                    .into_inner(),
+                face.map_updated(|updated| {
+                    updated.insert(core).derive_from(original_face, core)
+                })
+                .into_inner(),
             );
         }
 
@@ -175,13 +194,18 @@ impl ReplaceHalfEdge for Solid {
         let mut replacement_happened = false;
 
         let mut shells = Vec::new();
-        for shell in self.shells() {
-            let shell =
-                shell.replace_half_edge(original, replacements.clone(), core);
+        for original_shell in self.shells() {
+            let shell = original_shell.replace_half_edge(
+                original,
+                replacements.clone(),
+                core,
+            );
             replacement_happened |= shell.was_updated();
             shells.push(
                 shell
-                    .map_updated(|updated| updated.insert(core))
+                    .map_updated(|updated| {
+                        updated.insert(core).derive_from(original_shell, core)
+                    })
                     .into_inner(),
             );
         }

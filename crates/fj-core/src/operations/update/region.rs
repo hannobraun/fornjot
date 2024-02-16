@@ -1,6 +1,6 @@
 use crate::{
     objects::{Cycle, Region},
-    operations::insert::Insert,
+    operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -54,7 +54,9 @@ impl UpdateRegion for Region {
     where
         T: Insert<Inserted = Handle<Cycle>>,
     {
-        let exterior = update(self.exterior(), core).insert(core);
+        let exterior = update(self.exterior(), core)
+            .insert(core)
+            .derive_from(self.exterior(), core);
         Region::new(exterior, self.interiors().iter().cloned(), self.color())
     }
 
@@ -84,7 +86,9 @@ impl UpdateRegion for Region {
             .interiors()
             .replace(
                 handle,
-                update(handle, core).map(|object| object.insert(core)),
+                update(handle, core).map(|object| {
+                    object.insert(core).derive_from(handle, core)
+                }),
             )
             .expect("Cycle not found");
         Region::new(self.exterior().clone(), interiors, self.color())

@@ -6,6 +6,7 @@ use crate::{
     objects::{Face, HalfEdge, Shell},
     operations::{
         build::{BuildFace, BuildHalfEdge},
+        derive::DeriveFrom,
         insert::Insert,
         presentation::SetColor,
         split::SplitEdge,
@@ -145,17 +146,22 @@ impl SplitFace for Shell {
                         },
                         core,
                     )
-                    .insert(core);
+                    .insert(core)
+                    .derive_from(region, core);
 
                 if let Some(color) = face.region().color() {
-                    region = region.set_color(color).insert(core);
+                    region = region
+                        .set_color(color)
+                        .insert(core)
+                        .derive_from(&region, core);
                 }
 
                 region
             },
             core,
         )
-        .insert(core);
+        .insert(core)
+        .derive_from(face, core);
 
         // The previous operation has moved the iterator along.
         let half_edges_of_face_starting_at_d = half_edges_of_face_starting_at_b;
@@ -183,17 +189,22 @@ impl SplitFace for Shell {
                         },
                         core,
                     )
-                    .insert(core);
+                    .insert(core)
+                    .derive_from(region, core);
 
                 if let Some(color) = face.region().color() {
-                    region = region.set_color(color).insert(core);
+                    region = region
+                        .set_color(color)
+                        .insert(core)
+                        .derive_from(&region, core);
                 }
 
                 region
             },
             core,
         )
-        .insert(core);
+        .insert(core)
+        .derive_from(face, core);
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_.update_face(
