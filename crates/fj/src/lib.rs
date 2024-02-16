@@ -10,13 +10,11 @@
 //! [Fornjot]: https://www.fornjot.app/
 
 mod args;
-mod handle_model;
 mod instance;
 
 pub use self::{
     args::Args,
-    handle_model::{Error, Result},
-    instance::Instance,
+    instance::{Error, Instance, Result},
 };
 
 pub use fj_core as core;
