@@ -99,13 +99,9 @@ impl Instance {
 }
 
 /// Return value of [`Instance::process_model`]
-///
-/// [`Instance::process_model`]: crate::Instance::process_model
 pub type Result = std::result::Result<(), Error>;
 
 /// Error returned by [`Instance::process_model`]
-///
-/// [`Instance::process_model`]: crate::Instance::process_model
 #[derive(thiserror::Error)]
 pub enum Error {
     /// Failed to set up logger
