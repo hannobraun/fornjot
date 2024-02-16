@@ -1,13 +1,13 @@
 use crate::{
     objects::{Cycle, HalfEdge},
     operations::insert::Insert,
-    Instance,
+    Core,
 };
 
 use super::{Reverse, ReverseCurveCoordinateSystems};
 
 impl Reverse for Cycle {
-    fn reverse(&self, core: &mut Instance) -> Self {
+    fn reverse(&self, core: &mut Core) -> Self {
         let mut edges = self
             .half_edges()
             .pairs()
@@ -29,7 +29,7 @@ impl Reverse for Cycle {
 }
 
 impl ReverseCurveCoordinateSystems for Cycle {
-    fn reverse_curve_coordinate_systems(&self, core: &mut Instance) -> Self {
+    fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self {
         let edges = self.half_edges().iter().map(|edge| {
             edge.reverse_curve_coordinate_systems(core).insert(core)
         });

@@ -6,7 +6,7 @@ use crate::{
     },
     operations::{insert::Insert, update::UpdateHalfEdge},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::ReplaceOutput;
@@ -23,7 +23,7 @@ pub trait ReplaceCurve: IsObject + Sized {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
@@ -32,7 +32,7 @@ impl ReplaceCurve for HalfEdge {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if original.id() == self.curve().id() {
             ReplaceOutput::Updated(self.update_curve(|_, _| replacement, core))
@@ -47,7 +47,7 @@ impl ReplaceCurve for Cycle {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -76,7 +76,7 @@ impl ReplaceCurve for Region {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -116,7 +116,7 @@ impl ReplaceCurve for Sketch {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -145,7 +145,7 @@ impl ReplaceCurve for Face {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let region = self.region().replace_curve(original, replacement, core);
 
@@ -167,7 +167,7 @@ impl ReplaceCurve for Shell {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -194,7 +194,7 @@ impl ReplaceCurve for Solid {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -223,7 +223,7 @@ impl ReplaceCurve for Handle<HalfEdge> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -236,7 +236,7 @@ impl ReplaceCurve for Handle<Cycle> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -249,7 +249,7 @@ impl ReplaceCurve for Handle<Region> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -262,7 +262,7 @@ impl ReplaceCurve for Handle<Sketch> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -275,7 +275,7 @@ impl ReplaceCurve for Handle<Face> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -288,7 +288,7 @@ impl ReplaceCurve for Handle<Shell> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)
@@ -301,7 +301,7 @@ impl ReplaceCurve for Handle<Solid> {
         &self,
         original: &Handle<Curve>,
         replacement: Handle<Curve>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_curve(original, replacement, core)

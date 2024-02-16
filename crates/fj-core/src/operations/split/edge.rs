@@ -8,7 +8,7 @@ use crate::{
     },
     queries::SiblingOfHalfEdge,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Split a pair of [`HalfEdge`]s into two
@@ -23,7 +23,7 @@ pub trait SplitEdge: Sized {
         &self,
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Self, [[Handle<HalfEdge>; 2]; 2]);
 }
 
@@ -32,7 +32,7 @@ impl SplitEdge for Shell {
         &self,
         half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Self, [[Handle<HalfEdge>; 2]; 2]) {
         let point = point.into();
 

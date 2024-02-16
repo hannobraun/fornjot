@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::{
     objects::{Cycle, HalfEdge},
     operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
-    Instance,
+    Core,
 };
 
 /// Build a [`Cycle`]
@@ -22,14 +22,14 @@ pub trait BuildCycle {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Cycle {
         let circle = HalfEdge::circle(center, radius, core);
         Cycle::empty().add_half_edges([circle], core)
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, core: &mut Instance) -> Cycle
+    fn polygon<P, Ps>(points: Ps, core: &mut Core) -> Cycle
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,

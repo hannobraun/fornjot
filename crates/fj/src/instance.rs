@@ -20,7 +20,7 @@ use crate::Args;
 #[derive(Default)]
 pub struct Instance {
     /// The instance of the Fornjot core
-    pub core: fj_core::Instance,
+    pub core: fj_core::Core,
 }
 
 impl Instance {
@@ -31,7 +31,7 @@ impl Instance {
 
     /// Construct an instance of `Instance`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let core = fj_core::Instance::with_validation_config(config);
+        let core = fj_core::Core::with_validation_config(config);
         Self { core }
     }
 

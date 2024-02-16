@@ -9,7 +9,7 @@ use crate::{
         update::UpdateShell,
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// # Sweep a [`Face`] that is part of a [`Shell`]
@@ -34,7 +34,7 @@ pub trait SweepFaceOfShell {
         &self,
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self;
 }
 
@@ -43,7 +43,7 @@ impl SweepFaceOfShell for Shell {
         &self,
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self {
         let path = path.into();
 

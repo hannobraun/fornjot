@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::HalfEdge, Instance};
+use crate::{objects::HalfEdge, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for HalfEdge {
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
         // Don't need to transform the path, as that's defined in surface

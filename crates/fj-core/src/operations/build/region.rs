@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{Cycle, Region},
     operations::{build::BuildCycle, insert::Insert},
-    Instance,
+    Core,
 };
 
 /// Build a [`Region`]
@@ -13,7 +13,7 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildRegion {
     /// Build an empty region
-    fn empty(core: &mut Instance) -> Region {
+    fn empty(core: &mut Core) -> Region {
         let exterior = Cycle::empty().insert(core);
         let interiors = [];
         let color = None;
@@ -25,14 +25,14 @@ pub trait BuildRegion {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Region {
         let exterior = Cycle::circle(center, radius, core).insert(core);
         Region::new(exterior, [], None)
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, core: &mut Instance) -> Region
+    fn polygon<P, Ps>(points: Ps, core: &mut Core) -> Region
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,

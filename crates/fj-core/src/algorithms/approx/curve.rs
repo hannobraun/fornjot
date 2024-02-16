@@ -181,12 +181,12 @@ mod tests {
         geometry::{CurveBoundary, GlobalPath, SurfaceGeometry, SurfacePath},
         objects::{Curve, Surface},
         operations::insert::Insert,
-        Instance,
+        Core,
     };
 
     #[test]
     fn approx_line_on_flat_surface() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
         let (surface_path, boundary) =
@@ -203,7 +203,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
         let (surface_path, boundary) =
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_along_curve() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let global_path = GlobalPath::circle_from_radius(1.);
         let curve = Curve::new().insert(&mut core);
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn approx_circle_on_flat_surface() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
         let surface_path =

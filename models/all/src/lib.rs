@@ -8,7 +8,7 @@ use fj::{
     math::{Scalar, Vector},
 };
 
-pub fn model(core: &mut fj::core::Instance) -> Solid {
+pub fn model(core: &mut fj::core::Core) -> Solid {
     // Just combine all the other models using offsets/rotations that won't
     // result in neat vertex positions or axis-aligned edges/faces. This is
     // useful for testing.

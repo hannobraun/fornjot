@@ -15,7 +15,7 @@ pub fn model(
     outer: f64,
     inner: f64,
     height: f64,
-    core: &mut fj::core::Instance,
+    core: &mut fj::core::Core,
 ) -> Solid {
     let bottom_surface = core.layers.objects.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., height]);

@@ -84,14 +84,14 @@ mod tests {
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
-        Instance,
+        Core,
     };
 
     use super::Triangulate;
 
     #[test]
     fn simple() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let a = [0., 0.];
         let b = [2., 0.];
@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn simple_hole() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let a = [0., 0.];
         let b = [4., 0.];
@@ -185,7 +185,7 @@ mod tests {
 
     #[test]
     fn sharp_concave_shape() -> anyhow::Result<()> {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         //   e       c
         //   |\     /|

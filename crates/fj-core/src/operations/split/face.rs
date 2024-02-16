@@ -14,7 +14,7 @@ use crate::{
         },
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Split a face into two
@@ -40,7 +40,7 @@ pub trait SplitFace: Sized {
         &self,
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Self, [Handle<Face>; 2]);
 }
 
@@ -49,7 +49,7 @@ impl SplitFace for Shell {
         &self,
         face: &Handle<Face>,
         line: [(&Handle<HalfEdge>, impl Into<Point<1>>); 2],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Self, [Handle<Face>; 2]) {
         // The code below might assume that the half-edges that define the line
         // are part of the face's exterior. Let's make that explicit here.

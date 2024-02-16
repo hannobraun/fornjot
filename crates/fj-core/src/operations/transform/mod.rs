@@ -18,7 +18,7 @@ use type_map::TypeMap;
 use crate::{
     operations::insert::Insert,
     storage::{Handle, ObjectId},
-    Instance,
+    Core,
 };
 
 /// Transform an object
@@ -32,7 +32,7 @@ use crate::{
 /// hasn't been done so far, is that no one has put in the work yet.
 pub trait TransformObject: Sized {
     /// Transform the object
-    fn transform(&self, transform: &Transform, core: &mut Instance) -> Self {
+    fn transform(&self, transform: &Transform, core: &mut Core) -> Self {
         let mut cache = TransformCache::default();
         self.transform_with_cache(transform, core, &mut cache)
     }
@@ -41,18 +41,14 @@ pub trait TransformObject: Sized {
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self;
 
     /// Translate the object
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
-    fn translate(
-        &self,
-        offset: impl Into<Vector<3>>,
-        core: &mut Instance,
-    ) -> Self {
+    fn translate(&self, offset: impl Into<Vector<3>>, core: &mut Core) -> Self {
         self.transform(&Transform::translation(offset), core)
     }
 
@@ -62,7 +58,7 @@ pub trait TransformObject: Sized {
     fn rotate(
         &self,
         axis_angle: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self {
         self.transform(&Transform::rotation(axis_angle), core)
     }
@@ -75,7 +71,7 @@ where
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
         if let Some(object) = cache.get(self) {

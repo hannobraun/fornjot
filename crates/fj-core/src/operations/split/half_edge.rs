@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Vertex},
     operations::insert::Insert,
-    Instance,
+    Core,
 };
 
 /// Split a [`HalfEdge`] into two
@@ -27,7 +27,7 @@ pub trait SplitHalfEdge {
     fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> [HalfEdge; 2];
 }
 
@@ -35,7 +35,7 @@ impl SplitHalfEdge for HalfEdge {
     fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> [HalfEdge; 2] {
         let point = point.into();
 

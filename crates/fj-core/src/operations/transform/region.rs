@@ -1,4 +1,4 @@
-use crate::{objects::Region, Instance};
+use crate::{objects::Region, Core};
 
 use super::TransformObject;
 
@@ -6,7 +6,7 @@ impl TransformObject for Region {
     fn transform_with_cache(
         &self,
         transform: &fj_math::Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self {
         // Color does not need to be transformed.

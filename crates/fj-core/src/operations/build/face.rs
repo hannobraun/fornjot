@@ -10,7 +10,7 @@ use crate::{
         insert::{Insert, IsInserted, IsInsertedNo},
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Build a [`Face`]
@@ -20,7 +20,7 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
-    fn unbound(surface: Handle<Surface>, core: &mut Instance) -> Face {
+    fn unbound(surface: Handle<Surface>, core: &mut Core) -> Face {
         let exterior = Cycle::empty().insert(core);
         let region = Region::new(exterior, [], None).insert(core);
         Face::new(surface, region)
@@ -29,7 +29,7 @@ pub trait BuildFace {
     /// Build a triangle
     fn triangle(
         points: [impl Into<Point<3>>; 3],
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Polygon<3> {
         let (surface, points_surface) = Surface::plane_from_points(points);
         let surface = surface.insert(core);
@@ -63,7 +63,7 @@ pub trait BuildFace {
     fn polygon<P, Ps>(
         surface: Handle<Surface>,
         points: Ps,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Face
     where
         P: Into<Point<2>>,

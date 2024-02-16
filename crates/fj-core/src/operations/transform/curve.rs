@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Curve, Instance};
+use crate::{objects::Curve, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for Curve {
     fn transform_with_cache(
         &self,
         _: &Transform,
-        _: &mut Instance,
+        _: &mut Core,
         _: &mut TransformCache,
     ) -> Self {
         // There's nothing to actually transform here, as `Curve` holds no data.

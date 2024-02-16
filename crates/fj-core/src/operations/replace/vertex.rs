@@ -6,7 +6,7 @@ use crate::{
     },
     operations::{insert::Insert, update::UpdateHalfEdge},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::ReplaceOutput;
@@ -23,7 +23,7 @@ pub trait ReplaceVertex: IsObject + Sized {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject>;
 }
 
@@ -32,7 +32,7 @@ impl ReplaceVertex for HalfEdge {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         if original.id() == self.start_vertex().id() {
             ReplaceOutput::Updated(
@@ -49,7 +49,7 @@ impl ReplaceVertex for Cycle {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -78,7 +78,7 @@ impl ReplaceVertex for Region {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -118,7 +118,7 @@ impl ReplaceVertex for Sketch {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -147,7 +147,7 @@ impl ReplaceVertex for Face {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let region = self.region().replace_vertex(original, replacement, core);
 
@@ -169,7 +169,7 @@ impl ReplaceVertex for Shell {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -196,7 +196,7 @@ impl ReplaceVertex for Solid {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -225,7 +225,7 @@ impl ReplaceVertex for Handle<HalfEdge> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)
@@ -238,7 +238,7 @@ impl ReplaceVertex for Handle<Cycle> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)
@@ -251,7 +251,7 @@ impl ReplaceVertex for Handle<Region> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)
@@ -264,7 +264,7 @@ impl ReplaceVertex for Handle<Sketch> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         let mut replacement_happened = false;
 
@@ -293,7 +293,7 @@ impl ReplaceVertex for Handle<Face> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)
@@ -306,7 +306,7 @@ impl ReplaceVertex for Handle<Shell> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)
@@ -319,7 +319,7 @@ impl ReplaceVertex for Handle<Solid> {
         &self,
         original: &Handle<Vertex>,
         replacement: Handle<Vertex>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> ReplaceOutput<Self, Self::BareObject> {
         self.deref()
             .replace_vertex(original, replacement, core)

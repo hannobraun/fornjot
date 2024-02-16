@@ -11,14 +11,14 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
     /// Add half-edges to the cycle that are joined to the provided ones
     #[must_use]
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Instance) -> Self
+    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
         Es: IntoIterator<
             Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
@@ -72,12 +72,12 @@ pub trait JoinCycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         other_range: RangeInclusive<usize>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self;
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Instance) -> Self
+    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
         Es: IntoIterator<
             Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
@@ -104,7 +104,7 @@ impl JoinCycle for Cycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         range_other: RangeInclusive<usize>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self {
         assert_eq!(
             range.end() - range.start(),

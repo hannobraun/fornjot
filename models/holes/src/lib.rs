@@ -9,10 +9,7 @@ use fj::{
     math::Scalar,
 };
 
-pub fn model(
-    radius: impl Into<Scalar>,
-    core: &mut fj::core::Instance,
-) -> Solid {
+pub fn model(radius: impl Into<Scalar>, core: &mut fj::core::Core) -> Solid {
     let radius = radius.into();
 
     let size = radius * 4.;

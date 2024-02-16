@@ -10,10 +10,7 @@ use fj::{
     math::{Scalar, Vector},
 };
 
-pub fn model(
-    size: impl Into<Vector<3>>,
-    core: &mut fj::core::Instance,
-) -> Solid {
+pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
     let [x, y, z] = size.into().components;
 
     let bottom_surface = core.layers.objects.surfaces.xy_plane();

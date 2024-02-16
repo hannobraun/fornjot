@@ -5,7 +5,7 @@ use fj_math::{Point, Scalar, Vector};
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Shell},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{
@@ -24,7 +24,7 @@ pub trait AddHole {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self;
 
     /// Add a through hole between the provided locations
@@ -32,7 +32,7 @@ pub trait AddHole {
         &self,
         locations: [HoleLocation; 2],
         radius: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self;
 }
 
@@ -42,7 +42,7 @@ impl AddHole for Shell {
         location: HoleLocation,
         radius: impl Into<Scalar>,
         path: impl Into<Vector<3>>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self {
         let entry =
             HalfEdge::circle(location.position, radius, core).insert(core);
@@ -89,7 +89,7 @@ impl AddHole for Shell {
         &self,
         [entry_location, exit_location]: [HoleLocation; 2],
         radius: impl Into<Scalar>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self {
         let radius = radius.into();
 

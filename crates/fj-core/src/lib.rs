@@ -92,4 +92,4 @@ pub mod validate;
 
 mod instance;
 
-pub use self::instance::Instance;
+pub use self::instance::Core;

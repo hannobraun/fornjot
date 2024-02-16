@@ -2,7 +2,7 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Cycle`]
@@ -12,7 +12,7 @@ pub trait UpdateCycle {
     fn add_half_edges<T>(
         &self,
         half_edges: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<HalfEdge>>;
@@ -28,8 +28,8 @@ pub trait UpdateCycle {
     fn update_half_edge<T, const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(&Handle<HalfEdge>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<HalfEdge>>;
@@ -39,7 +39,7 @@ impl UpdateCycle for Cycle {
     fn add_half_edges<T>(
         &self,
         half_edges: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<HalfEdge>>,
@@ -54,8 +54,8 @@ impl UpdateCycle for Cycle {
     fn update_half_edge<T, const N: usize>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(&Handle<HalfEdge>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<HalfEdge>>,

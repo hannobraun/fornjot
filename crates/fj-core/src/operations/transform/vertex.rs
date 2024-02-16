@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Vertex, Instance};
+use crate::{objects::Vertex, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for Vertex {
     fn transform_with_cache(
         &self,
         _: &Transform,
-        _: &mut Instance,
+        _: &mut Core,
         _: &mut TransformCache,
     ) -> Self {
         // There's nothing to actually transform here, as `Vertex` holds no

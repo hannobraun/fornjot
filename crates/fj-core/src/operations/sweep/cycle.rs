@@ -6,7 +6,7 @@ use crate::{
     operations::{
         build::BuildCycle, join::JoinCycle, sweep::half_edge::SweepHalfEdge,
     },
-    Instance,
+    Core,
 };
 
 use super::SweepCache;
@@ -41,7 +41,7 @@ pub trait SweepCycle {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> SweptCycle;
 }
 
@@ -52,7 +52,7 @@ impl SweepCycle for Cycle {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> SweptCycle {
         let path = path.into();
 

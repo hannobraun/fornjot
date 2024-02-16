@@ -3,7 +3,7 @@
 //! See [`Merge`], which is currently the only trait in this module, for more
 //! information.
 
-use crate::{objects::Solid, Instance};
+use crate::{objects::Solid, Core};
 
 use super::update::UpdateSolid;
 
@@ -11,11 +11,11 @@ use super::update::UpdateSolid;
 pub trait Merge {
     /// Merge this solid with another
     #[must_use]
-    fn merge(&self, other: &Self, core: &mut Instance) -> Self;
+    fn merge(&self, other: &Self, core: &mut Core) -> Self;
 }
 
 impl Merge for Solid {
-    fn merge(&self, other: &Self, core: &mut Instance) -> Self {
+    fn merge(&self, other: &Self, core: &mut Core) -> Self {
         self.add_shells(other.shells().iter().cloned(), core)
     }
 }

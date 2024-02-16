@@ -2,7 +2,7 @@ use crate::{
     objects::{Face, Shell},
     operations::insert::Insert,
     storage::Handle,
-    Instance,
+    Core,
 };
 
 /// Update a [`Shell`]
@@ -12,7 +12,7 @@ pub trait UpdateShell {
     fn add_faces<T>(
         &self,
         faces: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Face>>;
@@ -28,8 +28,8 @@ pub trait UpdateShell {
     fn update_face<T, const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Face>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Face>>;
@@ -43,7 +43,7 @@ impl UpdateShell for Shell {
     fn add_faces<T>(
         &self,
         faces: impl IntoIterator<Item = T>,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Face>>,
@@ -56,8 +56,8 @@ impl UpdateShell for Shell {
     fn update_face<T, const N: usize>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>, &mut Instance) -> [T; N],
-        core: &mut Instance,
+        update: impl FnOnce(&Handle<Face>, &mut Core) -> [T; N],
+        core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Face>>,

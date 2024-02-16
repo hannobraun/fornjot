@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Shell, Instance};
+use crate::{objects::Shell, Core};
 
 use super::{TransformCache, TransformObject};
 
@@ -8,7 +8,7 @@ impl TransformObject for Shell {
     fn transform_with_cache(
         &self,
         transform: &Transform,
-        core: &mut Instance,
+        core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
         let faces = self

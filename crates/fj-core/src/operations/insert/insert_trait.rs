@@ -5,7 +5,7 @@ use crate::{
     },
     operations::build::{Polygon, TetrahedronShell},
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{IsInsertedNo, IsInsertedYes};
@@ -28,7 +28,7 @@ pub trait Insert: Sized {
     /// specific reason to do so, and you are handling validation errors in a
     /// non-standard way.
     #[must_use]
-    fn insert(self, core: &mut Instance) -> Self::Inserted;
+    fn insert(self, core: &mut Core) -> Self::Inserted;
 }
 
 macro_rules! impl_insert {
@@ -37,7 +37,7 @@ macro_rules! impl_insert {
             impl Insert for $ty {
                 type Inserted = Handle<Self>;
 
-                fn insert(self, core: &mut Instance) -> Self::Inserted {
+                fn insert(self, core: &mut Core) -> Self::Inserted {
                     let handle = core.layers.objects.$store.reserve();
                     let object = (handle.clone(), self).into();
                     core.layers.objects.insert(
@@ -73,7 +73,7 @@ where
 {
     type Inserted = Self;
 
-    fn insert(self, _: &mut Instance) -> Self::Inserted {
+    fn insert(self, _: &mut Core) -> Self::Inserted {
         self
     }
 }
@@ -81,7 +81,7 @@ where
 impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
     type Inserted = Polygon<D, IsInsertedYes>;
 
-    fn insert(self, core: &mut Instance) -> Self::Inserted {
+    fn insert(self, core: &mut Core) -> Self::Inserted {
         Polygon {
             face: self.face.insert(core),
             half_edges: self.half_edges,
@@ -93,7 +93,7 @@ impl<const D: usize> Insert for Polygon<D, IsInsertedNo> {
 impl Insert for TetrahedronShell<IsInsertedNo> {
     type Inserted = TetrahedronShell<IsInsertedYes>;
 
-    fn insert(self, core: &mut Instance) -> Self::Inserted {
+    fn insert(self, core: &mut Core) -> Self::Inserted {
         TetrahedronShell {
             shell: self.shell.insert(core),
             abc: self.abc,

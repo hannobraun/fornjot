@@ -5,11 +5,7 @@ use fj::core::{
     },
 };
 
-pub fn model(
-    size: f64,
-    split_pos: f64,
-    core: &mut fj::core::Instance,
-) -> Solid {
+pub fn model(size: f64, split_pos: f64, core: &mut fj::core::Core) -> Solid {
     let cuboid = cuboid::model([size, size, size], core);
 
     cuboid.update_shell(

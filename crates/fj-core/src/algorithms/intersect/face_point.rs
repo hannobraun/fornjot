@@ -140,12 +140,12 @@ mod tests {
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
-        Instance,
+        Core,
     };
 
     #[test]
     fn point_is_outside_face() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -171,7 +171,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_passing_outside() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -200,7 +200,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_at_cycle_seam() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -229,7 +229,7 @@ mod tests {
 
     #[test]
     fn ray_hits_vertex_while_staying_inside() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -258,7 +258,7 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_leaves_face_at_vertex() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -287,7 +287,7 @@ mod tests {
 
     #[test]
     fn ray_hits_parallel_edge_and_does_not_leave_face_there() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -322,7 +322,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_edge() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
@@ -359,7 +359,7 @@ mod tests {
 
     #[test]
     fn point_is_coincident_with_vertex() {
-        let mut core = Instance::new();
+        let mut core = Core::new();
 
         let face =
             Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)

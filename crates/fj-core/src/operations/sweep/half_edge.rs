@@ -9,7 +9,7 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    Instance,
+    Core,
 };
 
 use super::{vertex::SweepVertex, SweepCache, SweepSurfacePath};
@@ -40,7 +40,7 @@ pub trait SweepHalfEdge {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Face, Handle<HalfEdge>);
 }
 
@@ -52,7 +52,7 @@ impl SweepHalfEdge for HalfEdge {
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
-        core: &mut Instance,
+        core: &mut Core,
     ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
