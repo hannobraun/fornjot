@@ -15,9 +15,9 @@ use super::approx::{face::FaceApprox, Approx, Tolerance};
 /// Triangulate a shape
 pub trait Triangulate: Sized {
     /// Triangulate the shape
-    fn triangulate(self, _core: &mut Core) -> Mesh<Point<3>> {
+    fn triangulate(self, core: &mut Core) -> Mesh<Point<3>> {
         let mut mesh = Mesh::new();
-        self.triangulate_into_mesh(&mut mesh);
+        self.triangulate_into_mesh(&mut mesh, core);
         mesh
     }
 
@@ -25,7 +25,7 @@ pub trait Triangulate: Sized {
     ///
     /// This is a low-level method, intended for implementation of
     /// `Triangulate`. Most callers should prefer [`Triangulate::triangulate`].
-    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>);
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>, core: &mut Core);
 }
 
 impl<T> Triangulate for (T, Tolerance)
@@ -33,19 +33,23 @@ where
     T: Approx,
     T::Approximation: IntoIterator<Item = FaceApprox>,
 {
-    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>, core: &mut Core) {
         let (approx, tolerance) = self;
 
         let approx = approx.approx(tolerance);
 
         for approx in approx {
-            approx.triangulate_into_mesh(mesh);
+            approx.triangulate_into_mesh(mesh, core);
         }
     }
 }
 
 impl Triangulate for FaceApprox {
-    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>) {
+    fn triangulate_into_mesh(
+        self,
+        mesh: &mut Mesh<Point<3>>,
+        _core: &mut Core,
+    ) {
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
