@@ -7,6 +7,7 @@ use fj_core::{
         triangulate::Triangulate,
     },
     validate::{ValidationConfig, ValidationErrors},
+    Core,
 };
 use fj_interop::Model;
 use fj_math::{Aabb, Point, Scalar};
@@ -20,7 +21,7 @@ use crate::Args;
 #[derive(Default)]
 pub struct Instance {
     /// The instance of the Fornjot core
-    pub core: fj_core::Core,
+    pub core: Core,
 }
 
 impl Instance {
