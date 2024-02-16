@@ -6,7 +6,7 @@ use fj_core::{
     validate::ValidationConfig,
 };
 
-use crate::{handle_model, Result};
+use crate::{handle_model::handle_model, Result};
 
 /// An instance of Fornjot
 ///

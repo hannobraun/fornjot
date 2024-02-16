@@ -15,7 +15,7 @@ mod instance;
 
 pub use self::{
     args::Args,
-    handle_model::{handle_model, Error, Result},
+    handle_model::{Error, Result},
     instance::Instance,
 };
 
