@@ -74,20 +74,21 @@ fn approx_curve(
                     .approx_with_cache(tolerance, &mut (), core)
                     .into_iter()
                     .map(|(point_curve, point_surface)| {
-                        // We're throwing away `point_surface` here, which is a bit
-                        // weird, as we're recomputing it later (outside of this
-                        // function).
+                        // We're throwing away `point_surface` here, which is a
+                        // bit weird, as we're recomputing it later (outside of
+                        // this function).
                         //
                         // It should be fine though:
                         //
-                        // 1. We're throwing this version away, so there's no danger
-                        //    of inconsistency between this and the later version.
-                        // 2. This version should have been computed using the same
-                        //    path and parameters and the later version will be, so
-                        //    they should be the same anyway.
-                        // 3. Not all other cases handled in this function have a
-                        //    surface point available, so it needs to be computed
-                        //    later anyway, in the general case.
+                        // 1. We're throwing this version away, so there's no
+                        //    danger of inconsistency between this and the later
+                        //    version.
+                        // 2. This version should have been computed using the
+                        //    same path and parameters and the later version
+                        //    will be, so they should be the same anyway.
+                        // 3. Not all other cases handled in this function have
+                        //    a surface point available, so it needs to be
+                        //    computed later anyway, in the general case.
 
                         let point_global = surface
                             .geometry()
