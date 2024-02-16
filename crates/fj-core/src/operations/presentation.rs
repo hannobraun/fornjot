@@ -8,6 +8,18 @@ use crate::{
     Core,
 };
 
+/// Get the color of an object
+pub trait GetColor {
+    /// Get the color of the object
+    fn get_color(&self, core: &mut Core) -> Option<Color>;
+}
+
+impl GetColor for Handle<Region> {
+    fn get_color(&self, core: &mut Core) -> Option<Color> {
+        core.layers.presentation.color.get(self).copied()
+    }
+}
+
 /// Set the color of an object
 pub trait SetColor: IsObject {
     /// Set the color of the object
