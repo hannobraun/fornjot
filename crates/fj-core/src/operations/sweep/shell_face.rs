@@ -64,7 +64,7 @@ impl SweepFaceOfShell for Shell {
             .reverse(core)
             .insert(core)
             .derive_from(face.region().exterior(), core);
-        let region = Region::new(exterior, [], face.region().color());
+        let region = Region::new(exterior, []);
         let faces = region
             .sweep_region(
                 face.surface(),

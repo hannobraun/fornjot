@@ -43,7 +43,6 @@ impl SetColor for Handle<Region> {
         Region::new(
             self.exterior().clone(),
             self.interiors().into_iter().cloned(),
-            Some(color),
         )
     }
 }

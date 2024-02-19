@@ -117,7 +117,6 @@ impl ReplaceCurve for Region {
                     })
                     .into_inner(),
                 interiors,
-                self.color(),
             ))
         } else {
             ReplaceOutput::Original(self.clone())

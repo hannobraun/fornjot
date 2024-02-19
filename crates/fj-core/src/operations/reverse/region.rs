@@ -17,7 +17,7 @@ impl Reverse for Region {
             cycle.reverse(core).insert(core).derive_from(cycle, core)
         });
 
-        Region::new(exterior, interiors, self.color())
+        Region::new(exterior, interiors)
     }
 }
 
@@ -35,6 +35,6 @@ impl ReverseCurveCoordinateSystems for Region {
                 .derive_from(cycle, core)
         });
 
-        Region::new(exterior, interiors, self.color())
+        Region::new(exterior, interiors)
     }
 }

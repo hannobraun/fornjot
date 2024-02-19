@@ -1,7 +1,5 @@
 //! A single, continues 2d region
 
-use fj_interop::Color;
-
 use crate::{
     objects::{Cycle, ObjectSet},
     storage::Handle,
@@ -19,7 +17,6 @@ use crate::{
 pub struct Region {
     exterior: Handle<Cycle>,
     interiors: ObjectSet<Cycle>,
-    color: Option<Color>,
 }
 
 impl Region {
@@ -27,12 +24,10 @@ impl Region {
     pub fn new(
         exterior: Handle<Cycle>,
         interiors: impl IntoIterator<Item = Handle<Cycle>>,
-        color: Option<Color>,
     ) -> Self {
         Self {
             exterior,
             interiors: interiors.into_iter().collect(),
-            color,
         }
     }
 
@@ -53,10 +48,5 @@ impl Region {
         // It would be nice to return `&ObjectSet` here, but I don't see a way
         // for doing that here *and* in `interiors`.
         [self.exterior()].into_iter().chain(self.interiors())
-    }
-
-    /// Access the color of the region
-    pub fn color(&self) -> Option<Color> {
-        self.color
     }
 }

@@ -136,7 +136,7 @@ impl SweepHalfEdge for HalfEdge {
             });
 
         let exterior = exterior.insert(core);
-        let region = Region::new(exterior, [], color).insert(core);
+        let region = Region::new(exterior, []).insert(core);
 
         if let Some(color) = color {
             region.set_color(color, core);

@@ -174,12 +174,9 @@ mod tests {
                 })
                 .collect::<Vec<_>>();
 
-            let region = Region::new(
-                valid.region().exterior().clone(),
-                interiors,
-                valid.region().color(),
-            )
-            .insert(&mut core);
+            let region =
+                Region::new(valid.region().exterior().clone(), interiors)
+                    .insert(&mut core);
 
             Face::new(valid.surface().clone(), region)
         };

@@ -9,9 +9,6 @@ impl TransformObject for Region {
         core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self {
-        // Color does not need to be transformed.
-        let color = self.color();
-
         let exterior = self
             .exterior()
             .clone()
@@ -20,6 +17,6 @@ impl TransformObject for Region {
             interior.transform_with_cache(transform, core, cache)
         });
 
-        Region::new(exterior, interiors, color)
+        Region::new(exterior, interiors)
     }
 }

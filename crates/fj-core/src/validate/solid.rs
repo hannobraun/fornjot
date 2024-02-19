@@ -204,7 +204,6 @@ mod tests {
                 ])
                 .insert(&mut core),
                 vec![],
-                None,
             )
             .insert(&mut core),
         )
@@ -251,7 +250,6 @@ mod tests {
             ])
             .insert(&mut core),
             vec![],
-            None,
         )
         .insert(&mut core);
 
@@ -311,8 +309,7 @@ mod tests {
                     v: [0., 1., 1.].into(),
                 })
                 .insert(&mut core),
-                Region::new(shared_cycle.clone(), vec![], None)
-                    .insert(&mut core),
+                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
             )
             .insert(&mut core),
             Face::new(
@@ -321,7 +318,7 @@ mod tests {
                     v: [0., 0., 1.].into(),
                 })
                 .insert(&mut core),
-                Region::new(shared_cycle, vec![], None).insert(&mut core),
+                Region::new(shared_cycle, vec![]).insert(&mut core),
             )
             .insert(&mut core),
         ])
@@ -360,7 +357,6 @@ mod tests {
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
                 vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
-                None,
             )
             .insert(&mut core),
         )
