@@ -6,6 +6,7 @@ use crate::{
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         insert::Insert,
+        presentation::SetColor,
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
@@ -136,6 +137,11 @@ impl SweepHalfEdge for HalfEdge {
 
         let exterior = exterior.insert(core);
         let region = Region::new(exterior, [], color).insert(core);
+
+        if let Some(color) = color {
+            region.set_color(color, core);
+        }
+
         let face = Face::new(surface, region);
 
         (face, edge_top)
