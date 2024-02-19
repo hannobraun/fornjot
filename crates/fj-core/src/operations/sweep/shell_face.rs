@@ -67,7 +67,7 @@ impl SweepFaceOfShell for Shell {
         let faces = region
             .sweep_region(
                 face.surface(),
-                region.color(),
+                face.region().color(),
                 path,
                 &mut cache,
                 core,
