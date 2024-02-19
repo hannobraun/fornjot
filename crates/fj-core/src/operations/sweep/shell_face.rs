@@ -5,6 +5,7 @@ use crate::{
     operations::{
         derive::DeriveFrom,
         insert::Insert,
+        presentation::GetColor,
         reverse::Reverse,
         sweep::{SweepCache, SweepRegion},
         update::UpdateShell,
@@ -67,7 +68,7 @@ impl SweepFaceOfShell for Shell {
         let faces = region
             .sweep_region(
                 face.surface(),
-                face.region().color(),
+                face.region().get_color(core),
                 path,
                 &mut cache,
                 core,
