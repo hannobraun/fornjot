@@ -24,8 +24,8 @@ pub trait SetColor {
 
 impl SetColor for Handle<Region> {
     fn set_color(&self, color: impl Into<Color>, core: &mut Core) {
-        let color = color.into();
-
-        core.layers.presentation.set_color(self.clone(), color);
+        core.layers
+            .presentation
+            .set_color(self.clone(), color.into());
     }
 }
