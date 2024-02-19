@@ -167,9 +167,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.79"
+version = "1.0.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "080e9890a082662b09c1ad45f567faeeb47f22b5fb23895fbe1e651e718e25ca"
+checksum = "5ad32ce52e4161730f7098c077cd2ed6229b5804ccf99e5366be1ab72a98b4e1"
 
 [[package]]
 name = "approx"
@@ -494,9 +494,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.0"
+version = "4.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80c21025abd42669a92efc996ef13cfb2c5c627858421ea58d5c3b331a6c134f"
+checksum = "c918d541ef2913577a0f9566e9ce27cb35b6df072075769e0b26cb5a554520da"
 dependencies = [
  "clap_builder",
  "clap_derive",
@@ -504,9 +504,9 @@ dependencies = [
 
 [[package]]
 name = "clap_builder"
-version = "4.5.0"
+version = "4.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "458bf1f341769dfcf849846f65dffdf9146daa56bcd2a47cb4e1de9915567c99"
+checksum = "9f3e7391dad68afb0c2ede1bf619f579a3dc9c2ec67f089baa397123a2f3d1eb"
 dependencies = [
  "anstream",
  "anstyle",
@@ -818,9 +818,9 @@ dependencies = [
 
 [[package]]
 name = "env_logger"
-version = "0.11.1"
+version = "0.11.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05e7cf40684ae96ade6232ed84582f40ce0a66efcd43a5117aef610534f8e0b8"
+checksum = "6c012a26a7f605efc424dd53697843a72be7dc86ad2d01f7814337794a12231d"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1872,9 +1872,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra"
-version = "0.32.3"
+version = "0.32.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "307ed9b18cc2423f29e83f84fd23a8e73628727990181f18641a8b5dc2ab1caa"
+checksum = "4541eb06dce09c0241ebbaab7102f0a01a0c8994afed2e5d0d66775016e25ac2"
 dependencies = [
  "approx 0.5.1",
  "matrixmultiply",
@@ -2450,21 +2450,12 @@ checksum = "0f0f7f43585c34e4fdd7497d746bc32e14458cf11c69341cc0587b1d825dde42"
 
 [[package]]
 name = "quick-xml"
-version = "0.27.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffc053f057dd768a56f62cd7e434c42c831d296968997e9ac1f76ea7c2d14c41"
-dependencies = [
- "memchr",
- "serde",
-]
-
-[[package]]
-name = "quick-xml"
 version = "0.31.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1004a344b30a54e2ee58d66a71b32d2db2feb0a31f9a2d302bf0536f15de2a33"
 dependencies = [
  "memchr",
+ "serde",
 ]
 
 [[package]]
@@ -2565,7 +2556,7 @@ dependencies = [
  "cargo_metadata",
  "clap",
  "cmd_lib",
- "env_logger 0.11.1",
+ "env_logger 0.11.2",
  "log",
  "reqwest",
  "secstr",
@@ -2830,9 +2821,9 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "1.0.21"
+version = "1.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b97ed7a9823b74f99c7742f5336af7be5ecd3eeafcb1507d1fa93347b1d589b0"
+checksum = "92d43fe69e652f3df9bdc2b85b2854a0825b86e4fb76bc44d945137d053639ca"
 dependencies = [
  "serde",
 ]
@@ -3214,11 +3205,11 @@ dependencies = [
 
 [[package]]
 name = "threemf"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf108acc769867300099b3c5334f3dd9bf8c420522a7b7a5938ba0142643808e"
+checksum = "542e6ea27d8dc779b54b6325da4a52b97367f7a63a41f9c0ce67a3096e550123"
 dependencies = [
- "quick-xml 0.27.1",
+ "quick-xml",
  "serde",
  "thiserror",
  "zip",
@@ -3802,7 +3793,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63b3a62929287001986fb58c789dce9b67604a397c15c611ad9f747300b6c283"
 dependencies = [
  "proc-macro2",
- "quick-xml 0.31.0",
+ "quick-xml",
  "quote",
 ]
 
@@ -3820,9 +3811,9 @@ dependencies = [
 
 [[package]]
 name = "web-sys"
-version = "0.3.67"
+version = "0.3.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58cd2333b6e0be7a39605f0e255892fd7418a682d8da8fe042fe25128794d2ed"
+checksum = "96565907687f7aceb35bc5fc03770a8a0471d82e479f25832f54a0e3f4b28446"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
