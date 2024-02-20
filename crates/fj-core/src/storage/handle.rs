@@ -235,6 +235,18 @@ impl fmt::Debug for ObjectId {
 /// is the purpose of `HandleWrapper`.
 pub struct HandleWrapper<T>(pub Handle<T>);
 
+impl<T> HandleWrapper<T> {
+    /// Convert `&self` into a `&Handle`
+    pub fn as_handle(&self) -> &Handle<T> {
+        &self.0
+    }
+
+    /// Convert `self` into a `Handle`
+    pub fn into_handle(self) -> Handle<T> {
+        self.0
+    }
+}
+
 impl<T> Deref for HandleWrapper<T> {
     type Target = Handle<T>;
 
