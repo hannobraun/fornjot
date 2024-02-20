@@ -218,7 +218,7 @@ impl<'r, T> IntoIterator for &'r ObjectSet<T> {
 
 impl<T> IntoIterator for ObjectSet<T> {
     type Item = Handle<T>;
-    type IntoIter = vec::IntoIter<Handle<T>>;
+    type IntoIter = ObjectSetIntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.into_iter()
@@ -229,3 +229,6 @@ impl<T> IntoIterator for ObjectSet<T> {
 ///
 /// See [`ObjectSet::iter`].
 pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
+
+/// An owned iterator over an [`ObjectSet`]
+pub type ObjectSetIntoIter<T> = vec::IntoIter<Handle<T>>;
