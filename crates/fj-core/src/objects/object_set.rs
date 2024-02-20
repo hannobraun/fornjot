@@ -199,15 +199,6 @@ where
     }
 }
 
-impl<T> IntoIterator for ObjectSet<T> {
-    type Item = Handle<T>;
-    type IntoIter = vec::IntoIter<Handle<T>>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.inner.into_iter()
-    }
-}
-
 impl<'r, T> IntoIterator for &'r ObjectSet<T> {
     // You might wonder why we're returning references to `Handle`s here, when
     // `Handle` already is a kind of reference, and easily cloned.
@@ -222,6 +213,15 @@ impl<'r, T> IntoIterator for &'r ObjectSet<T> {
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
+    }
+}
+
+impl<T> IntoIterator for ObjectSet<T> {
+    type Item = Handle<T>;
+    type IntoIter = vec::IntoIter<Handle<T>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.inner.into_iter()
     }
 }
 
