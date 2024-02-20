@@ -1,8 +1,8 @@
-use std::{collections::BTreeSet, fmt::Debug, slice, vec};
+use std::{collections::BTreeSet, fmt::Debug, iter, slice, vec};
 
 use itertools::Itertools;
 
-use crate::storage::Handle;
+use crate::storage::{Handle, HandleWrapper};
 
 /// An ordered set of objects
 ///
@@ -19,7 +19,7 @@ pub struct ObjectSet<T> {
     // structure (since it is used in objects, and objects themselves are
     // immutable). We need to make sure there are no duplicates when this is
     // constructed (see the constructor below), but after that, we're fine.
-    inner: Vec<Handle<T>>,
+    inner: Vec<HandleWrapper<T>>,
 }
 
 impl<T> ObjectSet<T> {
@@ -36,6 +36,8 @@ impl<T> ObjectSet<T> {
         let mut inner = Vec::new();
 
         for handle in handles {
+            let handle = HandleWrapper::from(handle);
+
             if added.contains(&handle) {
                 panic!(
                     "Constructing `ObjectSet` with duplicate handle: {:?}",
@@ -97,7 +99,7 @@ impl<T> ObjectSet<T> {
 
     /// Return the n-th item
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
-        self.inner.get(index)
+        self.inner.get(index).map(|wrapper| &wrapper.0)
     }
 
     /// Return the n-th item, treating the index space as circular
@@ -131,7 +133,7 @@ impl<T> ObjectSet<T> {
 
     /// Access an iterator over the objects
     pub fn iter(&self) -> ObjectSetIter<T> {
-        self.inner.iter()
+        self.inner.iter().map(HandleWrapper::as_handle)
     }
 
     /// Access an iterator over the neighboring pairs of all contained objects
@@ -213,14 +215,17 @@ impl<T> IntoIterator for ObjectSet<T> {
     type IntoIter = ObjectSetIntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.inner.into_iter()
+        self.inner.into_iter().map(HandleWrapper::into_handle)
     }
 }
 
 /// An borrowed iterator over an [`ObjectSet`]
 ///
 /// See [`ObjectSet::iter`].
-pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
+pub type ObjectSetIter<'r, T> = iter::Map<
+    slice::Iter<'r, HandleWrapper<T>>,
+    fn(&HandleWrapper<T>) -> &Handle<T>,
+>;
 
 /// An owned iterator over an [`ObjectSet`]
 ///
@@ -232,4 +237,27 @@ pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
 /// iterator adapters. You can't return a reference to the argument of an
 /// adapter's closure, if you own that argument. You can, if you just reference
 /// the argument.
-pub type ObjectSetIntoIter<T> = vec::IntoIter<Handle<T>>;
+pub type ObjectSetIntoIter<T> = iter::Map<
+    vec::IntoIter<HandleWrapper<T>>,
+    fn(HandleWrapper<T>) -> Handle<T>,
+>;
+
+#[cfg(test)]
+mod tests {
+    use crate::{objects::Cycle, operations::insert::Insert, Core};
+
+    use super::ObjectSet;
+
+    #[test]
+    fn equal_but_not_identical_objects() {
+        let mut core = Core::new();
+
+        let bare_cycle = Cycle::new([]);
+        let cycle_a = bare_cycle.clone().insert(&mut core);
+        let cycle_b = bare_cycle.insert(&mut core);
+
+        let _object_set = ObjectSet::new([cycle_a, cycle_b]);
+        // Nothing more to test. `ObjectSet` panics on duplicate objects, and it
+        // shouldn't do that in this case.
+    }
+}
