@@ -200,14 +200,6 @@ where
 }
 
 impl<'r, T> IntoIterator for &'r ObjectSet<T> {
-    // You might wonder why we're returning references to `Handle`s here, when
-    // `Handle` already is a kind of reference, and easily cloned.
-    //
-    // Most of the time that doesn't make a difference, but there are use cases
-    // where dealing with owned `Handle`s is inconvenient, for example when
-    // using iterator adapters. You can't return a reference to the argument of
-    // an adapter's closure, if you own that argument. You can, if you just
-    // reference the argument.
     type Item = &'r Handle<T>;
     type IntoIter = ObjectSetIter<'r, T>;
 
@@ -231,4 +223,13 @@ impl<T> IntoIterator for ObjectSet<T> {
 pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
 
 /// An owned iterator over an [`ObjectSet`]
+///
+/// You might wonder why we're returning references to `Handle`s here, when
+/// `Handle` already is a kind of reference, and easily cloned.
+///
+/// Most of the time that doesn't make a difference, but there are use cases
+/// where dealing with owned `Handle`s is inconvenient, for example when using
+/// iterator adapters. You can't return a reference to the argument of an
+/// adapter's closure, if you own that argument. You can, if you just reference
+/// the argument.
 pub type ObjectSetIntoIter<T> = vec::IntoIter<Handle<T>>;
