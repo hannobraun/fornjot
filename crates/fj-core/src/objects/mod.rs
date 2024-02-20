@@ -33,6 +33,6 @@ pub use self::{
         surface::Surface,
         vertex::Vertex,
     },
-    object_set::ObjectSet,
+    object_set::{ObjectSet, ObjectSetIter},
     stores::{Objects, Surfaces},
 };

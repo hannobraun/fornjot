@@ -130,7 +130,7 @@ impl<T> ObjectSet<T> {
     }
 
     /// Access an iterator over the objects
-    pub fn iter(&self) -> slice::Iter<Handle<T>> {
+    pub fn iter(&self) -> ObjectSetIter<T> {
         self.inner.iter()
     }
 
@@ -218,9 +218,14 @@ impl<'r, T> IntoIterator for &'r ObjectSet<T> {
     // an adapter's closure, if you own that argument. You can, if you just
     // reference the argument.
     type Item = &'r Handle<T>;
-    type IntoIter = slice::Iter<'r, Handle<T>>;
+    type IntoIter = ObjectSetIter<'r, T>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
     }
 }
+
+/// An borrowed iterator over an [`ObjectSet`]
+///
+/// See [`ObjectSet::iter`].
+pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
