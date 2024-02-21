@@ -3,10 +3,10 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{Cycle, HalfEdge},
     storage::Handle,
-    validation::ValidationError,
+    validation::{ValidationConfig, ValidationError},
 };
 
-use super::{Validate, ValidationConfig};
+use super::Validate;
 
 impl Validate for Cycle {
     fn validate_with_config(

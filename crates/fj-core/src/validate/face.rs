@@ -1,8 +1,11 @@
 use fj_math::Winding;
 
-use crate::{objects::Face, validation::ValidationError};
+use crate::{
+    objects::Face,
+    validation::{ValidationConfig, ValidationError},
+};
 
-use super::{Validate, ValidationConfig};
+use super::Validate;
 
 impl Validate for Face {
     fn validate_with_config(

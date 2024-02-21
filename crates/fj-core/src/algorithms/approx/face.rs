@@ -9,7 +9,7 @@ use fj_interop::Color;
 use crate::{
     objects::{Face, Handedness, ObjectSet},
     operations::presentation::GetColor,
-    validate::ValidationConfig,
+    validation::ValidationConfig,
     Core,
 };
 

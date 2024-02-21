@@ -6,8 +6,7 @@ use fj_core::{
         bounding_volume::BoundingVolume,
         triangulate::Triangulate,
     },
-    validate::ValidationConfig,
-    validation::ValidationErrors,
+    validation::{ValidationConfig, ValidationErrors},
     Core,
 };
 use fj_interop::Model;

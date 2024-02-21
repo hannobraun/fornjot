@@ -2,7 +2,7 @@
 //!
 //! See [`Core`].
 
-use crate::{layers::Layers, validate::ValidationConfig};
+use crate::{layers::Layers, validation::ValidationConfig};
 
 /// An instance of the Fornjot core
 ///

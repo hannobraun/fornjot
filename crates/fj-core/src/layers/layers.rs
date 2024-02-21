@@ -1,7 +1,6 @@
 use crate::{
-    objects::Objects,
-    presentation::Presentation,
-    validate::{Validation, ValidationConfig},
+    objects::Objects, presentation::Presentation, validate::Validation,
+    validation::ValidationConfig,
 };
 
 use super::Layer;

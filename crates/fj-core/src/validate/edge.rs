@@ -1,8 +1,11 @@
 use fj_math::{Point, Scalar};
 
-use crate::{objects::HalfEdge, validation::ValidationError};
+use crate::{
+    objects::HalfEdge,
+    validation::{ValidationConfig, ValidationError},
+};
 
-use super::{Validate, ValidationConfig};
+use super::Validate;
 
 impl Validate for HalfEdge {
     fn validate_with_config(

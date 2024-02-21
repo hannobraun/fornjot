@@ -20,6 +20,10 @@
 //! - <https://github.com/hannobraun/fornjot/issues/1713>
 //! - <https://github.com/hannobraun/fornjot/issues/2157>
 
+mod config;
 mod error;
 
-pub use self::error::{ValidationError, ValidationErrors};
+pub use self::{
+    config::ValidationConfig,
+    error::{ValidationError, ValidationErrors},
+};
