@@ -22,4 +22,4 @@
 
 mod error;
 
-pub use self::error::ValidationError;
+pub use self::error::{ValidationError, ValidationErrors};

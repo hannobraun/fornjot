@@ -2,8 +2,8 @@
 
 use crate::{
     objects::{AnyObject, Stored},
-    validate::{Validation, ValidationErrors},
-    validation::ValidationError,
+    validate::Validation,
+    validation::{ValidationError, ValidationErrors},
 };
 
 use super::{objects::InsertObject, Command, Event, Layer};
