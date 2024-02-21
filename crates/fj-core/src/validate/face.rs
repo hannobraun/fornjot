@@ -1,8 +1,11 @@
 use fj_math::Winding;
 
-use crate::objects::Face;
+use crate::{
+    objects::Face,
+    validation::{ValidationConfig, ValidationError},
+};
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::Validate;
 
 impl Validate for Face {
     fn validate_with_config(
@@ -94,7 +97,8 @@ mod tests {
             reverse::Reverse,
             update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
-        validate::{FaceValidationError, Validate, ValidationError},
+        validate::{FaceValidationError, Validate},
+        validation::ValidationError,
         Core,
     };
 

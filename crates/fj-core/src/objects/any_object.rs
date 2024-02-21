@@ -4,7 +4,8 @@ use crate::{
         Surface, Vertex,
     },
     storage::{Handle, HandleWrapper, ObjectId},
-    validate::{Validate, ValidationConfig, ValidationError},
+    validate::Validate,
+    validation::{ValidationConfig, ValidationError},
 };
 
 macro_rules! any_object {
