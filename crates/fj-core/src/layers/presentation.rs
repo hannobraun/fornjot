@@ -87,9 +87,6 @@ impl Command<Presentation> for DeriveObject {
     }
 }
 
-/// Command for `Layer<Presentation>`
-pub enum PresentationCommand {}
-
 /// Event produced by `Layer<Presentation>`
 #[derive(Clone)]
 pub enum PresentationEvent {
