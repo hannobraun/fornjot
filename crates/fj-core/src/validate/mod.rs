@@ -1,14 +1,6 @@
 //! # Infrastructure for validating objects
 //!
-//! ## Structure and Nomenclature
-//!
-//! **Validation** is the process of checking that objects meet specific
-//! requirements. Each kind of object has its own set of requirements.
-//!
-//! An object that meets all the requirement for its kind is considered
-//! **valid**. An object that does not meet all of them is considered
-//! **invalid**. This results in a **validation error**, which is represented by
-//! `ValidationError`.
+//! ## Structure
 //!
 //! Every single requirement is checked by a dedicated function. These functions
 //! are called **validation checks**. Validation checks are currently not
