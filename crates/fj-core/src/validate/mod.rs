@@ -8,7 +8,7 @@
 //! An object that meets all the requirement for its kind is considered
 //! **valid**. An object that does not meet all of them is considered
 //! **invalid**. This results in a **validation error**, which is represented by
-//! [`ValidationError`].
+//! `ValidationError`.
 //!
 //! Every single requirement is checked by a dedicated function. These functions
 //! are called **validation checks**. Validation checks are currently not
@@ -76,7 +76,7 @@ mod solid;
 mod surface;
 mod vertex;
 
-use crate::storage::ObjectId;
+use crate::{storage::ObjectId, validation::ValidationError};
 
 pub use self::{
     cycle::CycleValidationError, edge::EdgeValidationError,
@@ -84,9 +84,7 @@ pub use self::{
     sketch::SketchValidationError, solid::SolidValidationError,
 };
 
-use std::{
-    collections::HashMap, convert::Infallible, error::Error, fmt, thread,
-};
+use std::{collections::HashMap, error::Error, fmt, thread};
 
 use fj_math::Scalar;
 
@@ -210,40 +208,6 @@ impl Default for ValidationConfig {
             // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
         }
-    }
-}
-
-/// An error that can occur during a validation
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum ValidationError {
-    /// `Cycle` validation error
-    #[error("`Cycle` validation error")]
-    Cycle(#[from] CycleValidationError),
-
-    /// `Edge` validation error
-    #[error("`Edge` validation error")]
-    Edge(#[from] EdgeValidationError),
-
-    /// `Face` validation error
-    #[error("`Face` validation error")]
-    Face(#[from] FaceValidationError),
-
-    /// `Shell` validation error
-    #[error("`Shell` validation error")]
-    Shell(#[from] ShellValidationError),
-
-    /// `Solid` validation error
-    #[error("`Solid` validation error")]
-    Solid(#[from] SolidValidationError),
-
-    /// `Sketch` validation error
-    #[error("`Sketch` validation error")]
-    Sketch(#[from] SketchValidationError),
-}
-
-impl From<Infallible> for ValidationError {
-    fn from(infallible: Infallible) -> Self {
-        match infallible {}
     }
 }
 

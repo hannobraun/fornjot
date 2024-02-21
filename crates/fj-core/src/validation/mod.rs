@@ -9,3 +9,7 @@
 //!
 //! - <https://github.com/hannobraun/fornjot/issues/1713>
 //! - <https://github.com/hannobraun/fornjot/issues/2157>
+
+mod error;
+
+pub use self::error::ValidationError;

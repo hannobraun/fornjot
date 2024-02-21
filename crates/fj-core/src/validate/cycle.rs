@@ -3,9 +3,10 @@ use fj_math::{Point, Scalar};
 use crate::{
     objects::{Cycle, HalfEdge},
     storage::Handle,
+    validation::ValidationError,
 };
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::{Validate, ValidationConfig};
 
 impl Validate for Cycle {
     fn validate_with_config(
@@ -83,7 +84,8 @@ mod tests {
             build::{BuildCycle, BuildHalfEdge},
             update::UpdateCycle,
         },
-        validate::{cycle::CycleValidationError, Validate, ValidationError},
+        validate::{cycle::CycleValidationError, Validate},
+        validation::ValidationError,
         Core,
     };
 

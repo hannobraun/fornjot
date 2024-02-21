@@ -1,8 +1,8 @@
 use fj_math::{Point, Scalar};
 
-use crate::objects::HalfEdge;
+use crate::{objects::HalfEdge, validation::ValidationError};
 
-use super::{Validate, ValidationConfig, ValidationError};
+use super::{Validate, ValidationConfig};
 
 impl Validate for HalfEdge {
     fn validate_with_config(
@@ -70,7 +70,8 @@ mod tests {
         assert_contains_err,
         objects::HalfEdge,
         operations::build::BuildHalfEdge,
-        validate::{EdgeValidationError, Validate, ValidationError},
+        validate::{EdgeValidationError, Validate},
+        validation::ValidationError,
         Core,
     };
 
