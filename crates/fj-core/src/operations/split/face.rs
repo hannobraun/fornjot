@@ -3,9 +3,9 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    objects::{Face, HalfEdge, Shell},
+    objects::{Cycle, Face, HalfEdge, Shell},
     operations::{
-        build::{BuildFace, BuildHalfEdge},
+        build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,
         insert::Insert,
         presentation::SetColor,
@@ -125,86 +125,80 @@ impl SplitFace for Shell {
 
         let half_edges_b_to_c_inclusive = half_edges_of_face_starting_at_b
             .take_while_ref(|half_edge| half_edge != &d);
-        let split_face_a = Face::unbound(
-            updated_face_after_split_edges.surface().clone(),
-            core,
-        )
-        .update_region(
-            |region, core| {
-                let mut region = region
-                    .update_exterior(
-                        |cycle, core| {
-                            cycle
-                                .add_half_edges(
-                                    half_edges_b_to_c_inclusive,
-                                    core,
-                                )
-                                .add_half_edges(
-                                    [dividing_half_edge_c_to_b],
-                                    core,
-                                )
-                        },
-                        core,
-                    )
-                    .insert(core)
-                    .derive_from(region, core);
-
-                if let Some(color) = face.region().color() {
-                    region = region
-                        .set_color(color, core)
+        let split_face_a = updated_face_after_split_edges
+            .update_region(
+                |region, core| {
+                    let mut region = region
+                        .update_exterior(
+                            |_, core| {
+                                Cycle::empty()
+                                    .add_half_edges(
+                                        half_edges_b_to_c_inclusive,
+                                        core,
+                                    )
+                                    .add_half_edges(
+                                        [dividing_half_edge_c_to_b],
+                                        core,
+                                    )
+                            },
+                            core,
+                        )
                         .insert(core)
-                        .derive_from(&region, core);
-                }
+                        .derive_from(region, core);
 
-                region
-            },
-            core,
-        )
-        .insert(core)
-        .derive_from(face, core);
+                    if let Some(color) = face.region().color() {
+                        region = region
+                            .set_color(color, core)
+                            .insert(core)
+                            .derive_from(&region, core);
+                    }
+
+                    region
+                },
+                core,
+            )
+            .insert(core)
+            .derive_from(updated_face_after_split_edges, core);
 
         // The previous operation has moved the iterator along.
         let half_edges_of_face_starting_at_d = half_edges_of_face_starting_at_b;
 
         let half_edges_d_to_a_inclusive = half_edges_of_face_starting_at_d
             .take_while(|half_edge| half_edge != &b);
-        let split_face_b = Face::unbound(
-            updated_face_after_split_edges.surface().clone(),
-            core,
-        )
-        .update_region(
-            |region, core| {
-                let mut region = region
-                    .update_exterior(
-                        |cycle, core| {
-                            cycle
-                                .add_half_edges(
-                                    half_edges_d_to_a_inclusive,
-                                    core,
-                                )
-                                .add_half_edges(
-                                    [dividing_half_edge_a_to_d],
-                                    core,
-                                )
-                        },
-                        core,
-                    )
-                    .insert(core)
-                    .derive_from(region, core);
-
-                if let Some(color) = face.region().color() {
-                    region = region
-                        .set_color(color, core)
+        let split_face_b = updated_face_after_split_edges
+            .update_region(
+                |region, core| {
+                    let mut region = region
+                        .update_exterior(
+                            |_, core| {
+                                Cycle::empty()
+                                    .add_half_edges(
+                                        half_edges_d_to_a_inclusive,
+                                        core,
+                                    )
+                                    .add_half_edges(
+                                        [dividing_half_edge_a_to_d],
+                                        core,
+                                    )
+                            },
+                            core,
+                        )
                         .insert(core)
-                        .derive_from(&region, core);
-                }
+                        .derive_from(region, core);
 
-                region
-            },
-            core,
-        )
-        .insert(core)
-        .derive_from(face, core);
+                    if let Some(color) = face.region().color() {
+                        region = region
+                            .set_color(color, core)
+                            .insert(core)
+                            .derive_from(&region, core);
+                    }
+
+                    region
+                },
+                core,
+            )
+            .insert(core)
+            .derive_from(updated_face_after_split_edges, core);
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_.update_face(
@@ -214,5 +208,46 @@ impl SplitFace for Shell {
         );
 
         (self_, faces)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_interop::Color;
+
+    use crate::{
+        objects::Shell,
+        operations::{
+            build::BuildShell,
+            presentation::{GetColor, SetColor},
+            split::SplitFace,
+        },
+        Core,
+    };
+
+    #[test]
+    fn split_face_should_keep_color() {
+        let mut core = Core::new();
+
+        let tetrahedron = Shell::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        let triangle = tetrahedron.abc;
+
+        let color = Color::default();
+        triangle.face.region().set_color(color, &mut core);
+
+        let split_line = [
+            (&triangle.half_edges[0], [0.5]),
+            (&triangle.half_edges[1], [0.5]),
+        ];
+        let (_shell, [face_a, face_b]) =
+            tetrahedron
+                .shell
+                .split_face(&triangle.face, split_line, &mut core);
+
+        assert_eq!(face_a.region().get_color(&mut core), Some(color));
+        assert_eq!(face_b.region().get_color(&mut core), Some(color));
     }
 }
