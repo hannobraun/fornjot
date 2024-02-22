@@ -8,7 +8,6 @@ use crate::{
         build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,
         insert::Insert,
-        presentation::SetColor,
         split::SplitEdge,
         update::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
@@ -128,7 +127,7 @@ impl SplitFace for Shell {
         let split_face_a = updated_face_after_split_edges
             .update_region(
                 |region, core| {
-                    let mut region = region
+                    region
                         .update_exterior(
                             |_, core| {
                                 Cycle::empty()
@@ -144,16 +143,7 @@ impl SplitFace for Shell {
                             core,
                         )
                         .insert(core)
-                        .derive_from(region, core);
-
-                    if let Some(color) = face.region().color() {
-                        region = region
-                            .set_color(color, core)
-                            .insert(core)
-                            .derive_from(&region, core);
-                    }
-
-                    region
+                        .derive_from(region, core)
                 },
                 core,
             )
@@ -168,7 +158,7 @@ impl SplitFace for Shell {
         let split_face_b = updated_face_after_split_edges
             .update_region(
                 |region, core| {
-                    let mut region = region
+                    region
                         .update_exterior(
                             |_, core| {
                                 Cycle::empty()
@@ -184,16 +174,7 @@ impl SplitFace for Shell {
                             core,
                         )
                         .insert(core)
-                        .derive_from(region, core);
-
-                    if let Some(color) = face.region().color() {
-                        region = region
-                            .set_color(color, core)
-                            .insert(core)
-                            .derive_from(&region, core);
-                    }
-
-                    region
+                        .derive_from(region, core)
                 },
                 core,
             )
