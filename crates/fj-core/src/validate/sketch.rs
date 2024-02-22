@@ -72,10 +72,9 @@ mod tests {
             Region::new(
                 Cycle::new(vec![]).insert(&mut core),
                 vec![shared_cycle.clone()],
-                None,
             )
             .insert(&mut core),
-            Region::new(shared_cycle, vec![], None).insert(&mut core),
+            Region::new(shared_cycle, vec![]).insert(&mut core),
         ]);
         assert_contains_err!(
             invalid_sketch,
@@ -87,7 +86,6 @@ mod tests {
         let valid_sketch = Sketch::new(vec![Region::new(
             Cycle::new(vec![]).insert(&mut core),
             vec![],
-            None,
         )
         .insert(&mut core)]);
         valid_sketch.validate_and_return_first_error()?;
@@ -114,12 +112,10 @@ mod tests {
             Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
                 .insert(&mut core);
 
-        let invalid_sketch = Sketch::new(vec![Region::new(
-            exterior.clone(),
-            vec![interior],
-            None,
-        )
-        .insert(&mut core)]);
+        let invalid_sketch =
+            Sketch::new(vec![
+                Region::new(exterior.clone(), vec![interior]).insert(&mut core)
+            ]);
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
@@ -128,9 +124,7 @@ mod tests {
         );
 
         let valid_sketch =
-            Sketch::new(vec![
-                Region::new(exterior, vec![], None).insert(&mut core)
-            ]);
+            Sketch::new(vec![Region::new(exterior, vec![]).insert(&mut core)]);
         valid_sketch.validate_and_return_first_error()?;
 
         Ok(())

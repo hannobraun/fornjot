@@ -16,9 +16,8 @@ pub trait BuildRegion {
     fn empty(core: &mut Core) -> Region {
         let exterior = Cycle::empty().insert(core);
         let interiors = [];
-        let color = None;
 
-        Region::new(exterior, interiors, color)
+        Region::new(exterior, interiors)
     }
 
     /// Build a circle
@@ -28,7 +27,7 @@ pub trait BuildRegion {
         core: &mut Core,
     ) -> Region {
         let exterior = Cycle::circle(center, radius, core).insert(core);
-        Region::new(exterior, [], None)
+        Region::new(exterior, [])
     }
 
     /// Build a polygon
@@ -39,7 +38,7 @@ pub trait BuildRegion {
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
         let exterior = Cycle::polygon(points, core).insert(core);
-        Region::new(exterior, [], None)
+        Region::new(exterior, [])
     }
 }
 

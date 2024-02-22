@@ -2,11 +2,7 @@
 
 use fj_interop::Color;
 
-use crate::{
-    objects::{IsObject, Region},
-    storage::Handle,
-    Core,
-};
+use crate::{objects::Region, storage::Handle, Core};
 
 /// Get the color of an object
 pub trait GetColor {
@@ -21,29 +17,15 @@ impl GetColor for Handle<Region> {
 }
 
 /// Set the color of an object
-pub trait SetColor: IsObject {
+pub trait SetColor {
     /// Set the color of the object
-    fn set_color(
-        &self,
-        color: impl Into<Color>,
-        core: &mut Core,
-    ) -> Self::BareObject;
+    fn set_color(&self, color: impl Into<Color>, core: &mut Core);
 }
 
 impl SetColor for Handle<Region> {
-    fn set_color(
-        &self,
-        color: impl Into<Color>,
-        core: &mut Core,
-    ) -> Self::BareObject {
-        let color = color.into();
-
-        core.layers.presentation.set_color(self.clone(), color);
-
-        Region::new(
-            self.exterior().clone(),
-            self.interiors().into_iter().cloned(),
-            Some(color),
-        )
+    fn set_color(&self, color: impl Into<Color>, core: &mut Core) {
+        core.layers
+            .presentation
+            .set_color(self.clone(), color.into());
     }
 }

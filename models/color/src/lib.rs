@@ -1,9 +1,7 @@
 use fj::core::{
     objects::Solid,
     operations::{
-        presentation::SetColor,
-        split::SplitFace,
-        update::{UpdateFace, UpdateShell, UpdateSolid},
+        presentation::SetColor, split::SplitFace, update::UpdateSolid,
     },
 };
 
@@ -14,16 +12,7 @@ pub fn model(core: &mut fj::core::Core) -> Solid {
     cuboid.update_shell(
         cuboid.shells().only(),
         |shell, core| {
-            let shell = shell.update_face(
-                shell.faces().first(),
-                |face, core| {
-                    [face.update_region(
-                        |region, core| region.set_color([0., 1., 0.], core),
-                        core,
-                    )]
-                },
-                core,
-            );
+            shell.faces().first().region().set_color([0., 1., 0.], core);
 
             // Split colored face, to make sure the same color is applied to the
             // two derived faces.

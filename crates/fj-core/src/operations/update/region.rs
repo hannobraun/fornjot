@@ -57,7 +57,7 @@ impl UpdateRegion for Region {
         let exterior = update(self.exterior(), core)
             .insert(core)
             .derive_from(self.exterior(), core);
-        Region::new(exterior, self.interiors().iter().cloned(), self.color())
+        Region::new(exterior, self.interiors().iter().cloned())
     }
 
     fn add_interiors<T>(
@@ -70,7 +70,7 @@ impl UpdateRegion for Region {
     {
         let interiors = interiors.into_iter().map(|cycle| cycle.insert(core));
         let interiors = self.interiors().iter().cloned().chain(interiors);
-        Region::new(self.exterior().clone(), interiors, self.color())
+        Region::new(self.exterior().clone(), interiors)
     }
 
     fn update_interior<T, const N: usize>(
@@ -91,6 +91,6 @@ impl UpdateRegion for Region {
                 }),
             )
             .expect("Cycle not found");
-        Region::new(self.exterior().clone(), interiors, self.color())
+        Region::new(self.exterior().clone(), interiors)
     }
 }

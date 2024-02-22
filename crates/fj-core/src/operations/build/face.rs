@@ -22,7 +22,7 @@ pub trait BuildFace {
     /// Build a face with an empty exterior, no interiors, and no color
     fn unbound(surface: Handle<Surface>, core: &mut Core) -> Face {
         let exterior = Cycle::empty().insert(core);
-        let region = Region::new(exterior, [], None).insert(core);
+        let region = Region::new(exterior, []).insert(core);
         Face::new(surface, region)
     }
 

@@ -2,7 +2,7 @@ use fj_math::Vector;
 
 use crate::{
     objects::{Face, Shell},
-    operations::insert::Insert,
+    operations::{insert::Insert, presentation::GetColor},
     storage::Handle,
     Core,
 };
@@ -49,7 +49,13 @@ impl SweepFace for Handle<Face> {
         let bottom_face = self;
         let other_faces = bottom_face
             .region()
-            .sweep_region(bottom_face.surface(), path, cache, core)
+            .sweep_region(
+                bottom_face.surface(),
+                bottom_face.region().get_color(core),
+                path,
+                cache,
+                core,
+            )
             .all_faces()
             .map(|side_face| side_face.insert(core));
 
