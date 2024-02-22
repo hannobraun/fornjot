@@ -8,7 +8,7 @@ use crate::{
 use super::Validate;
 
 impl Validate for Face {
-    fn validate_with_config(
+    fn validate(
         &self,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,

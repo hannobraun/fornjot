@@ -22,7 +22,7 @@ impl Command<Validation> for InsertObject {
         let mut errors = Vec::new();
 
         let object: AnyObject<Stored> = self.object.into();
-        object.validate_with_config(&state.config, &mut errors);
+        object.validate(&state.config, &mut errors);
 
         for err in errors {
             events.push(ValidationFailed {
