@@ -23,9 +23,11 @@
 mod config;
 mod error;
 mod validation;
+mod validation_check;
 
 pub use self::{
     config::ValidationConfig,
     error::{ValidationError, ValidationErrors},
     validation::Validation,
+    validation_check::ValidationCheck,
 };
