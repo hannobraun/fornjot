@@ -88,7 +88,10 @@ macro_rules! assert_contains_err {
     ($o:tt,$p:pat) => {
         assert!({
             let mut errors = Vec::new();
-            $o.validate(&mut errors);
+            $o.validate_with_config(
+                &$crate::validation::ValidationConfig::default(),
+                &mut errors,
+            );
             errors.iter().any(|e| matches!(e, $p))
         })
     };
@@ -102,18 +105,13 @@ pub trait Validate: Sized {
     #[allow(clippy::result_large_err)]
     fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
-        self.validate(&mut errors);
+        self.validate_with_config(&ValidationConfig::default(), &mut errors);
 
         if let Some(err) = errors.into_iter().next() {
             return Err(err);
         }
 
         Ok(())
-    }
-
-    /// Validate the object using default configuration
-    fn validate(&self, errors: &mut Vec<ValidationError>) {
-        self.validate_with_config(&ValidationConfig::default(), errors)
     }
 
     /// Validate the object
