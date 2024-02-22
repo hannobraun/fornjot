@@ -161,7 +161,7 @@ impl SplitFace for Shell {
             core,
         )
         .insert(core)
-        .derive_from(face, core);
+        .derive_from(updated_face_after_split_edges, core);
 
         // The previous operation has moved the iterator along.
         let half_edges_of_face_starting_at_d = half_edges_of_face_starting_at_b;
@@ -204,7 +204,7 @@ impl SplitFace for Shell {
             core,
         )
         .insert(core)
-        .derive_from(face, core);
+        .derive_from(updated_face_after_split_edges, core);
 
         let faces = [split_face_a, split_face_b];
         let self_ = self_.update_face(
