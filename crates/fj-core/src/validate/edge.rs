@@ -8,7 +8,7 @@ use crate::{
 use super::Validate;
 
 impl Validate for HalfEdge {
-    fn validate_with_config(
+    fn validate(
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,

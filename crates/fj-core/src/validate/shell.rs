@@ -14,7 +14,7 @@ use crate::{
 use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Shell {
-    fn validate_with_config(
+    fn validate(
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,

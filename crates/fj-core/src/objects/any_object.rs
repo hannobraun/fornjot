@@ -41,7 +41,7 @@ macro_rules! any_object {
             ) {
                 match self {
                     $(
-                        Self::$ty(object) => object.validate_with_config(config, errors),
+                        Self::$ty(object) => object.validate(config, errors),
                     )*
                 }
             }

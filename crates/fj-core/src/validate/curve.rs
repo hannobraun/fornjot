@@ -6,10 +6,5 @@ use crate::{
 use super::Validate;
 
 impl Validate for Curve {
-    fn validate_with_config(
-        &self,
-        _: &ValidationConfig,
-        _: &mut Vec<ValidationError>,
-    ) {
-    }
+    fn validate(&self, _: &ValidationConfig, _: &mut Vec<ValidationError>) {}
 }

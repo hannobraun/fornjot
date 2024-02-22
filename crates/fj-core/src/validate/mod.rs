@@ -49,7 +49,7 @@
 //! that are very close together can be considered coincident. What should be
 //! considered "very close" is dependent on the scale that your model operates
 //! on, and this fact is taken into account by allowing for configuration via
-//! [`Validate::validate_with_config`] and [`ValidationConfig`].
+//! [`Validate::validate`] and [`ValidationConfig`].
 //!
 //!
 //! ## Implementation Note
@@ -88,7 +88,7 @@ macro_rules! assert_contains_err {
     ($o:tt,$p:pat) => {
         assert!({
             let mut errors = Vec::new();
-            $o.validate_with_config(
+            $o.validate(
                 &$crate::validation::ValidationConfig::default(),
                 &mut errors,
             );
@@ -105,7 +105,7 @@ pub trait Validate: Sized {
     #[allow(clippy::result_large_err)]
     fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
-        self.validate_with_config(&ValidationConfig::default(), &mut errors);
+        self.validate(&ValidationConfig::default(), &mut errors);
 
         if let Some(err) = errors.into_iter().next() {
             return Err(err);
@@ -115,7 +115,7 @@ pub trait Validate: Sized {
     }
 
     /// Validate the object
-    fn validate_with_config(
+    fn validate(
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
