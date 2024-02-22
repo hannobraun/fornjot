@@ -34,15 +34,6 @@ macro_rules! any_object {
                 }
             }
 
-            /// Validate the object
-            pub fn validate(&self, errors: &mut Vec<ValidationError>) {
-                match self {
-                    $(
-                        Self::$ty(object) => object.validate(errors),
-                    )*
-                }
-            }
-
             /// Validate the object with a pre-defined validation configuration
             pub fn validate_with_config(&self,
                     config: &ValidationConfig,
