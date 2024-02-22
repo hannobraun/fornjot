@@ -127,23 +127,20 @@ impl SplitFace for Shell {
         let split_face_a = updated_face_after_split_edges
             .update_region(
                 |region, core| {
-                    region
-                        .update_exterior(
-                            |_, core| {
-                                Cycle::empty()
-                                    .add_half_edges(
-                                        half_edges_b_to_c_inclusive,
-                                        core,
-                                    )
-                                    .add_half_edges(
-                                        [dividing_half_edge_c_to_b],
-                                        core,
-                                    )
-                            },
-                            core,
-                        )
-                        .insert(core)
-                        .derive_from(region, core)
+                    region.update_exterior(
+                        |_, core| {
+                            Cycle::empty()
+                                .add_half_edges(
+                                    half_edges_b_to_c_inclusive,
+                                    core,
+                                )
+                                .add_half_edges(
+                                    [dividing_half_edge_c_to_b],
+                                    core,
+                                )
+                        },
+                        core,
+                    )
                 },
                 core,
             )
@@ -158,23 +155,20 @@ impl SplitFace for Shell {
         let split_face_b = updated_face_after_split_edges
             .update_region(
                 |region, core| {
-                    region
-                        .update_exterior(
-                            |_, core| {
-                                Cycle::empty()
-                                    .add_half_edges(
-                                        half_edges_d_to_a_inclusive,
-                                        core,
-                                    )
-                                    .add_half_edges(
-                                        [dividing_half_edge_a_to_d],
-                                        core,
-                                    )
-                            },
-                            core,
-                        )
-                        .insert(core)
-                        .derive_from(region, core)
+                    region.update_exterior(
+                        |_, core| {
+                            Cycle::empty()
+                                .add_half_edges(
+                                    half_edges_d_to_a_inclusive,
+                                    core,
+                                )
+                                .add_half_edges(
+                                    [dividing_half_edge_a_to_d],
+                                    core,
+                                )
+                        },
+                        core,
+                    )
                 },
                 core,
             )
