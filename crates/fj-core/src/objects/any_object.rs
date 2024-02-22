@@ -35,7 +35,7 @@ macro_rules! any_object {
             }
 
             /// Validate the object with a pre-defined validation configuration
-            pub fn validate_with_config(&self,
+            pub fn validate(&self,
                     config: &ValidationConfig,
                     errors: &mut Vec<ValidationError>
             ) {
