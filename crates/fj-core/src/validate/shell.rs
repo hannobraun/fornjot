@@ -235,7 +235,7 @@ impl ShellValidationError {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    surface_a.clone(),
+                    &surface_a.geometry(),
                     half_edge_b.clone(),
                     surface_b.clone(),
                 )
@@ -359,7 +359,7 @@ impl fmt::Display for CoincidentHalfEdgeVertices {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     edge_a: Handle<HalfEdge>,
-    surface_a: Handle<Surface>,
+    surface_a: &SurfaceGeometry,
     edge_b: Handle<HalfEdge>,
     surface_b: Handle<Surface>,
 ) -> impl Iterator<Item = Scalar> {
@@ -382,7 +382,7 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, &surface_a.geometry()));
+        let sample1 = sample(percent, (&edge_a, surface_a));
         let sample2 = sample(1.0 - percent, (&edge_b, &surface_b.geometry()));
         distances.push(sample1.distance_to(&sample2))
     }
