@@ -76,9 +76,9 @@ mod vertex;
 use crate::validation::{ValidationConfig, ValidationError};
 
 pub use self::{
-    cycle::CycleValidationError, edge::EdgeValidationError,
-    face::FaceValidationError, shell::ShellValidationError,
-    sketch::SketchValidationError, solid::SolidValidationError,
+    edge::EdgeValidationError, face::FaceValidationError,
+    shell::ShellValidationError, sketch::SketchValidationError,
+    solid::SolidValidationError,
 };
 
 /// Assert that some object has a validation error which matches a specific

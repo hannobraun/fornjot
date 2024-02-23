@@ -1,16 +1,18 @@
 use std::{convert::Infallible, fmt};
 
 use crate::validate::{
-    CycleValidationError, EdgeValidationError, FaceValidationError,
-    ShellValidationError, SketchValidationError, SolidValidationError,
+    EdgeValidationError, FaceValidationError, ShellValidationError,
+    SketchValidationError, SolidValidationError,
 };
+
+use super::checks::AdjacentHalfEdgesNotConnected;
 
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// `Cycle` validation error
-    #[error("`Cycle` validation error")]
-    Cycle(#[from] CycleValidationError),
+    /// `HalfEdge`s in `Cycle` not connected
+    #[error(transparent)]
+    HalfEdgesInCycleNotConnected(#[from] AdjacentHalfEdgesNotConnected),
 
     /// `Edge` validation error
     #[error("`Edge` validation error")]
