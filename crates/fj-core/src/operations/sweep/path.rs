@@ -23,7 +23,7 @@ pub trait SweepSurfacePath {
     /// <https://github.com/hannobraun/fornjot/issues/1112>
     fn sweep_surface_path(
         &self,
-        surface: &Surface,
+        surface: &SurfaceGeometry,
         path: impl Into<Vector<3>>,
     ) -> Surface;
 }
@@ -31,10 +31,10 @@ pub trait SweepSurfacePath {
 impl SweepSurfacePath for SurfacePath {
     fn sweep_surface_path(
         &self,
-        surface: &Surface,
+        surface: &SurfaceGeometry,
         path: impl Into<Vector<3>>,
     ) -> Surface {
-        match surface.geometry().u {
+        match surface.u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.
@@ -60,24 +60,18 @@ impl SweepSurfacePath for SurfacePath {
 
         let u = match self {
             SurfacePath::Circle(circle) => {
-                let center = surface
-                    .geometry()
-                    .point_from_surface_coords(circle.center());
-                let a =
-                    surface.geometry().vector_from_surface_coords(circle.a());
-                let b =
-                    surface.geometry().vector_from_surface_coords(circle.b());
+                let center = surface.point_from_surface_coords(circle.center());
+                let a = surface.vector_from_surface_coords(circle.a());
+                let b = surface.vector_from_surface_coords(circle.b());
 
                 let circle = Circle::new(center, a, b);
 
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin =
-                    surface.geometry().point_from_surface_coords(line.origin());
-                let direction = surface
-                    .geometry()
-                    .vector_from_surface_coords(line.direction());
+                let origin = surface.point_from_surface_coords(line.origin());
+                let direction =
+                    surface.vector_from_surface_coords(line.direction());
 
                 let line = Line::from_origin_and_direction(origin, direction);
 
