@@ -365,7 +365,7 @@ fn distances(
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
+        (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
     ) -> Point<3> {
         let [start, end] = edge.boundary().inner;
         let path_coords = start + (end - start) * percent;
@@ -382,8 +382,8 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
+        let sample1 = sample(percent, (&edge_a, &surface_a.geometry()));
+        let sample2 = sample(1.0 - percent, (&edge_b, &surface_b.geometry()));
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
