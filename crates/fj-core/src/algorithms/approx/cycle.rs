@@ -6,17 +6,14 @@ use std::ops::Deref;
 
 use fj_math::Segment;
 
-use crate::{
-    objects::{Cycle, Surface},
-    Core,
-};
+use crate::{geometry::SurfaceGeometry, objects::Cycle, Core};
 
 use super::{
     edge::{HalfEdgeApprox, HalfEdgeApproxCache},
     Approx, ApproxPoint, Tolerance,
 };
 
-impl Approx for (&Cycle, &Surface) {
+impl Approx for (&Cycle, &SurfaceGeometry) {
     type Approximation = CycleApprox;
     type Cache = HalfEdgeApproxCache;
 

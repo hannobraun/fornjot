@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, SurfaceGeometry},
-    objects::{Curve, HalfEdge, Shell, Surface, Vertex},
+    objects::{Curve, HalfEdge, Shell, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -95,9 +95,9 @@ impl ShellValidationError {
 
                 fn compare_curve_coords(
                     edge_a: &Handle<HalfEdge>,
-                    surface_a: &Handle<Surface>,
+                    surface_a: &SurfaceGeometry,
                     edge_b: &Handle<HalfEdge>,
-                    surface_b: &Handle<Surface>,
+                    surface_b: &SurfaceGeometry,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
                 ) {
@@ -115,12 +115,10 @@ impl ShellValidationError {
                         let b_surface =
                             edge_b.path().point_from_path_coords(point_curve);
 
-                        let a_global = surface_a
-                            .geometry()
-                            .point_from_surface_coords(a_surface);
-                        let b_global = surface_b
-                            .geometry()
-                            .point_from_surface_coords(b_surface);
+                        let a_global =
+                            surface_a.point_from_surface_coords(a_surface);
+                        let b_global =
+                            surface_b.point_from_surface_coords(b_surface);
 
                         let distance = (a_global - b_global).magnitude();
 
@@ -141,17 +139,17 @@ impl ShellValidationError {
 
                 compare_curve_coords(
                     edge_a,
-                    surface_a,
+                    &surface_a.geometry(),
                     edge_b,
-                    surface_b,
+                    &surface_b.geometry(),
                     config,
                     &mut mismatches,
                 );
                 compare_curve_coords(
                     edge_b,
-                    surface_b,
+                    &surface_b.geometry(),
                     edge_a,
-                    surface_a,
+                    &surface_a.geometry(),
                     config,
                     &mut mismatches,
                 );
@@ -237,9 +235,9 @@ impl ShellValidationError {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    surface_a.clone(),
+                    &surface_a.geometry(),
                     half_edge_b.clone(),
-                    surface_b.clone(),
+                    &surface_b.geometry(),
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
@@ -361,13 +359,13 @@ impl fmt::Display for CoincidentHalfEdgeVertices {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     edge_a: Handle<HalfEdge>,
-    surface_a: Handle<Surface>,
+    surface_a: &SurfaceGeometry,
     edge_b: Handle<HalfEdge>,
-    surface_b: Handle<Surface>,
+    surface_b: &SurfaceGeometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, SurfaceGeometry),
+        (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
     ) -> Point<3> {
         let [start, end] = edge.boundary().inner;
         let path_coords = start + (end - start) * percent;
@@ -384,8 +382,8 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a.geometry()));
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b.geometry()));
+        let sample1 = sample(percent, (&edge_a, surface_a));
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b));
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
