@@ -1,4 +1,5 @@
 use crate::{
+    geometry::Geometry,
     objects::Objects,
     presentation::Presentation,
     validation::{Validation, ValidationConfig},
@@ -27,6 +28,11 @@ pub struct Layers {
     /// shapes.
     pub objects: Layer<Objects>,
 
+    /// The geometry layer
+    ///
+    /// Manages geometric information that applies to topological objects.
+    pub geometry: Layer<Geometry>,
+
     /// The validation layer
     ///
     /// Monitors objects and validates them, as they are inserted.
@@ -42,9 +48,11 @@ impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
         let objects = Objects::new();
+        let geometry = Geometry::new(&objects);
 
         Self {
             objects: Layer::new(objects),
+            geometry: Layer::new(geometry),
             validation: Layer::default(),
             presentation: Layer::default(),
         }
