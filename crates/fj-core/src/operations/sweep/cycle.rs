@@ -65,7 +65,7 @@ impl SweepCycle for Cycle {
 
             let (side_face, top_edge) = bottom_half_edge.sweep_half_edge(
                 bottom_half_edge_next.start_vertex().clone(),
-                surface,
+                &surface.geometry(),
                 color,
                 path,
                 cache,
