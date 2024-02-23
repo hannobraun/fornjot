@@ -2,6 +2,7 @@ use fj_interop::Color;
 use fj_math::Vector;
 
 use crate::{
+    geometry::SurfaceGeometry,
     objects::{Cycle, Face, Region, Surface},
     operations::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
@@ -54,7 +55,7 @@ impl SweepRegion for Region {
 
         let top_exterior = sweep_cycle(
             self.exterior(),
-            surface,
+            &surface.geometry(),
             color,
             &mut faces,
             path,
@@ -68,7 +69,7 @@ impl SweepRegion for Region {
             .map(|bottom_cycle| {
                 sweep_cycle(
                     bottom_cycle,
-                    surface,
+                    &surface.geometry(),
                     color,
                     &mut faces,
                     path,
@@ -95,7 +96,7 @@ impl SweepRegion for Region {
 
 fn sweep_cycle(
     bottom_cycle: &Cycle,
-    bottom_surface: &Surface,
+    bottom_surface: &SurfaceGeometry,
     color: Option<Color>,
     faces: &mut Vec<Face>,
     path: Vector<3>,
@@ -103,7 +104,7 @@ fn sweep_cycle(
     core: &mut Core,
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
-        &bottom_surface.geometry(),
+        bottom_surface,
         color,
         path,
         cache,
