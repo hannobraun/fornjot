@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, SurfaceGeometry},
-    objects::{Curve, HalfEdge, Shell, Surface, Vertex},
+    objects::{Curve, HalfEdge, Shell, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -237,7 +237,7 @@ impl ShellValidationError {
                     half_edge_a.clone(),
                     &surface_a.geometry(),
                     half_edge_b.clone(),
-                    surface_b.clone(),
+                    &surface_b.geometry(),
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
@@ -361,7 +361,7 @@ fn distances(
     edge_a: Handle<HalfEdge>,
     surface_a: &SurfaceGeometry,
     edge_b: Handle<HalfEdge>,
-    surface_b: Handle<Surface>,
+    surface_b: &SurfaceGeometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
@@ -383,7 +383,7 @@ fn distances(
     for i in 0..sample_count {
         let percent = i as f64 * step;
         let sample1 = sample(percent, (&edge_a, surface_a));
-        let sample2 = sample(1.0 - percent, (&edge_b, &surface_b.geometry()));
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b));
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
