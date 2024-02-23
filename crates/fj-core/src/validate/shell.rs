@@ -95,7 +95,7 @@ impl ShellValidationError {
 
                 fn compare_curve_coords(
                     edge_a: &Handle<HalfEdge>,
-                    surface_a: &Handle<Surface>,
+                    surface_a: &SurfaceGeometry,
                     edge_b: &Handle<HalfEdge>,
                     surface_b: &Handle<Surface>,
                     config: &ValidationConfig,
@@ -115,9 +115,8 @@ impl ShellValidationError {
                         let b_surface =
                             edge_b.path().point_from_path_coords(point_curve);
 
-                        let a_global = surface_a
-                            .geometry()
-                            .point_from_surface_coords(a_surface);
+                        let a_global =
+                            surface_a.point_from_surface_coords(a_surface);
                         let b_global = surface_b
                             .geometry()
                             .point_from_surface_coords(b_surface);
@@ -141,7 +140,7 @@ impl ShellValidationError {
 
                 compare_curve_coords(
                     edge_a,
-                    surface_a,
+                    &surface_a.geometry(),
                     edge_b,
                     surface_b,
                     config,
@@ -149,7 +148,7 @@ impl ShellValidationError {
                 );
                 compare_curve_coords(
                     edge_b,
-                    surface_b,
+                    &surface_b.geometry(),
                     edge_a,
                     surface_a,
                     config,
