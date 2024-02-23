@@ -2,23 +2,18 @@
 
 pub mod face_point;
 pub mod ray_edge;
-pub mod ray_face;
 pub mod ray_segment;
 
 mod curve_edge;
 mod curve_face;
-mod face_face;
 mod line_segment;
-mod surface_surface;
 
 use fj_math::{Point, Vector};
 
 pub use self::{
     curve_edge::CurveEdgeIntersection,
     curve_face::{CurveFaceIntersection, CurveFaceIntersectionInterval},
-    face_face::FaceFaceIntersection,
     line_segment::LineSegmentIntersection,
-    surface_surface::SurfaceSurfaceIntersection,
 };
 
 /// Compute the intersection between a tuple of objects
