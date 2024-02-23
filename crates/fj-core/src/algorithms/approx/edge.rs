@@ -45,8 +45,17 @@ impl Approx for (&HalfEdge, &Surface) {
         let first = ApproxPoint::new(start_position_surface, start_position);
 
         let rest = {
-            let approx = (edge.curve(), edge.path(), surface, edge.boundary())
-                .approx_with_cache(tolerance, &mut cache.curve, core);
+            let approx = (
+                edge.curve(),
+                edge.path(),
+                &surface.geometry(),
+                edge.boundary(),
+            )
+                .approx_with_cache(
+                    tolerance,
+                    &mut cache.curve,
+                    core,
+                );
 
             approx.points.into_iter().map(|point| {
                 let point_surface =
