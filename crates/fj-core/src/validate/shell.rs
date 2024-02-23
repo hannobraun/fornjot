@@ -97,7 +97,7 @@ impl ShellValidationError {
                     edge_a: &Handle<HalfEdge>,
                     surface_a: &SurfaceGeometry,
                     edge_b: &Handle<HalfEdge>,
-                    surface_b: &Handle<Surface>,
+                    surface_b: &SurfaceGeometry,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
                 ) {
@@ -117,9 +117,8 @@ impl ShellValidationError {
 
                         let a_global =
                             surface_a.point_from_surface_coords(a_surface);
-                        let b_global = surface_b
-                            .geometry()
-                            .point_from_surface_coords(b_surface);
+                        let b_global =
+                            surface_b.point_from_surface_coords(b_surface);
 
                         let distance = (a_global - b_global).magnitude();
 
@@ -142,7 +141,7 @@ impl ShellValidationError {
                     edge_a,
                     &surface_a.geometry(),
                     edge_b,
-                    surface_b,
+                    &surface_b.geometry(),
                     config,
                     &mut mismatches,
                 );
@@ -150,7 +149,7 @@ impl ShellValidationError {
                     edge_b,
                     &surface_b.geometry(),
                     edge_a,
-                    surface_a,
+                    &surface_a.geometry(),
                     config,
                     &mut mismatches,
                 );
