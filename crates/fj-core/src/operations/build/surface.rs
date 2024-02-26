@@ -1,4 +1,4 @@
-use fj_math::{Point, Scalar};
+use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry},
@@ -20,8 +20,7 @@ pub trait BuildSurface {
         let (u, u_line) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
-        let geometry = SurfaceGeometry { u, v };
-        let surface = Surface::new(geometry);
+        let surface = Surface::plane_from_uv(u, v);
 
         let points_surface = {
             let [a, b] =
@@ -32,6 +31,18 @@ pub trait BuildSurface {
         };
 
         (surface, points_surface)
+    }
+
+    /// Build a plane from the provided `u` and `v`
+    fn plane_from_uv(
+        u: impl Into<GlobalPath>,
+        v: impl Into<Vector<3>>,
+    ) -> Surface {
+        let geometry = SurfaceGeometry {
+            u: u.into(),
+            v: v.into(),
+        };
+        Surface::new(geometry)
     }
 }
 

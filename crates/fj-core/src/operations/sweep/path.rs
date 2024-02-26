@@ -3,6 +3,7 @@ use fj_math::{Circle, Line, Vector};
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
+    operations::build::BuildSurface,
 };
 
 /// # Sweep a [`SurfacePath`]
@@ -79,6 +80,6 @@ impl SweepSurfacePath for SurfacePath {
             }
         };
 
-        Surface::new(SurfaceGeometry { u, v: path.into() })
+        Surface::plane_from_uv(u, path)
     }
 }
