@@ -901,7 +901,6 @@ dependencies = [
  "anyhow",
  "fj-interop",
  "fj-math",
- "iter_fixed",
  "itertools",
  "parking_lot",
  "pretty_assertions",
@@ -1588,12 +1587,6 @@ dependencies = [
  "libc",
  "windows-sys 0.52.0",
 ]
-
-[[package]]
-name = "iter_fixed"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d1d13810ef04ff22d946a8445d1e0016c9e98dbb6deeeb2af061e753060737c"
 
 [[package]]
 name = "itertools"
