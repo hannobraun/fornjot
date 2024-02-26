@@ -20,8 +20,7 @@ pub trait BuildSurface {
         let (u, u_line) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
-        let geometry = SurfaceGeometry { u, v };
-        let surface = Surface::new(geometry);
+        let surface = Surface::plane_from_uv(u, v);
 
         let points_surface = {
             let [a, b] =

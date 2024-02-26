@@ -175,10 +175,10 @@ impl SolidValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        geometry::{GlobalPath, SurfaceGeometry},
+        geometry::GlobalPath,
         objects::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
         operations::{
-            build::{BuildFace, BuildHalfEdge},
+            build::{BuildFace, BuildHalfEdge, BuildSurface},
             insert::Insert,
         },
         validate::{
@@ -193,10 +193,10 @@ mod tests {
         let mut core = Core::new();
 
         let shared_face = Face::new(
-            Surface::new(SurfaceGeometry {
-                u: GlobalPath::circle_from_radius(1.),
-                v: [0., 1., 1.].into(),
-            })
+            Surface::plane_from_uv(
+                GlobalPath::circle_from_radius(1.),
+                [0., 1., 1.],
+            )
             .insert(&mut core),
             Region::new(
                 Cycle::new(vec![
@@ -255,19 +255,19 @@ mod tests {
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
-                Surface::new(SurfaceGeometry {
-                    u: GlobalPath::circle_from_radius(1.),
-                    v: [0., 1., 1.].into(),
-                })
+                Surface::plane_from_uv(
+                    GlobalPath::circle_from_radius(1.),
+                    [0., 1., 1.],
+                )
                 .insert(&mut core),
                 shared_region.clone(),
             )
             .insert(&mut core),
             Face::new(
-                Surface::new(SurfaceGeometry {
-                    u: GlobalPath::circle_from_radius(1.),
-                    v: [0., 0., 1.].into(),
-                })
+                Surface::plane_from_uv(
+                    GlobalPath::circle_from_radius(1.),
+                    [0., 0., 1.],
+                )
                 .insert(&mut core),
                 shared_region.clone(),
             )
@@ -304,19 +304,19 @@ mod tests {
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
-                Surface::new(SurfaceGeometry {
-                    u: GlobalPath::circle_from_radius(1.),
-                    v: [0., 1., 1.].into(),
-                })
+                Surface::plane_from_uv(
+                    GlobalPath::circle_from_radius(1.),
+                    [0., 1., 1.],
+                )
                 .insert(&mut core),
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
             )
             .insert(&mut core),
             Face::new(
-                Surface::new(SurfaceGeometry {
-                    u: GlobalPath::circle_from_radius(1.),
-                    v: [0., 0., 1.].into(),
-                })
+                Surface::plane_from_uv(
+                    GlobalPath::circle_from_radius(1.),
+                    [0., 0., 1.],
+                )
                 .insert(&mut core),
                 Region::new(shared_cycle, vec![]).insert(&mut core),
             )
@@ -349,10 +349,10 @@ mod tests {
             HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
-            Surface::new(SurfaceGeometry {
-                u: GlobalPath::circle_from_radius(1.),
-                v: [0., 0., 1.].into(),
-            })
+            Surface::plane_from_uv(
+                GlobalPath::circle_from_radius(1.),
+                [0., 0., 1.],
+            )
             .insert(&mut core),
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
