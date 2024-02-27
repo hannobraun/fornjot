@@ -41,8 +41,10 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
+        let objects = Objects::new();
+
         Self {
-            objects: Layer::default(),
+            objects: Layer::new(objects),
             validation: Layer::default(),
             presentation: Layer::default(),
         }
