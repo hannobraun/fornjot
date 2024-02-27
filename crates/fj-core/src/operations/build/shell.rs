@@ -56,8 +56,8 @@ pub trait BuildShell {
 
                 let (surface, _) = Surface::plane_from_points(
                     [a_pos, b_pos, c_pos].map(Clone::clone),
+                    core,
                 );
-                let surface = surface.insert(core);
 
                 let curves_and_boundaries =
                     [[a, b], [b, c], [c, a]].map(|vertices| {

@@ -31,8 +31,8 @@ pub trait BuildFace {
         points: [impl Into<Point<3>>; 3],
         core: &mut Core,
     ) -> Polygon<3> {
-        let (surface, points_surface) = Surface::plane_from_points(points);
-        let surface = surface.insert(core);
+        let (surface, points_surface) =
+            Surface::plane_from_points(points, core);
 
         let face = Face::polygon(surface, points_surface, core);
 
