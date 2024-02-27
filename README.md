@@ -44,7 +44,7 @@ Fornjot is usable for simple models (see [examples](examples/)), but currently l
 
 ## Overview
 
-This is a list of the crates that make up Fornjot, along with a short description for each, starting with the most basic ones and leading up to the high-level ones:
+Fornjot features a modular architecture, allowing you to pick and choose which parts of it you want to use. It is made up of the following libraries:
 
 - [`fj`]: All-in-one API that re-exports all of the following crates.
 - [`fj-math`]: Math primitives used by the rest of Fornjot.
