@@ -20,7 +20,6 @@ use super::Layer;
 ///
 /// For now, there is no need for this, and all layers are just hardcoded here.
 /// That can be changed, once necessary.
-#[derive(Default)]
 pub struct Layers {
     /// The objects layer
     ///
@@ -42,7 +41,11 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            objects: Layer::default(),
+            validation: Layer::default(),
+            presentation: Layer::default(),
+        }
     }
 
     /// Construct an instance of `Layers`, using the provided configuration
@@ -51,5 +54,11 @@ impl Layers {
             validation: Layer::new(Validation::with_validation_config(config)),
             ..Self::new()
         }
+    }
+}
+
+impl Default for Layers {
+    fn default() -> Self {
+        Self::new()
     }
 }
