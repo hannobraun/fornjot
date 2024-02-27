@@ -4,6 +4,8 @@ use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Surface,
     operations::build::BuildSurface,
+    storage::Handle,
+    Core,
 };
 
 /// # Sweep a [`SurfacePath`]
@@ -26,7 +28,8 @@ pub trait SweepSurfacePath {
         &self,
         surface: &SurfaceGeometry,
         path: impl Into<Vector<3>>,
-    ) -> Surface;
+        core: &mut Core,
+    ) -> Handle<Surface>;
 }
 
 impl SweepSurfacePath for SurfacePath {
@@ -34,7 +37,8 @@ impl SweepSurfacePath for SurfacePath {
         &self,
         surface: &SurfaceGeometry,
         path: impl Into<Vector<3>>,
-    ) -> Surface {
+        core: &mut Core,
+    ) -> Handle<Surface> {
         match surface.u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
@@ -80,6 +84,6 @@ impl SweepSurfacePath for SurfacePath {
             }
         };
 
-        Surface::surface_from_uv(u, path)
+        Surface::surface_from_uv(u, path, core)
     }
 }

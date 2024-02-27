@@ -1,8 +1,7 @@
 use fj_math::Vector;
 
 use crate::{
-    geometry::GlobalPath,
-    operations::build::BuildSurface,
+    geometry::{GlobalPath, SurfaceGeometry},
     storage::{Handle, Store},
 };
 
@@ -95,18 +94,27 @@ impl Default for Surfaces {
         let xy_plane = store.reserve();
         store.insert(
             xy_plane.clone(),
-            Surface::surface_from_uv(GlobalPath::x_axis(), Vector::unit_y()),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_y(),
+            }),
         );
 
         let xz_plane = store.reserve();
         store.insert(
             xz_plane.clone(),
-            Surface::surface_from_uv(GlobalPath::x_axis(), Vector::unit_z()),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::x_axis(),
+                v: Vector::unit_z(),
+            }),
         );
         let yz_plane = store.reserve();
         store.insert(
             yz_plane.clone(),
-            Surface::surface_from_uv(GlobalPath::y_axis(), Vector::unit_z()),
+            Surface::new(SurfaceGeometry {
+                u: GlobalPath::y_axis(),
+                v: Vector::unit_z(),
+            }),
         );
 
         Self {
