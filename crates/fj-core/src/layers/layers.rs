@@ -49,7 +49,7 @@ impl Layers {
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         Self {
             validation: Layer::new(Validation::with_validation_config(config)),
-            ..Default::default()
+            ..Self::new()
         }
     }
 }
