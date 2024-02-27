@@ -20,7 +20,7 @@ pub trait BuildSurface {
         let (u, u_line) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
-        let surface = Surface::plane_from_uv(u, v);
+        let surface = Surface::surface_from_uv(u, v);
 
         let points_surface = {
             let [a, b] =
@@ -34,7 +34,7 @@ pub trait BuildSurface {
     }
 
     /// Build a plane from the provided `u` and `v`
-    fn plane_from_uv(
+    fn surface_from_uv(
         u: impl Into<GlobalPath>,
         v: impl Into<Vector<3>>,
     ) -> Surface {

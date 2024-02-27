@@ -95,18 +95,18 @@ impl Default for Surfaces {
         let xy_plane = store.reserve();
         store.insert(
             xy_plane.clone(),
-            Surface::plane_from_uv(GlobalPath::x_axis(), Vector::unit_y()),
+            Surface::surface_from_uv(GlobalPath::x_axis(), Vector::unit_y()),
         );
 
         let xz_plane = store.reserve();
         store.insert(
             xz_plane.clone(),
-            Surface::plane_from_uv(GlobalPath::x_axis(), Vector::unit_z()),
+            Surface::surface_from_uv(GlobalPath::x_axis(), Vector::unit_z()),
         );
         let yz_plane = store.reserve();
         store.insert(
             yz_plane.clone(),
-            Surface::plane_from_uv(GlobalPath::y_axis(), Vector::unit_z()),
+            Surface::surface_from_uv(GlobalPath::y_axis(), Vector::unit_z()),
         );
 
         Self {
