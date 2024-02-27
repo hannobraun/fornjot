@@ -24,7 +24,7 @@ pub trait BuildSurface {
         let (u, u_line) = GlobalPath::line_from_points([a, b]);
         let v = c - a;
 
-        let surface = Surface::surface_from_uv(u, v).insert(core);
+        let surface = Surface::surface_from_uv(u, v, core);
 
         let points_surface = {
             let [a, b] =
@@ -41,12 +41,13 @@ pub trait BuildSurface {
     fn surface_from_uv(
         u: impl Into<GlobalPath>,
         v: impl Into<Vector<3>>,
-    ) -> Surface {
+        core: &mut Core,
+    ) -> Handle<Surface> {
         let geometry = SurfaceGeometry {
             u: u.into(),
             v: v.into(),
         };
-        Surface::new(geometry)
+        Surface::new(geometry).insert(core)
     }
 }
 

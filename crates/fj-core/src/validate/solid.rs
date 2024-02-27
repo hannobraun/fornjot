@@ -196,8 +196,8 @@ mod tests {
             Surface::surface_from_uv(
                 GlobalPath::circle_from_radius(1.),
                 [0., 1., 1.],
-            )
-            .insert(&mut core),
+                &mut core,
+            ),
             Region::new(
                 Cycle::new(vec![
                     HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core)
@@ -258,8 +258,8 @@ mod tests {
                 Surface::surface_from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 1., 1.],
-                )
-                .insert(&mut core),
+                    &mut core,
+                ),
                 shared_region.clone(),
             )
             .insert(&mut core),
@@ -267,8 +267,8 @@ mod tests {
                 Surface::surface_from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 0., 1.],
-                )
-                .insert(&mut core),
+                    &mut core,
+                ),
                 shared_region.clone(),
             )
             .insert(&mut core),
@@ -307,8 +307,8 @@ mod tests {
                 Surface::surface_from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 1., 1.],
-                )
-                .insert(&mut core),
+                    &mut core,
+                ),
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
             )
             .insert(&mut core),
@@ -316,8 +316,8 @@ mod tests {
                 Surface::surface_from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 0., 1.],
-                )
-                .insert(&mut core),
+                    &mut core,
+                ),
                 Region::new(shared_cycle, vec![]).insert(&mut core),
             )
             .insert(&mut core),
@@ -352,8 +352,8 @@ mod tests {
             Surface::surface_from_uv(
                 GlobalPath::circle_from_radius(1.),
                 [0., 0., 1.],
-            )
-            .insert(&mut core),
+                &mut core,
+            ),
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
                 vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
