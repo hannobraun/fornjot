@@ -39,7 +39,7 @@ Fornjot is supported by [**@MitchellHansen**](https://github.com/MitchellHansen)
 
 ## Status
 
-Fornjot is usable for some toy examples, but currently lacks the features for something more advanced. Work to change that is underway.
+Fornjot is usable for simple models (see [examples](examples/)), but currently lacks the features for anything more advanced. Work to change that is underway.
 
 
 ## Overview
