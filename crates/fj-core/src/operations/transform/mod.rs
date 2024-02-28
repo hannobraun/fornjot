@@ -10,7 +10,7 @@ mod solid;
 mod surface;
 mod vertex;
 
-use std::collections::BTreeMap;
+use std::collections::{btree_map, BTreeMap};
 
 use fj_math::{Transform, Vector};
 use type_map::TypeMap;
@@ -101,6 +101,18 @@ where
 pub struct TransformCache(TypeMap);
 
 impl TransformCache {
+    fn entry<T: 'static>(
+        &mut self,
+        key: &Handle<T>,
+    ) -> btree_map::Entry<ObjectId, Handle<T>> {
+        let map = self
+            .0
+            .entry::<BTreeMap<ObjectId, Handle<T>>>()
+            .or_insert_with(BTreeMap::new);
+
+        map.entry(key.id())
+    }
+
     fn get<T: 'static>(&mut self, key: &Handle<T>) -> Option<&Handle<T>> {
         let map = self
             .0
