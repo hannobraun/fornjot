@@ -32,7 +32,7 @@ pub trait SweepRegion {
     /// operation's scope.
     fn sweep_region(
         &self,
-        surface: &Surface,
+        surface: &Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -43,7 +43,7 @@ pub trait SweepRegion {
 impl SweepRegion for Region {
     fn sweep_region(
         &self,
-        surface: &Surface,
+        surface: &Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
