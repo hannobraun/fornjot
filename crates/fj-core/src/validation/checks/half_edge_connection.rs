@@ -37,12 +37,12 @@ pub struct AdjacentHalfEdgesNotConnected {
     pub unconnected_half_edges: [Handle<HalfEdge>; 2],
 }
 
-impl ValidationCheck<AdjacentHalfEdgesNotConnected> for Cycle {
+impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
     fn check(
-        &self,
+        object: &Cycle,
         config: &ValidationConfig,
-    ) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> {
-        self.half_edges().pairs().filter_map(|(first, second)| {
+    ) -> impl Iterator<Item = Self> {
+        object.half_edges().pairs().filter_map(|(first, second)| {
             let end_pos_of_first_half_edge = {
                 let [_, end] = first.boundary().inner;
                 first.path().point_from_path_coords(end)
@@ -80,12 +80,14 @@ mod tests {
         Core,
     };
 
+    use super::AdjacentHalfEdgesNotConnected;
+
     #[test]
     fn adjacent_half_edges_connected() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
-        valid.check_and_return_first_error()?;
+        AdjacentHalfEdgesNotConnected::check_and_return_first_error(&valid)?;
 
         let invalid = valid.update_half_edge(
             valid.half_edges().first(),
@@ -94,7 +96,7 @@ mod tests {
             },
             &mut core,
         );
-        invalid.check_and_expect_one_error();
+        AdjacentHalfEdgesNotConnected::check_and_expect_one_error(&invalid);
 
         Ok(())
     }
