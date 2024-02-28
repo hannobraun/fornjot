@@ -54,4 +54,16 @@ impl Geometry {
     ) {
         self.surface.insert(surface.clone().into(), geometry);
     }
+
+    /// # Access the geometry of the provided surface
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the geometry of surface is not defined.
+    pub fn of_surface(&self, surface: &Handle<Surface>) -> SurfaceGeometry {
+        self.surface
+            .get(&surface.clone().into())
+            .copied()
+            .expect("Expected geometry of surface to be defined")
+    }
 }
