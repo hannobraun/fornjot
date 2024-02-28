@@ -16,9 +16,9 @@ pub trait ValidationCheck<T> {
     /// for use in unit tests), and thus always uses the default configuration.
     fn check_and_return_first_error(&self) -> Result<(), T> {
         let config = ValidationConfig::default();
-        let errors = self.check(&config).collect::<Vec<_>>();
+        let mut errors = self.check(&config);
 
-        if let Some(err) = errors.into_iter().next() {
+        if let Some(err) = errors.next() {
             return Err(err);
         }
 
