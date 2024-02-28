@@ -203,7 +203,7 @@ mod tests {
         let (surface_path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
-        let surface = core.layers.objects.surfaces.xz_plane().geometry();
+        let surface = core.layers.geometry.xz_plane();
 
         let tolerance = 1.;
         let approx = (&curve, surface_path, &surface, boundary)
@@ -274,7 +274,7 @@ mod tests {
         let surface_path =
             SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let surface = core.layers.objects.surfaces.xz_plane().geometry();
+        let surface = core.layers.geometry.xz_plane();
 
         let tolerance = 1.;
         let approx = (&curve, surface_path, &surface, boundary)
