@@ -15,8 +15,8 @@ pub trait ValidationCheck<T> {
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
     fn check_and_return_first_error(&self) -> Result<(), T> {
-        let errors =
-            self.check(&ValidationConfig::default()).collect::<Vec<_>>();
+        let config = ValidationConfig::default();
+        let errors = self.check(&config).collect::<Vec<_>>();
 
         if let Some(err) = errors.into_iter().next() {
             return Err(err);
