@@ -1,6 +1,9 @@
 use crate::{
     objects::Cycle,
-    validation::{ValidationCheck, ValidationConfig, ValidationError},
+    validation::{
+        checks::AdjacentHalfEdgesNotConnected, ValidationCheck,
+        ValidationConfig, ValidationError,
+    },
 };
 
 use super::Validate;
@@ -11,6 +14,8 @@ impl Validate for Cycle {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        errors.extend(self.check(config).map(Into::into));
+        errors.extend(
+            AdjacentHalfEdgesNotConnected::check(self, config).map(Into::into),
+        );
     }
 }
