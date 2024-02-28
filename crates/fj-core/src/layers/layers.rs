@@ -1,4 +1,5 @@
 use crate::{
+    geometry::Geometry,
     objects::Objects,
     presentation::Presentation,
     validation::{Validation, ValidationConfig},
@@ -20,13 +21,17 @@ use super::Layer;
 ///
 /// For now, there is no need for this, and all layers are just hardcoded here.
 /// That can be changed, once necessary.
-#[derive(Default)]
 pub struct Layers {
     /// The objects layer
     ///
     /// Manages the stores of topological and geometric objects that make up
     /// shapes.
     pub objects: Layer<Objects>,
+
+    /// The geometry layer
+    ///
+    /// Manages geometric information that applies to topological objects.
+    pub geometry: Layer<Geometry>,
 
     /// The validation layer
     ///
@@ -42,14 +47,28 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
-        Self::default()
+        let objects = Objects::new();
+        let geometry = Geometry::new(&objects);
+
+        Self {
+            objects: Layer::new(objects),
+            geometry: Layer::new(geometry),
+            validation: Layer::default(),
+            presentation: Layer::default(),
+        }
     }
 
     /// Construct an instance of `Layers`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         Self {
             validation: Layer::new(Validation::with_validation_config(config)),
-            ..Default::default()
+            ..Self::new()
         }
+    }
+}
+
+impl Default for Layers {
+    fn default() -> Self {
+        Self::new()
     }
 }
