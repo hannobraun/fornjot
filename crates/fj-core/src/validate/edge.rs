@@ -95,7 +95,7 @@ mod tests {
             )
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Edge(

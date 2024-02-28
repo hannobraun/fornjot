@@ -123,7 +123,7 @@ mod tests {
             &mut core,
         );
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Face(FaceValidationError::MissingBoundary)
@@ -181,7 +181,7 @@ mod tests {
             Face::new(valid.surface().clone(), region)
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Face(

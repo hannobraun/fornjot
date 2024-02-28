@@ -441,7 +441,9 @@ mod tests {
             &mut core,
         );
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
@@ -462,7 +464,9 @@ mod tests {
         );
         let invalid = valid.shell.remove_face(&valid.abc.face);
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(
@@ -508,7 +512,9 @@ mod tests {
             &mut core,
         );
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             invalid,
             ValidationError::Shell(

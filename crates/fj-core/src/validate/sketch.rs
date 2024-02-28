@@ -130,7 +130,7 @@ mod tests {
         let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
             .insert(&mut core);
         let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
         let invalid_sketch = Sketch::new(vec![
@@ -157,7 +157,7 @@ mod tests {
         )
         .insert(&mut core);
         let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let exterior = region.exterior();
         let cloned_edges: Vec<_> =
@@ -190,7 +190,7 @@ mod tests {
             Sketch::new(vec![
                 Region::new(valid_exterior.clone(), vec![]).insert(&mut core)
             ]);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_outer_circle = HalfEdge::from_sibling(
             &valid_outer_circle,
@@ -235,7 +235,7 @@ mod tests {
             vec![valid_interior],
         )
         .insert(&mut core)]);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_interior =
             Cycle::new(vec![inner_circle.clone()]).insert(&mut core);

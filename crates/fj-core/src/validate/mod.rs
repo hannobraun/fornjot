@@ -73,7 +73,10 @@ mod solid;
 mod surface;
 mod vertex;
 
-use crate::validation::{ValidationConfig, ValidationError};
+use crate::{
+    geometry::Geometry,
+    validation::{ValidationConfig, ValidationError},
+};
 
 pub use self::{
     edge::EdgeValidationError, face::FaceValidationError,
@@ -103,7 +106,10 @@ macro_rules! assert_contains_err {
 pub trait Validate: Sized {
     /// Validate the object using default config and return on first error
     #[allow(clippy::result_large_err)]
-    fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
+    fn validate_and_return_first_error(
+        &self,
+        _: &Geometry,
+    ) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
         self.validate(&ValidationConfig::default(), &mut errors);
 
