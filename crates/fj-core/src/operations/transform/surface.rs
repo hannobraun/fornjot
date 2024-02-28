@@ -17,7 +17,13 @@ impl TransformObject for Handle<Surface> {
             .entry(self)
             .or_insert_with(|| {
                 let geometry = self.geometry().transform(transform);
-                Surface::new(geometry).insert(core)
+                let surface = Surface::new(geometry).insert(core);
+
+                core.layers
+                    .geometry
+                    .define_surface(surface.clone(), geometry);
+
+                surface
             })
             .clone()
     }

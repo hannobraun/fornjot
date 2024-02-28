@@ -47,7 +47,13 @@ pub trait BuildSurface {
             u: u.into(),
             v: v.into(),
         };
-        Surface::new(geometry).insert(core)
+        let surface = Surface::new(geometry).insert(core);
+
+        core.layers
+            .geometry
+            .define_surface(surface.clone(), geometry);
+
+        surface
     }
 }
 
