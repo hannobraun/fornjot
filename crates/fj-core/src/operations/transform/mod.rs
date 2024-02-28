@@ -10,7 +10,7 @@ mod solid;
 mod surface;
 mod vertex;
 
-use std::collections::BTreeMap;
+use std::collections::{btree_map, BTreeMap};
 
 use fj_math::{Transform, Vector};
 use type_map::TypeMap;
@@ -101,10 +101,19 @@ where
 pub struct TransformCache(TypeMap);
 
 impl TransformCache {
+    fn entry<T: 'static>(
+        &mut self,
+        key: &Handle<T>,
+    ) -> btree_map::Entry<ObjectId, Handle<T>> {
+        let map = self
+            .0
+            .entry::<BTreeMap<ObjectId, Handle<T>>>()
+            .or_insert_with(BTreeMap::new);
+
+        map.entry(key.id())
+    }
+
     fn get<T: 'static>(&mut self, key: &Handle<T>) -> Option<&Handle<T>> {
-        // Silencing Clippy warning due to false positive in Rust 1.73.0. See:
-        // https://github.com/rust-lang/rust-clippy/issues/11390#issuecomment-1750951533
-        #[allow(clippy::unwrap_or_default)]
         let map = self
             .0
             .entry::<BTreeMap<ObjectId, Handle<T>>>()
@@ -114,9 +123,6 @@ impl TransformCache {
     }
 
     fn insert<T: 'static>(&mut self, key: Handle<T>, value: Handle<T>) {
-        // Silencing Clippy warning due to false positive in Rust 1.73.0. See:
-        // https://github.com/rust-lang/rust-clippy/issues/11390#issuecomment-1750951533
-        #[allow(clippy::unwrap_or_default)]
         let map = self
             .0
             .entry::<BTreeMap<ObjectId, Handle<T>>>()
