@@ -11,8 +11,7 @@ use super::{GlobalPath, SurfaceGeometry};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
-    /// The geometry of surfaces
-    pub surface: BTreeMap<HandleWrapper<Surface>, SurfaceGeometry>,
+    surface: BTreeMap<HandleWrapper<Surface>, SurfaceGeometry>,
 }
 
 impl Geometry {
