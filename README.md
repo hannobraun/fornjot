@@ -4,9 +4,20 @@
 
 ## About
 
-Fornjot is an early-stage [b-rep](https://en.wikipedia.org/wiki/Boundary_representation) CAD kernel written in the Rust programming language.
+Fornjot is an **early-stage CAD kernel**, using **boundary representation (b-rep)**, written in the Rust programming language.
 
-For an introduction of what the project aims to achieve, [please check out the website](https://www.fornjot.app/).
+As a CAD kernel, the project's main goal is to provide **a solid foundation for developers to build on top of**, whether for special purpose tooling, third-party libraries for extending Fornjot's feature set, or full-featured CAD applications.
+
+In doing so, Fornjot follows these principles:
+
+- Focus on **mechanical CAD applications**, like 3D printing, machining, woodworking; over other CAD use cases like architecture or electronics.
+- Favor **reliability over features**. Anything you can do should either work as expected, or result in a clear and actionable error.
+- Maintain **a friendly API for directly defining models** in Rust. This means code-first CAD modeling (or Code-CAD) is natively supported.
+- Support **code-first CAD modeling in other languages**, by enabling third-party APIs.
+
+Fornjot is still in development and doesn't always live up to these ambitions. None the less, these are the priorities the project follows.
+
+For more information, [please check out the website](https://www.fornjot.app/).
 
 
 ## Sponsors
@@ -28,12 +39,12 @@ Fornjot is supported by [**@MitchellHansen**](https://github.com/MitchellHansen)
 
 ## Status
 
-Fornjot is usable for some toy examples, but currently lacks the features for something more advanced. Work to change that is underway.
+Fornjot is usable for simple models (see [examples](examples/)), but currently lacks the features for anything more advanced. Work to change that is underway.
 
 
 ## Overview
 
-This is a list of the crates that make up Fornjot, along with a short description for each, starting with the most basic ones and leading up to the high-level ones:
+Fornjot features a modular architecture, allowing you to pick and choose which parts of it you want to use. It is made up of the following libraries:
 
 - [`fj`]: All-in-one API that re-exports all of the following crates.
 - [`fj-math`]: Math primitives used by the rest of Fornjot.
