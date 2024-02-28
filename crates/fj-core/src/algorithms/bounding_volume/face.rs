@@ -1,10 +1,13 @@
 use fj_math::Aabb;
 
-use crate::{geometry::GlobalPath, objects::Face};
+use crate::{
+    geometry::{Geometry, GlobalPath},
+    objects::Face,
+};
 
 impl super::BoundingVolume<3> for Face {
-    fn aabb(&self) -> Option<Aabb<3>> {
-        self.region().exterior().aabb().map(|aabb2| {
+    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<3>> {
+        self.region().exterior().aabb(geometry).map(|aabb2| {
             let surface = self.surface().geometry();
 
             match surface.u {

@@ -60,7 +60,7 @@ impl Instance {
             self.core.layers.validation.take_errors()?;
         }
 
-        let aabb = model.aabb().unwrap_or(Aabb {
+        let aabb = model.aabb(&self.core.layers.geometry).unwrap_or(Aabb {
             min: Point::origin(),
             max: Point::origin(),
         });

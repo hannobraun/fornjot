@@ -1,9 +1,12 @@
 use fj_math::{Aabb, Vector};
 
-use crate::{geometry::SurfacePath, objects::HalfEdge};
+use crate::{
+    geometry::{Geometry, SurfacePath},
+    objects::HalfEdge,
+};
 
 impl super::BoundingVolume<2> for HalfEdge {
-    fn aabb(&self) -> Option<Aabb<2>> {
+    fn aabb(&self, _: &Geometry) -> Option<Aabb<2>> {
         match self.path() {
             SurfacePath::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the
