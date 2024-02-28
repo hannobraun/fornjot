@@ -10,7 +10,7 @@ As a CAD kernel, the project's main goal is to provide **a solid foundation for 
 
 In doing so, Fornjot follows these principles:
 
-- Focus on **mechanical CAD applications**, like 3D printing, machining, woodworking; over other CAD use cases like architecture or electronics.
+- Focus on **mechanical CAD applications**, like 3D printing, machining, woodworking; over other use cases such as architecture or electronics.
 - Favor **reliability over features**. Anything you can do should either work as expected, or result in a clear and actionable error.
 - Maintain **a friendly API for directly defining models** in Rust. This means code-first CAD modeling (or Code-CAD) is natively supported.
 - Support **code-first CAD modeling in other languages**, by enabling third-party APIs.
