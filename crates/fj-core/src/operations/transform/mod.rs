@@ -102,9 +102,6 @@ pub struct TransformCache(TypeMap);
 
 impl TransformCache {
     fn get<T: 'static>(&mut self, key: &Handle<T>) -> Option<&Handle<T>> {
-        // Silencing Clippy warning due to false positive in Rust 1.73.0. See:
-        // https://github.com/rust-lang/rust-clippy/issues/11390#issuecomment-1750951533
-        #[allow(clippy::unwrap_or_default)]
         let map = self
             .0
             .entry::<BTreeMap<ObjectId, Handle<T>>>()
@@ -114,9 +111,6 @@ impl TransformCache {
     }
 
     fn insert<T: 'static>(&mut self, key: Handle<T>, value: Handle<T>) {
-        // Silencing Clippy warning due to false positive in Rust 1.73.0. See:
-        // https://github.com/rust-lang/rust-clippy/issues/11390#issuecomment-1750951533
-        #[allow(clippy::unwrap_or_default)]
         let map = self
             .0
             .entry::<BTreeMap<ObjectId, Handle<T>>>()
