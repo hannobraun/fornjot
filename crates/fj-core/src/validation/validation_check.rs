@@ -29,14 +29,14 @@ pub trait ValidationCheck<T> {
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
-    fn check_and_expect_one_error(&self)
+    fn check_and_expect_one_error(&self) -> T
     where
         T: Display,
     {
         let config = ValidationConfig::default();
         let mut errors = self.check(&config).peekable();
 
-        errors
+        let err = errors
             .next()
             .expect("Expected one validation error; none found");
 
@@ -49,5 +49,7 @@ pub trait ValidationCheck<T> {
 
             panic!("Expected only one validation error")
         }
+
+        err
     }
 }
