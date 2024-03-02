@@ -66,7 +66,8 @@ fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         },
     };
 
-    threemf::write(path, mesh)?;
+    let mut file = File::create(path)?;
+    threemf::write(&mut file, mesh)?;
 
     Ok(())
 }
