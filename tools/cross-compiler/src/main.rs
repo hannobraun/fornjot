@@ -39,10 +39,7 @@ fn main() -> anyhow::Result<()> {
                 .arg("--all-features")
                 .args(["--target", target.triple])
                 .args(["-p", crate_])
-                // Wee need to recreate that `web_sys` cfg here. It's already
-                // specified in `.cargo/config`, but the use of `RUSTFLAGS` here
-                // overwrites that.
-                .env("RUSTFLAGS", "-D warnings --cfg=web_sys_unstable_apis");
+                .env("RUSTFLAGS", "-D warnings");
 
             println!("Running {command:?}");
             let status = command.status()?;
