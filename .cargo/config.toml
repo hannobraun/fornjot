@@ -1,4 +1,0 @@
-[build]
-# As of wgpu 0.19.1, these are necessary to build for WebGPU.
-rustflags = ["--cfg=web_sys_unstable_apis"]
-rustdocflags = ["--cfg=web_sys_unstable_apis"]
