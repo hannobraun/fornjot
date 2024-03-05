@@ -8,7 +8,11 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
-use std::{fs::File, path::Path};
+use std::{
+    fs::File,
+    io::{Seek, Write},
+    path::Path,
+};
 
 use thiserror::Error;
 
@@ -24,13 +28,16 @@ use fj_math::{Point, Triangle};
 pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     match path.extension() {
         Some(extension) if extension.to_ascii_uppercase() == "3MF" => {
-            export_3mf(mesh, path)
+            let mut file = File::create(path)?;
+            export_3mf(mesh, &mut file)
         }
         Some(extension) if extension.to_ascii_uppercase() == "STL" => {
-            export_stl(mesh, path)
+            let mut file = File::create(path)?;
+            export_stl(mesh, &mut file)
         }
         Some(extension) if extension.to_ascii_uppercase() == "OBJ" => {
-            export_obj(mesh, path)
+            let mut file = File::create(path)?;
+            export_obj(mesh, &mut file)
         }
         Some(extension) => Err(Error::InvalidExtension(
             extension.to_string_lossy().into_owned(),
@@ -39,7 +46,11 @@ pub fn export(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
     }
 }
 
-fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
+/// Export the provided mesh to the provided writer in the 3MF format.
+pub fn export_3mf(
+    mesh: &Mesh<Point<3>>,
+    write: impl Write + Seek,
+) -> Result<(), Error> {
     let vertices = mesh
         .vertices()
         .map(|point| threemf::model::Vertex {
@@ -66,13 +77,16 @@ fn export_3mf(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         },
     };
 
-    let mut file = File::create(path)?;
-    threemf::write(&mut file, mesh)?;
+    threemf::write(write, mesh)?;
 
     Ok(())
 }
 
-fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
+/// Export the provided mesh to the provided writer in the STL format.
+pub fn export_stl(
+    mesh: &Mesh<Point<3>>,
+    mut write: impl Write,
+) -> Result<(), Error> {
     let points = mesh
         .triangles()
         .map(|triangle| triangle.inner.points())
@@ -99,8 +113,6 @@ fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         })
         .collect::<Vec<_>>();
 
-    let mut file = File::create(path)?;
-
     let binary_stl_file = stl::BinaryStlFile {
         header: stl::BinaryStlHeader {
             header: [0u8; 80],
@@ -112,20 +124,22 @@ fn export_stl(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         triangles,
     };
 
-    stl::write_stl(&mut file, &binary_stl_file)?;
+    stl::write_stl(&mut write, &binary_stl_file)?;
 
     Ok(())
 }
 
-fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
-    let mut f = File::create(path)?;
-
+/// Export the provided mesh to the provided writer in the OBJ format.
+fn export_obj(
+    mesh: &Mesh<Point<3>>,
+    mut write: impl Write,
+) -> Result<(), Error> {
     for (cnt, t) in mesh.triangles().enumerate() {
         // write each point of the triangle
         for v in t.inner.points() {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
                 .write(
-                    &mut f,
+                    &mut write,
                     &wavefront_rs::obj::entity::Entity::Vertex {
                         x: v.x.into_f64(),
                         y: v.y.into_f64(),
@@ -139,7 +153,7 @@ fn export_obj(mesh: &Mesh<Point<3>>, path: &Path) -> Result<(), Error> {
         // write the triangle
         wavefront_rs::obj::writer::Writer { auto_newline: true }
             .write(
-                &mut f,
+                &mut write,
                 &wavefront_rs::obj::entity::Entity::Face {
                     vertices: vec![
                         wavefront_rs::obj::entity::FaceVertex {
