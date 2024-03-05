@@ -28,16 +28,17 @@ impl<T> ObjectSet<T> {
     /// # Panics
     ///
     /// Panics, if the iterator contains duplicate `Handle`s.
-    pub fn new(handles: impl IntoIterator<Item = Handle<T>>) -> Self
+    pub fn new<H>(handles: impl IntoIterator<Item = H>) -> Self
     where
         T: Debug + Ord,
+        H: Into<HandleWrapper<T>>,
     {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
 
-        for handle in handles {
-            let handle = HandleWrapper::from(handle);
+        let handles = handles.into_iter().map(|handle| handle.into());
 
+        for handle in handles {
             if added.contains(&handle) {
                 panic!(
                     "Constructing `ObjectSet` with duplicate handle: {:?}",
@@ -149,13 +150,14 @@ impl<T> ObjectSet<T> {
     ///
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn replace<const N: usize>(
+    pub fn replace<H>(
         &self,
         original: &Handle<T>,
-        replacements: [Handle<T>; N],
+        replacements: impl IntoIterator<Item = H>,
     ) -> Option<Self>
     where
         T: Debug + Ord,
+        H: Into<Handle<T>>,
     {
         let mut iter = self.iter().cloned().peekable();
 
@@ -185,7 +187,7 @@ impl<T> ObjectSet<T> {
         Some(
             before
                 .into_iter()
-                .chain(replacements)
+                .chain(replacements.into_iter().map(|handle| handle.into()))
                 .chain(after)
                 .collect(),
         )
@@ -244,7 +246,12 @@ pub type ObjectSetIntoIter<T> = iter::Map<
 
 #[cfg(test)]
 mod tests {
-    use crate::{objects::Cycle, operations::insert::Insert, Core};
+    use std::collections::HashSet;
+
+    use crate::{
+        objects::Cycle, operations::insert::Insert, storage::HandleWrapper,
+        Core,
+    };
 
     use super::ObjectSet;
 
@@ -259,5 +266,39 @@ mod tests {
         let _object_set = ObjectSet::new([cycle_a, cycle_b]);
         // Nothing more to test. `ObjectSet` panics on duplicate objects, and it
         // shouldn't do that in this case.
+    }
+
+    #[test]
+    fn deduplicate_with_hashset() {
+        let mut core = Core::new();
+
+        let bare_cycle = Cycle::new([]);
+        let cycle = bare_cycle.insert(&mut core);
+
+        let standard_set = HashSet::from([cycle.clone(), cycle.clone()]);
+
+        assert_eq!(standard_set, [cycle].into());
+    }
+
+    #[test]
+    fn object_set_from_handle_wrappers() {
+        let mut core = Core::new();
+
+        let bare_cycle = Cycle::new([]);
+        let cycle_a = HandleWrapper::from(bare_cycle.clone().insert(&mut core));
+        let cycle_b = HandleWrapper::from(bare_cycle.insert(&mut core));
+
+        let _object_set = ObjectSet::new([cycle_a, cycle_b]);
+    }
+
+    #[test]
+    fn object_set_from_deduplicated_hash_set() {
+        let mut core = Core::new();
+
+        let bare_cycle = Cycle::new([]);
+        let cycle_a = HandleWrapper::from(bare_cycle.clone().insert(&mut core));
+        let cycle_b = HandleWrapper::from(bare_cycle.insert(&mut core));
+
+        let _object_set = ObjectSet::new(HashSet::from([cycle_a, cycle_b]));
     }
 }
