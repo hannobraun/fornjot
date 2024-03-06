@@ -130,7 +130,7 @@ pub fn export_stl(
 }
 
 /// Export the provided mesh to the provided writer in the OBJ format.
-fn export_obj(
+pub fn export_obj(
     mesh: &Mesh<Point<3>>,
     mut write: impl Write,
 ) -> Result<(), Error> {
