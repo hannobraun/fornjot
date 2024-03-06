@@ -23,16 +23,17 @@ pub trait UpdateCycle {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
-    fn update_half_edge<T, const N: usize>(
+    fn update_half_edge<T, R>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
-        T: Insert<Inserted = Handle<HalfEdge>>;
+        T: Insert<Inserted = Handle<HalfEdge>>,
+        R: IntoIterator<Item = T>;
 }
 
 impl UpdateCycle for Cycle {
@@ -51,20 +52,21 @@ impl UpdateCycle for Cycle {
         Cycle::new(half_edges)
     }
 
-    fn update_half_edge<T, const N: usize>(
+    fn update_half_edge<T, R>(
         &self,
         handle: &Handle<HalfEdge>,
-        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<HalfEdge>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<HalfEdge>>,
+        R: IntoIterator<Item = T>,
     {
         let edges = self
             .half_edges()
             .replace(
                 handle,
-                update(handle, core).map(|object| {
+                update(handle, core).into_iter().map(|object| {
                     object.insert(core).derive_from(handle, core)
                 }),
             )

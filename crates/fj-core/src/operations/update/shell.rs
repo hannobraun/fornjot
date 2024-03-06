@@ -23,16 +23,17 @@ pub trait UpdateShell {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
-    fn update_face<T, const N: usize>(
+    fn update_face<T, R>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Face>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
-        T: Insert<Inserted = Handle<Face>>;
+        T: Insert<Inserted = Handle<Face>>,
+        R: IntoIterator<Item = T>;
 
     /// Remove a face from the shell
     #[must_use]
@@ -53,20 +54,21 @@ impl UpdateShell for Shell {
         Shell::new(faces)
     }
 
-    fn update_face<T, const N: usize>(
+    fn update_face<T, R>(
         &self,
         handle: &Handle<Face>,
-        update: impl FnOnce(&Handle<Face>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Face>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Face>>,
+        R: IntoIterator<Item = T>,
     {
         let faces = self
             .faces()
             .replace(
                 handle,
-                update(handle, core).map(|object| {
+                update(handle, core).into_iter().map(|object| {
                     object.insert(core).derive_from(handle, core)
                 }),
             )

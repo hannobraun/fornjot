@@ -23,16 +23,17 @@ pub trait UpdateSolid {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
-    fn update_shell<T, const N: usize>(
+    fn update_shell<T, R>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Shell>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
-        T: Insert<Inserted = Handle<Shell>>;
+        T: Insert<Inserted = Handle<Shell>>,
+        R: IntoIterator<Item = T>;
 }
 
 impl UpdateSolid for Solid {
@@ -49,20 +50,21 @@ impl UpdateSolid for Solid {
         Solid::new(shells)
     }
 
-    fn update_shell<T, const N: usize>(
+    fn update_shell<T, R>(
         &self,
         handle: &Handle<Shell>,
-        update: impl FnOnce(&Handle<Shell>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Shell>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Shell>>,
+        R: IntoIterator<Item = T>,
     {
         let shells = self
             .shells()
             .replace(
                 handle,
-                update(handle, core).map(|object| {
+                update(handle, core).into_iter().map(|object| {
                     object.insert(core).derive_from(handle, core)
                 }),
             )

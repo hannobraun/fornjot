@@ -23,16 +23,17 @@ pub trait UpdateSketch {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
-    fn update_region<T, const N: usize>(
+    fn update_region<T, R>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
-        T: Insert<Inserted = Handle<Region>>;
+        T: Insert<Inserted = Handle<Region>>,
+        R: IntoIterator<Item = T>;
 }
 
 impl UpdateSketch for Sketch {
@@ -49,20 +50,21 @@ impl UpdateSketch for Sketch {
         Sketch::new(regions)
     }
 
-    fn update_region<T, const N: usize>(
+    fn update_region<T, R>(
         &self,
         handle: &Handle<Region>,
-        update: impl FnOnce(&Handle<Region>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Region>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Region>>,
+        R: IntoIterator<Item = T>,
     {
         let regions = self
             .regions()
             .replace(
                 handle,
-                update(handle, core).map(|object| {
+                update(handle, core).into_iter().map(|object| {
                     object.insert(core).derive_from(handle, core)
                 }),
             )
