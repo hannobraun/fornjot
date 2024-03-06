@@ -28,10 +28,11 @@ impl<T> ObjectSet<T> {
     /// # Panics
     ///
     /// Panics, if the iterator contains duplicate `Handle`s.
-    pub fn new<H>(handles: impl IntoIterator<Item = H>) -> Self
+    pub fn new(
+        handles: impl IntoIterator<Item = impl Into<HandleWrapper<T>>>,
+    ) -> Self
     where
         T: Debug + Ord,
-        H: Into<HandleWrapper<T>>,
     {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
@@ -150,14 +151,13 @@ impl<T> ObjectSet<T> {
     ///
     /// Panics, if the update results in a duplicate item.
     #[must_use]
-    pub fn replace<H>(
+    pub fn replace(
         &self,
         original: &Handle<T>,
-        replacements: impl IntoIterator<Item = H>,
+        replacements: impl IntoIterator<Item = impl Into<Handle<T>>>,
     ) -> Option<Self>
     where
         T: Debug + Ord,
-        H: Into<Handle<T>>,
     {
         let mut iter = self.iter().cloned().peekable();
 
