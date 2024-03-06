@@ -35,14 +35,15 @@ pub trait UpdateRegion {
     ///
     /// Panics, if the update results in a duplicate object.
     #[must_use]
-    fn update_interior<T, const N: usize>(
+    fn update_interior<T, R>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
-        T: Insert<Inserted = Handle<Cycle>>;
+        T: Insert<Inserted = Handle<Cycle>>,
+        R: IntoIterator<Item = T>;
 }
 
 impl UpdateRegion for Region {
@@ -73,20 +74,21 @@ impl UpdateRegion for Region {
         Region::new(self.exterior().clone(), interiors)
     }
 
-    fn update_interior<T, const N: usize>(
+    fn update_interior<T, R>(
         &self,
         handle: &Handle<Cycle>,
-        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> [T; N],
+        update: impl FnOnce(&Handle<Cycle>, &mut Core) -> R,
         core: &mut Core,
     ) -> Self
     where
         T: Insert<Inserted = Handle<Cycle>>,
+        R: IntoIterator<Item = T>,
     {
         let interiors = self
             .interiors()
             .replace(
                 handle,
-                update(handle, core).map(|object| {
+                update(handle, core).into_iter().map(|object| {
                     object.insert(core).derive_from(handle, core)
                 }),
             )
