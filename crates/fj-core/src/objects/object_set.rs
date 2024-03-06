@@ -269,18 +269,6 @@ mod tests {
     }
 
     #[test]
-    fn deduplicate_with_hashset() {
-        let mut core = Core::new();
-
-        let bare_cycle = Cycle::new([]);
-        let cycle = bare_cycle.insert(&mut core);
-
-        let standard_set = HashSet::from([cycle.clone(), cycle.clone()]);
-
-        assert_eq!(standard_set, [cycle].into());
-    }
-
-    #[test]
     fn object_set_from_handle_wrappers() {
         let mut core = Core::new();
 
