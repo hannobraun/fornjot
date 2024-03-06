@@ -23,7 +23,7 @@ pub trait UpdateCycle {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
     fn update_half_edge<T, R>(
         &self,

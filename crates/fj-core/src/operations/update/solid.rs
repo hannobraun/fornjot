@@ -23,7 +23,7 @@ pub trait UpdateSolid {
     ///
     /// Panics, if the object can't be found.
     ///
-    /// Panics, if the update results in a duplicate object.
+    /// Panics, if the update results in multiple handles referencing the same object.
     #[must_use]
     fn update_shell<T, R>(
         &self,
