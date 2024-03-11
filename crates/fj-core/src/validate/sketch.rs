@@ -54,7 +54,9 @@ mod tests {
     use crate::{
         assert_contains_err,
         objects::{Cycle, HalfEdge, Region, Sketch, Vertex},
-        operations::{build::BuildHalfEdge, insert::Insert},
+        operations::{
+            build::BuildHalfEdge, build::BuildRegion, insert::Insert,
+        },
         validate::{
             references::ReferenceCountError, SketchValidationError, Validate,
             ValidationError,
@@ -66,15 +68,15 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let shared_cycle = Cycle::new(vec![]).insert(&mut core);
+        let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
+            .insert(&mut core);
+        let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
+        valid_sketch.validate_and_return_first_error()?;
 
+        let shared_cycle = region.exterior();
         let invalid_sketch = Sketch::new(vec![
-            Region::new(
-                Cycle::new(vec![]).insert(&mut core),
-                vec![shared_cycle.clone()],
-            )
-            .insert(&mut core),
-            Region::new(shared_cycle, vec![]).insert(&mut core),
+            Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
+            Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
         ]);
         assert_contains_err!(
             invalid_sketch,
@@ -83,13 +85,6 @@ mod tests {
             ))
         );
 
-        let valid_sketch = Sketch::new(vec![Region::new(
-            Cycle::new(vec![]).insert(&mut core),
-            vec![],
-        )
-        .insert(&mut core)]);
-        valid_sketch.validate_and_return_first_error()?;
-
         Ok(())
     }
 
@@ -97,20 +92,18 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let half_edge =
-            HalfEdge::line_segment([[0., 0.], [1., 0.]], None, &mut core)
-                .insert(&mut core);
-        let sibling_edge =
-            HalfEdge::from_sibling(&half_edge, Vertex::new().insert(&mut core))
-                .insert(&mut core);
+        let region = <Region as BuildRegion>::polygon(
+            [[0., 0.], [1., 1.], [0., 1.]],
+            &mut core,
+        )
+        .insert(&mut core);
+        let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
+        valid_sketch.validate_and_return_first_error()?;
 
-        let exterior =
-            Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
-                .insert(&mut core);
-
-        let interior =
-            Cycle::new(vec![half_edge.clone(), sibling_edge.clone()])
-                .insert(&mut core);
+        let exterior = region.exterior();
+        let cloned_edges: Vec<_> =
+            exterior.half_edges().iter().map(|e| e.clone()).collect();
+        let interior = Cycle::new(cloned_edges).insert(&mut core);
 
         let invalid_sketch =
             Sketch::new(vec![
@@ -122,10 +115,6 @@ mod tests {
                 ReferenceCountError::HalfEdge { references: _ }
             ))
         );
-
-        let valid_sketch =
-            Sketch::new(vec![Region::new(exterior, vec![]).insert(&mut core)]);
-        valid_sketch.validate_and_return_first_error()?;
 
         Ok(())
     }
