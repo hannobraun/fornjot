@@ -951,7 +951,6 @@ dependencies = [
  "thiserror",
  "tobj",
  "tracing",
- "web-sys",
  "wgpu",
 ]
 

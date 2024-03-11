@@ -41,13 +41,3 @@ features = ["webgl"]
 [target.'cfg(target_arch = "wasm32")'.dependencies.getrandom]
 version = "0.2.12"
 features = ["js"]
-
-# We don't depend on `web-sys` directly, but `wgpu` does. And we're enabling
-# experimental features of `web-sys` to support WebGPU, and it seems that
-# `web-sys` makes breaking changes to those in path versions.
-#
-# See https://github.com/gfx-rs/wgpu/issues/5243.
-#
-# Here, we pin `web-sys` to a known-good version.
-[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
-version = "=0.3.67"
