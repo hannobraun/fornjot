@@ -54,7 +54,7 @@ jobs:
           key: release-operator-01
 
       - name: Release | GitHub
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.calculate-release-flags.outputs.tag-name }}
           name: ${{ needs.calculate-release-flags.outputs.tag-name }}
