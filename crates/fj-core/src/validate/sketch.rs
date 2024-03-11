@@ -1,3 +1,4 @@
+use crate::{objects::Cycle, storage::Handle};
 use crate::{objects::Sketch, validate_references};
 use fj_math::Winding;
 
@@ -13,7 +14,7 @@ impl Validate for Sketch {
         errors: &mut Vec<ValidationError>,
     ) {
         SketchValidationError::check_object_references(self, config, errors);
-        SketchValidationError::check_exterior_cycle(self, config, errors);
+        SketchValidationError::check_exterior_cycles(self, config, errors);
         SketchValidationError::check_interior_cycles(self, config, errors);
     }
 }
@@ -25,13 +26,23 @@ pub enum SketchValidationError {
     #[error("Object within sketch referenced by more than one other Object")]
     MultipleReferences(#[from] ReferenceCountError),
     /// Region within sketch has exterior cycle with clockwise winding
-    #[error("Exterior cycle within sketch region has clockwise winding")]
-    ClockwiseExteriorCycle(),
+    #[error(
+        "Exterior cycle within sketch region has clockwise winding\n
+        Cycle: {cycle:#?}"
+    )]
+    ClockwiseExteriorCycle {
+        /// Cycle with clockwise winding
+        cycle: Handle<Cycle>,
+    },
     /// Region within sketch has interior cycle with counter-clockwise winding
     #[error(
-        "Interior cycle within sketch region has counter-clockwise winding"
+        "Interior cycle within sketch region has counter-clockwise winding\n
+        Cycle: {cycle:#?}"
     )]
-    CounterClockwiseInteriorCycle(),
+    CounterClockwiseInteriorCycle {
+        /// Cycle with counter-clockwise winding
+        cycle: Handle<Cycle>,
+    },
 }
 
 impl SketchValidationError {
@@ -59,15 +70,18 @@ impl SketchValidationError {
         );
     }
 
-    fn check_exterior_cycle(
+    fn check_exterior_cycles(
         sketch: &Sketch,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
         sketch.regions().iter().for_each(|region| {
-            if region.exterior().winding() == Winding::Cw {
+            let cycle = region.exterior();
+            if cycle.winding() == Winding::Cw {
                 errors.push(ValidationError::Sketch(
-                    SketchValidationError::ClockwiseExteriorCycle(),
+                    SketchValidationError::ClockwiseExteriorCycle {
+                        cycle: cycle.clone(),
+                    },
                 ))
             }
         });
@@ -83,9 +97,11 @@ impl SketchValidationError {
                 .interiors()
                 .iter()
                 .filter(|interior| interior.winding() == Winding::Ccw)
-                .for_each(|_interior| {
+                .for_each(|cycle| {
                     errors.push(ValidationError::Sketch(
-                        SketchValidationError::CounterClockwiseInteriorCycle(),
+                        SketchValidationError::CounterClockwiseInteriorCycle {
+                            cycle: cycle.clone(),
+                        },
                     ));
                 })
         });
@@ -190,7 +206,7 @@ mod tests {
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(
-                SketchValidationError::ClockwiseExteriorCycle()
+                SketchValidationError::ClockwiseExteriorCycle { cycle: _ }
             )
         );
 
@@ -231,7 +247,9 @@ mod tests {
         assert_contains_err!(
             invalid_sketch,
             ValidationError::Sketch(
-                SketchValidationError::CounterClockwiseInteriorCycle()
+                SketchValidationError::CounterClockwiseInteriorCycle {
+                    cycle: _
+                }
             )
         );
         Ok(())
