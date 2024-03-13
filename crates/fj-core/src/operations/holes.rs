@@ -99,10 +99,9 @@ impl AddHole for Shell {
 
         let path = {
             let point = |location: &HoleLocation| {
-                location
-                    .face
-                    .surface()
-                    .geometry()
+                core.layers
+                    .geometry
+                    .of_surface(location.face.surface())
                     .point_from_surface_coords(location.position)
             };
 

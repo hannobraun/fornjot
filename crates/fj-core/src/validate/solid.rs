@@ -76,7 +76,7 @@ pub enum SolidValidationError {
 impl SolidValidationError {
     fn check_vertices(
         solid: &Solid,
-        _: &Geometry,
+        geometry: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -88,7 +88,7 @@ impl SolidValidationError {
                 face.region()
                     .all_cycles()
                     .flat_map(|cycle| cycle.half_edges().iter().cloned())
-                    .zip(repeat(face.surface().geometry()))
+                    .zip(repeat(geometry.of_surface(face.surface())))
             })
             .map(|(h, s)| {
                 (

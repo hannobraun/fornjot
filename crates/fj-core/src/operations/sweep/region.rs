@@ -55,7 +55,7 @@ impl SweepRegion for Region {
 
         let top_exterior = sweep_cycle(
             self.exterior(),
-            &surface.geometry(),
+            &core.layers.geometry.of_surface(surface),
             color,
             &mut faces,
             path,
@@ -69,7 +69,7 @@ impl SweepRegion for Region {
             .map(|bottom_cycle| {
                 sweep_cycle(
                     bottom_cycle,
-                    &surface.geometry(),
+                    &core.layers.geometry.of_surface(surface),
                     color,
                     &mut faces,
                     path,
