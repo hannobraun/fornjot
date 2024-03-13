@@ -18,9 +18,9 @@ impl Validate for Solid {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
-        SolidValidationError::check_vertices(self, config, errors);
+        SolidValidationError::check_vertices(self, geometry, config, errors);
         SolidValidationError::check_object_references(self, config, errors);
     }
 }
@@ -76,6 +76,7 @@ pub enum SolidValidationError {
 impl SolidValidationError {
     fn check_vertices(
         solid: &Solid,
+        _: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
