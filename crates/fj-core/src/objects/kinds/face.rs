@@ -2,7 +2,7 @@ use fj_math::Winding;
 
 use crate::{
     objects::{Region, Surface},
-    storage::Handle,
+    storage::{Handle, HandleWrapper},
 };
 
 /// A face of a shape
@@ -31,14 +31,17 @@ use crate::{
 /// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct Face {
-    surface: Handle<Surface>,
+    surface: HandleWrapper<Surface>,
     region: Handle<Region>,
 }
 
 impl Face {
     /// Construct an instance of `Face`
     pub fn new(surface: Handle<Surface>, region: Handle<Region>) -> Self {
-        Self { surface, region }
+        Self {
+            surface: surface.into(),
+            region,
+        }
     }
 
     /// Access the surface of the face
