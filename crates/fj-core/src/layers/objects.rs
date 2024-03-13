@@ -5,7 +5,7 @@ use crate::{
     validation::Validation,
 };
 
-use super::{Command, Event, Layer};
+use super::{validation::ValidateObject, Command, Event, Layer};
 
 impl Layer<Objects> {
     /// Insert an object into the stores
@@ -20,6 +20,9 @@ impl Layer<Objects> {
         self.process(InsertObject { object }, &mut events);
 
         for event in events {
+            let event = ValidateObject {
+                object: event.object.into(),
+            };
             validation.process(event, &mut Vec::new());
         }
     }
