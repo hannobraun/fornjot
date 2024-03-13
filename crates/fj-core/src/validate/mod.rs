@@ -88,7 +88,7 @@ pub use self::{
 /// pattern. This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.
 #[macro_export]
 macro_rules! assert_contains_err {
-    ($o:expr,$p:pat) => {
+    ($o:expr, $p:pat) => {
         assert!({
             let mut errors = Vec::new();
             $o.validate(
