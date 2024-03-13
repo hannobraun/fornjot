@@ -75,9 +75,13 @@ impl SweepFaceOfShell for Shell {
 
         let shell = self
             .remove_face(&face)
-            .add_faces(swept_region.all_faces(), core);
+            .add_faces(swept_region.clone().all_faces(), core);
 
-        ShellExtendedBySweep { shell }
+        ShellExtendedBySweep {
+            shell,
+            side_faces: swept_region.side_faces,
+            top_face: swept_region.top_face,
+        }
     }
 }
 
@@ -87,4 +91,10 @@ impl SweepFaceOfShell for Shell {
 pub struct ShellExtendedBySweep {
     /// The resulting shell after the sweep
     pub shell: Shell,
+
+    /// The side faces created by the sweep
+    pub side_faces: Vec<Face>,
+
+    /// The top face created by the sweep
+    pub top_face: Face,
 }
