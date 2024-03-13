@@ -91,6 +91,7 @@ impl Default for Surfaces {
 
         let xz_plane = store.reserve();
         store.insert(xz_plane.clone(), Surface::new());
+
         let yz_plane = store.reserve();
         store.insert(yz_plane.clone(), Surface::new());
 
