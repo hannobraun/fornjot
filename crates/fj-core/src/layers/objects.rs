@@ -29,9 +29,6 @@ impl Layer<Objects> {
 }
 
 /// Insert an object into the stores
-///
-/// This struct serves as both event and command for `Layer<Objects>`, as well
-/// as a command for `Layer<Validation>`.
 #[derive(Clone, Debug)]
 pub struct InsertObject {
     /// The object to insert
