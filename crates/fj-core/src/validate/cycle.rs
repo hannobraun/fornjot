@@ -1,4 +1,5 @@
 use crate::{
+    geometry::Geometry,
     objects::Cycle,
     validation::{
         checks::AdjacentHalfEdgesNotConnected, ValidationCheck,
@@ -13,6 +14,7 @@ impl Validate for Cycle {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         errors.extend(
             AdjacentHalfEdgesNotConnected::check(self, config).map(Into::into),

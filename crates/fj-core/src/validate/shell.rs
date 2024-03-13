@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, fmt};
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, SurfaceGeometry},
+    geometry::{CurveBoundary, Geometry, SurfaceGeometry},
     objects::{Curve, HalfEdge, Shell, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
@@ -18,10 +18,15 @@ impl Validate for Shell {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        geometry: &Geometry,
     ) {
-        ShellValidationError::check_curve_coordinates(self, config, errors);
+        ShellValidationError::check_curve_coordinates(
+            self, geometry, config, errors,
+        );
         ShellValidationError::check_half_edge_pairs(self, errors);
-        ShellValidationError::check_half_edge_coincidence(self, config, errors);
+        ShellValidationError::check_half_edge_coincidence(
+            self, geometry, config, errors,
+        );
     }
 }
 
@@ -75,6 +80,7 @@ impl ShellValidationError {
     /// Check that local curve definitions that refer to the same curve match
     fn check_curve_coordinates(
         shell: &Shell,
+        geometry: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -139,17 +145,17 @@ impl ShellValidationError {
 
                 compare_curve_coords(
                     edge_a,
-                    &surface_a.geometry(),
+                    &geometry.of_surface(surface_a),
                     edge_b,
-                    &surface_b.geometry(),
+                    &geometry.of_surface(surface_b),
                     config,
                     &mut mismatches,
                 );
                 compare_curve_coords(
                     edge_b,
-                    &surface_b.geometry(),
+                    &geometry.of_surface(surface_b),
                     edge_a,
-                    &surface_a.geometry(),
+                    &geometry.of_surface(surface_a),
                     config,
                     &mut mismatches,
                 );
@@ -208,6 +214,7 @@ impl ShellValidationError {
     /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
+        geometry: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -235,9 +242,9 @@ impl ShellValidationError {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    &surface_a.geometry(),
+                    &geometry.of_surface(surface_a),
                     half_edge_b.clone(),
-                    &surface_b.geometry(),
+                    &geometry.of_surface(surface_b),
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
@@ -441,8 +448,11 @@ mod tests {
             &mut core,
         );
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::CurveCoordinateSystemMismatch(..)
@@ -462,8 +472,11 @@ mod tests {
         );
         let invalid = valid.shell.remove_face(&valid.abc.face);
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::HalfEdgeHasNoSibling { .. }
@@ -508,8 +521,11 @@ mod tests {
             &mut core,
         );
 
-        valid.shell.validate_and_return_first_error()?;
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::CoincidentHalfEdgesAreNotSiblings { .. }

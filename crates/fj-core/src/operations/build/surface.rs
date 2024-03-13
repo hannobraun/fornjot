@@ -43,15 +43,15 @@ pub trait BuildSurface {
         v: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Handle<Surface> {
-        let geometry = SurfaceGeometry {
-            u: u.into(),
-            v: v.into(),
-        };
-        let surface = Surface::new(geometry).insert(core);
+        let surface = Surface::new().insert(core);
 
-        core.layers
-            .geometry
-            .define_surface(surface.clone(), geometry);
+        core.layers.geometry.define_surface(
+            surface.clone(),
+            SurfaceGeometry {
+                u: u.into(),
+                v: v.into(),
+            },
+        );
 
         surface
     }

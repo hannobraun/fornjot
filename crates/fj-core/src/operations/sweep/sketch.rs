@@ -43,14 +43,14 @@ impl SweepSketch for Sketch {
                 assert!(region.exterior().winding().is_ccw());
 
                 let is_negative_sweep = {
-                    let u = match surface.geometry().u {
+                    let u = match core.layers.geometry.of_surface(&surface).u {
                         GlobalPath::Circle(_) => todo!(
                             "Sweeping sketch from a rounded surfaces is not \
                             supported"
                         ),
                         GlobalPath::Line(line) => line.direction(),
                     };
-                    let v = surface.geometry().v;
+                    let v = core.layers.geometry.of_surface(&surface).v;
 
                     let normal = u.cross(&v);
 

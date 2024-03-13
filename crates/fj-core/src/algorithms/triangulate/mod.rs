@@ -161,12 +161,36 @@ mod tests {
 
         let triangles = triangulate(face, &mut core)?;
 
-        let a = surface.geometry().point_from_surface_coords(a);
-        let b = surface.geometry().point_from_surface_coords(b);
-        let e = surface.geometry().point_from_surface_coords(e);
-        let f = surface.geometry().point_from_surface_coords(f);
-        let g = surface.geometry().point_from_surface_coords(g);
-        let h = surface.geometry().point_from_surface_coords(h);
+        let a = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(a);
+        let b = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(b);
+        let e = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(e);
+        let f = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(f);
+        let g = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(g);
+        let h = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(h);
 
         // Let's test that some correct triangles are present. We don't need to
         // test them all.
@@ -224,11 +248,31 @@ mod tests {
 
         let triangles = triangulate(face, &mut core)?;
 
-        let a = surface.geometry().point_from_surface_coords(a);
-        let b = surface.geometry().point_from_surface_coords(b);
-        let c = surface.geometry().point_from_surface_coords(c);
-        let d = surface.geometry().point_from_surface_coords(d);
-        let e = surface.geometry().point_from_surface_coords(e);
+        let a = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(a);
+        let b = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(b);
+        let c = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(c);
+        let d = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(d);
+        let e = core
+            .layers
+            .geometry
+            .of_surface(&surface)
+            .point_from_surface_coords(e);
 
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([a, d, e]));

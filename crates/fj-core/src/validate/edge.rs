@@ -1,6 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
+    geometry::Geometry,
     objects::HalfEdge,
     validation::{ValidationConfig, ValidationError},
 };
@@ -12,6 +13,7 @@ impl Validate for HalfEdge {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         EdgeValidationError::check_vertex_coincidence(self, config, errors);
     }
@@ -95,8 +97,9 @@ mod tests {
             )
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Edge(
                 EdgeValidationError::VerticesAreCoincident { .. }

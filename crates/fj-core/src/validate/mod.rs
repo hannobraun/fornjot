@@ -73,7 +73,10 @@ mod solid;
 mod surface;
 mod vertex;
 
-use crate::validation::{ValidationConfig, ValidationError};
+use crate::{
+    geometry::Geometry,
+    validation::{ValidationConfig, ValidationError},
+};
 
 pub use self::{
     edge::EdgeValidationError, face::FaceValidationError,
@@ -85,12 +88,13 @@ pub use self::{
 /// pattern. This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.
 #[macro_export]
 macro_rules! assert_contains_err {
-    ($o:tt,$p:pat) => {
+    ($core:expr, $o:expr, $p:pat) => {
         assert!({
             let mut errors = Vec::new();
             $o.validate(
                 &$crate::validation::ValidationConfig::default(),
                 &mut errors,
+                &$core.layers.geometry,
             );
             errors.iter().any(|e| matches!(e, $p))
         })
@@ -103,9 +107,12 @@ macro_rules! assert_contains_err {
 pub trait Validate: Sized {
     /// Validate the object using default config and return on first error
     #[allow(clippy::result_large_err)]
-    fn validate_and_return_first_error(&self) -> Result<(), ValidationError> {
+    fn validate_and_return_first_error(
+        &self,
+        geometry: &Geometry,
+    ) -> Result<(), ValidationError> {
         let mut errors = Vec::new();
-        self.validate(&ValidationConfig::default(), &mut errors);
+        self.validate(&ValidationConfig::default(), &mut errors, geometry);
 
         if let Some(err) = errors.into_iter().next() {
             return Err(err);
@@ -119,5 +126,6 @@ pub trait Validate: Sized {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        geometry: &Geometry,
     );
 }

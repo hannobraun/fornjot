@@ -1,6 +1,7 @@
 //! Layer infrastructure for [`Objects`]
 
 use crate::{
+    geometry::Geometry,
     objects::{AboutToBeStored, AnyObject, Objects},
     validation::Validation,
 };
@@ -14,6 +15,7 @@ impl Layer<Objects> {
     pub fn insert(
         &mut self,
         object: AnyObject<AboutToBeStored>,
+        geometry: &Geometry,
         validation: &mut Layer<Validation>,
     ) {
         let mut events = Vec::new();
@@ -22,6 +24,7 @@ impl Layer<Objects> {
         for event in events {
             let event = ValidateObject {
                 object: event.object.into(),
+                geometry,
             };
             validation.process(event, &mut Vec::new());
         }

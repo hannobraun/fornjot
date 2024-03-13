@@ -1,6 +1,7 @@
 use fj_math::Winding;
 
 use crate::{
+    geometry::Geometry,
     objects::Face,
     validation::{ValidationConfig, ValidationError},
 };
@@ -12,6 +13,7 @@ impl Validate for Face {
         &self,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         FaceValidationError::check_boundary(self, errors);
         FaceValidationError::check_interior_winding(self, errors);
@@ -123,8 +125,9 @@ mod tests {
             &mut core,
         );
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Face(FaceValidationError::MissingBoundary)
         );
@@ -181,8 +184,9 @@ mod tests {
             Face::new(valid.surface().clone(), region)
         };
 
-        valid.validate_and_return_first_error()?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Face(
                 FaceValidationError::InvalidInteriorWinding { .. }

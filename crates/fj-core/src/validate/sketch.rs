@@ -1,3 +1,4 @@
+use crate::geometry::Geometry;
 use crate::{objects::Cycle, storage::Handle};
 use crate::{objects::Sketch, validate_references};
 use fj_math::Winding;
@@ -12,6 +13,7 @@ impl Validate for Sketch {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         SketchValidationError::check_object_references(self, config, errors);
         SketchValidationError::check_exterior_cycles(self, config, errors);
@@ -130,7 +132,7 @@ mod tests {
         let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
             .insert(&mut core);
         let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
         let invalid_sketch = Sketch::new(vec![
@@ -138,6 +140,7 @@ mod tests {
             Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
         ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
                 ReferenceCountError::Cycle { references: _ }
@@ -157,7 +160,7 @@ mod tests {
         )
         .insert(&mut core);
         let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let exterior = region.exterior();
         let cloned_edges: Vec<_> =
@@ -169,6 +172,7 @@ mod tests {
                 Region::new(exterior.clone(), vec![interior]).insert(&mut core)
             ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
                 ReferenceCountError::HalfEdge { references: _ }
@@ -190,7 +194,7 @@ mod tests {
             Sketch::new(vec![
                 Region::new(valid_exterior.clone(), vec![]).insert(&mut core)
             ]);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_outer_circle = HalfEdge::from_sibling(
             &valid_outer_circle,
@@ -204,6 +208,7 @@ mod tests {
                 Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
             ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(
                 SketchValidationError::ClockwiseExteriorCycle { cycle: _ }
@@ -235,7 +240,7 @@ mod tests {
             vec![valid_interior],
         )
         .insert(&mut core)]);
-        valid_sketch.validate_and_return_first_error()?;
+        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_interior =
             Cycle::new(vec![inner_circle.clone()]).insert(&mut core);
@@ -245,6 +250,7 @@ mod tests {
         )
         .insert(&mut core)]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(
                 SketchValidationError::CounterClockwiseInteriorCycle {

@@ -1,6 +1,7 @@
 use std::iter::repeat;
 
 use crate::{
+    geometry::Geometry,
     objects::{Solid, Vertex},
     storage::Handle,
     validate_references,
@@ -17,8 +18,9 @@ impl Validate for Solid {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        geometry: &Geometry,
     ) {
-        SolidValidationError::check_vertices(self, config, errors);
+        SolidValidationError::check_vertices(self, geometry, config, errors);
         SolidValidationError::check_object_references(self, config, errors);
     }
 }
@@ -74,6 +76,7 @@ pub enum SolidValidationError {
 impl SolidValidationError {
     fn check_vertices(
         solid: &Solid,
+        geometry: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -85,7 +88,7 @@ impl SolidValidationError {
                 face.region()
                     .all_cycles()
                     .flat_map(|cycle| cycle.half_edges().iter().cloned())
-                    .zip(repeat(face.surface().geometry()))
+                    .zip(repeat(geometry.of_surface(face.surface())))
             })
             .map(|(h, s)| {
                 (
@@ -225,6 +228,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Face { references: _ }
@@ -232,7 +236,7 @@ mod tests {
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error()?;
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -277,6 +281,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Region { references: _ }
@@ -284,7 +289,7 @@ mod tests {
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error()?;
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -326,6 +331,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Cycle { references: _ }
@@ -333,7 +339,7 @@ mod tests {
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error()?;
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -365,6 +371,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::HalfEdge { references: _ }
@@ -372,7 +379,7 @@ mod tests {
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error()?;
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
