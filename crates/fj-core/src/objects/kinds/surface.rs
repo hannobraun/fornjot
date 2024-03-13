@@ -1,5 +1,5 @@
 /// A two-dimensional shape
-#[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, Default, Hash)]
 pub struct Surface {}
 
 impl Surface {
