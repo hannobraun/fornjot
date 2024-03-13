@@ -73,8 +73,7 @@ impl SweepFaceOfShell for Shell {
                 &mut cache,
                 core,
             )
-            .all_faces()
-            .collect::<Vec<_>>();
+            .all_faces();
 
         let shell = self.remove_face(&face).add_faces(faces, core);
 
