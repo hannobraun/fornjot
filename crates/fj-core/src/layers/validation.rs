@@ -1,6 +1,7 @@
 //! Layer infrastructure for [`Validation`]
 
 use crate::{
+    geometry::Geometry,
     objects::{AnyObject, Stored},
     validation::{Validation, ValidationError, ValidationErrors},
 };
@@ -15,12 +16,15 @@ impl Layer<Validation> {
 }
 
 /// Validate an object
-pub struct ValidateObject {
+pub struct ValidateObject<'r> {
     /// The object to validate
     pub object: AnyObject<Stored>,
+
+    /// Reference to `Geometry`, which is required for validation
+    pub geometry: &'r Geometry,
 }
 
-impl Command<Validation> for ValidateObject {
+impl Command<Validation> for ValidateObject<'_> {
     type Result = ();
     type Event = ValidationFailed;
 
