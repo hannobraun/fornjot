@@ -27,12 +27,11 @@ impl Command<Validation> for ValidateObject {
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
 
-        let object: AnyObject<Stored> = self.object;
-        object.validate(&state.config, &mut errors);
+        self.object.validate(&state.config, &mut errors);
 
         for err in errors {
             events.push(ValidationFailed {
-                object: object.clone(),
+                object: self.object.clone(),
                 err,
             });
         }
