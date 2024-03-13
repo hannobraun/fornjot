@@ -1,9 +1,4 @@
-use fj_math::Vector;
-
-use crate::{
-    geometry::{GlobalPath, SurfaceGeometry},
-    storage::{Handle, Store},
-};
+use crate::storage::{Handle, Store};
 
 use super::{
     Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface, Vertex,
@@ -92,30 +87,12 @@ impl Default for Surfaces {
         let mut store: Store<Surface> = Store::new();
 
         let xy_plane = store.reserve();
-        store.insert(
-            xy_plane.clone(),
-            Surface::new(SurfaceGeometry {
-                u: GlobalPath::x_axis(),
-                v: Vector::unit_y(),
-            }),
-        );
+        store.insert(xy_plane.clone(), Surface::new());
 
         let xz_plane = store.reserve();
-        store.insert(
-            xz_plane.clone(),
-            Surface::new(SurfaceGeometry {
-                u: GlobalPath::x_axis(),
-                v: Vector::unit_z(),
-            }),
-        );
+        store.insert(xz_plane.clone(), Surface::new());
         let yz_plane = store.reserve();
-        store.insert(
-            yz_plane.clone(),
-            Surface::new(SurfaceGeometry {
-                u: GlobalPath::y_axis(),
-                v: Vector::unit_z(),
-            }),
-        );
+        store.insert(yz_plane.clone(), Surface::new());
 
         Self {
             store,
