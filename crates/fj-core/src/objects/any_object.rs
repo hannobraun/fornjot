@@ -1,4 +1,5 @@
 use crate::{
+    geometry::Geometry,
     objects::{
         Curve, Cycle, Face, HalfEdge, Objects, Region, Shell, Sketch, Solid,
         Surface, Vertex,
@@ -38,6 +39,7 @@ macro_rules! any_object {
             pub fn validate(&self,
                 config: &ValidationConfig,
                 errors: &mut Vec<ValidationError>,
+                _: &Geometry,
             ) {
                 match self {
                     $(

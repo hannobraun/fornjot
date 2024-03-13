@@ -30,7 +30,8 @@ impl Command<Validation> for ValidateObject<'_> {
 
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
-        self.object.validate(&state.config, &mut errors);
+        self.object
+            .validate(&state.config, &mut errors, self.geometry);
 
         for err in errors {
             events.push(ValidationFailed {
