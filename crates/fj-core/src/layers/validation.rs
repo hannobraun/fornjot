@@ -5,7 +5,7 @@ use crate::{
     validation::{Validation, ValidationError, ValidationErrors},
 };
 
-use super::{objects::InsertObject, Command, Event, Layer};
+use super::{Command, Event, Layer};
 
 impl Layer<Validation> {
     /// Take all errors stored in the validation layer
@@ -14,19 +14,23 @@ impl Layer<Validation> {
     }
 }
 
-impl Command<Validation> for InsertObject {
+/// Validate an object
+pub struct ValidateObject {
+    /// The object to validate
+    pub object: AnyObject<Stored>,
+}
+
+impl Command<Validation> for ValidateObject {
     type Result = ();
     type Event = ValidationFailed;
 
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
-
-        let object: AnyObject<Stored> = self.object.into();
-        object.validate(&state.config, &mut errors);
+        self.object.validate(&state.config, &mut errors);
 
         for err in errors {
             events.push(ValidationFailed {
-                object: object.clone(),
+                object: self.object.clone(),
                 err,
             });
         }
