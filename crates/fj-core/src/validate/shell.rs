@@ -24,7 +24,9 @@ impl Validate for Shell {
             self, geometry, config, errors,
         );
         ShellValidationError::check_half_edge_pairs(self, errors);
-        ShellValidationError::check_half_edge_coincidence(self, config, errors);
+        ShellValidationError::check_half_edge_coincidence(
+            self, geometry, config, errors,
+        );
     }
 }
 
@@ -212,6 +214,7 @@ impl ShellValidationError {
     /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
+        _: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
