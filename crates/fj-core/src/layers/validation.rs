@@ -26,7 +26,6 @@ impl Command<Validation> for ValidateObject {
 
     fn decide(self, state: &Validation, events: &mut Vec<Self::Event>) {
         let mut errors = Vec::new();
-
         self.object.validate(&state.config, &mut errors);
 
         for err in errors {
