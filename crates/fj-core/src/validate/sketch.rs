@@ -161,7 +161,7 @@ mod tests {
 
         let exterior = region.exterior();
         let cloned_edges: Vec<_> =
-            exterior.half_edges().iter().map(|e| e.clone()).collect();
+            exterior.half_edges().iter().cloned().collect();
         let interior = Cycle::new(cloned_edges).insert(&mut core);
 
         let invalid_sketch =
