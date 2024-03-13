@@ -18,9 +18,11 @@ impl Validate for Shell {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
-        ShellValidationError::check_curve_coordinates(self, config, errors);
+        ShellValidationError::check_curve_coordinates(
+            self, geometry, config, errors,
+        );
         ShellValidationError::check_half_edge_pairs(self, errors);
         ShellValidationError::check_half_edge_coincidence(self, config, errors);
     }
@@ -76,6 +78,7 @@ impl ShellValidationError {
     /// Check that local curve definitions that refer to the same curve match
     fn check_curve_coordinates(
         shell: &Shell,
+        _: &Geometry,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
