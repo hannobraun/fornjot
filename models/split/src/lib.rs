@@ -21,7 +21,9 @@ pub fn model(size: f64, split_pos: f64, core: &mut fj::core::Core) -> Solid {
 
             let (shell, [face, _]) = shell.split_face(face, line, core);
 
-            [shell.sweep_face_of_shell(face, [0., 0., -size / 2.], core)]
+            [shell
+                .sweep_face_of_shell(face, [0., 0., -size / 2.], core)
+                .shell]
         },
         core,
     )

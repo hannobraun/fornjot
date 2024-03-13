@@ -119,6 +119,7 @@ fn sweep_cycle(
 /// The result of sweeping a [`Region`]
 ///
 /// See [`SweepRegion`].
+#[derive(Clone)]
 pub struct SweptRegion {
     /// The side faces created by the sweep
     pub side_faces: Vec<Face>,

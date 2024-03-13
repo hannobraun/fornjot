@@ -37,7 +37,7 @@ pub trait SweepFaceOfShell {
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
         core: &mut Core,
-    ) -> Self;
+    ) -> ShellExtendedBySweep;
 }
 
 impl SweepFaceOfShell for Shell {
@@ -46,7 +46,7 @@ impl SweepFaceOfShell for Shell {
         face: Handle<Face>,
         path: impl Into<Vector<3>>,
         core: &mut Core,
-    ) -> Self {
+    ) -> ShellExtendedBySweep {
         let path = path.into();
 
         if !face.region().interiors().is_empty() {
@@ -65,17 +65,36 @@ impl SweepFaceOfShell for Shell {
             .insert(core)
             .derive_from(face.region().exterior(), core);
         let region = Region::new(exterior, []);
-        let faces = region
-            .sweep_region(
-                face.surface(),
-                face.region().get_color(core),
-                path,
-                &mut cache,
-                core,
-            )
-            .all_faces()
-            .collect::<Vec<_>>();
+        let swept_region = region.sweep_region(
+            face.surface(),
+            face.region().get_color(core),
+            path,
+            &mut cache,
+            core,
+        );
 
-        self.remove_face(&face).add_faces(faces, core)
+        let shell = self
+            .remove_face(&face)
+            .add_faces(swept_region.clone().all_faces(), core);
+
+        ShellExtendedBySweep {
+            shell,
+            side_faces: swept_region.side_faces,
+            top_face: swept_region.top_face,
+        }
     }
+}
+
+/// The result of sweeping a [`Face`] of a [`Shell`]
+///
+/// See [`SweepFaceOfShell`].
+pub struct ShellExtendedBySweep {
+    /// The resulting shell after the sweep
+    pub shell: Shell,
+
+    /// The side faces created by the sweep
+    pub side_faces: Vec<Face>,
+
+    /// The top face created by the sweep
+    pub top_face: Face,
 }

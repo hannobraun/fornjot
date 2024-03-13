@@ -18,7 +18,7 @@ pub use self::{
     half_edge::SweepHalfEdge,
     path::SweepSurfacePath,
     region::{SweepRegion, SweptRegion},
-    shell_face::SweepFaceOfShell,
+    shell_face::{ShellExtendedBySweep, SweepFaceOfShell},
     sketch::SweepSketch,
     vertex::SweepVertex,
 };
