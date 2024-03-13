@@ -1,6 +1,7 @@
 use fj_math::Winding;
 
 use crate::{
+    geometry::Geometry,
     objects::Face,
     validation::{ValidationConfig, ValidationError},
 };
@@ -12,6 +13,7 @@ impl Validate for Face {
         &self,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         FaceValidationError::check_boundary(self, errors);
         FaceValidationError::check_interior_winding(self, errors);

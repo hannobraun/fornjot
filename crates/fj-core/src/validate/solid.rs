@@ -1,6 +1,7 @@
 use std::iter::repeat;
 
 use crate::{
+    geometry::Geometry,
     objects::{Solid, Vertex},
     storage::Handle,
     validate_references,
@@ -17,6 +18,7 @@ impl Validate for Solid {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         SolidValidationError::check_vertices(self, config, errors);
         SolidValidationError::check_object_references(self, config, errors);

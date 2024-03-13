@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, fmt};
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, SurfaceGeometry},
+    geometry::{CurveBoundary, Geometry, SurfaceGeometry},
     objects::{Curve, HalfEdge, Shell, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
@@ -18,6 +18,7 @@ impl Validate for Shell {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         ShellValidationError::check_curve_coordinates(self, config, errors);
         ShellValidationError::check_half_edge_pairs(self, errors);

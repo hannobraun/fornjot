@@ -39,11 +39,15 @@ macro_rules! any_object {
             pub fn validate(&self,
                 config: &ValidationConfig,
                 errors: &mut Vec<ValidationError>,
-                _: &Geometry,
+                geometry: &Geometry,
             ) {
                 match self {
                     $(
-                        Self::$ty(object) => object.validate(config, errors),
+                        Self::$ty(object) => object.validate(
+                            config,
+                            errors,
+                            geometry,
+                        ),
                     )*
                 }
             }

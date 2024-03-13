@@ -1,3 +1,4 @@
+use crate::geometry::Geometry;
 use crate::{objects::Cycle, storage::Handle};
 use crate::{objects::Sketch, validate_references};
 use fj_math::Winding;
@@ -12,6 +13,7 @@ impl Validate for Sketch {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
+        _: &Geometry,
     ) {
         SketchValidationError::check_object_references(self, config, errors);
         SketchValidationError::check_exterior_cycles(self, config, errors);
@@ -206,6 +208,7 @@ mod tests {
                 Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
             ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(
                 SketchValidationError::ClockwiseExteriorCycle { cycle: _ }
@@ -247,6 +250,7 @@ mod tests {
         )
         .insert(&mut core)]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(
                 SketchValidationError::CounterClockwiseInteriorCycle {
