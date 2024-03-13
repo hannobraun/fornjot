@@ -65,17 +65,17 @@ impl SweepFaceOfShell for Shell {
             .insert(core)
             .derive_from(face.region().exterior(), core);
         let region = Region::new(exterior, []);
-        let faces = region
-            .sweep_region(
-                face.surface(),
-                face.region().get_color(core),
-                path,
-                &mut cache,
-                core,
-            )
-            .all_faces();
+        let swept_region = region.sweep_region(
+            face.surface(),
+            face.region().get_color(core),
+            path,
+            &mut cache,
+            core,
+        );
 
-        let shell = self.remove_face(&face).add_faces(faces, core);
+        let shell = self
+            .remove_face(&face)
+            .add_faces(swept_region.all_faces(), core);
 
         ShellExtendedBySweep { shell }
     }
