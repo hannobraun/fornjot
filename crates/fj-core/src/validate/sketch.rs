@@ -138,6 +138,7 @@ mod tests {
             Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
         ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
                 ReferenceCountError::Cycle { references: _ }
@@ -169,6 +170,7 @@ mod tests {
                 Region::new(exterior.clone(), vec![interior]).insert(&mut core)
             ]);
         assert_contains_err!(
+            core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
                 ReferenceCountError::HalfEdge { references: _ }

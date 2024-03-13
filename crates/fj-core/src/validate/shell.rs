@@ -445,6 +445,7 @@ mod tests {
             .shell
             .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::CurveCoordinateSystemMismatch(..)
@@ -468,6 +469,7 @@ mod tests {
             .shell
             .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::HalfEdgeHasNoSibling { .. }
@@ -516,6 +518,7 @@ mod tests {
             .shell
             .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Shell(
                 ShellValidationError::CoincidentHalfEdgesAreNotSiblings { .. }

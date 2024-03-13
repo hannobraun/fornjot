@@ -125,6 +125,7 @@ mod tests {
 
         valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Face(FaceValidationError::MissingBoundary)
         );
@@ -183,6 +184,7 @@ mod tests {
 
         valid.validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
+            core,
             invalid,
             ValidationError::Face(
                 FaceValidationError::InvalidInteriorWinding { .. }

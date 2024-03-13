@@ -225,6 +225,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Face { references: _ }
@@ -277,6 +278,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Region { references: _ }
@@ -326,6 +328,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::Cycle { references: _ }
@@ -365,6 +368,7 @@ mod tests {
         .insert(&mut core);
 
         assert_contains_err!(
+            core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
                 ReferenceCountError::HalfEdge { references: _ }
