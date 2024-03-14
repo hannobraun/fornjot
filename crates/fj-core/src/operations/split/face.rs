@@ -111,6 +111,7 @@ impl SplitFace for Shell {
         let dividing_half_edge_c_to_b = HalfEdge::from_sibling(
             &dividing_half_edge_a_to_d,
             d.start_vertex().clone(),
+            core,
         );
 
         let mut half_edges_of_face_starting_at_b =

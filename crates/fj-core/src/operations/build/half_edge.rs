@@ -31,13 +31,15 @@ pub trait BuildHalfEdge {
     fn from_sibling(
         sibling: &Handle<HalfEdge>,
         start_vertex: Handle<Vertex>,
-    ) -> HalfEdge {
+        core: &mut Core,
+    ) -> Handle<HalfEdge> {
         HalfEdge::new(
             sibling.path(),
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,
         )
+        .insert(core)
     }
 
     /// Create an arc

@@ -198,8 +198,8 @@ mod tests {
         let invalid_outer_circle = HalfEdge::from_sibling(
             &valid_outer_circle,
             Vertex::new().insert(&mut core),
-        )
-        .insert(&mut core);
+            &mut core,
+        );
         let invalid_exterior =
             Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
         let invalid_sketch =
@@ -226,8 +226,8 @@ mod tests {
         let cw_inner_circle = HalfEdge::from_sibling(
             &inner_circle,
             Vertex::new().insert(&mut core),
-        )
-        .insert(&mut core);
+            &mut core,
+        );
         let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
 
         let valid_interior =
