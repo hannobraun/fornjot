@@ -52,8 +52,10 @@ impl UpdateHalfEdge for HalfEdge {
         update: impl FnOnce(SurfacePath) -> SurfacePath,
         core: &mut Core,
     ) -> Handle<Self> {
+        let path = update(self.path());
+
         HalfEdge::new(
-            update(self.path()),
+            path,
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
