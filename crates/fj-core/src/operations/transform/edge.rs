@@ -1,10 +1,12 @@
 use fj_math::Transform;
 
-use crate::{objects::HalfEdge, Core};
+use crate::{
+    objects::HalfEdge, operations::insert::Insert, storage::Handle, Core,
+};
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for HalfEdge {
+impl TransformObject for Handle<HalfEdge> {
     fn transform_with_cache(
         &self,
         transform: &Transform,
@@ -24,6 +26,6 @@ impl TransformObject for HalfEdge {
             .clone()
             .transform_with_cache(transform, core, cache);
 
-        Self::new(path, boundary, curve, start_vertex)
+        HalfEdge::new(path, boundary, curve, start_vertex).insert(core)
     }
 }

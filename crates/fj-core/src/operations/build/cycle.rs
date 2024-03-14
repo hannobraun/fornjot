@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{
     objects::{Cycle, HalfEdge},
-    operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
+    operations::{build::BuildHalfEdge, update::UpdateCycle},
     Core,
 };
 
@@ -40,7 +40,7 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, core).insert(core)
+                HalfEdge::line_segment([start, end], None, core)
             });
 
         Cycle::new(edges)

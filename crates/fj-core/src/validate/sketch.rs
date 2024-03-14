@@ -186,8 +186,7 @@ mod tests {
     fn should_find_clockwise_exterior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let valid_outer_circle =
-            HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core);
+        let valid_outer_circle = HalfEdge::circle([0., 0.], 1., &mut core);
         let valid_exterior =
             Cycle::new(vec![valid_outer_circle.clone()]).insert(&mut core);
         let valid_sketch =
@@ -199,8 +198,8 @@ mod tests {
         let invalid_outer_circle = HalfEdge::from_sibling(
             &valid_outer_circle,
             Vertex::new().insert(&mut core),
-        )
-        .insert(&mut core);
+            &mut core,
+        );
         let invalid_exterior =
             Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
         let invalid_sketch =
@@ -222,15 +221,13 @@ mod tests {
     fn should_find_counterclockwise_interior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let outer_circle =
-            HalfEdge::circle([0., 0.], 2., &mut core).insert(&mut core);
-        let inner_circle =
-            HalfEdge::circle([0., 0.], 1., &mut core).insert(&mut core);
+        let outer_circle = HalfEdge::circle([0., 0.], 2., &mut core);
+        let inner_circle = HalfEdge::circle([0., 0.], 1., &mut core);
         let cw_inner_circle = HalfEdge::from_sibling(
             &inner_circle,
             Vertex::new().insert(&mut core),
-        )
-        .insert(&mut core);
+            &mut core,
+        );
         let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
 
         let valid_interior =

@@ -10,7 +10,6 @@ use crate::{
 
 use super::{
     build::{BuildCycle, BuildHalfEdge, BuildRegion},
-    insert::Insert,
     join::JoinCycle,
     sweep::{SweepCache, SweepRegion},
     update::{UpdateCycle, UpdateFace, UpdateRegion, UpdateShell},
@@ -44,8 +43,7 @@ impl AddHole for Shell {
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Self {
-        let entry =
-            HalfEdge::circle(location.position, radius, core).insert(core);
+        let entry = HalfEdge::circle(location.position, radius, core);
         let hole = Region::empty(core)
             .update_exterior(
                 |_, core| Cycle::empty().add_half_edges([entry.clone()], core),
@@ -94,8 +92,7 @@ impl AddHole for Shell {
     ) -> Self {
         let radius = radius.into();
 
-        let entry = HalfEdge::circle(entry_location.position, radius, core)
-            .insert(core);
+        let entry = HalfEdge::circle(entry_location.position, radius, core);
 
         let path = {
             let point = |location: &HoleLocation| {

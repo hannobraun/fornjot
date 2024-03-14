@@ -1,9 +1,14 @@
-use crate::{objects::HalfEdge, Core};
+use crate::{
+    objects::HalfEdge,
+    operations::{derive::DeriveFrom, insert::Insert},
+    storage::Handle,
+    Core,
+};
 
 use super::ReverseCurveCoordinateSystems;
 
-impl ReverseCurveCoordinateSystems for HalfEdge {
-    fn reverse_curve_coordinate_systems(&self, _: &mut Core) -> Self {
+impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
+    fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self {
         let path = self.path().reverse();
         let boundary = self.boundary().reverse();
 
@@ -13,5 +18,7 @@ impl ReverseCurveCoordinateSystems for HalfEdge {
             self.curve().clone(),
             self.start_vertex().clone(),
         )
+        .insert(core)
+        .derive_from(self, core)
     }
 }

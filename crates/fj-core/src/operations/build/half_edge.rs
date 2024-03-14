@@ -29,15 +29,17 @@ pub trait BuildHalfEdge {
 
     /// Create a half-edge from its sibling
     fn from_sibling(
-        sibling: &HalfEdge,
+        sibling: &Handle<HalfEdge>,
         start_vertex: Handle<Vertex>,
-    ) -> HalfEdge {
+        core: &mut Core,
+    ) -> Handle<HalfEdge> {
         HalfEdge::new(
             sibling.path(),
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,
         )
+        .insert(core)
     }
 
     /// Create an arc
@@ -50,7 +52,7 @@ pub trait BuildHalfEdge {
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
         core: &mut Core,
-    ) -> HalfEdge {
+    ) -> Handle<HalfEdge> {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -63,7 +65,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, core)
+        HalfEdge::unjoined(path, boundary, core).insert(core)
     }
 
     /// Create a circle
@@ -71,12 +73,12 @@ pub trait BuildHalfEdge {
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
         core: &mut Core,
-    ) -> HalfEdge {
+    ) -> Handle<HalfEdge> {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, core)
+        HalfEdge::unjoined(path, boundary, core).insert(core)
     }
 
     /// Create a line segment
@@ -84,14 +86,14 @@ pub trait BuildHalfEdge {
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
         core: &mut Core,
-    ) -> HalfEdge {
+    ) -> Handle<HalfEdge> {
         let boundary =
             boundary.unwrap_or_else(|| [[0.], [1.]].map(Point::from));
         let path = SurfacePath::line_from_points_with_coords(
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, core)
+        HalfEdge::unjoined(path, boundary, core).insert(core)
     }
 }
 
