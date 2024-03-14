@@ -1,4 +1,5 @@
 use crate::{
+    geometry::HalfEdgeGeometry,
     objects::{Cycle, HalfEdge},
     operations::{derive::DeriveFrom, insert::Insert},
     Core,
@@ -12,14 +13,23 @@ impl Reverse for Cycle {
             .half_edges()
             .pairs()
             .map(|(current, next)| {
-                HalfEdge::new(
+                let half_edge = HalfEdge::new(
                     current.path(),
                     current.boundary().reverse(),
                     current.curve().clone(),
                     next.start_vertex().clone(),
                 )
                 .insert(core)
-                .derive_from(current, core)
+                .derive_from(current, core);
+
+                core.layers.geometry.define_half_edge(
+                    half_edge.clone(),
+                    HalfEdgeGeometry {
+                        path: current.path(),
+                    },
+                );
+
+                half_edge
             })
             .collect::<Vec<_>>();
 

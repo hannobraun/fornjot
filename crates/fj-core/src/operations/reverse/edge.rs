@@ -1,4 +1,5 @@
 use crate::{
+    geometry::HalfEdgeGeometry,
     objects::HalfEdge,
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
@@ -12,13 +13,19 @@ impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
         let path = self.path().reverse();
         let boundary = self.boundary().reverse();
 
-        HalfEdge::new(
+        let half_edge = HalfEdge::new(
             path,
             boundary,
             self.curve().clone(),
             self.start_vertex().clone(),
         )
         .insert(core)
-        .derive_from(self, core)
+        .derive_from(self, core);
+
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 }

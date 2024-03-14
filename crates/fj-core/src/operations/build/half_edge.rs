@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, SurfacePath},
+    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
     operations::insert::Insert,
     storage::Handle,
@@ -33,13 +33,22 @@ pub trait BuildHalfEdge {
         start_vertex: Handle<Vertex>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        HalfEdge::new(
+        let half_edge = HalfEdge::new(
             sibling.path(),
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,
         )
-        .insert(core)
+        .insert(core);
+
+        core.layers.geometry.define_half_edge(
+            half_edge.clone(),
+            HalfEdgeGeometry {
+                path: sibling.path(),
+            },
+        );
+
+        half_edge
     }
 
     /// Create an arc
@@ -65,7 +74,12 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, core).insert(core)
+        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 
     /// Create a circle
@@ -78,7 +92,12 @@ pub trait BuildHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        HalfEdge::unjoined(path, boundary, core).insert(core)
+        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 
     /// Create a line segment
@@ -93,7 +112,12 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, core).insert(core)
+        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 }
 
