@@ -429,9 +429,12 @@ mod tests {
                             |cycle, core| {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge, _| {
+                                    |edge, core| {
                                         [edge
-                                            .update_path(|path| path.reverse())
+                                            .update_path(
+                                                |path| path.reverse(),
+                                                core,
+                                            )
                                             .update_boundary(|boundary| {
                                                 boundary.reverse()
                                             })]

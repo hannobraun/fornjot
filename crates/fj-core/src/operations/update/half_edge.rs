@@ -9,13 +9,14 @@ use crate::{
 };
 
 /// Update a [`HalfEdge`]
-pub trait UpdateHalfEdge {
+pub trait UpdateHalfEdge: Sized {
     /// Update the path of the edge
     #[must_use]
     fn update_path(
         &self,
         update: impl FnOnce(SurfacePath) -> SurfacePath,
-    ) -> Self;
+        core: &mut Core,
+    ) -> Handle<Self>;
 
     /// Update the boundary of the edge
     #[must_use]
@@ -49,13 +50,15 @@ impl UpdateHalfEdge for HalfEdge {
     fn update_path(
         &self,
         update: impl FnOnce(SurfacePath) -> SurfacePath,
-    ) -> Self {
+        core: &mut Core,
+    ) -> Handle<Self> {
         HalfEdge::new(
             update(self.path()),
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
         )
+        .insert(core)
     }
 
     fn update_boundary(
