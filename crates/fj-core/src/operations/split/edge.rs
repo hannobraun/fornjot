@@ -48,10 +48,12 @@ impl SplitEdge for Shell {
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
-            let sibling_b = sibling_b.update_start_vertex(
-                |_, _| half_edge_b.start_vertex().clone(),
-                core,
-            );
+            let sibling_b = sibling_b
+                .update_start_vertex(
+                    |_, _| half_edge_b.start_vertex().clone(),
+                    core,
+                )
+                .insert(core);
             [sibling_a, sibling_b].map(|half_edge| {
                 half_edge.insert(core).derive_from(&sibling, core)
             })

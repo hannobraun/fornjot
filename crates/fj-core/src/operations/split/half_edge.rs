@@ -3,6 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Vertex},
     operations::insert::Insert,
+    storage::Handle,
     Core,
 };
 
@@ -28,7 +29,7 @@ pub trait SplitHalfEdge {
         &self,
         point: impl Into<Point<1>>,
         core: &mut Core,
-    ) -> [HalfEdge; 2];
+    ) -> [Handle<HalfEdge>; 2];
 }
 
 impl SplitHalfEdge for HalfEdge {
@@ -36,7 +37,7 @@ impl SplitHalfEdge for HalfEdge {
         &self,
         point: impl Into<Point<1>>,
         core: &mut Core,
-    ) -> [HalfEdge; 2] {
+    ) -> [Handle<HalfEdge>; 2] {
         let point = point.into();
 
         let [start, end] = self.boundary().inner;
@@ -46,13 +47,15 @@ impl SplitHalfEdge for HalfEdge {
             [start, point],
             self.curve().clone(),
             self.start_vertex().clone(),
-        );
+        )
+        .insert(core);
         let b = HalfEdge::new(
             self.path(),
             [point, end],
             self.curve().clone(),
             Vertex::new().insert(core),
-        );
+        )
+        .insert(core);
 
         [a, b]
     }
