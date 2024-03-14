@@ -3,14 +3,15 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{Objects, Surface},
+    objects::{HalfEdge, Objects, Surface},
     storage::{Handle, HandleWrapper},
 };
 
-use super::{GlobalPath, SurfaceGeometry};
+use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
+    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeometry>,
     surface: BTreeMap<HandleWrapper<Surface>, SurfaceGeometry>,
 
     xy_plane: Handle<Surface>,
@@ -22,6 +23,7 @@ impl Geometry {
     /// Create a new instance of `Geometry`
     pub fn new(objects: &Objects) -> Self {
         let mut self_ = Self {
+            half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
 
             xy_plane: objects.surfaces.xy_plane(),
@@ -60,6 +62,21 @@ impl Geometry {
         geometry: SurfaceGeometry,
     ) {
         self.surface.insert(surface.into(), geometry);
+    }
+
+    /// # Access the geometry of the provided half-edge
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the geometry of the half-edge is not defined.
+    pub fn of_half_edge(
+        &self,
+        half_edge: &Handle<HalfEdge>,
+    ) -> HalfEdgeGeometry {
+        self.half_edge
+            .get(half_edge)
+            .copied()
+            .expect("Expected geometry of half-edge to be defined")
     }
 
     /// # Access the geometry of the provided surface
