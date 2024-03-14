@@ -59,7 +59,7 @@ impl Geometry {
         surface: Handle<Surface>,
         geometry: SurfaceGeometry,
     ) {
-        self.surface.insert(surface.clone().into(), geometry);
+        self.surface.insert(surface.into(), geometry);
     }
 
     /// # Access the geometry of the provided surface
