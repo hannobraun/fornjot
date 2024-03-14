@@ -29,7 +29,7 @@ pub trait BuildHalfEdge {
 
     /// Create a half-edge from its sibling
     fn from_sibling(
-        sibling: &HalfEdge,
+        sibling: &Handle<HalfEdge>,
         start_vertex: Handle<Vertex>,
     ) -> HalfEdge {
         HalfEdge::new(
