@@ -58,7 +58,7 @@ impl FaceValidationError {
 
     fn check_interior_winding(
         face: &Face,
-        _: &Geometry,
+        geometry: &Geometry,
         errors: &mut Vec<ValidationError>,
     ) {
         if face.region().exterior().half_edges().is_empty() {
@@ -67,7 +67,7 @@ impl FaceValidationError {
             return;
         }
 
-        let exterior_winding = face.region().exterior().winding();
+        let exterior_winding = face.region().exterior().winding(geometry);
 
         for interior in face.region().interiors() {
             if interior.half_edges().is_empty() {
@@ -75,7 +75,7 @@ impl FaceValidationError {
                 // like a job for a different validation check.
                 continue;
             }
-            let interior_winding = interior.winding();
+            let interior_winding = interior.winding(geometry);
 
             if exterior_winding == interior_winding {
                 errors.push(

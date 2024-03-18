@@ -65,8 +65,8 @@ impl Face {
     /// Faces *do* have an orientation, meaning they have definite front and
     /// back sides. The front side is the side, where the face's exterior cycle
     /// is wound counter-clockwise.
-    pub fn coord_handedness(&self, _: &Geometry) -> Handedness {
-        match self.region.exterior().winding() {
+    pub fn coord_handedness(&self, geometry: &Geometry) -> Handedness {
+        match self.region.exterior().winding(geometry) {
             Winding::Ccw => Handedness::RightHanded,
             Winding::Cw => Handedness::LeftHanded,
         }
