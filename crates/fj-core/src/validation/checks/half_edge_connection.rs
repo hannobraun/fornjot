@@ -1,6 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
+    geometry::Geometry,
     objects::{Cycle, HalfEdge},
     storage::Handle,
     validation::{validation_check::ValidationCheck, ValidationConfig},
@@ -40,6 +41,7 @@ pub struct AdjacentHalfEdgesNotConnected {
 impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
     fn check(
         object: &Cycle,
+        _: &Geometry,
         config: &ValidationConfig,
     ) -> impl Iterator<Item = Self> {
         object.half_edges().pairs().filter_map(|(first, second)| {
@@ -87,7 +89,10 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
-        AdjacentHalfEdgesNotConnected::check_and_return_first_error(&valid)?;
+        AdjacentHalfEdgesNotConnected::check_and_return_first_error(
+            &valid,
+            &core.layers.geometry,
+        )?;
 
         let invalid = valid.update_half_edge(
             valid.half_edges().first(),
@@ -96,7 +101,10 @@ mod tests {
             },
             &mut core,
         );
-        AdjacentHalfEdgesNotConnected::check_and_expect_one_error(&invalid);
+        AdjacentHalfEdgesNotConnected::check_and_expect_one_error(
+            &invalid,
+            &core.layers.geometry,
+        );
 
         Ok(())
     }

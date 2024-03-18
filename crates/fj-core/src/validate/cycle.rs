@@ -14,10 +14,11 @@ impl Validate for Cycle {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
         errors.extend(
-            AdjacentHalfEdgesNotConnected::check(self, config).map(Into::into),
+            AdjacentHalfEdgesNotConnected::check(self, geometry, config)
+                .map(Into::into),
         );
     }
 }

@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use crate::geometry::Geometry;
+
 use super::ValidationConfig;
 
 /// Run a specific validation check on an object
@@ -10,6 +12,7 @@ pub trait ValidationCheck<T>: Sized {
     /// Run the validation check on the implementing object
     fn check(
         object: &T,
+        geometry: &Geometry,
         config: &ValidationConfig,
     ) -> impl Iterator<Item = Self>;
 
@@ -17,9 +20,12 @@ pub trait ValidationCheck<T>: Sized {
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
-    fn check_and_return_first_error(object: &T) -> Result<(), Self> {
+    fn check_and_return_first_error(
+        object: &T,
+        geometry: &Geometry,
+    ) -> Result<(), Self> {
         let config = ValidationConfig::default();
-        let mut errors = Self::check(object, &config);
+        let mut errors = Self::check(object, geometry, &config);
 
         if let Some(err) = errors.next() {
             return Err(err);
@@ -32,12 +38,12 @@ pub trait ValidationCheck<T>: Sized {
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
-    fn check_and_expect_one_error(object: &T) -> Self
+    fn check_and_expect_one_error(object: &T, geometry: &Geometry) -> Self
     where
         Self: Display,
     {
         let config = ValidationConfig::default();
-        let mut errors = Self::check(object, &config).peekable();
+        let mut errors = Self::check(object, geometry, &config).peekable();
 
         let err = errors
             .next()
