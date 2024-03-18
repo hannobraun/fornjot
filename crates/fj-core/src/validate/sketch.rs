@@ -19,7 +19,9 @@ impl Validate for Sketch {
         SketchValidationError::check_exterior_cycles(
             self, geometry, config, errors,
         );
-        SketchValidationError::check_interior_cycles(self, config, errors);
+        SketchValidationError::check_interior_cycles(
+            self, geometry, config, errors,
+        );
     }
 }
 
@@ -94,6 +96,7 @@ impl SketchValidationError {
 
     fn check_interior_cycles(
         sketch: &Sketch,
+        _: &Geometry,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
