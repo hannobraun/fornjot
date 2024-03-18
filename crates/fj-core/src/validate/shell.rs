@@ -403,6 +403,7 @@ mod tests {
         objects::{Curve, Shell},
         operations::{
             build::BuildShell,
+            geometry::UpdateHalfEdgeGeometry,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
                 UpdateShell,
