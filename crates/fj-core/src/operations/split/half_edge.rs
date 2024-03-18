@@ -33,7 +33,7 @@ pub trait SplitHalfEdge {
     ) -> [Handle<HalfEdge>; 2];
 }
 
-impl SplitHalfEdge for HalfEdge {
+impl SplitHalfEdge for Handle<HalfEdge> {
     fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
