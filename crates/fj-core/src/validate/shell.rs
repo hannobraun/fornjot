@@ -436,9 +436,10 @@ mod tests {
                                                 |path| path.reverse(),
                                                 core,
                                             )
-                                            .update_boundary(|boundary| {
-                                                boundary.reverse()
-                                            })]
+                                            .update_boundary(
+                                                |boundary| boundary.reverse(),
+                                                core,
+                                            )]
                                     },
                                     core,
                                 )
