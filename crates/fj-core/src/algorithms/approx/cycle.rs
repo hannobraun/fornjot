@@ -29,8 +29,8 @@ impl Approx for (&Cycle, &SurfaceGeometry) {
         let half_edges = cycle
             .half_edges()
             .iter()
-            .map(|edge| {
-                (edge.deref(), surface)
+            .map(|half_edge| {
+                (half_edge.deref(), surface)
                     .approx_with_cache(tolerance, cache, core)
             })
             .collect();
