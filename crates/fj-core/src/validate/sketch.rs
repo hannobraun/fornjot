@@ -13,10 +13,12 @@ impl Validate for Sketch {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
         SketchValidationError::check_object_references(self, config, errors);
-        SketchValidationError::check_exterior_cycles(self, config, errors);
+        SketchValidationError::check_exterior_cycles(
+            self, geometry, config, errors,
+        );
         SketchValidationError::check_interior_cycles(self, config, errors);
     }
 }
@@ -74,6 +76,7 @@ impl SketchValidationError {
 
     fn check_exterior_cycles(
         sketch: &Sketch,
+        _: &Geometry,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
