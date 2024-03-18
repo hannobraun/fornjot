@@ -4,10 +4,11 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{CurveBoundary, SurfacePath},
+    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
+        insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
@@ -88,12 +89,20 @@ impl JoinCycle for Cycle {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev_half_edge, _, _), (half_edge, path, boundary))| {
-                HalfEdge::unjoined(path, boundary, core)
+                let half_edge = HalfEdge::unjoined(path, boundary, core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
                         |_, _| prev_half_edge.start_vertex().clone(),
                         core,
                     )
+                    .insert(core);
+
+                core.layers.geometry.define_half_edge(
+                    half_edge.clone(),
+                    HalfEdgeGeometry { path },
+                );
+
+                half_edge
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)

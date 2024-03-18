@@ -1,7 +1,8 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::HalfEdge, operations::insert::Insert, storage::Handle, Core,
+    geometry::HalfEdgeGeometry, objects::HalfEdge, operations::insert::Insert,
+    storage::Handle, Core,
 };
 
 use super::{TransformCache, TransformObject};
@@ -26,6 +27,13 @@ impl TransformObject for Handle<HalfEdge> {
             .clone()
             .transform_with_cache(transform, core, cache);
 
-        HalfEdge::new(path, boundary, curve, start_vertex).insert(core)
+        let half_edge =
+            HalfEdge::new(path, boundary, curve, start_vertex).insert(core);
+
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 }

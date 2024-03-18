@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, SurfacePath},
+    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
     objects::HalfEdge,
     operations::insert::Insert,
     storage::Handle,
@@ -35,13 +35,19 @@ impl UpdateHalfEdgeGeometry for Handle<HalfEdge> {
     ) -> Self {
         let path = update(self.path());
 
-        HalfEdge::new(
+        let half_edge = HalfEdge::new(
             path,
             self.boundary(),
             self.curve().clone(),
             self.start_vertex().clone(),
         )
-        .insert(core)
+        .insert(core);
+
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+
+        half_edge
     }
 
     fn update_boundary(
