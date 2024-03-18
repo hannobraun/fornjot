@@ -37,7 +37,7 @@ pub trait ValidationCheck<T>: Sized {
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
-    fn check_and_expect_one_error(object: &T) -> Self
+    fn check_and_expect_one_error(object: &T, _: &Geometry) -> Self
     where
         Self: Display,
     {

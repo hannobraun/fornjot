@@ -99,7 +99,10 @@ mod tests {
             },
             &mut core,
         );
-        AdjacentHalfEdgesNotConnected::check_and_expect_one_error(&invalid);
+        AdjacentHalfEdgesNotConnected::check_and_expect_one_error(
+            &invalid,
+            &core.layers.geometry,
+        );
 
         Ok(())
     }
