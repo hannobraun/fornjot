@@ -9,7 +9,7 @@ use crate::{
 };
 
 /// Update a [`HalfEdge`]
-pub trait UpdateHalfEdge: Sized {
+pub trait UpdateHalfEdge {
     /// Update the boundary of the edge
     #[must_use]
     fn update_boundary(
