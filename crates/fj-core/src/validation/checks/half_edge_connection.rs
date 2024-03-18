@@ -1,6 +1,7 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
+    geometry::Geometry,
     objects::{Cycle, HalfEdge},
     storage::Handle,
     validation::{validation_check::ValidationCheck, ValidationConfig},
@@ -40,6 +41,7 @@ pub struct AdjacentHalfEdgesNotConnected {
 impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
     fn check(
         object: &Cycle,
+        _: &Geometry,
         config: &ValidationConfig,
     ) -> impl Iterator<Item = Self> {
         object.half_edges().pairs().filter_map(|(first, second)| {
