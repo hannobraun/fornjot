@@ -13,10 +13,10 @@ impl Validate for Face {
         &self,
         _: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
         FaceValidationError::check_boundary(self, errors);
-        FaceValidationError::check_interior_winding(self, errors);
+        FaceValidationError::check_interior_winding(self, geometry, errors);
     }
 }
 
@@ -56,7 +56,11 @@ impl FaceValidationError {
         // checks for `Cycle` to make sure that the cycle is closed properly.
     }
 
-    fn check_interior_winding(face: &Face, errors: &mut Vec<ValidationError>) {
+    fn check_interior_winding(
+        face: &Face,
+        _: &Geometry,
+        errors: &mut Vec<ValidationError>,
+    ) {
         if face.region().exterior().half_edges().is_empty() {
             // Can't determine winding, if the cycle has no edges. Sounds like a
             // job for a different validation check.
