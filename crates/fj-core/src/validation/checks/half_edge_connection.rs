@@ -87,7 +87,10 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
-        AdjacentHalfEdgesNotConnected::check_and_return_first_error(&valid)?;
+        AdjacentHalfEdgesNotConnected::check_and_return_first_error(
+            &valid,
+            &core.layers.geometry,
+        )?;
 
         let invalid = valid.update_half_edge(
             valid.half_edges().first(),

@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use crate::geometry::Geometry;
+
 use super::ValidationConfig;
 
 /// Run a specific validation check on an object
@@ -17,7 +19,10 @@ pub trait ValidationCheck<T>: Sized {
     ///
     /// This method is designed for convenience over flexibility (it is intended
     /// for use in unit tests), and thus always uses the default configuration.
-    fn check_and_return_first_error(object: &T) -> Result<(), Self> {
+    fn check_and_return_first_error(
+        object: &T,
+        _: &Geometry,
+    ) -> Result<(), Self> {
         let config = ValidationConfig::default();
         let mut errors = Self::check(object, &config);
 
