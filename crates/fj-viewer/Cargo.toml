@@ -20,11 +20,11 @@ fj-math.workspace = true
 nalgebra = "0.32.4"
 tobj = "4.0.1"
 raw-window-handle = "0.6.0"
-thiserror = "1.0.57"
+thiserror = "1.0.58"
 tracing = "0.1.40"
 
 [dependencies.bytemuck]
-version = "1.14.3"
+version = "1.15.0"
 features = ["derive"]
 
 [dependencies.image]

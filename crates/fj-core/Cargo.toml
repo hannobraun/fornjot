@@ -20,9 +20,9 @@ itertools = "0.12.1"
 parking_lot = "0.12.0"
 robust = "1.1.0"
 spade = "2.6.0"
-thiserror = "1.0.57"
+thiserror = "1.0.58"
 type-map = "0.5.0"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-anyhow = "1.0.80"
+anyhow = "1.0.81"
