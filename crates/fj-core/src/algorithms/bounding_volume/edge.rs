@@ -7,8 +7,8 @@ use crate::{
 };
 
 impl super::BoundingVolume<2> for Handle<HalfEdge> {
-    fn aabb(&self, _: &Geometry) -> Option<Aabb<2>> {
-        match self.path() {
+    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<2>> {
+        match geometry.of_half_edge(self).path {
             SurfacePath::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the
                 // most precise, but it should do for now.
@@ -23,7 +23,10 @@ impl super::BoundingVolume<2> for Handle<HalfEdge> {
             }
             SurfacePath::Line(_) => {
                 let points = self.boundary().inner.map(|point_curve| {
-                    self.path().point_from_path_coords(point_curve)
+                    geometry
+                        .of_half_edge(self)
+                        .path
+                        .point_from_path_coords(point_curve)
                 });
 
                 Some(Aabb::<2>::from_points(points))

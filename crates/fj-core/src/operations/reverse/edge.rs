@@ -10,7 +10,7 @@ use super::ReverseCurveCoordinateSystems;
 
 impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
     fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self {
-        let path = self.path().reverse();
+        let path = core.layers.geometry.of_half_edge(self).path.reverse();
         let boundary = self.boundary().reverse();
 
         let half_edge = HalfEdge::new(

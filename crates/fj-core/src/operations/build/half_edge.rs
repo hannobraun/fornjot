@@ -34,7 +34,7 @@ pub trait BuildHalfEdge {
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let half_edge = HalfEdge::new(
-            sibling.path(),
+            core.layers.geometry.of_half_edge(sibling).path,
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,
@@ -44,7 +44,7 @@ pub trait BuildHalfEdge {
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeometry {
-                path: sibling.path(),
+                path: core.layers.geometry.of_half_edge(sibling).path,
             },
         );
 
