@@ -1,20 +1,12 @@
 //! Intersection algorithms
 
-pub mod face_point;
-pub mod ray_edge;
 pub mod ray_segment;
 
-mod curve_edge;
-mod curve_face;
 mod line_segment;
 
 use fj_math::{Point, Vector};
 
-pub use self::{
-    curve_edge::CurveEdgeIntersection,
-    curve_face::{CurveFaceIntersection, CurveFaceIntersectionInterval},
-    line_segment::LineSegmentIntersection,
-};
+pub use self::line_segment::LineSegmentIntersection;
 
 /// Compute the intersection between a tuple of objects
 ///
