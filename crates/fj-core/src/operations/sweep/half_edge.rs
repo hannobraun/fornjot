@@ -47,7 +47,7 @@ pub trait SweepHalfEdge {
     ) -> (Face, Handle<HalfEdge>);
 }
 
-impl SweepHalfEdge for HalfEdge {
+impl SweepHalfEdge for Handle<HalfEdge> {
     fn sweep_half_edge(
         &self,
         end_vertex: Handle<Vertex>,
