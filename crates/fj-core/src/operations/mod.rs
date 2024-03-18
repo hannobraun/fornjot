@@ -40,6 +40,7 @@
 
 pub mod build;
 pub mod derive;
+pub mod geometry;
 pub mod holes;
 pub mod insert;
 pub mod join;
