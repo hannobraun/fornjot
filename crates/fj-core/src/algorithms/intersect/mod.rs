@@ -1,6 +1,5 @@
 //! Intersection algorithms
 
-pub mod face_point;
 pub mod ray_edge;
 pub mod ray_segment;
 
