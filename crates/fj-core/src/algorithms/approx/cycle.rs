@@ -2,8 +2,6 @@
 //!
 //! See [`CycleApprox`].
 
-use std::ops::Deref;
-
 use fj_math::Segment;
 
 use crate::{geometry::SurfaceGeometry, objects::Cycle, Core};
@@ -30,8 +28,7 @@ impl Approx for (&Cycle, &SurfaceGeometry) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                (half_edge.deref(), surface)
-                    .approx_with_cache(tolerance, cache, core)
+                (half_edge, surface).approx_with_cache(tolerance, cache, core)
             })
             .collect();
 
