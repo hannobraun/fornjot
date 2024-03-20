@@ -129,8 +129,8 @@ impl JoinCycle for Cycle {
                 cycle
                     .update_half_edge(
                         self.half_edges().nth_circular(index),
-                        |edge, core| {
-                            [edge
+                        |half_edge, core| {
+                            [half_edge
                                 .update_curve(
                                     |_, _| edge_other.curve().clone(),
                                     core,
@@ -150,8 +150,8 @@ impl JoinCycle for Cycle {
                     )
                     .update_half_edge(
                         self.half_edges().nth_circular(index + 1),
-                        |edge, core| {
-                            [edge.update_start_vertex(
+                        |half_edge, core| {
+                            [half_edge.update_start_vertex(
                                 |_, _| edge_other.start_vertex().clone(),
                                 core,
                             )]
