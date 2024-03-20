@@ -113,7 +113,7 @@ impl SweepHalfEdge for HalfEdge {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
-                let edge = {
+                let half_edge = {
                     let half_edge = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
@@ -130,9 +130,9 @@ impl SweepHalfEdge for HalfEdge {
                     half_edge.insert(core)
                 };
 
-                exterior = exterior.add_half_edges([edge.clone()], core);
+                exterior = exterior.add_half_edges([half_edge.clone()], core);
 
-                edge
+                half_edge
             });
 
         let exterior = exterior.insert(core);
