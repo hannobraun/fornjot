@@ -430,8 +430,8 @@ mod tests {
                             |cycle, core| {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge, core| {
-                                        [edge
+                                    |half_edge, core| {
+                                        [half_edge
                                             .update_path(
                                                 |path| path.reverse(),
                                                 core,
@@ -508,8 +508,8 @@ mod tests {
                             |cycle, core| {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
-                                    |edge, core| {
-                                        [edge.update_curve(
+                                    |half_edge, core| {
+                                        [half_edge.update_curve(
                                             |_, _| Curve::new(),
                                             core,
                                         )]
