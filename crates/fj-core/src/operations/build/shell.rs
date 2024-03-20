@@ -8,6 +8,7 @@ use crate::{
     objects::{Curve, Face, HalfEdge, Shell, Surface, Vertex},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
+        geometry::UpdateHalfEdgeGeometry,
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
         join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
@@ -99,6 +100,14 @@ pub trait BuildShell {
                             half_edge
                                 .update_start_vertex(|_, _| vertex, core)
                                 .update_curve(|_, _| curve, core)
+                                .insert(core)
+                                .set_path(
+                                    core.layers
+                                        .geometry
+                                        .of_half_edge(&half_edge)
+                                        .path,
+                                    &mut core.layers.geometry,
+                                )
                         })
                 };
 
