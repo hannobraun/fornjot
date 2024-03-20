@@ -10,7 +10,7 @@ use crate::{
 
 /// Update the geometry of a [`HalfEdge`]
 pub trait UpdateHalfEdgeGeometry {
-    /// Update the path of the edge
+    /// Update the path of the half-edge
     #[must_use]
     fn update_path(
         &self,
@@ -18,7 +18,7 @@ pub trait UpdateHalfEdgeGeometry {
         core: &mut Core,
     ) -> Self;
 
-    /// Update the boundary of the edge
+    /// Update the boundary of the half-edge
     #[must_use]
     fn update_boundary(
         &self,
