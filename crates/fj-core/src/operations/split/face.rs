@@ -7,6 +7,7 @@ use crate::{
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,
+        geometry::UpdateHalfEdgeGeometry,
         insert::Insert,
         split::SplitEdge,
         update::{
@@ -101,13 +102,20 @@ impl SplitFace for Shell {
             .expect("Updated shell must contain updated face");
 
         // Build the edge that's going to divide the new faces.
-        let dividing_half_edge_a_to_d = HalfEdge::line_segment(
-            [b.start_position(), d.start_position()],
-            None,
-            core,
-        )
-        .update_start_vertex(|_, _| b.start_vertex().clone(), core)
-        .insert(core);
+        let dividing_half_edge_a_to_d = {
+            let half_edge = HalfEdge::line_segment(
+                [b.start_position(), d.start_position()],
+                None,
+                core,
+            );
+            half_edge
+                .update_start_vertex(|_, _| b.start_vertex().clone(), core)
+                .insert(core)
+                .set_path(
+                    core.layers.geometry.of_half_edge(&half_edge).path,
+                    &mut core.layers.geometry,
+                )
+        };
         let dividing_half_edge_c_to_b = HalfEdge::from_sibling(
             &dividing_half_edge_a_to_d,
             d.start_vertex().clone(),

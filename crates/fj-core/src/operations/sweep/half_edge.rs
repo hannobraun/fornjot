@@ -6,6 +6,7 @@ use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Vertex},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
+        geometry::UpdateHalfEdgeGeometry,
         insert::Insert,
         presentation::SetColor,
         update::{UpdateCycle, UpdateHalfEdge},
@@ -113,26 +114,30 @@ impl SweepHalfEdge for HalfEdge {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
-                let edge = {
-                    let edge = HalfEdge::line_segment(
+                let half_edge = {
+                    let line_segment = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
                         core,
-                    )
-                    .update_start_vertex(|_, _| start_vertex, core);
+                    );
+                    let half_edge = line_segment
+                        .update_start_vertex(|_, _| start_vertex, core);
 
-                    let edge = if let Some(curve) = curve {
-                        edge.update_curve(|_, _| curve, core)
+                    let half_edge = if let Some(curve) = curve {
+                        half_edge.update_curve(|_, _| curve, core)
                     } else {
-                        edge
+                        half_edge
                     };
 
-                    edge.insert(core)
+                    half_edge.insert(core).set_path(
+                        core.layers.geometry.of_half_edge(&line_segment).path,
+                        &mut core.layers.geometry,
+                    )
                 };
 
-                exterior = exterior.add_half_edges([edge.clone()], core);
+                exterior = exterior.add_half_edges([half_edge.clone()], core);
 
-                edge
+                half_edge
             });
 
         let exterior = exterior.insert(core);
