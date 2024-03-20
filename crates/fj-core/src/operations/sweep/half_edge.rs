@@ -121,13 +121,13 @@ impl SweepHalfEdge for HalfEdge {
                     )
                     .update_start_vertex(|_, _| start_vertex, core);
 
-                    let edge = if let Some(curve) = curve {
+                    let half_edge = if let Some(curve) = curve {
                         half_edge.update_curve(|_, _| curve, core)
                     } else {
                         half_edge
                     };
 
-                    edge.insert(core)
+                    half_edge.insert(core)
                 };
 
                 exterior = exterior.add_half_edges([edge.clone()], core);
