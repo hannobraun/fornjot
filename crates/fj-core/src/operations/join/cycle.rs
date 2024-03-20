@@ -8,6 +8,7 @@ use crate::{
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
+        geometry::UpdateHalfEdgeGeometry,
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
@@ -144,6 +145,14 @@ impl JoinCycle for Cycle {
                                             .clone()
                                     },
                                     core,
+                                )
+                                .insert(core)
+                                .set_path(
+                                    core.layers
+                                        .geometry
+                                        .of_half_edge(half_edge)
+                                        .path,
+                                    &mut core.layers.geometry,
                                 )]
                         },
                         core,
@@ -151,10 +160,19 @@ impl JoinCycle for Cycle {
                     .update_half_edge(
                         self.half_edges().nth_circular(index + 1),
                         |half_edge, core| {
-                            [half_edge.update_start_vertex(
-                                |_, _| edge_other.start_vertex().clone(),
-                                core,
-                            )]
+                            [half_edge
+                                .update_start_vertex(
+                                    |_, _| edge_other.start_vertex().clone(),
+                                    core,
+                                )
+                                .insert(core)
+                                .set_path(
+                                    core.layers
+                                        .geometry
+                                        .of_half_edge(half_edge)
+                                        .path,
+                                    &mut core.layers.geometry,
+                                )]
                         },
                         core,
                     )
