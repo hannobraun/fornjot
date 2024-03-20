@@ -431,6 +431,34 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
+                                        // This is going to be weird:
+                                        //
+                                        // - That first call to `update_path` is
+                                        //   going to reverse a path and insert
+                                        //   a new object with the reversed
+                                        //   path.
+                                        // - The next call to `update_boundary`
+                                        //   relies on that, because it inserts
+                                        //   an object too, and that would cause
+                                        //   a validation failure without the
+                                        //   first call.
+                                        // - But the new object created from
+                                        //   those two operations doesn't
+                                        //   actually have its geometry set in
+                                        //   the geometry layer, because that
+                                        //   happens in `update_path`, for an
+                                        //   earlier version of the object.
+                                        // - So we need a last `set_path`, which
+                                        //   sets the path again.
+                                        //
+                                        // This is very weird, but good new is,
+                                        // it's just an artifact of the
+                                        // transition from a unified object
+                                        // graph to separate topology and
+                                        // geometry layers. This should clear up
+                                        // again, once the separation is
+                                        // finished, and all APIs can adapt to
+                                        // the new reality.
                                         [half_edge
                                             .update_path(
                                                 |path| path.reverse(),
@@ -439,6 +467,14 @@ mod tests {
                                             .update_boundary(
                                                 |boundary| boundary.reverse(),
                                                 core,
+                                            )
+                                            .set_path(
+                                                core.layers
+                                                    .geometry
+                                                    .of_half_edge(half_edge)
+                                                    .path
+                                                    .reverse(),
+                                                &mut core.layers.geometry,
                                             )]
                                     },
                                     core,
