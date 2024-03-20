@@ -404,6 +404,7 @@ mod tests {
         operations::{
             build::BuildShell,
             geometry::UpdateHalfEdgeGeometry,
+            insert::Insert,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
                 UpdateShell,
@@ -545,10 +546,19 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        [half_edge.update_curve(
-                                            |_, _| Curve::new(),
-                                            core,
-                                        )]
+                                        [half_edge
+                                            .update_curve(
+                                                |_, _| Curve::new(),
+                                                core,
+                                            )
+                                            .insert(core)
+                                            .set_path(
+                                                core.layers
+                                                    .geometry
+                                                    .of_half_edge(half_edge)
+                                                    .path,
+                                                &mut core.layers.geometry,
+                                            )]
                                     },
                                     core,
                                 )
