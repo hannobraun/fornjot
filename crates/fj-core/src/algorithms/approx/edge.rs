@@ -5,14 +5,16 @@
 //! approximations are usually used to build cycle approximations, and this way,
 //! the caller doesn't have to deal with duplicate vertices.
 
-use crate::{geometry::SurfaceGeometry, objects::HalfEdge, Core};
+use crate::{
+    geometry::SurfaceGeometry, objects::HalfEdge, storage::Handle, Core,
+};
 
 use super::{
     curve::CurveApproxCache, vertex::VertexApproxCache, Approx, ApproxPoint,
     Tolerance,
 };
 
-impl Approx for (&HalfEdge, &SurfaceGeometry) {
+impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
     type Approximation = HalfEdgeApprox;
     type Cache = HalfEdgeApproxCache;
 
@@ -44,7 +46,7 @@ impl Approx for (&HalfEdge, &SurfaceGeometry) {
         let rest = {
             let approx = (
                 half_edge.curve(),
-                half_edge.path(),
+                core.layers.geometry.of_half_edge(half_edge).path,
                 surface,
                 half_edge.boundary(),
             )
@@ -55,8 +57,12 @@ impl Approx for (&HalfEdge, &SurfaceGeometry) {
                 );
 
             approx.points.into_iter().map(|point| {
-                let point_surface =
-                    half_edge.path().point_from_path_coords(point.local_form);
+                let point_surface = core
+                    .layers
+                    .geometry
+                    .of_half_edge(half_edge)
+                    .path
+                    .point_from_path_coords(point.local_form);
 
                 ApproxPoint::new(point_surface, point.global_form)
             })

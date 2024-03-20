@@ -77,7 +77,7 @@ impl SweepCycle for Cycle {
 
             top_edges.push((
                 top_edge,
-                bottom_half_edge.path(),
+                core.layers.geometry.of_half_edge(bottom_half_edge).path,
                 bottom_half_edge.boundary(),
             ));
         }

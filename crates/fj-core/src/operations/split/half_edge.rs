@@ -33,7 +33,7 @@ pub trait SplitHalfEdge {
     ) -> [Handle<HalfEdge>; 2];
 }
 
-impl SplitHalfEdge for HalfEdge {
+impl SplitHalfEdge for Handle<HalfEdge> {
     fn split_half_edge(
         &self,
         point: impl Into<Point<1>>,
@@ -44,14 +44,14 @@ impl SplitHalfEdge for HalfEdge {
         let [start, end] = self.boundary().inner;
 
         let a = HalfEdge::new(
-            self.path(),
+            core.layers.geometry.of_half_edge(self).path,
             [start, point],
             self.curve().clone(),
             self.start_vertex().clone(),
         )
         .insert(core);
         let b = HalfEdge::new(
-            self.path(),
+            core.layers.geometry.of_half_edge(self).path,
             [point, end],
             self.curve().clone(),
             Vertex::new().insert(core),
@@ -60,11 +60,15 @@ impl SplitHalfEdge for HalfEdge {
 
         core.layers.geometry.define_half_edge(
             a.clone(),
-            HalfEdgeGeometry { path: self.path() },
+            HalfEdgeGeometry {
+                path: core.layers.geometry.of_half_edge(self).path,
+            },
         );
         core.layers.geometry.define_half_edge(
             b.clone(),
-            HalfEdgeGeometry { path: self.path() },
+            HalfEdgeGeometry {
+                path: core.layers.geometry.of_half_edge(self).path,
+            },
         );
 
         [a, b]

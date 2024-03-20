@@ -104,6 +104,7 @@ impl ShellValidationError {
                     surface_a: &SurfaceGeometry,
                     edge_b: &Handle<HalfEdge>,
                     surface_b: &SurfaceGeometry,
+                    geometry: &Geometry,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
                 ) {
@@ -116,10 +117,14 @@ impl ShellValidationError {
                     let c = a + (d - a) * 2. / 3.;
 
                     for point_curve in [a, b, c, d] {
-                        let a_surface =
-                            edge_a.path().point_from_path_coords(point_curve);
-                        let b_surface =
-                            edge_b.path().point_from_path_coords(point_curve);
+                        let a_surface = geometry
+                            .of_half_edge(edge_a)
+                            .path
+                            .point_from_path_coords(point_curve);
+                        let b_surface = geometry
+                            .of_half_edge(edge_b)
+                            .path
+                            .point_from_path_coords(point_curve);
 
                         let a_global =
                             surface_a.point_from_surface_coords(a_surface);
@@ -148,6 +153,7 @@ impl ShellValidationError {
                     &geometry.of_surface(surface_a),
                     edge_b,
                     &geometry.of_surface(surface_b),
+                    geometry,
                     config,
                     &mut mismatches,
                 );
@@ -156,6 +162,7 @@ impl ShellValidationError {
                     &geometry.of_surface(surface_b),
                     edge_a,
                     &geometry.of_surface(surface_a),
+                    geometry,
                     config,
                     &mut mismatches,
                 );
@@ -245,6 +252,7 @@ impl ShellValidationError {
                     &geometry.of_surface(surface_a),
                     half_edge_b.clone(),
                     &geometry.of_surface(surface_b),
+                    geometry,
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
@@ -369,14 +377,19 @@ fn distances(
     surface_a: &SurfaceGeometry,
     edge_b: Handle<HalfEdge>,
     surface_b: &SurfaceGeometry,
+    geometry: &Geometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
         (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
+        geometry: &Geometry,
     ) -> Point<3> {
         let [start, end] = edge.boundary().inner;
         let path_coords = start + (end - start) * percent;
-        let surface_coords = edge.path().point_from_path_coords(path_coords);
+        let surface_coords = geometry
+            .of_half_edge(edge)
+            .path
+            .point_from_path_coords(path_coords);
         surface.point_from_surface_coords(surface_coords)
     }
 
@@ -389,8 +402,8 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a));
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b));
+        let sample1 = sample(percent, (&edge_a, surface_a), geometry);
+        let sample2 = sample(1.0 - percent, (&edge_b, surface_b), geometry);
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()

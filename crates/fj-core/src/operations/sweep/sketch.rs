@@ -40,7 +40,10 @@ impl SweepSketch for Sketch {
             let region = {
                 // The following code assumes that the sketch is winded counter-
                 // clockwise. Let's check that real quick.
-                assert!(region.exterior().winding().is_ccw());
+                assert!(region
+                    .exterior()
+                    .winding(&core.layers.geometry)
+                    .is_ccw());
 
                 let is_negative_sweep = {
                     let u = match core.layers.geometry.of_surface(&surface).u {

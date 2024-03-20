@@ -41,13 +41,16 @@ pub struct AdjacentHalfEdgesNotConnected {
 impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
     fn check(
         object: &Cycle,
-        _: &Geometry,
+        geometry: &Geometry,
         config: &ValidationConfig,
     ) -> impl Iterator<Item = Self> {
         object.half_edges().pairs().filter_map(|(first, second)| {
             let end_pos_of_first_half_edge = {
                 let [_, end] = first.boundary().inner;
-                first.path().point_from_path_coords(end)
+                geometry
+                    .of_half_edge(first)
+                    .path
+                    .point_from_path_coords(end)
             };
             let start_pos_of_second_half_edge = second.start_position();
 

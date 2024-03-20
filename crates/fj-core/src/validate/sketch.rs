@@ -13,11 +13,15 @@ impl Validate for Sketch {
         &self,
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
-        _: &Geometry,
+        geometry: &Geometry,
     ) {
         SketchValidationError::check_object_references(self, config, errors);
-        SketchValidationError::check_exterior_cycles(self, config, errors);
-        SketchValidationError::check_interior_cycles(self, config, errors);
+        SketchValidationError::check_exterior_cycles(
+            self, geometry, config, errors,
+        );
+        SketchValidationError::check_interior_cycles(
+            self, geometry, config, errors,
+        );
     }
 }
 
@@ -74,12 +78,13 @@ impl SketchValidationError {
 
     fn check_exterior_cycles(
         sketch: &Sketch,
+        geometry: &Geometry,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
         sketch.regions().iter().for_each(|region| {
             let cycle = region.exterior();
-            if cycle.winding() == Winding::Cw {
+            if cycle.winding(geometry) == Winding::Cw {
                 errors.push(ValidationError::Sketch(
                     SketchValidationError::ClockwiseExteriorCycle {
                         cycle: cycle.clone(),
@@ -91,6 +96,7 @@ impl SketchValidationError {
 
     fn check_interior_cycles(
         sketch: &Sketch,
+        geometry: &Geometry,
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
@@ -98,7 +104,7 @@ impl SketchValidationError {
             region
                 .interiors()
                 .iter()
-                .filter(|interior| interior.winding() == Winding::Ccw)
+                .filter(|interior| interior.winding(geometry) == Winding::Ccw)
                 .for_each(|cycle| {
                     errors.push(ValidationError::Sketch(
                         SketchValidationError::CounterClockwiseInteriorCycle {

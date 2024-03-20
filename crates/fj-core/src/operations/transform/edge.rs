@@ -16,7 +16,7 @@ impl TransformObject for Handle<HalfEdge> {
     ) -> Self {
         // Don't need to transform the path, as that's defined in surface
         // coordinates.
-        let path = self.path();
+        let path = core.layers.geometry.of_half_edge(self).path;
         let boundary = self.boundary();
         let curve = self
             .curve()
