@@ -1,5 +1,183 @@
 # Fornjot - Changelog
 
+## v0.49.0 (2024-03-21)
+
+### Library improvements
+
+Improvements to Fornjot libraries.
+
+#### `fj`
+
+- Add `fj::Instance` ([#2217])
+
+#### `fj-core`
+
+- Expand and improve validation checking ([#2144], [#2148], [#2256]; thank you, [@nathan-folsom] and [@emka]!)
+- Add operation for creating shell from vertices and indices ([#2149])
+- Make background validation configurable ([#2150]; thank you, [@brungardtdb]!)
+- Make some cleanups in `transform`, move it to `operations` ([#2169])
+- Refactor `services` into `layers` ([#2212], [#2213], [#2214], [#2215])
+- Move color information to dedicated presentation layer ([#2167], [#2168], [#2179], [#2219], [#2220], [#2221], [#2230], [#2232], [#2233], [#2234])
+- Add `IsObject` trait ([#2178])
+- Rename `Object` to `AnyObject`; clean it up ([#2185], [#2186], [#2187])
+- Improve documentation ([#2188], [#2209]; thank you, [@watana318]!)
+- Add new entry point into API: `Core` ([#2191], [#2192], [#2196], [#2197], [#2198], [#2207], [#2210], [#2211], [#2218])
+- Clean up `update` operations API ([#2200], [#2203], [#2205], [#2206], [#2253], [#2255]; thank you, [@IamTheCarl]!)
+- Don't require dropping validation layer to handle validation errors ([#2216])
+- Fix panic in `ObjectSet` due to equal but not identical objects ([#2228])
+- Start cleanup of validation infrastructure ([#2229], [#2231], [#2235], [#2242], [#2277])
+- Remove unused intersection checks ([#2236], [#2268])
+- Start moving geometry from object graph to dedicate geometry layer ([#2237], [#2241], [#2245], [#2246], [#2247], [#2261], [#2263], [#2265], [#2267], [#2270], [#2271], [#2272], [#2274], [#2275])
+- Expand `build` operations API ([#2239], [#2240], [#2276])
+- Return more information from shell-face sweep operation ([#2260])
+- Lots of minor clean-ups ([#2147], [#2195], [#2199], [#2204], [#2208], [#2262], [#2273])
+
+#### `fj-export`
+
+- Upgrade to `3mf-rs` 0.5 ([#2248]; thank you, [@IamTheCarl]!)
+- Make export functions more general; make them public ([#2252], [#2254]; thank you, [@IamTheCarl]!)
+
+#### `fj-interop`
+
+- Clean up crate ([#2165])
+- Add various conversions to `Color` ([#2166])
+
+#### `fj-viewer`
+
+- Upgrade to wgpu 0.19 ([#2182])
+
+### Other changes
+
+Improvements that are not associated with a specific Fornjot library.
+
+- Improve release procedure ([#2141], [#2142], [#2177])
+- Clean up example models ([#2143], [#2183], [#2184])
+- Keep dependencies up-to-date ([#2146], [#2151], [#2152], [#2154], [#2156], [#2173], [#2181], [#2190], [#2202], [#2225], [#2238], [#2251], [#2257], [#2258], [#2269])
+- Keep Rust version up-to-date ([#2153], [#2226])
+- Keep README files in repository up-to-date ([#2155], [#2163], [#2176], [#2189], [#2243], [#2244], [#2259])
+- Update `CONTRIBUTING.md` ([#2175])
+
+[#2141]: https://github.com/hannobraun/fornjot/pull/2141
+[#2142]: https://github.com/hannobraun/fornjot/pull/2142
+[#2143]: https://github.com/hannobraun/fornjot/pull/2143
+[#2144]: https://github.com/hannobraun/fornjot/pull/2144
+[#2146]: https://github.com/hannobraun/fornjot/pull/2146
+[#2147]: https://github.com/hannobraun/fornjot/pull/2147
+[#2148]: https://github.com/hannobraun/fornjot/pull/2148
+[#2149]: https://github.com/hannobraun/fornjot/pull/2149
+[#2150]: https://github.com/hannobraun/fornjot/pull/2150
+[#2151]: https://github.com/hannobraun/fornjot/pull/2151
+[#2152]: https://github.com/hannobraun/fornjot/pull/2152
+[#2153]: https://github.com/hannobraun/fornjot/pull/2153
+[#2154]: https://github.com/hannobraun/fornjot/pull/2154
+[#2155]: https://github.com/hannobraun/fornjot/pull/2155
+[#2156]: https://github.com/hannobraun/fornjot/pull/2156
+[#2163]: https://github.com/hannobraun/fornjot/pull/2163
+[#2165]: https://github.com/hannobraun/fornjot/pull/2165
+[#2166]: https://github.com/hannobraun/fornjot/pull/2166
+[#2167]: https://github.com/hannobraun/fornjot/pull/2167
+[#2168]: https://github.com/hannobraun/fornjot/pull/2168
+[#2169]: https://github.com/hannobraun/fornjot/pull/2169
+[#2173]: https://github.com/hannobraun/fornjot/pull/2173
+[#2175]: https://github.com/hannobraun/fornjot/pull/2175
+[#2176]: https://github.com/hannobraun/fornjot/pull/2176
+[#2177]: https://github.com/hannobraun/fornjot/pull/2177
+[#2178]: https://github.com/hannobraun/fornjot/pull/2178
+[#2179]: https://github.com/hannobraun/fornjot/pull/2179
+[#2181]: https://github.com/hannobraun/fornjot/pull/2181
+[#2182]: https://github.com/hannobraun/fornjot/pull/2182
+[#2183]: https://github.com/hannobraun/fornjot/pull/2183
+[#2184]: https://github.com/hannobraun/fornjot/pull/2184
+[#2185]: https://github.com/hannobraun/fornjot/pull/2185
+[#2186]: https://github.com/hannobraun/fornjot/pull/2186
+[#2187]: https://github.com/hannobraun/fornjot/pull/2187
+[#2188]: https://github.com/hannobraun/fornjot/pull/2188
+[#2189]: https://github.com/hannobraun/fornjot/pull/2189
+[#2190]: https://github.com/hannobraun/fornjot/pull/2190
+[#2191]: https://github.com/hannobraun/fornjot/pull/2191
+[#2192]: https://github.com/hannobraun/fornjot/pull/2192
+[#2195]: https://github.com/hannobraun/fornjot/pull/2195
+[#2196]: https://github.com/hannobraun/fornjot/pull/2196
+[#2197]: https://github.com/hannobraun/fornjot/pull/2197
+[#2198]: https://github.com/hannobraun/fornjot/pull/2198
+[#2199]: https://github.com/hannobraun/fornjot/pull/2199
+[#2200]: https://github.com/hannobraun/fornjot/pull/2200
+[#2202]: https://github.com/hannobraun/fornjot/pull/2202
+[#2203]: https://github.com/hannobraun/fornjot/pull/2203
+[#2204]: https://github.com/hannobraun/fornjot/pull/2204
+[#2205]: https://github.com/hannobraun/fornjot/pull/2205
+[#2206]: https://github.com/hannobraun/fornjot/pull/2206
+[#2207]: https://github.com/hannobraun/fornjot/pull/2207
+[#2208]: https://github.com/hannobraun/fornjot/pull/2208
+[#2209]: https://github.com/hannobraun/fornjot/pull/2209
+[#2210]: https://github.com/hannobraun/fornjot/pull/2210
+[#2211]: https://github.com/hannobraun/fornjot/pull/2211
+[#2212]: https://github.com/hannobraun/fornjot/pull/2212
+[#2213]: https://github.com/hannobraun/fornjot/pull/2213
+[#2214]: https://github.com/hannobraun/fornjot/pull/2214
+[#2215]: https://github.com/hannobraun/fornjot/pull/2215
+[#2216]: https://github.com/hannobraun/fornjot/pull/2216
+[#2217]: https://github.com/hannobraun/fornjot/pull/2217
+[#2218]: https://github.com/hannobraun/fornjot/pull/2218
+[#2219]: https://github.com/hannobraun/fornjot/pull/2219
+[#2220]: https://github.com/hannobraun/fornjot/pull/2220
+[#2221]: https://github.com/hannobraun/fornjot/pull/2221
+[#2225]: https://github.com/hannobraun/fornjot/pull/2225
+[#2226]: https://github.com/hannobraun/fornjot/pull/2226
+[#2228]: https://github.com/hannobraun/fornjot/pull/2228
+[#2229]: https://github.com/hannobraun/fornjot/pull/2229
+[#2230]: https://github.com/hannobraun/fornjot/pull/2230
+[#2231]: https://github.com/hannobraun/fornjot/pull/2231
+[#2232]: https://github.com/hannobraun/fornjot/pull/2232
+[#2233]: https://github.com/hannobraun/fornjot/pull/2233
+[#2234]: https://github.com/hannobraun/fornjot/pull/2234
+[#2235]: https://github.com/hannobraun/fornjot/pull/2235
+[#2236]: https://github.com/hannobraun/fornjot/pull/2236
+[#2237]: https://github.com/hannobraun/fornjot/pull/2237
+[#2238]: https://github.com/hannobraun/fornjot/pull/2238
+[#2239]: https://github.com/hannobraun/fornjot/pull/2239
+[#2240]: https://github.com/hannobraun/fornjot/pull/2240
+[#2241]: https://github.com/hannobraun/fornjot/pull/2241
+[#2242]: https://github.com/hannobraun/fornjot/pull/2242
+[#2243]: https://github.com/hannobraun/fornjot/pull/2243
+[#2244]: https://github.com/hannobraun/fornjot/pull/2244
+[#2245]: https://github.com/hannobraun/fornjot/pull/2245
+[#2246]: https://github.com/hannobraun/fornjot/pull/2246
+[#2247]: https://github.com/hannobraun/fornjot/pull/2247
+[#2248]: https://github.com/hannobraun/fornjot/pull/2248
+[#2251]: https://github.com/hannobraun/fornjot/pull/2251
+[#2252]: https://github.com/hannobraun/fornjot/pull/2252
+[#2253]: https://github.com/hannobraun/fornjot/pull/2253
+[#2254]: https://github.com/hannobraun/fornjot/pull/2254
+[#2255]: https://github.com/hannobraun/fornjot/pull/2255
+[#2256]: https://github.com/hannobraun/fornjot/pull/2256
+[#2257]: https://github.com/hannobraun/fornjot/pull/2257
+[#2258]: https://github.com/hannobraun/fornjot/pull/2258
+[#2259]: https://github.com/hannobraun/fornjot/pull/2259
+[#2260]: https://github.com/hannobraun/fornjot/pull/2260
+[#2261]: https://github.com/hannobraun/fornjot/pull/2261
+[#2262]: https://github.com/hannobraun/fornjot/pull/2262
+[#2263]: https://github.com/hannobraun/fornjot/pull/2263
+[#2265]: https://github.com/hannobraun/fornjot/pull/2265
+[#2267]: https://github.com/hannobraun/fornjot/pull/2267
+[#2268]: https://github.com/hannobraun/fornjot/pull/2268
+[#2269]: https://github.com/hannobraun/fornjot/pull/2269
+[#2270]: https://github.com/hannobraun/fornjot/pull/2270
+[#2271]: https://github.com/hannobraun/fornjot/pull/2271
+[#2272]: https://github.com/hannobraun/fornjot/pull/2272
+[#2273]: https://github.com/hannobraun/fornjot/pull/2273
+[#2274]: https://github.com/hannobraun/fornjot/pull/2274
+[#2275]: https://github.com/hannobraun/fornjot/pull/2275
+[#2276]: https://github.com/hannobraun/fornjot/pull/2276
+[#2277]: https://github.com/hannobraun/fornjot/pull/2277
+
+[@nathan-folsom]: https://github.com/nathan-folsom
+[@brungardtdb]: https://github.com/brungardtdb
+[@watana318]: https://github.com/watana318
+[@IamTheCarl]: https://github.com/IamTheCarl
+[@emka]: https://github.com/emka
+
+
 ## v0.48.0 (2023-12-15)
 
 ### Library improvements
