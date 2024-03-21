@@ -5,7 +5,7 @@ use crate::validate::{
     SketchValidationError, SolidValidationError,
 };
 
-use super::checks::AdjacentHalfEdgesNotConnected;
+use super::checks::{AdjacentHalfEdgesNotConnected, FaceHasNoBoundary};
 
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
@@ -13,6 +13,10 @@ pub enum ValidationError {
     /// Adjacent half-edges are not connected
     #[error(transparent)]
     AdjacentHalfEdgesNotConnected(#[from] AdjacentHalfEdgesNotConnected),
+
+    /// Face has no boundary
+    #[error(transparent)]
+    FaceHasNoBoundary(#[from] FaceHasNoBoundary),
 
     /// `Edge` validation error
     #[error("`Edge` validation error")]
