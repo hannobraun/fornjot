@@ -1,7 +1,7 @@
 use std::{array, borrow::Borrow};
 
 use fj_interop::ext::ArrayExt;
-use fj_math::Point;
+use fj_math::{Point, Scalar};
 
 use crate::{
     objects::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
@@ -23,6 +23,17 @@ pub trait BuildFace {
     fn unbound(surface: Handle<Surface>, core: &mut Core) -> Face {
         let exterior = Cycle::empty().insert(core);
         let region = Region::new(exterior, []).insert(core);
+        Face::new(surface, region)
+    }
+
+    /// Build a circle
+    fn circle(
+        surface: Handle<Surface>,
+        center: impl Into<Point<2>>,
+        radius: impl Into<Scalar>,
+        core: &mut Core,
+    ) -> Face {
+        let region = Region::circle(center, radius, core).insert(core);
         Face::new(surface, region)
     }
 
