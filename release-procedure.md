@@ -102,7 +102,7 @@ Post the release announcement in the official Fornjot community channels:
 Additionally, post it in the following places:
 
 - Rust Users
-  https://users.rust-lang.org/t/fornjot-code-cad-in-rust-weekly-dev-log/71783
+  https://users.rust-lang.org/
 - Mastodon
   https://fosstodon.org/@hannobraun
 - Twitter
