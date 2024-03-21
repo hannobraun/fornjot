@@ -10,7 +10,7 @@ use super::checks::AdjacentHalfEdgesNotConnected;
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ValidationError {
-    /// `HalfEdge`s in `Cycle` not connected
+    /// Adjacent half-edges are not connected
     #[error(transparent)]
     AdjacentHalfEdgesNotConnected(#[from] AdjacentHalfEdgesNotConnected),
 
