@@ -3,7 +3,10 @@ use fj_math::Winding;
 use crate::{
     geometry::Geometry,
     objects::Face,
-    validation::{ValidationConfig, ValidationError},
+    validation::{
+        checks::FaceHasNoBoundary, ValidationCheck, ValidationConfig,
+        ValidationError,
+    },
 };
 
 use super::Validate;
@@ -11,11 +14,13 @@ use super::Validate;
 impl Validate for Face {
     fn validate(
         &self,
-        _: &ValidationConfig,
+        config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
-        FaceValidationError::check_boundary(self, errors);
+        errors.extend(
+            FaceHasNoBoundary::check(self, geometry, config).map(Into::into),
+        );
         FaceValidationError::check_interior_winding(self, geometry, errors);
     }
 }
@@ -23,10 +28,6 @@ impl Validate for Face {
 /// [`Face`] validation error
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum FaceValidationError {
-    /// The [`Face`] has no exterior cycle
-    #[error("The `Face` has no exterior cycle")]
-    MissingBoundary,
-
     /// Interior of [`Face`] has invalid winding; must be opposite of exterior
     #[error(
         "Interior of `Face` has invalid winding; must be opposite of exterior\n\
@@ -47,15 +48,6 @@ pub enum FaceValidationError {
 }
 
 impl FaceValidationError {
-    fn check_boundary(face: &Face, errors: &mut Vec<ValidationError>) {
-        if face.region().exterior().half_edges().is_empty() {
-            errors.push(ValidationError::from(Self::MissingBoundary));
-        }
-
-        // Checking *that* a boundary exists is enough. There are validation
-        // checks for `Cycle` to make sure that the cycle is closed properly.
-    }
-
     fn check_interior_winding(
         face: &Face,
         geometry: &Geometry,
@@ -95,49 +87,18 @@ impl FaceValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Cycle, Face, HalfEdge, Region},
+        objects::{Cycle, Face, Region},
         operations::{
-            build::{BuildCycle, BuildFace, BuildHalfEdge},
+            build::{BuildCycle, BuildFace},
             derive::DeriveFrom,
             insert::Insert,
             reverse::Reverse,
-            update::{UpdateCycle, UpdateFace, UpdateRegion},
+            update::{UpdateFace, UpdateRegion},
         },
         validate::{FaceValidationError, Validate},
         validation::ValidationError,
         Core,
     };
-
-    #[test]
-    fn boundary() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let invalid =
-            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core);
-        let valid = invalid.update_region(
-            |region, core| {
-                region.update_exterior(
-                    |cycle, core| {
-                        cycle.add_half_edges(
-                            [HalfEdge::circle([0., 0.], 1., core)],
-                            core,
-                        )
-                    },
-                    core,
-                )
-            },
-            &mut core,
-        );
-
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::Face(FaceValidationError::MissingBoundary)
-        );
-
-        Ok(())
-    }
 
     #[test]
     fn interior_winding() -> anyhow::Result<()> {

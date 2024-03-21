@@ -88,7 +88,7 @@ mod tests {
     use super::AdjacentHalfEdgesNotConnected;
 
     #[test]
-    fn adjacent_half_edges_connected() -> anyhow::Result<()> {
+    fn adjacent_half_edges_not_connected() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
