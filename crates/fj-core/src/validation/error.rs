@@ -12,7 +12,7 @@ use super::checks::AdjacentHalfEdgesNotConnected;
 pub enum ValidationError {
     /// `HalfEdge`s in `Cycle` not connected
     #[error(transparent)]
-    HalfEdgesInCycleNotConnected(#[from] AdjacentHalfEdgesNotConnected),
+    AdjacentHalfEdgesNotConnected(#[from] AdjacentHalfEdgesNotConnected),
 
     /// `Edge` validation error
     #[error("`Edge` validation error")]
