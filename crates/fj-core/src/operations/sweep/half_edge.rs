@@ -134,7 +134,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                         half_edge
                     };
 
-                    half_edge.insert(core).set_path(
+                    half_edge.insert(core).set_geometry(
                         core.layers.geometry.of_half_edge(&line_segment).path,
                         &mut core.layers.geometry,
                     )

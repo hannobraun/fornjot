@@ -457,7 +457,7 @@ mod tests {
                                             half_edge.start_vertex().clone(),
                                         )
                                         .insert(core)
-                                        .set_path(
+                                        .set_geometry(
                                             geometry.path,
                                             &mut core.layers.geometry,
                                         )]
@@ -536,7 +536,7 @@ mod tests {
                                                 core,
                                             )
                                             .insert(core)
-                                            .set_path(
+                                            .set_geometry(
                                                 core.layers
                                                     .geometry
                                                     .of_half_edge(half_edge)

@@ -97,7 +97,7 @@ impl JoinCycle for Cycle {
                         core,
                     )
                     .insert(core)
-                    .set_path(path, &mut core.layers.geometry)
+                    .set_geometry(path, &mut core.layers.geometry)
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)
@@ -141,7 +141,7 @@ impl JoinCycle for Cycle {
                                     core,
                                 )
                                 .insert(core)
-                                .set_path(
+                                .set_geometry(
                                     core.layers
                                         .geometry
                                         .of_half_edge(half_edge)
@@ -160,7 +160,7 @@ impl JoinCycle for Cycle {
                                     core,
                                 )
                                 .insert(core)
-                                .set_path(
+                                .set_geometry(
                                     core.layers
                                         .geometry
                                         .of_half_edge(half_edge)

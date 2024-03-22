@@ -112,7 +112,7 @@ pub trait BuildHalfEdge {
 
         HalfEdge::unjoined(boundary, core)
             .insert(core)
-            .set_path(path, &mut core.layers.geometry)
+            .set_geometry(path, &mut core.layers.geometry)
     }
 }
 

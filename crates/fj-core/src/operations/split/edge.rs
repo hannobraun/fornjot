@@ -50,7 +50,7 @@ impl SplitEdge for Shell {
                     core,
                 )
                 .insert(core)
-                .set_path(
+                .set_geometry(
                     core.layers.geometry.of_half_edge(&sibling_b).path,
                     &mut core.layers.geometry,
                 );

@@ -8,11 +8,19 @@ use crate::{
 /// Update the geometry of a [`HalfEdge`]
 pub trait UpdateHalfEdgeGeometry {
     /// Set the path of the half-edge
-    fn set_path(self, path: SurfacePath, layer: &mut Layer<Geometry>) -> Self;
+    fn set_geometry(
+        self,
+        path: SurfacePath,
+        layer: &mut Layer<Geometry>,
+    ) -> Self;
 }
 
 impl UpdateHalfEdgeGeometry for Handle<HalfEdge> {
-    fn set_path(self, path: SurfacePath, layer: &mut Layer<Geometry>) -> Self {
+    fn set_geometry(
+        self,
+        path: SurfacePath,
+        layer: &mut Layer<Geometry>,
+    ) -> Self {
         layer.define_half_edge(self.clone(), HalfEdgeGeometry { path });
         self
     }
