@@ -5,6 +5,6 @@ mod handle;
 mod store;
 
 pub use self::{
-    handle::{Handle, HandleWrapper, ObjectId},
+    handle::{Handle, ObjectId},
     store::{Iter, Store},
 };
