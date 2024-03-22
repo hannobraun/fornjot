@@ -1,11 +1,14 @@
 use std::{convert::Infallible, fmt};
 
 use crate::validate::{
-    EdgeValidationError, FaceValidationError, ShellValidationError,
-    SketchValidationError, SolidValidationError,
+    EdgeValidationError, ShellValidationError, SketchValidationError,
+    SolidValidationError,
 };
 
-use super::checks::{AdjacentHalfEdgesNotConnected, FaceHasNoBoundary};
+use super::checks::{
+    AdjacentHalfEdgesNotConnected, FaceHasNoBoundary,
+    InteriorCycleHasInvalidWinding,
+};
 
 /// An error that can occur during a validation
 #[derive(Clone, Debug, thiserror::Error)]
@@ -18,13 +21,13 @@ pub enum ValidationError {
     #[error(transparent)]
     FaceHasNoBoundary(#[from] FaceHasNoBoundary),
 
+    /// Interior cycle has invalid winding
+    #[error(transparent)]
+    InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
+
     /// `Edge` validation error
     #[error("`Edge` validation error")]
     Edge(#[from] EdgeValidationError),
-
-    /// `Face` validation error
-    #[error("`Face` validation error")]
-    Face(#[from] FaceValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error")]
