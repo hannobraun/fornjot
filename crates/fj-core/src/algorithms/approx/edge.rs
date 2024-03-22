@@ -27,7 +27,11 @@ impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
         let (half_edge, surface) = self;
         let tolerance = tolerance.into();
 
-        let start_position_surface = half_edge.start_position();
+        let start_position_surface = core
+            .layers
+            .geometry
+            .of_half_edge(half_edge)
+            .start_position(half_edge.boundary());
         let start_position =
             match cache.start_position.get(half_edge.start_vertex()) {
                 Some(position) => position,
