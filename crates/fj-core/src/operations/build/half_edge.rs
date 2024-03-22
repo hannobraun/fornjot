@@ -4,7 +4,7 @@ use fj_math::{Arc, Point, Scalar};
 use crate::{
     geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
-    operations::insert::Insert,
+    operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
     Core,
 };
@@ -112,12 +112,9 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
-
-        half_edge
+        HalfEdge::unjoined(path, boundary, core)
+            .insert(core)
+            .set_path(path, &mut core.layers.geometry)
     }
 }
 
