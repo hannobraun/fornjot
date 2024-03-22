@@ -13,8 +13,6 @@ impl TransformObject for Handle<HalfEdge> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
-        // Don't need to transform the path, as that's defined in surface
-        // coordinates.
         let boundary = self.boundary();
         let curve = self
             .curve()
