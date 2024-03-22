@@ -1,8 +1,8 @@
-use std::{collections::BTreeSet, fmt::Debug, iter, slice, vec};
+use std::{collections::BTreeSet, fmt::Debug, slice, vec};
 
 use itertools::Itertools;
 
-use crate::storage::{Handle, HandleWrapper};
+use crate::storage::Handle;
 
 /// An ordered set of objects
 ///
@@ -19,7 +19,7 @@ pub struct ObjectSet<T> {
     // structure (since it is used in objects, and objects themselves are
     // immutable). We need to make sure there are no duplicates when this is
     // constructed (see the constructor below), but after that, we're fine.
-    inner: Vec<HandleWrapper<T>>,
+    inner: Vec<Handle<T>>,
 }
 
 impl<T> ObjectSet<T> {
@@ -28,16 +28,15 @@ impl<T> ObjectSet<T> {
     /// # Panics
     ///
     /// Panics, if the iterator contains duplicate `Handle`s.
-    pub fn new(
-        handles: impl IntoIterator<Item = impl Into<HandleWrapper<T>>>,
-    ) -> Self
+    pub fn new(handles: impl IntoIterator<Item = Handle<T>>) -> Self
     where
         T: Debug + Ord,
     {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
 
-        let handles = handles.into_iter().map(|handle| handle.into());
+        // TASK: Inline.
+        let handles = handles.into_iter();
 
         for handle in handles {
             if added.contains(&handle) {
@@ -101,7 +100,7 @@ impl<T> ObjectSet<T> {
 
     /// Return the n-th item
     pub fn nth(&self, index: usize) -> Option<&Handle<T>> {
-        self.inner.get(index).map(|wrapper| &wrapper.0)
+        self.inner.get(index)
     }
 
     /// Return the n-th item, treating the index space as circular
@@ -135,7 +134,7 @@ impl<T> ObjectSet<T> {
 
     /// Access an iterator over the objects
     pub fn iter(&self) -> ObjectSetIter<T> {
-        self.inner.iter().map(HandleWrapper::as_handle)
+        self.inner.iter()
     }
 
     /// Access an iterator over the neighboring pairs of all contained objects
@@ -217,17 +216,14 @@ impl<T> IntoIterator for ObjectSet<T> {
     type IntoIter = ObjectSetIntoIter<T>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.inner.into_iter().map(HandleWrapper::into_handle)
+        self.inner.into_iter()
     }
 }
 
 /// An borrowed iterator over an [`ObjectSet`]
 ///
 /// See [`ObjectSet::iter`].
-pub type ObjectSetIter<'r, T> = iter::Map<
-    slice::Iter<'r, HandleWrapper<T>>,
-    fn(&HandleWrapper<T>) -> &Handle<T>,
->;
+pub type ObjectSetIter<'r, T> = slice::Iter<'r, Handle<T>>;
 
 /// An owned iterator over an [`ObjectSet`]
 ///
@@ -239,19 +235,13 @@ pub type ObjectSetIter<'r, T> = iter::Map<
 /// iterator adapters. You can't return a reference to the argument of an
 /// adapter's closure, if you own that argument. You can, if you just reference
 /// the argument.
-pub type ObjectSetIntoIter<T> = iter::Map<
-    vec::IntoIter<HandleWrapper<T>>,
-    fn(HandleWrapper<T>) -> Handle<T>,
->;
+pub type ObjectSetIntoIter<T> = vec::IntoIter<Handle<T>>;
 
 #[cfg(test)]
 mod tests {
     use std::collections::HashSet;
 
-    use crate::{
-        objects::Cycle, operations::insert::Insert, storage::HandleWrapper,
-        Core,
-    };
+    use crate::{objects::Cycle, operations::insert::Insert, Core};
 
     use super::ObjectSet;
 
@@ -273,8 +263,8 @@ mod tests {
         let mut core = Core::new();
 
         let bare_cycle = Cycle::new([]);
-        let cycle_a = HandleWrapper::from(bare_cycle.clone().insert(&mut core));
-        let cycle_b = HandleWrapper::from(bare_cycle.insert(&mut core));
+        let cycle_a = bare_cycle.clone().insert(&mut core);
+        let cycle_b = bare_cycle.insert(&mut core);
 
         let _object_set = ObjectSet::new([cycle_a, cycle_b]);
     }
@@ -284,8 +274,8 @@ mod tests {
         let mut core = Core::new();
 
         let bare_cycle = Cycle::new([]);
-        let cycle_a = HandleWrapper::from(bare_cycle.clone().insert(&mut core));
-        let cycle_b = HandleWrapper::from(bare_cycle.insert(&mut core));
+        let cycle_a = bare_cycle.clone().insert(&mut core);
+        let cycle_b = bare_cycle.insert(&mut core);
 
         let _object_set = ObjectSet::new(HashSet::from([cycle_a, cycle_b]));
     }
