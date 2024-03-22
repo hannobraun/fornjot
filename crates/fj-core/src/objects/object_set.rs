@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fmt::Debug, slice, vec};
+use std::{collections::BTreeSet, fmt::Debug, hash::Hash, slice, vec};
 
 use itertools::Itertools;
 
@@ -9,7 +9,7 @@ use crate::storage::Handle;
 /// This is the data structure used by all objects that reference multiple
 /// objects of the same type. It is a set, not containing any duplicate
 /// elements, and it maintains the insertion order of those elements.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct ObjectSet<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
     // here? Well, it's here because we need it to preserve insertion order, but
@@ -190,6 +190,12 @@ impl<T> ObjectSet<T> {
                 .chain(after)
                 .collect(),
         )
+    }
+}
+
+impl<T> Hash for ObjectSet<T> {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.inner.hash(state);
     }
 }
 
