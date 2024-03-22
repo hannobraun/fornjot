@@ -9,7 +9,7 @@ use crate::storage::Handle;
 /// This is the data structure used by all objects that reference multiple
 /// objects of the same type. It is a set, not containing any duplicate
 /// elements, and it maintains the insertion order of those elements.
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct ObjectSet<T> {
     // This is supposed to be a set data structure, so what is that `Vec` doing
     // here? Well, it's here because we need it to preserve insertion order, but
@@ -190,6 +190,26 @@ impl<T> ObjectSet<T> {
                 .chain(after)
                 .collect(),
         )
+    }
+}
+
+impl<T> Eq for ObjectSet<T> {}
+
+impl<T> PartialEq for ObjectSet<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner.eq(&other.inner)
+    }
+}
+
+impl<T> Ord for ObjectSet<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.inner.cmp(&other.inner)
+    }
+}
+
+impl<T> PartialOrd for ObjectSet<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
     }
 }
 
