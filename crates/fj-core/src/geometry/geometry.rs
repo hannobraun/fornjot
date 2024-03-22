@@ -4,15 +4,15 @@ use fj_math::Vector;
 
 use crate::{
     objects::{HalfEdge, Objects, Surface},
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
 };
 
 use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
-    half_edge: BTreeMap<HandleWrapper<HalfEdge>, HalfEdgeGeometry>,
-    surface: BTreeMap<HandleWrapper<Surface>, SurfaceGeometry>,
+    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeometry>,
+    surface: BTreeMap<Handle<Surface>, SurfaceGeometry>,
 
     xy_plane: Handle<Surface>,
     xz_plane: Handle<Surface>,
@@ -61,7 +61,7 @@ impl Geometry {
         half_edge: Handle<HalfEdge>,
         geometry: HalfEdgeGeometry,
     ) {
-        self.half_edge.insert(half_edge.into(), geometry);
+        self.half_edge.insert(half_edge, geometry);
     }
 
     pub(crate) fn define_surface_inner(
@@ -69,7 +69,7 @@ impl Geometry {
         surface: Handle<Surface>,
         geometry: SurfaceGeometry,
     ) {
-        self.surface.insert(surface.into(), geometry);
+        self.surface.insert(surface, geometry);
     }
 
     /// # Access the geometry of the provided half-edge
@@ -82,7 +82,7 @@ impl Geometry {
         half_edge: &Handle<HalfEdge>,
     ) -> HalfEdgeGeometry {
         self.half_edge
-            .get(&half_edge.clone().into())
+            .get(half_edge)
             .copied()
             .expect("Expected geometry of half-edge to be defined")
     }
@@ -94,7 +94,7 @@ impl Geometry {
     /// Panics, if the geometry of surface is not defined.
     pub fn of_surface(&self, surface: &Handle<Surface>) -> SurfaceGeometry {
         self.surface
-            .get(&surface.clone().into())
+            .get(surface)
             .copied()
             .expect("Expected geometry of surface to be defined")
     }
