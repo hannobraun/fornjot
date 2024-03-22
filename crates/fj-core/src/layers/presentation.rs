@@ -77,9 +77,9 @@ impl Command<Presentation> for DeriveObject {
         if let (AnyObject::Region(original), AnyObject::Region(derived)) =
             (self.original, self.derived)
         {
-            if let Some(color) = state.color.get(&original.0).cloned() {
+            if let Some(color) = state.color.get(&original).cloned() {
                 events.push(SetColor {
-                    region: derived.into(),
+                    region: derived,
                     color,
                 });
             }
