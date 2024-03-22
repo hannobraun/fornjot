@@ -21,7 +21,7 @@
 /// `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 ///
 /// [`HalfEdge`]: crate::objects::HalfEdge
-#[derive(Clone, Debug, Default, Hash)]
+#[derive(Clone, Debug, Default)]
 pub struct Curve {}
 
 impl Curve {

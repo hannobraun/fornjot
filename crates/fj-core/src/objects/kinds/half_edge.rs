@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     geometry::CurveBoundary,
     objects::{Curve, Vertex},
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
 };
 
 /// # A directed half-edge, defined in a surface's 2D space
@@ -33,11 +33,11 @@ use crate::{
 ///
 /// [`Cycle`]: crate::objects::Cycle
 /// [`Shell`]: crate::objects::Shell
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct HalfEdge {
     boundary: CurveBoundary<Point<1>>,
-    curve: HandleWrapper<Curve>,
-    start_vertex: HandleWrapper<Vertex>,
+    curve: Handle<Curve>,
+    start_vertex: Handle<Vertex>,
 }
 
 impl HalfEdge {
@@ -49,8 +49,8 @@ impl HalfEdge {
     ) -> Self {
         Self {
             boundary: boundary.into(),
-            curve: curve.into(),
-            start_vertex: start_vertex.into(),
+            curve,
+            start_vertex,
         }
     }
 

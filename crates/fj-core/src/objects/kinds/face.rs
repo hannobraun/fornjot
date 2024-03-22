@@ -3,7 +3,7 @@ use fj_math::Winding;
 use crate::{
     geometry::Geometry,
     objects::{Region, Surface},
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
 };
 
 /// A face of a shape
@@ -30,19 +30,16 @@ use crate::{
 ///
 /// [`HalfEdge`]: crate::objects::HalfEdge
 /// [`Shell`]: crate::objects::Shell
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Face {
-    surface: HandleWrapper<Surface>,
+    surface: Handle<Surface>,
     region: Handle<Region>,
 }
 
 impl Face {
     /// Construct an instance of `Face`
     pub fn new(surface: Handle<Surface>, region: Handle<Region>) -> Self {
-        Self {
-            surface: surface.into(),
-            region,
-        }
+        Self { surface, region }
     }
 
     /// Access the surface of the face

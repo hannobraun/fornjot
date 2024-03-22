@@ -1,6 +1,4 @@
-use std::{
-    any::type_name, borrow::Borrow, cmp::Ordering, fmt, hash::Hash, ops::Deref,
-};
+use std::{any::type_name, borrow::Borrow, fmt, hash::Hash, ops::Deref};
 
 use super::{blocks::Index, store::StoreInner};
 
@@ -125,41 +123,29 @@ impl<T> Clone for Handle<T> {
     }
 }
 
-impl<T> Eq for Handle<T> where T: Eq {}
+impl<T> Eq for Handle<T> {}
 
-impl<T> PartialEq for Handle<T>
-where
-    T: PartialEq,
-{
+impl<T> PartialEq for Handle<T> {
     fn eq(&self, other: &Self) -> bool {
-        self.deref().eq(other.deref())
+        self.id().eq(&other.id())
     }
 }
 
-impl<T> Hash for Handle<T>
-where
-    T: Hash,
-{
+impl<T> Hash for Handle<T> {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.deref().hash(state);
+        self.id().hash(state);
     }
 }
 
-impl<T> Ord for Handle<T>
-where
-    T: Ord,
-{
+impl<T> Ord for Handle<T> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.deref().cmp(other.deref())
+        self.id().cmp(&other.id())
     }
 }
 
-impl<T> PartialOrd for Handle<T>
-where
-    T: PartialOrd,
-{
+impl<T> PartialOrd for Handle<T> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.deref().partial_cmp(other.deref())
+        Some(self.cmp(other))
     }
 }
 
@@ -188,12 +174,6 @@ where
     }
 }
 
-impl<T> From<HandleWrapper<T>> for Handle<T> {
-    fn from(wrapper: HandleWrapper<T>) -> Self {
-        wrapper.0
-    }
-}
-
 unsafe impl<T> Send for Handle<T> {}
 unsafe impl<T> Sync for Handle<T> {}
 
@@ -216,91 +196,3 @@ impl fmt::Debug for ObjectId {
         write!(f, "object id {id:#x}")
     }
 }
-
-/// A wrapper around [`Handle`] that defines equality based on identity
-///
-/// `HandleWrapper` implements [`Eq`]/[`PartialEq`] and other common traits
-/// that are based on those, based on the identity of a stored object that the
-/// wrapped [`Handle`] references.
-///
-/// This is useful, since some objects are empty (meaning, they don't contain
-/// any data, and don't reference other objects). Such objects only exist to be
-/// distinguished based on their identity. But since a bare object doesn't have
-/// an identity yet, there's no meaningful way to implement [`Eq`]/[`PartialEq`]
-/// for such a bare object type.
-///
-/// However, such objects are referenced by other objects, and if we want to
-/// derive [`Eq`]/[`PartialEq`] for a referencing object, we need something that
-/// can provide [`Eq`]/[`PartialEq`] implementations for the empty objects. That
-/// is the purpose of `HandleWrapper`.
-pub struct HandleWrapper<T>(pub Handle<T>);
-
-impl<T> HandleWrapper<T> {
-    /// Convert `&self` into a `&Handle`
-    pub fn as_handle(&self) -> &Handle<T> {
-        &self.0
-    }
-
-    /// Convert `self` into a `Handle`
-    pub fn into_handle(self) -> Handle<T> {
-        self.0
-    }
-}
-
-impl<T> Deref for HandleWrapper<T> {
-    type Target = Handle<T>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T> Clone for HandleWrapper<T> {
-    fn clone(&self) -> Self {
-        Self(self.0.clone())
-    }
-}
-
-impl<T> Eq for HandleWrapper<T> {}
-
-impl<T> PartialEq for HandleWrapper<T> {
-    fn eq(&self, other: &Self) -> bool {
-        self.0.id().eq(&other.0.id())
-    }
-}
-
-impl<T> Hash for HandleWrapper<T> {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.0.id().hash(state);
-    }
-}
-
-impl<T> Ord for HandleWrapper<T> {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.0.id().cmp(&other.0.id())
-    }
-}
-
-impl<T> PartialOrd for HandleWrapper<T> {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<T> fmt::Debug for HandleWrapper<T>
-where
-    T: fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl<T> From<Handle<T>> for HandleWrapper<T> {
-    fn from(handle: Handle<T>) -> Self {
-        Self(handle)
-    }
-}
-
-unsafe impl<T> Send for HandleWrapper<T> {}
-unsafe impl<T> Sync for HandleWrapper<T> {}

@@ -4,21 +4,18 @@ use std::collections::BTreeMap;
 
 use fj_math::Point;
 
-use crate::{
-    objects::Vertex,
-    storage::{Handle, HandleWrapper},
-};
+use crate::{objects::Vertex, storage::Handle};
 
 /// Cache for vertex approximations
 #[derive(Default)]
 pub struct VertexApproxCache {
-    inner: BTreeMap<HandleWrapper<Vertex>, Point<3>>,
+    inner: BTreeMap<Handle<Vertex>, Point<3>>,
 }
 
 impl VertexApproxCache {
     /// Get an approximated vertex from the cache
     pub fn get(&self, handle: &Handle<Vertex>) -> Option<Point<3>> {
-        self.inner.get(&handle.clone().into()).cloned()
+        self.inner.get(handle).cloned()
     }
 
     /// Insert an approximated vertex into the cache
@@ -27,8 +24,6 @@ impl VertexApproxCache {
         handle: Handle<Vertex>,
         position: Point<3>,
     ) -> Point<3> {
-        self.inner
-            .insert(handle.clone().into(), position)
-            .unwrap_or(position)
+        self.inner.insert(handle, position).unwrap_or(position)
     }
 }

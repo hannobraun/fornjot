@@ -8,7 +8,7 @@ use crate::{
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -183,7 +183,7 @@ impl ShellValidationError {
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
-                    let curve = HandleWrapper::from(half_edge.curve().clone());
+                    let curve = half_edge.curve().clone();
                     let boundary = half_edge.boundary();
                     let vertices =
                         cycle.bounding_vertices_of_half_edge(half_edge).expect(

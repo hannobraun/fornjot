@@ -11,7 +11,7 @@ use crate::{
 ///
 /// The shells that form the boundaries of the solid must not intersect. This is
 /// not currently validated.
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Solid {
     shells: ObjectSet<Shell>,
 }
