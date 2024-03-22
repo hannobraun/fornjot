@@ -4,7 +4,7 @@ use crate::{
         Curve, Cycle, Face, HalfEdge, Objects, Region, Shell, Sketch, Solid,
         Surface, Vertex,
     },
-    storage::{Handle, HandleWrapper, ObjectId},
+    storage::{Handle, ObjectId},
     validate::Validate,
     validation::{ValidationConfig, ValidationError},
 };
@@ -62,7 +62,7 @@ macro_rules! any_object {
                             objects.$store.insert(
                                 handle.clone().into(), object
                             );
-                            handle.0.into()
+                            handle.into()
                         }
                     )*
                 }
@@ -138,7 +138,7 @@ impl Form for Bare {
 pub struct Stored;
 
 impl Form for Stored {
-    type Form<T> = HandleWrapper<T>;
+    type Form<T> = Handle<T>;
 }
 
 /// Implementation of [`Form`] for objects that are about to be stored
@@ -152,5 +152,5 @@ impl Form for Stored {
 pub struct AboutToBeStored;
 
 impl Form for AboutToBeStored {
-    type Form<T> = (HandleWrapper<T>, T);
+    type Form<T> = (Handle<T>, T);
 }
