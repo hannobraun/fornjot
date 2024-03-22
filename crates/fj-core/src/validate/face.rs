@@ -25,7 +25,3 @@ impl Validate for Face {
         );
     }
 }
-
-/// [`Face`] validation error
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum FaceValidationError {}
