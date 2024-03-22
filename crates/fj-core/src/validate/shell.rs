@@ -23,7 +23,7 @@ impl Validate for Shell {
         ShellValidationError::check_curve_coordinates(
             self, geometry, config, errors,
         );
-        ShellValidationError::check_half_edge_pairs(self, errors);
+        ShellValidationError::check_half_edge_pairs(self, geometry, errors);
         ShellValidationError::check_half_edge_coincidence(
             self, geometry, config, errors,
         );
@@ -177,7 +177,11 @@ impl ShellValidationError {
     }
 
     /// Check that each half-edge is part of a pair
-    fn check_half_edge_pairs(shell: &Shell, errors: &mut Vec<ValidationError>) {
+    fn check_half_edge_pairs(
+        shell: &Shell,
+        _: &Geometry,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let mut unmatched_half_edges = BTreeMap::new();
 
         for face in shell.faces() {
