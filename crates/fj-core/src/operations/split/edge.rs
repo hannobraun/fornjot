@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Shell},
     operations::{
-        derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
+        geometry::UpdateHalfEdgeGeometry, insert::Insert,
         replace::ReplaceHalfEdge, split::SplitHalfEdge, update::UpdateHalfEdge,
     },
     queries::SiblingOfHalfEdge,
@@ -40,11 +40,7 @@ impl SplitEdge for Shell {
             .get_sibling_of(half_edge)
             .expect("Expected half-edge and its sibling to be part of shell");
 
-        let [half_edge_a, half_edge_b] = half_edge
-            .split_half_edge(point, core)
-            .map(|half_edge_part| {
-                half_edge_part.insert(core).derive_from(half_edge, core)
-            });
+        let [half_edge_a, half_edge_b] = half_edge.split_half_edge(point, core);
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
@@ -53,22 +49,14 @@ impl SplitEdge for Shell {
                     |_, _| half_edge_b.start_vertex().clone(),
                     core,
                 )
-                .insert(core);
-            [sibling_a, sibling_b].map(|half_edge| {
-                half_edge.insert(core).derive_from(&sibling, core).set_path(
-                    core.layers.geometry.of_half_edge(&sibling).path,
+                .insert(core)
+                .set_path(
+                    core.layers.geometry.of_half_edge(&sibling_b).path,
                     &mut core.layers.geometry,
-                )
-            })
-        };
+                );
 
-        let [half_edge_a, half_edge_b] =
-            [half_edge_a, half_edge_b].map(|half_edge_part| {
-                half_edge_part.set_path(
-                    core.layers.geometry.of_half_edge(half_edge).path,
-                    &mut core.layers.geometry,
-                )
-            });
+            [sibling_a, sibling_b]
+        };
 
         let shell = self
             .replace_half_edge(
