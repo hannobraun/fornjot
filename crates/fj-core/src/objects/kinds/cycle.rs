@@ -7,7 +7,7 @@ use crate::{
 };
 
 /// A cycle of connected edges
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Cycle {
     half_edges: ObjectSet<HalfEdge>,
 }

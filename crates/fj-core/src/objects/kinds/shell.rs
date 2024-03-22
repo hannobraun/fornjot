@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// A 3-dimensional closed shell
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Shell {
     faces: ObjectSet<Face>,
 }

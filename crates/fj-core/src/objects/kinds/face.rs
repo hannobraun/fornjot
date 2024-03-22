@@ -30,7 +30,7 @@ use crate::{
 ///
 /// [`HalfEdge`]: crate::objects::HalfEdge
 /// [`Shell`]: crate::objects::Shell
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Face {
     surface: Handle<Surface>,
     region: Handle<Region>,

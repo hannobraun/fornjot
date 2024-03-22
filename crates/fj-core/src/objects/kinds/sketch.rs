@@ -4,7 +4,7 @@ use crate::{
 };
 
 /// A 2-dimensional shape
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Sketch {
     regions: ObjectSet<Region>,
 }

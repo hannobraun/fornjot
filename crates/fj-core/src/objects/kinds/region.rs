@@ -13,7 +13,7 @@ use crate::{
 /// region on their left side (on the region's front side).
 ///
 /// [`HalfEdge`]: crate::objects::HalfEdge
-#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Clone, Debug)]
 pub struct Region {
     exterior: Handle<Cycle>,
     interiors: ObjectSet<Cycle>,
