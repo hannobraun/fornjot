@@ -7,7 +7,7 @@ use fj_math::Point;
 use crate::{
     geometry::{CurveBoundary, GlobalPath, SurfaceGeometry, SurfacePath},
     objects::Curve,
-    storage::{Handle, HandleWrapper},
+    storage::Handle,
     Core,
 };
 
@@ -146,8 +146,7 @@ impl CurveApprox {
 /// Cache for curve approximations
 #[derive(Default)]
 pub struct CurveApproxCache {
-    inner:
-        BTreeMap<(HandleWrapper<Curve>, CurveBoundary<Point<1>>), CurveApprox>,
+    inner: BTreeMap<(Handle<Curve>, CurveBoundary<Point<1>>), CurveApprox>,
 }
 
 impl CurveApproxCache {
@@ -156,12 +155,12 @@ impl CurveApproxCache {
         handle: &Handle<Curve>,
         boundary: CurveBoundary<Point<1>>,
     ) -> Option<CurveApprox> {
-        let handle = HandleWrapper::from(handle.clone());
-
         if let Some(approx) = self.inner.get(&(handle.clone(), boundary)) {
             return Some(approx.clone());
         }
-        if let Some(approx) = self.inner.get(&(handle, boundary.reverse())) {
+        if let Some(approx) =
+            self.inner.get(&(handle.clone(), boundary.reverse()))
+        {
             return Some(approx.clone().reverse());
         }
 
@@ -174,7 +173,6 @@ impl CurveApproxCache {
         boundary: CurveBoundary<Point<1>>,
         approx: CurveApprox,
     ) -> CurveApprox {
-        let handle = HandleWrapper::from(handle);
         self.inner
             .insert((handle, boundary), approx.clone())
             .unwrap_or(approx)
