@@ -40,9 +40,7 @@ impl SplitEdge for Shell {
             .get_sibling_of(half_edge)
             .expect("Expected half-edge and its sibling to be part of shell");
 
-        let [half_edge_a, half_edge_b] = half_edge
-            .split_half_edge(point, core)
-            .map(|half_edge_part| half_edge_part);
+        let [half_edge_a, half_edge_b] = half_edge.split_half_edge(point, core);
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
