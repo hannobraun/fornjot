@@ -17,14 +17,14 @@ use crate::{
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
     fn unjoined(
-        path: SurfacePath,
+        _: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
         core: &mut Core,
     ) -> HalfEdge {
         let curve = Curve::new().insert(core);
         let start_vertex = Vertex::new().insert(core);
 
-        HalfEdge::new(path, boundary, curve, start_vertex)
+        HalfEdge::new(boundary, curve, start_vertex)
     }
 
     /// Create a half-edge from its sibling
@@ -34,7 +34,6 @@ pub trait BuildHalfEdge {
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let half_edge = HalfEdge::new(
-            core.layers.geometry.of_half_edge(sibling).path,
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,

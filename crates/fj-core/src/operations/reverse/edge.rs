@@ -14,7 +14,6 @@ impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
         let boundary = self.boundary().reverse();
 
         let half_edge = HalfEdge::new(
-            path,
             boundary,
             self.curve().clone(),
             self.start_vertex().clone(),
