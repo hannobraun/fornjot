@@ -3,7 +3,7 @@ use fj_math::Point;
 use crate::{
     objects::{HalfEdge, Shell},
     operations::{
-        derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
+        geometry::UpdateHalfEdgeGeometry, insert::Insert,
         replace::ReplaceHalfEdge, split::SplitHalfEdge, update::UpdateHalfEdge,
     },
     queries::SiblingOfHalfEdge,
@@ -42,7 +42,7 @@ impl SplitEdge for Shell {
 
         let [half_edge_a, half_edge_b] = half_edge
             .split_half_edge(point, core)
-            .map(|half_edge_part| half_edge_part.derive_from(half_edge, core));
+            .map(|half_edge_part| half_edge_part);
 
         let siblings = {
             let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
@@ -53,7 +53,7 @@ impl SplitEdge for Shell {
                 )
                 .insert(core);
             [sibling_a, sibling_b].map(|half_edge| {
-                half_edge.derive_from(&sibling, core).set_path(
+                half_edge.set_path(
                     core.layers.geometry.of_half_edge(&sibling).path,
                     &mut core.layers.geometry,
                 )
