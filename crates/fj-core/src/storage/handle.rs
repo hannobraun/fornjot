@@ -125,41 +125,29 @@ impl<T> Clone for Handle<T> {
     }
 }
 
-impl<T> Eq for Handle<T> where T: Eq {}
+impl<T> Eq for Handle<T> {}
 
-impl<T> PartialEq for Handle<T>
-where
-    T: PartialEq,
-{
+impl<T> PartialEq for Handle<T> {
     fn eq(&self, other: &Self) -> bool {
         self.id().eq(&other.id())
     }
 }
 
-impl<T> Hash for Handle<T>
-where
-    T: Hash,
-{
+impl<T> Hash for Handle<T> {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.id().hash(state);
     }
 }
 
-impl<T> Ord for Handle<T>
-where
-    T: Ord,
-{
+impl<T> Ord for Handle<T> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.id().cmp(&other.id())
     }
 }
 
-impl<T> PartialOrd for Handle<T>
-where
-    T: PartialOrd,
-{
+impl<T> PartialOrd for Handle<T> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.id().partial_cmp(&other.id())
+        Some(self.cmp(other))
     }
 }
 
