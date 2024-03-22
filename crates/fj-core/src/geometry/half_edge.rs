@@ -37,6 +37,15 @@ pub struct HalfEdgeGeometry {
 }
 
 impl HalfEdgeGeometry {
+    /// Update the boundary
+    pub fn with_boundary(
+        mut self,
+        boundary: impl Into<CurveBoundary<Point<1>>>,
+    ) -> Self {
+        self.boundary = boundary.into();
+        self
+    }
+
     /// Compute the surface position where the half-edge starts
     pub fn start_position(
         &self,
