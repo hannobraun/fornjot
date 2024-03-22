@@ -62,14 +62,6 @@ impl SplitEdge for Shell {
             })
         };
 
-        let [half_edge_a, half_edge_b] =
-            [half_edge_a, half_edge_b].map(|half_edge_part| {
-                half_edge_part.set_path(
-                    core.layers.geometry.of_half_edge(half_edge).path,
-                    &mut core.layers.geometry,
-                )
-            });
-
         let shell = self
             .replace_half_edge(
                 half_edge,
