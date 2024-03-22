@@ -41,9 +41,7 @@ pub trait BuildHalfEdge {
 
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
-            HalfEdgeGeometry {
-                path: core.layers.geometry.of_half_edge(sibling).path,
-            },
+            core.layers.geometry.of_half_edge(sibling),
         );
 
         half_edge
