@@ -179,7 +179,7 @@ impl ShellValidationError {
     /// Check that each half-edge is part of a pair
     fn check_half_edge_pairs(
         shell: &Shell,
-        _: &Geometry,
+        geometry: &Geometry,
         errors: &mut Vec<ValidationError>,
     ) {
         let mut unmatched_half_edges = BTreeMap::new();
@@ -204,7 +204,8 @@ impl ShellValidationError {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(shell.are_siblings(half_edge, sibling));
+                            assert!(shell
+                                .are_siblings(half_edge, sibling, geometry));
                         }
                         None => {
                             // If this half-edge has a sibling, we haven't seen
@@ -242,7 +243,7 @@ impl ShellValidationError {
                     continue;
                 }
 
-                if shell.are_siblings(half_edge_a, half_edge_b) {
+                if shell.are_siblings(half_edge_a, half_edge_b, geometry) {
                     // If the half-edges are siblings, they are allowed to be
                     // coincident. Must be, in fact. There's another validation
                     // check that takes care of that.
