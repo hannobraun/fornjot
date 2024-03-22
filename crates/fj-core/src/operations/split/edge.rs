@@ -49,13 +49,13 @@ impl SplitEdge for Shell {
                     |_, _| half_edge_b.start_vertex().clone(),
                     core,
                 )
-                .insert(core);
-            [sibling_a, sibling_b].map(|half_edge| {
-                half_edge.set_path(
-                    core.layers.geometry.of_half_edge(&sibling).path,
+                .insert(core)
+                .set_path(
+                    core.layers.geometry.of_half_edge(&sibling_b).path,
                     &mut core.layers.geometry,
-                )
-            })
+                );
+
+            [sibling_a, sibling_b]
         };
 
         let shell = self
