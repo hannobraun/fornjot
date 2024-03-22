@@ -65,7 +65,11 @@ impl Cycle {
         let mut sum = Scalar::ZERO;
 
         for (a, b) in self.half_edges().pairs() {
-            let [a, b] = [a, b].map(|half_edge| half_edge.start_position());
+            let [a, b] = [a, b].map(|half_edge| {
+                geometry
+                    .of_half_edge(half_edge)
+                    .start_position(half_edge.boundary())
+            });
 
             sum += (b.u - a.u) * (b.v + a.v);
         }

@@ -52,7 +52,9 @@ impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
                     .path
                     .point_from_path_coords(end)
             };
-            let start_pos_of_second_half_edge = second.start_position();
+            let start_pos_of_second_half_edge = geometry
+                .of_half_edge(second)
+                .start_position(second.boundary());
 
             let distance_between_positions = (end_pos_of_first_half_edge
                 - start_pos_of_second_half_edge)
