@@ -42,7 +42,7 @@ impl Cycle {
 
             let geometry = geometry.of_half_edge(first);
 
-            let [a, b] = first.boundary().inner;
+            let [a, b] = geometry.boundary.inner;
             let edge_direction_positive = a < b;
 
             let circle = match geometry.path {
