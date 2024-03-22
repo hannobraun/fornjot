@@ -11,7 +11,7 @@ use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
-    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeometry>,
+    half_edge: BTreeMap<HandleWrapper<HalfEdge>, HalfEdgeGeometry>,
     surface: BTreeMap<HandleWrapper<Surface>, SurfaceGeometry>,
 
     xy_plane: Handle<Surface>,
@@ -61,7 +61,7 @@ impl Geometry {
         half_edge: Handle<HalfEdge>,
         geometry: HalfEdgeGeometry,
     ) {
-        self.half_edge.insert(half_edge, geometry);
+        self.half_edge.insert(half_edge.into(), geometry);
     }
 
     pub(crate) fn define_surface_inner(
@@ -82,7 +82,7 @@ impl Geometry {
         half_edge: &Handle<HalfEdge>,
     ) -> HalfEdgeGeometry {
         self.half_edge
-            .get(half_edge)
+            .get(&half_edge.clone().into())
             .copied()
             .expect("Expected geometry of half-edge to be defined")
     }
