@@ -77,7 +77,7 @@ impl HalfEdge {
         &self.start_vertex
     }
 
-    /// Compute the surface position where the edge starts
+    /// Compute the surface position where the half-edge starts
     pub fn start_position(&self) -> Point<2> {
         // Computing the surface position from the curve position is fine.
         // `Edge` "owns" its start position. There is no competing code that
