@@ -82,7 +82,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
 
         // Let's figure out the surface coordinates of the edge vertices.
         let surface_points = {
-            let [a, b] = self.boundary().inner;
+            let [a, b] = geometry.boundary.inner;
 
             [
                 [a.t, Scalar::ZERO],
@@ -100,7 +100,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
 
         // Now, the boundaries of each edge.
         let boundaries = {
-            let [a, b] = self.boundary().inner;
+            let [a, b] = geometry.boundary.inner;
             let [c, d] = [0., 1.].map(|coord| Point::from([coord]));
 
             [[a, b], [c, d], [b, a], [d, c]]
