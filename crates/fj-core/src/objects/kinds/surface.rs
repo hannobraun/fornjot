@@ -14,7 +14,7 @@
 /// If you need to reference a `Surface` from a struct that needs to derive
 /// `Eq`/`Ord`/..., you can use `HandleWrapper<Vertex>` to do that. It will
 /// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct Surface {}
 
 impl Surface {
