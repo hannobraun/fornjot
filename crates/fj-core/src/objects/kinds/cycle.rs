@@ -66,9 +66,7 @@ impl Cycle {
 
         for (a, b) in self.half_edges().pairs() {
             let [a, b] = [a, b].map(|half_edge| {
-                geometry
-                    .of_half_edge(half_edge)
-                    .start_position(half_edge.boundary())
+                geometry.of_half_edge(half_edge).start_position()
             });
 
             sum += (b.u - a.u) * (b.v + a.v);

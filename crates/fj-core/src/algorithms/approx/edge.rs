@@ -31,7 +31,7 @@ impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
             .layers
             .geometry
             .of_half_edge(half_edge)
-            .start_position(half_edge.boundary());
+            .start_position();
         let start_position =
             match cache.start_position.get(half_edge.start_vertex()) {
                 Some(position) => position,
