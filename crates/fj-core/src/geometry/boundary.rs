@@ -5,7 +5,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::{objects::Vertex, storage::HandleWrapper};
+use crate::{objects::Vertex, storage::Handle};
 
 /// A boundary on a curve
 ///
@@ -240,7 +240,7 @@ impl CurveBoundaryElement for Point<1> {
 }
 
 impl CurveBoundaryElement for Vertex {
-    type Repr = HandleWrapper<Vertex>;
+    type Repr = Handle<Vertex>;
 }
 
 #[cfg(test)]
