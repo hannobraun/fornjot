@@ -21,9 +21,10 @@ impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
         .insert(core)
         .derive_from(self, core);
 
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+        core.layers.geometry.define_half_edge(
+            half_edge.clone(),
+            HalfEdgeGeometry { path, boundary },
+        );
 
         half_edge
     }

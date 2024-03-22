@@ -31,6 +31,9 @@ pub struct HalfEdgeGeometry {
     /// really belong here. It exists here for practical reasons that are,
     /// hopefully, temporary.
     pub path: SurfacePath,
+
+    /// # The boundary of the half-edge on its curve
+    pub boundary: CurveBoundary<Point<1>>,
 }
 
 impl HalfEdgeGeometry {

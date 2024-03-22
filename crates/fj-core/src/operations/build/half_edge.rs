@@ -68,9 +68,13 @@ pub trait BuildHalfEdge {
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
         let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+        core.layers.geometry.define_half_edge(
+            half_edge.clone(),
+            HalfEdgeGeometry {
+                path,
+                boundary: boundary.into(),
+            },
+        );
 
         half_edge
     }
@@ -86,9 +90,13 @@ pub trait BuildHalfEdge {
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
+        core.layers.geometry.define_half_edge(
+            half_edge.clone(),
+            HalfEdgeGeometry {
+                path,
+                boundary: boundary.into(),
+            },
+        );
 
         half_edge
     }
@@ -107,7 +115,13 @@ pub trait BuildHalfEdge {
 
         HalfEdge::unjoined(boundary, core)
             .insert(core)
-            .set_geometry(HalfEdgeGeometry { path }, &mut core.layers.geometry)
+            .set_geometry(
+                HalfEdgeGeometry {
+                    path,
+                    boundary: boundary.into(),
+                },
+                &mut core.layers.geometry,
+            )
     }
 }
 
