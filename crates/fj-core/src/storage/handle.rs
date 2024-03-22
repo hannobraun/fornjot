@@ -132,7 +132,7 @@ where
     T: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
-        self.deref().eq(other.deref())
+        self.id().eq(&other.id())
     }
 }
 
@@ -141,7 +141,7 @@ where
     T: Hash,
 {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.deref().hash(state);
+        self.id().hash(state);
     }
 }
 
@@ -150,7 +150,7 @@ where
     T: Ord,
 {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.deref().cmp(other.deref())
+        self.id().cmp(&other.id())
     }
 }
 
@@ -159,7 +159,7 @@ where
     T: PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.deref().partial_cmp(other.deref())
+        self.id().partial_cmp(&other.id())
     }
 }
 
