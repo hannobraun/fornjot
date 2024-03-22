@@ -13,8 +13,10 @@ impl Reverse for Cycle {
             .half_edges()
             .pairs()
             .map(|(current, next)| {
+                let path = core.layers.geometry.of_half_edge(current).path;
+
                 let half_edge = HalfEdge::new(
-                    core.layers.geometry.of_half_edge(current).path,
+                    path,
                     current.boundary().reverse(),
                     current.curve().clone(),
                     next.start_vertex().clone(),
@@ -24,9 +26,7 @@ impl Reverse for Cycle {
 
                 core.layers.geometry.define_half_edge(
                     half_edge.clone(),
-                    HalfEdgeGeometry {
-                        path: core.layers.geometry.of_half_edge(current).path,
-                    },
+                    HalfEdgeGeometry { path },
                 );
 
                 half_edge
