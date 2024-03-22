@@ -38,7 +38,6 @@ impl UpdateHalfEdge for HalfEdge {
         T: Insert<Inserted = Handle<Curve>>,
     {
         HalfEdge::new(
-            self.path(),
             self.boundary(),
             update(self.curve(), core)
                 .insert(core)
@@ -56,7 +55,6 @@ impl UpdateHalfEdge for HalfEdge {
         T: Insert<Inserted = Handle<Vertex>>,
     {
         HalfEdge::new(
-            self.path(),
             self.boundary(),
             self.curve().clone(),
             update(self.start_vertex(), core)

@@ -28,7 +28,7 @@ impl TransformObject for Handle<HalfEdge> {
             .transform_with_cache(transform, core, cache);
 
         let half_edge =
-            HalfEdge::new(path, boundary, curve, start_vertex).insert(core);
+            HalfEdge::new(boundary, curve, start_vertex).insert(core);
 
         core.layers
             .geometry

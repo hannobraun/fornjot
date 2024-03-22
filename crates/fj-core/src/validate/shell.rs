@@ -446,7 +446,6 @@ mod tests {
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
                                         [HalfEdge::new(
-                                            half_edge.path().reverse(),
                                             half_edge.boundary().reverse(),
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),

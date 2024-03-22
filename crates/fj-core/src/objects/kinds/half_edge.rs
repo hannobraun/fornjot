@@ -1,7 +1,7 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, SurfacePath},
+    geometry::CurveBoundary,
     objects::{Curve, Vertex},
     storage::{Handle, HandleWrapper},
 };
@@ -35,7 +35,6 @@ use crate::{
 /// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdge {
-    path: SurfacePath,
     boundary: CurveBoundary<Point<1>>,
     curve: HandleWrapper<Curve>,
     start_vertex: HandleWrapper<Vertex>,
@@ -44,22 +43,15 @@ pub struct HalfEdge {
 impl HalfEdge {
     /// Create an instance of `Edge`
     pub fn new(
-        path: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
         curve: Handle<Curve>,
         start_vertex: Handle<Vertex>,
     ) -> Self {
         Self {
-            path,
             boundary: boundary.into(),
             curve: curve.into(),
             start_vertex: start_vertex.into(),
         }
-    }
-
-    /// Access the curve that defines the edge's geometry
-    pub fn path(&self) -> SurfacePath {
-        self.path
     }
 
     /// Access the boundary points of the edge on the curve
