@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::hash::Hash;
 
 use crate::objects::{Cycle, Face, HalfEdge, Region, Shell};
 use crate::storage::Handle;
@@ -7,7 +6,7 @@ use crate::storage::Handle;
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
 
-impl<T: Eq + PartialEq + Hash, U> ReferenceCounter<T, U> {
+impl<T, U> ReferenceCounter<T, U> {
     pub fn new() -> Self {
         Self(HashMap::new())
     }
