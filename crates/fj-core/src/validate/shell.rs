@@ -450,6 +450,8 @@ mod tests {
                                             .geometry
                                             .of_half_edge(half_edge);
                                         geometry.path = geometry.path.reverse();
+                                        geometry.boundary =
+                                            geometry.boundary.reverse();
 
                                         [HalfEdge::new(
                                             half_edge.boundary().reverse(),
