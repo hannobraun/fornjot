@@ -32,16 +32,15 @@ pub trait BuildHalfEdge {
         start_vertex: Handle<Vertex>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
+        let geometry = core.layers.geometry.of_half_edge(sibling);
+
         HalfEdge::new(
             sibling.boundary().reverse(),
             sibling.curve().clone(),
             start_vertex,
         )
         .insert(core)
-        .set_geometry(
-            core.layers.geometry.of_half_edge(sibling),
-            &mut core.layers.geometry,
-        )
+        .set_geometry(geometry, &mut core.layers.geometry)
     }
 
     /// Create an arc
