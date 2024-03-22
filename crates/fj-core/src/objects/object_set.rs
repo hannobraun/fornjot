@@ -30,7 +30,7 @@ impl<T> ObjectSet<T> {
     /// Panics, if the iterator contains duplicate `Handle`s.
     pub fn new(handles: impl IntoIterator<Item = Handle<T>>) -> Self
     where
-        T: Debug + Ord,
+        T: Debug,
     {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
@@ -156,7 +156,7 @@ impl<T> ObjectSet<T> {
         replacements: impl IntoIterator<Item = impl Into<Handle<T>>>,
     ) -> Option<Self>
     where
-        T: Debug + Ord,
+        T: Debug,
     {
         let mut iter = self.iter().cloned().peekable();
 
@@ -201,7 +201,7 @@ impl<T> Hash for ObjectSet<T> {
 
 impl<O> FromIterator<Handle<O>> for ObjectSet<O>
 where
-    O: Debug + Ord,
+    O: Debug,
 {
     fn from_iter<T: IntoIterator<Item = Handle<O>>>(handles: T) -> Self {
         Self::new(handles)
