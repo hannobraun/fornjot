@@ -33,7 +33,7 @@ use crate::{
 ///
 /// [`Cycle`]: crate::objects::Cycle
 /// [`Shell`]: crate::objects::Shell
-#[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+#[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct HalfEdge {
     boundary: CurveBoundary<Point<1>>,
     curve: Handle<Curve>,

@@ -83,7 +83,7 @@
 /// [`Sketch`]: crate::objects::Sketch
 /// [`Solid`]: crate::objects::Solid
 /// [`Surface`]: crate::objects::Surface
-#[derive(Clone, Copy, Debug, Default, Hash)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct Vertex {}
 
 impl Vertex {
