@@ -17,7 +17,6 @@ use crate::{
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
     fn unjoined(
-        _: SurfacePath,
         boundary: impl Into<CurveBoundary<Point<1>>>,
         core: &mut Core,
     ) -> HalfEdge {
@@ -73,7 +72,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
+        let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
         core.layers
             .geometry
             .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
@@ -91,7 +90,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let half_edge = HalfEdge::unjoined(path, boundary, core).insert(core);
+        let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
         core.layers
             .geometry
             .define_half_edge(half_edge.clone(), HalfEdgeGeometry { path });
@@ -111,7 +110,7 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(path, boundary, core)
+        HalfEdge::unjoined(boundary, core)
             .insert(core)
             .set_path(path, &mut core.layers.geometry)
     }
