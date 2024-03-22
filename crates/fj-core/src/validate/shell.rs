@@ -445,10 +445,11 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let geometry = core
+                                        let mut geometry = core
                                             .layers
                                             .geometry
                                             .of_half_edge(half_edge);
+                                        geometry.path = geometry.path.reverse();
 
                                         [HalfEdge::new(
                                             half_edge.boundary().reverse(),
@@ -457,7 +458,7 @@ mod tests {
                                         )
                                         .insert(core)
                                         .set_path(
-                                            geometry.path.reverse(),
+                                            geometry.path,
                                             &mut core.layers.geometry,
                                         )]
                                     },
