@@ -22,7 +22,7 @@ impl Reverse for Cycle {
                 .insert(core)
                 .derive_from(current, core)
                 .set_geometry(
-                    core.layers.geometry.of_half_edge(current).path,
+                    core.layers.geometry.of_half_edge(current),
                     &mut core.layers.geometry,
                 )
             })

@@ -458,7 +458,7 @@ mod tests {
                                         )
                                         .insert(core)
                                         .set_geometry(
-                                            geometry.path,
+                                            geometry,
                                             &mut core.layers.geometry,
                                         )]
                                     },
@@ -539,8 +539,7 @@ mod tests {
                                             .set_geometry(
                                                 core.layers
                                                     .geometry
-                                                    .of_half_edge(half_edge)
-                                                    .path,
+                                                    .of_half_edge(half_edge),
                                                 &mut core.layers.geometry,
                                             )]
                                     },

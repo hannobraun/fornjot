@@ -104,8 +104,7 @@ pub trait BuildShell {
                                 .set_geometry(
                                     core.layers
                                         .geometry
-                                        .of_half_edge(&half_edge)
-                                        .path,
+                                        .of_half_edge(&half_edge),
                                     &mut core.layers.geometry,
                                 )
                         })
