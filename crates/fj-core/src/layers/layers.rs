@@ -46,11 +46,11 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
-        let objects = Topology::new();
-        let geometry = Geometry::new(&objects);
+        let topology = Topology::new();
+        let geometry = Geometry::new(&topology);
 
         Self {
-            topology: Layer::new(objects),
+            topology: Layer::new(topology),
             geometry: Layer::new(geometry),
             validation: Layer::default(),
             presentation: Layer::default(),
