@@ -17,13 +17,13 @@ use crate::{
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
     fn unjoined(
-        boundary: impl Into<CurveBoundary<Point<1>>>,
+        _: impl Into<CurveBoundary<Point<1>>>,
         core: &mut Core,
     ) -> HalfEdge {
         let curve = Curve::new().insert(core);
         let start_vertex = Vertex::new().insert(core);
 
-        HalfEdge::new(boundary, curve, start_vertex)
+        HalfEdge::new(curve, start_vertex)
     }
 
     /// Create a half-edge from its sibling
@@ -35,13 +35,9 @@ pub trait BuildHalfEdge {
         let mut geometry = core.layers.geometry.of_half_edge(sibling);
         geometry.boundary = geometry.boundary.reverse();
 
-        HalfEdge::new(
-            sibling.boundary().reverse(),
-            sibling.curve().clone(),
-            start_vertex,
-        )
-        .insert(core)
-        .set_geometry(geometry, &mut core.layers.geometry)
+        HalfEdge::new(sibling.curve().clone(), start_vertex)
+            .insert(core)
+            .set_geometry(geometry, &mut core.layers.geometry)
     }
 
     /// Create an arc

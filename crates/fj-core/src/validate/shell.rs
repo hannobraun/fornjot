@@ -462,7 +462,6 @@ mod tests {
                                             geometry.boundary.reverse();
 
                                         [HalfEdge::new(
-                                            half_edge.boundary().reverse(),
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )

@@ -13,13 +13,10 @@ impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
         geometry.path = geometry.path.reverse();
         geometry.boundary = geometry.boundary.reverse();
 
-        let half_edge = HalfEdge::new(
-            geometry.boundary,
-            self.curve().clone(),
-            self.start_vertex().clone(),
-        )
-        .insert(core)
-        .derive_from(self, core);
+        let half_edge =
+            HalfEdge::new(self.curve().clone(), self.start_vertex().clone())
+                .insert(core)
+                .derive_from(self, core);
 
         core.layers
             .geometry
