@@ -4,7 +4,7 @@ use fj_math::Vector;
 
 use crate::{
     storage::Handle,
-    topology::{HalfEdge, Objects, Surface},
+    topology::{HalfEdge, Surface, Topology},
 };
 
 use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
@@ -21,7 +21,7 @@ pub struct Geometry {
 
 impl Geometry {
     /// Create a new instance of `Geometry`
-    pub fn new(objects: &Objects) -> Self {
+    pub fn new(objects: &Topology) -> Self {
         let mut self_ = Self {
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),

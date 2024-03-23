@@ -7,8 +7,8 @@
 //! whole shapes (2D and 3D, respectively), while all other objects are
 //! referenced (directly or indirectly) by these top-level objects.
 //!
-//! All objects are stored in centralized storage (see [`Objects`]) and referred
-//! to through a [`Handle`].
+//! All objects are stored in centralized storage (see [`Topology`]) and
+//! referred to through a [`Handle`].
 //!
 //! [`Handle`]: crate::storage::Handle
 
@@ -34,5 +34,5 @@ pub use self::{
         surface::Surface,
         vertex::Vertex,
     },
-    stores::{Objects, Surfaces},
+    stores::{Surfaces, Topology},
 };

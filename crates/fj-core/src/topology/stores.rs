@@ -6,7 +6,7 @@ use super::{
 
 /// The available object stores
 #[derive(Debug, Default)]
-pub struct Objects {
+pub struct Topology {
     /// Store for [`Curve`]s
     pub curves: Store<Curve>,
 
@@ -38,7 +38,7 @@ pub struct Objects {
     pub vertices: Store<Vertex>,
 }
 
-impl Objects {
+impl Topology {
     /// Construct a new instance of `Stores`
     pub fn new() -> Self {
         Self::default()

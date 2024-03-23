@@ -1,7 +1,7 @@
 use crate::{
     geometry::Geometry,
     presentation::Presentation,
-    topology::Objects,
+    topology::Topology,
     validation::{Validation, ValidationConfig},
 };
 
@@ -26,7 +26,7 @@ pub struct Layers {
     ///
     /// Manages the stores of topological and geometric objects that make up
     /// shapes.
-    pub objects: Layer<Objects>,
+    pub objects: Layer<Topology>,
 
     /// The geometry layer
     ///
@@ -47,7 +47,7 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
-        let objects = Objects::new();
+        let objects = Topology::new();
         let geometry = Geometry::new(&objects);
 
         Self {

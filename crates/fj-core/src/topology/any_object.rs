@@ -2,8 +2,8 @@ use crate::{
     geometry::Geometry,
     storage::{Handle, ObjectId},
     topology::{
-        Curve, Cycle, Face, HalfEdge, Objects, Region, Shell, Sketch, Solid,
-        Surface, Vertex,
+        Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
+        Topology, Vertex,
     },
     validate::Validate,
     validation::{ValidationConfig, ValidationError},
@@ -55,7 +55,7 @@ macro_rules! any_object {
 
         impl AnyObject<AboutToBeStored> {
             /// Insert the object into its respective store
-            pub fn insert(self, objects: &mut Objects) -> AnyObject<Stored> {
+            pub fn insert(self, objects: &mut Topology) -> AnyObject<Stored> {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
