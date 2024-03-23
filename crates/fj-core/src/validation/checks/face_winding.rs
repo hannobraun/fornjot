@@ -88,7 +88,7 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Face::polygon(
-            core.layers.objects.surfaces.xy_plane(),
+            core.layers.topology.surfaces.xy_plane(),
             [[0., 0.], [3., 0.], [0., 3.]],
             &mut core,
         )

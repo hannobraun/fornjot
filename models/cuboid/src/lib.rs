@@ -13,7 +13,7 @@ use fj::{
 pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
     let [x, y, z] = size.into().components;
 
-    let bottom_surface = core.layers.objects.surfaces.xy_plane();
+    let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
     Sketch::empty()

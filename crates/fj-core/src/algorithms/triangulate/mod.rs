@@ -105,7 +105,7 @@ mod tests {
         let d = [0., 1.];
 
         let face =
-            Face::unbound(core.layers.objects.surfaces.xy_plane(), &mut core)
+            Face::unbound(core.layers.topology.surfaces.xy_plane(), &mut core)
                 .update_region(
                     |region, core| {
                         region.update_exterior(
@@ -145,7 +145,7 @@ mod tests {
         let g = [3., 3.];
         let h = [3., 1.];
 
-        let surface = core.layers.objects.surfaces.xy_plane();
+        let surface = core.layers.topology.surfaces.xy_plane();
 
         let face = Face::unbound(surface.clone(), &mut core).update_region(
             |region, core| {
@@ -234,7 +234,7 @@ mod tests {
         let d = [1., 1.];
         let e = [0., 9.];
 
-        let surface = core.layers.objects.surfaces.xy_plane();
+        let surface = core.layers.topology.surfaces.xy_plane();
 
         let face = Face::unbound(surface.clone(), &mut core).update_region(
             |region, core| {

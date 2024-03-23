@@ -38,9 +38,9 @@ macro_rules! impl_insert {
                 type Inserted = Handle<Self>;
 
                 fn insert(self, core: &mut Core) -> Self::Inserted {
-                    let handle = core.layers.objects.$store.reserve();
+                    let handle = core.layers.topology.$store.reserve();
                     let object = (handle.clone(), self).into();
-                    core.layers.objects.insert(
+                    core.layers.topology.insert(
                         object,
                         &core.layers.geometry,
                         &mut core.layers.validation,

@@ -26,7 +26,7 @@ pub struct Layers {
     ///
     /// Manages the stores of topological and geometric objects that make up
     /// shapes.
-    pub objects: Layer<Topology>,
+    pub topology: Layer<Topology>,
 
     /// The geometry layer
     ///
@@ -51,7 +51,7 @@ impl Layers {
         let geometry = Geometry::new(&objects);
 
         Self {
-            objects: Layer::new(objects),
+            topology: Layer::new(objects),
             geometry: Layer::new(geometry),
             validation: Layer::default(),
             presentation: Layer::default(),

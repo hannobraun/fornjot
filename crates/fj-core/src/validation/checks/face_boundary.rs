@@ -49,7 +49,7 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Face::circle(
-            core.layers.objects.surfaces.xy_plane(),
+            core.layers.topology.surfaces.xy_plane(),
             [0., 0.],
             1.,
             &mut core,
