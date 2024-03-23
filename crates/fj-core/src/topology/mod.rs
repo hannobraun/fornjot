@@ -14,14 +14,15 @@
 
 mod any_object;
 mod is_object;
-mod kinds;
 mod object_set;
+mod objects;
 mod stores;
 
 pub use self::{
     any_object::{AboutToBeStored, AnyObject, Bare, Form, Stored},
     is_object::IsObject,
-    kinds::{
+    object_set::{ObjectSet, ObjectSetIntoIter, ObjectSetIter},
+    objects::{
         curve::Curve,
         cycle::Cycle,
         face::{Face, Handedness},
@@ -33,6 +34,5 @@ pub use self::{
         surface::Surface,
         vertex::Vertex,
     },
-    object_set::{ObjectSet, ObjectSetIntoIter, ObjectSetIter},
     stores::{Objects, Surfaces},
 };
