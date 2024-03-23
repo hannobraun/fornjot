@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 use fj_math::Point;
 
-use crate::{objects::Vertex, storage::Handle};
+use crate::{storage::Handle, topology::Vertex};
 
 /// Cache for vertex approximations
 #[derive(Default)]

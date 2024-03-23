@@ -26,8 +26,8 @@ pub use self::{
 use std::collections::BTreeMap;
 
 use crate::{
-    objects::{Curve, Vertex},
     storage::{Handle, ObjectId},
+    topology::{Curve, Vertex},
 };
 
 /// A cache used for sweeping

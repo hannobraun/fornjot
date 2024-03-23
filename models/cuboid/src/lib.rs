@@ -1,11 +1,11 @@
 use fj::{
     core::{
-        objects::{Region, Sketch, Solid},
         operations::{
             build::{BuildRegion, BuildSketch},
             sweep::SweepSketch,
             update::UpdateSketch,
         },
+        topology::{Region, Sketch, Solid},
     },
     math::{Scalar, Vector},
 };

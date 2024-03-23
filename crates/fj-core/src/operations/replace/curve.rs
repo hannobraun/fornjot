@@ -1,11 +1,11 @@
 use std::ops::Deref;
 
 use crate::{
-    objects::{
-        Curve, Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid,
-    },
     operations::{derive::DeriveFrom, insert::Insert, update::UpdateHalfEdge},
     storage::Handle,
+    topology::{
+        Curve, Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid,
+    },
     Core,
 };
 

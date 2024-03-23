@@ -1,7 +1,7 @@
 use crate::{
-    objects::{Cycle, HalfEdge},
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
+    topology::{Cycle, HalfEdge},
     Core,
 };
 

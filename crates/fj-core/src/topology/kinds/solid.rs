@@ -1,6 +1,6 @@
 use crate::{
-    objects::{ObjectSet, Shell},
     storage::Handle,
+    topology::{ObjectSet, Shell},
 };
 
 /// A 3-dimensional shape, built from [`Shell`]s. Many Solids will contains only

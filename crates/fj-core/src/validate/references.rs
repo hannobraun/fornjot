@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use crate::objects::{Cycle, Face, HalfEdge, Region, Shell};
 use crate::storage::Handle;
+use crate::topology::{Cycle, Face, HalfEdge, Region, Shell};
 
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);

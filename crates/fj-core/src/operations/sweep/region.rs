@@ -3,11 +3,11 @@ use fj_math::Vector;
 
 use crate::{
     geometry::SurfaceGeometry,
-    objects::{Cycle, Face, Region, Surface},
     operations::{
         insert::Insert, reverse::Reverse, transform::TransformObject,
     },
     storage::Handle,
+    topology::{Cycle, Face, Region, Surface},
     Core,
 };
 

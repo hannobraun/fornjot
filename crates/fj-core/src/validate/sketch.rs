@@ -1,6 +1,6 @@
 use crate::geometry::Geometry;
-use crate::{objects::Cycle, storage::Handle};
-use crate::{objects::Sketch, validate_references};
+use crate::{storage::Handle, topology::Cycle};
+use crate::{topology::Sketch, validate_references};
 use fj_math::Winding;
 
 use super::{
@@ -120,10 +120,10 @@ impl SketchValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Cycle, HalfEdge, Region, Sketch, Vertex},
         operations::{
             build::BuildHalfEdge, build::BuildRegion, insert::Insert,
         },
+        topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{
             references::ReferenceCountError, SketchValidationError, Validate,
             ValidationError,

@@ -6,7 +6,7 @@
 //! the caller doesn't have to deal with duplicate vertices.
 
 use crate::{
-    geometry::SurfaceGeometry, objects::HalfEdge, storage::Handle, Core,
+    geometry::SurfaceGeometry, storage::Handle, topology::HalfEdge, Core,
 };
 
 use super::{

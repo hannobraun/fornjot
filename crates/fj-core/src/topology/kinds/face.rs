@@ -2,8 +2,8 @@ use fj_math::Winding;
 
 use crate::{
     geometry::Geometry,
-    objects::{Region, Surface},
     storage::Handle,
+    topology::{Region, Surface},
 };
 
 /// A face of a shape
@@ -28,8 +28,8 @@ use crate::{
 /// means that all [`HalfEdge`]s that bound a `Face` have the interior of the
 /// face on their left side (on the face's front side).
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
-/// [`Shell`]: crate::objects::Shell
+/// [`HalfEdge`]: crate::topology::HalfEdge
+/// [`Shell`]: crate::topology::Shell
 #[derive(Clone, Debug)]
 pub struct Face {
     surface: Handle<Surface>,

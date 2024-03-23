@@ -1,6 +1,6 @@
 use crate::{
     geometry::Geometry,
-    objects::Curve,
+    topology::Curve,
     validation::{ValidationConfig, ValidationError},
 };
 

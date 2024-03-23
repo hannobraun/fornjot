@@ -1,6 +1,6 @@
 use fj_math::Aabb;
 
-use crate::{geometry::Geometry, objects::Cycle};
+use crate::{geometry::Geometry, topology::Cycle};
 
 impl super::BoundingVolume<2> for Cycle {
     fn aabb(&self, geometry: &Geometry) -> Option<Aabb<2>> {

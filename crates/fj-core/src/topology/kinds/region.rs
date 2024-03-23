@@ -1,8 +1,8 @@
 //! A single, continues 2d region
 
 use crate::{
-    objects::{Cycle, ObjectSet},
     storage::Handle,
+    topology::{Cycle, ObjectSet},
 };
 
 /// A single, continuous 2d region, may contain holes
@@ -12,7 +12,7 @@ use crate::{
 /// means that all [`HalfEdge`]s that bound a `Region` have the interior of the
 /// region on their left side (on the region's front side).
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`HalfEdge`]: crate::topology::HalfEdge
 #[derive(Clone, Debug)]
 pub struct Region {
     exterior: Handle<Cycle>,

@@ -3,9 +3,9 @@
 use fj_interop::Color;
 
 use crate::{
-    objects::{AnyObject, Region, Stored},
     presentation::Presentation,
     storage::Handle,
+    topology::{AnyObject, Region, Stored},
 };
 
 use super::{Command, Event, Layer};

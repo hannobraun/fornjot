@@ -85,11 +85,11 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, Tolerance},
-        objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
+        topology::{Cycle, Face},
         Core,
     };
 

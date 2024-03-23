@@ -2,7 +2,7 @@
 
 use std::collections::BTreeSet;
 
-use crate::{objects::Solid, Core};
+use crate::{topology::Solid, Core};
 
 use super::{edge::HalfEdgeApproxCache, face::FaceApprox, Approx, Tolerance};
 

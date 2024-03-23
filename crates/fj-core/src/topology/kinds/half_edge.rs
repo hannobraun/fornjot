@@ -1,6 +1,6 @@
 use crate::{
-    objects::{Curve, Vertex},
     storage::Handle,
+    topology::{Curve, Vertex},
 };
 
 /// # A directed half-edge, defined in a surface's 2D space
@@ -28,8 +28,8 @@ use crate::{
 /// their start vertices are different.
 ///
 ///
-/// [`Cycle`]: crate::objects::Cycle
-/// [`Shell`]: crate::objects::Shell
+/// [`Cycle`]: crate::topology::Cycle
+/// [`Shell`]: crate::topology::Shell
 #[derive(Clone, Debug)]
 pub struct HalfEdge {
     curve: Handle<Curve>,

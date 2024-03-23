@@ -1,8 +1,8 @@
 use fj_math::{Point, Scalar};
 
 use crate::{
-    objects::{Cycle, Region},
     operations::{build::BuildCycle, insert::Insert},
+    topology::{Cycle, Region},
     Core,
 };
 

@@ -2,8 +2,8 @@
 
 use crate::{
     geometry::{Geometry, HalfEdgeGeometry, SurfaceGeometry},
-    objects::{HalfEdge, Surface},
     storage::Handle,
+    topology::{HalfEdge, Surface},
 };
 
 use super::{Command, Event, Layer};

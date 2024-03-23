@@ -1,10 +1,10 @@
 use crate::{
-    objects::{
+    operations::build::{Polygon, TetrahedronShell},
+    storage::Handle,
+    topology::{
         Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
         Vertex,
     },
-    operations::build::{Polygon, TetrahedronShell},
-    storage::Handle,
     Core,
 };
 

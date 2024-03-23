@@ -6,7 +6,7 @@ use std::collections::BTreeMap;
 
 use fj_interop::Color;
 
-use crate::{objects::Region, storage::Handle};
+use crate::{storage::Handle, topology::Region};
 
 /// Presentation data for the object graph
 ///

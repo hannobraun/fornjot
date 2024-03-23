@@ -3,7 +3,6 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Shell},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,
@@ -15,6 +14,7 @@ use crate::{
         },
     },
     storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Shell},
     Core,
 };
 
@@ -204,12 +204,12 @@ mod tests {
     use fj_interop::Color;
 
     use crate::{
-        objects::Shell,
         operations::{
             build::BuildShell,
             presentation::{GetColor, SetColor},
             split::SplitFace,
         },
+        topology::Shell,
         Core,
     };
 

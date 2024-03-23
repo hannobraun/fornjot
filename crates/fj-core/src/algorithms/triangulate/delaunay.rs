@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::{Point, Scalar, Triangle, Winding};
 use spade::HasPosition;
 
-use crate::{algorithms::approx::cycle::CycleApprox, objects::Handedness};
+use crate::{algorithms::approx::cycle::CycleApprox, topology::Handedness};
 
 /// Create a Delaunay triangulation of all points
 pub fn triangulate(

@@ -3,10 +3,10 @@ use fj_math::Vector;
 
 use crate::{
     geometry::SurfaceGeometry,
-    objects::{Cycle, Face},
     operations::{
         build::BuildCycle, join::JoinCycle, sweep::half_edge::SweepHalfEdge,
     },
+    topology::{Cycle, Face},
     Core,
 };
 

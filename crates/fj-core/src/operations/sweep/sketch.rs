@@ -2,9 +2,9 @@ use fj_math::{Scalar, Vector};
 
 use crate::{
     geometry::GlobalPath,
-    objects::{Face, Sketch, Solid, Surface},
     operations::{derive::DeriveFrom, insert::Insert, reverse::Reverse},
     storage::Handle,
+    topology::{Face, Sketch, Solid, Surface},
     Core,
 };
 

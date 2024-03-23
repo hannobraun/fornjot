@@ -1,12 +1,12 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{Shell, Solid},
     operations::{
         build::{BuildShell, TetrahedronShell},
         insert::{Insert, IsInsertedYes},
         update::UpdateSolid,
     },
+    topology::{Shell, Solid},
     Core,
 };
 

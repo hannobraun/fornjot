@@ -9,8 +9,8 @@ use crate::{
         CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
         SurfacePath,
     },
-    objects::Curve,
     storage::Handle,
+    topology::Curve,
     Core,
 };
 
@@ -187,8 +187,8 @@ mod tests {
             CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
             SurfacePath,
         },
-        objects::Curve,
         operations::insert::Insert,
+        topology::Curve,
         Core,
     };
 

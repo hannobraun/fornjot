@@ -1,12 +1,12 @@
 use fj::{
     core::{
-        objects::{Cycle, Region, Sketch, Solid},
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             reverse::Reverse,
             sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
         },
+        topology::{Cycle, Region, Sketch, Solid},
     },
     math::{Point, Vector},
 };

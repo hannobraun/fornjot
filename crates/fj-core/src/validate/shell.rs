@@ -4,11 +4,11 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, Geometry, SurfaceGeometry},
-    objects::{Curve, HalfEdge, Shell, Vertex},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
     storage::Handle,
+    topology::{Curve, HalfEdge, Shell, Vertex},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -421,7 +421,6 @@ fn distances(
 mod tests {
     use crate::{
         assert_contains_err,
-        objects::{Curve, HalfEdge, Shell},
         operations::{
             build::BuildShell,
             geometry::UpdateHalfEdgeGeometry,
@@ -431,6 +430,7 @@ mod tests {
                 UpdateShell,
             },
         },
+        topology::{Curve, HalfEdge, Shell},
         validate::{shell::ShellValidationError, Validate, ValidationError},
         Core,
     };

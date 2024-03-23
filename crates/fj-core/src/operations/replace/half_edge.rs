@@ -1,9 +1,9 @@
 use std::ops::Deref;
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
+    topology::{Cycle, Face, HalfEdge, IsObject, Region, Shell, Sketch, Solid},
     Core,
 };
 

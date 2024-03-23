@@ -1,7 +1,6 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{Face, Region, Shell},
     operations::{
         derive::DeriveFrom,
         insert::Insert,
@@ -11,6 +10,7 @@ use crate::{
         update::UpdateShell,
     },
     storage::Handle,
+    topology::{Face, Region, Shell},
     Core,
 };
 

@@ -1,6 +1,6 @@
 use crate::{
-    objects::{Face, ObjectSet},
     storage::Handle,
+    topology::{Face, ObjectSet},
 };
 
 /// A 3-dimensional closed shell

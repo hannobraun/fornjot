@@ -1,7 +1,7 @@
 use crate::{
     geometry::CurveBoundary,
-    objects::{Cycle, Face, HalfEdge, Region, Shell, Vertex},
     storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Region, Shell, Vertex},
 };
 
 /// Determine the bounding vertices of a half-edge

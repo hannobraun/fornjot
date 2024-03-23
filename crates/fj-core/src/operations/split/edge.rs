@@ -1,13 +1,13 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{HalfEdge, Shell},
     operations::{
         geometry::UpdateHalfEdgeGeometry, insert::Insert,
         replace::ReplaceHalfEdge, split::SplitHalfEdge, update::UpdateHalfEdge,
     },
     queries::SiblingOfHalfEdge,
     storage::Handle,
+    topology::{HalfEdge, Shell},
     Core,
 };
 

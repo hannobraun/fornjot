@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{HalfEdge, Objects, Surface},
     storage::Handle,
+    topology::{HalfEdge, Objects, Surface},
 };
 
 use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};

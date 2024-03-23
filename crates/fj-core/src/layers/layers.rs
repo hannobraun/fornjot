@@ -1,7 +1,7 @@
 use crate::{
     geometry::Geometry,
-    objects::Objects,
     presentation::Presentation,
+    topology::Objects,
     validation::{Validation, ValidationConfig},
 };
 

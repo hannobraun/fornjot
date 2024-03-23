@@ -2,7 +2,7 @@
 
 use crate::{
     geometry::Geometry,
-    objects::{AnyObject, Stored},
+    topology::{AnyObject, Stored},
     validation::{Validation, ValidationError, ValidationErrors},
 };
 

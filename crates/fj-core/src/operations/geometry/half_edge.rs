@@ -1,8 +1,8 @@
 use crate::{
     geometry::{Geometry, HalfEdgeGeometry},
     layers::Layer,
-    objects::HalfEdge,
     storage::Handle,
+    topology::HalfEdge,
 };
 
 /// Update the geometry of a [`HalfEdge`]

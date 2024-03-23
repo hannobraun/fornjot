@@ -3,7 +3,6 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::SurfaceGeometry,
-    objects::{Cycle, Face, HalfEdge, Region, Vertex},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         geometry::UpdateHalfEdgeGeometry,
@@ -12,6 +11,7 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Region, Vertex},
     Core,
 };
 

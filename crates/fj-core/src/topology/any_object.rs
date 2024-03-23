@@ -1,10 +1,10 @@
 use crate::{
     geometry::Geometry,
-    objects::{
+    storage::{Handle, ObjectId},
+    topology::{
         Curve, Cycle, Face, HalfEdge, Objects, Region, Shell, Sketch, Solid,
         Surface, Vertex,
     },
-    storage::{Handle, ObjectId},
     validate::Validate,
     validation::{ValidationConfig, ValidationError},
 };

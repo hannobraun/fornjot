@@ -1,7 +1,7 @@
 use crate::{
-    objects::{Face, Shell},
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
+    topology::{Face, Shell},
     Core,
 };
 

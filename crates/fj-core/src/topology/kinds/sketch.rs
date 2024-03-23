@@ -1,6 +1,6 @@
 use crate::{
-    objects::{ObjectSet, Region},
     storage::Handle,
+    topology::{ObjectSet, Region},
 };
 
 /// A 2-dimensional shape

@@ -4,7 +4,7 @@
 
 use fj_math::Segment;
 
-use crate::{geometry::SurfaceGeometry, objects::Cycle, Core};
+use crate::{geometry::SurfaceGeometry, topology::Cycle, Core};
 
 use super::{
     edge::{HalfEdgeApprox, HalfEdgeApproxCache},

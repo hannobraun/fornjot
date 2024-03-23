@@ -3,8 +3,8 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    objects::{Cycle, Face, HalfEdge, Region, Shell},
     storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Region, Shell},
     Core,
 };
 

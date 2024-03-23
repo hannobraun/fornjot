@@ -1,9 +1,9 @@
 use fj::{
     core::{
-        objects::Solid,
         operations::{
             build::BuildSolid, merge::Merge, transform::TransformObject,
         },
+        topology::Solid,
     },
     math::{Scalar, Vector},
 };

@@ -4,7 +4,6 @@ use itertools::Itertools;
 
 use crate::{
     geometry::HalfEdgeGeometry,
-    objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
         geometry::UpdateHalfEdgeGeometry,
@@ -12,6 +11,7 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
+    topology::{Cycle, HalfEdge},
     Core,
 };
 
