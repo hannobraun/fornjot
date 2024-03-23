@@ -1,7 +1,6 @@
 use fj_math::Point;
 
 use crate::{
-    geometry::HalfEdgeGeometry,
     objects::{HalfEdge, Vertex},
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
@@ -60,15 +59,11 @@ impl SplitHalfEdge for Handle<HalfEdge> {
 
         core.layers.geometry.define_half_edge(
             a.clone(),
-            HalfEdgeGeometry {
-                path: core.layers.geometry.of_half_edge(self).path,
-            },
+            core.layers.geometry.of_half_edge(self),
         );
         core.layers.geometry.define_half_edge(
             b.clone(),
-            HalfEdgeGeometry {
-                path: core.layers.geometry.of_half_edge(self).path,
-            },
+            core.layers.geometry.of_half_edge(self),
         );
 
         [a, b]

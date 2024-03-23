@@ -101,11 +101,10 @@ pub trait BuildShell {
                                 .update_start_vertex(|_, _| vertex, core)
                                 .update_curve(|_, _| curve, core)
                                 .insert(core)
-                                .set_path(
+                                .set_geometry(
                                     core.layers
                                         .geometry
-                                        .of_half_edge(&half_edge)
-                                        .path,
+                                        .of_half_edge(&half_edge),
                                     &mut core.layers.geometry,
                                 )
                         })

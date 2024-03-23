@@ -445,18 +445,20 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
+                                        let mut geometry = core
+                                            .layers
+                                            .geometry
+                                            .of_half_edge(half_edge);
+                                        geometry.path = geometry.path.reverse();
+
                                         [HalfEdge::new(
                                             half_edge.boundary().reverse(),
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )
                                         .insert(core)
-                                        .set_path(
-                                            core.layers
-                                                .geometry
-                                                .of_half_edge(half_edge)
-                                                .path
-                                                .reverse(),
+                                        .set_geometry(
+                                            geometry,
                                             &mut core.layers.geometry,
                                         )]
                                     },
@@ -534,11 +536,10 @@ mod tests {
                                                 core,
                                             )
                                             .insert(core)
-                                            .set_path(
+                                            .set_geometry(
                                                 core.layers
                                                     .geometry
-                                                    .of_half_edge(half_edge)
-                                                    .path,
+                                                    .of_half_edge(half_edge),
                                                 &mut core.layers.geometry,
                                             )]
                                     },

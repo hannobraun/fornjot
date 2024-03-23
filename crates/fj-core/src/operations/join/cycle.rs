@@ -4,7 +4,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{CurveBoundary, SurfacePath},
+    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
@@ -97,7 +97,10 @@ impl JoinCycle for Cycle {
                         core,
                     )
                     .insert(core)
-                    .set_path(path, &mut core.layers.geometry)
+                    .set_geometry(
+                        HalfEdgeGeometry { path },
+                        &mut core.layers.geometry,
+                    )
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)
@@ -141,11 +144,10 @@ impl JoinCycle for Cycle {
                                     core,
                                 )
                                 .insert(core)
-                                .set_path(
+                                .set_geometry(
                                     core.layers
                                         .geometry
-                                        .of_half_edge(half_edge)
-                                        .path,
+                                        .of_half_edge(half_edge),
                                     &mut core.layers.geometry,
                                 )]
                         },
@@ -160,11 +162,10 @@ impl JoinCycle for Cycle {
                                     core,
                                 )
                                 .insert(core)
-                                .set_path(
+                                .set_geometry(
                                     core.layers
                                         .geometry
-                                        .of_half_edge(half_edge)
-                                        .path,
+                                        .of_half_edge(half_edge),
                                     &mut core.layers.geometry,
                                 )]
                         },

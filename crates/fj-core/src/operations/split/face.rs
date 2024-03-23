@@ -120,8 +120,8 @@ impl SplitFace for Shell {
             half_edge
                 .update_start_vertex(|_, _| b.start_vertex().clone(), core)
                 .insert(core)
-                .set_path(
-                    core.layers.geometry.of_half_edge(&half_edge).path,
+                .set_geometry(
+                    core.layers.geometry.of_half_edge(&half_edge),
                     &mut core.layers.geometry,
                 )
         };
