@@ -31,19 +31,28 @@ pub struct HalfEdgeGeometry {
     /// really belong here. It exists here for practical reasons that are,
     /// hopefully, temporary.
     pub path: SurfacePath,
+
+    /// # The boundary of the half-edge on its curve
+    pub boundary: CurveBoundary<Point<1>>,
 }
 
 impl HalfEdgeGeometry {
+    /// Update the boundary
+    pub fn with_boundary(
+        mut self,
+        boundary: impl Into<CurveBoundary<Point<1>>>,
+    ) -> Self {
+        self.boundary = boundary.into();
+        self
+    }
+
     /// Compute the surface position where the half-edge starts
-    pub fn start_position(
-        &self,
-        boundary: CurveBoundary<Point<1>>,
-    ) -> Point<2> {
+    pub fn start_position(&self) -> Point<2> {
         // Computing the surface position from the curve position is fine.
         // `HalfEdge` "owns" its start position. There is no competing code that
         // could compute the surface position from slightly different data.
 
-        let [start, _] = boundary.inner;
+        let [start, _] = self.boundary.inner;
         self.path.point_from_path_coords(start)
     }
 }

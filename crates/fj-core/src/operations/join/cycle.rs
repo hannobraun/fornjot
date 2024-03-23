@@ -98,7 +98,7 @@ impl JoinCycle for Cycle {
                     )
                     .insert(core)
                     .set_geometry(
-                        HalfEdgeGeometry { path },
+                        HalfEdgeGeometry { path, boundary },
                         &mut core.layers.geometry,
                     )
             })

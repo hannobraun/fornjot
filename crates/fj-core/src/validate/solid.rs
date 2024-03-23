@@ -93,7 +93,7 @@ impl SolidValidationError {
             .map(|(h, s)| {
                 (
                     s.point_from_surface_coords(
-                        geometry.of_half_edge(&h).start_position(h.boundary()),
+                        geometry.of_half_edge(&h).start_position(),
                     ),
                     h.start_vertex().clone(),
                 )
