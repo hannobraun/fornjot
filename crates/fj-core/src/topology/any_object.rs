@@ -55,11 +55,11 @@ macro_rules! any_object {
 
         impl AnyObject<AboutToBeStored> {
             /// Insert the object into its respective store
-            pub fn insert(self, objects: &mut Topology) -> AnyObject<Stored> {
+            pub fn insert(self, topology: &mut Topology) -> AnyObject<Stored> {
                 match self {
                     $(
                         Self::$ty((handle, object)) => {
-                            objects.$store.insert(
+                            topology.$store.insert(
                                 handle.clone().into(), object
                             );
                             handle.into()
