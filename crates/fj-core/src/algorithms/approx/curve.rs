@@ -5,7 +5,10 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, GlobalPath, SurfaceGeometry, SurfacePath},
+    geometry::{
+        CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
+        SurfacePath,
+    },
     objects::Curve,
     storage::Handle,
     Core,
@@ -13,14 +16,7 @@ use crate::{
 
 use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx
-    for (
-        &Handle<Curve>,
-        SurfacePath,
-        &SurfaceGeometry,
-        CurveBoundary<Point<1>>,
-    )
-{
+impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &SurfaceGeometry) {
     type Approximation = CurveApprox;
     type Cache = CurveApproxCache;
 
@@ -30,20 +26,20 @@ impl Approx
         cache: &mut Self::Cache,
         core: &mut Core,
     ) -> Self::Approximation {
-        let (curve, surface_path, surface, boundary) = self;
+        let (curve, half_edge, surface) = self;
 
-        match cache.get(curve, boundary) {
+        match cache.get(curve, half_edge.boundary) {
             Some(approx) => approx,
             None => {
                 let approx = approx_curve(
-                    &surface_path,
+                    &half_edge.path,
                     surface,
-                    boundary,
+                    half_edge.boundary,
                     tolerance,
                     core,
                 );
 
-                cache.insert(curve.clone(), boundary, approx)
+                cache.insert(curve.clone(), half_edge.boundary, approx)
             }
         }
     }
@@ -187,7 +183,10 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
-        geometry::{CurveBoundary, GlobalPath, SurfaceGeometry, SurfacePath},
+        geometry::{
+            CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
+            SurfacePath,
+        },
         objects::Curve,
         operations::insert::Insert,
         Core,
@@ -198,14 +197,15 @@ mod tests {
         let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
-        let (surface_path, boundary) =
+        let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
+        let half_edge = HalfEdgeGeometry { path, boundary };
         let surface = core.layers.geometry.xz_plane();
 
         let tolerance = 1.;
-        let approx = (&curve, surface_path, &surface, boundary)
-            .approx(tolerance, &mut core);
+        let approx =
+            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -215,17 +215,18 @@ mod tests {
         let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
-        let (surface_path, boundary) =
+        let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
+        let half_edge = HalfEdgeGeometry { path, boundary };
         let surface = SurfaceGeometry {
             u: GlobalPath::circle_from_radius(1.),
             v: [0., 0., 1.].into(),
         };
 
         let tolerance = 1.;
-        let approx = (&curve, surface_path, &surface, boundary)
-            .approx(tolerance, &mut core);
+        let approx =
+            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -236,26 +237,26 @@ mod tests {
 
         let global_path = GlobalPath::circle_from_radius(1.);
         let curve = Curve::new().insert(&mut core);
-        let surface_path = SurfacePath::line_from_points_with_coords([
+        let path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
         ]);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
+        let half_edge = HalfEdgeGeometry { path, boundary };
         let surface = SurfaceGeometry {
             u: global_path,
             v: [0., 0., 1.].into(),
         };
 
         let tolerance = 1.;
-        let approx = (&curve, surface_path, &surface, boundary)
-            .approx(tolerance, &mut core);
+        let approx =
+            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
 
         let expected_approx = (global_path, boundary)
             .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
-                let point_surface =
-                    surface_path.point_from_path_coords(point_local);
+                let point_surface = path.point_from_path_coords(point_local);
                 let point_global =
                     surface.point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_local, point_global)
@@ -269,21 +270,20 @@ mod tests {
         let mut core = Core::new();
 
         let curve = Curve::new().insert(&mut core);
-        let surface_path =
-            SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
+        let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
+        let half_edge = HalfEdgeGeometry { path, boundary };
         let surface = core.layers.geometry.xz_plane();
 
         let tolerance = 1.;
-        let approx = (&curve, surface_path, &surface, boundary)
-            .approx(tolerance, &mut core);
+        let approx =
+            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
 
-        let expected_approx = (&surface_path, boundary)
+        let expected_approx = (&path, boundary)
             .approx(tolerance, &mut core)
             .into_iter()
             .map(|(point_local, _)| {
-                let point_surface =
-                    surface_path.point_from_path_coords(point_local);
+                let point_surface = path.point_from_path_coords(point_local);
                 let point_global =
                     surface.point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_local, point_global)

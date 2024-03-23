@@ -42,36 +42,24 @@ impl SplitHalfEdge for Handle<HalfEdge> {
     ) -> [Handle<HalfEdge>; 2] {
         let point = point.into();
 
-        let [start, end] = self.boundary().inner;
+        let geometry = core.layers.geometry.of_half_edge(self);
+        let [start, end] = geometry.boundary.inner;
 
-        let a = HalfEdge::new(
-            [start, point],
-            self.curve().clone(),
-            self.start_vertex().clone(),
-        )
-        .insert(core)
-        .derive_from(self, core)
-        .set_geometry(
-            core.layers
-                .geometry
-                .of_half_edge(self)
-                .with_boundary([start, point]),
-            &mut core.layers.geometry,
-        );
-        let b = HalfEdge::new(
-            [point, end],
-            self.curve().clone(),
-            Vertex::new().insert(core),
-        )
-        .insert(core)
-        .derive_from(self, core)
-        .set_geometry(
-            core.layers
-                .geometry
-                .of_half_edge(self)
-                .with_boundary([point, end]),
-            &mut core.layers.geometry,
-        );
+        let a =
+            HalfEdge::new(self.curve().clone(), self.start_vertex().clone())
+                .insert(core)
+                .derive_from(self, core)
+                .set_geometry(
+                    geometry.with_boundary([start, point]),
+                    &mut core.layers.geometry,
+                );
+        let b = HalfEdge::new(self.curve().clone(), Vertex::new().insert(core))
+            .insert(core)
+            .derive_from(self, core)
+            .set_geometry(
+                geometry.with_boundary([point, end]),
+                &mut core.layers.geometry,
+            );
 
         [a, b]
     }

@@ -59,12 +59,8 @@ impl SweepHalfEdge for Handle<HalfEdge> {
     ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
-        let surface = core
-            .layers
-            .geometry
-            .of_half_edge(self)
-            .path
-            .sweep_surface_path(surface, path, core);
+        let geometry = core.layers.geometry.of_half_edge(self);
+        let surface = geometry.path.sweep_surface_path(surface, path, core);
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
@@ -86,7 +82,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
 
         // Let's figure out the surface coordinates of the edge vertices.
         let surface_points = {
-            let [a, b] = self.boundary().inner;
+            let [a, b] = geometry.boundary.inner;
 
             [
                 [a.t, Scalar::ZERO],
@@ -104,7 +100,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
 
         // Now, the boundaries of each edge.
         let boundaries = {
-            let [a, b] = self.boundary().inner;
+            let [a, b] = geometry.boundary.inner;
             let [c, d] = [0., 1.].map(|coord| Point::from([coord]));
 
             [[a, b], [c, d], [b, a], [d, c]]

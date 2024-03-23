@@ -13,7 +13,6 @@ impl TransformObject for Handle<HalfEdge> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self {
-        let boundary = self.boundary();
         let curve = self
             .curve()
             .clone()
@@ -23,8 +22,7 @@ impl TransformObject for Handle<HalfEdge> {
             .clone()
             .transform_with_cache(transform, core, cache);
 
-        let half_edge =
-            HalfEdge::new(boundary, curve, start_vertex).insert(core);
+        let half_edge = HalfEdge::new(curve, start_vertex).insert(core);
 
         core.layers.geometry.define_half_edge(
             half_edge.clone(),

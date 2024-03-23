@@ -40,10 +40,12 @@ impl Cycle {
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
 
-            let [a, b] = first.boundary().inner;
+            let geometry = geometry.of_half_edge(first);
+
+            let [a, b] = geometry.boundary.inner;
             let edge_direction_positive = a < b;
 
-            let circle = match geometry.of_half_edge(first).path {
+            let circle = match geometry.path {
                 SurfacePath::Circle(circle) => circle,
                 SurfacePath::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"

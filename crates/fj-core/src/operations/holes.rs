@@ -68,11 +68,7 @@ impl AddHole for Shell {
                             [Cycle::empty().add_joined_edges(
                                 [(
                                     entry.clone(),
-                                    core.layers
-                                        .geometry
-                                        .of_half_edge(&entry)
-                                        .path,
-                                    entry.boundary(),
+                                    core.layers.geometry.of_half_edge(&entry),
                                 )],
                                 core,
                             )],
@@ -142,11 +138,7 @@ impl AddHole for Shell {
                             [Cycle::empty().add_joined_edges(
                                 [(
                                     entry.clone(),
-                                    core.layers
-                                        .geometry
-                                        .of_half_edge(&entry)
-                                        .path,
-                                    entry.boundary(),
+                                    core.layers.geometry.of_half_edge(&entry),
                                 )],
                                 core,
                             )],
@@ -167,11 +159,7 @@ impl AddHole for Shell {
                             [Cycle::empty().add_joined_edges(
                                 [(
                                     exit.clone(),
-                                    core.layers
-                                        .geometry
-                                        .of_half_edge(exit)
-                                        .path,
-                                    exit.boundary(),
+                                    core.layers.geometry.of_half_edge(exit),
                                 )],
                                 core,
                             )],

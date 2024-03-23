@@ -18,7 +18,6 @@ impl Reverse for Cycle {
                 geometry.boundary = geometry.boundary.reverse();
 
                 HalfEdge::new(
-                    current.boundary().reverse(),
                     current.curve().clone(),
                     next.start_vertex().clone(),
                 )

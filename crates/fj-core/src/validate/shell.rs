@@ -23,7 +23,7 @@ impl Validate for Shell {
         ShellValidationError::check_curve_coordinates(
             self, geometry, config, errors,
         );
-        ShellValidationError::check_half_edge_pairs(self, errors);
+        ShellValidationError::check_half_edge_pairs(self, geometry, errors);
         ShellValidationError::check_half_edge_coincidence(
             self, geometry, config, errors,
         );
@@ -112,7 +112,7 @@ impl ShellValidationError {
                     // we have right now are circles, 3 would be enough to check
                     // for coincidence. But the first and last might be
                     // identical, so let's add an extra one.
-                    let [a, d] = edge_a.boundary().inner;
+                    let [a, d] = geometry.of_half_edge(edge_a).boundary.inner;
                     let b = a + (d - a) * 1. / 3.;
                     let c = a + (d - a) * 2. / 3.;
 
@@ -177,14 +177,18 @@ impl ShellValidationError {
     }
 
     /// Check that each half-edge is part of a pair
-    fn check_half_edge_pairs(shell: &Shell, errors: &mut Vec<ValidationError>) {
+    fn check_half_edge_pairs(
+        shell: &Shell,
+        geometry: &Geometry,
+        errors: &mut Vec<ValidationError>,
+    ) {
         let mut unmatched_half_edges = BTreeMap::new();
 
         for face in shell.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve = half_edge.curve().clone();
-                    let boundary = half_edge.boundary();
+                    let boundary = geometry.of_half_edge(half_edge).boundary;
                     let vertices =
                         cycle.bounding_vertices_of_half_edge(half_edge).expect(
                             "`half_edge` came from `cycle`, must exist there",
@@ -200,7 +204,8 @@ impl ShellValidationError {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(shell.are_siblings(half_edge, sibling));
+                            assert!(shell
+                                .are_siblings(half_edge, sibling, geometry));
                         }
                         None => {
                             // If this half-edge has a sibling, we haven't seen
@@ -238,7 +243,7 @@ impl ShellValidationError {
                     continue;
                 }
 
-                if shell.are_siblings(half_edge_a, half_edge_b) {
+                if shell.are_siblings(half_edge_a, half_edge_b, geometry) {
                     // If the half-edges are siblings, they are allowed to be
                     // coincident. Must be, in fact. There's another validation
                     // check that takes care of that.
@@ -257,8 +262,11 @@ impl ShellValidationError {
                 .all(|d| d < config.distinct_min_distance)
                 {
                     let boundaries = Box::new(CoincidentHalfEdgeBoundaries {
-                        boundaries: [half_edge_a, half_edge_b]
-                            .map(|half_edge| half_edge.boundary()),
+                        boundaries: [half_edge_a, half_edge_b].map(
+                            |half_edge| {
+                                geometry.of_half_edge(half_edge).boundary
+                            },
+                        ),
                     });
                     let curves = Box::new(CoincidentHalfEdgeCurves {
                         curves: [half_edge_a, half_edge_b]
@@ -384,7 +392,7 @@ fn distances(
         (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
         geometry: &Geometry,
     ) -> Point<3> {
-        let [start, end] = edge.boundary().inner;
+        let [start, end] = geometry.of_half_edge(edge).boundary.inner;
         let path_coords = start + (end - start) * percent;
         let surface_coords = geometry
             .of_half_edge(edge)
@@ -454,7 +462,6 @@ mod tests {
                                             geometry.boundary.reverse();
 
                                         [HalfEdge::new(
-                                            half_edge.boundary().reverse(),
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )

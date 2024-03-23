@@ -1,10 +1,9 @@
 use std::ops::RangeInclusive;
 
-use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
+    geometry::HalfEdgeGeometry,
     objects::{Cycle, HalfEdge},
     operations::{
         build::BuildHalfEdge,
@@ -22,9 +21,7 @@ pub trait JoinCycle {
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
-        Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
-        >,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeometry)>,
         Es::IntoIter: Clone + ExactSizeIterator;
 
     /// Join the cycle to another
@@ -81,26 +78,21 @@ pub trait JoinCycle {
 impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
-        Es: IntoIterator<
-            Item = (Handle<HalfEdge>, SurfacePath, CurveBoundary<Point<1>>),
-        >,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeometry)>,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         let half_edges = edges
             .into_iter()
             .circular_tuple_windows()
-            .map(|((prev_half_edge, _, _), (half_edge, path, boundary))| {
-                HalfEdge::unjoined(boundary, core)
+            .map(|((prev_half_edge, _), (half_edge, geometry))| {
+                HalfEdge::unjoined(core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
                         |_, _| prev_half_edge.start_vertex().clone(),
                         core,
                     )
                     .insert(core)
-                    .set_geometry(
-                        HalfEdgeGeometry { path, boundary },
-                        &mut core.layers.geometry,
-                    )
+                    .set_geometry(geometry, &mut core.layers.geometry)
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)

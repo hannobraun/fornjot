@@ -1,7 +1,4 @@
-use fj_math::Point;
-
 use crate::{
-    geometry::CurveBoundary,
     objects::{Curve, Vertex},
     storage::Handle,
 };
@@ -35,28 +32,17 @@ use crate::{
 /// [`Shell`]: crate::objects::Shell
 #[derive(Clone, Debug)]
 pub struct HalfEdge {
-    boundary: CurveBoundary<Point<1>>,
     curve: Handle<Curve>,
     start_vertex: Handle<Vertex>,
 }
 
 impl HalfEdge {
     /// Create an instance of `Edge`
-    pub fn new(
-        boundary: impl Into<CurveBoundary<Point<1>>>,
-        curve: Handle<Curve>,
-        start_vertex: Handle<Vertex>,
-    ) -> Self {
+    pub fn new(curve: Handle<Curve>, start_vertex: Handle<Vertex>) -> Self {
         Self {
-            boundary: boundary.into(),
             curve,
             start_vertex,
         }
-    }
-
-    /// Access the boundary points of the edge on the curve
-    pub fn boundary(&self) -> CurveBoundary<Point<1>> {
-        self.boundary
     }
 
     /// Access the curve of the edge
