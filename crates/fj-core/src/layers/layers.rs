@@ -22,10 +22,9 @@ use super::Layer;
 /// For now, there is no need for this, and all layers are just hardcoded here.
 /// That can be changed, once necessary.
 pub struct Layers {
-    /// The objects layer
+    /// The topology layer
     ///
-    /// Manages the stores of topological and geometric objects that make up
-    /// shapes.
+    /// Manages the stores of topological objects.
     pub topology: Layer<Topology>,
 
     /// The geometry layer
