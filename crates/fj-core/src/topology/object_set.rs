@@ -267,7 +267,7 @@ pub type ObjectSetIntoIter<T> = vec::IntoIter<Handle<T>>;
 mod tests {
     use std::collections::HashSet;
 
-    use crate::{objects::Cycle, operations::insert::Insert, Core};
+    use crate::{operations::insert::Insert, topology::Cycle, Core};
 
     use super::ObjectSet;
 

@@ -2,7 +2,7 @@ use fj_math::Aabb;
 
 use crate::{
     geometry::{Geometry, GlobalPath},
-    objects::Face,
+    topology::Face,
 };
 
 impl super::BoundingVolume<3> for Face {

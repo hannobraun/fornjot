@@ -2,8 +2,8 @@ use std::iter::repeat;
 
 use crate::{
     geometry::Geometry,
-    objects::{Solid, Vertex},
     storage::Handle,
+    topology::{Solid, Vertex},
     validate_references,
 };
 use fj_math::Point;
@@ -181,11 +181,11 @@ mod tests {
     use crate::{
         assert_contains_err,
         geometry::GlobalPath,
-        objects::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
         operations::{
             build::{BuildFace, BuildHalfEdge, BuildSurface},
             insert::Insert,
         },
+        topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
         validate::{
             references::ReferenceCountError, SolidValidationError, Validate,
             ValidationError,

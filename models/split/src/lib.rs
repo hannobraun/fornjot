@@ -1,8 +1,8 @@
 use fj::core::{
-    objects::Solid,
     operations::{
         split::SplitFace, sweep::SweepFaceOfShell, update::UpdateSolid,
     },
+    topology::Solid,
 };
 
 pub fn model(size: f64, split_pos: f64, core: &mut fj::core::Core) -> Solid {

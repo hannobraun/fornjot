@@ -1,10 +1,10 @@
 use fj::{
     core::{
-        objects::Solid,
         operations::{
             holes::{AddHole, HoleLocation},
             update::UpdateSolid,
         },
+        topology::Solid,
     },
     math::Scalar,
 };

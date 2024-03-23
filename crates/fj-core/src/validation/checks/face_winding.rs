@@ -1,8 +1,8 @@
 use fj_math::Winding;
 
 use crate::{
-    objects::{Cycle, Face},
     storage::Handle,
+    topology::{Cycle, Face},
     validation::ValidationCheck,
 };
 
@@ -71,7 +71,6 @@ impl ValidationCheck<Face> for InteriorCycleHasInvalidWinding {
 #[cfg(test)]
 mod tests {
     use crate::{
-        objects::{Cycle, Face, Region},
         operations::{
             build::{BuildCycle, BuildFace},
             derive::DeriveFrom,
@@ -79,6 +78,7 @@ mod tests {
             reverse::Reverse,
             update::{UpdateFace, UpdateRegion},
         },
+        topology::{Cycle, Face, Region},
         validation::{checks::InteriorCycleHasInvalidWinding, ValidationCheck},
         Core,
     };
@@ -88,7 +88,7 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Face::polygon(
-            core.layers.objects.surfaces.xy_plane(),
+            core.layers.topology.surfaces.xy_plane(),
             [[0., 0.], [3., 0.], [0., 3.]],
             &mut core,
         )

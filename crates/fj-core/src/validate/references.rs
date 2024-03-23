@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use crate::objects::{Cycle, Face, HalfEdge, Region, Shell};
 use crate::storage::Handle;
+use crate::topology::{Cycle, Face, HalfEdge, Region, Shell};
 
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
@@ -51,26 +51,26 @@ macro_rules! validate_references {
 /// should only be referenced by a single other object  
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ReferenceCountError {
-    /// [`crate::objects::Region`] referenced by more than one [`crate::objects::Face`]
+    /// [`Region`] referenced by more than one [`Face`]
     #[error(
         "[`Region`] referenced by more than one [`Face`]\n{references:#?}"
     )]
     Region {
         references: MultipleReferences<Region, Face>,
     },
-    /// [`crate::objects::Face`] referenced by more than one [`crate::objects::Shell`]
+    /// [`Face`] referenced by more than one [`Shell`]
     #[error("[`Face`] referenced by more than one [`Shell`]\n{references:#?}")]
     Face {
         references: MultipleReferences<Face, Shell>,
     },
-    /// [`crate::objects::HalfEdge`] referenced by more than one [`crate::objects::Cycle`]
+    /// [`HalfEdge`] referenced by more than one [`Cycle`]
     #[error(
         "[`HalfEdge`] referenced by more than one [`Cycle`]\n{references:#?}"
     )]
     HalfEdge {
         references: MultipleReferences<HalfEdge, Cycle>,
     },
-    /// [`crate::objects::Cycle`] referenced by more than one [`crate::objects::Region`]
+    /// [`Cycle`] referenced by more than one [`Region`]
     #[error(
         "[`Cycle`] referenced by more than one [`Region`]\n{references:#?}"
     )]

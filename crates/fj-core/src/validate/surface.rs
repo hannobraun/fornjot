@@ -1,4 +1,4 @@
-use crate::{geometry::Geometry, objects::Surface};
+use crate::{geometry::Geometry, topology::Surface};
 
 use super::{Validate, ValidationConfig, ValidationError};
 

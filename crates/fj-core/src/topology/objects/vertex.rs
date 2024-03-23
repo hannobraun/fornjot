@@ -78,11 +78,11 @@
 /// `Eq`/`Ord`/..., you can use `HandleWrapper<Vertex>` to do that. It will
 /// use `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`HalfEdge`]: crate::topology::HalfEdge
 /// [`Handle`]: crate::storage::Handle
-/// [`Sketch`]: crate::objects::Sketch
-/// [`Solid`]: crate::objects::Solid
-/// [`Surface`]: crate::objects::Surface
+/// [`Sketch`]: crate::topology::Sketch
+/// [`Solid`]: crate::topology::Solid
+/// [`Surface`]: crate::topology::Surface
 #[derive(Clone, Debug, Default)]
 pub struct Vertex {}
 

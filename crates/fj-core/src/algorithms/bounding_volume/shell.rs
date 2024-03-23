@@ -1,6 +1,6 @@
 use fj_math::Aabb;
 
-use crate::{geometry::Geometry, objects::Shell};
+use crate::{geometry::Geometry, topology::Shell};
 
 impl super::BoundingVolume<3> for Shell {
     fn aabb(&self, geometry: &Geometry) -> Option<Aabb<3>> {

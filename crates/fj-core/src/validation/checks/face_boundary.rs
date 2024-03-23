@@ -1,6 +1,6 @@
 use crate::{
     geometry::Geometry,
-    objects::Face,
+    topology::Face,
     validation::{ValidationCheck, ValidationConfig},
 };
 
@@ -35,11 +35,11 @@ impl ValidationCheck<Face> for FaceHasNoBoundary {
 #[cfg(test)]
 mod tests {
     use crate::{
-        objects::{Cycle, Face},
         operations::{
             build::{BuildCycle, BuildFace},
             update::{UpdateFace, UpdateRegion},
         },
+        topology::{Cycle, Face},
         validation::{checks::FaceHasNoBoundary, ValidationCheck},
         Core,
     };
@@ -49,7 +49,7 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Face::circle(
-            core.layers.objects.surfaces.xy_plane(),
+            core.layers.topology.surfaces.xy_plane(),
             [0., 0.],
             1.,
             &mut core,

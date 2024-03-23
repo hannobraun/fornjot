@@ -1,6 +1,6 @@
 use crate::{
     geometry::Geometry,
-    objects::Cycle,
+    topology::Cycle,
     validation::{
         checks::AdjacentHalfEdgesNotConnected, ValidationCheck,
         ValidationConfig, ValidationError,

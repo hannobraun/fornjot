@@ -1,6 +1,6 @@
 use crate::{
     geometry::Geometry,
-    objects::Face,
+    topology::Face,
     validation::{
         checks::{FaceHasNoBoundary, InteriorCycleHasInvalidWinding},
         ValidationCheck, ValidationConfig, ValidationError,

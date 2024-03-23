@@ -7,8 +7,8 @@ use std::{collections::BTreeSet, ops::Deref};
 use fj_interop::Color;
 
 use crate::{
-    objects::{Face, Handedness, ObjectSet},
     operations::presentation::GetColor,
+    topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
     Core,
 };

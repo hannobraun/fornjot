@@ -2,8 +2,8 @@ use fj_math::{Scalar, Winding};
 
 use crate::{
     geometry::{Geometry, SurfacePath},
-    objects::{HalfEdge, ObjectSet},
     storage::Handle,
+    topology::{HalfEdge, ObjectSet},
 };
 
 /// A cycle of connected edges

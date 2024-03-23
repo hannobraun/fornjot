@@ -1,6 +1,6 @@
 use crate::{
-    objects::{Face, HalfEdge, Shell, Surface},
     storage::Handle,
+    topology::{Face, HalfEdge, Shell, Surface},
 };
 
 /// Access all half-edges referenced by an object, and the surface they're on

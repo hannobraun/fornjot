@@ -1,11 +1,11 @@
 use fj_math::Point;
 
 use crate::{
-    objects::{HalfEdge, Vertex},
     operations::{
         derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
     },
     storage::Handle,
+    topology::{HalfEdge, Vertex},
     Core,
 };
 

@@ -2,8 +2,8 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{Geometry, SurfacePath},
-    objects::HalfEdge,
     storage::Handle,
+    topology::HalfEdge,
 };
 
 impl super::BoundingVolume<2> for Handle<HalfEdge> {

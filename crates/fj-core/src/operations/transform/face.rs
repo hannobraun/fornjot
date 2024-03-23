@@ -1,6 +1,6 @@
 use fj_math::Transform;
 
-use crate::{objects::Face, Core};
+use crate::{topology::Face, Core};
 
 use super::{TransformCache, TransformObject};
 

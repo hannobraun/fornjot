@@ -1,9 +1,9 @@
 use fj::core::{
-    objects::{Shell, Solid},
     operations::{
         build::{BuildShell, BuildSolid},
         update::UpdateSolid,
     },
+    topology::{Shell, Solid},
 };
 
 pub fn model(core: &mut fj::core::Core) -> Solid {

@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use fj_math::Vector;
 
 use crate::{
-    objects::{HalfEdge, Objects, Surface},
     storage::Handle,
+    topology::{HalfEdge, Surface, Topology},
 };
 
 use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
@@ -21,14 +21,14 @@ pub struct Geometry {
 
 impl Geometry {
     /// Create a new instance of `Geometry`
-    pub fn new(objects: &Objects) -> Self {
+    pub fn new(topology: &Topology) -> Self {
         let mut self_ = Self {
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
 
-            xy_plane: objects.surfaces.xy_plane(),
-            xz_plane: objects.surfaces.xz_plane(),
-            yz_plane: objects.surfaces.yz_plane(),
+            xy_plane: topology.surfaces.xy_plane(),
+            xz_plane: topology.surfaces.xz_plane(),
+            yz_plane: topology.surfaces.yz_plane(),
         };
 
         self_.define_surface_inner(

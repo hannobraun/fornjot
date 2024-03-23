@@ -1,8 +1,8 @@
 use crate::{
-    objects::{Cycle, HalfEdge},
     operations::{
         derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
     },
+    topology::{Cycle, HalfEdge},
     Core,
 };
 

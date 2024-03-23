@@ -20,7 +20,7 @@
 /// `Eq`/`Ord`/..., you can use `HandleWrapper<Curve>` to do that. It will use
 /// `Handle::id` to provide those `Eq`/`Ord`/... implementations.
 ///
-/// [`HalfEdge`]: crate::objects::HalfEdge
+/// [`HalfEdge`]: crate::topology::HalfEdge
 #[derive(Clone, Debug, Default)]
 pub struct Curve {}
 

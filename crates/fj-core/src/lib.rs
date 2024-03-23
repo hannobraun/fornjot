@@ -84,11 +84,11 @@
 pub mod algorithms;
 pub mod geometry;
 pub mod layers;
-pub mod objects;
 pub mod operations;
 pub mod presentation;
 pub mod queries;
 pub mod storage;
+pub mod topology;
 pub mod validate;
 pub mod validation;
 

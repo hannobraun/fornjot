@@ -3,8 +3,8 @@
 //! See [`Layers`].
 
 pub mod geometry;
-pub mod objects;
 pub mod presentation;
+pub mod topology;
 pub mod validation;
 
 mod layer;

@@ -1,14 +1,14 @@
-//! Layer infrastructure for [`Objects`]
+//! Layer infrastructure for [`Topology`]
 
 use crate::{
     geometry::Geometry,
-    objects::{AboutToBeStored, AnyObject, Objects},
+    topology::{AboutToBeStored, AnyObject, Topology},
     validation::Validation,
 };
 
 use super::{validation::ValidateObject, Command, Event, Layer};
 
-impl Layer<Objects> {
+impl Layer<Topology> {
     /// Insert an object into the stores
     ///
     /// Passes any events produced to the validation layer.
@@ -38,17 +38,17 @@ pub struct InsertObject {
     pub object: AnyObject<AboutToBeStored>,
 }
 
-impl Command<Objects> for InsertObject {
+impl Command<Topology> for InsertObject {
     type Result = ();
     type Event = InsertObject;
 
-    fn decide(self, _: &Objects, events: &mut Vec<Self::Event>) {
+    fn decide(self, _: &Topology, events: &mut Vec<Self::Event>) {
         events.push(self);
     }
 }
 
-impl Event<Objects> for InsertObject {
-    fn evolve(&self, state: &mut Objects) {
+impl Event<Topology> for InsertObject {
+    fn evolve(&self, state: &mut Topology) {
         self.object.clone().insert(state);
     }
 }

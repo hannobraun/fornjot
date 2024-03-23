@@ -1,8 +1,8 @@
 use fj::core::{
-    objects::Solid,
     operations::{
         presentation::SetColor, split::SplitFace, update::UpdateSolid,
     },
+    topology::Solid,
 };
 
 pub fn model(core: &mut fj::core::Core) -> Solid {

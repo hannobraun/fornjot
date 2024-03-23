@@ -2,8 +2,8 @@ use fj_math::{Point, Scalar};
 use itertools::Itertools;
 
 use crate::{
-    objects::{Cycle, HalfEdge},
     operations::{build::BuildHalfEdge, update::UpdateCycle},
+    topology::{Cycle, HalfEdge},
     Core,
 };
 

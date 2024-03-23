@@ -5,7 +5,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::{objects::Vertex, storage::Handle};
+use crate::{storage::Handle, topology::Vertex};
 
 /// A boundary on a curve
 ///

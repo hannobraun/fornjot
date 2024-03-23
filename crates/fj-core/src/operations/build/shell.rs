@@ -5,7 +5,6 @@ use fj_math::Point;
 
 use crate::{
     geometry::CurveBoundary,
-    objects::{Curve, Face, HalfEdge, Shell, Surface, Vertex},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
         geometry::UpdateHalfEdgeGeometry,
@@ -16,6 +15,7 @@ use crate::{
             UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion, UpdateShell,
         },
     },
+    topology::{Curve, Face, HalfEdge, Shell, Surface, Vertex},
     Core,
 };
 

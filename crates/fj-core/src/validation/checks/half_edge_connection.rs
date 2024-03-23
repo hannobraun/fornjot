@@ -2,8 +2,8 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::Geometry,
-    objects::{Cycle, HalfEdge},
     storage::Handle,
+    topology::{Cycle, HalfEdge},
     validation::{validation_check::ValidationCheck, ValidationConfig},
 };
 
@@ -77,11 +77,11 @@ impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
 mod tests {
 
     use crate::{
-        objects::{Cycle, HalfEdge},
         operations::{
             build::{BuildCycle, BuildHalfEdge},
             update::UpdateCycle,
         },
+        topology::{Cycle, HalfEdge},
         validation::ValidationCheck,
         Core,
     };

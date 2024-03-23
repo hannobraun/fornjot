@@ -3,9 +3,9 @@ use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::{HalfEdgeGeometry, SurfacePath},
-    objects::{Curve, HalfEdge, Vertex},
     operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
+    topology::{Curve, HalfEdge, Vertex},
     Core,
 };
 

@@ -2,9 +2,9 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry},
-    objects::Surface,
     operations::insert::Insert,
     storage::Handle,
+    topology::Surface,
     Core,
 };
 

@@ -1,7 +1,7 @@
 use crate::{
     geometry::Geometry,
-    objects::Objects,
     presentation::Presentation,
+    topology::Topology,
     validation::{Validation, ValidationConfig},
 };
 
@@ -22,11 +22,10 @@ use super::Layer;
 /// For now, there is no need for this, and all layers are just hardcoded here.
 /// That can be changed, once necessary.
 pub struct Layers {
-    /// The objects layer
+    /// The topology layer
     ///
-    /// Manages the stores of topological and geometric objects that make up
-    /// shapes.
-    pub objects: Layer<Objects>,
+    /// Manages the stores of topological objects.
+    pub topology: Layer<Topology>,
 
     /// The geometry layer
     ///
@@ -47,11 +46,11 @@ pub struct Layers {
 impl Layers {
     /// Construct an instance of `Layers`
     pub fn new() -> Self {
-        let objects = Objects::new();
-        let geometry = Geometry::new(&objects);
+        let topology = Topology::new();
+        let geometry = Geometry::new(&topology);
 
         Self {
-            objects: Layer::new(objects),
+            topology: Layer::new(topology),
             geometry: Layer::new(geometry),
             validation: Layer::default(),
             presentation: Layer::default(),

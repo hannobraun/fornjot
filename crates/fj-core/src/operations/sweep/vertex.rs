@@ -1,7 +1,7 @@
 use crate::{
-    objects::{Curve, Vertex},
     operations::insert::Insert,
     storage::Handle,
+    topology::{Curve, Vertex},
     Core,
 };
 

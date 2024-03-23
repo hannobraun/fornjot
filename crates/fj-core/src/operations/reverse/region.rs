@@ -1,6 +1,6 @@
 use crate::{
-    objects::Region,
     operations::{derive::DeriveFrom, insert::Insert},
+    topology::Region,
     Core,
 };
 

@@ -2,9 +2,9 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
-    objects::Surface,
     operations::build::BuildSurface,
     storage::Handle,
+    topology::Surface,
     Core,
 };
 

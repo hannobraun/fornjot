@@ -3,8 +3,8 @@
 //! See [`DeriveFrom`].
 
 use crate::{
-    objects::{AnyObject, Stored},
     storage::Handle,
+    topology::{AnyObject, Stored},
     Core,
 };
 

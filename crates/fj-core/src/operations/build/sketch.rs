@@ -1,4 +1,4 @@
-use crate::objects::Sketch;
+use crate::topology::Sketch;
 
 /// Build a [`Sketch`]
 ///

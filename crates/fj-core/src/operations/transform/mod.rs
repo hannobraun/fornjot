@@ -16,9 +16,9 @@ use fj_math::{Transform, Vector};
 use type_map::TypeMap;
 
 use crate::{
-    objects::{AnyObject, Stored},
     operations::insert::Insert,
     storage::{Handle, ObjectId},
+    topology::{AnyObject, Stored},
     Core,
 };
 

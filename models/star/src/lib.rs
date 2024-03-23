@@ -2,13 +2,13 @@ use std::f64::consts::PI;
 
 use fj::{
     core::{
-        objects::{Cycle, Region, Sketch, Solid},
         operations::{
             build::{BuildCycle, BuildRegion, BuildSketch},
             reverse::Reverse,
             sweep::SweepSketch,
             update::{UpdateRegion, UpdateSketch},
         },
+        topology::{Cycle, Region, Sketch, Solid},
     },
     math::Vector,
 };
@@ -40,7 +40,7 @@ pub fn model(
         inner_points.push([x / 2., y / 2.]);
     }
 
-    let bottom_surface = core.layers.objects.surfaces.xy_plane();
+    let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., h]);
 
     Sketch::empty()

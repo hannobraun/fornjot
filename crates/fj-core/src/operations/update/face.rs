@@ -1,7 +1,7 @@
 use crate::{
-    objects::{Face, Region},
     operations::{build::Polygon, derive::DeriveFrom, insert::Insert},
     storage::Handle,
+    topology::{Face, Region},
     Core,
 };
 

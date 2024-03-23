@@ -1,7 +1,7 @@
 use crate::{
     geometry::Geometry,
-    objects::{HalfEdge, Shell},
     storage::Handle,
+    topology::{HalfEdge, Shell},
 };
 
 use super::BoundingVerticesOfHalfEdge;

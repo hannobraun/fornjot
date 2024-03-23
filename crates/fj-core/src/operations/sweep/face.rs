@@ -1,9 +1,9 @@
 use fj_math::Vector;
 
 use crate::{
-    objects::{Face, Shell},
     operations::{insert::Insert, presentation::GetColor},
     storage::Handle,
+    topology::{Face, Shell},
     Core,
 };
 

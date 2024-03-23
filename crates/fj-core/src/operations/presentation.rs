@@ -2,7 +2,7 @@
 
 use fj_interop::Color;
 
-use crate::{objects::Region, storage::Handle, Core};
+use crate::{storage::Handle, topology::Region, Core};
 
 /// Get the color of an object
 pub trait GetColor {

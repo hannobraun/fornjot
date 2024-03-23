@@ -1,6 +1,6 @@
 use crate::{
     geometry::Geometry,
-    objects::HalfEdge,
+    topology::HalfEdge,
     validation::{ValidationConfig, ValidationError},
 };
 

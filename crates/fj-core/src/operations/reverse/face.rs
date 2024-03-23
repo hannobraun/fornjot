@@ -1,12 +1,12 @@
 use std::borrow::Borrow;
 
 use crate::{
-    objects::Face,
     operations::{
         build::Polygon,
         derive::DeriveFrom,
         insert::{Insert, IsInsertedNo, IsInsertedYes},
     },
+    topology::Face,
     Core,
 };
 

@@ -1,7 +1,7 @@
 use fj_math::Transform;
 
 use crate::{
-    objects::Surface, operations::insert::Insert, storage::Handle, Core,
+    operations::insert::Insert, storage::Handle, topology::Surface, Core,
 };
 
 use super::{TransformCache, TransformObject};
