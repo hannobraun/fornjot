@@ -112,7 +112,7 @@ impl ShellValidationError {
                     // we have right now are circles, 3 would be enough to check
                     // for coincidence. But the first and last might be
                     // identical, so let's add an extra one.
-                    let [a, d] = edge_a.boundary().inner;
+                    let [a, d] = geometry.of_half_edge(edge_a).boundary.inner;
                     let b = a + (d - a) * 1. / 3.;
                     let c = a + (d - a) * 2. / 3.;
 
@@ -188,7 +188,7 @@ impl ShellValidationError {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve = half_edge.curve().clone();
-                    let boundary = half_edge.boundary();
+                    let boundary = geometry.of_half_edge(half_edge).boundary;
                     let vertices =
                         cycle.bounding_vertices_of_half_edge(half_edge).expect(
                             "`half_edge` came from `cycle`, must exist there",
@@ -262,8 +262,11 @@ impl ShellValidationError {
                 .all(|d| d < config.distinct_min_distance)
                 {
                     let boundaries = Box::new(CoincidentHalfEdgeBoundaries {
-                        boundaries: [half_edge_a, half_edge_b]
-                            .map(|half_edge| half_edge.boundary()),
+                        boundaries: [half_edge_a, half_edge_b].map(
+                            |half_edge| {
+                                geometry.of_half_edge(half_edge).boundary
+                            },
+                        ),
                     });
                     let curves = Box::new(CoincidentHalfEdgeCurves {
                         curves: [half_edge_a, half_edge_b]
@@ -389,7 +392,7 @@ fn distances(
         (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
         geometry: &Geometry,
     ) -> Point<3> {
-        let [start, end] = edge.boundary().inner;
+        let [start, end] = geometry.of_half_edge(edge).boundary.inner;
         let path_coords = start + (end - start) * percent;
         let surface_coords = geometry
             .of_half_edge(edge)
