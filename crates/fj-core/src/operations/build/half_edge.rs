@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeometry, SurfacePath},
+    geometry::{HalfEdgeGeometry, SurfacePath},
     objects::{Curve, HalfEdge, Vertex},
     operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
@@ -16,10 +16,7 @@ use crate::{
 /// [module-level documentation]: super
 pub trait BuildHalfEdge {
     /// Create a half-edge that is not joined to a sibling
-    fn unjoined(
-        _: impl Into<CurveBoundary<Point<1>>>,
-        core: &mut Core,
-    ) -> HalfEdge {
+    fn unjoined(core: &mut Core) -> HalfEdge {
         let curve = Curve::new().insert(core);
         let start_vertex = Vertex::new().insert(core);
 
@@ -63,7 +60,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
-        let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
+        let half_edge = HalfEdge::unjoined(core).insert(core);
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeometry {
@@ -85,7 +82,7 @@ pub trait BuildHalfEdge {
         let boundary =
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
-        let half_edge = HalfEdge::unjoined(boundary, core).insert(core);
+        let half_edge = HalfEdge::unjoined(core).insert(core);
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeometry {
@@ -109,15 +106,13 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(boundary, core)
-            .insert(core)
-            .set_geometry(
-                HalfEdgeGeometry {
-                    path,
-                    boundary: boundary.into(),
-                },
-                &mut core.layers.geometry,
-            )
+        HalfEdge::unjoined(core).insert(core).set_geometry(
+            HalfEdgeGeometry {
+                path,
+                boundary: boundary.into(),
+            },
+            &mut core.layers.geometry,
+        )
     }
 }
 
