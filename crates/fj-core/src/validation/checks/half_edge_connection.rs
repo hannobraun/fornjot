@@ -46,7 +46,7 @@ impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
     ) -> impl Iterator<Item = Self> {
         object.half_edges().pairs().filter_map(|(first, second)| {
             let end_pos_of_first_half_edge = {
-                let [_, end] = first.boundary().inner;
+                let [_, end] = geometry.of_half_edge(first).boundary.inner;
                 geometry
                     .of_half_edge(first)
                     .path
