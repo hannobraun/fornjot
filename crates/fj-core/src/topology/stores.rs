@@ -4,7 +4,7 @@ use super::{
     Curve, Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface, Vertex,
 };
 
-/// The available object stores
+/// The stores for all topological objects
 #[derive(Debug, Default)]
 pub struct Topology {
     /// Store for [`Curve`]s
