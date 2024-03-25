@@ -4,13 +4,14 @@ use fj_math::Vector;
 
 use crate::{
     storage::Handle,
-    topology::{HalfEdge, Surface, Topology},
+    topology::{Curve, HalfEdge, Surface, Topology},
 };
 
-use super::{GlobalPath, HalfEdgeGeom, SurfaceGeom};
+use super::{CurveGeom, GlobalPath, HalfEdgeGeom, SurfaceGeom};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
+    curve: BTreeMap<Handle<Curve>, CurveGeom>,
     half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
@@ -25,6 +26,7 @@ impl Geometry {
     /// Create a new instance of `Geometry`
     pub fn new(topology: &Topology) -> Self {
         let mut self_ = Self {
+            curve: BTreeMap::new(),
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
 
@@ -86,6 +88,17 @@ impl Geometry {
         }
 
         self.surface.insert(surface, geometry);
+    }
+
+    /// # Access the geometry of the provided curve
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the geometry of the curve is not defined.
+    pub fn of_curve(&self, curve: &Handle<Curve>) -> &CurveGeom {
+        self.curve
+            .get(curve)
+            .expect("Expected geometry of half-edge to be defined")
     }
 
     /// # Access the geometry of the provided half-edge
