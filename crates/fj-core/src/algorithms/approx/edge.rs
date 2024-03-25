@@ -6,7 +6,9 @@
 //! the caller doesn't have to deal with duplicate vertices.
 
 use crate::{
-    geometry::SurfaceGeometry, storage::Handle, topology::HalfEdge, Core,
+    storage::Handle,
+    topology::{HalfEdge, Surface},
+    Core,
 };
 
 use super::{
@@ -14,7 +16,7 @@ use super::{
     Tolerance,
 };
 
-impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
+impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
     type Approximation = HalfEdgeApprox;
     type Cache = HalfEdgeApproxCache;
 
@@ -36,7 +38,10 @@ impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
             match cache.start_position.get(half_edge.start_vertex()) {
                 Some(position) => position,
                 None => {
-                    let position_global = surface
+                    let position_global = core
+                        .layers
+                        .geometry
+                        .of_surface(surface)
                         .point_from_surface_coords(start_position_surface);
                     cache.start_position.insert(
                         half_edge.start_vertex().clone(),
@@ -51,7 +56,7 @@ impl Approx for (&Handle<HalfEdge>, &SurfaceGeometry) {
             let approx = (
                 half_edge.curve(),
                 &core.layers.geometry.of_half_edge(half_edge),
-                surface,
+                &core.layers.geometry.of_surface(surface),
             )
                 .approx_with_cache(
                     tolerance,

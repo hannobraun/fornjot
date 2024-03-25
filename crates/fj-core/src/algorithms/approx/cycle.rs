@@ -32,8 +32,7 @@ impl Approx for (&Cycle, &Handle<Surface>) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                (half_edge, &core.layers.geometry.of_surface(surface))
-                    .approx_with_cache(tolerance, cache, core)
+                (half_edge, surface).approx_with_cache(tolerance, cache, core)
             })
             .collect();
 
