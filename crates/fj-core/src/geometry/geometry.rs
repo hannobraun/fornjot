@@ -62,6 +62,14 @@ impl Geometry {
         self_
     }
 
+    pub(crate) fn define_curve_inner(
+        &mut self,
+        curve: Handle<Curve>,
+        geometry: CurveGeom,
+    ) {
+        self.curve.insert(curve, geometry);
+    }
+
     pub(crate) fn define_half_edge_inner(
         &mut self,
         half_edge: Handle<HalfEdge>,
