@@ -198,7 +198,7 @@ mod tests {
         let mut core = Core::new();
 
         let shared_face = Face::new(
-            Surface::surface_from_uv(
+            Surface::from_uv(
                 GlobalPath::circle_from_radius(1.),
                 [0., 1., 1.],
                 &mut core,
@@ -257,7 +257,7 @@ mod tests {
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
-                Surface::surface_from_uv(
+                Surface::from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 1., 1.],
                     &mut core,
@@ -266,7 +266,7 @@ mod tests {
             )
             .insert(&mut core),
             Face::new(
-                Surface::surface_from_uv(
+                Surface::from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 0., 1.],
                     &mut core,
@@ -305,7 +305,7 @@ mod tests {
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
-                Surface::surface_from_uv(
+                Surface::from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 1., 1.],
                     &mut core,
@@ -314,7 +314,7 @@ mod tests {
             )
             .insert(&mut core),
             Face::new(
-                Surface::surface_from_uv(
+                Surface::from_uv(
                     GlobalPath::circle_from_radius(1.),
                     [0., 0., 1.],
                     &mut core,
@@ -350,7 +350,7 @@ mod tests {
         let shared_edge = HalfEdge::circle([0., 0.], 1., &mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
-            Surface::surface_from_uv(
+            Surface::from_uv(
                 GlobalPath::circle_from_radius(1.),
                 [0., 0., 1.],
                 &mut core,
