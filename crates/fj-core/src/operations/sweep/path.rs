@@ -84,6 +84,6 @@ impl SweepSurfacePath for SurfacePath {
             }
         };
 
-        Surface::surface_from_uv(u, path, core)
+        Surface::from_uv(u, path, core)
     }
 }
