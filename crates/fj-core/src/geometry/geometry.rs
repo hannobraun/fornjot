@@ -91,7 +91,7 @@ impl Geometry {
     ///
     /// ## Panics
     ///
-    /// Panics, if the geometry of surface is not defined.
+    /// Panics, if the geometry of the surface is not defined.
     pub fn of_surface(&self, surface: &Handle<Surface>) -> SurfaceGeometry {
         self.surface
             .get(surface)
