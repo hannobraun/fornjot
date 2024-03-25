@@ -4,14 +4,18 @@
 
 use fj_math::Segment;
 
-use crate::{geometry::SurfaceGeometry, topology::Cycle, Core};
+use crate::{
+    storage::Handle,
+    topology::{Cycle, Surface},
+    Core,
+};
 
 use super::{
     edge::{HalfEdgeApprox, HalfEdgeApproxCache},
     Approx, ApproxPoint, Tolerance,
 };
 
-impl Approx for (&Cycle, &SurfaceGeometry) {
+impl Approx for (&Cycle, &Handle<Surface>) {
     type Approximation = CycleApprox;
     type Cache = HalfEdgeApproxCache;
 
@@ -28,7 +32,8 @@ impl Approx for (&Cycle, &SurfaceGeometry) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                (half_edge, surface).approx_with_cache(tolerance, cache, core)
+                (half_edge, &core.layers.geometry.of_surface(surface))
+                    .approx_with_cache(tolerance, cache, core)
             })
             .collect();
 
