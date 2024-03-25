@@ -56,7 +56,7 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
             let approx = (
                 half_edge.curve(),
                 &core.layers.geometry.of_half_edge(half_edge),
-                &core.layers.geometry.of_surface(surface),
+                surface,
             )
                 .approx_with_cache(
                     tolerance,

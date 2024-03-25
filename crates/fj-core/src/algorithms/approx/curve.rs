@@ -10,13 +10,13 @@ use crate::{
         SurfacePath,
     },
     storage::Handle,
-    topology::Curve,
+    topology::{Curve, Surface},
     Core,
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &SurfaceGeometry) {
+impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &Handle<Surface>) {
     type Approximation = CurveApprox;
     type Cache = CurveApproxCache;
 
@@ -33,7 +33,7 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &SurfaceGeometry) {
             None => {
                 let approx = approx_curve(
                     &half_edge.path,
-                    surface,
+                    &core.layers.geometry.of_surface(surface),
                     half_edge.boundary,
                     tolerance,
                     core,
@@ -183,12 +183,9 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
-        geometry::{
-            CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
-            SurfacePath,
-        },
-        operations::insert::Insert,
-        topology::Curve,
+        geometry::{CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfacePath},
+        operations::{build::BuildSurface, insert::Insert},
+        topology::{Curve, Surface},
         Core,
     };
 
@@ -201,7 +198,7 @@ mod tests {
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
         let half_edge = HalfEdgeGeometry { path, boundary };
-        let surface = core.layers.geometry.xz_plane();
+        let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
         let approx =
@@ -219,10 +216,11 @@ mod tests {
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
         let half_edge = HalfEdgeGeometry { path, boundary };
-        let surface = SurfaceGeometry {
-            u: GlobalPath::circle_from_radius(1.),
-            v: [0., 0., 1.].into(),
-        };
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
 
         let tolerance = 1.;
         let approx =
@@ -243,10 +241,7 @@ mod tests {
         ]);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeometry { path, boundary };
-        let surface = SurfaceGeometry {
-            u: global_path,
-            v: [0., 0., 1.].into(),
-        };
+        let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
 
         let tolerance = 1.;
         let approx =
@@ -257,8 +252,11 @@ mod tests {
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
-                let point_global =
-                    surface.point_from_surface_coords(point_surface);
+                let point_global = core
+                    .layers
+                    .geometry
+                    .of_surface(&surface)
+                    .point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();
@@ -273,7 +271,7 @@ mod tests {
         let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeometry { path, boundary };
-        let surface = core.layers.geometry.xz_plane();
+        let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
         let approx =
@@ -284,8 +282,11 @@ mod tests {
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
-                let point_global =
-                    surface.point_from_surface_coords(point_surface);
+                let point_global = core
+                    .layers
+                    .geometry
+                    .of_surface(&surface)
+                    .point_from_surface_coords(point_surface);
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();
