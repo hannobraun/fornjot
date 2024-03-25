@@ -192,12 +192,12 @@ mod tests {
     fn approx_line_on_flat_surface() {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.xz_plane();
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let curve = Curve::new().insert(&mut core);
         let boundary = CurveBoundary::from(boundary);
         let half_edge = HalfEdgeGeom { path, boundary };
-        let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -210,16 +210,16 @@ mod tests {
     fn approx_line_on_curved_surface_but_not_along_curve() {
         let mut core = Core::new();
 
-        let (path, boundary) =
-            SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve = Curve::new().insert(&mut core);
-        let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { path, boundary };
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
             &mut core,
         );
+        let (path, boundary) =
+            SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
+        let curve = Curve::new().insert(&mut core);
+        let boundary = CurveBoundary::from(boundary);
+        let half_edge = HalfEdgeGeom { path, boundary };
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -233,6 +233,7 @@ mod tests {
         let mut core = Core::new();
 
         let global_path = GlobalPath::circle_from_radius(1.);
+        let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
         let path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
@@ -240,7 +241,6 @@ mod tests {
         let curve = Curve::new().insert(&mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeom { path, boundary };
-        let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -266,11 +266,11 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.xz_plane();
         let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let curve = Curve::new().insert(&mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeom { path, boundary };
-        let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
