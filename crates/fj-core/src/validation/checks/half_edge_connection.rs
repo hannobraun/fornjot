@@ -147,8 +147,11 @@ mod tests {
 
         // We're only testing for `Face` here, not `Sketch`. Should be fine, as
         // most of the code is shared.
-        let valid =
-            Face::polygon(surface, [[0., 0.], [1., 0.], [1., 1.]], &mut core);
+        let valid = Face::polygon(
+            surface.clone(),
+            [[0., 0.], [1., 0.], [1., 1.]],
+            &mut core,
+        );
         AdjacentHalfEdgesNotConnected::check_and_return_first_error(
             &valid,
             &core.layers.geometry,
@@ -164,6 +167,7 @@ mod tests {
                                 [HalfEdge::line_segment(
                                     [[0., 0.], [2., 0.]],
                                     None,
+                                    surface,
                                     core,
                                 )]
                             },

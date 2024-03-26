@@ -23,15 +23,19 @@ pub trait BuildCycle {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        _: Handle<Surface>,
+        surface: Handle<Surface>,
         core: &mut Core,
     ) -> Cycle {
-        let circle = HalfEdge::circle(center, radius, core);
+        let circle = HalfEdge::circle(center, radius, surface, core);
         Cycle::empty().add_half_edges([circle], core)
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, _: Handle<Surface>, core: &mut Core) -> Cycle
+    fn polygon<P, Ps>(
+        points: Ps,
+        surface: Handle<Surface>,
+        core: &mut Core,
+    ) -> Cycle
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,
@@ -42,7 +46,12 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment([start, end], None, core)
+                HalfEdge::line_segment(
+                    [start, end],
+                    None,
+                    surface.clone(),
+                    core,
+                )
             });
 
         Cycle::new(edges)

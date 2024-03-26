@@ -5,7 +5,7 @@ use crate::{
     geometry::{HalfEdgeGeom, SurfacePath},
     operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
-    topology::{Curve, HalfEdge, Vertex},
+    topology::{Curve, HalfEdge, Surface, Vertex},
     Core,
 };
 
@@ -46,6 +46,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
+        _: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let angle_rad = angle_rad.into();
@@ -76,6 +77,7 @@ pub trait BuildHalfEdge {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
+        _: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
@@ -98,6 +100,7 @@ pub trait BuildHalfEdge {
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
+        _: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let boundary =
