@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{HalfEdgeGeom, SurfacePath},
+    geometry::{CurveGeom, HalfEdgeGeom, SurfacePath},
     operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, HalfEdge, Surface, Vertex},
@@ -46,7 +46,7 @@ pub trait BuildHalfEdge {
         start: impl Into<Point<2>>,
         end: impl Into<Point<2>>,
         angle_rad: impl Into<Scalar>,
-        _: Handle<Surface>,
+        surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let angle_rad = angle_rad.into();
@@ -62,6 +62,11 @@ pub trait BuildHalfEdge {
             [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
+
+        core.layers.geometry.define_curve(
+            half_edge.curve().clone(),
+            CurveGeom::from_path_and_surface(path, surface),
+        );
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeom {
@@ -77,7 +82,7 @@ pub trait BuildHalfEdge {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
-        _: Handle<Surface>,
+        surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let path = SurfacePath::circle_from_center_and_radius(center, radius);
@@ -85,6 +90,11 @@ pub trait BuildHalfEdge {
             [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
+
+        core.layers.geometry.define_curve(
+            half_edge.curve().clone(),
+            CurveGeom::from_path_and_surface(path, surface),
+        );
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeom {
@@ -100,7 +110,7 @@ pub trait BuildHalfEdge {
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
         boundary: Option<[Point<1>; 2]>,
-        _: Handle<Surface>,
+        surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
         let boundary =
@@ -111,6 +121,10 @@ pub trait BuildHalfEdge {
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
 
+        core.layers.geometry.define_curve(
+            half_edge.curve().clone(),
+            CurveGeom::from_path_and_surface(path, surface),
+        );
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeom {
