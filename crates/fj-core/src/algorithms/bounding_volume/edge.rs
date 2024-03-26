@@ -10,7 +10,9 @@ impl super::BoundingVolume<2> for &Handle<HalfEdge> {
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
         let half_edge = self;
 
-        match geometry.of_half_edge(half_edge).path {
+        let geometry = geometry.of_half_edge(half_edge);
+
+        match geometry.path {
             SurfacePath::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the
                 // most precise, but it should do for now.
@@ -24,8 +26,6 @@ impl super::BoundingVolume<2> for &Handle<HalfEdge> {
                 })
             }
             SurfacePath::Line(_) => {
-                let geometry = geometry.of_half_edge(half_edge);
-
                 let points = geometry.boundary.inner.map(|point_curve| {
                     geometry.path.point_from_path_coords(point_curve)
                 });
