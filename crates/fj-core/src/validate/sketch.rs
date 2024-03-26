@@ -146,8 +146,13 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.space_2d();
 
-        let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
-            .insert(&mut core);
+        let region = <Region as BuildRegion>::circle(
+            [0., 0.],
+            1.,
+            surface.clone(),
+            &mut core,
+        )
+        .insert(&mut core);
         let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
             .insert(&mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
@@ -179,6 +184,7 @@ mod tests {
 
         let region = <Region as BuildRegion>::polygon(
             [[0., 0.], [1., 1.], [0., 1.]],
+            surface.clone(),
             &mut core,
         )
         .insert(&mut core);

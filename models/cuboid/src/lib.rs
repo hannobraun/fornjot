@@ -25,6 +25,7 @@ pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
                     [x / 2., y / 2.],
                     [-x / 2., y / 2.],
                 ],
+                core.layers.topology.surfaces.space_2d(),
                 core,
             )],
             core,
