@@ -5,8 +5,8 @@ use crate::{
     topology::Face,
 };
 
-impl super::BoundingVolume<3> for Face {
-    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<3>> {
+impl super::BoundingVolume<3> for &Face {
+    fn aabb(self, geometry: &Geometry) -> Option<Aabb<3>> {
         self.region().exterior().aabb(geometry).map(|aabb2| {
             let surface = geometry.of_surface(self.surface());
 
