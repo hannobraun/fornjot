@@ -50,7 +50,7 @@ impl SweepFace for Handle<Face> {
         let other_faces = bottom_face
             .region()
             .sweep_region(
-                bottom_face.surface(),
+                bottom_face.surface().clone(),
                 bottom_face.region().get_color(core),
                 path,
                 cache,

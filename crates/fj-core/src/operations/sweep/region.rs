@@ -32,7 +32,7 @@ pub trait SweepRegion {
     /// operation's scope.
     fn sweep_region(
         &self,
-        surface: &Handle<Surface>,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -43,7 +43,7 @@ pub trait SweepRegion {
 impl SweepRegion for Region {
     fn sweep_region(
         &self,
-        surface: &Handle<Surface>,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -55,7 +55,7 @@ impl SweepRegion for Region {
 
         let top_exterior = sweep_cycle(
             self.exterior(),
-            &core.layers.geometry.of_surface(surface),
+            &core.layers.geometry.of_surface(&surface),
             color,
             &mut faces,
             path,
@@ -69,7 +69,7 @@ impl SweepRegion for Region {
             .map(|bottom_cycle| {
                 sweep_cycle(
                     bottom_cycle,
-                    &core.layers.geometry.of_surface(surface),
+                    &core.layers.geometry.of_surface(&surface),
                     color,
                     &mut faces,
                     path,
