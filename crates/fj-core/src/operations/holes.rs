@@ -50,7 +50,7 @@ impl AddHole for Shell {
                 core,
             )
             .sweep_region(
-                location.face.surface(),
+                location.face.surface().clone(),
                 None,
                 path,
                 &mut SweepCache::default(),
@@ -113,7 +113,7 @@ impl AddHole for Shell {
                 core,
             )
             .sweep_region(
-                entry_location.face.surface(),
+                entry_location.face.surface().clone(),
                 None,
                 path,
                 &mut SweepCache::default(),
