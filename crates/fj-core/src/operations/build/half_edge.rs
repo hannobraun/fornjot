@@ -106,13 +106,17 @@ pub trait BuildHalfEdge {
             boundary.zip_ext(points_surface),
         );
 
-        HalfEdge::unjoined(core).insert(core).set_geometry(
+        let half_edge = HalfEdge::unjoined(core).insert(core);
+
+        core.layers.geometry.define_half_edge(
+            half_edge.clone(),
             HalfEdgeGeom {
                 path,
                 boundary: boundary.into(),
             },
-            &mut core.layers.geometry,
-        )
+        );
+
+        half_edge
     }
 }
 
