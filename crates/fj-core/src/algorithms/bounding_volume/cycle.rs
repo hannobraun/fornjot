@@ -11,7 +11,7 @@ impl super::BoundingVolume<2> for &Cycle {
         for half_edge in cycle.half_edges() {
             let new_aabb = half_edge
                 .aabb(geometry)
-                .expect("`Edge` can always compute AABB");
+                .expect("`HalfEdge` can always compute AABB");
             aabb = Some(aabb.map_or(new_aabb, |aabb| aabb.merged(&new_aabb)));
         }
 
