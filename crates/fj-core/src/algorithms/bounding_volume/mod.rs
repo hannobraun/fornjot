@@ -1,8 +1,8 @@
 //! Compute a bounding volume for an object
 
 mod cycle;
-mod edge;
 mod face;
+mod half_edge;
 mod shell;
 mod solid;
 
