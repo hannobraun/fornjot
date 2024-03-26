@@ -2,11 +2,11 @@ use fj_interop::Color;
 use fj_math::Vector;
 
 use crate::{
-    geometry::SurfaceGeometry,
     operations::{
         build::BuildCycle, join::JoinCycle, sweep::half_edge::SweepHalfEdge,
     },
-    topology::{Cycle, Face},
+    storage::Handle,
+    topology::{Cycle, Face, Surface},
     Core,
 };
 
@@ -38,7 +38,7 @@ pub trait SweepCycle {
     /// operation is called in, and therefore falls outside of its scope.
     fn sweep_cycle(
         &self,
-        surface: &SurfaceGeometry,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -49,7 +49,7 @@ pub trait SweepCycle {
 impl SweepCycle for Cycle {
     fn sweep_cycle(
         &self,
-        surface: &SurfaceGeometry,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -66,7 +66,7 @@ impl SweepCycle for Cycle {
 
             let (side_face, top_edge) = bottom_half_edge.sweep_half_edge(
                 bottom_half_edge_next.start_vertex().clone(),
-                surface,
+                &core.layers.geometry.of_surface(&surface),
                 color,
                 path,
                 cache,

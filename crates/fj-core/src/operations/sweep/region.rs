@@ -103,7 +103,7 @@ fn sweep_cycle(
     core: &mut Core,
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
-        &core.layers.geometry.of_surface(&bottom_surface),
+        bottom_surface,
         color,
         path,
         cache,
