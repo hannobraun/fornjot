@@ -89,20 +89,24 @@ mod tests {
         let mut core = Core::new();
 
         let surface = core.layers.topology.surfaces.xy_plane();
-        let valid =
-            Face::polygon(surface, [[0., 0.], [3., 0.], [0., 3.]], &mut core)
-                .update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::polygon(
-                                [[1., 1.], [1., 2.], [2., 1.]],
-                                core,
-                            )],
-                            core,
-                        )
-                    },
-                    &mut core,
-                );
+        let valid = Face::polygon(
+            surface.clone(),
+            [[0., 0.], [3., 0.], [0., 3.]],
+            &mut core,
+        )
+        .update_region(
+            |region, core| {
+                region.add_interiors(
+                    [Cycle::polygon(
+                        [[1., 1.], [1., 2.], [2., 1.]],
+                        surface,
+                        core,
+                    )],
+                    core,
+                )
+            },
+            &mut core,
+        );
         InteriorCycleHasInvalidWinding::check_and_return_first_error(
             &valid,
             &core.layers.geometry,

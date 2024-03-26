@@ -104,11 +104,11 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.xy_plane();
 
-        let face = Face::unbound(surface, &mut core)
+        let face = Face::unbound(surface.clone(), &mut core)
             .update_region(
                 |region, core| {
                     region.update_exterior(
-                        |_, core| Cycle::polygon([a, b, c, d], core),
+                        |_, core| Cycle::polygon([a, b, c, d], surface, core),
                         core,
                     )
                 },
@@ -152,11 +152,21 @@ mod tests {
                 |region, core| {
                     region
                         .update_exterior(
-                            |_, core| Cycle::polygon([a, b, c, d], core),
+                            |_, core| {
+                                Cycle::polygon(
+                                    [a, b, c, d],
+                                    surface.clone(),
+                                    core,
+                                )
+                            },
                             core,
                         )
                         .add_interiors(
-                            [Cycle::polygon([e, f, g, h], core)],
+                            [Cycle::polygon(
+                                [e, f, g, h],
+                                surface.clone(),
+                                core,
+                            )],
                             core,
                         )
                 },
@@ -245,7 +255,13 @@ mod tests {
             .update_region(
                 |region, core| {
                     region.update_exterior(
-                        |_, core| Cycle::polygon([a, b, c, d, e], core),
+                        |_, core| {
+                            Cycle::polygon(
+                                [a, b, c, d, e],
+                                surface.clone(),
+                                core,
+                            )
+                        },
                         core,
                     )
                 },

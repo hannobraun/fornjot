@@ -3,7 +3,8 @@ use itertools::Itertools;
 
 use crate::{
     operations::{build::BuildHalfEdge, update::UpdateCycle},
-    topology::{Cycle, HalfEdge},
+    storage::Handle,
+    topology::{Cycle, HalfEdge, Surface},
     Core,
 };
 
@@ -22,6 +23,7 @@ pub trait BuildCycle {
     fn circle(
         center: impl Into<Point<2>>,
         radius: impl Into<Scalar>,
+        _: Handle<Surface>,
         core: &mut Core,
     ) -> Cycle {
         let circle = HalfEdge::circle(center, radius, core);
@@ -29,7 +31,7 @@ pub trait BuildCycle {
     }
 
     /// Build a polygon
-    fn polygon<P, Ps>(points: Ps, core: &mut Core) -> Cycle
+    fn polygon<P, Ps>(points: Ps, _: Handle<Surface>, core: &mut Core) -> Cycle
     where
         P: Into<Point<2>>,
         Ps: IntoIterator<Item = P>,

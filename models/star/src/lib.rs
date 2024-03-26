@@ -51,7 +51,12 @@ pub fn model(
                 core,
             )
             .add_interiors(
-                [Cycle::polygon(inner_points, core).reverse(core)],
+                [Cycle::polygon(
+                    inner_points,
+                    core.layers.topology.surfaces.space_2d(),
+                    core,
+                )
+                .reverse(core)],
                 core,
             )],
             core,

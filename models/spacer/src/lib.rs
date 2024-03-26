@@ -29,7 +29,13 @@ pub fn model(
                 core,
             )
             .add_interiors(
-                [Cycle::circle(Point::origin(), inner, core).reverse(core)],
+                [Cycle::circle(
+                    Point::origin(),
+                    inner,
+                    core.layers.topology.surfaces.space_2d(),
+                    core,
+                )
+                .reverse(core)],
                 core,
             )],
             core,
