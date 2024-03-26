@@ -2,7 +2,6 @@ use fj_interop::{ext::ArrayExt, Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::SurfaceGeometry,
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         geometry::UpdateHalfEdgeGeometry,
@@ -11,7 +10,7 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    topology::{Cycle, Face, HalfEdge, Region, Vertex},
+    topology::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
     Core,
 };
 
@@ -39,7 +38,7 @@ pub trait SweepHalfEdge {
     fn sweep_half_edge(
         &self,
         end_vertex: Handle<Vertex>,
-        surface: &SurfaceGeometry,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -51,7 +50,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
     fn sweep_half_edge(
         &self,
         end_vertex: Handle<Vertex>,
-        surface: &SurfaceGeometry,
+        surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -60,7 +59,11 @@ impl SweepHalfEdge for Handle<HalfEdge> {
         let path = path.into();
 
         let geometry = core.layers.geometry.of_half_edge(self);
-        let surface = geometry.path.sweep_surface_path(surface, path, core);
+        let surface = geometry.path.sweep_surface_path(
+            &core.layers.geometry.of_surface(&surface),
+            path,
+            core,
+        );
 
         // Next, we need to define the boundaries of the face. Let's start with
         // the global vertices and edges.
