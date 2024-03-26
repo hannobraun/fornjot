@@ -2,8 +2,8 @@ use fj_math::Aabb;
 
 use crate::{geometry::Geometry, topology::Shell};
 
-impl super::BoundingVolume<3> for Shell {
-    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<3>> {
+impl super::BoundingVolume<3> for &Shell {
+    fn aabb(self, geometry: &Geometry) -> Option<Aabb<3>> {
         let mut aabb: Option<Aabb<3>> = None;
 
         for face in self.faces() {

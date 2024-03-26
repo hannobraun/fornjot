@@ -6,8 +6,8 @@ use crate::{
     topology::HalfEdge,
 };
 
-impl super::BoundingVolume<2> for Handle<HalfEdge> {
-    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<2>> {
+impl super::BoundingVolume<2> for &Handle<HalfEdge> {
+    fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
         match geometry.of_half_edge(self).path {
             SurfacePath::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the

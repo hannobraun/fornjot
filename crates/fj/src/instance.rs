@@ -47,7 +47,7 @@ impl Instance {
     pub fn process_model<M>(&mut self, model: &M) -> Result
     where
         for<'r> (&'r M, Tolerance): Triangulate,
-        M: BoundingVolume<3>,
+        for<'r> &'r M: BoundingVolume<3>,
     {
         tracing_subscriber::registry()
             .with(tracing_subscriber::fmt::layer())

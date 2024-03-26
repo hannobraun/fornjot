@@ -2,8 +2,8 @@ use fj_math::Aabb;
 
 use crate::{geometry::Geometry, topology::Cycle};
 
-impl super::BoundingVolume<2> for Cycle {
-    fn aabb(&self, geometry: &Geometry) -> Option<Aabb<2>> {
+impl super::BoundingVolume<2> for &Cycle {
+    fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
         let mut aabb: Option<Aabb<2>> = None;
 
         for edge in self.half_edges() {
