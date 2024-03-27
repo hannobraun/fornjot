@@ -15,7 +15,3 @@ impl Validate for HalfEdge {
     ) {
     }
 }
-
-/// [`HalfEdge`] validation failed
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum EdgeValidationError {}
