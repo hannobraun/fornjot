@@ -16,6 +16,25 @@ use crate::{
 ///
 /// However, the *position* of that shared vertex is redundantly defined in both
 /// [`HalfEdge`]s. This check verifies that both positions are the same.
+///
+/// ## Implementation Note
+///
+/// Having the vertex positions redundantly defined is not desirable, but
+/// currently we lack the facilities to project a single definition (whether
+/// local to a curve, local to a surface, or global in 3D space) into other
+/// local contexts, where they are required for approximation/triangulation.
+///
+/// As of this writing, there is no issue for creating these facilities and
+/// consolidating these redundant definitions, but the following issue tracks a
+/// prerequisite of that:
+///
+/// <https://github.com/hannobraun/fornjot/issues/2118>
+///
+/// If there was a single definition for each vertex position, we wouldn't need
+/// this validation check in its current form, but we would still need another
+/// one that fills a similar gap. Namely, we would still need to check whether a
+/// half-edge's start and end vertices are actually located on that half-edge's
+/// curve.
 #[derive(Clone, Debug, thiserror::Error)]
 #[error(
     "Adjacent `HalfEdge`s in `Cycle` are not connected\n\
