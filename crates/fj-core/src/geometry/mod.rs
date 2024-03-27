@@ -11,5 +11,5 @@ pub use self::{
     geometry::Geometry,
     half_edge::HalfEdgeGeom,
     path::{GlobalPath, SurfacePath},
-    surface::SurfaceGeometry,
+    surface::SurfaceGeom,
 };

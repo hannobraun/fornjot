@@ -1,7 +1,7 @@
 //! Layer infrastructure for [`Geometry`]
 
 use crate::{
-    geometry::{Geometry, HalfEdgeGeom, SurfaceGeometry},
+    geometry::{Geometry, HalfEdgeGeom, SurfaceGeom},
     storage::Handle,
     topology::{HalfEdge, Surface},
 };
@@ -29,7 +29,7 @@ impl Layer<Geometry> {
     pub fn define_surface(
         &mut self,
         surface: Handle<Surface>,
-        geometry: SurfaceGeometry,
+        geometry: SurfaceGeom,
     ) {
         let mut events = Vec::new();
         self.process(DefineSurface { surface, geometry }, &mut events);
@@ -64,7 +64,7 @@ impl Event<Geometry> for DefineHalfEdge {
 /// Define the geometry of a surface
 pub struct DefineSurface {
     surface: Handle<Surface>,
-    geometry: SurfaceGeometry,
+    geometry: SurfaceGeom,
 }
 
 impl Command<Geometry> for DefineSurface {

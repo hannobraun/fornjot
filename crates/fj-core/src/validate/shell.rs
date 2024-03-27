@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, fmt};
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, SurfaceGeometry},
+    geometry::{CurveBoundary, Geometry, SurfaceGeom},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -101,9 +101,9 @@ impl ShellValidationError {
 
                 fn compare_curve_coords(
                     edge_a: &Handle<HalfEdge>,
-                    surface_a: &SurfaceGeometry,
+                    surface_a: &SurfaceGeom,
                     edge_b: &Handle<HalfEdge>,
-                    surface_b: &SurfaceGeometry,
+                    surface_b: &SurfaceGeom,
                     geometry: &Geometry,
                     config: &ValidationConfig,
                     mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
@@ -382,14 +382,14 @@ impl fmt::Display for CoincidentHalfEdgeVertices {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     edge_a: Handle<HalfEdge>,
-    surface_a: &SurfaceGeometry,
+    surface_a: &SurfaceGeom,
     edge_b: Handle<HalfEdge>,
-    surface_b: &SurfaceGeometry,
+    surface_b: &SurfaceGeom,
     geometry: &Geometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, &SurfaceGeometry),
+        (edge, surface): (&Handle<HalfEdge>, &SurfaceGeom),
         geometry: &Geometry,
     ) -> Point<3> {
         let [start, end] = geometry.of_half_edge(edge).boundary.inner;

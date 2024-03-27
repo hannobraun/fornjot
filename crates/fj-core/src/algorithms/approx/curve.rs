@@ -6,7 +6,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{
-        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeom, SurfaceGeometry,
+        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeom, SurfaceGeom,
         SurfacePath,
     },
     storage::Handle,
@@ -46,7 +46,7 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
 
 fn approx_curve(
     path: &SurfacePath,
-    surface: &SurfaceGeometry,
+    surface: &SurfaceGeom,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
     geometry: &Geometry,

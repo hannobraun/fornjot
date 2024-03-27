@@ -6,7 +6,7 @@ use super::GlobalPath;
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct SurfaceGeometry {
+pub struct SurfaceGeom {
     /// The u-axis of the surface
     pub u: GlobalPath,
 
@@ -14,7 +14,7 @@ pub struct SurfaceGeometry {
     pub v: Vector<3>,
 }
 
-impl SurfaceGeometry {
+impl SurfaceGeom {
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,
@@ -64,11 +64,11 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{GlobalPath, SurfaceGeometry};
+    use crate::geometry::{GlobalPath, SurfaceGeom};
 
     #[test]
     fn point_from_surface_coords() {
-        let surface = SurfaceGeometry {
+        let surface = SurfaceGeom {
             u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn vector_from_surface_coords() {
-        let surface = SurfaceGeometry {
+        let surface = SurfaceGeom {
             u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
