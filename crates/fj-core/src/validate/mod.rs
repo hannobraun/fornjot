@@ -79,8 +79,8 @@ use crate::{
 };
 
 pub use self::{
-    edge::EdgeValidationError, shell::ShellValidationError,
-    sketch::SketchValidationError, solid::SolidValidationError,
+    shell::ShellValidationError, sketch::SketchValidationError,
+    solid::SolidValidationError,
 };
 
 /// Assert that some object has a validation error which matches a specific

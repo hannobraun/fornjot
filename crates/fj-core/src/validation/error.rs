@@ -1,8 +1,7 @@
 use std::{convert::Infallible, fmt};
 
 use crate::validate::{
-    EdgeValidationError, ShellValidationError, SketchValidationError,
-    SolidValidationError,
+    ShellValidationError, SketchValidationError, SolidValidationError,
 };
 
 use super::checks::{
@@ -24,10 +23,6 @@ pub enum ValidationError {
     /// Interior cycle has invalid winding
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
-
-    /// `Edge` validation error
-    #[error("`Edge` validation error")]
-    Edge(#[from] EdgeValidationError),
 
     /// `Shell` validation error
     #[error("`Shell` validation error")]
