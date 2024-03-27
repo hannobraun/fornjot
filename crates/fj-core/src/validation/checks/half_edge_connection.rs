@@ -63,33 +63,41 @@ impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
-        object.half_edges().pairs().filter_map(|(first, second)| {
-            let end_pos_of_first_half_edge = {
-                let [_, end] = geometry.of_half_edge(first).boundary.inner;
-                geometry
-                    .of_half_edge(first)
-                    .path
-                    .point_from_path_coords(end)
-            };
-            let start_pos_of_second_half_edge =
-                geometry.of_half_edge(second).start_position();
-
-            let distance_between_positions = (end_pos_of_first_half_edge
-                - start_pos_of_second_half_edge)
-                .magnitude();
-
-            if distance_between_positions > config.identical_max_distance {
-                return Some(AdjacentHalfEdgesNotConnected {
-                    end_pos_of_first_half_edge,
-                    start_pos_of_second_half_edge,
-                    distance_between_positions,
-                    unconnected_half_edges: [first.clone(), second.clone()],
-                });
-            }
-
-            None
-        })
+        check_cycle(object, geometry, config)
     }
+}
+
+fn check_cycle<'r>(
+    object: &'r Cycle,
+    geometry: &'r Geometry,
+    config: &'r ValidationConfig,
+) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
+    object.half_edges().pairs().filter_map(|(first, second)| {
+        let end_pos_of_first_half_edge = {
+            let [_, end] = geometry.of_half_edge(first).boundary.inner;
+            geometry
+                .of_half_edge(first)
+                .path
+                .point_from_path_coords(end)
+        };
+        let start_pos_of_second_half_edge =
+            geometry.of_half_edge(second).start_position();
+
+        let distance_between_positions = (end_pos_of_first_half_edge
+            - start_pos_of_second_half_edge)
+            .magnitude();
+
+        if distance_between_positions > config.identical_max_distance {
+            return Some(AdjacentHalfEdgesNotConnected {
+                end_pos_of_first_half_edge,
+                start_pos_of_second_half_edge,
+                distance_between_positions,
+                unconnected_half_edges: [first.clone(), second.clone()],
+            });
+        }
+
+        None
+    })
 }
 
 #[cfg(test)]
