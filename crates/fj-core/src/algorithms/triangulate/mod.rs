@@ -6,7 +6,7 @@ mod polygon;
 use fj_interop::Mesh;
 use fj_math::Point;
 
-use crate::Core;
+use crate::{operations::presentation::GetColor, Core};
 
 use self::polygon::Polygon;
 
@@ -69,7 +69,7 @@ impl Triangulate for FaceApprox {
                 .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
-        let color = self.color.unwrap_or_default();
+        let color = self.face.region().get_color(_core).unwrap_or_default();
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);

@@ -4,10 +4,7 @@
 
 use std::{collections::BTreeSet, ops::Deref};
 
-use fj_interop::Color;
-
 use crate::{
-    operations::presentation::GetColor,
     storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
@@ -101,13 +98,11 @@ impl Approx for Handle<Face> {
             interiors.insert(cycle);
         }
 
-        let color = self.region().get_color(core);
         let coord_handedness = self.coord_handedness(&core.layers.geometry);
         FaceApprox {
             face: self,
             exterior,
             interiors,
-            color,
             coord_handedness,
         }
     }
@@ -124,9 +119,6 @@ pub struct FaceApprox {
 
     /// Approximations of the interior cycles
     pub interiors: BTreeSet<CycleApprox>,
-
-    /// The color of the approximated face
-    pub color: Option<Color>,
 
     /// The handedness of the approximated face's front-side coordinate system
     pub coord_handedness: Handedness,
