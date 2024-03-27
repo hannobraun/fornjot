@@ -6,12 +6,11 @@ use fj_math::Point;
 
 use crate::{
     geometry::{
-        CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
+        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
         SurfacePath,
     },
     storage::Handle,
     topology::{Curve, Surface},
-    Core,
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
@@ -24,7 +23,7 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &Handle<Surface>) {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let (curve, half_edge, surface) = self;
 
@@ -33,10 +32,10 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &Handle<Surface>) {
             None => {
                 let approx = approx_curve(
                     &half_edge.path,
-                    &core.layers.geometry.of_surface(surface),
+                    &geometry.of_surface(surface),
                     half_edge.boundary,
                     tolerance,
-                    core,
+                    geometry,
                 );
 
                 cache.insert(curve.clone(), half_edge.boundary, approx)
@@ -50,7 +49,7 @@ fn approx_curve(
     surface: &SurfaceGeometry,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    core: &mut Core,
+    geometry: &Geometry,
 ) -> CurveApprox {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
@@ -66,7 +65,7 @@ fn approx_curve(
         }
         (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
             (path, boundary)
-                .approx_with_cache(tolerance, &mut (), core)
+                .approx_with_cache(tolerance, &mut (), geometry)
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
                     // We're throwing away `point_surface` here, which is a
@@ -100,7 +99,7 @@ fn approx_curve(
             let approx_u = (surface.u, range_u).approx_with_cache(
                 tolerance,
                 &mut (),
-                core,
+                geometry,
             );
 
             let mut points = Vec::new();
@@ -201,8 +200,8 @@ mod tests {
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -223,8 +222,8 @@ mod tests {
         );
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -244,11 +243,11 @@ mod tests {
         let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (global_path, boundary)
-            .approx(tolerance, &mut core)
+            .approx(tolerance, &core.layers.geometry)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
@@ -274,11 +273,11 @@ mod tests {
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (&path, boundary)
-            .approx(tolerance, &mut core)
+            .approx(tolerance, &core.layers.geometry)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);

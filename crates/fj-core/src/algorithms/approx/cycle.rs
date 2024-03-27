@@ -5,9 +5,9 @@
 use fj_math::Segment;
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
     topology::{Cycle, Surface},
-    Core,
 };
 
 use super::{
@@ -23,7 +23,7 @@ impl Approx for (&Cycle, &Handle<Surface>) {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let (cycle, surface) = self;
         let tolerance = tolerance.into();
@@ -32,7 +32,8 @@ impl Approx for (&Cycle, &Handle<Surface>) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                (half_edge, surface).approx_with_cache(tolerance, cache, core)
+                (half_edge, surface)
+                    .approx_with_cache(tolerance, cache, geometry)
             })
             .collect();
 

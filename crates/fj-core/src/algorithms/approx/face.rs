@@ -5,10 +5,10 @@
 use std::{collections::BTreeSet, ops::Deref};
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
-    Core,
 };
 
 use super::{
@@ -24,13 +24,15 @@ impl Approx for &ObjectSet<Face> {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
         let approx = self
             .into_iter()
-            .map(|face| face.clone().approx_with_cache(tolerance, cache, core))
+            .map(|face| {
+                face.clone().approx_with_cache(tolerance, cache, geometry)
+            })
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -71,7 +73,7 @@ impl Approx for Handle<Face> {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let tolerance = tolerance.into();
 
@@ -89,16 +91,16 @@ impl Approx for Handle<Face> {
         // it have nothing to do with its curvature.
 
         let exterior = (self.region().exterior().deref(), self.surface())
-            .approx_with_cache(tolerance, cache, core);
+            .approx_with_cache(tolerance, cache, geometry);
 
         let mut interiors = BTreeSet::new();
         for cycle in self.region().interiors() {
             let cycle = (cycle.deref(), self.surface())
-                .approx_with_cache(tolerance, cache, core);
+                .approx_with_cache(tolerance, cache, geometry);
             interiors.insert(cycle);
         }
 
-        let coord_handedness = self.coord_handedness(&core.layers.geometry);
+        let coord_handedness = self.coord_handedness(geometry);
         FaceApprox {
             face: self,
             exterior,
