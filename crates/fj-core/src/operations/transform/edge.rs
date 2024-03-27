@@ -26,7 +26,7 @@ impl TransformObject for Handle<HalfEdge> {
 
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
-            core.layers.geometry.of_half_edge(self),
+            *core.layers.geometry.of_half_edge(self),
         );
 
         half_edge

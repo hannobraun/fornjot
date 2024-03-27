@@ -58,7 +58,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
     ) -> (Face, Handle<HalfEdge>) {
         let path = path.into();
 
-        let geometry = core.layers.geometry.of_half_edge(self);
+        let geometry = *core.layers.geometry.of_half_edge(self);
         let surface = geometry.path.sweep_surface_path(
             &core.layers.geometry.of_surface(&surface),
             path,
@@ -134,7 +134,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                     };
 
                     half_edge.insert(core).set_geometry(
-                        core.layers.geometry.of_half_edge(&line_segment),
+                        *core.layers.geometry.of_half_edge(&line_segment),
                         &mut core.layers.geometry,
                     )
                 };

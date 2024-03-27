@@ -80,10 +80,9 @@ impl Geometry {
     pub fn of_half_edge(
         &self,
         half_edge: &Handle<HalfEdge>,
-    ) -> HalfEdgeGeometry {
+    ) -> &HalfEdgeGeometry {
         self.half_edge
             .get(half_edge)
-            .copied()
             .expect("Expected geometry of half-edge to be defined")
     }
 

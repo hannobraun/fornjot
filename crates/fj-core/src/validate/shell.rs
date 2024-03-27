@@ -453,7 +453,7 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let mut geometry = core
+                                        let mut geometry = *core
                                             .layers
                                             .geometry
                                             .of_half_edge(half_edge);
@@ -546,7 +546,8 @@ mod tests {
                                             )
                                             .insert(core)
                                             .set_geometry(
-                                                core.layers
+                                                *core
+                                                    .layers
                                                     .geometry
                                                     .of_half_edge(half_edge),
                                                 &mut core.layers.geometry,
