@@ -9,7 +9,7 @@ mod surface;
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
     geometry::Geometry,
-    half_edge::HalfEdgeGeometry,
+    half_edge::HalfEdgeGeom,
     path::{GlobalPath, SurfacePath},
     surface::SurfaceGeometry,
 };

@@ -3,7 +3,7 @@ use std::ops::RangeInclusive;
 use itertools::Itertools;
 
 use crate::{
-    geometry::HalfEdgeGeometry,
+    geometry::HalfEdgeGeom,
     operations::{
         build::BuildHalfEdge,
         geometry::UpdateHalfEdgeGeometry,
@@ -21,7 +21,7 @@ pub trait JoinCycle {
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeometry)>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator;
 
     /// Join the cycle to another
@@ -78,7 +78,7 @@ pub trait JoinCycle {
 impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeometry)>,
+        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         let half_edges = edges

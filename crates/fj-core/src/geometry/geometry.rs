@@ -7,11 +7,11 @@ use crate::{
     topology::{HalfEdge, Surface, Topology},
 };
 
-use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
+use super::{GlobalPath, HalfEdgeGeom, SurfaceGeometry};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
-    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeometry>,
+    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeometry>,
 
     xy_plane: Handle<Surface>,
@@ -59,7 +59,7 @@ impl Geometry {
     pub(crate) fn define_half_edge_inner(
         &mut self,
         half_edge: Handle<HalfEdge>,
-        geometry: HalfEdgeGeometry,
+        geometry: HalfEdgeGeom,
     ) {
         self.half_edge.insert(half_edge, geometry);
     }
@@ -77,10 +77,7 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the half-edge is not defined.
-    pub fn of_half_edge(
-        &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> &HalfEdgeGeometry {
+    pub fn of_half_edge(&self, half_edge: &Handle<HalfEdge>) -> &HalfEdgeGeom {
         self.half_edge
             .get(half_edge)
             .expect("Expected geometry of half-edge to be defined")

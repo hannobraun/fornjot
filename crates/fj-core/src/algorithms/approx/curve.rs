@@ -6,7 +6,7 @@ use fj_math::Point;
 
 use crate::{
     geometry::{
-        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeometry, SurfaceGeometry,
+        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeom, SurfaceGeometry,
         SurfacePath,
     },
     storage::Handle,
@@ -15,7 +15,7 @@ use crate::{
 
 use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &Handle<Surface>) {
+impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
     type Approximation = CurveApprox;
     type Cache = CurveApproxCache;
 
@@ -182,7 +182,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
-        geometry::{CurveBoundary, GlobalPath, HalfEdgeGeometry, SurfacePath},
+        geometry::{CurveBoundary, GlobalPath, HalfEdgeGeom, SurfacePath},
         operations::{build::BuildSurface, insert::Insert},
         topology::{Curve, Surface},
         Core,
@@ -196,7 +196,7 @@ mod tests {
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeometry { path, boundary };
+        let half_edge = HalfEdgeGeom { path, boundary };
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
@@ -214,7 +214,7 @@ mod tests {
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeometry { path, boundary };
+        let half_edge = HalfEdgeGeom { path, boundary };
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
             [0., 0., 1.],
@@ -239,7 +239,7 @@ mod tests {
             ([TAU], [TAU, 1.]),
         ]);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeometry { path, boundary };
+        let half_edge = HalfEdgeGeom { path, boundary };
         let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
 
         let tolerance = 1.;
@@ -269,7 +269,7 @@ mod tests {
         let curve = Curve::new().insert(&mut core);
         let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeometry { path, boundary };
+        let half_edge = HalfEdgeGeom { path, boundary };
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;

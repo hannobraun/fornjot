@@ -4,7 +4,7 @@ use super::{CurveBoundary, SurfacePath};
 
 /// The geometry of a half-edge
 #[derive(Copy, Clone)]
-pub struct HalfEdgeGeometry {
+pub struct HalfEdgeGeom {
     /// # The path of the half-edge
     ///
     /// ## Implementation Note
@@ -36,7 +36,7 @@ pub struct HalfEdgeGeometry {
     pub boundary: CurveBoundary<Point<1>>,
 }
 
-impl HalfEdgeGeometry {
+impl HalfEdgeGeom {
     /// Update the boundary
     pub fn with_boundary(
         mut self,
