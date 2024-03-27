@@ -6,7 +6,7 @@ mod polygon;
 use fj_interop::Mesh;
 use fj_math::Point;
 
-use crate::Core;
+use crate::{operations::presentation::GetColor, Core};
 
 use self::polygon::Polygon;
 
@@ -45,11 +45,7 @@ where
 }
 
 impl Triangulate for FaceApprox {
-    fn triangulate_into_mesh(
-        self,
-        mesh: &mut Mesh<Point<3>>,
-        _core: &mut Core,
-    ) {
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>, core: &mut Core) {
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
@@ -69,7 +65,7 @@ impl Triangulate for FaceApprox {
                 .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
-        let color = self.color.unwrap_or_default();
+        let color = self.face.region().get_color(core).unwrap_or_default();
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
@@ -87,8 +83,10 @@ mod tests {
         algorithms::approx::{Approx, Tolerance},
         operations::{
             build::{BuildCycle, BuildFace},
+            insert::Insert,
             update::{UpdateFace, UpdateRegion},
         },
+        storage::Handle,
         topology::{Cycle, Face},
         Core,
     };
@@ -114,7 +112,8 @@ mod tests {
                         )
                     },
                     &mut core,
-                );
+                )
+                .insert(&mut core);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -147,17 +146,22 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut core).update_region(
-            |region, core| {
-                region
-                    .update_exterior(
-                        |_, core| Cycle::polygon([a, b, c, d], core),
-                        core,
-                    )
-                    .add_interiors([Cycle::polygon([e, f, g, h], core)], core)
-            },
-            &mut core,
-        );
+        let face = Face::unbound(surface.clone(), &mut core)
+            .update_region(
+                |region, core| {
+                    region
+                        .update_exterior(
+                            |_, core| Cycle::polygon([a, b, c, d], core),
+                            core,
+                        )
+                        .add_interiors(
+                            [Cycle::polygon([e, f, g, h], core)],
+                            core,
+                        )
+                },
+                &mut core,
+            )
+            .insert(&mut core);
 
         let triangles = triangulate(face, &mut core)?;
 
@@ -236,15 +240,17 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.xy_plane();
 
-        let face = Face::unbound(surface.clone(), &mut core).update_region(
-            |region, core| {
-                region.update_exterior(
-                    |_, core| Cycle::polygon([a, b, c, d, e], core),
-                    core,
-                )
-            },
-            &mut core,
-        );
+        let face = Face::unbound(surface.clone(), &mut core)
+            .update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |_, core| Cycle::polygon([a, b, c, d, e], core),
+                        core,
+                    )
+                },
+                &mut core,
+            )
+            .insert(&mut core);
 
         let triangles = triangulate(face, &mut core)?;
 
@@ -282,7 +288,7 @@ mod tests {
     }
 
     fn triangulate(
-        face: Face,
+        face: Handle<Face>,
         core: &mut Core,
     ) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;

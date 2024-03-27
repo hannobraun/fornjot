@@ -4,10 +4,8 @@
 
 use std::{collections::BTreeSet, ops::Deref};
 
-use fj_interop::Color;
-
 use crate::{
-    operations::presentation::GetColor,
+    storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
     Core,
@@ -32,7 +30,7 @@ impl Approx for &ObjectSet<Face> {
 
         let approx = self
             .into_iter()
-            .map(|face| face.approx_with_cache(tolerance, cache, core))
+            .map(|face| face.clone().approx_with_cache(tolerance, cache, core))
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -65,7 +63,7 @@ impl Approx for &ObjectSet<Face> {
     }
 }
 
-impl Approx for &Face {
+impl Approx for Handle<Face> {
     type Approximation = FaceApprox;
     type Cache = HalfEdgeApproxCache;
 
@@ -100,11 +98,12 @@ impl Approx for &Face {
             interiors.insert(cycle);
         }
 
+        let coord_handedness = self.coord_handedness(&core.layers.geometry);
         FaceApprox {
+            face: self,
             exterior,
             interiors,
-            color: self.region().get_color(core),
-            coord_handedness: self.coord_handedness(&core.layers.geometry),
+            coord_handedness,
         }
     }
 }
@@ -112,14 +111,14 @@ impl Approx for &Face {
 /// An approximation of a [`Face`]
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct FaceApprox {
+    /// The [`Face`], that this approximates
+    pub face: Handle<Face>,
+
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
 
     /// Approximations of the interior cycles
     pub interiors: BTreeSet<CycleApprox>,
-
-    /// The color of the approximated face
-    pub color: Option<Color>,
 
     /// The handedness of the approximated face's front-side coordinate system
     pub coord_handedness: Handedness,
