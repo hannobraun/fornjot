@@ -91,25 +91,24 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the surface is not defined.
-    pub fn of_surface(&self, surface: &Handle<Surface>) -> SurfaceGeometry {
+    pub fn of_surface(&self, surface: &Handle<Surface>) -> &SurfaceGeometry {
         self.surface
             .get(surface)
-            .copied()
             .expect("Expected geometry of surface to be defined")
     }
 
     /// Access the geometry of the xy-plane
-    pub fn xy_plane(&self) -> SurfaceGeometry {
+    pub fn xy_plane(&self) -> &SurfaceGeometry {
         self.of_surface(&self.xy_plane)
     }
 
     /// Access the geometry of the xz-plane
-    pub fn xz_plane(&self) -> SurfaceGeometry {
+    pub fn xz_plane(&self) -> &SurfaceGeometry {
         self.of_surface(&self.xz_plane)
     }
 
     /// Access the geometry of the yz-plane
-    pub fn yz_plane(&self) -> SurfaceGeometry {
+    pub fn yz_plane(&self) -> &SurfaceGeometry {
         self.of_surface(&self.yz_plane)
     }
 }

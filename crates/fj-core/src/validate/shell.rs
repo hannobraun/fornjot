@@ -150,18 +150,18 @@ impl ShellValidationError {
 
                 compare_curve_coords(
                     edge_a,
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     edge_b,
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     geometry,
                     config,
                     &mut mismatches,
                 );
                 compare_curve_coords(
                     edge_b,
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     edge_a,
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     geometry,
                     config,
                     &mut mismatches,
@@ -254,9 +254,9 @@ impl ShellValidationError {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     half_edge_b.clone(),
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     geometry,
                 )
                 .all(|d| d < config.distinct_min_distance)
