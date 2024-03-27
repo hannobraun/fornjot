@@ -8,6 +8,7 @@ use fj_interop::Color;
 
 use crate::{
     operations::presentation::GetColor,
+    storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
     Core,
@@ -32,7 +33,7 @@ impl Approx for &ObjectSet<Face> {
 
         let approx = self
             .into_iter()
-            .map(|face| face.approx_with_cache(tolerance, cache, core))
+            .map(|face| face.clone().approx_with_cache(tolerance, cache, core))
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -65,7 +66,7 @@ impl Approx for &ObjectSet<Face> {
     }
 }
 
-impl Approx for &Face {
+impl Approx for Handle<Face> {
     type Approximation = FaceApprox;
     type Cache = HalfEdgeApproxCache;
 
