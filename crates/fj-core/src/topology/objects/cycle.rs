@@ -6,6 +6,8 @@ use crate::{
     topology::{HalfEdge, ObjectSet},
 };
 
+use super::surface::Surface;
+
 /// A cycle of connected edges
 #[derive(Clone, Debug)]
 pub struct Cycle {
@@ -29,7 +31,7 @@ impl Cycle {
     /// Please note that this is not *the* winding of the cycle, only one of the
     /// two possible windings, depending on the direction you look at the
     /// surface that the cycle is defined on from.
-    pub fn winding(&self, geometry: &Geometry) -> Winding {
+    pub fn winding(&self, geometry: &Geometry, _: &Handle<Surface>) -> Winding {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the
         // first circle.

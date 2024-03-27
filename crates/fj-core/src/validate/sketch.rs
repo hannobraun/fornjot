@@ -77,7 +77,7 @@ impl SketchValidationError {
     ) {
         sketch.regions().iter().for_each(|region| {
             let cycle = region.exterior();
-            if cycle.winding(geometry) == Winding::Cw {
+            if cycle.winding(geometry, sketch.surface()) == Winding::Cw {
                 errors.push(ValidationError::Sketch(
                     SketchValidationError::ClockwiseExteriorCycle {
                         cycle: cycle.clone(),
@@ -97,7 +97,9 @@ impl SketchValidationError {
             region
                 .interiors()
                 .iter()
-                .filter(|interior| interior.winding(geometry) == Winding::Ccw)
+                .filter(|interior| {
+                    interior.winding(geometry, sketch.surface()) == Winding::Ccw
+                })
                 .for_each(|cycle| {
                     errors.push(ValidationError::Sketch(
                         SketchValidationError::CounterClockwiseInteriorCycle {
