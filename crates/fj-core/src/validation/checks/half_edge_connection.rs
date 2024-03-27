@@ -58,11 +58,11 @@ pub struct AdjacentHalfEdgesNotConnected {
 }
 
 impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
-    fn check(
-        object: &Cycle,
-        geometry: &Geometry,
-        config: &ValidationConfig,
-    ) -> impl Iterator<Item = Self> {
+    fn check<'r>(
+        object: &'r Cycle,
+        geometry: &'r Geometry,
+        config: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
         object.half_edges().pairs().filter_map(|(first, second)| {
             let end_pos_of_first_half_edge = {
                 let [_, end] = geometry.of_half_edge(first).boundary.inner;

@@ -37,11 +37,11 @@ pub struct InteriorCycleHasInvalidWinding {
 }
 
 impl ValidationCheck<Face> for InteriorCycleHasInvalidWinding {
-    fn check(
-        object: &Face,
-        geometry: &Geometry,
-        _: &ValidationConfig,
-    ) -> impl Iterator<Item = Self> {
+    fn check<'r>(
+        object: &'r Face,
+        geometry: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
         object.region().interiors().iter().filter_map(|interior| {
             let exterior = object.region().exterior();
 

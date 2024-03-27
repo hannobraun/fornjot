@@ -17,11 +17,11 @@ use crate::{
 pub struct FaceHasNoBoundary {}
 
 impl ValidationCheck<Face> for FaceHasNoBoundary {
-    fn check(
-        object: &Face,
-        _: &Geometry,
-        _: &ValidationConfig,
-    ) -> impl Iterator<Item = Self> {
+    fn check<'r>(
+        object: &'r Face,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
         let error = if object.region().exterior().half_edges().is_empty() {
             Some(FaceHasNoBoundary {})
         } else {

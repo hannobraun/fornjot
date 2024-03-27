@@ -10,11 +10,11 @@ use super::ValidationConfig;
 /// to. `Self` is the object, while `T` identifies the validation check.
 pub trait ValidationCheck<T>: Sized {
     /// Run the validation check on the implementing object
-    fn check(
-        object: &T,
-        geometry: &Geometry,
-        config: &ValidationConfig,
-    ) -> impl Iterator<Item = Self>;
+    fn check<'r>(
+        object: &'r T,
+        geometry: &'r Geometry,
+        config: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r;
 
     /// Convenience method to run the check return the first error
     ///
