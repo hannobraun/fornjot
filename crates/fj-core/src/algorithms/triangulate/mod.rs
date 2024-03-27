@@ -45,11 +45,7 @@ where
 }
 
 impl Triangulate for FaceApprox {
-    fn triangulate_into_mesh(
-        self,
-        mesh: &mut Mesh<Point<3>>,
-        _core: &mut Core,
-    ) {
+    fn triangulate_into_mesh(self, mesh: &mut Mesh<Point<3>>, core: &mut Core) {
         let face_as_polygon = Polygon::new()
             .with_exterior(
                 self.exterior
@@ -69,7 +65,7 @@ impl Triangulate for FaceApprox {
                 .contains_triangle(triangle.map(|point| point.point_surface))
         });
 
-        let color = self.face.region().get_color(_core).unwrap_or_default();
+        let color = self.face.region().get_color(core).unwrap_or_default();
 
         for triangle in triangles {
             let points = triangle.map(|point| point.point_global);
