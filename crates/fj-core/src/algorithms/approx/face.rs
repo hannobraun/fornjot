@@ -104,6 +104,7 @@ impl Approx for Handle<Face> {
         let color = self.region().get_color(core);
         let coord_handedness = self.coord_handedness(&core.layers.geometry);
         FaceApprox {
+            face: self,
             exterior,
             interiors,
             color,
@@ -115,6 +116,9 @@ impl Approx for Handle<Face> {
 /// An approximation of a [`Face`]
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub struct FaceApprox {
+    /// The [`Face`], that this approximates
+    pub face: Handle<Face>,
+
     /// Approximation of the exterior cycle
     pub exterior: CycleApprox,
 
