@@ -6,9 +6,9 @@
 //! the caller doesn't have to deal with duplicate vertices.
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
     topology::{HalfEdge, Surface},
-    Core,
 };
 
 use super::{
@@ -24,23 +24,18 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         self,
         tolerance: impl Into<Tolerance>,
         cache: &mut Self::Cache,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let (half_edge, surface) = self;
         let tolerance = tolerance.into();
 
-        let start_position_surface = core
-            .layers
-            .geometry
-            .of_half_edge(half_edge)
-            .start_position();
+        let start_position_surface =
+            geometry.of_half_edge(half_edge).start_position();
         let start_position =
             match cache.start_position.get(half_edge.start_vertex()) {
                 Some(position) => position,
                 None => {
-                    let position_global = core
-                        .layers
-                        .geometry
+                    let position_global = geometry
                         .of_surface(surface)
                         .point_from_surface_coords(start_position_surface);
                     cache.start_position.insert(
@@ -55,19 +50,17 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         let rest = {
             let approx = (
                 half_edge.curve(),
-                &core.layers.geometry.of_half_edge(half_edge),
+                &geometry.of_half_edge(half_edge),
                 surface,
             )
                 .approx_with_cache(
                     tolerance,
                     &mut cache.curve,
-                    core,
+                    geometry,
                 );
 
             approx.points.into_iter().map(|point| {
-                let point_surface = core
-                    .layers
-                    .geometry
+                let point_surface = geometry
                     .of_half_edge(half_edge)
                     .path
                     .point_from_path_coords(point.local_form);
