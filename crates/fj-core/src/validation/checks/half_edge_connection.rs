@@ -7,7 +7,7 @@ use crate::{
     validation::{validation_check::ValidationCheck, ValidationConfig},
 };
 
-/// Adjacent [`HalfEdge`]s in [`Cycle`] are not connected
+/// # Adjacent [`HalfEdge`]s in [`Cycle`] are not connected
 ///
 /// Each [`HalfEdge`] only references its start vertex. The end vertex is always
 /// assumed to be the start vertex of the next [`HalfEdge`] in the cycle. This
