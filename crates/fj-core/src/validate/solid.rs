@@ -88,11 +88,11 @@ impl SolidValidationError {
                 face.region()
                     .all_cycles()
                     .flat_map(|cycle| cycle.half_edges().iter().cloned())
-                    .zip(repeat(geometry.of_surface(face.surface())))
+                    .zip(repeat(face.surface()))
             })
             .map(|(h, s)| {
                 (
-                    s.point_from_surface_coords(
+                    geometry.of_surface(s).point_from_surface_coords(
                         geometry.of_half_edge(&h).start_position(),
                     ),
                     h.start_vertex().clone(),
