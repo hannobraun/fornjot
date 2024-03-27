@@ -19,7 +19,7 @@ use std::{
 
 use fj_math::Point;
 
-use crate::{geometry::Geometry, Core};
+use crate::geometry::Geometry;
 
 pub use self::tolerance::{InvalidTolerance, Tolerance};
 
@@ -38,10 +38,10 @@ pub trait Approx: Sized {
     fn approx(
         self,
         tolerance: impl Into<Tolerance>,
-        core: &mut Core,
+        geometry: &Geometry,
     ) -> Self::Approximation {
         let mut cache = Self::Cache::default();
-        self.approx_with_cache(tolerance, &mut cache, &core.layers.geometry)
+        self.approx_with_cache(tolerance, &mut cache, geometry)
     }
 
     /// Approximate the object, using the provided cache

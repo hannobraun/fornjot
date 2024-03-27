@@ -200,8 +200,8 @@ mod tests {
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -222,8 +222,8 @@ mod tests {
         );
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -243,11 +243,11 @@ mod tests {
         let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (global_path, boundary)
-            .approx(tolerance, &mut core)
+            .approx(tolerance, &core.layers.geometry)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
@@ -273,11 +273,11 @@ mod tests {
         let surface = core.layers.topology.surfaces.xz_plane();
 
         let tolerance = 1.;
-        let approx =
-            (&curve, &half_edge, &surface).approx(tolerance, &mut core);
+        let approx = (&curve, &half_edge, &surface)
+            .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (&path, boundary)
-            .approx(tolerance, &mut core)
+            .approx(tolerance, &core.layers.geometry)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
