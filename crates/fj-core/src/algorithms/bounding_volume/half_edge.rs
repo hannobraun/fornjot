@@ -10,8 +10,8 @@ impl super::BoundingVolume<2> for &Handle<HalfEdge> {
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
         let half_edge = self;
 
-        let half_edge = geometry.of_half_edge(half_edge);
-        let path = half_edge.path;
+        let half_edge_geom = geometry.of_half_edge(half_edge);
+        let path = half_edge_geom.path;
 
         match path {
             SurfacePath::Circle(circle) => {
@@ -27,7 +27,7 @@ impl super::BoundingVolume<2> for &Handle<HalfEdge> {
                 })
             }
             SurfacePath::Line(_) => {
-                let points = half_edge.boundary.inner.map(|point_curve| {
+                let points = half_edge_geom.boundary.inner.map(|point_curve| {
                     path.point_from_path_coords(point_curve)
                 });
 
