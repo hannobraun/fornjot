@@ -32,7 +32,7 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeometry, &Handle<Surface>) {
             None => {
                 let approx = approx_curve(
                     &half_edge.path,
-                    &geometry.of_surface(surface),
+                    geometry.of_surface(surface),
                     half_edge.boundary,
                     tolerance,
                     geometry,

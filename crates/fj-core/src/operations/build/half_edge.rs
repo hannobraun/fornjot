@@ -29,7 +29,7 @@ pub trait BuildHalfEdge {
         start_vertex: Handle<Vertex>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        let mut geometry = core.layers.geometry.of_half_edge(sibling);
+        let mut geometry = *core.layers.geometry.of_half_edge(sibling);
         geometry.boundary = geometry.boundary.reverse();
 
         HalfEdge::new(sibling.curve().clone(), start_vertex)

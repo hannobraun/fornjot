@@ -137,7 +137,8 @@ impl JoinCycle for Cycle {
                                 )
                                 .insert(core)
                                 .set_geometry(
-                                    core.layers
+                                    *core
+                                        .layers
                                         .geometry
                                         .of_half_edge(half_edge),
                                     &mut core.layers.geometry,
@@ -155,7 +156,8 @@ impl JoinCycle for Cycle {
                                 )
                                 .insert(core)
                                 .set_geometry(
-                                    core.layers
+                                    *core
+                                        .layers
                                         .geometry
                                         .of_half_edge(half_edge),
                                     &mut core.layers.geometry,

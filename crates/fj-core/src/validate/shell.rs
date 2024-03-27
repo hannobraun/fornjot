@@ -150,18 +150,18 @@ impl ShellValidationError {
 
                 compare_curve_coords(
                     edge_a,
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     edge_b,
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     geometry,
                     config,
                     &mut mismatches,
                 );
                 compare_curve_coords(
                     edge_b,
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     edge_a,
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     geometry,
                     config,
                     &mut mismatches,
@@ -254,9 +254,9 @@ impl ShellValidationError {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    &geometry.of_surface(surface_a),
+                    geometry.of_surface(surface_a),
                     half_edge_b.clone(),
-                    &geometry.of_surface(surface_b),
+                    geometry.of_surface(surface_b),
                     geometry,
                 )
                 .all(|d| d < config.distinct_min_distance)
@@ -453,7 +453,7 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let mut geometry = core
+                                        let mut geometry = *core
                                             .layers
                                             .geometry
                                             .of_half_edge(half_edge);
@@ -546,7 +546,8 @@ mod tests {
                                             )
                                             .insert(core)
                                             .set_geometry(
-                                                core.layers
+                                                *core
+                                                    .layers
                                                     .geometry
                                                     .of_half_edge(half_edge),
                                                 &mut core.layers.geometry,
