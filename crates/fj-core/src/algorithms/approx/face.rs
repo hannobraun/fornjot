@@ -102,11 +102,12 @@ impl Approx for Handle<Face> {
         }
 
         let color = self.region().get_color(core);
+        let coord_handedness = self.coord_handedness(&core.layers.geometry);
         FaceApprox {
             exterior,
             interiors,
             color,
-            coord_handedness: self.coord_handedness(&core.layers.geometry),
+            coord_handedness,
         }
     }
 }
