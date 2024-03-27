@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeometry},
+    geometry::{GlobalPath, SurfaceGeom},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -47,7 +47,7 @@ pub trait BuildSurface {
 
         core.layers.geometry.define_surface(
             surface.clone(),
-            SurfaceGeometry {
+            SurfaceGeom {
                 u: u.into(),
                 v: v.into(),
             },

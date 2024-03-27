@@ -1,7 +1,7 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeometry, SurfacePath},
+    geometry::{GlobalPath, SurfaceGeom, SurfacePath},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
@@ -26,7 +26,7 @@ pub trait SweepSurfacePath {
     /// <https://github.com/hannobraun/fornjot/issues/1112>
     fn sweep_surface_path(
         &self,
-        surface: &SurfaceGeometry,
+        surface: &SurfaceGeom,
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Handle<Surface>;
@@ -35,7 +35,7 @@ pub trait SweepSurfacePath {
 impl SweepSurfacePath for SurfacePath {
     fn sweep_surface_path(
         &self,
-        surface: &SurfaceGeometry,
+        surface: &SurfaceGeom,
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Handle<Surface> {

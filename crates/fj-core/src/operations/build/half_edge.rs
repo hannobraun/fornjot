@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{HalfEdgeGeometry, SurfacePath},
+    geometry::{HalfEdgeGeom, SurfacePath},
     operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, HalfEdge, Vertex},
@@ -63,7 +63,7 @@ pub trait BuildHalfEdge {
         let half_edge = HalfEdge::unjoined(core).insert(core);
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
-            HalfEdgeGeometry {
+            HalfEdgeGeom {
                 path,
                 boundary: boundary.into(),
             },
@@ -85,7 +85,7 @@ pub trait BuildHalfEdge {
         let half_edge = HalfEdge::unjoined(core).insert(core);
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
-            HalfEdgeGeometry {
+            HalfEdgeGeom {
                 path,
                 boundary: boundary.into(),
             },
@@ -107,7 +107,7 @@ pub trait BuildHalfEdge {
         );
 
         HalfEdge::unjoined(core).insert(core).set_geometry(
-            HalfEdgeGeometry {
+            HalfEdgeGeom {
                 path,
                 boundary: boundary.into(),
             },

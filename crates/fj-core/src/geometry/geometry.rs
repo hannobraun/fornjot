@@ -7,12 +7,12 @@ use crate::{
     topology::{HalfEdge, Surface, Topology},
 };
 
-use super::{GlobalPath, HalfEdgeGeometry, SurfaceGeometry};
+use super::{GlobalPath, HalfEdgeGeom, SurfaceGeom};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
-    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeometry>,
-    surface: BTreeMap<Handle<Surface>, SurfaceGeometry>,
+    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
+    surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
     xy_plane: Handle<Surface>,
     xz_plane: Handle<Surface>,
@@ -33,21 +33,21 @@ impl Geometry {
 
         self_.define_surface_inner(
             self_.xy_plane.clone(),
-            SurfaceGeometry {
+            SurfaceGeom {
                 u: GlobalPath::x_axis(),
                 v: Vector::unit_y(),
             },
         );
         self_.define_surface_inner(
             self_.xz_plane.clone(),
-            SurfaceGeometry {
+            SurfaceGeom {
                 u: GlobalPath::x_axis(),
                 v: Vector::unit_z(),
             },
         );
         self_.define_surface_inner(
             self_.yz_plane.clone(),
-            SurfaceGeometry {
+            SurfaceGeom {
                 u: GlobalPath::y_axis(),
                 v: Vector::unit_z(),
             },
@@ -59,7 +59,7 @@ impl Geometry {
     pub(crate) fn define_half_edge_inner(
         &mut self,
         half_edge: Handle<HalfEdge>,
-        geometry: HalfEdgeGeometry,
+        geometry: HalfEdgeGeom,
     ) {
         self.half_edge.insert(half_edge, geometry);
     }
@@ -67,7 +67,7 @@ impl Geometry {
     pub(crate) fn define_surface_inner(
         &mut self,
         surface: Handle<Surface>,
-        geometry: SurfaceGeometry,
+        geometry: SurfaceGeom,
     ) {
         self.surface.insert(surface, geometry);
     }
@@ -77,10 +77,7 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the half-edge is not defined.
-    pub fn of_half_edge(
-        &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> &HalfEdgeGeometry {
+    pub fn of_half_edge(&self, half_edge: &Handle<HalfEdge>) -> &HalfEdgeGeom {
         self.half_edge
             .get(half_edge)
             .expect("Expected geometry of half-edge to be defined")
@@ -91,24 +88,24 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the surface is not defined.
-    pub fn of_surface(&self, surface: &Handle<Surface>) -> &SurfaceGeometry {
+    pub fn of_surface(&self, surface: &Handle<Surface>) -> &SurfaceGeom {
         self.surface
             .get(surface)
             .expect("Expected geometry of surface to be defined")
     }
 
     /// Access the geometry of the xy-plane
-    pub fn xy_plane(&self) -> &SurfaceGeometry {
+    pub fn xy_plane(&self) -> &SurfaceGeom {
         self.of_surface(&self.xy_plane)
     }
 
     /// Access the geometry of the xz-plane
-    pub fn xz_plane(&self) -> &SurfaceGeometry {
+    pub fn xz_plane(&self) -> &SurfaceGeom {
         self.of_surface(&self.xz_plane)
     }
 
     /// Access the geometry of the yz-plane
-    pub fn yz_plane(&self) -> &SurfaceGeometry {
+    pub fn yz_plane(&self) -> &SurfaceGeom {
         self.of_surface(&self.yz_plane)
     }
 }

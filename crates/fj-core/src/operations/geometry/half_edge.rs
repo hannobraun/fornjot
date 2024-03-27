@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{Geometry, HalfEdgeGeometry},
+    geometry::{Geometry, HalfEdgeGeom},
     layers::Layer,
     storage::Handle,
     topology::HalfEdge,
@@ -10,7 +10,7 @@ pub trait UpdateHalfEdgeGeometry {
     /// Set the path of the half-edge
     fn set_geometry(
         self,
-        geometry: HalfEdgeGeometry,
+        geometry: HalfEdgeGeom,
         layer: &mut Layer<Geometry>,
     ) -> Self;
 }
@@ -18,7 +18,7 @@ pub trait UpdateHalfEdgeGeometry {
 impl UpdateHalfEdgeGeometry for Handle<HalfEdge> {
     fn set_geometry(
         self,
-        geometry: HalfEdgeGeometry,
+        geometry: HalfEdgeGeom,
         layer: &mut Layer<Geometry>,
     ) -> Self {
         layer.define_half_edge(self.clone(), geometry);
