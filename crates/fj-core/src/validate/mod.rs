@@ -63,8 +63,8 @@
 
 mod curve;
 mod cycle;
-mod edge;
 mod face;
+mod half_edge;
 mod references;
 mod region;
 mod shell;
