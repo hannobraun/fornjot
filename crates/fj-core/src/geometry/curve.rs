@@ -25,6 +25,18 @@ pub struct CurveGeom {
     pub definitions: Vec<LocalCurveGeom>,
 }
 
+impl CurveGeom {
+    /// Create a new instance of `CurveGeom` from a path and a surface
+    pub fn from_path_and_surface(
+        path: SurfacePath,
+        surface: Handle<Surface>,
+    ) -> Self {
+        Self {
+            definitions: vec![LocalCurveGeom { path, surface }],
+        }
+    }
+}
+
 /// The geometric definition of a curve in 2D surface coordinates
 #[derive(Clone)]
 pub struct LocalCurveGeom {
