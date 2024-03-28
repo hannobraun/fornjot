@@ -1,9 +1,10 @@
 use fj_math::Winding;
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
     topology::{Cycle, Face},
-    validation::ValidationCheck,
+    validation::{ValidationCheck, ValidationConfig},
 };
 
 /// Interior [`Cycle`] of [`Face`] has invalid winding
@@ -38,8 +39,8 @@ pub struct InteriorCycleHasInvalidWinding {
 impl ValidationCheck<Face> for InteriorCycleHasInvalidWinding {
     fn check(
         object: &Face,
-        geometry: &crate::geometry::Geometry,
-        _: &crate::validation::ValidationConfig,
+        geometry: &Geometry,
+        _: &ValidationConfig,
     ) -> impl Iterator<Item = Self> {
         object.region().interiors().iter().filter_map(|interior| {
             let exterior = object.region().exterior();
