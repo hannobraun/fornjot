@@ -137,14 +137,21 @@ mod tests {
 
         let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
             .insert(&mut core);
-        let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
+        let valid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![region.clone()],
+        )
+        .insert(&mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
-        let invalid_sketch = Sketch::new(vec![
-            Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-            Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-        ]);
+        let invalid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![
+                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
+                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
+            ],
+        );
         assert_contains_err!(
             core,
             invalid_sketch,
@@ -165,7 +172,11 @@ mod tests {
             &mut core,
         )
         .insert(&mut core);
-        let valid_sketch = Sketch::new(vec![region.clone()]).insert(&mut core);
+        let valid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![region.clone()],
+        )
+        .insert(&mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let exterior = region.exterior();
@@ -173,10 +184,12 @@ mod tests {
             exterior.half_edges().iter().cloned().collect();
         let interior = Cycle::new(cloned_edges).insert(&mut core);
 
-        let invalid_sketch =
-            Sketch::new(vec![
+        let invalid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![
                 Region::new(exterior.clone(), vec![interior]).insert(&mut core)
-            ]);
+            ],
+        );
         assert_contains_err!(
             core,
             invalid_sketch,
@@ -195,10 +208,10 @@ mod tests {
         let valid_outer_circle = HalfEdge::circle([0., 0.], 1., &mut core);
         let valid_exterior =
             Cycle::new(vec![valid_outer_circle.clone()]).insert(&mut core);
-        let valid_sketch =
-            Sketch::new(vec![
-                Region::new(valid_exterior.clone(), vec![]).insert(&mut core)
-            ]);
+        let valid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![Region::new(valid_exterior.clone(), vec![]).insert(&mut core)],
+        );
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_outer_circle = HalfEdge::from_sibling(
@@ -208,10 +221,12 @@ mod tests {
         );
         let invalid_exterior =
             Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
-        let invalid_sketch =
-            Sketch::new(vec![
+        let invalid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![
                 Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
-            ]);
+            ],
+        );
         assert_contains_err!(
             core,
             invalid_sketch,
@@ -238,20 +253,20 @@ mod tests {
 
         let valid_interior =
             Cycle::new(vec![cw_inner_circle.clone()]).insert(&mut core);
-        let valid_sketch = Sketch::new(vec![Region::new(
-            exterior.clone(),
-            vec![valid_interior],
-        )
-        .insert(&mut core)]);
+        let valid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![Region::new(exterior.clone(), vec![valid_interior])
+                .insert(&mut core)],
+        );
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_interior =
             Cycle::new(vec![inner_circle.clone()]).insert(&mut core);
-        let invalid_sketch = Sketch::new(vec![Region::new(
-            exterior.clone(),
-            vec![invalid_interior],
-        )
-        .insert(&mut core)]);
+        let invalid_sketch = Sketch::new(
+            core.layers.topology.surfaces.space_2d(),
+            vec![Region::new(exterior.clone(), vec![invalid_interior])
+                .insert(&mut core)],
+        );
         assert_contains_err!(
             core,
             invalid_sketch,

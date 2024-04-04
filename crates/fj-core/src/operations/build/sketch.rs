@@ -7,8 +7,8 @@ use crate::topology::{Sketch, Topology};
 /// [module-level documentation]: super
 pub trait BuildSketch {
     /// Create a sketch with no regions
-    fn empty(_: &Topology) -> Sketch {
-        Sketch::new([])
+    fn empty(topology: &Topology) -> Sketch {
+        Sketch::new(topology.surfaces.space_2d(), [])
     }
 }
 

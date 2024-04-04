@@ -47,7 +47,7 @@ impl UpdateSketch for Sketch {
     {
         let regions = regions.into_iter().map(|region| region.insert(core));
         let regions = self.regions().iter().cloned().chain(regions);
-        Sketch::new(regions)
+        Sketch::new(self.surface().clone(), regions)
     }
 
     fn update_region<T, R>(
@@ -69,6 +69,6 @@ impl UpdateSketch for Sketch {
                 }),
             )
             .expect("Region not found");
-        Sketch::new(regions)
+        Sketch::new(self.surface().clone(), regions)
     }
 }

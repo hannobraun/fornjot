@@ -117,7 +117,7 @@ impl ReplaceHalfEdge for Sketch {
         }
 
         if replacement_happened {
-            ReplaceOutput::Updated(Sketch::new(regions))
+            ReplaceOutput::Updated(Sketch::new(self.surface().clone(), regions))
         } else {
             ReplaceOutput::Original(self.clone())
         }
