@@ -69,6 +69,14 @@ impl Geometry {
         surface: Handle<Surface>,
         geometry: SurfaceGeom,
     ) {
+        if self.surface.contains_key(&surface)
+            && (surface == self.xy_plane
+                || surface == self.xz_plane
+                || surface == self.yz_plane)
+        {
+            panic!("Attempting to redefine basis plane.");
+        }
+
         self.surface.insert(surface, geometry);
     }
 
