@@ -25,7 +25,7 @@ impl Layer<Geometry> {
         );
     }
 
-    /// Define the geometry of the provided surface
+    /// # Define the geometry of the provided surface
     pub fn define_surface(
         &mut self,
         surface: Handle<Surface>,
