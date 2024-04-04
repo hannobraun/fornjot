@@ -50,6 +50,8 @@ impl Topology {
 pub struct Surfaces {
     store: Store<Surface>,
 
+    space_2d: Handle<Surface>,
+
     xy_plane: Handle<Surface>,
     xz_plane: Handle<Surface>,
     yz_plane: Handle<Surface>,
@@ -64,6 +66,15 @@ impl Surfaces {
     /// Insert an object into the store
     pub fn insert(&mut self, handle: Handle<Surface>, surface: Surface) {
         self.store.insert(handle, surface);
+    }
+
+    /// Access the surface representing 2D space
+    ///
+    /// Every other surface is a 2D subspace within a 3D space. This surface is
+    /// special, in that it represents the 2D space which is not located in a 3D
+    /// space.
+    pub fn space_2d(&self) -> Handle<Surface> {
+        self.space_2d.clone()
     }
 
     /// Access the xy-plane
@@ -86,6 +97,9 @@ impl Default for Surfaces {
     fn default() -> Self {
         let mut store: Store<Surface> = Store::new();
 
+        let space_2d = store.reserve();
+        store.insert(space_2d.clone(), Surface::new());
+
         let xy_plane = store.reserve();
         store.insert(xy_plane.clone(), Surface::new());
 
@@ -97,6 +111,7 @@ impl Default for Surfaces {
 
         Self {
             store,
+            space_2d,
             xy_plane,
             xz_plane,
             yz_plane,
