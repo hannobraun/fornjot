@@ -14,6 +14,8 @@ pub struct Geometry {
     half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
+    space_2d: Handle<Surface>,
+
     xy_plane: Handle<Surface>,
     xz_plane: Handle<Surface>,
     yz_plane: Handle<Surface>,
@@ -25,6 +27,8 @@ impl Geometry {
         let mut self_ = Self {
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
+
+            space_2d: topology.surfaces.space_2d(),
 
             xy_plane: topology.surfaces.xy_plane(),
             xz_plane: topology.surfaces.xz_plane(),
@@ -69,6 +73,10 @@ impl Geometry {
         surface: Handle<Surface>,
         geometry: SurfaceGeom,
     ) {
+        if surface == self.space_2d {
+            panic!("Attempting to define geometry for 2D space");
+        }
+
         if self.surface.contains_key(&surface)
             && (surface == self.xy_plane
                 || surface == self.xz_plane
