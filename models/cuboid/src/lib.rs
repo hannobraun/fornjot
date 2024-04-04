@@ -16,7 +16,7 @@ pub fn model(size: impl Into<Vector<3>>, core: &mut fj::core::Core) -> Solid {
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([Scalar::ZERO, Scalar::ZERO, z]);
 
-    Sketch::empty()
+    Sketch::empty(&core.layers.topology)
         .add_regions(
             [Region::polygon(
                 [

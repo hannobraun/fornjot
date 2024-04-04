@@ -20,7 +20,7 @@ pub fn model(
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
     let sweep_path = Vector::from([0., 0., height]);
 
-    Sketch::empty()
+    Sketch::empty(&core.layers.topology)
         .add_regions(
             [Region::circle(Point::origin(), outer, core).add_interiors(
                 [Cycle::circle(Point::origin(), inner, core).reverse(core)],
