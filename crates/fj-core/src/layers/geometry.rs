@@ -26,6 +26,11 @@ impl Layer<Geometry> {
     }
 
     /// # Define the geometry of the provided surface
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the surface is a special pre-defined plane, like the basis
+    /// planes (xy-, xz-, or yz-plane).
     pub fn define_surface(
         &mut self,
         surface: Handle<Surface>,
