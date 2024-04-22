@@ -20,7 +20,7 @@ itertools = "0.12.1"
 parking_lot = "0.12.0"
 robust = "1.1.0"
 spade = "2.6.0"
-thiserror = "1.0.58"
+thiserror = "1.0.59"
 type-map = "0.5.0"
 
 [dev-dependencies]
