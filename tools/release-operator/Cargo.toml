@@ -13,14 +13,14 @@ env_logger = "0.11.3"
 log = "0.4.21"
 secstr = "0.5.0"
 semver = "1.0.22"
-serde_json = "1.0.115"
-thiserror = "1.0.58"
+serde_json = "1.0.116"
+thiserror = "1.0.59"
 
 [dependencies.autolib]
 path = "../autolib"
 
 [dependencies.reqwest]
-version = "0.12.3"
+version = "0.12.4"
 features = ["blocking"]
 
 [dependencies.clap]
@@ -29,5 +29,5 @@ features = ["std", "derive", "env"]
 default_features = false
 
 [dependencies.serde]
-version = "1.0.197"
+version = "1.0.198"
 features = ["derive"]
