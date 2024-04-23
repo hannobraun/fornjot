@@ -1,7 +1,11 @@
-use crate::geometry::Geometry;
-use crate::{storage::Handle, topology::Cycle};
-use crate::{topology::Sketch, validate_references};
 use fj_math::Winding;
+
+use crate::{
+    geometry::Geometry,
+    storage::Handle,
+    topology::{Cycle, Sketch},
+    validate_references,
+};
 
 use super::{
     references::{ReferenceCountError, ReferenceCounter},
