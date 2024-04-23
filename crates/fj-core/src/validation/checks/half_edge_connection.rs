@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, HalfEdge},
+    topology::{Cycle, Face, HalfEdge, Region, Sketch},
     validation::{validation_check::ValidationCheck, ValidationConfig},
 };
 
@@ -57,14 +57,38 @@ pub struct AdjacentHalfEdgesNotConnected {
     pub unconnected_half_edges: [Handle<HalfEdge>; 2],
 }
 
-impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
+impl ValidationCheck<Face> for AdjacentHalfEdgesNotConnected {
     fn check<'r>(
-        object: &'r Cycle,
+        object: &'r Face,
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
-        check_cycle(object, geometry, config)
+        check_region(object.region(), geometry, config)
     }
+}
+
+impl ValidationCheck<Sketch> for AdjacentHalfEdgesNotConnected {
+    fn check<'r>(
+        object: &'r Sketch,
+        geometry: &'r Geometry,
+        config: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        object
+            .regions()
+            .iter()
+            .flat_map(|region| check_region(region, geometry, config))
+    }
+}
+
+fn check_region<'r>(
+    region: &'r Region,
+    geometry: &'r Geometry,
+    config: &'r ValidationConfig,
+) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
+    [region.exterior()]
+        .into_iter()
+        .chain(region.interiors())
+        .flat_map(|cycle| check_cycle(cycle, geometry, config))
 }
 
 fn check_cycle<'r>(
@@ -105,10 +129,10 @@ mod tests {
 
     use crate::{
         operations::{
-            build::{BuildCycle, BuildHalfEdge},
-            update::UpdateCycle,
+            build::{BuildFace, BuildHalfEdge},
+            update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
-        topology::{Cycle, HalfEdge},
+        topology::{Face, HalfEdge},
         validation::ValidationCheck,
         Core,
     };
@@ -119,16 +143,36 @@ mod tests {
     fn adjacent_half_edges_not_connected() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
+        // We're only testing for `Face` here, not `Sketch`. Should be fine, as
+        // most of the code is shared.
+        let valid = Face::polygon(
+            core.layers.topology.surfaces.space_2d(),
+            [[0., 0.], [1., 0.], [1., 1.]],
+            &mut core,
+        );
         AdjacentHalfEdgesNotConnected::check_and_return_first_error(
             &valid,
             &core.layers.geometry,
         )?;
 
-        let invalid = valid.update_half_edge(
-            valid.half_edges().first(),
-            |_, core| {
-                [HalfEdge::line_segment([[0., 0.], [2., 0.]], None, core)]
+        let invalid = valid.update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle.update_half_edge(
+                            cycle.half_edges().first(),
+                            |_, core| {
+                                [HalfEdge::line_segment(
+                                    [[0., 0.], [2., 0.]],
+                                    None,
+                                    core,
+                                )]
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )
             },
             &mut core,
         );

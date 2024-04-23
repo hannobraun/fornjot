@@ -2,7 +2,10 @@ use crate::{
     geometry::Geometry,
     topology::Face,
     validation::{
-        checks::{FaceHasNoBoundary, InteriorCycleHasInvalidWinding},
+        checks::{
+            AdjacentHalfEdgesNotConnected, FaceHasNoBoundary,
+            InteriorCycleHasInvalidWinding,
+        },
         ValidationCheck, ValidationConfig, ValidationError,
     },
 };
@@ -16,6 +19,10 @@ impl Validate for Face {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
+        errors.extend(
+            AdjacentHalfEdgesNotConnected::check(self, geometry, config)
+                .map(Into::into),
+        );
         errors.extend(
             FaceHasNoBoundary::check(self, geometry, config).map(Into::into),
         );
