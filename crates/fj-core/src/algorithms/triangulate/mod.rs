@@ -102,18 +102,19 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face =
-            Face::unbound(core.layers.topology.surfaces.xy_plane(), &mut core)
-                .update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |_, core| Cycle::polygon([a, b, c, d], core),
-                            core,
-                        )
-                    },
-                    &mut core,
-                )
-                .insert(&mut core);
+        let surface = core.layers.topology.surfaces.xy_plane();
+
+        let face = Face::unbound(surface, &mut core)
+            .update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |_, core| Cycle::polygon([a, b, c, d], core),
+                        core,
+                    )
+                },
+                &mut core,
+            )
+            .insert(&mut core);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
