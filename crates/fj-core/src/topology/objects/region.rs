@@ -5,7 +5,7 @@ use crate::{
     topology::{Cycle, ObjectSet},
 };
 
-/// A single, continuous 2d region, may contain holes
+/// A single, continuous 2d region; may contain holes
 ///
 /// Interior cycles must have the opposite winding of the exterior cycle,
 /// meaning on the front side of the region, they must appear clockwise. This
