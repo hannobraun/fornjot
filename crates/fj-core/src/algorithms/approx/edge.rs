@@ -30,7 +30,14 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         let tolerance = tolerance.into();
 
         let start_position_surface =
-            geometry.of_half_edge(half_edge).start_position();
+            geometry.of_half_edge(half_edge).start_position(
+                &geometry
+                    .of_curve(half_edge.curve())
+                    .unwrap()
+                    .local_on(surface)
+                    .unwrap()
+                    .path,
+            );
         let start_position =
             match cache.start_position.get(half_edge.start_vertex()) {
                 Some(position) => position,

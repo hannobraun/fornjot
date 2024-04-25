@@ -31,7 +31,11 @@ impl Cycle {
     /// Please note that this is not *the* winding of the cycle, only one of the
     /// two possible windings, depending on the direction you look at the
     /// surface that the cycle is defined on from.
-    pub fn winding(&self, geometry: &Geometry, _: &Handle<Surface>) -> Winding {
+    pub fn winding(
+        &self,
+        geometry: &Geometry,
+        surface: &Handle<Surface>,
+    ) -> Winding {
         // The cycle could be made up of one or two circles. If that is the
         // case, the winding of the cycle is determined by the winding of the
         // first circle.
@@ -70,7 +74,14 @@ impl Cycle {
 
         for (a, b) in self.half_edges().pairs() {
             let [a, b] = [a, b].map(|half_edge| {
-                geometry.of_half_edge(half_edge).start_position()
+                geometry.of_half_edge(half_edge).start_position(
+                    &geometry
+                        .of_curve(half_edge.curve())
+                        .unwrap()
+                        .local_on(surface)
+                        .unwrap()
+                        .path,
+                )
             });
 
             sum += (b.u - a.u) * (b.v + a.v);
