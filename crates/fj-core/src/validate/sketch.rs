@@ -1,7 +1,12 @@
-use crate::geometry::Geometry;
-use crate::{storage::Handle, topology::Cycle};
-use crate::{topology::Sketch, validate_references};
 use fj_math::Winding;
+
+use crate::{
+    geometry::Geometry,
+    storage::Handle,
+    topology::{Cycle, Sketch},
+    validate_references,
+    validation::{checks::AdjacentHalfEdgesNotConnected, ValidationCheck},
+};
 
 use super::{
     references::{ReferenceCountError, ReferenceCounter},
@@ -15,6 +20,10 @@ impl Validate for Sketch {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
+        errors.extend(
+            AdjacentHalfEdgesNotConnected::check(self, geometry, config)
+                .map(Into::into),
+        );
         SketchValidationError::check_object_references(self, config, errors);
         SketchValidationError::check_exterior_cycles(
             self, geometry, config, errors,

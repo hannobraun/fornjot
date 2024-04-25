@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, HalfEdge},
+    topology::{Cycle, Face, HalfEdge, Region, Sketch},
     validation::{validation_check::ValidationCheck, ValidationConfig},
 };
 
@@ -57,39 +57,71 @@ pub struct AdjacentHalfEdgesNotConnected {
     pub unconnected_half_edges: [Handle<HalfEdge>; 2],
 }
 
-impl ValidationCheck<Cycle> for AdjacentHalfEdgesNotConnected {
-    fn check(
-        object: &Cycle,
-        geometry: &Geometry,
-        config: &ValidationConfig,
-    ) -> impl Iterator<Item = Self> {
-        object.half_edges().pairs().filter_map(|(first, second)| {
-            let end_pos_of_first_half_edge = {
-                let [_, end] = geometry.of_half_edge(first).boundary.inner;
-                geometry
-                    .of_half_edge(first)
-                    .path
-                    .point_from_path_coords(end)
-            };
-            let start_pos_of_second_half_edge =
-                geometry.of_half_edge(second).start_position();
-
-            let distance_between_positions = (end_pos_of_first_half_edge
-                - start_pos_of_second_half_edge)
-                .magnitude();
-
-            if distance_between_positions > config.identical_max_distance {
-                return Some(AdjacentHalfEdgesNotConnected {
-                    end_pos_of_first_half_edge,
-                    start_pos_of_second_half_edge,
-                    distance_between_positions,
-                    unconnected_half_edges: [first.clone(), second.clone()],
-                });
-            }
-
-            None
-        })
+impl ValidationCheck<Face> for AdjacentHalfEdgesNotConnected {
+    fn check<'r>(
+        object: &'r Face,
+        geometry: &'r Geometry,
+        config: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        check_region(object.region(), geometry, config)
     }
+}
+
+impl ValidationCheck<Sketch> for AdjacentHalfEdgesNotConnected {
+    fn check<'r>(
+        object: &'r Sketch,
+        geometry: &'r Geometry,
+        config: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        object
+            .regions()
+            .iter()
+            .flat_map(|region| check_region(region, geometry, config))
+    }
+}
+
+fn check_region<'r>(
+    region: &'r Region,
+    geometry: &'r Geometry,
+    config: &'r ValidationConfig,
+) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
+    [region.exterior()]
+        .into_iter()
+        .chain(region.interiors())
+        .flat_map(|cycle| check_cycle(cycle, geometry, config))
+}
+
+fn check_cycle<'r>(
+    cycle: &'r Cycle,
+    geometry: &'r Geometry,
+    config: &'r ValidationConfig,
+) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
+    cycle.half_edges().pairs().filter_map(|(first, second)| {
+        let end_pos_of_first_half_edge = {
+            let [_, end] = geometry.of_half_edge(first).boundary.inner;
+            geometry
+                .of_half_edge(first)
+                .path
+                .point_from_path_coords(end)
+        };
+        let start_pos_of_second_half_edge =
+            geometry.of_half_edge(second).start_position();
+
+        let distance_between_positions = (end_pos_of_first_half_edge
+            - start_pos_of_second_half_edge)
+            .magnitude();
+
+        if distance_between_positions > config.identical_max_distance {
+            return Some(AdjacentHalfEdgesNotConnected {
+                end_pos_of_first_half_edge,
+                start_pos_of_second_half_edge,
+                distance_between_positions,
+                unconnected_half_edges: [first.clone(), second.clone()],
+            });
+        }
+
+        None
+    })
 }
 
 #[cfg(test)]
@@ -97,10 +129,10 @@ mod tests {
 
     use crate::{
         operations::{
-            build::{BuildCycle, BuildHalfEdge},
-            update::UpdateCycle,
+            build::{BuildFace, BuildHalfEdge},
+            update::{UpdateCycle, UpdateFace, UpdateRegion},
         },
-        topology::{Cycle, HalfEdge},
+        topology::{Face, HalfEdge},
         validation::ValidationCheck,
         Core,
     };
@@ -111,16 +143,36 @@ mod tests {
     fn adjacent_half_edges_not_connected() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let valid = Cycle::polygon([[0., 0.], [1., 0.], [1., 1.]], &mut core);
+        // We're only testing for `Face` here, not `Sketch`. Should be fine, as
+        // most of the code is shared.
+        let valid = Face::polygon(
+            core.layers.topology.surfaces.space_2d(),
+            [[0., 0.], [1., 0.], [1., 1.]],
+            &mut core,
+        );
         AdjacentHalfEdgesNotConnected::check_and_return_first_error(
             &valid,
             &core.layers.geometry,
         )?;
 
-        let invalid = valid.update_half_edge(
-            valid.half_edges().first(),
-            |_, core| {
-                [HalfEdge::line_segment([[0., 0.], [2., 0.]], None, core)]
+        let invalid = valid.update_region(
+            |region, core| {
+                region.update_exterior(
+                    |cycle, core| {
+                        cycle.update_half_edge(
+                            cycle.half_edges().first(),
+                            |_, core| {
+                                [HalfEdge::line_segment(
+                                    [[0., 0.], [2., 0.]],
+                                    None,
+                                    core,
+                                )]
+                            },
+                            core,
+                        )
+                    },
+                    core,
+                )
             },
             &mut core,
         );
