@@ -144,18 +144,17 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.space_2d();
+
         let region = <Region as BuildRegion>::circle([0., 0.], 1., &mut core)
             .insert(&mut core);
-        let valid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
-            vec![region.clone()],
-        )
-        .insert(&mut core);
+        let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
+            .insert(&mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
         let invalid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface,
             vec![
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
@@ -176,16 +175,15 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.space_2d();
+
         let region = <Region as BuildRegion>::polygon(
             [[0., 0.], [1., 1.], [0., 1.]],
             &mut core,
         )
         .insert(&mut core);
-        let valid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
-            vec![region.clone()],
-        )
-        .insert(&mut core);
+        let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
+            .insert(&mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let exterior = region.exterior();
@@ -194,7 +192,7 @@ mod tests {
         let interior = Cycle::new(cloned_edges).insert(&mut core);
 
         let invalid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface,
             vec![
                 Region::new(exterior.clone(), vec![interior]).insert(&mut core)
             ],
@@ -214,11 +212,13 @@ mod tests {
     fn should_find_clockwise_exterior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.space_2d();
+
         let valid_outer_circle = HalfEdge::circle([0., 0.], 1., &mut core);
         let valid_exterior =
             Cycle::new(vec![valid_outer_circle.clone()]).insert(&mut core);
         let valid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface.clone(),
             vec![Region::new(valid_exterior.clone(), vec![]).insert(&mut core)],
         );
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
@@ -231,7 +231,7 @@ mod tests {
         let invalid_exterior =
             Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
         let invalid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface,
             vec![
                 Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
             ],
@@ -251,6 +251,8 @@ mod tests {
     fn should_find_counterclockwise_interior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.space_2d();
+
         let outer_circle = HalfEdge::circle([0., 0.], 2., &mut core);
         let inner_circle = HalfEdge::circle([0., 0.], 1., &mut core);
         let cw_inner_circle = HalfEdge::from_sibling(
@@ -263,7 +265,7 @@ mod tests {
         let valid_interior =
             Cycle::new(vec![cw_inner_circle.clone()]).insert(&mut core);
         let valid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface.clone(),
             vec![Region::new(exterior.clone(), vec![valid_interior])
                 .insert(&mut core)],
         );
@@ -272,7 +274,7 @@ mod tests {
         let invalid_interior =
             Cycle::new(vec![inner_circle.clone()]).insert(&mut core);
         let invalid_sketch = Sketch::new(
-            core.layers.topology.surfaces.space_2d(),
+            surface,
             vec![Region::new(exterior.clone(), vec![invalid_interior])
                 .insert(&mut core)],
         );
