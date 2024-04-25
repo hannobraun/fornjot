@@ -143,13 +143,12 @@ mod tests {
     fn adjacent_half_edges_not_connected() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.space_2d();
+
         // We're only testing for `Face` here, not `Sketch`. Should be fine, as
         // most of the code is shared.
-        let valid = Face::polygon(
-            core.layers.topology.surfaces.space_2d(),
-            [[0., 0.], [1., 0.], [1., 1.]],
-            &mut core,
-        );
+        let valid =
+            Face::polygon(surface, [[0., 0.], [1., 0.], [1., 1.]], &mut core);
         AdjacentHalfEdgesNotConnected::check_and_return_first_error(
             &valid,
             &core.layers.geometry,
