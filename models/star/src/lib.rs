@@ -45,8 +45,18 @@ pub fn model(
 
     Sketch::empty(&core.layers.topology)
         .add_regions(
-            [Region::polygon(outer_points, core).add_interiors(
-                [Cycle::polygon(inner_points, core).reverse(core)],
+            [Region::polygon(
+                outer_points,
+                core.layers.topology.surfaces.space_2d(),
+                core,
+            )
+            .add_interiors(
+                [Cycle::polygon(
+                    inner_points,
+                    core.layers.topology.surfaces.space_2d(),
+                    core,
+                )
+                .reverse(core)],
                 core,
             )],
             core,

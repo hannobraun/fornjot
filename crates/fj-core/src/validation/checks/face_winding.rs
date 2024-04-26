@@ -88,15 +88,20 @@ mod tests {
     fn interior_winding() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = core.layers.topology.surfaces.xy_plane();
         let valid = Face::polygon(
-            core.layers.topology.surfaces.xy_plane(),
+            surface.clone(),
             [[0., 0.], [3., 0.], [0., 3.]],
             &mut core,
         )
         .update_region(
             |region, core| {
                 region.add_interiors(
-                    [Cycle::polygon([[1., 1.], [1., 2.], [2., 1.]], core)],
+                    [Cycle::polygon(
+                        [[1., 1.], [1., 2.], [2., 1.]],
+                        surface,
+                        core,
+                    )],
                     core,
                 )
             },

@@ -22,8 +22,20 @@ pub fn model(
 
     Sketch::empty(&core.layers.topology)
         .add_regions(
-            [Region::circle(Point::origin(), outer, core).add_interiors(
-                [Cycle::circle(Point::origin(), inner, core).reverse(core)],
+            [Region::circle(
+                Point::origin(),
+                outer,
+                core.layers.topology.surfaces.space_2d(),
+                core,
+            )
+            .add_interiors(
+                [Cycle::circle(
+                    Point::origin(),
+                    inner,
+                    core.layers.topology.surfaces.space_2d(),
+                    core,
+                )
+                .reverse(core)],
                 core,
             )],
             core,

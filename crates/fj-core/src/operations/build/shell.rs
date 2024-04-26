@@ -95,6 +95,7 @@ pub trait BuildShell {
                             let half_edge = HalfEdge::line_segment(
                                 positions,
                                 Some(boundary.reverse().inner),
+                                surface.clone(),
                                 core,
                             );
                             half_edge

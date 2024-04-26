@@ -102,18 +102,19 @@ mod tests {
         let c = [2., 2.];
         let d = [0., 1.];
 
-        let face =
-            Face::unbound(core.layers.topology.surfaces.xy_plane(), &mut core)
-                .update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |_, core| Cycle::polygon([a, b, c, d], core),
-                            core,
-                        )
-                    },
-                    &mut core,
-                )
-                .insert(&mut core);
+        let surface = core.layers.topology.surfaces.xy_plane();
+
+        let face = Face::unbound(surface.clone(), &mut core)
+            .update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |_, core| Cycle::polygon([a, b, c, d], surface, core),
+                        core,
+                    )
+                },
+                &mut core,
+            )
+            .insert(&mut core);
 
         let a = Point::from(a).to_xyz();
         let b = Point::from(b).to_xyz();
@@ -151,11 +152,21 @@ mod tests {
                 |region, core| {
                     region
                         .update_exterior(
-                            |_, core| Cycle::polygon([a, b, c, d], core),
+                            |_, core| {
+                                Cycle::polygon(
+                                    [a, b, c, d],
+                                    surface.clone(),
+                                    core,
+                                )
+                            },
                             core,
                         )
                         .add_interiors(
-                            [Cycle::polygon([e, f, g, h], core)],
+                            [Cycle::polygon(
+                                [e, f, g, h],
+                                surface.clone(),
+                                core,
+                            )],
                             core,
                         )
                 },
@@ -244,7 +255,13 @@ mod tests {
             .update_region(
                 |region, core| {
                     region.update_exterior(
-                        |_, core| Cycle::polygon([a, b, c, d, e], core),
+                        |_, core| {
+                            Cycle::polygon(
+                                [a, b, c, d, e],
+                                surface.clone(),
+                                core,
+                            )
+                        },
                         core,
                     )
                 },

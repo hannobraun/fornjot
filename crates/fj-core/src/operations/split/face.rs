@@ -109,6 +109,7 @@ impl SplitFace for Shell {
                     core.layers.geometry.of_half_edge(&d).start_position(),
                 ],
                 None,
+                face.surface().clone(),
                 core,
             );
             half_edge

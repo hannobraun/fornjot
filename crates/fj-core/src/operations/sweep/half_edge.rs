@@ -122,6 +122,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                     let line_segment = HalfEdge::line_segment(
                         [start, end],
                         Some(boundary),
+                        surface.clone(),
                         core,
                     );
                     let half_edge = line_segment

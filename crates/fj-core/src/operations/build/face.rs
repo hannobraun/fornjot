@@ -33,7 +33,8 @@ pub trait BuildFace {
         radius: impl Into<Scalar>,
         core: &mut Core,
     ) -> Face {
-        let region = Region::circle(center, radius, core).insert(core);
+        let region =
+            Region::circle(center, radius, surface.clone(), core).insert(core);
         Face::new(surface, region)
     }
 
@@ -81,7 +82,8 @@ pub trait BuildFace {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let region = Region::polygon(points, core).insert(core);
+        let region =
+            Region::polygon(points, surface.clone(), core).insert(core);
         Face::new(surface, region)
     }
 }
