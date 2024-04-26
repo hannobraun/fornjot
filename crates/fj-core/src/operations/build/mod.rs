@@ -17,6 +17,7 @@
 //! the top-level object itself, but also to the other objects that make up its
 //! components.
 
+mod curve;
 mod cycle;
 mod face;
 mod half_edge;
@@ -27,6 +28,7 @@ mod solid;
 mod surface;
 
 pub use self::{
+    curve::BuildCurve,
     cycle::BuildCycle,
     face::{BuildFace, Polygon},
     half_edge::BuildHalfEdge,

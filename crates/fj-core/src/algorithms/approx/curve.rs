@@ -183,7 +183,7 @@ mod tests {
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, HalfEdgeGeom, SurfacePath},
-        operations::{build::BuildSurface, insert::Insert},
+        operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},
         Core,
     };
@@ -195,7 +195,8 @@ mod tests {
         let surface = core.layers.topology.surfaces.xz_plane();
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve = Curve::new().insert(&mut core);
+        let curve =
+            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
         let half_edge = HalfEdgeGeom { path, boundary };
 
@@ -217,7 +218,8 @@ mod tests {
         );
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve = Curve::new().insert(&mut core);
+        let curve =
+            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
         let half_edge = HalfEdgeGeom { path, boundary };
 
@@ -238,7 +240,8 @@ mod tests {
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
         ]);
-        let curve = Curve::new().insert(&mut core);
+        let curve =
+            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeom { path, boundary };
 
@@ -268,7 +271,8 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.xz_plane();
         let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
-        let curve = Curve::new().insert(&mut core);
+        let curve =
+            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
         let half_edge = HalfEdgeGeom { path, boundary };
 
