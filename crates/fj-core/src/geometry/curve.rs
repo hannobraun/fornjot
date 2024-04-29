@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::{storage::Handle, topology::Surface};
 
 use super::SurfacePath;
@@ -22,7 +24,7 @@ pub struct CurveGeom {
     /// which is a prerequisite for making the required tooling practical:
     ///
     /// <https://github.com/hannobraun/fornjot/issues/2118>
-    pub definitions: Vec<LocalCurveGeom>,
+    pub definitions: BTreeMap<Handle<Surface>, LocalCurveGeom>,
 }
 
 impl CurveGeom {
@@ -31,7 +33,9 @@ impl CurveGeom {
         path: SurfacePath,
         surface: Handle<Surface>,
     ) -> Self {
-        let definitions = vec![LocalCurveGeom { path, surface }];
+        let mut definitions = BTreeMap::new();
+        definitions.insert(surface.clone(), LocalCurveGeom { path, surface });
+
         Self { definitions }
     }
 }
