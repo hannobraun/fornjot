@@ -70,11 +70,7 @@ pub trait BuildShell {
                             .cloned()
                             .unwrap_or_else(|| {
                                 let curve = Curve::new().insert(core);
-                                let boundary =
-                                    CurveBoundary::<Point<1>>::from([
-                                        [0.],
-                                        [1.],
-                                    ]);
+                                let boundary = CurveBoundary::default();
 
                                 curves.insert(
                                     vertices,

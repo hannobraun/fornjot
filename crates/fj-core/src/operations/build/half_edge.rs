@@ -115,9 +115,7 @@ pub trait BuildHalfEdge {
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        let boundary = boundary.unwrap_or_else(|| CurveBoundary {
-            inner: [[0.], [1.]].map(Point::from),
-        });
+        let boundary = boundary.unwrap_or_default();
         let path = SurfacePath::line_from_points_with_coords(
             boundary.inner.zip_ext(points_surface),
         );
