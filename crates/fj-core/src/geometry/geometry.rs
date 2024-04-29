@@ -7,7 +7,7 @@ use crate::{
     topology::{Curve, HalfEdge, Surface, Topology},
 };
 
-use super::{CurveGeom, GlobalPath, HalfEdgeGeom, SurfaceGeom};
+use super::{CurveGeom, GlobalPath, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
@@ -65,9 +65,14 @@ impl Geometry {
     pub(crate) fn define_curve_inner(
         &mut self,
         curve: Handle<Curve>,
-        geometry: CurveGeom,
+        surface: Handle<Surface>,
+        geometry: LocalCurveGeom,
     ) {
-        self.curve.insert(curve, geometry);
+        self.curve
+            .entry(curve)
+            .or_default()
+            .definitions
+            .insert(surface, geometry);
     }
 
     pub(crate) fn define_half_edge_inner(

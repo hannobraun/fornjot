@@ -5,7 +5,7 @@ use crate::{storage::Handle, topology::Surface};
 use super::SurfacePath;
 
 /// The geometric definition of a curve
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct CurveGeom {
     /// # The redundant local definitions of the curve geometry
     ///
@@ -25,19 +25,6 @@ pub struct CurveGeom {
     ///
     /// <https://github.com/hannobraun/fornjot/issues/2118>
     pub definitions: BTreeMap<Handle<Surface>, LocalCurveGeom>,
-}
-
-impl CurveGeom {
-    /// Create a new instance of `CurveGeom` from a path and a surface
-    pub fn from_path_and_surface(
-        path: SurfacePath,
-        surface: Handle<Surface>,
-    ) -> Self {
-        let mut definitions = BTreeMap::new();
-        definitions.insert(surface, LocalCurveGeom { path });
-
-        Self { definitions }
-    }
 }
 
 /// The geometric definition of a curve in 2D surface coordinates
