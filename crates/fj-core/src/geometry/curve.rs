@@ -34,7 +34,7 @@ impl CurveGeom {
         surface: Handle<Surface>,
     ) -> Self {
         let mut definitions = BTreeMap::new();
-        definitions.insert(surface.clone(), LocalCurveGeom { path, surface });
+        definitions.insert(surface.clone(), LocalCurveGeom { path });
 
         Self { definitions }
     }
@@ -45,7 +45,4 @@ impl CurveGeom {
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
     pub path: SurfacePath,
-
-    /// The surface that the curve is defined on
-    pub surface: Handle<Surface>,
 }
