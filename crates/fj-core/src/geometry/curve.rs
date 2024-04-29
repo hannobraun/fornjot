@@ -31,9 +31,8 @@ impl CurveGeom {
         path: SurfacePath,
         surface: Handle<Surface>,
     ) -> Self {
-        Self {
-            definitions: vec![LocalCurveGeom { path, surface }],
-        }
+        let definitions = vec![LocalCurveGeom { path, surface }];
+        Self { definitions }
     }
 }
 
