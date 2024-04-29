@@ -1,9 +1,11 @@
-use fj_interop::ext::ArrayExt;
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
     geometry::{CurveBoundary, HalfEdgeGeom, LocalCurveGeom, SurfacePath},
-    operations::{geometry::UpdateHalfEdgeGeometry, insert::Insert},
+    operations::{
+        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
+        insert::Insert,
+    },
     storage::Handle,
     topology::{Curve, HalfEdge, Surface, Vertex},
     Core,
@@ -115,21 +117,26 @@ pub trait BuildHalfEdge {
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        let boundary = boundary.unwrap_or_default();
-        let path = SurfacePath::line_from_points_with_coords(
-            boundary.inner.zip_ext(points_surface),
-        );
-
         let half_edge = HalfEdge::unjoined(core).insert(core);
 
-        core.layers.geometry.define_curve(
-            half_edge.curve().clone(),
-            surface,
-            LocalCurveGeom { path },
+        half_edge.curve().clone().make_line_on_surface(
+            points_surface,
+            boundary,
+            surface.clone(),
+            &mut core.layers.geometry,
         );
+
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
-            HalfEdgeGeom { path, boundary },
+            HalfEdgeGeom {
+                path: core
+                    .layers
+                    .geometry
+                    .of_curve(half_edge.curve())
+                    .local_on(&surface)
+                    .path,
+                boundary: boundary.unwrap_or_default(),
+            },
         );
 
         half_edge

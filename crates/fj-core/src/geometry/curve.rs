@@ -27,6 +27,19 @@ pub struct CurveGeom {
     pub definitions: BTreeMap<Handle<Surface>, LocalCurveGeom>,
 }
 
+impl CurveGeom {
+    /// # Return the local definition on the provided surface
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the curve has not been defined on that surface.
+    pub fn local_on(&self, surface: &Handle<Surface>) -> &LocalCurveGeom {
+        self.definitions
+            .get(surface)
+            .expect("Curve not defined on provided surface")
+    }
+}
+
 /// The geometric definition of a curve in 2D surface coordinates
 #[derive(Clone)]
 pub struct LocalCurveGeom {
