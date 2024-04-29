@@ -52,6 +52,14 @@ impl<T: CurveBoundaryElement> CurveBoundary<T> {
     }
 }
 
+impl Default for CurveBoundary<Point<1>> {
+    fn default() -> Self {
+        Self {
+            inner: [[0.], [1.]].map(Point::from),
+        }
+    }
+}
+
 impl<S, T: CurveBoundaryElement> From<[S; 2]> for CurveBoundary<T>
 where
     S: Into<T::Repr>,
