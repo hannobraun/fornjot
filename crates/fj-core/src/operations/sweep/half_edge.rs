@@ -2,6 +2,7 @@ use fj_interop::{ext::ArrayExt, Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
+    geometry::CurveBoundary,
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         geometry::UpdateHalfEdgeGeometry,
@@ -121,7 +122,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                 let half_edge = {
                     let line_segment = HalfEdge::line_segment(
                         [start, end],
-                        Some(boundary),
+                        Some(CurveBoundary { inner: boundary }),
                         surface.clone(),
                         core,
                     );
