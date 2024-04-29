@@ -94,7 +94,7 @@ pub trait BuildShell {
                         .map(|((vertex, positions), (curve, boundary))| {
                             let half_edge = HalfEdge::line_segment(
                                 positions,
-                                Some(boundary.reverse().inner),
+                                Some(boundary.reverse()),
                                 surface.clone(),
                                 core,
                             );
