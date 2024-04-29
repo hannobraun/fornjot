@@ -1,7 +1,7 @@
 //! Layer infrastructure for [`Geometry`]
 
 use crate::{
-    geometry::{CurveGeom, Geometry, HalfEdgeGeom, SurfaceGeom},
+    geometry::{Geometry, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom},
     storage::Handle,
     topology::{Curve, HalfEdge, Surface},
 };
@@ -10,9 +10,21 @@ use super::{Command, Event, Layer};
 
 impl Layer<Geometry> {
     /// Define the geometry of the provided curve
-    pub fn define_curve(&mut self, curve: Handle<Curve>, geometry: CurveGeom) {
+    pub fn define_curve(
+        &mut self,
+        curve: Handle<Curve>,
+        surface: Handle<Surface>,
+        geometry: LocalCurveGeom,
+    ) {
         let mut events = Vec::new();
-        self.process(DefineCurve { curve, geometry }, &mut events);
+        self.process(
+            DefineCurve {
+                curve,
+                surface,
+                geometry,
+            },
+            &mut events,
+        );
     }
 
     /// Define the geometry of the provided half-edge
@@ -50,7 +62,8 @@ impl Layer<Geometry> {
 /// Define the geometry of a curve
 pub struct DefineCurve {
     curve: Handle<Curve>,
-    geometry: CurveGeom,
+    surface: Handle<Surface>,
+    geometry: LocalCurveGeom,
 }
 
 impl Command<Geometry> for DefineCurve {
@@ -68,7 +81,11 @@ impl Command<Geometry> for DefineCurve {
 
 impl Event<Geometry> for DefineCurve {
     fn evolve(&self, state: &mut Geometry) {
-        state.define_curve_inner(self.curve.clone(), self.geometry.clone());
+        state.define_curve_inner(
+            self.curve.clone(),
+            self.surface.clone(),
+            self.geometry.clone(),
+        );
     }
 }
 

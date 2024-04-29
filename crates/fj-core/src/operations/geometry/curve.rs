@@ -1,5 +1,5 @@
 use crate::{
-    geometry::{CurveGeom, Geometry, SurfacePath},
+    geometry::{Geometry, LocalCurveGeom, SurfacePath},
     layers::Layer,
     storage::Handle,
     topology::{Curve, Surface},
@@ -23,10 +23,7 @@ impl UpdateCurveGeometry for Handle<Curve> {
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self {
-        geometry.define_curve(
-            self.clone(),
-            CurveGeom::from_path_and_surface(path, surface),
-        );
+        geometry.define_curve(self.clone(), surface, LocalCurveGeom { path });
 
         self
     }
