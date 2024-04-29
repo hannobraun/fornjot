@@ -1,6 +1,6 @@
 use crate::{
-    geometry::{CurveGeom, SurfacePath},
-    operations::insert::Insert,
+    geometry::SurfacePath,
+    operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, Surface},
     Core,
@@ -18,14 +18,11 @@ pub trait BuildCurve {
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<Curve> {
-        let curve = Curve::new().insert(core);
-
-        core.layers.geometry.define_curve(
-            curve.clone(),
-            CurveGeom::from_path_and_surface(path, surface),
-        );
-
-        curve
+        Curve::new().insert(core).make_path_on_surface(
+            path,
+            surface,
+            &mut core.layers.geometry,
+        )
     }
 }
 
