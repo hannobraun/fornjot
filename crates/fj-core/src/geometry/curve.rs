@@ -27,19 +27,6 @@ pub struct CurveGeom {
     pub definitions: BTreeMap<Handle<Surface>, LocalCurveGeom>,
 }
 
-impl CurveGeom {
-    /// Create a new instance of `CurveGeom` from a path and a surface
-    pub fn from_path_and_surface(
-        path: SurfacePath,
-        surface: Handle<Surface>,
-    ) -> Self {
-        let mut definitions = BTreeMap::new();
-        definitions.insert(surface, LocalCurveGeom { path });
-
-        Self { definitions }
-    }
-}
-
 /// The geometric definition of a curve in 2D surface coordinates
 #[derive(Clone)]
 pub struct LocalCurveGeom {
