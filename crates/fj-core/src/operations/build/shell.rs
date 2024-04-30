@@ -88,9 +88,11 @@ pub trait BuildShell {
                         .zip_ext([[a, b], [b, c], [c, a]])
                         .zip_ext(curves_and_boundaries)
                         .map(|((vertex, positions), (curve, boundary))| {
+                            let boundary = boundary.reverse();
+
                             let half_edge = HalfEdge::line_segment(
                                 positions,
-                                Some(boundary.reverse()),
+                                Some(boundary),
                                 surface.clone(),
                                 core,
                             );
