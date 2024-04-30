@@ -4,10 +4,10 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    geometry::CurveBoundary,
+    geometry::{CurveBoundary, HalfEdgeGeom},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
-        geometry::UpdateHalfEdgeGeometry,
+        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
         join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
@@ -88,21 +88,29 @@ pub trait BuildShell {
                         .zip_ext([[a, b], [b, c], [c, a]])
                         .zip_ext(curves_and_boundaries)
                         .map(|((vertex, positions), (curve, boundary))| {
-                            let half_edge = HalfEdge::line_segment(
+                            let boundary = boundary.reverse();
+
+                            let curve = curve.make_line_on_surface(
                                 positions,
-                                Some(boundary.reverse()),
+                                Some(boundary),
                                 surface.clone(),
-                                core,
+                                &mut core.layers.geometry,
                             );
-                            half_edge
+
+                            HalfEdge::unjoined(core)
                                 .update_start_vertex(|_, _| vertex, core)
-                                .update_curve(|_, _| curve, core)
+                                .update_curve(|_, _| curve.clone(), core)
                                 .insert(core)
                                 .set_geometry(
-                                    *core
-                                        .layers
-                                        .geometry
-                                        .of_half_edge(&half_edge),
+                                    HalfEdgeGeom {
+                                        path: core
+                                            .layers
+                                            .geometry
+                                            .of_curve(&curve)
+                                            .local_on(&surface)
+                                            .path,
+                                        boundary,
+                                    },
                                     &mut core.layers.geometry,
                                 )
                         })
