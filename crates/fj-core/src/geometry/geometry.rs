@@ -108,10 +108,8 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the curve is not defined.
-    pub fn of_curve(&self, curve: &Handle<Curve>) -> &CurveGeom {
-        self.curve
-            .get(curve)
-            .expect("Expected geometry of half-edge to be defined")
+    pub fn of_curve(&self, curve: &Handle<Curve>) -> Option<&CurveGeom> {
+        self.curve.get(curve)
     }
 
     /// # Access the geometry of the provided half-edge

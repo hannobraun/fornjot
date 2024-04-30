@@ -107,6 +107,10 @@ pub trait BuildShell {
                                             .layers
                                             .geometry
                                             .of_curve(&curve)
+                                            .expect(
+                                                "Curve geometry was just \
+                                                defined in same function",
+                                            )
                                             .local_on(&surface)
                                             .path,
                                         boundary,
