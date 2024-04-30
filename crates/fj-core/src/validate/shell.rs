@@ -423,7 +423,7 @@ mod tests {
         assert_contains_err,
         operations::{
             build::BuildShell,
-            geometry::UpdateHalfEdgeGeometry,
+            geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
             insert::Insert,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
@@ -539,7 +539,12 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let curve = Curve::new().insert(core);
+                                        let curve = Curve::new()
+                                            .insert(core)
+                                            .copy_geometry_from(
+                                                half_edge.curve(),
+                                                &mut core.layers.geometry,
+                                            );
 
                                         [half_edge
                                             .update_curve(|_, _| curve, core)
