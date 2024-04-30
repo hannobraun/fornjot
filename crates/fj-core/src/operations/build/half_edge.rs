@@ -133,6 +133,7 @@ pub trait BuildHalfEdge {
                     .layers
                     .geometry
                     .of_curve(half_edge.curve())
+                    .expect("Curve geometry was just defined in same function")
                     .local_on(&surface)
                     .path,
                 boundary: boundary.unwrap_or_default(),
