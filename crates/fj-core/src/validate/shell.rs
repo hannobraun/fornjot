@@ -539,11 +539,10 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
+                                        let curve = Curve::new();
+
                                         [half_edge
-                                            .update_curve(
-                                                |_, _| Curve::new(),
-                                                core,
-                                            )
+                                            .update_curve(|_, _| curve, core)
                                             .insert(core)
                                             .set_geometry(
                                                 *core
