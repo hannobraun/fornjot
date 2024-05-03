@@ -52,6 +52,8 @@ impl SweepRegion for Region {
 
         let mut faces = Vec::new();
 
+        let top_surface = surface.translate(path, core).insert(core);
+
         let top_exterior = sweep_cycle(
             self.exterior(),
             surface.clone(),
@@ -79,7 +81,6 @@ impl SweepRegion for Region {
             .collect::<Vec<_>>();
 
         let top_face = {
-            let top_surface = surface.translate(path, core).insert(core);
             let top_region =
                 Region::new(top_exterior, top_interiors).insert(core);
 
