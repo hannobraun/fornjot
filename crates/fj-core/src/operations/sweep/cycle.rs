@@ -39,6 +39,7 @@ pub trait SweepCycle {
     fn sweep_cycle(
         &self,
         surface: Handle<Surface>,
+        top_surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
@@ -50,6 +51,7 @@ impl SweepCycle for Cycle {
     fn sweep_cycle(
         &self,
         surface: Handle<Surface>,
+        _top_surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,

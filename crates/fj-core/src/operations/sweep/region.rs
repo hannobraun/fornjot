@@ -100,7 +100,7 @@ impl SweepRegion for Region {
 fn sweep_cycle(
     bottom_cycle: &Cycle,
     bottom_surface: Handle<Surface>,
-    _top_surface: Handle<Surface>,
+    top_surface: Handle<Surface>,
     color: Option<Color>,
     faces: &mut Vec<Face>,
     path: Vector<3>,
@@ -109,6 +109,7 @@ fn sweep_cycle(
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
         bottom_surface,
+        top_surface,
         color,
         path,
         cache,
