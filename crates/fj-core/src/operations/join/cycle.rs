@@ -3,7 +3,7 @@ use std::ops::RangeInclusive;
 use itertools::Itertools;
 
 use crate::{
-    geometry::HalfEdgeGeom,
+    geometry::{HalfEdgeGeom, LocalCurveGeom},
     operations::{
         build::BuildHalfEdge,
         geometry::UpdateHalfEdgeGeometry,
@@ -11,15 +11,28 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    topology::{Cycle, HalfEdge},
+    topology::{Cycle, HalfEdge, Surface},
     Core,
 };
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
-    /// Add half-edges to the cycle that are joined to the provided ones
+    /// Add new half-edges to the cycle that are joined to the provided ones
+    ///
+    /// This method creates a new half-edge for each half-edge that is provided,
+    /// joins the new half-edge to the provided one, and adds the new half-edge
+    /// to the cycle.
+    ///
+    /// The geometry for each new half-edge needs to be provided as well.
+    ///
+    /// Also requires the surface that the cycle is defined in.
     #[must_use]
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
+    fn add_joined_edges<Es>(
+        &self,
+        edges: Es,
+        surface: Handle<Surface>,
+        core: &mut Core,
+    ) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator;
@@ -76,7 +89,12 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
+    fn add_joined_edges<Es>(
+        &self,
+        edges: Es,
+        surface: Handle<Surface>,
+        core: &mut Core,
+    ) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator,
@@ -85,14 +103,24 @@ impl JoinCycle for Cycle {
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev_half_edge, _), (half_edge, geometry))| {
-                HalfEdge::unjoined(core)
+                let half_edge = HalfEdge::unjoined(core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
                         |_, _| prev_half_edge.start_vertex().clone(),
                         core,
                     )
                     .insert(core)
-                    .set_geometry(geometry, &mut core.layers.geometry)
+                    .set_geometry(geometry, &mut core.layers.geometry);
+
+                core.layers.geometry.define_curve(
+                    half_edge.curve().clone(),
+                    surface.clone(),
+                    LocalCurveGeom {
+                        path: geometry.path,
+                    },
+                );
+
+                half_edge
             })
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)

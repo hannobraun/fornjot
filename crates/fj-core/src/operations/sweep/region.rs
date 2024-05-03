@@ -52,9 +52,12 @@ impl SweepRegion for Region {
 
         let mut faces = Vec::new();
 
+        let top_surface = surface.translate(path, core).insert(core);
+
         let top_exterior = sweep_cycle(
             self.exterior(),
             surface.clone(),
+            top_surface.clone(),
             color,
             &mut faces,
             path,
@@ -69,6 +72,7 @@ impl SweepRegion for Region {
                 sweep_cycle(
                     bottom_cycle,
                     surface.clone(),
+                    top_surface.clone(),
                     color,
                     &mut faces,
                     path,
@@ -79,7 +83,6 @@ impl SweepRegion for Region {
             .collect::<Vec<_>>();
 
         let top_face = {
-            let top_surface = surface.translate(path, core).insert(core);
             let top_region =
                 Region::new(top_exterior, top_interiors).insert(core);
 
@@ -93,9 +96,11 @@ impl SweepRegion for Region {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn sweep_cycle(
     bottom_cycle: &Cycle,
     bottom_surface: Handle<Surface>,
+    top_surface: Handle<Surface>,
     color: Option<Color>,
     faces: &mut Vec<Face>,
     path: Vector<3>,
@@ -104,6 +109,7 @@ fn sweep_cycle(
 ) -> Handle<Cycle> {
     let swept_cycle = bottom_cycle.reverse(core).sweep_cycle(
         bottom_surface,
+        top_surface,
         color,
         path,
         cache,
