@@ -24,6 +24,8 @@ pub trait JoinCycle {
     /// to the cycle.
     ///
     /// The geometry for each new half-edge needs to be provided as well.
+    ///
+    /// Also requires the surface that the cycle is defined in.
     #[must_use]
     fn add_joined_edges<Es>(
         &self,
