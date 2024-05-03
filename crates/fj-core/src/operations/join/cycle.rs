@@ -11,7 +11,7 @@ use crate::{
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    topology::{Cycle, HalfEdge},
+    topology::{Cycle, HalfEdge, Surface},
     Core,
 };
 
@@ -25,7 +25,12 @@ pub trait JoinCycle {
     ///
     /// The geometry for each new half-edge needs to be provided as well.
     #[must_use]
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
+    fn add_joined_edges<Es>(
+        &self,
+        edges: Es,
+        surface: Handle<Surface>,
+        core: &mut Core,
+    ) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator;
@@ -82,7 +87,12 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
+    fn add_joined_edges<Es>(
+        &self,
+        edges: Es,
+        _: Handle<Surface>,
+        core: &mut Core,
+    ) -> Self
     where
         Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator,
