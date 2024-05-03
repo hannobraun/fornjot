@@ -57,6 +57,7 @@ impl SweepRegion for Region {
         let top_exterior = sweep_cycle(
             self.exterior(),
             surface.clone(),
+            top_surface.clone(),
             color,
             &mut faces,
             path,
@@ -71,6 +72,7 @@ impl SweepRegion for Region {
                 sweep_cycle(
                     bottom_cycle,
                     surface.clone(),
+                    top_surface.clone(),
                     color,
                     &mut faces,
                     path,
@@ -94,9 +96,11 @@ impl SweepRegion for Region {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn sweep_cycle(
     bottom_cycle: &Cycle,
     bottom_surface: Handle<Surface>,
+    _top_surface: Handle<Surface>,
     color: Option<Color>,
     faces: &mut Vec<Face>,
     path: Vector<3>,
