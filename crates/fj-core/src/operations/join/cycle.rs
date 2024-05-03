@@ -17,7 +17,13 @@ use crate::{
 
 /// Join a [`Cycle`] to another
 pub trait JoinCycle {
-    /// Add half-edges to the cycle that are joined to the provided ones
+    /// Add new half-edges to the cycle that are joined to the provided ones
+    ///
+    /// This method creates a new half-edge for each half-edge that is provided,
+    /// joins the new half-edge to the provided one, and adds the new half-edge
+    /// to the cycle.
+    ///
+    /// The geometry for each new half-edge needs to be provided as well.
     #[must_use]
     fn add_joined_edges<Es>(&self, edges: Es, core: &mut Core) -> Self
     where
