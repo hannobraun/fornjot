@@ -64,7 +64,7 @@ impl SweepCycle for Cycle {
             let (bottom_half_edge, bottom_half_edge_next) =
                 bottom_half_edge_pair;
 
-            let (side_face, top_edge) = bottom_half_edge.sweep_half_edge(
+            let (side_face, top_half_edge) = bottom_half_edge.sweep_half_edge(
                 bottom_half_edge_next.start_vertex().clone(),
                 surface.clone(),
                 color,
@@ -76,7 +76,7 @@ impl SweepCycle for Cycle {
             faces.push(side_face);
 
             top_edges.push((
-                top_edge,
+                top_half_edge,
                 *core.layers.geometry.of_half_edge(bottom_half_edge),
             ));
         }
