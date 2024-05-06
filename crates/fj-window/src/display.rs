@@ -27,7 +27,10 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 
     let mut held_mouse_button = None;
     let mut new_size = None;
-    let mut stop_drawing = false;
+
+    let mut display_state = DisplayState {
+        stop_drawing: false,
+    };
 
     #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop_window_target| {
@@ -109,13 +112,14 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = new_size.take() {
-                    stop_drawing = size.width == 0 || size.height == 0;
-                    if !stop_drawing {
+                    display_state.stop_drawing =
+                        size.width == 0 || size.height == 0;
+                    if !display_state.stop_drawing {
                         viewer.handle_screen_resize(size);
                     }
                 }
 
-                if !stop_drawing {
+                if !display_state.stop_drawing {
                     viewer.draw();
                 }
             }
@@ -140,6 +144,10 @@ pub enum Error {
     /// Error initializing graphics
     #[error("Error initializing graphics")]
     Graphics(#[from] RendererInitError),
+}
+
+struct DisplayState {
+    stop_drawing: bool,
 }
 
 fn input_event<T>(
