@@ -23,13 +23,13 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let window = Window::new(&event_loop)?;
     let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_model_update(model);
-
     let mut display_state = DisplayState {
         held_mouse_button: None,
         new_size: None,
         stop_drawing: false,
     };
+
+    viewer.handle_model_update(model);
 
     #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop_window_target| {
