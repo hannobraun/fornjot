@@ -35,15 +35,17 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 
     #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop_window_target| {
-        let input_event = input_event(
-            &event,
-            &display_state.window,
-            &display_state.held_mouse_button,
-            display_state.viewer.cursor(),
-            invert_zoom,
-        );
-        if let Some(input_event) = input_event {
-            display_state.viewer.handle_input_event(input_event);
+        if let Event::WindowEvent { event, .. } = &event {
+            let input_event = input_event(
+                event,
+                &display_state.window,
+                &display_state.held_mouse_button,
+                display_state.viewer.cursor(),
+                invert_zoom,
+            );
+            if let Some(input_event) = input_event {
+                display_state.viewer.handle_input_event(input_event);
+            }
         }
 
         match event {
@@ -155,18 +157,15 @@ struct DisplayState {
     stop_drawing: bool,
 }
 
-fn input_event<T>(
-    event: &Event<T>,
+fn input_event(
+    event: &WindowEvent,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedScreenPosition>,
     invert_zoom: bool,
 ) -> Option<InputEvent> {
     match event {
-        Event::WindowEvent {
-            event: WindowEvent::CursorMoved { position, .. },
-            ..
-        } => {
+        WindowEvent::CursorMoved { position, .. } => {
             let [width, height] = window.size().as_f64();
             let aspect_ratio = width / height;
 
@@ -196,10 +195,7 @@ fn input_event<T>(
             *previous_cursor = Some(current);
             event
         }
-        Event::WindowEvent {
-            event: WindowEvent::MouseWheel { delta, .. },
-            ..
-        } => {
+        WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
                     f64::from(*y) * ZOOM_FACTOR_LINE
