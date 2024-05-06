@@ -42,7 +42,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         }
 
         if event == Event::AboutToWait {
-            display_state.window.window().request_redraw();
+            display_state.about_to_wait(event_loop);
         }
     })?;
 
@@ -149,6 +149,10 @@ impl DisplayState {
             }
             _ => {}
         }
+    }
+
+    fn about_to_wait(&mut self, _: &ActiveEventLoop) {
+        self.window.window().request_redraw();
     }
 }
 
