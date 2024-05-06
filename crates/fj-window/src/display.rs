@@ -21,15 +21,16 @@ use crate::window::{self, Window};
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
     let window = Window::new(&event_loop)?;
-    let mut viewer = block_on(Viewer::new(&window))?;
+    let viewer = block_on(Viewer::new(&window))?;
 
     let mut display_state = DisplayState {
+        viewer,
         held_mouse_button: None,
         new_size: None,
         stop_drawing: false,
     };
 
-    viewer.handle_model_update(model);
+    display_state.viewer.handle_model_update(model);
 
     #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop_window_target| {
@@ -37,11 +38,11 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             &event,
             &window,
             &display_state.held_mouse_button,
-            viewer.cursor(),
+            display_state.viewer.cursor(),
             invert_zoom,
         );
         if let Some(input_event) = input_event {
-            viewer.handle_input_event(input_event);
+            display_state.viewer.handle_input_event(input_event);
         }
 
         match event {
@@ -68,10 +69,10 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                     event_loop_window_target.exit();
                 }
                 Key::Character("1") => {
-                    viewer.toggle_draw_model();
+                    display_state.viewer.toggle_draw_model();
                 }
                 Key::Character("2") => {
-                    viewer.toggle_draw_mesh();
+                    display_state.viewer.toggle_draw_mesh();
                 }
                 _ => {}
             },
@@ -90,17 +91,17 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             } => match state {
                 ElementState::Pressed => {
                     display_state.held_mouse_button = Some(button);
-                    viewer.add_focus_point();
+                    display_state.viewer.add_focus_point();
                 }
                 ElementState::Released => {
                     display_state.held_mouse_button = None;
-                    viewer.remove_focus_point();
+                    display_state.viewer.remove_focus_point();
                 }
             },
             Event::WindowEvent {
                 event: WindowEvent::MouseWheel { .. },
                 ..
-            } => viewer.add_focus_point(),
+            } => display_state.viewer.add_focus_point(),
             Event::AboutToWait => {
                 window.window().request_redraw();
             }
@@ -114,12 +115,12 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                     display_state.stop_drawing =
                         size.width == 0 || size.height == 0;
                     if !display_state.stop_drawing {
-                        viewer.handle_screen_resize(size);
+                        display_state.viewer.handle_screen_resize(size);
                     }
                 }
 
                 if !display_state.stop_drawing {
-                    viewer.draw();
+                    display_state.viewer.draw();
                 }
             }
             _ => {}
@@ -146,6 +147,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    viewer: Viewer,
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
     stop_drawing: bool,
