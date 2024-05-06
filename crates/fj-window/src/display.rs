@@ -24,6 +24,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let viewer = block_on(Viewer::new(&window))?;
 
     let mut display_state = DisplayState {
+        invert_zoom,
         window,
         viewer,
         held_mouse_button: None,
@@ -41,7 +42,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 &display_state.window,
                 &display_state.held_mouse_button,
                 display_state.viewer.cursor(),
-                invert_zoom,
+                display_state.invert_zoom,
             );
             if let Some(input_event) = input_event {
                 display_state.viewer.handle_input_event(input_event);
@@ -150,6 +151,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    invert_zoom: bool,
     window: Window,
     viewer: Viewer,
     held_mouse_button: Option<MouseButton>,
