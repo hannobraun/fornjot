@@ -41,85 +41,8 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             display_state.window_event(event_loop, *window_id, event.clone())
         }
 
-        match event {
-            Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => {
-                event_loop.exit();
-            }
-            Event::WindowEvent {
-                event:
-                    WindowEvent::KeyboardInput {
-                        event:
-                            KeyEvent {
-                                logical_key,
-                                state: ElementState::Pressed,
-                                ..
-                            },
-                        ..
-                    },
-                ..
-            } => match logical_key.as_ref() {
-                Key::Named(NamedKey::Escape) => {
-                    event_loop.exit();
-                }
-                Key::Character("1") => {
-                    display_state.viewer.toggle_draw_model();
-                }
-                Key::Character("2") => {
-                    display_state.viewer.toggle_draw_mesh();
-                }
-                _ => {}
-            },
-            Event::WindowEvent {
-                event: WindowEvent::Resized(size),
-                ..
-            } => {
-                display_state.new_size = Some(ScreenSize {
-                    width: size.width,
-                    height: size.height,
-                });
-            }
-            Event::WindowEvent {
-                event: WindowEvent::MouseInput { state, button, .. },
-                ..
-            } => match state {
-                ElementState::Pressed => {
-                    display_state.held_mouse_button = Some(button);
-                    display_state.viewer.add_focus_point();
-                }
-                ElementState::Released => {
-                    display_state.held_mouse_button = None;
-                    display_state.viewer.remove_focus_point();
-                }
-            },
-            Event::WindowEvent {
-                event: WindowEvent::MouseWheel { .. },
-                ..
-            } => display_state.viewer.add_focus_point(),
-            Event::AboutToWait => {
-                display_state.window.window().request_redraw();
-            }
-            Event::WindowEvent {
-                event: WindowEvent::RedrawRequested,
-                ..
-            } => {
-                // Only do a screen resize once per frame. This protects against
-                // spurious resize events that cause issues with the renderer.
-                if let Some(size) = display_state.new_size.take() {
-                    display_state.stop_drawing =
-                        size.width == 0 || size.height == 0;
-                    if !display_state.stop_drawing {
-                        display_state.viewer.handle_screen_resize(size);
-                    }
-                }
-
-                if !display_state.stop_drawing {
-                    display_state.viewer.draw();
-                }
-            }
-            _ => {}
+        if event == Event::AboutToWait {
+            display_state.window.window().request_redraw();
         }
     })?;
 
@@ -154,7 +77,7 @@ struct DisplayState {
 impl DisplayState {
     fn window_event(
         &mut self,
-        _: &ActiveEventLoop,
+        event_loop: &ActiveEventLoop,
         _: WindowId,
         event: WindowEvent,
     ) {
@@ -167,6 +90,64 @@ impl DisplayState {
         );
         if let Some(input_event) = input_event {
             self.viewer.handle_input_event(input_event);
+        }
+
+        match event {
+            WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        logical_key,
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => match logical_key.as_ref() {
+                Key::Named(NamedKey::Escape) => {
+                    event_loop.exit();
+                }
+                Key::Character("1") => {
+                    self.viewer.toggle_draw_model();
+                }
+                Key::Character("2") => {
+                    self.viewer.toggle_draw_mesh();
+                }
+                _ => {}
+            },
+            WindowEvent::Resized(size) => {
+                self.new_size = Some(ScreenSize {
+                    width: size.width,
+                    height: size.height,
+                });
+            }
+            WindowEvent::MouseInput { state, button, .. } => match state {
+                ElementState::Pressed => {
+                    self.held_mouse_button = Some(button);
+                    self.viewer.add_focus_point();
+                }
+                ElementState::Released => {
+                    self.held_mouse_button = None;
+                    self.viewer.remove_focus_point();
+                }
+            },
+            WindowEvent::MouseWheel { .. } => self.viewer.add_focus_point(),
+            WindowEvent::RedrawRequested => {
+                // Only do a screen resize once per frame. This protects against
+                // spurious resize events that cause issues with the renderer.
+                if let Some(size) = self.new_size.take() {
+                    self.stop_drawing = size.width == 0 || size.height == 0;
+                    if !self.stop_drawing {
+                        self.viewer.handle_screen_resize(size);
+                    }
+                }
+
+                if !self.stop_drawing {
+                    self.viewer.draw();
+                }
+            }
+            _ => {}
         }
     }
 }
