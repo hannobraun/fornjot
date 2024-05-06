@@ -11,8 +11,9 @@ use winit::{
         ElementState, Event, KeyEvent, MouseButton, MouseScrollDelta,
         WindowEvent,
     },
-    event_loop::EventLoop,
+    event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{Key, NamedKey},
+    window::WindowId,
 };
 
 use crate::window::{self, Window};
@@ -36,17 +37,8 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 
     #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop| {
-        if let Event::WindowEvent { event, .. } = &event {
-            let input_event = input_event(
-                event,
-                &display_state.window,
-                &display_state.held_mouse_button,
-                display_state.viewer.cursor(),
-                display_state.invert_zoom,
-            );
-            if let Some(input_event) = input_event {
-                display_state.viewer.handle_input_event(input_event);
-            }
+        if let Event::WindowEvent { window_id, event } = &event {
+            display_state.window_event(event_loop, *window_id, event.clone())
         }
 
         match event {
@@ -157,6 +149,26 @@ struct DisplayState {
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
     stop_drawing: bool,
+}
+
+impl DisplayState {
+    fn window_event(
+        &mut self,
+        _: &ActiveEventLoop,
+        _: WindowId,
+        event: WindowEvent,
+    ) {
+        let input_event = input_event(
+            &event,
+            &self.window,
+            &self.held_mouse_button,
+            self.viewer.cursor(),
+            self.invert_zoom,
+        );
+        if let Some(input_event) = input_event {
+            self.viewer.handle_input_event(input_event);
+        }
+    }
 }
 
 fn input_event(
