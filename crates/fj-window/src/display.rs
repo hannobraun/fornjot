@@ -34,10 +34,6 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         stop_drawing: false,
     };
 
-    if let Some(model) = display_state.model.take() {
-        display_state.viewer.handle_model_update(model);
-    }
-
     event_loop.run_app(&mut display_state)?;
 
     Ok(())
@@ -70,7 +66,11 @@ struct DisplayState {
 }
 
 impl ApplicationHandler for DisplayState {
-    fn resumed(&mut self, _: &ActiveEventLoop) {}
+    fn resumed(&mut self, _: &ActiveEventLoop) {
+        if let Some(model) = self.model.take() {
+            self.viewer.handle_model_update(model);
+        }
+    }
 
     fn window_event(
         &mut self,
