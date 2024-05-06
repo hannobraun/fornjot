@@ -14,7 +14,6 @@ impl Args {
 #[derive(clap::Subcommand)]
 pub enum Blog {
     Release,
-    SponsorUpdate,
 }
 
 #[derive(clap::Parser)]
