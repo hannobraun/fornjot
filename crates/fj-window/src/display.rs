@@ -9,8 +9,7 @@ use winit::{
     dpi::PhysicalPosition,
     error::EventLoopError,
     event::{
-        ElementState, Event, KeyEvent, MouseButton, MouseScrollDelta,
-        WindowEvent,
+        ElementState, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent,
     },
     event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{Key, NamedKey},
@@ -36,16 +35,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 
     display_state.viewer.handle_model_update(model);
 
-    #[allow(deprecated)] // only for the transition to winit 0.30
-    event_loop.run(move |event, event_loop| {
-        if let Event::WindowEvent { window_id, event } = &event {
-            display_state.window_event(event_loop, *window_id, event.clone())
-        }
-
-        if event == Event::AboutToWait {
-            display_state.about_to_wait(event_loop);
-        }
-    })?;
+    event_loop.run_app(&mut display_state)?;
 
     Ok(())
 }
