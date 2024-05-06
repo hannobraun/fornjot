@@ -5,6 +5,7 @@ use fj_viewer::{
 };
 use futures::executor::block_on;
 use winit::{
+    application::ApplicationHandler,
     dpi::PhysicalPosition,
     error::EventLoopError,
     event::{
@@ -74,7 +75,9 @@ struct DisplayState {
     stop_drawing: bool,
 }
 
-impl DisplayState {
+impl ApplicationHandler for DisplayState {
+    fn resumed(&mut self, _: &ActiveEventLoop) {}
+
     fn window_event(
         &mut self,
         event_loop: &ActiveEventLoop,
