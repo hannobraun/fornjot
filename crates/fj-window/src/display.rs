@@ -66,9 +66,11 @@ struct DisplayState {
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, _: &ActiveEventLoop) {
-        let viewer = self.viewer.get_or_insert_with(|| {
-            block_on(Viewer::new(&self.window)).unwrap()
-        });
+        let window = &self.window;
+
+        let viewer = self
+            .viewer
+            .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
 
         if let Some(model) = self.model.take() {
             viewer.handle_model_update(model);
