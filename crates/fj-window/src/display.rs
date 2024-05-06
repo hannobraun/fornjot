@@ -5,14 +5,15 @@ use fj_viewer::{
 };
 use futures::executor::block_on;
 use winit::{
+    application::ApplicationHandler,
     dpi::PhysicalPosition,
     error::EventLoopError,
     event::{
-        ElementState, Event, KeyEvent, MouseButton, MouseScrollDelta,
-        WindowEvent,
+        ElementState, KeyEvent, MouseButton, MouseScrollDelta, WindowEvent,
     },
-    event_loop::EventLoop,
+    event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{Key, NamedKey},
+    window::WindowId,
 };
 
 use crate::window::{self, Window};
@@ -20,107 +21,18 @@ use crate::window::{self, Window};
 /// Display the provided mesh in a window that processes input
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
-    let window = Window::new(&event_loop)?;
-    let mut viewer = block_on(Viewer::new(&window))?;
 
-    viewer.handle_model_update(model);
+    let mut display_state = DisplayState {
+        model: Some(model),
+        invert_zoom,
+        window: None,
+        viewer: None,
+        held_mouse_button: None,
+        new_size: None,
+        stop_drawing: false,
+    };
 
-    let mut held_mouse_button = None;
-    let mut new_size = None;
-    let mut stop_drawing = false;
-
-    event_loop.run(move |event, event_loop_window_target| {
-        let input_event = input_event(
-            &event,
-            &window,
-            &held_mouse_button,
-            viewer.cursor(),
-            invert_zoom,
-        );
-        if let Some(input_event) = input_event {
-            viewer.handle_input_event(input_event);
-        }
-
-        match event {
-            Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => {
-                event_loop_window_target.exit();
-            }
-            Event::WindowEvent {
-                event:
-                    WindowEvent::KeyboardInput {
-                        event:
-                            KeyEvent {
-                                logical_key,
-                                state: ElementState::Pressed,
-                                ..
-                            },
-                        ..
-                    },
-                ..
-            } => match logical_key.as_ref() {
-                Key::Named(NamedKey::Escape) => {
-                    event_loop_window_target.exit();
-                }
-                Key::Character("1") => {
-                    viewer.toggle_draw_model();
-                }
-                Key::Character("2") => {
-                    viewer.toggle_draw_mesh();
-                }
-                _ => {}
-            },
-            Event::WindowEvent {
-                event: WindowEvent::Resized(size),
-                ..
-            } => {
-                new_size = Some(ScreenSize {
-                    width: size.width,
-                    height: size.height,
-                });
-            }
-            Event::WindowEvent {
-                event: WindowEvent::MouseInput { state, button, .. },
-                ..
-            } => match state {
-                ElementState::Pressed => {
-                    held_mouse_button = Some(button);
-                    viewer.add_focus_point();
-                }
-                ElementState::Released => {
-                    held_mouse_button = None;
-                    viewer.remove_focus_point();
-                }
-            },
-            Event::WindowEvent {
-                event: WindowEvent::MouseWheel { .. },
-                ..
-            } => viewer.add_focus_point(),
-            Event::AboutToWait => {
-                window.window().request_redraw();
-            }
-            Event::WindowEvent {
-                event: WindowEvent::RedrawRequested,
-                ..
-            } => {
-                // Only do a screen resize once per frame. This protects against
-                // spurious resize events that cause issues with the renderer.
-                if let Some(size) = new_size.take() {
-                    stop_drawing = size.width == 0 || size.height == 0;
-                    if !stop_drawing {
-                        viewer.handle_screen_resize(size);
-                    }
-                }
-
-                if !stop_drawing {
-                    viewer.draw();
-                }
-            }
-            _ => {}
-        }
-    })?;
+    event_loop.run_app(&mut display_state)?;
 
     Ok(())
 }
@@ -141,18 +53,127 @@ pub enum Error {
     Graphics(#[from] RendererInitError),
 }
 
-fn input_event<T>(
-    event: &Event<T>,
+struct DisplayState {
+    model: Option<Model>,
+    invert_zoom: bool,
+    window: Option<Window>,
+    viewer: Option<Viewer>,
+    held_mouse_button: Option<MouseButton>,
+    new_size: Option<ScreenSize>,
+    stop_drawing: bool,
+}
+
+impl ApplicationHandler for DisplayState {
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        let window = self
+            .window
+            .get_or_insert_with(|| Window::new(event_loop).unwrap());
+
+        let viewer = self
+            .viewer
+            .get_or_insert_with(|| block_on(Viewer::new(window)).unwrap());
+
+        if let Some(model) = self.model.take() {
+            viewer.handle_model_update(model);
+        }
+    }
+
+    fn window_event(
+        &mut self,
+        event_loop: &ActiveEventLoop,
+        _: WindowId,
+        event: WindowEvent,
+    ) {
+        let Some(window) = &self.window else { return };
+        let Some(viewer) = &mut self.viewer else {
+            return;
+        };
+
+        let input_event = input_event(
+            &event,
+            window,
+            &self.held_mouse_button,
+            viewer.cursor(),
+            self.invert_zoom,
+        );
+        if let Some(input_event) = input_event {
+            viewer.handle_input_event(input_event);
+        }
+
+        match event {
+            WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        logical_key,
+                        state: ElementState::Pressed,
+                        ..
+                    },
+                ..
+            } => match logical_key.as_ref() {
+                Key::Named(NamedKey::Escape) => {
+                    event_loop.exit();
+                }
+                Key::Character("1") => {
+                    viewer.toggle_draw_model();
+                }
+                Key::Character("2") => {
+                    viewer.toggle_draw_mesh();
+                }
+                _ => {}
+            },
+            WindowEvent::Resized(size) => {
+                self.new_size = Some(ScreenSize {
+                    width: size.width,
+                    height: size.height,
+                });
+            }
+            WindowEvent::MouseInput { state, button, .. } => match state {
+                ElementState::Pressed => {
+                    self.held_mouse_button = Some(button);
+                    viewer.add_focus_point();
+                }
+                ElementState::Released => {
+                    self.held_mouse_button = None;
+                    viewer.remove_focus_point();
+                }
+            },
+            WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
+            WindowEvent::RedrawRequested => {
+                // Only do a screen resize once per frame. This protects against
+                // spurious resize events that cause issues with the renderer.
+                if let Some(size) = self.new_size.take() {
+                    self.stop_drawing = size.width == 0 || size.height == 0;
+                    if !self.stop_drawing {
+                        viewer.handle_screen_resize(size);
+                    }
+                }
+
+                if !self.stop_drawing {
+                    viewer.draw();
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn about_to_wait(&mut self, _: &ActiveEventLoop) {
+        let Some(window) = &self.window else { return };
+        window.window().request_redraw();
+    }
+}
+
+fn input_event(
+    event: &WindowEvent,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
     previous_cursor: &mut Option<NormalizedScreenPosition>,
     invert_zoom: bool,
 ) -> Option<InputEvent> {
     match event {
-        Event::WindowEvent {
-            event: WindowEvent::CursorMoved { position, .. },
-            ..
-        } => {
+        WindowEvent::CursorMoved { position, .. } => {
             let [width, height] = window.size().as_f64();
             let aspect_ratio = width / height;
 
@@ -182,10 +203,7 @@ fn input_event<T>(
             *previous_cursor = Some(current);
             event
         }
-        Event::WindowEvent {
-            event: WindowEvent::MouseWheel { delta, .. },
-            ..
-        } => {
+        WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
                     f64::from(*y) * ZOOM_FACTOR_LINE
