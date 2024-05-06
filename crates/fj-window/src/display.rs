@@ -26,9 +26,9 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     viewer.handle_model_update(model);
 
     let mut held_mouse_button = None;
-    let mut new_size = None;
 
     let mut display_state = DisplayState {
+        new_size: None,
         stop_drawing: false,
     };
 
@@ -80,7 +80,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 event: WindowEvent::Resized(size),
                 ..
             } => {
-                new_size = Some(ScreenSize {
+                display_state.new_size = Some(ScreenSize {
                     width: size.width,
                     height: size.height,
                 });
@@ -111,7 +111,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
             } => {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
-                if let Some(size) = new_size.take() {
+                if let Some(size) = display_state.new_size.take() {
                     display_state.stop_drawing =
                         size.width == 0 || size.height == 0;
                     if !display_state.stop_drawing {
@@ -147,6 +147,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    new_size: Option<ScreenSize>,
     stop_drawing: bool,
 }
 
