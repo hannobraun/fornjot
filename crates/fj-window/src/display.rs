@@ -25,9 +25,8 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
 
     viewer.handle_model_update(model);
 
-    let mut held_mouse_button = None;
-
     let mut display_state = DisplayState {
+        held_mouse_button: None,
         new_size: None,
         stop_drawing: false,
     };
@@ -37,7 +36,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         let input_event = input_event(
             &event,
             &window,
-            &held_mouse_button,
+            &display_state.held_mouse_button,
             viewer.cursor(),
             invert_zoom,
         );
@@ -90,11 +89,11 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 ..
             } => match state {
                 ElementState::Pressed => {
-                    held_mouse_button = Some(button);
+                    display_state.held_mouse_button = Some(button);
                     viewer.add_focus_point();
                 }
                 ElementState::Released => {
-                    held_mouse_button = None;
+                    display_state.held_mouse_button = None;
                     viewer.remove_focus_point();
                 }
             },
@@ -147,6 +146,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
     stop_drawing: bool,
 }
