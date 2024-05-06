@@ -25,6 +25,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let viewer = block_on(Viewer::new(&window))?;
 
     let mut display_state = DisplayState {
+        model: Some(model),
         invert_zoom,
         window,
         viewer,
@@ -33,7 +34,9 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         stop_drawing: false,
     };
 
-    display_state.viewer.handle_model_update(model);
+    if let Some(model) = display_state.model.take() {
+        display_state.viewer.handle_model_update(model);
+    }
 
     event_loop.run_app(&mut display_state)?;
 
@@ -57,6 +60,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    model: Option<Model>,
     invert_zoom: bool,
     window: Window,
     viewer: Viewer,
