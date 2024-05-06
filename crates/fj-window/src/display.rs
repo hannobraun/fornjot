@@ -24,6 +24,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let viewer = block_on(Viewer::new(&window))?;
 
     let mut display_state = DisplayState {
+        window,
         viewer,
         held_mouse_button: None,
         new_size: None,
@@ -36,7 +37,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     event_loop.run(move |event, event_loop_window_target| {
         let input_event = input_event(
             &event,
-            &window,
+            &display_state.window,
             &display_state.held_mouse_button,
             display_state.viewer.cursor(),
             invert_zoom,
@@ -103,7 +104,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 ..
             } => display_state.viewer.add_focus_point(),
             Event::AboutToWait => {
-                window.window().request_redraw();
+                display_state.window.window().request_redraw();
             }
             Event::WindowEvent {
                 event: WindowEvent::RedrawRequested,
@@ -147,6 +148,7 @@ pub enum Error {
 }
 
 struct DisplayState {
+    window: Window,
     viewer: Viewer,
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
