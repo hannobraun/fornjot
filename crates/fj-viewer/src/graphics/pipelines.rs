@@ -76,6 +76,8 @@ impl Pipeline {
                 vertex: wgpu::VertexState {
                     module: shader.module,
                     entry_point: "vertex",
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
                     buffers: &[wgpu::VertexBufferLayout {
                         array_stride: size_of::<Vertex>() as u64,
                         step_mode: wgpu::VertexStepMode::Vertex,
@@ -115,6 +117,8 @@ impl Pipeline {
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
                     entry_point: shader.frag_entry,
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
                     targets: &[Some(wgpu::ColorTargetState {
                         format: color_format,
                         blend: Some(

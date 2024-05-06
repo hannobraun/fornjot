@@ -108,11 +108,15 @@ impl NavigationCubeRenderer {
                 vertex: wgpu::VertexState {
                     module: &shader,
                     entry_point: "vertex",
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
                     buffers: &[model::ModelVertex::desc()],
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: &shader,
                     entry_point: "fragment",
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
                     targets: &[Some(wgpu::ColorTargetState {
                         format: config.format,
                         blend: Some(wgpu::BlendState {
