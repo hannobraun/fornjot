@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use fj_viewer::{Screen, ScreenSize};
-use winit::event_loop::EventLoop;
+use winit::event_loop::ActiveEventLoop;
 
 /// A window that can be used with `fj-viewer`
 pub struct Window {
@@ -10,8 +10,7 @@ pub struct Window {
 
 impl Window {
     /// Create an instance of `Window` from the given `EventLoop`
-    pub fn new<T>(event_loop: &EventLoop<T>) -> Result<Self, WindowError> {
-        #[allow(deprecated)] // only for the transition to winit 0.30
+    pub fn new(event_loop: &ActiveEventLoop) -> Result<Self, WindowError> {
         let window = event_loop.create_window(
             winit::window::Window::default_attributes()
                 .with_title("Fornjot")

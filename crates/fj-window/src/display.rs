@@ -21,12 +21,11 @@ use crate::window::{self, Window};
 /// Display the provided mesh in a window that processes input
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
-    let window = Window::new(&event_loop)?;
 
     let mut display_state = DisplayState {
         model: Some(model),
         invert_zoom,
-        window,
+        window: None,
         viewer: None,
         held_mouse_button: None,
         new_size: None,
@@ -57,7 +56,7 @@ pub enum Error {
 struct DisplayState {
     model: Option<Model>,
     invert_zoom: bool,
-    window: Window,
+    window: Option<Window>,
     viewer: Option<Viewer>,
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
@@ -65,8 +64,10 @@ struct DisplayState {
 }
 
 impl ApplicationHandler for DisplayState {
-    fn resumed(&mut self, _: &ActiveEventLoop) {
-        let window = &self.window;
+    fn resumed(&mut self, event_loop: &ActiveEventLoop) {
+        let window = self
+            .window
+            .get_or_insert_with(|| Window::new(event_loop).unwrap());
 
         let viewer = self
             .viewer
@@ -83,7 +84,7 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let window = &self.window;
+        let Some(window) = &self.window else { return };
         let Some(viewer) = &mut self.viewer else {
             return;
         };
@@ -159,7 +160,7 @@ impl ApplicationHandler for DisplayState {
     }
 
     fn about_to_wait(&mut self, _: &ActiveEventLoop) {
-        let window = &self.window;
+        let Some(window) = &self.window else { return };
         window.window().request_redraw();
     }
 }
