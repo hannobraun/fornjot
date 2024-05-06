@@ -29,6 +29,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let mut new_size = None;
     let mut stop_drawing = false;
 
+    #[allow(deprecated)] // only for the transition to winit 0.30
     event_loop.run(move |event, event_loop_window_target| {
         let input_event = input_event(
             &event,
