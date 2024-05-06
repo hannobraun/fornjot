@@ -34,7 +34,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     display_state.viewer.handle_model_update(model);
 
     #[allow(deprecated)] // only for the transition to winit 0.30
-    event_loop.run(move |event, event_loop_window_target| {
+    event_loop.run(move |event, event_loop| {
         if let Event::WindowEvent { event, .. } = &event {
             let input_event = input_event(
                 event,
@@ -53,7 +53,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 event: WindowEvent::CloseRequested,
                 ..
             } => {
-                event_loop_window_target.exit();
+                event_loop.exit();
             }
             Event::WindowEvent {
                 event:
@@ -69,7 +69,7 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
                 ..
             } => match logical_key.as_ref() {
                 Key::Named(NamedKey::Escape) => {
-                    event_loop_window_target.exit();
+                    event_loop.exit();
                 }
                 Key::Character("1") => {
                     display_state.viewer.toggle_draw_model();
