@@ -177,7 +177,6 @@ pub fn load_model(
 }
 
 pub trait DrawModel<'a> {
-    fn draw_mesh(&mut self, mesh: &'a Mesh, material: &'a Material);
     fn draw_mesh_instanced(
         &mut self,
         mesh: &'a Mesh,
@@ -193,10 +192,6 @@ impl<'a, 'b> DrawModel<'b> for wgpu::RenderPass<'a>
 where
     'b: 'a,
 {
-    fn draw_mesh(&mut self, mesh: &'b Mesh, material: &'b Material) {
-        self.draw_mesh_instanced(mesh, material, 0..1);
-    }
-
     fn draw_mesh_instanced(
         &mut self,
         mesh: &'b Mesh,
