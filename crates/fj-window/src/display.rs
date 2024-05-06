@@ -22,13 +22,12 @@ use crate::window::{self, Window};
 pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
     let event_loop = EventLoop::new()?;
     let window = Window::new(&event_loop)?;
-    let viewer = block_on(Viewer::new(&window))?;
 
     let mut display_state = DisplayState {
         model: Some(model),
         invert_zoom,
         window,
-        viewer,
+        viewer: None,
         held_mouse_button: None,
         new_size: None,
         stop_drawing: false,
@@ -59,7 +58,7 @@ struct DisplayState {
     model: Option<Model>,
     invert_zoom: bool,
     window: Window,
-    viewer: Viewer,
+    viewer: Option<Viewer>,
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
     stop_drawing: bool,
@@ -67,8 +66,12 @@ struct DisplayState {
 
 impl ApplicationHandler for DisplayState {
     fn resumed(&mut self, _: &ActiveEventLoop) {
+        let viewer = self.viewer.get_or_insert_with(|| {
+            block_on(Viewer::new(&self.window)).unwrap()
+        });
+
         if let Some(model) = self.model.take() {
-            self.viewer.handle_model_update(model);
+            viewer.handle_model_update(model);
         }
     }
 
@@ -78,7 +81,9 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let viewer = &mut self.viewer;
+        let Some(viewer) = &mut self.viewer else {
+            return;
+        };
 
         let input_event = input_event(
             &event,
