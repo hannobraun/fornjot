@@ -81,13 +81,14 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
+        let window = &self.window;
         let Some(viewer) = &mut self.viewer else {
             return;
         };
 
         let input_event = input_event(
             &event,
-            &self.window,
+            window,
             &self.held_mouse_button,
             viewer.cursor(),
             self.invert_zoom,
