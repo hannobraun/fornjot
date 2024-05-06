@@ -78,15 +78,17 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
+        let viewer = &mut self.viewer;
+
         let input_event = input_event(
             &event,
             &self.window,
             &self.held_mouse_button,
-            self.viewer.cursor(),
+            viewer.cursor(),
             self.invert_zoom,
         );
         if let Some(input_event) = input_event {
-            self.viewer.handle_input_event(input_event);
+            viewer.handle_input_event(input_event);
         }
 
         match event {
@@ -106,10 +108,10 @@ impl ApplicationHandler for DisplayState {
                     event_loop.exit();
                 }
                 Key::Character("1") => {
-                    self.viewer.toggle_draw_model();
+                    viewer.toggle_draw_model();
                 }
                 Key::Character("2") => {
-                    self.viewer.toggle_draw_mesh();
+                    viewer.toggle_draw_mesh();
                 }
                 _ => {}
             },
@@ -122,26 +124,26 @@ impl ApplicationHandler for DisplayState {
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
                     self.held_mouse_button = Some(button);
-                    self.viewer.add_focus_point();
+                    viewer.add_focus_point();
                 }
                 ElementState::Released => {
                     self.held_mouse_button = None;
-                    self.viewer.remove_focus_point();
+                    viewer.remove_focus_point();
                 }
             },
-            WindowEvent::MouseWheel { .. } => self.viewer.add_focus_point(),
+            WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
             WindowEvent::RedrawRequested => {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = self.new_size.take() {
                     self.stop_drawing = size.width == 0 || size.height == 0;
                     if !self.stop_drawing {
-                        self.viewer.handle_screen_resize(size);
+                        viewer.handle_screen_resize(size);
                     }
                 }
 
                 if !self.stop_drawing {
-                    self.viewer.draw();
+                    viewer.draw();
                 }
             }
             _ => {}
