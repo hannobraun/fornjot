@@ -157,7 +157,8 @@ impl ApplicationHandler for DisplayState {
     }
 
     fn about_to_wait(&mut self, _: &ActiveEventLoop) {
-        self.window.window().request_redraw();
+        let window = &self.window;
+        window.window().request_redraw();
     }
 }
 
