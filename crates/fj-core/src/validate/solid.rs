@@ -204,12 +204,12 @@ mod tests {
         );
 
         let shared_face = Face::new(
-            surface,
+            surface.clone(),
             Region::new(
                 Cycle::new(vec![HalfEdge::circle(
                     [0., 0.],
                     1.,
-                    core.layers.topology.surfaces.space_2d(),
+                    surface,
                     &mut core,
                 )])
                 .insert(&mut core),
