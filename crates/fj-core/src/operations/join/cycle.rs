@@ -84,6 +84,7 @@ pub trait JoinCycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         other_range: RangeInclusive<usize>,
+        surface_self: Handle<Surface>,
         core: &mut Core,
     ) -> Self;
 }
@@ -131,6 +132,7 @@ impl JoinCycle for Cycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         range_other: RangeInclusive<usize>,
+        surface_self: Handle<Surface>,
         core: &mut Core,
     ) -> Self {
         assert_eq!(
@@ -148,6 +150,30 @@ impl JoinCycle for Cycle {
                     .update_half_edge(
                         self.half_edges().nth_circular(index),
                         |half_edge, core| {
+                            // The curve of the other half-edge we're joining
+                            // this one to already has a curve geometry,
+                            // presumably. But it might not have a local
+                            // definition for the surface that *this* half-edge
+                            // is in.
+                            //
+                            // We need to make sure that any local definition
+                            // that our current curve already has, moves over to
+                            // the new one.
+                            let curve_geom = core
+                                .layers
+                                .geometry
+                                .of_curve(half_edge.curve())
+                                .and_then(|curve_geom| {
+                                    curve_geom.local_on(&surface_self)
+                                });
+                            if let Some(curve_geom) = curve_geom {
+                                core.layers.geometry.define_curve(
+                                    edge_other.curve().clone(),
+                                    surface_self.clone(),
+                                    curve_geom.clone(),
+                                );
+                            }
+
                             [half_edge
                                 .update_curve(
                                     |_, _| edge_other.curve().clone(),
