@@ -119,10 +119,12 @@ impl SweepHalfEdge for Handle<HalfEdge> {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
+                let boundary = CurveBoundary { inner: boundary };
+
                 let half_edge = {
                     let line_segment = HalfEdge::line_segment(
                         [start, end],
-                        Some(CurveBoundary { inner: boundary }),
+                        Some(boundary),
                         surface.clone(),
                         core,
                     );
