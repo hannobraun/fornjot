@@ -349,6 +349,12 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
         let shared_edge = HalfEdge::circle(
             [0., 0.],
             1.,
@@ -357,11 +363,7 @@ mod tests {
         );
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
-            Surface::from_uv(
-                GlobalPath::circle_from_radius(1.),
-                [0., 0., 1.],
-                &mut core,
-            ),
+            surface,
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
                 vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
