@@ -141,10 +141,14 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                                 .geometry
                                 .of_curve(&curve)
                                 .expect(
-                                    "Curve geometry was just \
-                                                defined in same function",
+                                    "Curve geometry was just defined in same \
+                                    function",
                                 )
                                 .local_on(&surface)
+                                .expect(
+                                    "Curve geometry was just defined in same \
+                                    function",
+                                )
                                 .path,
                             boundary,
                         },
