@@ -3,8 +3,8 @@
 use crate::Core;
 
 mod cycle;
-mod edge;
 mod face;
+mod half_edge;
 mod region;
 
 /// Reverse the direction/orientation of an object
