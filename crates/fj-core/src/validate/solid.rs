@@ -263,7 +263,7 @@ mod tests {
             Cycle::new(vec![HalfEdge::circle(
                 [0., 0.],
                 1.,
-                core.layers.topology.surfaces.space_2d(),
+                surface.clone(),
                 &mut core,
             )])
             .insert(&mut core),
@@ -308,7 +308,7 @@ mod tests {
         let shared_cycle = Cycle::new(vec![HalfEdge::circle(
             [0., 0.],
             1.,
-            core.layers.topology.surfaces.space_2d(),
+            surface.clone(),
             &mut core,
         )])
         .insert(&mut core);
@@ -355,12 +355,8 @@ mod tests {
             &mut core,
         );
 
-        let shared_edge = HalfEdge::circle(
-            [0., 0.],
-            1.,
-            core.layers.topology.surfaces.space_2d(),
-            &mut core,
-        );
+        let shared_edge =
+            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
             surface,
