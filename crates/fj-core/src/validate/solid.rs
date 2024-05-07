@@ -197,12 +197,14 @@ mod tests {
     fn should_find_face_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 1., 1.],
+            &mut core,
+        );
+
         let shared_face = Face::new(
-            Surface::from_uv(
-                GlobalPath::circle_from_radius(1.),
-                [0., 1., 1.],
-                &mut core,
-            ),
+            surface,
             Region::new(
                 Cycle::new(vec![HalfEdge::circle(
                     [0., 0.],
