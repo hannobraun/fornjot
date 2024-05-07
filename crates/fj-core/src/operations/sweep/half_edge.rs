@@ -2,16 +2,16 @@ use fj_interop::{ext::ArrayExt, Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::CurveBoundary,
+    geometry::{CurveBoundary, HalfEdgeGeom},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
-        geometry::UpdateHalfEdgeGeometry,
+        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
         insert::Insert,
         presentation::SetColor,
         update::{UpdateCycle, UpdateHalfEdge},
     },
     storage::Handle,
-    topology::{Cycle, Face, HalfEdge, Region, Surface, Vertex},
+    topology::{Curve, Cycle, Face, HalfEdge, Region, Surface, Vertex},
     Core,
 };
 
@@ -119,27 +119,37 @@ impl SweepHalfEdge for Handle<HalfEdge> {
             .zip_ext(vertices)
             .zip_ext(curves)
             .map(|((((boundary, start), end), start_vertex), curve)| {
-                let half_edge = {
-                    let line_segment = HalfEdge::line_segment(
+                let boundary = CurveBoundary { inner: boundary };
+
+                let curve = curve
+                    .unwrap_or_else(|| Curve::new().insert(core))
+                    .make_line_on_surface(
                         [start, end],
-                        Some(CurveBoundary { inner: boundary }),
+                        Some(boundary),
                         surface.clone(),
-                        core,
-                    );
-                    let half_edge = line_segment
-                        .update_start_vertex(|_, _| start_vertex, core);
-
-                    let half_edge = if let Some(curve) = curve {
-                        half_edge.update_curve(|_, _| curve, core)
-                    } else {
-                        half_edge
-                    };
-
-                    half_edge.insert(core).set_geometry(
-                        *core.layers.geometry.of_half_edge(&line_segment),
                         &mut core.layers.geometry,
-                    )
-                };
+                    );
+
+                let half_edge = HalfEdge::unjoined(core)
+                    .update_start_vertex(|_, _| start_vertex, core)
+                    .update_curve(|_, _| curve.clone(), core)
+                    .insert(core)
+                    .set_geometry(
+                        HalfEdgeGeom {
+                            path: core
+                                .layers
+                                .geometry
+                                .of_curve(&curve)
+                                .expect(
+                                    "Curve geometry was just \
+                                                defined in same function",
+                                )
+                                .local_on(&surface)
+                                .path,
+                            boundary,
+                        },
+                        &mut core.layers.geometry,
+                    );
 
                 exterior = exterior.add_half_edges([half_edge.clone()], core);
 
