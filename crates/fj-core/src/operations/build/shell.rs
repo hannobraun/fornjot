@@ -166,31 +166,35 @@ pub trait BuildShell {
         let [a, b, c, d] = points.map(Into::into);
 
         let abc = Face::triangle([a, b, c], core);
-        let bad = Face::triangle([b, a, d], core).update_region(
-            |region, core| {
-                region.update_exterior(
-                    |cycle, core| {
-                        cycle
-                            .update_half_edge(
-                                cycle.half_edges().nth_circular(0),
-                                |edge, core| {
-                                    [edge
-                                        .reverse_curve_coordinate_systems(core)]
-                                },
-                                core,
-                            )
-                            .join_to(
-                                abc.face.region().exterior(),
-                                0..=0,
-                                0..=0,
-                                core,
-                            )
-                    },
-                    core,
-                )
-            },
-            core,
-        );
+        let bad = {
+            let bad = Face::triangle([b, a, d], core);
+            bad.update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |cycle, core| {
+                            cycle
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |edge, core| {
+                                        [edge.reverse_curve_coordinate_systems(
+                                            core,
+                                        )]
+                                    },
+                                    core,
+                                )
+                                .join_to(
+                                    abc.face.region().exterior(),
+                                    0..=0,
+                                    0..=0,
+                                    core,
+                                )
+                        },
+                        core,
+                    )
+                },
+                core,
+            )
+        };
         let dac = Face::triangle([d, a, c], core).update_region(
             |region, core| {
                 region.update_exterior(
