@@ -84,6 +84,7 @@ pub trait JoinCycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         other_range: RangeInclusive<usize>,
+        surface_self: Handle<Surface>,
         core: &mut Core,
     ) -> Self;
 }
@@ -131,6 +132,7 @@ impl JoinCycle for Cycle {
         other: &Cycle,
         range: RangeInclusive<usize>,
         range_other: RangeInclusive<usize>,
+        _surface_self: Handle<Surface>,
         core: &mut Core,
     ) -> Self {
         assert_eq!(

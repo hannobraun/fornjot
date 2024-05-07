@@ -186,6 +186,7 @@ pub trait BuildShell {
                                     abc.face.region().exterior(),
                                     0..=0,
                                     0..=0,
+                                    bad.face.surface().clone(),
                                     core,
                                 )
                         },
@@ -215,6 +216,7 @@ pub trait BuildShell {
                                         abc.face.region().exterior(),
                                         1..=1,
                                         2..=2,
+                                        dac.face.surface().clone(),
                                         core,
                                     )
                                     .update_half_edge(
@@ -229,6 +231,7 @@ pub trait BuildShell {
                                         bad.face.region().exterior(),
                                         0..=0,
                                         1..=1,
+                                        dac.face.surface().clone(),
                                         core,
                                     )
                             },
@@ -274,18 +277,21 @@ pub trait BuildShell {
                                         abc.face.region().exterior(),
                                         0..=0,
                                         1..=1,
+                                        cbd.face.surface().clone(),
                                         core,
                                     )
                                     .join_to(
                                         bad.face.region().exterior(),
                                         1..=1,
                                         2..=2,
+                                        cbd.face.surface().clone(),
                                         core,
                                     )
                                     .join_to(
                                         dac.face.region().exterior(),
                                         2..=2,
                                         2..=2,
+                                        cbd.face.surface().clone(),
                                         core,
                                     )
                             },
