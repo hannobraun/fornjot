@@ -195,45 +195,49 @@ pub trait BuildShell {
                 core,
             )
         };
-        let dac = Face::triangle([d, a, c], core).update_region(
-            |region, core| {
-                region.update_exterior(
-                    |cycle, core| {
-                        cycle
-                            .update_half_edge(
-                                cycle.half_edges().nth_circular(1),
-                                |edge, core| {
-                                    [edge
+        let dac =
+            {
+                let dac = Face::triangle([d, a, c], core);
+                dac.update_region(
+                    |region, core| {
+                        region.update_exterior(
+                            |cycle, core| {
+                                cycle
+                                    .update_half_edge(
+                                        cycle.half_edges().nth_circular(1),
+                                        |edge, core| {
+                                            [edge
                                         .reverse_curve_coordinate_systems(core)]
-                                },
-                                core,
-                            )
-                            .join_to(
-                                abc.face.region().exterior(),
-                                1..=1,
-                                2..=2,
-                                core,
-                            )
-                            .update_half_edge(
-                                cycle.half_edges().nth_circular(0),
-                                |edge, core| {
-                                    [edge
+                                        },
+                                        core,
+                                    )
+                                    .join_to(
+                                        abc.face.region().exterior(),
+                                        1..=1,
+                                        2..=2,
+                                        core,
+                                    )
+                                    .update_half_edge(
+                                        cycle.half_edges().nth_circular(0),
+                                        |edge, core| {
+                                            [edge
                                         .reverse_curve_coordinate_systems(core)]
-                                },
-                                core,
-                            )
-                            .join_to(
-                                bad.face.region().exterior(),
-                                0..=0,
-                                1..=1,
-                                core,
-                            )
+                                        },
+                                        core,
+                                    )
+                                    .join_to(
+                                        bad.face.region().exterior(),
+                                        0..=0,
+                                        1..=1,
+                                        core,
+                                    )
+                            },
+                            core,
+                        )
                     },
                     core,
                 )
-            },
-            core,
-        );
+            };
         let cbd = Face::triangle([c, b, d], core).update_region(
             |region, core| {
                 region.update_exterior(
