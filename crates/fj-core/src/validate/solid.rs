@@ -197,17 +197,19 @@ mod tests {
     fn should_find_face_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 1., 1.],
+            &mut core,
+        );
+
         let shared_face = Face::new(
-            Surface::from_uv(
-                GlobalPath::circle_from_radius(1.),
-                [0., 1., 1.],
-                &mut core,
-            ),
+            surface.clone(),
             Region::new(
                 Cycle::new(vec![HalfEdge::circle(
                     [0., 0.],
                     1.,
-                    core.layers.topology.surfaces.space_2d(),
+                    surface,
                     &mut core,
                 )])
                 .insert(&mut core),
@@ -253,11 +255,17 @@ mod tests {
     fn should_find_region_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
         let shared_region = Region::new(
             Cycle::new(vec![HalfEdge::circle(
                 [0., 0.],
                 1.,
-                core.layers.topology.surfaces.space_2d(),
+                surface.clone(),
                 &mut core,
             )])
             .insert(&mut core),
@@ -266,24 +274,8 @@ mod tests {
         .insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
-            Face::new(
-                Surface::from_uv(
-                    GlobalPath::circle_from_radius(1.),
-                    [0., 1., 1.],
-                    &mut core,
-                ),
-                shared_region.clone(),
-            )
-            .insert(&mut core),
-            Face::new(
-                Surface::from_uv(
-                    GlobalPath::circle_from_radius(1.),
-                    [0., 0., 1.],
-                    &mut core,
-                ),
-                shared_region.clone(),
-            )
-            .insert(&mut core),
+            Face::new(surface.clone(), shared_region.clone()).insert(&mut core),
+            Face::new(surface, shared_region.clone()).insert(&mut core),
         ])
         .insert(&mut core)])
         .insert(&mut core);
@@ -309,30 +301,28 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
         let shared_cycle = Cycle::new(vec![HalfEdge::circle(
             [0., 0.],
             1.,
-            core.layers.topology.surfaces.space_2d(),
+            surface.clone(),
             &mut core,
         )])
         .insert(&mut core);
 
         let invalid_solid = Solid::new(vec![Shell::new(vec![
             Face::new(
-                Surface::from_uv(
-                    GlobalPath::circle_from_radius(1.),
-                    [0., 1., 1.],
-                    &mut core,
-                ),
+                surface.clone(),
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
             )
             .insert(&mut core),
             Face::new(
-                Surface::from_uv(
-                    GlobalPath::circle_from_radius(1.),
-                    [0., 0., 1.],
-                    &mut core,
-                ),
+                surface,
                 Region::new(shared_cycle, vec![]).insert(&mut core),
             )
             .insert(&mut core),
@@ -361,19 +351,17 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let shared_edge = HalfEdge::circle(
-            [0., 0.],
-            1.,
-            core.layers.topology.surfaces.space_2d(),
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
             &mut core,
         );
 
+        let shared_edge =
+            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
+
         let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
-            Surface::from_uv(
-                GlobalPath::circle_from_radius(1.),
-                [0., 0., 1.],
-                &mut core,
-            ),
+            surface,
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
                 vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
