@@ -33,10 +33,11 @@ impl CurveGeom {
     /// ## Panics
     ///
     /// Panics, if the curve has not been defined on that surface.
-    pub fn local_on(&self, surface: &Handle<Surface>) -> &LocalCurveGeom {
-        self.definitions
-            .get(surface)
-            .expect("Curve not defined on provided surface")
+    pub fn local_on(
+        &self,
+        surface: &Handle<Surface>,
+    ) -> Option<&LocalCurveGeom> {
+        self.definitions.get(surface)
     }
 }
 

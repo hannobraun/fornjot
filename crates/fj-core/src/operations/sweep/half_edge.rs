@@ -145,6 +145,10 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                                     function",
                                 )
                                 .local_on(&surface)
+                                .expect(
+                                    "Curve geometry was just defined in same \
+                                    function",
+                                )
                                 .path,
                             boundary,
                         },
