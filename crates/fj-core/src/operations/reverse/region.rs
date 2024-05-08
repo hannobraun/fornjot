@@ -28,12 +28,14 @@ impl ReverseCurveCoordinateSystems for &Region {
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let exterior = self
+        let region = self;
+
+        let exterior = region
             .exterior()
             .reverse_curve_coordinate_systems(core)
             .insert(core)
-            .derive_from(self.exterior(), core);
-        let interiors = self.interiors().iter().map(|cycle| {
+            .derive_from(region.exterior(), core);
+        let interiors = region.interiors().iter().map(|cycle| {
             cycle
                 .reverse_curve_coordinate_systems(core)
                 .insert(core)
