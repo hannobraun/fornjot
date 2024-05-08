@@ -24,7 +24,7 @@ pub trait ReverseCurveCoordinateSystems {
     /// This will not have any effect on object positions in global coordinates.
     #[must_use]
     fn reverse_curve_coordinate_systems(
-        &self,
+        self,
         core: &mut Core,
     ) -> Self::Reversed;
 }

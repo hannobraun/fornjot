@@ -33,11 +33,11 @@ impl Reverse for Cycle {
     }
 }
 
-impl ReverseCurveCoordinateSystems for Cycle {
+impl ReverseCurveCoordinateSystems for &Cycle {
     type Reversed = Cycle;
 
     fn reverse_curve_coordinate_systems(
-        &self,
+        self,
         core: &mut Core,
     ) -> Self::Reversed {
         let edges = self

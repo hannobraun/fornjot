@@ -42,11 +42,11 @@ impl<const D: usize> Reverse for Polygon<D, IsInsertedYes> {
     }
 }
 
-impl ReverseCurveCoordinateSystems for Face {
+impl ReverseCurveCoordinateSystems for &Face {
     type Reversed = Face;
 
     fn reverse_curve_coordinate_systems(
-        &self,
+        self,
         core: &mut Core,
     ) -> Self::Reversed {
         let region = self

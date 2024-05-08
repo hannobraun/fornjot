@@ -7,11 +7,11 @@ use crate::{
 
 use super::ReverseCurveCoordinateSystems;
 
-impl ReverseCurveCoordinateSystems for Handle<HalfEdge> {
+impl ReverseCurveCoordinateSystems for &Handle<HalfEdge> {
     type Reversed = Handle<HalfEdge>;
 
     fn reverse_curve_coordinate_systems(
-        &self,
+        self,
         core: &mut Core,
     ) -> Self::Reversed {
         let mut half_edge_geom = *core.layers.geometry.of_half_edge(self);
