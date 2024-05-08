@@ -21,8 +21,13 @@ impl Reverse for Region {
     }
 }
 
-impl ReverseCurveCoordinateSystems for Region {
-    fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self {
+impl ReverseCurveCoordinateSystems for &Region {
+    type Reversed = Region;
+
+    fn reverse_curve_coordinate_systems(
+        self,
+        core: &mut Core,
+    ) -> Self::Reversed {
         let exterior = self
             .exterior()
             .reverse_curve_coordinate_systems(core)
