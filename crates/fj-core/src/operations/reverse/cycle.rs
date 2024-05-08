@@ -40,7 +40,9 @@ impl ReverseCurveCoordinateSystems for &Cycle {
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let edges = self
+        let cycle = self;
+
+        let edges = cycle
             .half_edges()
             .iter()
             .map(|edge| edge.reverse_curve_coordinate_systems(core));
