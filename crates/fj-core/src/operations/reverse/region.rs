@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use crate::{
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
@@ -29,15 +31,14 @@ impl ReverseCurveCoordinateSystems for (&Region, &Handle<Surface>) {
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let (region, _) = self;
+        let (region, surface) = self;
 
-        let exterior = region
-            .exterior()
+        let exterior = (region.exterior().deref(), surface)
             .reverse_curve_coordinate_systems(core)
             .insert(core)
             .derive_from(region.exterior(), core);
         let interiors = region.interiors().iter().map(|cycle| {
-            cycle
+            (cycle.deref(), surface)
                 .reverse_curve_coordinate_systems(core)
                 .insert(core)
                 .derive_from(cycle, core)
