@@ -2,6 +2,7 @@
 
 use crate::Core;
 
+mod curve;
 mod cycle;
 mod face;
 mod half_edge;
