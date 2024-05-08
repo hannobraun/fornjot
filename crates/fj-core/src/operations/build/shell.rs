@@ -176,9 +176,10 @@ pub trait BuildShell {
                                 .update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |edge, core| {
-                                        [edge.reverse_curve_coordinate_systems(
-                                            core,
-                                        )]
+                                        [(edge, bad.face.surface())
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
                                     },
                                     core,
                                 )
@@ -207,7 +208,7 @@ pub trait BuildShell {
                                     .update_half_edge(
                                         cycle.half_edges().nth_circular(1),
                                         |edge, core| {
-                                            [edge
+                                            [(edge, dac.face.surface())
                                         .reverse_curve_coordinate_systems(core)]
                                         },
                                         core,
@@ -222,7 +223,7 @@ pub trait BuildShell {
                                     .update_half_edge(
                                         cycle.half_edges().nth_circular(0),
                                         |edge, core| {
-                                            [edge
+                                            [(edge, dac.face.surface())
                                         .reverse_curve_coordinate_systems(core)]
                                         },
                                         core,
@@ -252,7 +253,7 @@ pub trait BuildShell {
                                     .update_half_edge(
                                         cycle.half_edges().nth_circular(0),
                                         |edge, core| {
-                                            [edge
+                                            [(edge, cbd.face.surface())
                                         .reverse_curve_coordinate_systems(core)]
                                         },
                                         core,
@@ -260,7 +261,7 @@ pub trait BuildShell {
                                     .update_half_edge(
                                         cycle.half_edges().nth_circular(1),
                                         |edge, core| {
-                                            [edge
+                                            [(edge, cbd.face.surface())
                                         .reverse_curve_coordinate_systems(core)]
                                         },
                                         core,
@@ -268,7 +269,7 @@ pub trait BuildShell {
                                     .update_half_edge(
                                         cycle.half_edges().nth_circular(2),
                                         |edge, core| {
-                                            [edge
+                                            [(edge, cbd.face.surface())
                                         .reverse_curve_coordinate_systems(core)]
                                         },
                                         core,

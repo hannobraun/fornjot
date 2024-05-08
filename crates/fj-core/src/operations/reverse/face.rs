@@ -1,4 +1,4 @@
-use std::borrow::Borrow;
+use std::{borrow::Borrow, ops::Deref};
 
 use crate::{
     operations::{
@@ -49,8 +49,7 @@ impl ReverseCurveCoordinateSystems for &Face {
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let region = self
-            .region()
+        let region = (self.region().deref(), self.surface())
             .reverse_curve_coordinate_systems(core)
             .insert(core)
             .derive_from(self.region(), core);
