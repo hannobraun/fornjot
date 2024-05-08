@@ -16,9 +16,15 @@ pub trait Reverse {
 
 /// Reverse the direction of the curve coordinate systems within an object
 pub trait ReverseCurveCoordinateSystems {
+    /// The type of the reversed object
+    type Reversed;
+
     /// Reverse the direction of the curve coordinate systems within an object
     ///
     /// This will not have any effect on object positions in global coordinates.
     #[must_use]
-    fn reverse_curve_coordinate_systems(&self, core: &mut Core) -> Self;
+    fn reverse_curve_coordinate_systems(
+        &self,
+        core: &mut Core,
+    ) -> Self::Reversed;
 }
