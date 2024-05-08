@@ -41,12 +41,12 @@ impl ReverseCurveCoordinateSystems for (&Cycle, &Handle<Surface>) {
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let (cycle, _) = self;
+        let (cycle, surface) = self;
 
         let edges = cycle
             .half_edges()
             .iter()
-            .map(|edge| edge.reverse_curve_coordinate_systems(core));
+            .map(|edge| (edge, surface).reverse_curve_coordinate_systems(core));
 
         Cycle::new(edges)
     }
