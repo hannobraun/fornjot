@@ -1,6 +1,7 @@
 use crate::{
     operations::{derive::DeriveFrom, insert::Insert},
-    topology::Region,
+    storage::Handle,
+    topology::{Region, Surface},
     Core,
 };
 
@@ -21,14 +22,14 @@ impl Reverse for Region {
     }
 }
 
-impl ReverseCurveCoordinateSystems for &Region {
+impl ReverseCurveCoordinateSystems for (&Region, &Handle<Surface>) {
     type Reversed = Region;
 
     fn reverse_curve_coordinate_systems(
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let region = self;
+        let (region, _) = self;
 
         let exterior = region
             .exterior()
