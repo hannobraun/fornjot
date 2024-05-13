@@ -38,7 +38,7 @@ impl SweepSketch for Sketch {
         let mut shells = Vec::new();
         for region in self.regions() {
             let region = {
-                // The following code assumes that the sketch is winded counter-
+                // The following code assumes that the sketch is wound counter-
                 // clockwise. Let's check that real quick.
                 assert!(region
                     .exterior()
@@ -66,6 +66,24 @@ impl SweepSketch for Sketch {
                     region.reverse(core).insert(core).derive_from(region, core)
                 }
             };
+
+            for cycle in region.all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let curve_geom = core
+                        .layers
+                        .geometry
+                        .of_curve(half_edge.curve())
+                        .unwrap()
+                        .local_on(self.surface())
+                        .unwrap();
+
+                    core.layers.geometry.define_curve(
+                        half_edge.curve().clone(),
+                        surface.clone(),
+                        curve_geom.clone(),
+                    );
+                }
+            }
 
             let face = Face::new(surface.clone(), region.clone()).insert(core);
             let shell = face.sweep_face(path, &mut cache, core).insert(core);
