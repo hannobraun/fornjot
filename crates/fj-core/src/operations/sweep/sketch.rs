@@ -67,6 +67,24 @@ impl SweepSketch for Sketch {
                 }
             };
 
+            for cycle in region.all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    let curve_geom = core
+                        .layers
+                        .geometry
+                        .of_curve(half_edge.curve())
+                        .unwrap()
+                        .local_on(self.surface())
+                        .unwrap();
+
+                    core.layers.geometry.define_curve(
+                        half_edge.curve().clone(),
+                        surface.clone(),
+                        curve_geom.clone(),
+                    );
+                }
+            }
+
             let face = Face::new(surface.clone(), region.clone()).insert(core);
             let shell = face.sweep_face(path, &mut cache, core).insert(core);
             shells.push(shell);
