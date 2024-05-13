@@ -38,7 +38,7 @@ impl SweepSketch for Sketch {
         let mut shells = Vec::new();
         for region in self.regions() {
             let region = {
-                // The following code assumes that the sketch is winded counter-
+                // The following code assumes that the sketch is wound counter-
                 // clockwise. Let's check that real quick.
                 assert!(region
                     .exterior()
