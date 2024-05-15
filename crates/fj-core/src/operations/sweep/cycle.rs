@@ -38,7 +38,7 @@ pub trait SweepCycle {
     /// operation is called in, and therefore falls outside of its scope.
     fn sweep_cycle(
         &self,
-        surface: Handle<Surface>,
+        bottom_surface: Handle<Surface>,
         top_surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
@@ -50,7 +50,7 @@ pub trait SweepCycle {
 impl SweepCycle for Cycle {
     fn sweep_cycle(
         &self,
-        surface: Handle<Surface>,
+        bottom_surface: Handle<Surface>,
         top_surface: Handle<Surface>,
         color: Option<Color>,
         path: impl Into<Vector<3>>,
@@ -68,7 +68,7 @@ impl SweepCycle for Cycle {
 
             let (side_face, top_half_edge) = bottom_half_edge.sweep_half_edge(
                 bottom_half_edge_next.start_vertex().clone(),
-                surface.clone(),
+                bottom_surface.clone(),
                 color,
                 path,
                 cache,
