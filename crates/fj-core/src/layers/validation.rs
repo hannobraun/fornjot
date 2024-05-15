@@ -34,6 +34,10 @@ impl Command<Validation> for ValidateObject<'_> {
             .validate(&state.config, &mut errors, self.geometry);
 
         for err in errors {
+            if state.config.panic_on_error {
+                panic!("{:#?}", err);
+            }
+
             events.push(ValidationFailed {
                 object: self.object.clone(),
                 err,

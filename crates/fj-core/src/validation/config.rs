@@ -3,6 +3,22 @@ use fj_math::Scalar;
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]
 pub struct ValidationConfig {
+    /// Panic on first validation error, instead of storing it
+    ///
+    /// Validation errors are usually stored in the validation layer, and only
+    /// cause a panic if the validation layer is dropped with unhandled errors.
+    ///
+    /// This provides flexibility in handling validation errors, but can also be
+    /// helpful in understanding them, as experience has shown that the first
+    /// validation error often does not provide a full picture of what's wrong.
+    ///
+    /// However, it can be helpful to get an immediate panic on a validation
+    /// error, to get the code that caused it into a stack trace. This is what
+    /// happens, if this option is set to `true`.
+    ///
+    /// Defaults to `false`.
+    pub panic_on_error: bool,
+
     /// The minimum distance between distinct objects
     ///
     /// Objects whose distance is less than the value defined in this field, are
@@ -21,6 +37,7 @@ pub struct ValidationConfig {
 impl Default for ValidationConfig {
     fn default() -> Self {
         Self {
+            panic_on_error: false,
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
 
             // This value was chosen pretty arbitrarily. Seems small enough to
