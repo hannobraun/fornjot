@@ -57,7 +57,7 @@ impl SweepFace for Handle<Face> {
                 core,
             )
             .all_faces()
-            .map(|side_face| side_face.insert(core));
+            .map(|face| face.insert(core));
 
         let mut faces = Vec::new();
         faces.push(bottom_face.clone());
