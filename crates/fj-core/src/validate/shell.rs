@@ -34,10 +34,6 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains curves whose coordinate systems don't match
-    #[error(transparent)]
-    CurveCoordinateSystemMismatch(CurveGeometryMismatch),
-
     /// [`Shell`] contains a half-edge that is not part of a pair
     #[error("Half-edge has no sibling: {half_edge:#?}")]
     HalfEdgeHasNoSibling {
@@ -83,7 +79,7 @@ impl ShellValidationError {
     ) {
         CurveGeometryMismatch::check(shell, geometry, config).for_each(
             |error| {
-                errors.push(Self::CurveCoordinateSystemMismatch(error).into());
+                errors.push(error.into());
             },
         );
     }
@@ -391,9 +387,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid,
-            ValidationError::Shell(
-                ShellValidationError::CurveCoordinateSystemMismatch(..)
-            )
+            ValidationError::CurveCoordinateSystemMismatch(..)
         );
 
         Ok(())
