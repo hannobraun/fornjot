@@ -39,7 +39,7 @@ pub enum ShellValidationError {
         .0.len(),
         .0
     )]
-    CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
+    CurveCoordinateSystemMismatch(Vec<CurveGeometryMismatch>),
 
     /// [`Shell`] contains a half-edge that is not part of a pair
     #[error("Half-edge has no sibling: {half_edge:#?}")]
@@ -106,7 +106,7 @@ impl ShellValidationError {
                     surface_b: &SurfaceGeom,
                     geometry: &Geometry,
                     config: &ValidationConfig,
-                    mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
+                    mismatches: &mut Vec<CurveGeometryMismatch>,
                 ) {
                     // Let's check 4 points. Given that the most complex curves
                     // we have right now are circles, 3 would be enough to check
@@ -134,7 +134,7 @@ impl ShellValidationError {
                         let distance = (a_global - b_global).magnitude();
 
                         if distance > config.identical_max_distance {
-                            mismatches.push(CurveCoordinateSystemMismatch {
+                            mismatches.push(CurveGeometryMismatch {
                                 half_edge_a: edge_a.clone(),
                                 half_edge_b: edge_b.clone(),
                                 point_curve,
@@ -369,7 +369,7 @@ impl fmt::Display for CoincidentHalfEdgeCurves {
 ///
 /// <https://github.com/hannobraun/fornjot/issues/2118>
 #[derive(Clone, Debug)]
-pub struct CurveCoordinateSystemMismatch {
+pub struct CurveGeometryMismatch {
     /// One of the half-edges, whose curves have mismatching geometry
     pub half_edge_a: Handle<HalfEdge>,
 
