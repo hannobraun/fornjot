@@ -77,10 +77,9 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        CurveGeometryMismatch::check(shell, geometry, config).for_each(
-            |error| {
-                errors.push(error.into());
-            },
+        errors.extend(
+            CurveGeometryMismatch::check(shell, geometry, config)
+                .map(Into::into),
         );
     }
 
