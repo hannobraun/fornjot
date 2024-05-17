@@ -18,7 +18,7 @@ pub enum ValidationError {
 
     /// Curve geometry mismatch
     #[error(transparent)]
-    CurveCoordinateSystemMismatch(#[from] CurveGeometryMismatch),
+    CurveGeometryMismatch(#[from] CurveGeometryMismatch),
 
     /// Face has no boundary
     #[error(transparent)]

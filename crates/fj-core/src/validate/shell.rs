@@ -387,7 +387,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid,
-            ValidationError::CurveCoordinateSystemMismatch(..)
+            ValidationError::CurveGeometryMismatch(..)
         );
 
         Ok(())
