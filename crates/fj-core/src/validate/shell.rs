@@ -36,11 +36,10 @@ impl Validate for Shell {
 pub enum ShellValidationError {
     /// [`Shell`] contains curves whose coordinate systems don't match
     #[error(
-        "Curve coordinate system mismatch ({} errors): {:#?}",
-        .0.len(),
+        "Curve coordinate system mismatch: {:#?}",
         .0
     )]
-    CurveCoordinateSystemMismatch(Vec<CurveGeometryMismatch>),
+    CurveCoordinateSystemMismatch(CurveGeometryMismatch),
 
     /// [`Shell`] contains a half-edge that is not part of a pair
     #[error("Half-edge has no sibling: {half_edge:#?}")]
@@ -168,9 +167,9 @@ impl ShellValidationError {
                     &mut mismatches,
                 );
 
-                if !mismatches.is_empty() {
+                for mismatch in mismatches {
                     errors.push(
-                        Self::CurveCoordinateSystemMismatch(mismatches).into(),
+                        Self::CurveCoordinateSystemMismatch(mismatch).into(),
                     );
                 }
             }
