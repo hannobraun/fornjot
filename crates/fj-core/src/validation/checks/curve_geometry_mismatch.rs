@@ -132,7 +132,6 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
 #[cfg(test)]
 mod tests {
     use crate::{
-        assert_contains_err,
         operations::{
             build::BuildShell,
             geometry::UpdateHalfEdgeGeometry,
@@ -140,10 +139,7 @@ mod tests {
             update::{UpdateCycle, UpdateFace, UpdateRegion, UpdateShell},
         },
         topology::{HalfEdge, Shell},
-        validate::Validate,
-        validation::{
-            checks::CurveGeometryMismatch, ValidationCheck, ValidationError,
-        },
+        validation::{checks::CurveGeometryMismatch, ValidationCheck},
         Core,
     };
 
@@ -199,12 +195,11 @@ mod tests {
             },
             &mut core,
         );
-
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::CurveGeometryMismatch(..)
-        );
+        assert!(CurveGeometryMismatch::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        )
+        .is_err());
 
         Ok(())
     }
