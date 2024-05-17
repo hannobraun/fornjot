@@ -35,7 +35,7 @@ impl Validate for Shell {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
     /// [`Shell`] contains curves whose coordinate systems don't match
-    #[error("Curve coordinate system mismatch: {:#?}", .0)]
+    #[error(transparent)]
     CurveCoordinateSystemMismatch(CurveGeometryMismatch),
 
     /// [`Shell`] contains a half-edge that is not part of a pair

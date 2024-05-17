@@ -29,7 +29,8 @@ use crate::{storage::Handle, topology::HalfEdge};
 ///
 /// [`Shell`]: crate::topology::Shell
 /// [`Curve`]: crate::topology::Curve
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, thiserror::Error)]
+#[error("Curve coordinate system mismatch: {:#?}", self)]
 pub struct CurveGeometryMismatch {
     /// One of the half-edges, whose curves have mismatching geometry
     pub half_edge_a: Handle<HalfEdge>,
