@@ -5,7 +5,7 @@ use crate::validate::{
 };
 
 use super::checks::{
-    AdjacentHalfEdgesNotConnected, FaceHasNoBoundary,
+    AdjacentHalfEdgesNotConnected, CurveGeometryMismatch, FaceHasNoBoundary,
     InteriorCycleHasInvalidWinding,
 };
 
@@ -15,6 +15,10 @@ pub enum ValidationError {
     /// Adjacent half-edges are not connected
     #[error(transparent)]
     AdjacentHalfEdgesNotConnected(#[from] AdjacentHalfEdgesNotConnected),
+
+    /// Curve geometry mismatch
+    #[error(transparent)]
+    CurveGeometryMismatch(#[from] CurveGeometryMismatch),
 
     /// Face has no boundary
     #[error(transparent)]

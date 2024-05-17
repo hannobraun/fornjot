@@ -9,6 +9,7 @@ use crate::{
     },
     storage::Handle,
     topology::{Curve, HalfEdge, Shell, Vertex},
+    validation::{checks::CurveGeometryMismatch, ValidationCheck},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -20,8 +21,9 @@ impl Validate for Shell {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
-        ShellValidationError::check_curve_coordinates(
-            self, geometry, config, errors,
+        errors.extend(
+            CurveGeometryMismatch::check(self, geometry, config)
+                .map(Into::into),
         );
         ShellValidationError::check_half_edge_pairs(self, geometry, errors);
         ShellValidationError::check_half_edge_coincidence(
@@ -33,14 +35,6 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains curves whose coordinate systems don't match
-    #[error(
-        "Curve coordinate system mismatch ({} errors): {:#?}",
-        .0.len(),
-        .0
-    )]
-    CurveCoordinateSystemMismatch(Vec<CurveCoordinateSystemMismatch>),
-
     /// [`Shell`] contains a half-edge that is not part of a pair
     #[error("Half-edge has no sibling: {half_edge:#?}")]
     HalfEdgeHasNoSibling {
@@ -77,105 +71,6 @@ pub enum ShellValidationError {
 }
 
 impl ShellValidationError {
-    /// Check that local curve definitions that refer to the same curve match
-    fn check_curve_coordinates(
-        shell: &Shell,
-        geometry: &Geometry,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let edges_and_surfaces =
-            shell.all_half_edges_with_surface().collect::<Vec<_>>();
-
-        for (edge_a, surface_a) in &edges_and_surfaces {
-            for (edge_b, surface_b) in &edges_and_surfaces {
-                // We only care about edges referring to the same curve.
-                if edge_a.curve().id() != edge_b.curve().id() {
-                    continue;
-                }
-
-                // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
-                    continue;
-                }
-
-                fn compare_curve_coords(
-                    edge_a: &Handle<HalfEdge>,
-                    surface_a: &SurfaceGeom,
-                    edge_b: &Handle<HalfEdge>,
-                    surface_b: &SurfaceGeom,
-                    geometry: &Geometry,
-                    config: &ValidationConfig,
-                    mismatches: &mut Vec<CurveCoordinateSystemMismatch>,
-                ) {
-                    // Let's check 4 points. Given that the most complex curves
-                    // we have right now are circles, 3 would be enough to check
-                    // for coincidence. But the first and last might be
-                    // identical, so let's add an extra one.
-                    let [a, d] = geometry.of_half_edge(edge_a).boundary.inner;
-                    let b = a + (d - a) * 1. / 3.;
-                    let c = a + (d - a) * 2. / 3.;
-
-                    for point_curve in [a, b, c, d] {
-                        let a_surface = geometry
-                            .of_half_edge(edge_a)
-                            .path
-                            .point_from_path_coords(point_curve);
-                        let b_surface = geometry
-                            .of_half_edge(edge_b)
-                            .path
-                            .point_from_path_coords(point_curve);
-
-                        let a_global =
-                            surface_a.point_from_surface_coords(a_surface);
-                        let b_global =
-                            surface_b.point_from_surface_coords(b_surface);
-
-                        let distance = (a_global - b_global).magnitude();
-
-                        if distance > config.identical_max_distance {
-                            mismatches.push(CurveCoordinateSystemMismatch {
-                                half_edge_a: edge_a.clone(),
-                                half_edge_b: edge_b.clone(),
-                                point_curve,
-                                point_a: a_global,
-                                point_b: b_global,
-                                distance,
-                            });
-                        }
-                    }
-                }
-
-                let mut mismatches = Vec::new();
-
-                compare_curve_coords(
-                    edge_a,
-                    geometry.of_surface(surface_a),
-                    edge_b,
-                    geometry.of_surface(surface_b),
-                    geometry,
-                    config,
-                    &mut mismatches,
-                );
-                compare_curve_coords(
-                    edge_b,
-                    geometry.of_surface(surface_b),
-                    edge_a,
-                    geometry.of_surface(surface_a),
-                    geometry,
-                    config,
-                    &mut mismatches,
-                );
-
-                if !mismatches.is_empty() {
-                    errors.push(
-                        Self::CurveCoordinateSystemMismatch(mismatches).into(),
-                    );
-                }
-            }
-        }
-    }
-
     /// Check that each half-edge is part of a pair
     fn check_half_edge_pairs(
         shell: &Shell,
@@ -345,16 +240,6 @@ impl fmt::Display for CoincidentHalfEdgeCurves {
 }
 
 #[derive(Clone, Debug)]
-pub struct CurveCoordinateSystemMismatch {
-    pub half_edge_a: Handle<HalfEdge>,
-    pub half_edge_b: Handle<HalfEdge>,
-    pub point_curve: Point<1>,
-    pub point_a: Point<3>,
-    pub point_b: Point<3>,
-    pub distance: Scalar,
-}
-
-#[derive(Clone, Debug)]
 pub struct CoincidentHalfEdgeVertices {
     pub vertices: [CurveBoundary<Vertex>; 2],
 }
@@ -430,72 +315,10 @@ mod tests {
                 UpdateShell,
             },
         },
-        topology::{Curve, HalfEdge, Shell},
+        topology::{Curve, Shell},
         validate::{shell::ShellValidationError, Validate, ValidationError},
         Core,
     };
-
-    #[test]
-    fn curve_coordinate_system_mismatch() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core,
-        );
-        let invalid = valid.shell.update_face(
-            &valid.abc.face,
-            |face, core| {
-                [face.update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle.update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |half_edge, core| {
-                                        let mut geometry = *core
-                                            .layers
-                                            .geometry
-                                            .of_half_edge(half_edge);
-                                        geometry.path = geometry.path.reverse();
-                                        geometry.boundary =
-                                            geometry.boundary.reverse();
-
-                                        [HalfEdge::new(
-                                            half_edge.curve().clone(),
-                                            half_edge.start_vertex().clone(),
-                                        )
-                                        .insert(core)
-                                        .set_geometry(
-                                            geometry,
-                                            &mut core.layers.geometry,
-                                        )]
-                                    },
-                                    core,
-                                )
-                            },
-                            core,
-                        )
-                    },
-                    core,
-                )]
-            },
-            &mut core,
-        );
-
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::Shell(
-                ShellValidationError::CurveCoordinateSystemMismatch(..)
-            )
-        );
-
-        Ok(())
-    }
 
     #[test]
     fn half_edge_has_no_sibling() -> anyhow::Result<()> {
