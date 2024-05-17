@@ -88,15 +88,15 @@ impl ShellValidationError {
         edges_and_surfaces
             .iter()
             .cartesian_product(&edges_and_surfaces)
-            .for_each(|((edge_a, surface_a), (edge_b, surface_b))| {
+            .filter_map(|((edge_a, surface_a), (edge_b, surface_b))| {
                 // We only care about edges referring to the same curve.
                 if edge_a.curve().id() != edge_b.curve().id() {
-                    return;
+                    return None;
                 }
 
                 // No need to check an edge against itself.
                 if edge_a.id() == edge_b.id() {
-                    return;
+                    return None;
                 }
 
                 let surface_a = geometry.of_surface(surface_a);
@@ -109,6 +109,8 @@ impl ShellValidationError {
                 let [a, d] = geometry.of_half_edge(edge_a).boundary.inner;
                 let b = a + (d - a) * 1. / 3.;
                 let c = a + (d - a) * 2. / 3.;
+
+                let mut errors: Vec<ValidationError> = Vec::new();
 
                 for point_curve in [a, b, c, d] {
                     let a_surface = geometry
@@ -143,6 +145,12 @@ impl ShellValidationError {
                         );
                     }
                 }
+
+                Some(errors)
+            })
+            .flatten()
+            .for_each(|error| {
+                errors.push(error);
             });
     }
 
