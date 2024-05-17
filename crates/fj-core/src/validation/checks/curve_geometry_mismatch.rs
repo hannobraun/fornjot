@@ -141,7 +141,9 @@ mod tests {
         },
         topology::{HalfEdge, Shell},
         validate::Validate,
-        validation::ValidationError,
+        validation::{
+            checks::CurveGeometryMismatch, ValidationCheck, ValidationError,
+        },
         Core,
     };
 
@@ -153,6 +155,11 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
+        CurveGeometryMismatch::check_and_return_first_error(
+            &valid.shell,
+            &core.layers.geometry,
+        )?;
+
         let invalid = valid.shell.update_face(
             &valid.abc.face,
             |face, core| {
@@ -193,9 +200,6 @@ mod tests {
             &mut core,
         );
 
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             core,
             invalid,
