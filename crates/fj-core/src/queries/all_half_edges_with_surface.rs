@@ -17,15 +17,16 @@ impl AllHalfEdgesWithSurface for Face {
         &self,
         result: &mut Vec<(Handle<HalfEdge>, Handle<Surface>)>,
     ) {
-        for cycle in self.region().all_cycles() {
-            result.extend(
+        self.region()
+            .all_cycles()
+            .map(|cycle| {
                 cycle
                     .half_edges()
                     .iter()
                     .cloned()
-                    .map(|half_edge| (half_edge, self.surface().clone())),
-            );
-        }
+                    .map(|half_edge| (half_edge, self.surface().clone()))
+            })
+            .for_each(|iter| result.extend(iter))
     }
 }
 
