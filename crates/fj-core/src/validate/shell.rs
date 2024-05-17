@@ -321,7 +321,7 @@ mod tests {
     };
 
     #[test]
-    fn curve_coordinate_system_mismatch() -> anyhow::Result<()> {
+    fn curve_geometry_mismatch() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Shell::tetrahedron(
