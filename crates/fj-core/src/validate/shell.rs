@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, fmt};
 
 use fj_math::{Point, Scalar};
+use itertools::Itertools;
 
 use crate::{
     geometry::{CurveBoundary, Geometry, SurfaceGeom},
@@ -84,16 +85,18 @@ impl ShellValidationError {
         let edges_and_surfaces =
             shell.all_half_edges_with_surface().collect::<Vec<_>>();
 
-        for (edge_a, surface_a) in &edges_and_surfaces {
-            for (edge_b, surface_b) in &edges_and_surfaces {
+        edges_and_surfaces
+            .iter()
+            .cartesian_product(&edges_and_surfaces)
+            .for_each(|((edge_a, surface_a), (edge_b, surface_b))| {
                 // We only care about edges referring to the same curve.
                 if edge_a.curve().id() != edge_b.curve().id() {
-                    continue;
+                    return;
                 }
 
                 // No need to check an edge against itself.
                 if edge_a.id() == edge_b.id() {
-                    continue;
+                    return;
                 }
 
                 let surface_a = geometry.of_surface(surface_a);
@@ -140,8 +143,7 @@ impl ShellValidationError {
                         );
                     }
                 }
-            }
-        }
+            });
     }
 
     /// Check that each half-edge is part of a pair
