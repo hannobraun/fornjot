@@ -144,12 +144,14 @@ impl ShellValidationError {
                 }
 
                 let mut mismatches = Vec::new();
+                let surface_a = geometry.of_surface(surface_a);
+                let surface_b = geometry.of_surface(surface_b);
 
                 compare_curve_coords(
                     edge_a,
-                    geometry.of_surface(surface_a),
+                    surface_a,
                     edge_b,
-                    geometry.of_surface(surface_b),
+                    surface_b,
                     geometry,
                     config,
                     &mut mismatches,
