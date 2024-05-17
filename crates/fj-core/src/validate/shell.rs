@@ -154,15 +154,6 @@ impl ShellValidationError {
                     config,
                     &mut mismatches,
                 );
-                compare_curve_coords(
-                    edge_b,
-                    geometry.of_surface(surface_b),
-                    edge_a,
-                    geometry.of_surface(surface_a),
-                    geometry,
-                    config,
-                    &mut mismatches,
-                );
 
                 for mismatch in mismatches {
                     errors.push(
