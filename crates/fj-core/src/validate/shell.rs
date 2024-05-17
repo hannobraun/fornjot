@@ -96,7 +96,6 @@ impl ShellValidationError {
                     continue;
                 }
 
-                let mut mismatches = Vec::new();
                 let surface_a = geometry.of_surface(surface_a);
                 let surface_b = geometry.of_surface(surface_b);
 
@@ -126,21 +125,20 @@ impl ShellValidationError {
                     let distance = (a_global - b_global).magnitude();
 
                     if distance > config.identical_max_distance {
-                        mismatches.push(CurveGeometryMismatch {
-                            half_edge_a: edge_a.clone(),
-                            half_edge_b: edge_b.clone(),
-                            point_curve,
-                            point_a: a_global,
-                            point_b: b_global,
-                            distance,
-                        });
+                        errors.push(
+                            Self::CurveCoordinateSystemMismatch(
+                                CurveGeometryMismatch {
+                                    half_edge_a: edge_a.clone(),
+                                    half_edge_b: edge_b.clone(),
+                                    point_curve,
+                                    point_a: a_global,
+                                    point_b: b_global,
+                                    distance,
+                                },
+                            )
+                            .into(),
+                        );
                     }
-                }
-
-                for mismatch in mismatches {
-                    errors.push(
-                        Self::CurveCoordinateSystemMismatch(mismatch).into(),
-                    );
                 }
             }
         }
