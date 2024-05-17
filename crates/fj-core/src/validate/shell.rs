@@ -1,7 +1,6 @@
 use std::{collections::BTreeMap, fmt};
 
 use fj_math::{Point, Scalar};
-use itertools::Itertools;
 
 use crate::{
     geometry::{CurveBoundary, Geometry, SurfaceGeom},
@@ -10,7 +9,7 @@ use crate::{
     },
     storage::Handle,
     topology::{Curve, HalfEdge, Shell, Vertex},
-    validation::checks::CurveGeometryMismatch,
+    validation::{checks::CurveGeometryMismatch, ValidationCheck},
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -82,76 +81,11 @@ impl ShellValidationError {
         config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let edges_and_surfaces =
-            shell.all_half_edges_with_surface().collect::<Vec<_>>();
-
-        edges_and_surfaces
-            .iter()
-            .cartesian_product(&edges_and_surfaces)
-            .filter_map(|((edge_a, surface_a), (edge_b, surface_b))| {
-                // We only care about edges referring to the same curve.
-                if edge_a.curve().id() != edge_b.curve().id() {
-                    return None;
-                }
-
-                // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
-                    return None;
-                }
-
-                let surface_a = geometry.of_surface(surface_a);
-                let surface_b = geometry.of_surface(surface_b);
-
-                // Let's check 4 points. Given that the most complex curves we
-                // have right now are circles, 3 would be enough to check for
-                // coincidence. But the first and last might be identical, so
-                // let's add an extra one.
-                let [a, d] = geometry.of_half_edge(edge_a).boundary.inner;
-                let b = a + (d - a) * 1. / 3.;
-                let c = a + (d - a) * 2. / 3.;
-
-                let mut errors: Vec<ValidationError> = Vec::new();
-
-                for point_curve in [a, b, c, d] {
-                    let a_surface = geometry
-                        .of_half_edge(edge_a)
-                        .path
-                        .point_from_path_coords(point_curve);
-                    let b_surface = geometry
-                        .of_half_edge(edge_b)
-                        .path
-                        .point_from_path_coords(point_curve);
-
-                    let a_global =
-                        surface_a.point_from_surface_coords(a_surface);
-                    let b_global =
-                        surface_b.point_from_surface_coords(b_surface);
-
-                    let distance = (a_global - b_global).magnitude();
-
-                    if distance > config.identical_max_distance {
-                        errors.push(
-                            Self::CurveCoordinateSystemMismatch(
-                                CurveGeometryMismatch {
-                                    half_edge_a: edge_a.clone(),
-                                    half_edge_b: edge_b.clone(),
-                                    point_curve,
-                                    point_a: a_global,
-                                    point_b: b_global,
-                                    distance,
-                                },
-                            )
-                            .into(),
-                        );
-                    }
-                }
-
-                Some(errors)
-            })
-            .flatten()
-            .for_each(|error| {
-                errors.push(error);
-            });
+        CurveGeometryMismatch::check(shell, geometry, config).for_each(
+            |error| {
+                errors.push(Self::CurveCoordinateSystemMismatch(error).into());
+            },
+        );
     }
 
     /// Check that each half-edge is part of a pair
