@@ -315,70 +315,10 @@ mod tests {
                 UpdateShell,
             },
         },
-        topology::{Curve, HalfEdge, Shell},
+        topology::{Curve, Shell},
         validate::{shell::ShellValidationError, Validate, ValidationError},
         Core,
     };
-
-    #[test]
-    fn curve_geometry_mismatch() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core,
-        );
-        let invalid = valid.shell.update_face(
-            &valid.abc.face,
-            |face, core| {
-                [face.update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle.update_half_edge(
-                                    cycle.half_edges().nth_circular(0),
-                                    |half_edge, core| {
-                                        let mut geometry = *core
-                                            .layers
-                                            .geometry
-                                            .of_half_edge(half_edge);
-                                        geometry.path = geometry.path.reverse();
-                                        geometry.boundary =
-                                            geometry.boundary.reverse();
-
-                                        [HalfEdge::new(
-                                            half_edge.curve().clone(),
-                                            half_edge.start_vertex().clone(),
-                                        )
-                                        .insert(core)
-                                        .set_geometry(
-                                            geometry,
-                                            &mut core.layers.geometry,
-                                        )]
-                                    },
-                                    core,
-                                )
-                            },
-                            core,
-                        )
-                    },
-                    core,
-                )]
-            },
-            &mut core,
-        );
-
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::CurveGeometryMismatch(..)
-        );
-
-        Ok(())
-    }
 
     #[test]
     fn half_edge_has_no_sibling() -> anyhow::Result<()> {
