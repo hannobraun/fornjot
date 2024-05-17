@@ -19,14 +19,14 @@ impl AllHalfEdgesWithSurface for Face {
     ) {
         self.region()
             .all_cycles()
-            .map(|cycle| {
+            .flat_map(|cycle| {
                 cycle
                     .half_edges()
                     .iter()
                     .cloned()
                     .map(|half_edge| (half_edge, self.surface().clone()))
             })
-            .for_each(|iter| result.extend(iter))
+            .for_each(|r| result.push(r))
     }
 }
 
