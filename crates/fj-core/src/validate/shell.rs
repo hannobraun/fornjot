@@ -21,8 +21,9 @@ impl Validate for Shell {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
-        ShellValidationError::check_curve_coordinates(
-            self, geometry, config, errors,
+        errors.extend(
+            CurveGeometryMismatch::check(self, geometry, config)
+                .map(Into::into),
         );
         ShellValidationError::check_half_edge_pairs(self, geometry, errors);
         ShellValidationError::check_half_edge_coincidence(
@@ -70,19 +71,6 @@ pub enum ShellValidationError {
 }
 
 impl ShellValidationError {
-    /// Check that local curve definitions that refer to the same curve match
-    fn check_curve_coordinates(
-        shell: &Shell,
-        geometry: &Geometry,
-        config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        errors.extend(
-            CurveGeometryMismatch::check(shell, geometry, config)
-                .map(Into::into),
-        );
-    }
-
     /// Check that each half-edge is part of a pair
     fn check_half_edge_pairs(
         shell: &Shell,
