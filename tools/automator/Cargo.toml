@@ -5,12 +5,12 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.83"
+anyhow = "1.0.86"
 chrono = "0.4.38"
 map-macro = "0.3.0"
 octocrab = "0.38.0"
 semver = "1.0.23"
-serde = "1.0.201"
+serde = "1.0.202"
 serde_json = "1.0.117"
 tracing = "0.1.40"
 url = "2.5.0"

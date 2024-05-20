@@ -19,5 +19,5 @@ fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
 futures = "0.3.30"
-thiserror = "1.0.60"
+thiserror = "1.0.61"
 winit = "0.30.0"
