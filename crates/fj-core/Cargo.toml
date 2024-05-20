@@ -16,13 +16,13 @@ workspace = true
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
-itertools = "0.12.1"
+itertools = "0.13.0"
 parking_lot = "0.12.2"
 robust = "1.1.0"
-spade = "2.6.0"
-thiserror = "1.0.60"
+spade = "2.7.0"
+thiserror = "1.0.61"
 type-map = "0.5.0"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-anyhow = "1.0.83"
+anyhow = "1.0.86"

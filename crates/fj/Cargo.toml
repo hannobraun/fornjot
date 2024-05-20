@@ -21,7 +21,7 @@ fj-interop.workspace = true
 fj-math.workspace = true
 fj-viewer.workspace = true
 fj-window.workspace = true
-thiserror = "1.0.60"
+thiserror = "1.0.61"
 tracing = "0.1.40"
 
 [dependencies.clap]
