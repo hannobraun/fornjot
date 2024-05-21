@@ -39,7 +39,7 @@ impl Validate for Shell {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
     /// [`Shell`] contains a half-edge that is not part of a pair
-    #[error("Half-edge has no sibling: {:#?}", .0.half_edge)]
+    #[error(transparent)]
     HalfEdgeHasNoSibling(HalfEdgeHasNoSibling),
 
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings

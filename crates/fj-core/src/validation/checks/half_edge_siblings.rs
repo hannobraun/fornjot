@@ -11,7 +11,8 @@ use crate::{storage::Handle, topology::HalfEdge};
 /// - If the shell is closed, that its topological object graph is not valid.
 ///
 /// [`Shell`]: crate::topology::Shell
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, thiserror::Error)]
+#[error("Half-edge has no sibling: {half_edge:#?}")]
 pub struct HalfEdgeHasNoSibling {
     /// The half-edge that does not have a sibling
     pub half_edge: Handle<HalfEdge>,
