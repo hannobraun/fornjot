@@ -116,13 +116,12 @@ impl ShellValidationError {
         unmatched_half_edges
             .into_values()
             .cloned()
-            .for_each(|half_edge| {
-                errors.push(
-                    Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling {
-                        half_edge,
-                    })
-                    .into(),
-                );
+            .map(|half_edge| {
+                Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling { half_edge })
+                    .into()
+            })
+            .for_each(|err| {
+                errors.push(err);
             });
     }
 
