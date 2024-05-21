@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fmt};
+use std::fmt;
 
 use fj_math::{Point, Scalar};
 
@@ -79,48 +79,9 @@ impl ShellValidationError {
     fn check_half_edge_pairs<'r>(
         object: &'r Shell,
         geometry: &'r Geometry,
-        _: &'r ValidationConfig,
+        config: &'r ValidationConfig,
     ) -> impl Iterator<Item = HalfEdgeHasNoSibling> + 'r {
-        let mut unmatched_half_edges = BTreeMap::new();
-
-        for face in object.faces() {
-            for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
-                    let curve = half_edge.curve().clone();
-                    let boundary = geometry.of_half_edge(half_edge).boundary;
-                    let vertices =
-                        cycle.bounding_vertices_of_half_edge(half_edge).expect(
-                            "`half_edge` came from `cycle`, must exist there",
-                        );
-
-                    let key = (curve.clone(), boundary, vertices.clone());
-                    let key_reversed =
-                        (curve, boundary.reverse(), vertices.reverse());
-
-                    match unmatched_half_edges.remove(&key_reversed) {
-                        Some(sibling) => {
-                            // This must be the sibling of the half-edge we're
-                            // currently looking at. Let's make sure the logic
-                            // we use here to determine that matches the
-                            // "official" definition.
-                            assert!(object
-                                .are_siblings(half_edge, sibling, geometry));
-                        }
-                        None => {
-                            // If this half-edge has a sibling, we haven't seen
-                            // it yet. Let's store this half-edge then, in case
-                            // we come across the sibling later.
-                            unmatched_half_edges.insert(key, half_edge);
-                        }
-                    }
-                }
-            }
-        }
-
-        unmatched_half_edges
-            .into_values()
-            .cloned()
-            .map(|half_edge| HalfEdgeHasNoSibling { half_edge })
+        HalfEdgeHasNoSibling::check(object, geometry, config)
     }
 
     /// Check that non-sibling half-edges are not coincident
