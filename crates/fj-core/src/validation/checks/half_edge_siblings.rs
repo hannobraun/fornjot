@@ -72,3 +72,37 @@ impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
             .map(|half_edge| HalfEdgeHasNoSibling { half_edge })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        assert_contains_err,
+        operations::{build::BuildShell, update::UpdateShell},
+        topology::Shell,
+        validate::Validate,
+        validation::ValidationError,
+        Core,
+    };
+
+    #[test]
+    fn half_edge_has_no_sibling() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let valid = Shell::tetrahedron(
+            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        let invalid = valid.shell.remove_face(&valid.abc.face);
+
+        valid
+            .shell
+            .validate_and_return_first_error(&core.layers.geometry)?;
+        assert_contains_err!(
+            core,
+            invalid,
+            ValidationError::HalfEdgeHasNoSibling { .. }
+        );
+
+        Ok(())
+    }
+}
