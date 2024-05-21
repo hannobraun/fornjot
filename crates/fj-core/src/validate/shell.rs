@@ -9,7 +9,10 @@ use crate::{
     },
     storage::Handle,
     topology::{Curve, HalfEdge, Shell, Vertex},
-    validation::{checks::CurveGeometryMismatch, ValidationCheck},
+    validation::{
+        checks::{CurveGeometryMismatch, HalfEdgeHasNoSibling},
+        ValidationCheck,
+    },
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -36,11 +39,8 @@ impl Validate for Shell {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
     /// [`Shell`] contains a half-edge that is not part of a pair
-    #[error("Half-edge has no sibling: {half_edge:#?}")]
-    HalfEdgeHasNoSibling {
-        /// The half-edge that has no sibling
-        half_edge: Handle<HalfEdge>,
-    },
+    #[error("Half-edge has no sibling: {:#?}", .0.half_edge)]
+    HalfEdgeHasNoSibling(HalfEdgeHasNoSibling),
 
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
@@ -114,7 +114,10 @@ impl ShellValidationError {
         }
 
         for half_edge in unmatched_half_edges.into_values().cloned() {
-            errors.push(Self::HalfEdgeHasNoSibling { half_edge }.into());
+            errors.push(
+                Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling { half_edge })
+                    .into(),
+            );
         }
     }
 
