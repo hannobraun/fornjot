@@ -80,7 +80,9 @@ mod tests {
         operations::{build::BuildShell, update::UpdateShell},
         topology::Shell,
         validate::Validate,
-        validation::ValidationError,
+        validation::{
+            checks::HalfEdgeHasNoSibling, ValidationCheck, ValidationError,
+        },
         Core,
     };
 
@@ -92,11 +94,13 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
+        HalfEdgeHasNoSibling::check_and_return_first_error(
+            &valid.shell,
+            &core.layers.geometry,
+        )?;
+
         let invalid = valid.shell.remove_face(&valid.abc.face);
 
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
         assert_contains_err!(
             core,
             invalid,
