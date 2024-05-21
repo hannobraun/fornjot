@@ -29,7 +29,7 @@ impl Validate for Shell {
                 .map(Into::into),
         );
         errors.extend(
-            ShellValidationError::check_half_edge_pairs(self, geometry, config)
+            HalfEdgeHasNoSibling::check(self, geometry, config)
                 .map(ShellValidationError::HalfEdgeHasNoSibling)
                 .map(Into::into),
         );
@@ -75,15 +75,6 @@ pub enum ShellValidationError {
 }
 
 impl ShellValidationError {
-    /// Check that each half-edge is part of a pair
-    fn check_half_edge_pairs<'r>(
-        object: &'r Shell,
-        geometry: &'r Geometry,
-        config: &'r ValidationConfig,
-    ) -> impl Iterator<Item = HalfEdgeHasNoSibling> + 'r {
-        HalfEdgeHasNoSibling::check(object, geometry, config)
-    }
-
     /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
