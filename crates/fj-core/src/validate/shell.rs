@@ -28,9 +28,10 @@ impl Validate for Shell {
             CurveGeometryMismatch::check(self, geometry, config)
                 .map(Into::into),
         );
-        errors.extend(ShellValidationError::check_half_edge_pairs(
-            self, geometry,
-        ));
+        errors.extend(
+            ShellValidationError::check_half_edge_pairs(self, geometry)
+                .map(Into::into),
+        );
         ShellValidationError::check_half_edge_coincidence(
             self, geometry, config, errors,
         );
@@ -77,7 +78,7 @@ impl ShellValidationError {
     fn check_half_edge_pairs<'r>(
         shell: &'r Shell,
         geometry: &'r Geometry,
-    ) -> impl Iterator<Item = ValidationError> + 'r {
+    ) -> impl Iterator<Item = ShellValidationError> + 'r {
         let mut unmatched_half_edges = BTreeMap::new();
 
         for face in shell.faces() {
@@ -119,7 +120,6 @@ impl ShellValidationError {
             .cloned()
             .map(|half_edge| {
                 Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling { half_edge })
-                    .into()
             })
     }
 
