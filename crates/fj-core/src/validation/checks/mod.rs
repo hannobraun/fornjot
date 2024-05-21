@@ -6,10 +6,12 @@ mod curve_geometry_mismatch;
 mod face_boundary;
 mod face_winding;
 mod half_edge_connection;
+mod half_edge_siblings;
 
 pub use self::{
     curve_geometry_mismatch::CurveGeometryMismatch,
     face_boundary::FaceHasNoBoundary,
     face_winding::InteriorCycleHasInvalidWinding,
     half_edge_connection::AdjacentHalfEdgesNotConnected,
+    half_edge_siblings::HalfEdgeHasNoSibling,
 };

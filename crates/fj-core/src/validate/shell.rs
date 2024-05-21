@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fmt};
+use std::fmt;
 
 use fj_math::{Point, Scalar};
 
@@ -9,7 +9,10 @@ use crate::{
     },
     storage::Handle,
     topology::{Curve, HalfEdge, Shell, Vertex},
-    validation::{checks::CurveGeometryMismatch, ValidationCheck},
+    validation::{
+        checks::{CurveGeometryMismatch, HalfEdgeHasNoSibling},
+        ValidationCheck,
+    },
 };
 
 use super::{Validate, ValidationConfig, ValidationError};
@@ -25,7 +28,9 @@ impl Validate for Shell {
             CurveGeometryMismatch::check(self, geometry, config)
                 .map(Into::into),
         );
-        ShellValidationError::check_half_edge_pairs(self, geometry, errors);
+        errors.extend(
+            HalfEdgeHasNoSibling::check(self, geometry, config).map(Into::into),
+        );
         ShellValidationError::check_half_edge_coincidence(
             self, geometry, config, errors,
         );
@@ -35,13 +40,6 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains a half-edge that is not part of a pair
-    #[error("Half-edge has no sibling: {half_edge:#?}")]
-    HalfEdgeHasNoSibling {
-        /// The half-edge that has no sibling
-        half_edge: Handle<HalfEdge>,
-    },
-
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
@@ -71,53 +69,6 @@ pub enum ShellValidationError {
 }
 
 impl ShellValidationError {
-    /// Check that each half-edge is part of a pair
-    fn check_half_edge_pairs(
-        shell: &Shell,
-        geometry: &Geometry,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let mut unmatched_half_edges = BTreeMap::new();
-
-        for face in shell.faces() {
-            for cycle in face.region().all_cycles() {
-                for half_edge in cycle.half_edges() {
-                    let curve = half_edge.curve().clone();
-                    let boundary = geometry.of_half_edge(half_edge).boundary;
-                    let vertices =
-                        cycle.bounding_vertices_of_half_edge(half_edge).expect(
-                            "`half_edge` came from `cycle`, must exist there",
-                        );
-
-                    let key = (curve.clone(), boundary, vertices.clone());
-                    let key_reversed =
-                        (curve, boundary.reverse(), vertices.reverse());
-
-                    match unmatched_half_edges.remove(&key_reversed) {
-                        Some(sibling) => {
-                            // This must be the sibling of the half-edge we're
-                            // currently looking at. Let's make sure the logic
-                            // we use here to determine that matches the
-                            // "official" definition.
-                            assert!(shell
-                                .are_siblings(half_edge, sibling, geometry));
-                        }
-                        None => {
-                            // If this half-edge has a sibling, we haven't seen
-                            // it yet. Let's store this half-edge then, in case
-                            // we come across the sibling later.
-                            unmatched_half_edges.insert(key, half_edge);
-                        }
-                    }
-                }
-            }
-        }
-
-        for half_edge in unmatched_half_edges.into_values().cloned() {
-            errors.push(Self::HalfEdgeHasNoSibling { half_edge }.into());
-        }
-    }
-
     /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
         shell: &Shell,
@@ -319,30 +270,6 @@ mod tests {
         validate::{shell::ShellValidationError, Validate, ValidationError},
         Core,
     };
-
-    #[test]
-    fn half_edge_has_no_sibling() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let valid = Shell::tetrahedron(
-            [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
-            &mut core,
-        );
-        let invalid = valid.shell.remove_face(&valid.abc.face);
-
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::Shell(
-                ShellValidationError::HalfEdgeHasNoSibling { .. }
-            )
-        );
-
-        Ok(())
-    }
 
     #[test]
     fn coincident_half_edges_are_not_siblings() -> anyhow::Result<()> {
