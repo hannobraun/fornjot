@@ -29,7 +29,7 @@ impl Validate for Shell {
                 .map(Into::into),
         );
         errors.extend(
-            ShellValidationError::check_half_edge_pairs(self, geometry)
+            ShellValidationError::check_half_edge_pairs(self, geometry, config)
                 .map(ShellValidationError::HalfEdgeHasNoSibling)
                 .map(Into::into),
         );
@@ -79,6 +79,7 @@ impl ShellValidationError {
     fn check_half_edge_pairs<'r>(
         object: &'r Shell,
         geometry: &'r Geometry,
+        _: &'r ValidationConfig,
     ) -> impl Iterator<Item = HalfEdgeHasNoSibling> + 'r {
         let mut unmatched_half_edges = BTreeMap::new();
 
