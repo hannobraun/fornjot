@@ -113,16 +113,12 @@ impl ShellValidationError {
             }
         }
 
-        unmatched_half_edges
-            .into_values()
-            .cloned()
-            .map(|half_edge| {
+        errors.extend(unmatched_half_edges.into_values().cloned().map(
+            |half_edge| {
                 Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling { half_edge })
                     .into()
-            })
-            .for_each(|err| {
-                errors.push(err);
-            });
+            },
+        ));
     }
 
     /// Check that non-sibling half-edges are not coincident
