@@ -77,12 +77,12 @@ pub enum ShellValidationError {
 impl ShellValidationError {
     /// Check that each half-edge is part of a pair
     fn check_half_edge_pairs<'r>(
-        shell: &'r Shell,
+        object: &'r Shell,
         geometry: &'r Geometry,
     ) -> impl Iterator<Item = HalfEdgeHasNoSibling> + 'r {
         let mut unmatched_half_edges = BTreeMap::new();
 
-        for face in shell.faces() {
+        for face in object.faces() {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve = half_edge.curve().clone();
@@ -102,7 +102,7 @@ impl ShellValidationError {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(shell
+                            assert!(object
                                 .are_siblings(half_edge, sibling, geometry));
                         }
                         None => {
