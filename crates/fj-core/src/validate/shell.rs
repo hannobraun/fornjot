@@ -72,10 +72,10 @@ pub enum ShellValidationError {
 
 impl ShellValidationError {
     /// Check that each half-edge is part of a pair
-    fn check_half_edge_pairs(
-        shell: &Shell,
-        geometry: &Geometry,
-        errors: &mut Vec<ValidationError>,
+    fn check_half_edge_pairs<'r>(
+        shell: &'r Shell,
+        geometry: &'r Geometry,
+        errors: &'r mut Vec<ValidationError>,
     ) {
         let mut unmatched_half_edges = BTreeMap::new();
 
