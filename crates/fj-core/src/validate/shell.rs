@@ -30,6 +30,7 @@ impl Validate for Shell {
         );
         errors.extend(
             ShellValidationError::check_half_edge_pairs(self, geometry)
+                .map(ShellValidationError::HalfEdgeHasNoSibling)
                 .map(Into::into),
         );
         ShellValidationError::check_half_edge_coincidence(
@@ -78,7 +79,7 @@ impl ShellValidationError {
     fn check_half_edge_pairs<'r>(
         shell: &'r Shell,
         geometry: &'r Geometry,
-    ) -> impl Iterator<Item = ShellValidationError> + 'r {
+    ) -> impl Iterator<Item = HalfEdgeHasNoSibling> + 'r {
         let mut unmatched_half_edges = BTreeMap::new();
 
         for face in shell.faces() {
@@ -118,9 +119,7 @@ impl ShellValidationError {
         unmatched_half_edges
             .into_values()
             .cloned()
-            .map(|half_edge| {
-                Self::HalfEdgeHasNoSibling(HalfEdgeHasNoSibling { half_edge })
-            })
+            .map(|half_edge| HalfEdgeHasNoSibling { half_edge })
     }
 
     /// Check that non-sibling half-edges are not coincident
