@@ -29,9 +29,7 @@ impl Validate for Shell {
                 .map(Into::into),
         );
         errors.extend(
-            HalfEdgeHasNoSibling::check(self, geometry, config)
-                .map(ShellValidationError::HalfEdgeHasNoSibling)
-                .map(Into::into),
+            HalfEdgeHasNoSibling::check(self, geometry, config).map(Into::into),
         );
         ShellValidationError::check_half_edge_coincidence(
             self, geometry, config, errors,
@@ -42,10 +40,6 @@ impl Validate for Shell {
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
-    /// [`Shell`] contains a half-edge that is not part of a pair
-    #[error(transparent)]
-    HalfEdgeHasNoSibling(HalfEdgeHasNoSibling),
-
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings
     #[error(
         "`Shell` contains `HalfEdge`s that are coincident but are not \
@@ -293,9 +287,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid,
-            ValidationError::Shell(
-                ShellValidationError::HalfEdgeHasNoSibling { .. }
-            )
+            ValidationError::HalfEdgeHasNoSibling { .. }
         );
 
         Ok(())
