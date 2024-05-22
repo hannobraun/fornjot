@@ -32,9 +32,12 @@ impl Validate for Shell {
         errors.extend(
             HalfEdgeHasNoSibling::check(self, geometry, config).map(Into::into),
         );
-        errors.extend(ShellValidationError::check_half_edge_coincidence(
-            self, geometry, config,
-        ));
+        errors.extend(
+            ShellValidationError::check_half_edge_coincidence(
+                self, geometry, config,
+            )
+            .map(Into::into),
+        );
     }
 }
 
@@ -52,7 +55,7 @@ impl ShellValidationError {
         shell: &Shell,
         geometry: &Geometry,
         config: &ValidationConfig,
-    ) -> impl Iterator<Item = ValidationError> {
+    ) -> impl Iterator<Item = ShellValidationError> {
         let mut errors = Vec::new();
 
         let edges_and_surfaces =
@@ -101,18 +104,15 @@ impl ShellValidationError {
                                 )
                         });
 
-                    errors.push(
-                        Self::CoincidentHalfEdgesAreNotSiblings(
-                            CoincidentHalfEdgesAreNotSiblings {
-                                boundaries,
-                                curves,
-                                vertices,
-                                half_edge_a: half_edge_a.clone(),
-                                half_edge_b: half_edge_b.clone(),
-                            },
-                        )
-                        .into(),
-                    )
+                    errors.push(Self::CoincidentHalfEdgesAreNotSiblings(
+                        CoincidentHalfEdgesAreNotSiblings {
+                            boundaries,
+                            curves,
+                            vertices,
+                            half_edge_a: half_edge_a.clone(),
+                            half_edge_b: half_edge_b.clone(),
+                        },
+                    ))
                 }
             }
         }
