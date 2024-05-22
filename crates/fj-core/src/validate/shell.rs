@@ -48,14 +48,14 @@ pub enum ShellValidationError {}
 impl ShellValidationError {
     /// Check that non-sibling half-edges are not coincident
     fn check_half_edge_coincidence(
-        shell: &Shell,
+        object: &Shell,
         geometry: &Geometry,
         config: &ValidationConfig,
     ) -> impl Iterator<Item = CoincidentHalfEdgesAreNotSiblings> {
         let mut errors = Vec::new();
 
         let edges_and_surfaces =
-            shell.all_half_edges_with_surface().collect::<Vec<_>>();
+            object.all_half_edges_with_surface().collect::<Vec<_>>();
 
         // This is O(N^2) which isn't great, but we can't use a HashMap since we
         // need to deal with float inaccuracies. Maybe we could use some smarter
@@ -67,7 +67,7 @@ impl ShellValidationError {
                     continue;
                 }
 
-                if shell.are_siblings(half_edge_a, half_edge_b, geometry) {
+                if object.are_siblings(half_edge_a, half_edge_b, geometry) {
                     // If the half-edges are siblings, they are allowed to be
                     // coincident. Must be, in fact. There's another validation
                     // check that takes care of that.
@@ -93,7 +93,7 @@ impl ShellValidationError {
                         .map(|half_edge| half_edge.curve().clone());
                     let vertices =
                         [half_edge_a, half_edge_b].map(|half_edge| {
-                            shell
+                            object
                                 .bounding_vertices_of_half_edge(half_edge)
                                 .expect(
                                     "Expected half-edge to be part of shell",
