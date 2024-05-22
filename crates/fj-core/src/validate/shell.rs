@@ -90,15 +90,14 @@ impl ShellValidationError {
                         });
                     let curves = [half_edge_a, half_edge_b]
                         .map(|half_edge| half_edge.curve().clone());
-                    let vertices = CoincidentHalfEdgeVertices {
-                        vertices: [half_edge_a, half_edge_b].map(|half_edge| {
+                    let vertices =
+                        [half_edge_a, half_edge_b].map(|half_edge| {
                             shell
                                 .bounding_vertices_of_half_edge(half_edge)
                                 .expect(
                                     "Expected half-edge to be part of shell",
                                 )
-                        }),
-                    };
+                        });
 
                     errors.push(
                         Self::CoincidentHalfEdgesAreNotSiblings(
@@ -127,7 +126,7 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
     pub curves: [Handle<Curve>; 2],
 
     /// The vertices of the half-edges
-    pub vertices: CoincidentHalfEdgeVertices,
+    pub vertices: [CurveBoundary<Vertex>; 2],
 
     /// The first half-edge
     pub half_edge_a: Handle<HalfEdge>,
@@ -172,36 +171,26 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             }
         }
 
-        write!(
-            f,
-            "{}\
-            Half-edge 1: {:#?}\n\
-            Half-edge 2: {:#?}",
-            self.vertices, self.half_edge_a, self.half_edge_b,
-        )
-    }
-}
+        {
+            let [a, b] = &self.vertices;
 
-#[derive(Clone, Debug)]
-pub struct CoincidentHalfEdgeVertices {
-    pub vertices: [CurveBoundary<Vertex>; 2],
-}
-
-impl fmt::Display for CoincidentHalfEdgeVertices {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = &self.vertices;
-
-        if a != &b.clone().reverse() {
-            writeln!(
-                f,
-                "Vertices don't match.\n\
-                \tHalf-edge 1 is bounded by `{a:?}`\n\
-                \tHalf-edge 2 is bounded by `{b:?}`\n\
-                \t(expecting same vertices, but in reverse order)"
-            )?;
+            if a != &b.clone().reverse() {
+                writeln!(
+                    f,
+                    "Vertices don't match.\n\
+                    \tHalf-edge 1 is bounded by `{a:?}`\n\
+                    \tHalf-edge 2 is bounded by `{b:?}`\n\
+                    \t(expecting same vertices, but in reverse order)"
+                )?;
+            }
         }
 
-        Ok(())
+        write!(
+            f,
+            "Half-edge 1: {:#?}\n\
+            Half-edge 2: {:#?}",
+            self.half_edge_a, self.half_edge_b,
+        )
     }
 }
 
