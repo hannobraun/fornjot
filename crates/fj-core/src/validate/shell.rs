@@ -84,18 +84,18 @@ impl ShellValidationError {
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
-                    let boundaries = Box::new(CoincidentHalfEdgeBoundaries {
+                    let boundaries = CoincidentHalfEdgeBoundaries {
                         boundaries: [half_edge_a, half_edge_b].map(
                             |half_edge| {
                                 geometry.of_half_edge(half_edge).boundary
                             },
                         ),
-                    });
-                    let curves = Box::new(CoincidentHalfEdgeCurves {
+                    };
+                    let curves = CoincidentHalfEdgeCurves {
                         curves: [half_edge_a, half_edge_b]
                             .map(|half_edge| half_edge.curve().clone()),
-                    });
-                    let vertices = Box::new(CoincidentHalfEdgeVertices {
+                    };
+                    let vertices = CoincidentHalfEdgeVertices {
                         vertices: [half_edge_a, half_edge_b].map(|half_edge| {
                             shell
                                 .bounding_vertices_of_half_edge(half_edge)
@@ -103,7 +103,7 @@ impl ShellValidationError {
                                     "Expected half-edge to be part of shell",
                                 )
                         }),
-                    });
+                    };
 
                     errors.push(
                         Self::CoincidentHalfEdgesAreNotSiblings(
@@ -126,13 +126,13 @@ impl ShellValidationError {
 #[derive(Clone, Debug, thiserror::Error)]
 pub struct CoincidentHalfEdgesAreNotSiblings {
     /// The boundaries of the half-edges
-    pub boundaries: Box<CoincidentHalfEdgeBoundaries>,
+    pub boundaries: CoincidentHalfEdgeBoundaries,
 
     /// The curves of the half-edges
-    pub curves: Box<CoincidentHalfEdgeCurves>,
+    pub curves: CoincidentHalfEdgeCurves,
 
     /// The vertices of the half-edges
-    pub vertices: Box<CoincidentHalfEdgeVertices>,
+    pub vertices: CoincidentHalfEdgeVertices,
 
     /// The first half-edge
     pub half_edge_a: Handle<HalfEdge>,
