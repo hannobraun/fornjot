@@ -190,7 +190,9 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             "Half-edge 1: {:#?}\n\
             Half-edge 2: {:#?}",
             self.half_edge_a, self.half_edge_b,
-        )
+        )?;
+
+        Ok(())
     }
 }
 
