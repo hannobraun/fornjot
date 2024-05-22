@@ -88,10 +88,8 @@ impl ShellValidationError {
                         [half_edge_a, half_edge_b].map(|half_edge| {
                             geometry.of_half_edge(half_edge).boundary
                         });
-                    let curves = CoincidentHalfEdgeCurves {
-                        curves: [half_edge_a, half_edge_b]
-                            .map(|half_edge| half_edge.curve().clone()),
-                    };
+                    let curves = [half_edge_a, half_edge_b]
+                        .map(|half_edge| half_edge.curve().clone());
                     let vertices = CoincidentHalfEdgeVertices {
                         vertices: [half_edge_a, half_edge_b].map(|half_edge| {
                             shell
@@ -126,7 +124,7 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
     pub boundaries: [CurveBoundary<Point<1>>; 2],
 
     /// The curves of the half-edges
-    pub curves: CoincidentHalfEdgeCurves,
+    pub curves: [Handle<Curve>; 2],
 
     /// The vertices of the half-edges
     pub vertices: CoincidentHalfEdgeVertices,
@@ -160,37 +158,27 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             }
         }
 
+        {
+            let [a, b] = &self.curves;
+
+            if a.id() != b.id() {
+                writeln!(
+                    f,
+                    "Curves don't match.\n\
+                    \tHalf-edge 1 lies on {a:?}\n\
+                    \tHalf-edge 2 lies on {b:?}\n\
+                    \t(must be the same)"
+                )?;
+            }
+        }
+
         write!(
             f,
             "{}\
-            {}\
             Half-edge 1: {:#?}\n\
             Half-edge 2: {:#?}",
-            self.curves, self.vertices, self.half_edge_a, self.half_edge_b,
+            self.vertices, self.half_edge_a, self.half_edge_b,
         )
-    }
-}
-
-#[derive(Clone, Debug)]
-pub struct CoincidentHalfEdgeCurves {
-    pub curves: [Handle<Curve>; 2],
-}
-
-impl fmt::Display for CoincidentHalfEdgeCurves {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = &self.curves;
-
-        if a.id() != b.id() {
-            writeln!(
-                f,
-                "Curves don't match.\n\
-                \tHalf-edge 1 lies on {a:?}\n\
-                \tHalf-edge 2 lies on {b:?}\n\
-                \t(must be the same)"
-            )?;
-        }
-
-        Ok(())
     }
 }
 
