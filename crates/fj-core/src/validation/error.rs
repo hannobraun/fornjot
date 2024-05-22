@@ -1,8 +1,6 @@
 use std::{convert::Infallible, fmt};
 
-use crate::validate::{
-    ShellValidationError, SketchValidationError, SolidValidationError,
-};
+use crate::validate::{SketchValidationError, SolidValidationError};
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
@@ -38,10 +36,6 @@ pub enum ValidationError {
     /// Interior cycle has invalid winding
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
-
-    /// `Shell` validation error
-    #[error("`Shell` validation error")]
-    Shell(#[from] ShellValidationError),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]

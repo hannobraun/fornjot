@@ -33,12 +33,6 @@ impl Validate for Shell {
     }
 }
 
-/// [`Shell`] validation failed
-#[derive(Clone, Debug, thiserror::Error)]
-pub enum ShellValidationError {}
-
-impl ShellValidationError {}
-
 #[cfg(test)]
 mod tests {
     use crate::{
