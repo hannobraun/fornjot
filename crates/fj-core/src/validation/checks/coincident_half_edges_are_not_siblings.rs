@@ -208,7 +208,6 @@ fn distances(
 #[cfg(test)]
 mod tests {
     use crate::{
-        assert_contains_err,
         operations::{
             build::BuildShell,
             geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
@@ -219,8 +218,9 @@ mod tests {
             },
         },
         topology::{Curve, Shell},
-        validate::Validate,
-        validation::ValidationError,
+        validation::{
+            checks::CoincidentHalfEdgesAreNotSiblings, ValidationCheck,
+        },
         Core,
     };
 
@@ -232,6 +232,11 @@ mod tests {
             [[0., 0., 0.], [0., 1., 0.], [1., 0., 0.], [0., 0., 1.]],
             &mut core,
         );
+        CoincidentHalfEdgesAreNotSiblings::check_and_return_first_error(
+            &valid.shell,
+            &core.layers.geometry,
+        )?;
+
         let invalid = valid.shell.update_face(
             &valid.abc.face,
             |face, core| {
@@ -271,14 +276,12 @@ mod tests {
             },
             &mut core,
         );
-
-        valid
-            .shell
-            .validate_and_return_first_error(&core.layers.geometry)?;
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::CoincidentHalfEdgesAreNotSiblings { .. }
+        assert!(
+            CoincidentHalfEdgesAreNotSiblings::check_and_return_first_error(
+                &invalid,
+                &core.layers.geometry,
+            )
+            .is_err()
         );
 
         Ok(())
