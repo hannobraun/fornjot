@@ -84,13 +84,10 @@ impl ShellValidationError {
                 )
                 .all(|d| d < config.distinct_min_distance)
                 {
-                    let boundaries = CoincidentHalfEdgeBoundaries {
-                        boundaries: [half_edge_a, half_edge_b].map(
-                            |half_edge| {
-                                geometry.of_half_edge(half_edge).boundary
-                            },
-                        ),
-                    };
+                    let boundaries =
+                        [half_edge_a, half_edge_b].map(|half_edge| {
+                            geometry.of_half_edge(half_edge).boundary
+                        });
                     let curves = CoincidentHalfEdgeCurves {
                         curves: [half_edge_a, half_edge_b]
                             .map(|half_edge| half_edge.curve().clone()),
@@ -126,7 +123,7 @@ impl ShellValidationError {
 #[derive(Clone, Debug, thiserror::Error)]
 pub struct CoincidentHalfEdgesAreNotSiblings {
     /// The boundaries of the half-edges
-    pub boundaries: CoincidentHalfEdgeBoundaries,
+    pub boundaries: [CurveBoundary<Point<1>>; 2],
 
     /// The curves of the half-edges
     pub curves: CoincidentHalfEdgeCurves,
@@ -149,42 +146,28 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             siblings",
         )?;
 
+        {
+            let [a, b] = &self.boundaries;
+
+            if a != &b.reverse() {
+                writeln!(
+                    f,
+                    "Boundaries don't match.\n\
+                    \tHalf-edge 1 has boundary `{a:?}`\n\
+                    \tHalf-edge 2 has boundary `{b:?}`\n\
+                    \t(expecting same boundary, but reversed)"
+                )?;
+            }
+        }
+
         write!(
             f,
             "{}\
             {}\
-            {}\
             Half-edge 1: {:#?}\n\
             Half-edge 2: {:#?}",
-            self.boundaries,
-            self.curves,
-            self.vertices,
-            self.half_edge_a,
-            self.half_edge_b,
+            self.curves, self.vertices, self.half_edge_a, self.half_edge_b,
         )
-    }
-}
-
-#[derive(Clone, Debug)]
-pub struct CoincidentHalfEdgeBoundaries {
-    pub boundaries: [CurveBoundary<Point<1>>; 2],
-}
-
-impl fmt::Display for CoincidentHalfEdgeBoundaries {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let [a, b] = &self.boundaries;
-
-        if a != &b.reverse() {
-            writeln!(
-                f,
-                "Boundaries don't match.\n\
-                \tHalf-edge 1 has boundary `{a:?}`\n\
-                \tHalf-edge 2 has boundary `{b:?}`\n\
-                \t(expecting same boundary, but reversed)"
-            )?;
-        }
-
-        Ok(())
     }
 }
 
