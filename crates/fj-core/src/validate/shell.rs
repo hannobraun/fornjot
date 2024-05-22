@@ -124,14 +124,6 @@ impl ShellValidationError {
 }
 
 #[derive(Clone, Debug, thiserror::Error)]
-#[error(
-    "`Shell` contains `HalfEdge`s that are coincident but are not siblings\n\
-    {boundaries}\
-    {curves}\
-    {vertices}\
-    Half-edge 1: {half_edge_a:#?}\n\
-    Half-edge 2: {half_edge_b:#?}"
-)]
 pub struct CoincidentHalfEdgesAreNotSiblings {
     /// The boundaries of the half-edges
     pub boundaries: Box<CoincidentHalfEdgeBoundaries>,
@@ -147,6 +139,25 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
 
     /// The second half-edge
     pub half_edge_b: Handle<HalfEdge>,
+}
+
+impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "`Shell` contains `HalfEdge`s that are coincident but are not siblings\n\
+            {}\
+            {}\
+            {}\
+            Half-edge 1: {:#?}\n\
+            Half-edge 2: {:#?}",
+            self.boundaries,
+            self.curves,
+            self.vertices,
+            self.half_edge_a,
+            self.half_edge_b,
+        )
+    }
 }
 
 #[derive(Clone, Debug)]
