@@ -117,6 +117,11 @@ impl ShellValidationError {
     }
 }
 
+/// A [`Shell`] contains two [`HalfEdge`]s that are coincident but not siblings
+///
+/// Coincident half-edges must reference the same curve, and have the same
+/// boundaries on that curve. This provides clear, topological information,
+/// which is important to handle the shell geometry in a robust way.
 #[derive(Clone, Debug, thiserror::Error)]
 pub struct CoincidentHalfEdgesAreNotSiblings {
     /// The boundaries of the half-edges
