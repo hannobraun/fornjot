@@ -41,31 +41,8 @@ impl Validate for Shell {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ShellValidationError {
     /// [`Shell`] contains half-edges that are coincident, but aren't siblings
-    #[error(
-        "`Shell` contains `HalfEdge`s that are coincident but are not \
-        siblings\n\
-        {boundaries}\
-        {curves}\
-        {vertices}\
-        Half-edge 1: {half_edge_a:#?}\n\
-        Half-edge 2: {half_edge_b:#?}"
-    )]
-    CoincidentHalfEdgesAreNotSiblings {
-        /// The boundaries of the half-edges
-        boundaries: Box<CoincidentHalfEdgeBoundaries>,
-
-        /// The curves of the half-edges
-        curves: Box<CoincidentHalfEdgeCurves>,
-
-        /// The vertices of the half-edges
-        vertices: Box<CoincidentHalfEdgeVertices>,
-
-        /// The first half-edge
-        half_edge_a: Handle<HalfEdge>,
-
-        /// The second half-edge
-        half_edge_b: Handle<HalfEdge>,
-    },
+    #[error(transparent)]
+    CoincidentHalfEdgesAreNotSiblings(CoincidentHalfEdgesAreNotSiblings),
 }
 
 impl ShellValidationError {
@@ -129,19 +106,47 @@ impl ShellValidationError {
                     });
 
                     errors.push(
-                        Self::CoincidentHalfEdgesAreNotSiblings {
-                            boundaries,
-                            curves,
-                            vertices,
-                            half_edge_a: half_edge_a.clone(),
-                            half_edge_b: half_edge_b.clone(),
-                        }
+                        Self::CoincidentHalfEdgesAreNotSiblings(
+                            CoincidentHalfEdgesAreNotSiblings {
+                                boundaries,
+                                curves,
+                                vertices,
+                                half_edge_a: half_edge_a.clone(),
+                                half_edge_b: half_edge_b.clone(),
+                            },
+                        )
                         .into(),
                     )
                 }
             }
         }
     }
+}
+
+#[derive(Clone, Debug, thiserror::Error)]
+#[error(
+    "`Shell` contains `HalfEdge`s that are coincident but are not siblings\n\
+    {boundaries}\
+    {curves}\
+    {vertices}\
+    Half-edge 1: {half_edge_a:#?}\n\
+    Half-edge 2: {half_edge_b:#?}"
+)]
+pub struct CoincidentHalfEdgesAreNotSiblings {
+    /// The boundaries of the half-edges
+    pub boundaries: Box<CoincidentHalfEdgeBoundaries>,
+
+    /// The curves of the half-edges
+    pub curves: Box<CoincidentHalfEdgeCurves>,
+
+    /// The vertices of the half-edges
+    pub vertices: Box<CoincidentHalfEdgeVertices>,
+
+    /// The first half-edge
+    pub half_edge_a: Handle<HalfEdge>,
+
+    /// The second half-edge
+    pub half_edge_b: Handle<HalfEdge>,
 }
 
 #[derive(Clone, Debug)]
