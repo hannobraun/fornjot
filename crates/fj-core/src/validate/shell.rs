@@ -36,7 +36,6 @@ impl Validate for Shell {
             ShellValidationError::check_half_edge_coincidence(
                 self, geometry, config,
             )
-            .map(ShellValidationError::CoincidentHalfEdgesAreNotSiblings)
             .map(Into::into),
         );
     }
@@ -44,11 +43,7 @@ impl Validate for Shell {
 
 /// [`Shell`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum ShellValidationError {
-    /// [`Shell`] contains half-edges that are coincident, but aren't siblings
-    #[error(transparent)]
-    CoincidentHalfEdgesAreNotSiblings(CoincidentHalfEdgesAreNotSiblings),
-}
+pub enum ShellValidationError {}
 
 impl ShellValidationError {
     /// Check that non-sibling half-edges are not coincident
@@ -174,7 +169,7 @@ mod tests {
             },
         },
         topology::{Curve, Shell},
-        validate::{shell::ShellValidationError, Validate, ValidationError},
+        validate::{Validate, ValidationError},
         Core,
     };
 
@@ -232,9 +227,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid,
-            ValidationError::Shell(
-                ShellValidationError::CoincidentHalfEdgesAreNotSiblings { .. }
-            )
+            ValidationError::CoincidentHalfEdgesAreNotSiblings { .. }
         );
 
         Ok(())
