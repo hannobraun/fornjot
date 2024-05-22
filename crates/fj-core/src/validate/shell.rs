@@ -143,10 +143,15 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
 
 impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(
+            f,
+            "`Shell` contains `HalfEdge`s that are coincident but are not \
+            siblings",
+        )?;
+
         write!(
             f,
-            "`Shell` contains `HalfEdge`s that are coincident but are not siblings\n\
-            {}\
+            "{}\
             {}\
             {}\
             Half-edge 1: {:#?}\n\
