@@ -1,7 +1,9 @@
-use std::collections::HashMap;
+use std::{any::type_name_of_val, collections::HashMap, fmt};
 
-use crate::storage::Handle;
-use crate::topology::{Cycle, Face, HalfEdge, Region, Shell};
+use crate::{
+    storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Region, Shell},
+};
 
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
@@ -11,24 +13,17 @@ impl<T, U> ReferenceCounter<T, U> {
         Self(HashMap::new())
     }
 
-    pub fn add_reference(
-        &mut self,
-        referenced: Handle<T>,
-        reference: Handle<U>,
-    ) {
-        self.0
-            .entry(referenced)
-            .and_modify(|references| references.push(reference.clone()))
-            .or_insert(vec![reference]);
+    pub fn count_reference(&mut self, to: Handle<T>, from: Handle<U>) {
+        self.0.entry(to).or_default().push(from);
     }
 
-    pub fn get_multiples(&self) -> Vec<MultipleReferences<T, U>> {
+    pub fn find_multiples(&self) -> Vec<MultipleReferences<T, U>> {
         self.0
             .iter()
-            .filter(|(_, references)| references.len() > 1)
-            .map(|(referenced, references)| MultipleReferences {
-                referenced: referenced.clone(),
-                references: references.to_vec(),
+            .filter(|(_, referenced_by)| referenced_by.len() > 1)
+            .map(|(object, referenced_by)| MultipleReferences {
+                object: object.clone(),
+                referenced_by: referenced_by.to_vec(),
             })
             .collect()
     }
@@ -39,68 +34,62 @@ impl<T, U> ReferenceCounter<T, U> {
 macro_rules! validate_references {
     ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
         $(
-            $counter.get_multiples().iter().for_each(|multiple| {
-                let reference_error = ReferenceCountError::$err { references: multiple.clone() };
+            $counter.find_multiples().iter().for_each(|multiple| {
+                let reference_error = ObjectNotExclusivelyOwned::$err { references: multiple.clone() };
                 $errors.push(Into::<$error_ty>::into(reference_error).into());
             });
         )*
     };
 }
 
-/// Validation errors for when an object is referenced by multiple other objects. Each object
-/// should only be referenced by a single other object  
+/// Object that should be exclusively owned by another, is not
+///
+/// Some objects are expected to be "owned" by a single other object. This means
+/// that only one reference to these objects must exist within the topological
+/// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum ReferenceCountError {
+pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
-    #[error(
-        "[`Region`] referenced by more than one [`Face`]\n{references:#?}"
-    )]
+    #[error(transparent)]
     Region {
         references: MultipleReferences<Region, Face>,
     },
     /// [`Face`] referenced by more than one [`Shell`]
-    #[error("[`Face`] referenced by more than one [`Shell`]\n{references:#?}")]
+    #[error(transparent)]
     Face {
         references: MultipleReferences<Face, Shell>,
     },
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
-    #[error(
-        "[`HalfEdge`] referenced by more than one [`Cycle`]\n{references:#?}"
-    )]
+    #[error(transparent)]
     HalfEdge {
         references: MultipleReferences<HalfEdge, Cycle>,
     },
     /// [`Cycle`] referenced by more than one [`Region`]
-    #[error(
-        "[`Cycle`] referenced by more than one [`Region`]\n{references:#?}"
-    )]
+    #[error(transparent)]
     Cycle {
         references: MultipleReferences<Cycle, Region>,
     },
 }
 
+#[derive(Clone, Debug, thiserror::Error)]
 pub struct MultipleReferences<T, U> {
-    referenced: Handle<T>,
-    references: Vec<Handle<U>>,
+    object: Handle<T>,
+    referenced_by: Vec<Handle<U>>,
 }
 
-use std::fmt::Debug;
-
-impl<T: Debug, U: Debug> Debug for MultipleReferences<T, U> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl<T, U> fmt::Display for MultipleReferences<T, U>
+where
+    T: fmt::Debug,
+    U: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "{:?} referenced by {:?}",
-            self.referenced, self.references
+            "`{}` ({:?}) referenced by multiple `{}` objects ({:?})",
+            type_name_of_val(&self.object),
+            self.object,
+            type_name_of_val(&self.referenced_by),
+            self.referenced_by
         )
-    }
-}
-
-impl<T, U> Clone for MultipleReferences<T, U> {
-    fn clone(&self) -> Self {
-        Self {
-            referenced: self.referenced.clone(),
-            references: self.references.to_vec(),
-        }
     }
 }

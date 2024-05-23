@@ -9,7 +9,7 @@ use crate::{
 };
 
 use super::{
-    references::{ReferenceCountError, ReferenceCounter},
+    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
     Validate, ValidationConfig, ValidationError,
 };
 
@@ -39,7 +39,8 @@ impl Validate for Sketch {
 pub enum SketchValidationError {
     /// Object within sketch referenced by more than one other object
     #[error("Object within sketch referenced by more than one other Object")]
-    MultipleReferences(#[from] ReferenceCountError),
+    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
+
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
         "Exterior cycle within sketch region has clockwise winding\n
@@ -49,6 +50,7 @@ pub enum SketchValidationError {
         /// Cycle with clockwise winding
         cycle: Handle<Cycle>,
     },
+
     /// Region within sketch has interior cycle with counter-clockwise winding
     #[error(
         "Interior cycle within sketch region has counter-clockwise winding\n
@@ -71,9 +73,9 @@ impl SketchValidationError {
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
-                referenced_cycles.add_reference(c.clone(), r.clone());
+                referenced_cycles.count_reference(c.clone(), r.clone());
                 c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges.add_reference(e.clone(), c.clone());
+                    referenced_edges.count_reference(e.clone(), c.clone());
                 })
             })
         });
@@ -134,8 +136,8 @@ mod tests {
         },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{
-            references::ReferenceCountError, SketchValidationError, Validate,
-            ValidationError,
+            references::ObjectNotExclusivelyOwned, SketchValidationError,
+            Validate, ValidationError,
         },
         Core,
     };
@@ -168,9 +170,11 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::Cycle { references: _ }
-            ))
+            ValidationError::Sketch(
+                SketchValidationError::ObjectNotExclusivelyOwned(
+                    ObjectNotExclusivelyOwned::Cycle { references: _ }
+                )
+            )
         );
 
         Ok(())
@@ -206,9 +210,11 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::HalfEdge { references: _ }
-            ))
+            ValidationError::Sketch(
+                SketchValidationError::ObjectNotExclusivelyOwned(
+                    ObjectNotExclusivelyOwned::HalfEdge { references: _ }
+                )
+            )
         );
 
         Ok(())
