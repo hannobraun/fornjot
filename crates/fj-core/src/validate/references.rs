@@ -28,8 +28,8 @@ impl<T, U> ReferenceCounter<T, U> {
         self.0
             .iter()
             .filter(|(_, references)| references.len() > 1)
-            .map(|(referenced, references)| MultipleReferences {
-                object: referenced.clone(),
+            .map(|(object, references)| MultipleReferences {
+                object: object.clone(),
                 referenced_by: references.to_vec(),
             })
             .collect()
