@@ -55,28 +55,22 @@ macro_rules! validate_references {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
-    #[error(
-        "[`Region`] referenced by more than one [`Face`]\n{references:#?}"
-    )]
+    #[error("`Region` referenced by more than one `Face`\n{references:#?}")]
     Region {
         references: MultipleReferences<Region, Face>,
     },
     /// [`Face`] referenced by more than one [`Shell`]
-    #[error("[`Face`] referenced by more than one [`Shell`]\n{references:#?}")]
+    #[error("`Face` referenced by more than one `Shell`\n{references:#?}")]
     Face {
         references: MultipleReferences<Face, Shell>,
     },
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
-    #[error(
-        "[`HalfEdge`] referenced by more than one [`Cycle`]\n{references:#?}"
-    )]
+    #[error("`HalfEdge` referenced by more than one `Cycle`\n{references:#?}")]
     HalfEdge {
         references: MultipleReferences<HalfEdge, Cycle>,
     },
     /// [`Cycle`] referenced by more than one [`Region`]
-    #[error(
-        "[`Cycle`] referenced by more than one [`Region`]\n{references:#?}"
-    )]
+    #[error("`Cycle` referenced by more than one `Region`\n{references:#?}")]
     Cycle {
         references: MultipleReferences<Cycle, Region>,
     },
