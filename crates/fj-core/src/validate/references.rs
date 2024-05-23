@@ -71,7 +71,7 @@ pub enum ObjectNotExclusivelyOwned {
     },
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, thiserror::Error)]
 pub struct MultipleReferences<T, U> {
     object: Handle<T>,
     referenced_by: Vec<Handle<U>>,
