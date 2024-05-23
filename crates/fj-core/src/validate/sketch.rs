@@ -39,7 +39,7 @@ impl Validate for Sketch {
 pub enum SketchValidationError {
     /// Object within sketch referenced by more than one other object
     #[error("Object within sketch referenced by more than one other Object")]
-    MultipleReferences(#[from] ObjectNotExclusivelyOwned),
+    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
@@ -170,9 +170,11 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::Cycle { references: _ }
-            ))
+            ValidationError::Sketch(
+                SketchValidationError::ObjectNotExclusivelyOwned(
+                    ObjectNotExclusivelyOwned::Cycle { references: _ }
+                )
+            )
         );
 
         Ok(())
@@ -208,9 +210,11 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
-            ))
+            ValidationError::Sketch(
+                SketchValidationError::ObjectNotExclusivelyOwned(
+                    ObjectNotExclusivelyOwned::HalfEdge { references: _ }
+                )
+            )
         );
 
         Ok(())
