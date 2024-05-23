@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt};
+use std::{any::type_name_of_val, collections::HashMap, fmt};
 
 use crate::{
     storage::Handle,
@@ -50,22 +50,22 @@ macro_rules! validate_references {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
-    #[error("`Region` referenced by more than one `Face`\n{references}")]
+    #[error(transparent)]
     Region {
         references: MultipleReferences<Region, Face>,
     },
     /// [`Face`] referenced by more than one [`Shell`]
-    #[error("`Face` referenced by more than one `Shell`\n{references}")]
+    #[error(transparent)]
     Face {
         references: MultipleReferences<Face, Shell>,
     },
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
-    #[error("`HalfEdge` referenced by more than one `Cycle`\n{references}")]
+    #[error(transparent)]
     HalfEdge {
         references: MultipleReferences<HalfEdge, Cycle>,
     },
     /// [`Cycle`] referenced by more than one [`Region`]
-    #[error("`Cycle` referenced by more than one `Region`\n{references}")]
+    #[error(transparent)]
     Cycle {
         references: MultipleReferences<Cycle, Region>,
     },
@@ -85,8 +85,11 @@ where
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "{:?} referenced by {:?}",
-            self.object, self.referenced_by
+            "`{}` ({:?}) referenced by multiple `{}` objects ({:?})",
+            type_name_of_val(&self.object),
+            self.object,
+            type_name_of_val(&self.referenced_by),
+            self.referenced_by
         )
     }
 }
