@@ -24,7 +24,7 @@ impl<T, U> ReferenceCounter<T, U> {
             .or_insert(vec![reference]);
     }
 
-    pub fn get_multiples(&self) -> Vec<MultipleReferences<T, U>> {
+    pub fn find_multiples(&self) -> Vec<MultipleReferences<T, U>> {
         self.0
             .iter()
             .filter(|(_, references)| references.len() > 1)
@@ -41,7 +41,7 @@ impl<T, U> ReferenceCounter<T, U> {
 macro_rules! validate_references {
     ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
         $(
-            $counter.get_multiples().iter().for_each(|multiple| {
+            $counter.find_multiples().iter().for_each(|multiple| {
                 let reference_error = ObjectNotExclusivelyOwned::$err { references: multiple.clone() };
                 $errors.push(Into::<$error_ty>::into(reference_error).into());
             });
