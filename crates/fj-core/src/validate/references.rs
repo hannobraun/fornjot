@@ -84,7 +84,11 @@ pub struct MultipleReferences<T, U> {
     references: Vec<Handle<U>>,
 }
 
-impl<T: fmt::Debug, U: fmt::Debug> fmt::Debug for MultipleReferences<T, U> {
+impl<T, U> fmt::Debug for MultipleReferences<T, U>
+where
+    T: fmt::Debug,
+    U: fmt::Debug,
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
