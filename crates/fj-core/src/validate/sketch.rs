@@ -40,6 +40,7 @@ pub enum SketchValidationError {
     /// Object within sketch referenced by more than one other object
     #[error("Object within sketch referenced by more than one other Object")]
     MultipleReferences(#[from] ReferenceCountError),
+
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
         "Exterior cycle within sketch region has clockwise winding\n
@@ -49,6 +50,7 @@ pub enum SketchValidationError {
         /// Cycle with clockwise winding
         cycle: Handle<Cycle>,
     },
+
     /// Region within sketch has interior cycle with counter-clockwise winding
     #[error(
         "Interior cycle within sketch region has counter-clockwise winding\n
