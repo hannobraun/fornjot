@@ -9,7 +9,7 @@ use crate::{
 };
 
 use super::{
-    references::{ReferenceCountError, ReferenceCounter},
+    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
     Validate, ValidationConfig, ValidationError,
 };
 
@@ -39,7 +39,7 @@ impl Validate for Sketch {
 pub enum SketchValidationError {
     /// Object within sketch referenced by more than one other object
     #[error("Object within sketch referenced by more than one other Object")]
-    MultipleReferences(#[from] ReferenceCountError),
+    MultipleReferences(#[from] ObjectNotExclusivelyOwned),
 
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
@@ -136,8 +136,8 @@ mod tests {
         },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{
-            references::ReferenceCountError, SketchValidationError, Validate,
-            ValidationError,
+            references::ObjectNotExclusivelyOwned, SketchValidationError,
+            Validate, ValidationError,
         },
         Core,
     };
@@ -171,7 +171,7 @@ mod tests {
             core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::Cycle { references: _ }
+                ObjectNotExclusivelyOwned::Cycle { references: _ }
             ))
         );
 
@@ -209,7 +209,7 @@ mod tests {
             core,
             invalid_sketch,
             ValidationError::Sketch(SketchValidationError::MultipleReferences(
-                ReferenceCountError::HalfEdge { references: _ }
+                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
             ))
         );
 

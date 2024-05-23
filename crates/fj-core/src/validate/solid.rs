@@ -9,7 +9,7 @@ use crate::{
 use fj_math::Point;
 
 use super::{
-    references::{ReferenceCountError, ReferenceCounter},
+    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
     Validate, ValidationConfig, ValidationError,
 };
 
@@ -70,7 +70,7 @@ pub enum SolidValidationError {
 
     /// Object within solid referenced by more than one other object
     #[error("Object within solid referenced by more than one other Object")]
-    MultipleReferences(#[from] ReferenceCountError),
+    MultipleReferences(#[from] ObjectNotExclusivelyOwned),
 }
 
 impl SolidValidationError {
@@ -187,8 +187,8 @@ mod tests {
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
         validate::{
-            references::ReferenceCountError, SolidValidationError, Validate,
-            ValidationError,
+            references::ObjectNotExclusivelyOwned, SolidValidationError,
+            Validate, ValidationError,
         },
         Core,
     };
@@ -238,7 +238,7 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Face { references: _ }
+                ObjectNotExclusivelyOwned::Face { references: _ }
             ))
         );
 
@@ -284,7 +284,7 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Region { references: _ }
+                ObjectNotExclusivelyOwned::Region { references: _ }
             ))
         );
 
@@ -334,7 +334,7 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::Cycle { references: _ }
+                ObjectNotExclusivelyOwned::Cycle { references: _ }
             ))
         );
 
@@ -376,7 +376,7 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ReferenceCountError::HalfEdge { references: _ }
+                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
             ))
         );
 

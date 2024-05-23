@@ -40,7 +40,7 @@ macro_rules! validate_references {
     ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
         $(
             $counter.get_multiples().iter().for_each(|multiple| {
-                let reference_error = ReferenceCountError::$err { references: multiple.clone() };
+                let reference_error = ObjectNotExclusivelyOwned::$err { references: multiple.clone() };
                 $errors.push(Into::<$error_ty>::into(reference_error).into());
             });
         )*
@@ -50,7 +50,7 @@ macro_rules! validate_references {
 /// Validation errors for when an object is referenced by multiple other objects. Each object
 /// should only be referenced by a single other object  
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum ReferenceCountError {
+pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
     #[error(
         "[`Region`] referenced by more than one [`Face`]\n{references:#?}"
