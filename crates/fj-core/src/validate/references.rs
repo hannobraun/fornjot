@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::Debug};
+use std::{collections::HashMap, fmt};
 
 use crate::{
     storage::Handle,
@@ -84,7 +84,7 @@ pub struct MultipleReferences<T, U> {
     references: Vec<Handle<U>>,
 }
 
-impl<T: Debug, U: Debug> Debug for MultipleReferences<T, U> {
+impl<T: fmt::Debug, U: fmt::Debug> fmt::Debug for MultipleReferences<T, U> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
