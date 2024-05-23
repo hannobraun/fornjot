@@ -85,7 +85,7 @@ pub struct MultipleReferences<T, U> {
 }
 
 impl<T: fmt::Debug, U: fmt::Debug> fmt::Debug for MultipleReferences<T, U> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
             "{:?} referenced by {:?}",
