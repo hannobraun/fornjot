@@ -76,6 +76,7 @@ pub enum ObjectNotExclusivelyOwned {
     },
 }
 
+#[derive(Clone)]
 pub struct MultipleReferences<T, U> {
     referenced: Handle<T>,
     references: Vec<Handle<U>>,
@@ -90,14 +91,5 @@ impl<T: Debug, U: Debug> Debug for MultipleReferences<T, U> {
             "{:?} referenced by {:?}",
             self.referenced, self.references
         )
-    }
-}
-
-impl<T, U> Clone for MultipleReferences<T, U> {
-    fn clone(&self) -> Self {
-        Self {
-            referenced: self.referenced.clone(),
-            references: self.references.to_vec(),
-        }
     }
 }
