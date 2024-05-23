@@ -27,7 +27,7 @@ impl<T, U> ReferenceCounter<T, U> {
     pub fn find_multiples(&self) -> Vec<MultipleReferences<T, U>> {
         self.0
             .iter()
-            .filter(|(_, references)| references.len() > 1)
+            .filter(|(_, referenced_by)| referenced_by.len() > 1)
             .map(|(object, referenced_by)| MultipleReferences {
                 object: object.clone(),
                 referenced_by: referenced_by.to_vec(),
