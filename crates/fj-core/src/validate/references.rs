@@ -13,8 +13,8 @@ impl<T, U> ReferenceCounter<T, U> {
         Self(HashMap::new())
     }
 
-    pub fn count_reference(&mut self, to: Handle<T>, reference: Handle<U>) {
-        self.0.entry(to).or_default().push(reference);
+    pub fn count_reference(&mut self, to: Handle<T>, from: Handle<U>) {
+        self.0.entry(to).or_default().push(from);
     }
 
     pub fn find_multiples(&self) -> Vec<MultipleReferences<T, U>> {
