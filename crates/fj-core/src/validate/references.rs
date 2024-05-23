@@ -18,10 +18,7 @@ impl<T, U> ReferenceCounter<T, U> {
         referenced: Handle<T>,
         reference: Handle<U>,
     ) {
-        self.0
-            .entry(referenced)
-            .and_modify(|references| references.push(reference.clone()))
-            .or_insert(vec![reference]);
+        self.0.entry(referenced).or_default().push(reference);
     }
 
     pub fn find_multiples(&self) -> Vec<MultipleReferences<T, U>> {
