@@ -1,7 +1,9 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Debug};
 
-use crate::storage::Handle;
-use crate::topology::{Cycle, Face, HalfEdge, Region, Shell};
+use crate::{
+    storage::Handle,
+    topology::{Cycle, Face, HalfEdge, Region, Shell},
+};
 
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
@@ -81,8 +83,6 @@ pub struct MultipleReferences<T, U> {
     referenced: Handle<T>,
     references: Vec<Handle<U>>,
 }
-
-use std::fmt::Debug;
 
 impl<T: Debug, U: Debug> Debug for MultipleReferences<T, U> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
