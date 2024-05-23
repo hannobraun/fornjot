@@ -13,7 +13,7 @@ impl<T, U> ReferenceCounter<T, U> {
         Self(HashMap::new())
     }
 
-    pub fn add_reference(
+    pub fn count_reference(
         &mut self,
         referenced: Handle<T>,
         reference: Handle<U>,
