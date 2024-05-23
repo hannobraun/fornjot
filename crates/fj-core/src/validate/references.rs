@@ -29,7 +29,7 @@ impl<T, U> ReferenceCounter<T, U> {
             .iter()
             .filter(|(_, references)| references.len() > 1)
             .map(|(referenced, references)| MultipleReferences {
-                referenced: referenced.clone(),
+                object: referenced.clone(),
                 references: references.to_vec(),
             })
             .collect()
@@ -80,7 +80,7 @@ pub enum ObjectNotExclusivelyOwned {
 
 #[derive(Clone, Debug)]
 pub struct MultipleReferences<T, U> {
-    referenced: Handle<T>,
+    object: Handle<T>,
     references: Vec<Handle<U>>,
 }
 
@@ -90,10 +90,6 @@ where
     U: fmt::Debug,
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "{:?} referenced by {:?}",
-            self.referenced, self.references
-        )
+        write!(f, "{:?} referenced by {:?}", self.object, self.references)
     }
 }
