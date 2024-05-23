@@ -47,8 +47,11 @@ macro_rules! validate_references {
     };
 }
 
-/// Validation errors for when an object is referenced by multiple other objects. Each object
-/// should only be referenced by a single other object  
+/// Object that should be exclusively owned by another, is not
+///
+/// Some objects are expected to be "owned" by a single other object. This means
+/// that only one reference to these objects must exist within the topological
+/// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
