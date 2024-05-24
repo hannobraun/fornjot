@@ -19,10 +19,8 @@ impl<T, U> ReferenceCounter<T, U> {
             .iter()
             .filter(|(_, referenced_by)| referenced_by.len() > 1)
             .map(|(object, referenced_by)| ObjectNotExclusivelyOwned {
-                references: MultipleReferences {
-                    object: object.clone(),
-                    referenced_by: referenced_by.to_vec(),
-                },
+                object: object.clone(),
+                referenced_by: referenced_by.to_vec(),
             })
             .collect()
     }
@@ -47,19 +45,12 @@ macro_rules! validate_references {
 /// that only one reference to these objects must exist within the topological
 /// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
-#[error(transparent)]
 pub struct ObjectNotExclusivelyOwned<T, U> {
-    /// The invalid references
-    pub references: MultipleReferences<T, U>,
-}
-
-#[derive(Clone, Debug, thiserror::Error)]
-pub struct MultipleReferences<T, U> {
     object: Handle<T>,
     referenced_by: Vec<Handle<U>>,
 }
 
-impl<T, U> fmt::Display for MultipleReferences<T, U>
+impl<T, U> fmt::Display for ObjectNotExclusivelyOwned<T, U>
 where
     T: fmt::Debug,
     U: fmt::Debug,
