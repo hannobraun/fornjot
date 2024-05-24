@@ -2,6 +2,34 @@ use std::{any::type_name_of_val, collections::HashMap, fmt};
 
 use crate::storage::Handle;
 
+/// Object that should be exclusively owned by another, is not
+///
+/// Some objects are expected to be "owned" by a single other object. This means
+/// that only one reference to these objects must exist within the topological
+/// object graph.
+#[derive(Clone, Debug, thiserror::Error)]
+pub struct ObjectNotExclusivelyOwned<T, U> {
+    object: Handle<T>,
+    referenced_by: Vec<Handle<U>>,
+}
+
+impl<T, U> fmt::Display for ObjectNotExclusivelyOwned<T, U>
+where
+    T: fmt::Debug,
+    U: fmt::Debug,
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "`{}` ({:?}) referenced by multiple `{}` objects ({:?})",
+            type_name_of_val(&self.object),
+            self.object,
+            type_name_of_val(&self.referenced_by),
+            self.referenced_by
+        )
+    }
+}
+
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
 
@@ -37,32 +65,4 @@ macro_rules! validate_references {
             });
         )*
     };
-}
-
-/// Object that should be exclusively owned by another, is not
-///
-/// Some objects are expected to be "owned" by a single other object. This means
-/// that only one reference to these objects must exist within the topological
-/// object graph.
-#[derive(Clone, Debug, thiserror::Error)]
-pub struct ObjectNotExclusivelyOwned<T, U> {
-    object: Handle<T>,
-    referenced_by: Vec<Handle<U>>,
-}
-
-impl<T, U> fmt::Display for ObjectNotExclusivelyOwned<T, U>
-where
-    T: fmt::Debug,
-    U: fmt::Debug,
-{
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "`{}` ({:?}) referenced by multiple `{}` objects ({:?})",
-            type_name_of_val(&self.object),
-            self.object,
-            type_name_of_val(&self.referenced_by),
-            self.referenced_by
-        )
-    }
 }
