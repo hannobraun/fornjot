@@ -79,7 +79,7 @@ impl SketchValidationError {
         validate_references!(
             errors, SketchValidationError;
             referenced_edges, MultipleReferencesToHalfEdge;
-            referenced_cycles, Cycle;
+            referenced_cycles, MultipleReferencesToCycle;
         );
     }
 
@@ -167,7 +167,9 @@ mod tests {
             core,
             invalid_sketch,
             ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::Cycle { references: _ }
+                ObjectNotExclusivelyOwned::MultipleReferencesToCycle {
+                    references: _
+                }
             )
         );
 

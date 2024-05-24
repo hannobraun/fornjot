@@ -72,7 +72,7 @@ pub enum ObjectNotExclusivelyOwned {
 
     /// [`Cycle`] referenced by more than one [`Region`]
     #[error(transparent)]
-    Cycle {
+    MultipleReferencesToCycle {
         /// The invalid references
         references: MultipleReferences<Cycle, Region>,
     },

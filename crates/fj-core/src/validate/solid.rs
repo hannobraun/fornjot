@@ -168,7 +168,7 @@ impl SolidValidationError {
             referenced_regions, MultipleReferencesToRegion;
             referenced_faces, MultipleReferencesToFace;
             referenced_edges, MultipleReferencesToHalfEdge;
-            referenced_cycles, Cycle;
+            referenced_cycles, MultipleReferencesToCycle;
         );
     }
 }
@@ -334,7 +334,9 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::Cycle { references: _ }
+                ObjectNotExclusivelyOwned::MultipleReferencesToCycle {
+                    references: _
+                }
             )
         );
 
