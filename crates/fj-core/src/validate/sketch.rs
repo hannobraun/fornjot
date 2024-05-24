@@ -9,8 +9,7 @@ use crate::{
 };
 
 use super::{
-    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
-    Validate, ValidationConfig, ValidationError,
+    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
 };
 
 impl Validate for Sketch {
@@ -37,10 +36,6 @@ impl Validate for Sketch {
 /// [`Sketch`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SketchValidationError {
-    /// Object within sketch referenced by more than one other object
-    #[error("Object within sketch referenced by more than one other Object")]
-    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
-
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
         "Exterior cycle within sketch region has clockwise winding\n
@@ -81,9 +76,9 @@ impl SketchValidationError {
         });
 
         validate_references!(
-            errors, SketchValidationError;
-            referenced_edges, HalfEdge;
-            referenced_cycles, Cycle;
+            errors;
+            referenced_edges, MultipleReferencesToHalfEdge;
+            referenced_cycles, MultipleReferencesToCycle;
         );
     }
 
@@ -135,10 +130,7 @@ mod tests {
             build::BuildHalfEdge, build::BuildRegion, insert::Insert,
         },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
-        validate::{
-            references::ObjectNotExclusivelyOwned, SketchValidationError,
-            Validate, ValidationError,
-        },
+        validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
 
@@ -170,11 +162,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::Cycle { references: _ }
-                )
-            )
+            ValidationError::MultipleReferencesToCycle(_)
         );
 
         Ok(())
@@ -210,11 +198,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::HalfEdge { references: _ }
-                )
-            )
+            ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
         Ok(())

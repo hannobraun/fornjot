@@ -9,8 +9,7 @@ use crate::{
 use fj_math::Point;
 
 use super::{
-    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
-    Validate, ValidationConfig, ValidationError,
+    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
 };
 
 impl Validate for Solid {
@@ -67,10 +66,6 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
-
-    /// Object within solid referenced by more than one other object
-    #[error("Object within solid referenced by more than one other Object")]
-    MultipleReferences(#[from] ObjectNotExclusivelyOwned),
 }
 
 impl SolidValidationError {
@@ -168,11 +163,11 @@ impl SolidValidationError {
         });
 
         validate_references!(
-            errors, SolidValidationError;
-            referenced_regions, Region;
-            referenced_faces, Face;
-            referenced_edges, HalfEdge;
-            referenced_cycles, Cycle;
+            errors;
+            referenced_regions, MultipleReferencesToRegion;
+            referenced_faces, MultipleReferencesToFace;
+            referenced_edges, MultipleReferencesToHalfEdge;
+            referenced_cycles, MultipleReferencesToCycle;
         );
     }
 }
@@ -187,10 +182,7 @@ mod tests {
             insert::Insert,
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
-        validate::{
-            references::ObjectNotExclusivelyOwned, SolidValidationError,
-            Validate, ValidationError,
-        },
+        validate::{Validate, ValidationError},
         Core,
     };
 
@@ -238,9 +230,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::Face { references: _ }
-            ))
+            ValidationError::MultipleReferencesToFace(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -284,9 +274,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::Region { references: _ }
-            ))
+            ValidationError::MultipleReferencesToRegion(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -334,9 +322,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::Cycle { references: _ }
-            ))
+            ValidationError::MultipleReferencesToCycle(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -376,9 +362,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(SolidValidationError::MultipleReferences(
-                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
-            ))
+            ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);

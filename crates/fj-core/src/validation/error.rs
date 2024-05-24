@@ -1,6 +1,11 @@
 use std::{convert::Infallible, fmt};
 
-use crate::validate::{SketchValidationError, SolidValidationError};
+use crate::{
+    topology::{Cycle, Face, HalfEdge, Region, Shell},
+    validate::{
+        ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
+    },
+};
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
@@ -36,6 +41,22 @@ pub enum ValidationError {
     /// Interior cycle has invalid winding
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
+
+    /// Multiple references to [`Cycle`]
+    #[error(transparent)]
+    MultipleReferencesToCycle(ObjectNotExclusivelyOwned<Cycle, Region>),
+
+    /// Multiple references to [`Face`]
+    #[error(transparent)]
+    MultipleReferencesToFace(ObjectNotExclusivelyOwned<Face, Shell>),
+
+    /// Multiple references to [`HalfEdge`]
+    #[error(transparent)]
+    MultipleReferencesToHalfEdge(ObjectNotExclusivelyOwned<HalfEdge, Cycle>),
+
+    /// Multiple references to [`Region`]
+    #[error(transparent)]
+    MultipleReferencesToRegion(ObjectNotExclusivelyOwned<Region, Face>),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]
