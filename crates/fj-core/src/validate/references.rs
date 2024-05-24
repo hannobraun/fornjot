@@ -52,21 +52,25 @@ pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
     #[error(transparent)]
     Region {
+        /// The invalid references
         references: MultipleReferences<Region, Face>,
     },
     /// [`Face`] referenced by more than one [`Shell`]
     #[error(transparent)]
     Face {
+        /// The invalid references
         references: MultipleReferences<Face, Shell>,
     },
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
     #[error(transparent)]
     HalfEdge {
+        /// The invalid references
         references: MultipleReferences<HalfEdge, Cycle>,
     },
     /// [`Cycle`] referenced by more than one [`Region`]
     #[error(transparent)]
     Cycle {
+        /// The invalid references
         references: MultipleReferences<Cycle, Region>,
     },
 }
