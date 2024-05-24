@@ -69,7 +69,7 @@ pub enum SolidValidationError {
     },
 
     /// Object within solid referenced by more than one other object
-    #[error("Object within solid referenced by more than one other Object")]
+    #[error(transparent)]
     ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 }
 
