@@ -58,7 +58,7 @@ pub enum ObjectNotExclusivelyOwned {
 
     /// [`Face`] referenced by more than one [`Shell`]
     #[error(transparent)]
-    Face {
+    MultipleReferencesToFace {
         /// The invalid references
         references: MultipleReferences<Face, Shell>,
     },

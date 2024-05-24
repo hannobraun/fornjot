@@ -166,7 +166,7 @@ impl SolidValidationError {
         validate_references!(
             errors, SolidValidationError;
             referenced_regions, MultipleReferencesToRegion;
-            referenced_faces, Face;
+            referenced_faces, MultipleReferencesToFace;
             referenced_edges, HalfEdge;
             referenced_cycles, Cycle;
         );
@@ -234,7 +234,9 @@ mod tests {
             core,
             invalid_solid,
             ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::Face { references: _ }
+                ObjectNotExclusivelyOwned::MultipleReferencesToFace {
+                    references: _
+                }
             )
         );
 
