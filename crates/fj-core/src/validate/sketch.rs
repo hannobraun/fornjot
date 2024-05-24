@@ -37,7 +37,7 @@ impl Validate for Sketch {
 /// [`Sketch`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SketchValidationError {
-    /// Object within sketch referenced by more than one other object
+    /// An object that should be exclusively owned by another, is not
     #[error(transparent)]
     ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 
