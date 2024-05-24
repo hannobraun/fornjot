@@ -65,7 +65,7 @@ pub enum ObjectNotExclusivelyOwned {
 
     /// [`HalfEdge`] referenced by more than one [`Cycle`]
     #[error(transparent)]
-    HalfEdge {
+    MultipleReferencesToHalfEdge {
         /// The invalid references
         references: MultipleReferences<HalfEdge, Cycle>,
     },
