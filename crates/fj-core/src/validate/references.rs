@@ -29,7 +29,7 @@ impl<T, U> ReferenceCounter<T, U> {
 /// Find errors and convert to [`crate::validate::ValidationError`]
 #[macro_export]
 macro_rules! validate_references {
-    ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
+    ($errors:ident;$($counter:ident, $err:ident;)*) => {
         $(
             $counter.find_multiples().iter().for_each(|multiple| {
                 let reference_error = ValidationError::$err(multiple.clone());

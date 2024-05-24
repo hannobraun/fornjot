@@ -163,7 +163,7 @@ impl SolidValidationError {
         });
 
         validate_references!(
-            errors, SolidValidationError;
+            errors;
             referenced_regions, MultipleReferencesToRegion;
             referenced_faces, MultipleReferencesToFace;
             referenced_edges, MultipleReferencesToHalfEdge;
