@@ -131,10 +131,7 @@ mod tests {
             build::BuildHalfEdge, build::BuildRegion, insert::Insert,
         },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
-        validate::{
-            references::ObjectNotExclusivelyOwned, SketchValidationError,
-            Validate, ValidationError,
-        },
+        validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
 
@@ -166,11 +163,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToCycle {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToCycle(_)
         );
 
         Ok(())
@@ -206,11 +199,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToHalfEdge {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
         Ok(())

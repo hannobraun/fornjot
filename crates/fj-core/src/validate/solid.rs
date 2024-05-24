@@ -183,9 +183,7 @@ mod tests {
             insert::Insert,
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
-        validate::{
-            references::ObjectNotExclusivelyOwned, Validate, ValidationError,
-        },
+        validate::{Validate, ValidationError},
         Core,
     };
 
@@ -233,11 +231,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToFace {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToFace(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -281,11 +275,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToRegion {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToRegion(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -333,11 +323,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToCycle {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToCycle(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);
@@ -377,11 +363,7 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::ObjectNotExclusivelyOwned(
-                ObjectNotExclusivelyOwned::MultipleReferencesToHalfEdge {
-                    references: _
-                }
-            )
+            ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
         let valid_solid = Solid::new(vec![]).insert(&mut core);

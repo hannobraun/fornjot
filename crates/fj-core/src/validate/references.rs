@@ -1,9 +1,6 @@
 use std::{any::type_name_of_val, collections::HashMap, fmt};
 
-use crate::{
-    storage::Handle,
-    topology::{Cycle, Face, HalfEdge, Region, Shell},
-};
+use crate::storage::Handle;
 
 #[derive(Default)]
 pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
@@ -35,7 +32,7 @@ macro_rules! validate_references {
     ($errors:ident, $error_ty:ty;$($counter:ident, $err:ident;)*) => {
         $(
             $counter.find_multiples().iter().for_each(|multiple| {
-                let reference_error = ObjectNotExclusivelyOwned::$err { references: multiple.clone() };
+                let reference_error = ValidationError::$err(ObjectNotExclusivelyOwned{ references: multiple.clone() });
                 $errors.push(reference_error.into());
             });
         )*
@@ -48,34 +45,10 @@ macro_rules! validate_references {
 /// that only one reference to these objects must exist within the topological
 /// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
-pub enum ObjectNotExclusivelyOwned {
-    /// Multiple references to [`Region`]
-    #[error(transparent)]
-    MultipleReferencesToRegion {
-        /// The invalid references
-        references: MultipleReferences<Region, Face>,
-    },
-
-    /// Multiple references to [`Face`]
-    #[error(transparent)]
-    MultipleReferencesToFace {
-        /// The invalid references
-        references: MultipleReferences<Face, Shell>,
-    },
-
-    /// Multiple references to [`HalfEdge`]
-    #[error(transparent)]
-    MultipleReferencesToHalfEdge {
-        /// The invalid references
-        references: MultipleReferences<HalfEdge, Cycle>,
-    },
-
-    /// Multiple references to [`Cycle`]
-    #[error(transparent)]
-    MultipleReferencesToCycle {
-        /// The invalid references
-        references: MultipleReferences<Cycle, Region>,
-    },
+#[error(transparent)]
+pub struct ObjectNotExclusivelyOwned<T, U> {
+    /// The invalid references
+    pub references: MultipleReferences<T, U>,
 }
 
 #[derive(Clone, Debug, thiserror::Error)]

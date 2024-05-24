@@ -1,7 +1,10 @@
 use std::{convert::Infallible, fmt};
 
-use crate::validate::{
-    ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
+use crate::{
+    topology::{Cycle, Face, HalfEdge, Region, Shell},
+    validate::{
+        ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
+    },
 };
 
 use super::checks::{
@@ -39,9 +42,21 @@ pub enum ValidationError {
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
 
-    /// An object that should be exclusively owned by another, is not
+    /// Multiple references to [`Cycle`]
     #[error(transparent)]
-    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
+    MultipleReferencesToCycle(ObjectNotExclusivelyOwned<Cycle, Region>),
+
+    /// Multiple references to [`Face`]
+    #[error(transparent)]
+    MultipleReferencesToFace(ObjectNotExclusivelyOwned<Face, Shell>),
+
+    /// Multiple references to [`HalfEdge`]
+    #[error(transparent)]
+    MultipleReferencesToHalfEdge(ObjectNotExclusivelyOwned<HalfEdge, Cycle>),
+
+    /// Multiple references to [`Region`]
+    #[error(transparent)]
+    MultipleReferencesToRegion(ObjectNotExclusivelyOwned<Region, Face>),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]
