@@ -51,7 +51,7 @@ macro_rules! validate_references {
 pub enum ObjectNotExclusivelyOwned {
     /// [`Region`] referenced by more than one [`Face`]
     #[error(transparent)]
-    Region {
+    MultipleReferencesToRegion {
         /// The invalid references
         references: MultipleReferences<Region, Face>,
     },
