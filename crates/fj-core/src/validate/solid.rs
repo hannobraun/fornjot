@@ -9,8 +9,7 @@ use crate::{
 use fj_math::Point;
 
 use super::{
-    references::{ObjectNotExclusivelyOwned, ReferenceCounter},
-    Validate, ValidationConfig, ValidationError,
+    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
 };
 
 impl Validate for Solid {
