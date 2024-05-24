@@ -38,7 +38,7 @@ impl Validate for Sketch {
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SketchValidationError {
     /// Object within sketch referenced by more than one other object
-    #[error("Object within sketch referenced by more than one other Object")]
+    #[error(transparent)]
     ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 
     /// Region within sketch has exterior cycle with clockwise winding
