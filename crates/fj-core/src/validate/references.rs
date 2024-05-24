@@ -49,28 +49,28 @@ macro_rules! validate_references {
 /// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ObjectNotExclusivelyOwned {
-    /// [`Region`] referenced by more than one [`Face`]
+    /// Multiple references to [`Region`]
     #[error(transparent)]
     MultipleReferencesToRegion {
         /// The invalid references
         references: MultipleReferences<Region, Face>,
     },
 
-    /// [`Face`] referenced by more than one [`Shell`]
+    /// Multiple references to [`Face`]
     #[error(transparent)]
     MultipleReferencesToFace {
         /// The invalid references
         references: MultipleReferences<Face, Shell>,
     },
 
-    /// [`HalfEdge`] referenced by more than one [`Cycle`]
+    /// Multiple references to [`HalfEdge`]
     #[error(transparent)]
     MultipleReferencesToHalfEdge {
         /// The invalid references
         references: MultipleReferences<HalfEdge, Cycle>,
     },
 
-    /// [`Cycle`] referenced by more than one [`Region`]
+    /// Multiple references to [`Cycle`]
     #[error(transparent)]
     MultipleReferencesToCycle {
         /// The invalid references
