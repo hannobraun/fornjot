@@ -36,7 +36,7 @@ macro_rules! validate_references {
         $(
             $counter.find_multiples().iter().for_each(|multiple| {
                 let reference_error = ObjectNotExclusivelyOwned::$err { references: multiple.clone() };
-                $errors.push(Into::<$error_ty>::into(reference_error).into());
+                $errors.push(reference_error.into());
             });
         )*
     };

@@ -1,6 +1,8 @@
 use std::{convert::Infallible, fmt};
 
-use crate::validate::{SketchValidationError, SolidValidationError};
+use crate::validate::{
+    ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
+};
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
@@ -36,6 +38,10 @@ pub enum ValidationError {
     /// Interior cycle has invalid winding
     #[error(transparent)]
     InteriorCycleHasInvalidWinding(#[from] InteriorCycleHasInvalidWinding),
+
+    /// An object that should be exclusively owned by another, is not
+    #[error(transparent)]
+    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]

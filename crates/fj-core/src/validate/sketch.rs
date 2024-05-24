@@ -37,10 +37,6 @@ impl Validate for Sketch {
 /// [`Sketch`] validation failed
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum SketchValidationError {
-    /// An object that should be exclusively owned by another, is not
-    #[error(transparent)]
-    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
-
     /// Region within sketch has exterior cycle with clockwise winding
     #[error(
         "Exterior cycle within sketch region has clockwise winding\n
@@ -170,10 +166,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::Cycle { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::Cycle { references: _ }
             )
         );
 
@@ -210,10 +204,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_sketch,
-            ValidationError::Sketch(
-                SketchValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::HalfEdge { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
             )
         );
 

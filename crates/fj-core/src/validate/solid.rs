@@ -67,10 +67,6 @@ pub enum SolidValidationError {
         /// Position of second vertex
         position_b: Point<3>,
     },
-
-    /// Object within solid referenced by more than one other object
-    #[error(transparent)]
-    ObjectNotExclusivelyOwned(#[from] ObjectNotExclusivelyOwned),
 }
 
 impl SolidValidationError {
@@ -188,8 +184,7 @@ mod tests {
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Surface},
         validate::{
-            references::ObjectNotExclusivelyOwned, SolidValidationError,
-            Validate, ValidationError,
+            references::ObjectNotExclusivelyOwned, Validate, ValidationError,
         },
         Core,
     };
@@ -238,10 +233,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::Face { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::Face { references: _ }
             )
         );
 
@@ -286,10 +279,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::Region { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::Region { references: _ }
             )
         );
 
@@ -338,10 +329,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::Cycle { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::Cycle { references: _ }
             )
         );
 
@@ -382,10 +371,8 @@ mod tests {
         assert_contains_err!(
             core,
             invalid_solid,
-            ValidationError::Solid(
-                SolidValidationError::ObjectNotExclusivelyOwned(
-                    ObjectNotExclusivelyOwned::HalfEdge { references: _ }
-                )
+            ValidationError::ObjectNotExclusivelyOwned(
+                ObjectNotExclusivelyOwned::HalfEdge { references: _ }
             )
         );
 
