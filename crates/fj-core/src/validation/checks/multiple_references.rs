@@ -51,10 +51,10 @@ impl<T, U> ReferenceCounter<T, U> {
     }
 
     pub fn multiples(
-        &self,
-    ) -> impl Iterator<Item = MultipleReferencesToObject<T, U>> + '_ {
+        self,
+    ) -> impl Iterator<Item = MultipleReferencesToObject<T, U>> {
         self.0
-            .iter()
+            .into_iter()
             .filter(|(_, referenced_by)| referenced_by.len() > 1)
             .map(|(object, referenced_by)| MultipleReferencesToObject {
                 object: object.clone(),
