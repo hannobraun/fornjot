@@ -42,7 +42,7 @@ impl<T, U> ReferenceCounter<T, U> {
         self.0.entry(to).or_default().push(from);
     }
 
-    pub fn find_multiples(
+    pub fn multiples(
         &self,
     ) -> impl Iterator<Item = MultipleReferencesToObject<T, U>> + '_ {
         self.0
@@ -60,7 +60,7 @@ impl<T, U> ReferenceCounter<T, U> {
 macro_rules! validate_references {
     ($errors:ident;$($counter:ident, $err:ident;)*) => {
         $(
-            $counter.find_multiples().for_each(|multiple| {
+            $counter.multiples().for_each(|multiple| {
                 let reference_error = ValidationError::$err(multiple.clone());
                 $errors.push(reference_error.into());
             });
