@@ -4,7 +4,6 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Solid, Vertex},
-    validate_references,
 };
 use fj_math::Point;
 
@@ -160,13 +159,10 @@ impl SolidValidationError {
             })
         });
 
-        validate_references!(
-            errors;
-            regions;
-            faces;
-            half_edges;
-            cycles;
-        );
+        errors.extend(faces.multiples().map(Into::into));
+        errors.extend(regions.multiples().map(Into::into));
+        errors.extend(cycles.multiples().map(Into::into));
+        errors.extend(half_edges.multiples().map(Into::into));
     }
 }
 

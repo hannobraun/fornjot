@@ -54,16 +54,3 @@ impl<T, U> ReferenceCounter<T, U> {
             })
     }
 }
-
-/// Find errors and convert to [`crate::validate::ValidationError`]
-#[macro_export]
-macro_rules! validate_references {
-    ($errors:ident;$($counter:ident;)*) => {
-        $(
-            $counter.multiples().for_each(|multiple| {
-                let reference_error = multiple.clone();
-                $errors.push(reference_error.into());
-            });
-        )*
-    };
-}

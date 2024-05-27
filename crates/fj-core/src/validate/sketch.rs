@@ -4,7 +4,6 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Cycle, Sketch},
-    validate_references,
     validation::{checks::AdjacentHalfEdgesNotConnected, ValidationCheck},
 };
 
@@ -75,11 +74,8 @@ impl SketchValidationError {
             })
         });
 
-        validate_references!(
-            errors;
-            half_edges;
-            cycles;
-        );
+        errors.extend(cycles.multiples().map(Into::into));
+        errors.extend(half_edges.multiples().map(Into::into));
     }
 
     fn check_exterior_cycles(
