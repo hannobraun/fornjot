@@ -145,7 +145,7 @@ impl SolidValidationError {
         let mut referenced_faces = ReferenceCounter::new();
         let mut referenced_regions = ReferenceCounter::new();
         let mut referenced_cycles = ReferenceCounter::new();
-        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_half_edges = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
@@ -154,7 +154,7 @@ impl SolidValidationError {
                 f.region().all_cycles().for_each(|c| {
                     referenced_cycles.count(c.clone(), f.region().clone());
                     c.half_edges().into_iter().for_each(|e| {
-                        referenced_edges.count(e.clone(), c.clone());
+                        referenced_half_edges.count(e.clone(), c.clone());
                     })
                 })
             })
@@ -164,7 +164,7 @@ impl SolidValidationError {
             errors;
             referenced_regions, MultipleReferencesToRegion;
             referenced_faces, MultipleReferencesToFace;
-            referenced_edges, MultipleReferencesToHalfEdge;
+            referenced_half_edges, MultipleReferencesToHalfEdge;
             referenced_cycles, MultipleReferencesToCycle;
         );
     }
