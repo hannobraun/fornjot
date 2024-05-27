@@ -2,7 +2,7 @@ use std::{any::type_name_of_val, collections::HashMap, fmt};
 
 use crate::{
     storage::Handle,
-    topology::{Cycle, HalfEdge, Sketch},
+    topology::{Cycle, HalfEdge, Region, Sketch},
     validation::ValidationCheck,
 };
 
@@ -31,6 +31,24 @@ where
             type_name_of_val(&self.referenced_by),
             self.referenced_by
         )
+    }
+}
+
+impl ValidationCheck<Sketch> for MultipleReferencesToObject<Cycle, Region> {
+    fn check<'r>(
+        object: &'r Sketch,
+        _: &'r crate::geometry::Geometry,
+        _: &'r crate::validation::ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut cycles = ReferenceCounter::new();
+
+        for region in object.regions() {
+            for cycle in region.all_cycles() {
+                cycles.count(cycle.clone(), region.clone());
+            }
+        }
+
+        cycles.multiples()
     }
 }
 
