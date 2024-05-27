@@ -129,8 +129,7 @@ mod tests {
             &mut core,
         )
         .insert(&mut core);
-        let valid = Sketch::new(surface.clone(), vec![region.clone()])
-            .insert(&mut core);
+        let valid = Sketch::new(surface.clone(), vec![region.clone()]);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
