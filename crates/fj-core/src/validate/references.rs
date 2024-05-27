@@ -42,7 +42,9 @@ impl<T, U> ReferenceCounter<T, U> {
         self.0.entry(to).or_default().push(from);
     }
 
-    pub fn find_multiples(&self) -> Vec<MultipleReferencesToObject<T, U>> {
+    pub fn find_multiples(
+        &self,
+    ) -> impl Iterator<Item = MultipleReferencesToObject<T, U>> + '_ {
         self.0
             .iter()
             .filter(|(_, referenced_by)| referenced_by.len() > 1)
@@ -50,7 +52,6 @@ impl<T, U> ReferenceCounter<T, U> {
                 object: object.clone(),
                 referenced_by: referenced_by.to_vec(),
             })
-            .collect()
     }
 }
 
@@ -59,7 +60,7 @@ impl<T, U> ReferenceCounter<T, U> {
 macro_rules! validate_references {
     ($errors:ident;$($counter:ident, $err:ident;)*) => {
         $(
-            $counter.find_multiples().iter().for_each(|multiple| {
+            $counter.find_multiples().for_each(|multiple| {
                 let reference_error = ValidationError::$err(multiple.clone());
                 $errors.push(reference_error.into());
             });
