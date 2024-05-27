@@ -116,7 +116,10 @@ mod tests {
         },
         topology::{Cycle, Region, Sketch},
         validate::Validate,
-        validation::ValidationError,
+        validation::{
+            checks::MultipleReferencesToObject, ValidationCheck,
+            ValidationError,
+        },
         Core,
     };
 
@@ -125,7 +128,13 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Sketch::circle([0., 0.], 1., &mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        MultipleReferencesToObject::<
+            Cycle,
+            Region
+        >::check_and_return_first_error(
+            &valid,
+            &core.layers.geometry,
+        )?;
 
         let invalid = valid.add_regions(
             [Region::new(
@@ -134,10 +143,9 @@ mod tests {
             )],
             &mut core,
         );
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToCycle(_)
+        MultipleReferencesToObject::<Cycle, Region>::check_and_expect_one_error(
+            &invalid,
+            &core.layers.geometry,
         );
 
         Ok(())
