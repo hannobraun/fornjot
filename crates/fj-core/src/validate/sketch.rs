@@ -63,8 +63,8 @@ impl SketchValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut referenced_edges = ReferenceCounter::new();
         let mut referenced_cycles = ReferenceCounter::new();
+        let mut referenced_edges = ReferenceCounter::new();
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {

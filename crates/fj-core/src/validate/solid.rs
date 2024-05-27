@@ -142,10 +142,10 @@ impl SolidValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut referenced_regions = ReferenceCounter::new();
         let mut referenced_faces = ReferenceCounter::new();
-        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_regions = ReferenceCounter::new();
         let mut referenced_cycles = ReferenceCounter::new();
+        let mut referenced_edges = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
