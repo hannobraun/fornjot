@@ -110,8 +110,7 @@ mod tests {
     use crate::{
         assert_contains_err,
         operations::{
-            build::{BuildRegion, BuildSketch},
-            insert::Insert,
+            build::BuildSketch,
             update::{UpdateRegion, UpdateSketch},
         },
         topology::{Cycle, Region, Sketch},
@@ -155,16 +154,7 @@ mod tests {
     fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.space_2d();
-
-        let region = <Region as BuildRegion>::polygon(
-            [[0., 0.], [1., 1.], [0., 1.]],
-            surface.clone(),
-            &mut core,
-        )
-        .insert(&mut core);
-        let valid = Sketch::new(surface.clone(), vec![region.clone()])
-            .insert(&mut core);
+        let valid = Sketch::polygon([[0., 0.], [1., 1.], [0., 1.]], &mut core);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid = valid.update_region(
