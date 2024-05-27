@@ -172,7 +172,7 @@ mod tests {
             exterior.half_edges().iter().cloned().collect();
         let interior = Cycle::new(cloned_edges).insert(&mut core);
 
-        let invalid_sketch = Sketch::new(
+        let invalid = Sketch::new(
             surface,
             vec![
                 Region::new(exterior.clone(), vec![interior]).insert(&mut core)
@@ -180,7 +180,7 @@ mod tests {
         );
         assert_contains_err!(
             core,
-            invalid_sketch,
+            invalid,
             ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
