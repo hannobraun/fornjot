@@ -8,12 +8,12 @@ use crate::storage::Handle;
 /// that only one reference to these objects must exist within the topological
 /// object graph.
 #[derive(Clone, Debug, thiserror::Error)]
-pub struct ObjectNotExclusivelyOwned<T, U> {
+pub struct MultipleReferencesToObject<T, U> {
     object: Handle<T>,
     referenced_by: Vec<Handle<U>>,
 }
 
-impl<T, U> fmt::Display for ObjectNotExclusivelyOwned<T, U>
+impl<T, U> fmt::Display for MultipleReferencesToObject<T, U>
 where
     T: fmt::Debug,
     U: fmt::Debug,
@@ -42,11 +42,11 @@ impl<T, U> ReferenceCounter<T, U> {
         self.0.entry(to).or_default().push(from);
     }
 
-    pub fn find_multiples(&self) -> Vec<ObjectNotExclusivelyOwned<T, U>> {
+    pub fn find_multiples(&self) -> Vec<MultipleReferencesToObject<T, U>> {
         self.0
             .iter()
             .filter(|(_, referenced_by)| referenced_by.len() > 1)
-            .map(|(object, referenced_by)| ObjectNotExclusivelyOwned {
+            .map(|(object, referenced_by)| MultipleReferencesToObject {
                 object: object.clone(),
                 referenced_by: referenced_by.to_vec(),
             })

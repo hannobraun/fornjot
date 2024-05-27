@@ -79,7 +79,7 @@ use crate::{
 };
 
 pub use self::{
-    references::ObjectNotExclusivelyOwned, sketch::SketchValidationError,
+    references::MultipleReferencesToObject, sketch::SketchValidationError,
     solid::SolidValidationError,
 };
 

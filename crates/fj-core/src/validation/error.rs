@@ -3,7 +3,7 @@ use std::{convert::Infallible, fmt};
 use crate::{
     topology::{Cycle, Face, HalfEdge, Region, Shell},
     validate::{
-        ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
+        MultipleReferencesToObject, SketchValidationError, SolidValidationError,
     },
 };
 
@@ -44,19 +44,19 @@ pub enum ValidationError {
 
     /// Multiple references to [`Cycle`]
     #[error(transparent)]
-    MultipleReferencesToCycle(ObjectNotExclusivelyOwned<Cycle, Region>),
+    MultipleReferencesToCycle(MultipleReferencesToObject<Cycle, Region>),
 
     /// Multiple references to [`Face`]
     #[error(transparent)]
-    MultipleReferencesToFace(ObjectNotExclusivelyOwned<Face, Shell>),
+    MultipleReferencesToFace(MultipleReferencesToObject<Face, Shell>),
 
     /// Multiple references to [`HalfEdge`]
     #[error(transparent)]
-    MultipleReferencesToHalfEdge(ObjectNotExclusivelyOwned<HalfEdge, Cycle>),
+    MultipleReferencesToHalfEdge(MultipleReferencesToObject<HalfEdge, Cycle>),
 
     /// Multiple references to [`Region`]
     #[error(transparent)]
-    MultipleReferencesToRegion(ObjectNotExclusivelyOwned<Region, Face>),
+    MultipleReferencesToRegion(MultipleReferencesToObject<Region, Face>),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]
