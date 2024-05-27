@@ -3,14 +3,14 @@ use fj_math::Winding;
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, Sketch},
-    validate_references,
-    validation::{checks::AdjacentHalfEdgesNotConnected, ValidationCheck},
+    topology::{Cycle, HalfEdge, Region, Sketch},
+    validation::{
+        checks::{AdjacentHalfEdgesNotConnected, MultipleReferencesToObject},
+        ValidationCheck,
+    },
 };
 
-use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
-};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Sketch {
     fn validate(
@@ -23,7 +23,18 @@ impl Validate for Sketch {
             AdjacentHalfEdgesNotConnected::check(self, geometry, config)
                 .map(Into::into),
         );
-        SketchValidationError::check_object_references(self, config, errors);
+        errors.extend(
+            MultipleReferencesToObject::<Cycle, Region>::check(
+                self, geometry, config,
+            )
+            .map(Into::into),
+        );
+        errors.extend(
+            MultipleReferencesToObject::<HalfEdge, Cycle>::check(
+                self, geometry, config,
+            )
+            .map(Into::into),
+        );
         SketchValidationError::check_exterior_cycles(
             self, geometry, config, errors,
         );
@@ -58,30 +69,6 @@ pub enum SketchValidationError {
 }
 
 impl SketchValidationError {
-    fn check_object_references(
-        sketch: &Sketch,
-        _config: &ValidationConfig,
-        errors: &mut Vec<ValidationError>,
-    ) {
-        let mut referenced_edges = ReferenceCounter::new();
-        let mut referenced_cycles = ReferenceCounter::new();
-
-        sketch.regions().iter().for_each(|r| {
-            r.all_cycles().for_each(|c| {
-                referenced_cycles.count_reference(c.clone(), r.clone());
-                c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges.count_reference(e.clone(), c.clone());
-                })
-            })
-        });
-
-        validate_references!(
-            errors;
-            referenced_edges, MultipleReferencesToHalfEdge;
-            referenced_cycles, MultipleReferencesToCycle;
-        );
-    }
-
     fn check_exterior_cycles(
         sketch: &Sketch,
         geometry: &Geometry,
@@ -126,83 +113,11 @@ impl SketchValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        operations::{
-            build::BuildHalfEdge, build::BuildRegion, insert::Insert,
-        },
+        operations::{build::BuildHalfEdge, insert::Insert},
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
-
-    #[test]
-    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let surface = core.layers.topology.surfaces.space_2d();
-
-        let region = <Region as BuildRegion>::circle(
-            [0., 0.],
-            1.,
-            surface.clone(),
-            &mut core,
-        )
-        .insert(&mut core);
-        let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
-            .insert(&mut core);
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
-
-        let shared_cycle = region.exterior();
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![
-                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-            ],
-        );
-        assert_contains_err!(
-            core,
-            invalid_sketch,
-            ValidationError::MultipleReferencesToCycle(_)
-        );
-
-        Ok(())
-    }
-
-    #[test]
-    fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
-        let mut core = Core::new();
-
-        let surface = core.layers.topology.surfaces.space_2d();
-
-        let region = <Region as BuildRegion>::polygon(
-            [[0., 0.], [1., 1.], [0., 1.]],
-            surface.clone(),
-            &mut core,
-        )
-        .insert(&mut core);
-        let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
-            .insert(&mut core);
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
-
-        let exterior = region.exterior();
-        let cloned_edges: Vec<_> =
-            exterior.half_edges().iter().cloned().collect();
-        let interior = Cycle::new(cloned_edges).insert(&mut core);
-
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![
-                Region::new(exterior.clone(), vec![interior]).insert(&mut core)
-            ],
-        );
-        assert_contains_err!(
-            core,
-            invalid_sketch,
-            ValidationError::MultipleReferencesToHalfEdge(_)
-        );
-
-        Ok(())
-    }
 
     #[test]
     fn should_find_clockwise_exterior_cycle() -> anyhow::Result<()> {

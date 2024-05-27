@@ -2,15 +2,13 @@ use std::{convert::Infallible, fmt};
 
 use crate::{
     topology::{Cycle, Face, HalfEdge, Region, Shell},
-    validate::{
-        ObjectNotExclusivelyOwned, SketchValidationError, SolidValidationError,
-    },
+    validate::{SketchValidationError, SolidValidationError},
 };
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
     CurveGeometryMismatch, FaceHasNoBoundary, HalfEdgeHasNoSibling,
-    InteriorCycleHasInvalidWinding,
+    InteriorCycleHasInvalidWinding, MultipleReferencesToObject,
 };
 
 /// An error that can occur during a validation
@@ -44,19 +42,25 @@ pub enum ValidationError {
 
     /// Multiple references to [`Cycle`]
     #[error(transparent)]
-    MultipleReferencesToCycle(ObjectNotExclusivelyOwned<Cycle, Region>),
+    MultipleReferencesToCycle(
+        #[from] MultipleReferencesToObject<Cycle, Region>,
+    ),
 
     /// Multiple references to [`Face`]
     #[error(transparent)]
-    MultipleReferencesToFace(ObjectNotExclusivelyOwned<Face, Shell>),
+    MultipleReferencesToFace(#[from] MultipleReferencesToObject<Face, Shell>),
 
     /// Multiple references to [`HalfEdge`]
     #[error(transparent)]
-    MultipleReferencesToHalfEdge(ObjectNotExclusivelyOwned<HalfEdge, Cycle>),
+    MultipleReferencesToHalfEdge(
+        #[from] MultipleReferencesToObject<HalfEdge, Cycle>,
+    ),
 
     /// Multiple references to [`Region`]
     #[error(transparent)]
-    MultipleReferencesToRegion(ObjectNotExclusivelyOwned<Region, Face>),
+    MultipleReferencesToRegion(
+        #[from] MultipleReferencesToObject<Region, Face>,
+    ),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]

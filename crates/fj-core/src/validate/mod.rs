@@ -65,7 +65,6 @@ mod curve;
 mod cycle;
 mod face;
 mod half_edge;
-mod references;
 mod region;
 mod shell;
 mod sketch;
@@ -78,10 +77,7 @@ use crate::{
     validation::{ValidationConfig, ValidationError},
 };
 
-pub use self::{
-    references::ObjectNotExclusivelyOwned, sketch::SketchValidationError,
-    solid::SolidValidationError,
-};
+pub use self::{sketch::SketchValidationError, solid::SolidValidationError};
 
 /// Assert that some object has a validation error which matches a specific
 /// pattern. This is preferred to matching on [`Validate::validate_and_return_first_error`], since usually we don't care about the order.

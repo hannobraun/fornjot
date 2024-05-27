@@ -4,13 +4,11 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Solid, Vertex},
-    validate_references,
+    validation::checks::ReferenceCounter,
 };
 use fj_math::Point;
 
-use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
-};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Solid {
     fn validate(
@@ -142,33 +140,28 @@ impl SolidValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut referenced_regions = ReferenceCounter::new();
-        let mut referenced_faces = ReferenceCounter::new();
-        let mut referenced_edges = ReferenceCounter::new();
-        let mut referenced_cycles = ReferenceCounter::new();
+        let mut faces = ReferenceCounter::new();
+        let mut regions = ReferenceCounter::new();
+        let mut cycles = ReferenceCounter::new();
+        let mut half_edges = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
-                referenced_faces.count_reference(f.clone(), s.clone());
-                referenced_regions
-                    .count_reference(f.region().clone(), f.clone());
+                faces.count(f.clone(), s.clone());
+                regions.count(f.region().clone(), f.clone());
                 f.region().all_cycles().for_each(|c| {
-                    referenced_cycles
-                        .count_reference(c.clone(), f.region().clone());
+                    cycles.count(c.clone(), f.region().clone());
                     c.half_edges().into_iter().for_each(|e| {
-                        referenced_edges.count_reference(e.clone(), c.clone());
+                        half_edges.count(e.clone(), c.clone());
                     })
                 })
             })
         });
 
-        validate_references!(
-            errors;
-            referenced_regions, MultipleReferencesToRegion;
-            referenced_faces, MultipleReferencesToFace;
-            referenced_edges, MultipleReferencesToHalfEdge;
-            referenced_cycles, MultipleReferencesToCycle;
-        );
+        errors.extend(faces.multiples().map(Into::into));
+        errors.extend(regions.multiples().map(Into::into));
+        errors.extend(cycles.multiples().map(Into::into));
+        errors.extend(half_edges.multiples().map(Into::into));
     }
 }
 
