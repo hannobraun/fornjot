@@ -109,7 +109,9 @@ impl<T, U> ReferenceCounter<T, U> {
 mod tests {
     use crate::{
         assert_contains_err,
-        operations::{build::BuildRegion, insert::Insert},
+        operations::{
+            build::BuildRegion, insert::Insert, update::UpdateSketch,
+        },
         topology::{Cycle, Region, Sketch},
         validate::Validate,
         validation::ValidationError,
@@ -132,13 +134,12 @@ mod tests {
         let valid = Sketch::new(surface.clone(), vec![region.clone()]);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
-        let shared_cycle = region.exterior();
-        let invalid = Sketch::new(
-            surface,
-            vec![
-                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-            ],
+        let invalid = valid.add_regions(
+            [Region::new(
+                valid.regions().first().exterior().clone(),
+                vec![],
+            )],
+            &mut core,
         );
         assert_contains_err!(
             core,
