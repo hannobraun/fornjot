@@ -64,20 +64,20 @@ impl SketchValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let mut referenced_cycles = ReferenceCounter::new();
-        let mut referenced_edges = ReferenceCounter::new();
+        let mut referenced_half_edges = ReferenceCounter::new();
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
                 referenced_cycles.count(c.clone(), r.clone());
                 c.half_edges().into_iter().for_each(|e| {
-                    referenced_edges.count(e.clone(), c.clone());
+                    referenced_half_edges.count(e.clone(), c.clone());
                 })
             })
         });
 
         validate_references!(
             errors;
-            referenced_edges, MultipleReferencesToHalfEdge;
+            referenced_half_edges, MultipleReferencesToHalfEdge;
             referenced_cycles, MultipleReferencesToCycle;
         );
     }
