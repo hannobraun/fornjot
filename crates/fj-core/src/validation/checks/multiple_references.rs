@@ -163,9 +163,9 @@ mod tests {
             &mut core,
         )
         .insert(&mut core);
-        let valid_sketch = Sketch::new(surface.clone(), vec![region.clone()])
+        let valid = Sketch::new(surface.clone(), vec![region.clone()])
             .insert(&mut core);
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let exterior = region.exterior();
         let cloned_edges: Vec<_> =
