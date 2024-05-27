@@ -38,7 +38,7 @@ impl<T, U> ReferenceCounter<T, U> {
         Self(HashMap::new())
     }
 
-    pub fn count_reference(&mut self, to: Handle<T>, from: Handle<U>) {
+    pub fn count(&mut self, to: Handle<T>, from: Handle<U>) {
         self.0.entry(to).or_default().push(from);
     }
 

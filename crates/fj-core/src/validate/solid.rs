@@ -149,14 +149,12 @@ impl SolidValidationError {
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
-                referenced_faces.count_reference(f.clone(), s.clone());
-                referenced_regions
-                    .count_reference(f.region().clone(), f.clone());
+                referenced_faces.count(f.clone(), s.clone());
+                referenced_regions.count(f.region().clone(), f.clone());
                 f.region().all_cycles().for_each(|c| {
-                    referenced_cycles
-                        .count_reference(c.clone(), f.region().clone());
+                    referenced_cycles.count(c.clone(), f.region().clone());
                     c.half_edges().into_iter().for_each(|e| {
-                        referenced_edges.count_reference(e.clone(), c.clone());
+                        referenced_edges.count(e.clone(), c.clone());
                     })
                 })
             })
