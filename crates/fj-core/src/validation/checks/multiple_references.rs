@@ -133,7 +133,7 @@ mod tests {
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let shared_cycle = region.exterior();
-        let invalid_sketch = Sketch::new(
+        let invalid = Sketch::new(
             surface,
             vec![
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
@@ -142,7 +142,7 @@ mod tests {
         );
         assert_contains_err!(
             core,
-            invalid_sketch,
+            invalid,
             ValidationError::MultipleReferencesToCycle(_)
         );
 
