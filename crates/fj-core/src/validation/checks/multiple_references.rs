@@ -108,17 +108,12 @@ impl<T, U> ReferenceCounter<T, U> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        assert_contains_err,
         operations::{
             build::BuildSketch,
             update::{UpdateRegion, UpdateSketch},
         },
-        topology::{Cycle, Region, Sketch},
-        validate::Validate,
-        validation::{
-            checks::MultipleReferencesToObject, ValidationCheck,
-            ValidationError,
-        },
+        topology::{Cycle, HalfEdge, Region, Sketch},
+        validation::{checks::MultipleReferencesToObject, ValidationCheck},
         Core,
     };
 
@@ -155,7 +150,13 @@ mod tests {
         let mut core = Core::new();
 
         let valid = Sketch::polygon([[0., 0.], [1., 1.], [0., 1.]], &mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        MultipleReferencesToObject::<
+            HalfEdge,
+            Cycle
+        >::check_and_return_first_error(
+            &valid,
+            &core.layers.geometry,
+        )?;
 
         let invalid = valid.update_region(
             valid.regions().first(),
@@ -169,10 +170,15 @@ mod tests {
             },
             &mut core,
         );
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToHalfEdge(_)
+        assert!(
+            MultipleReferencesToObject::<
+                HalfEdge,
+                Cycle
+            >::check_and_return_first_error(
+                &invalid,
+                &core.layers.geometry,
+            )
+            .is_err()
         );
 
         Ok(())
