@@ -118,7 +118,7 @@ mod tests {
     };
 
     #[test]
-    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Sketch::circle([0., 0.], 1., &mut core);
@@ -146,7 +146,7 @@ mod tests {
     }
 
     #[test]
-    fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_half_edge() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Sketch::polygon([[0., 0.], [1., 1.], [0., 1.]], &mut core);
