@@ -17,9 +17,9 @@ workspace = true
 fj-interop.workspace = true
 fj-math.workspace = true
 itertools = "0.13.0"
-parking_lot = "0.12.2"
+parking_lot = "0.12.3"
 robust = "1.1.0"
-spade = "2.7.0"
+spade = "2.8.0"
 thiserror = "1.0.61"
 type-map = "0.5.0"
 
