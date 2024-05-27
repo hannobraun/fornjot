@@ -4,12 +4,11 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Solid, Vertex},
+    validation::checks::ReferenceCounter,
 };
 use fj_math::Point;
 
-use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
-};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Solid {
     fn validate(

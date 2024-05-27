@@ -2,15 +2,13 @@ use std::{convert::Infallible, fmt};
 
 use crate::{
     topology::{Cycle, Face, HalfEdge, Region, Shell},
-    validate::{
-        MultipleReferencesToObject, SketchValidationError, SolidValidationError,
-    },
+    validate::{SketchValidationError, SolidValidationError},
 };
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
     CurveGeometryMismatch, FaceHasNoBoundary, HalfEdgeHasNoSibling,
-    InteriorCycleHasInvalidWinding,
+    InteriorCycleHasInvalidWinding, MultipleReferencesToObject,
 };
 
 /// An error that can occur during a validation

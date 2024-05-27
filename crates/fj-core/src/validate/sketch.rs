@@ -4,12 +4,13 @@ use crate::{
     geometry::Geometry,
     storage::Handle,
     topology::{Cycle, Sketch},
-    validation::{checks::AdjacentHalfEdgesNotConnected, ValidationCheck},
+    validation::{
+        checks::{AdjacentHalfEdgesNotConnected, ReferenceCounter},
+        ValidationCheck,
+    },
 };
 
-use super::{
-    references::ReferenceCounter, Validate, ValidationConfig, ValidationError,
-};
+use super::{Validate, ValidationConfig, ValidationError};
 
 impl Validate for Sketch {
     fn validate(
