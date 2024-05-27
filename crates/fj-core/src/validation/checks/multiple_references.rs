@@ -112,7 +112,7 @@ mod tests {
         operations::{
             build::{BuildRegion, BuildSketch},
             insert::Insert,
-            update::UpdateSketch,
+            update::{UpdateRegion, UpdateSketch},
         },
         topology::{Cycle, Region, Sketch},
         validate::Validate,
@@ -167,16 +167,17 @@ mod tests {
             .insert(&mut core);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
-        let exterior = region.exterior();
-        let cloned_edges: Vec<_> =
-            exterior.half_edges().iter().cloned().collect();
-        let interior = Cycle::new(cloned_edges).insert(&mut core);
-
-        let invalid = Sketch::new(
-            surface,
-            vec![
-                Region::new(exterior.clone(), vec![interior]).insert(&mut core)
-            ],
+        let invalid = valid.update_region(
+            valid.regions().first(),
+            |region, core| {
+                [region.add_interiors(
+                    [Cycle::new(
+                        region.exterior().half_edges().iter().cloned(),
+                    )],
+                    core,
+                )]
+            },
+            &mut core,
         );
         assert_contains_err!(
             core,
