@@ -63,12 +63,12 @@ impl SketchValidationError {
         _config: &ValidationConfig,
         errors: &mut Vec<ValidationError>,
     ) {
-        let mut referenced_cycles = ReferenceCounter::new();
+        let mut cycles = ReferenceCounter::new();
         let mut referenced_half_edges = ReferenceCounter::new();
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
-                referenced_cycles.count(c.clone(), r.clone());
+                cycles.count(c.clone(), r.clone());
                 c.half_edges().into_iter().for_each(|e| {
                     referenced_half_edges.count(e.clone(), c.clone());
                 })
@@ -78,7 +78,7 @@ impl SketchValidationError {
         validate_references!(
             errors;
             referenced_half_edges, MultipleReferencesToHalfEdge;
-            referenced_cycles, MultipleReferencesToCycle;
+            cycles, MultipleReferencesToCycle;
         );
     }
 
