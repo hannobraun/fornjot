@@ -110,7 +110,9 @@ mod tests {
     use crate::{
         assert_contains_err,
         operations::{
-            build::BuildRegion, insert::Insert, update::UpdateSketch,
+            build::{BuildRegion, BuildSketch},
+            insert::Insert,
+            update::UpdateSketch,
         },
         topology::{Cycle, Region, Sketch},
         validate::Validate,
@@ -122,16 +124,7 @@ mod tests {
     fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.space_2d();
-
-        let region = <Region as BuildRegion>::circle(
-            [0., 0.],
-            1.,
-            surface.clone(),
-            &mut core,
-        )
-        .insert(&mut core);
-        let valid = Sketch::new(surface.clone(), vec![region.clone()]);
+        let valid = Sketch::circle([0., 0.], 1., &mut core);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid = valid.add_regions(
