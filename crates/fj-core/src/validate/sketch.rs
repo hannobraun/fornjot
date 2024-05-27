@@ -77,8 +77,8 @@ impl SketchValidationError {
 
         validate_references!(
             errors;
-            half_edges, MultipleReferencesToHalfEdge;
-            cycles, MultipleReferencesToCycle;
+            half_edges;
+            cycles;
         );
     }
 

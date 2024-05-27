@@ -162,10 +162,10 @@ impl SolidValidationError {
 
         validate_references!(
             errors;
-            regions, MultipleReferencesToRegion;
-            faces, MultipleReferencesToFace;
-            half_edges, MultipleReferencesToHalfEdge;
-            cycles, MultipleReferencesToCycle;
+            regions;
+            faces;
+            half_edges;
+            cycles;
         );
     }
 }
