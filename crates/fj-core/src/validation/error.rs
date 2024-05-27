@@ -44,19 +44,25 @@ pub enum ValidationError {
 
     /// Multiple references to [`Cycle`]
     #[error(transparent)]
-    MultipleReferencesToCycle(MultipleReferencesToObject<Cycle, Region>),
+    MultipleReferencesToCycle(
+        #[from] MultipleReferencesToObject<Cycle, Region>,
+    ),
 
     /// Multiple references to [`Face`]
     #[error(transparent)]
-    MultipleReferencesToFace(MultipleReferencesToObject<Face, Shell>),
+    MultipleReferencesToFace(#[from] MultipleReferencesToObject<Face, Shell>),
 
     /// Multiple references to [`HalfEdge`]
     #[error(transparent)]
-    MultipleReferencesToHalfEdge(MultipleReferencesToObject<HalfEdge, Cycle>),
+    MultipleReferencesToHalfEdge(
+        #[from] MultipleReferencesToObject<HalfEdge, Cycle>,
+    ),
 
     /// Multiple references to [`Region`]
     #[error(transparent)]
-    MultipleReferencesToRegion(MultipleReferencesToObject<Region, Face>),
+    MultipleReferencesToRegion(
+        #[from] MultipleReferencesToObject<Region, Face>,
+    ),
 
     /// `Solid` validation error
     #[error("`Solid` validation error")]
