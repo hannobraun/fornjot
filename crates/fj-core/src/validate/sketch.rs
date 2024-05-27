@@ -3,9 +3,12 @@ use fj_math::Winding;
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, Sketch},
+    topology::{Cycle, HalfEdge, Sketch},
     validation::{
-        checks::{AdjacentHalfEdgesNotConnected, ReferenceCounter},
+        checks::{
+            AdjacentHalfEdgesNotConnected, MultipleReferencesToObject,
+            ReferenceCounter,
+        },
         ValidationCheck,
     },
 };
@@ -22,6 +25,12 @@ impl Validate for Sketch {
         errors.extend(
             AdjacentHalfEdgesNotConnected::check(self, geometry, config)
                 .map(Into::into),
+        );
+        errors.extend(
+            MultipleReferencesToObject::<HalfEdge, Cycle>::check(
+                self, geometry, config,
+            )
+            .map(Into::into),
         );
         SketchValidationError::check_object_references(self, config, errors);
         SketchValidationError::check_exterior_cycles(
@@ -64,19 +73,14 @@ impl SketchValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let mut cycles = ReferenceCounter::new();
-        let mut half_edges = ReferenceCounter::new();
 
         sketch.regions().iter().for_each(|r| {
             r.all_cycles().for_each(|c| {
                 cycles.count(c.clone(), r.clone());
-                c.half_edges().into_iter().for_each(|e| {
-                    half_edges.count(e.clone(), c.clone());
-                })
             })
         });
 
         errors.extend(cycles.multiples().map(Into::into));
-        errors.extend(half_edges.multiples().map(Into::into));
     }
 
     fn check_exterior_cycles(

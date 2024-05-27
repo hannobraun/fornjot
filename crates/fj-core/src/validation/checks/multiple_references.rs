@@ -1,6 +1,10 @@
 use std::{any::type_name_of_val, collections::HashMap, fmt};
 
-use crate::storage::Handle;
+use crate::{
+    storage::Handle,
+    topology::{Cycle, HalfEdge, Sketch},
+    validation::ValidationCheck,
+};
 
 /// Object that should be exclusively owned by another, is not
 ///
@@ -27,6 +31,26 @@ where
             type_name_of_val(&self.referenced_by),
             self.referenced_by
         )
+    }
+}
+
+impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
+    fn check<'r>(
+        object: &'r Sketch,
+        _: &'r crate::geometry::Geometry,
+        _: &'r crate::validation::ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut half_edges = ReferenceCounter::new();
+
+        for region in object.regions() {
+            for cycle in region.all_cycles() {
+                for half_edge in cycle.half_edges() {
+                    half_edges.count(half_edge.clone(), cycle.clone());
+                }
+            }
+        }
+
+        half_edges.multiples()
     }
 }
 
