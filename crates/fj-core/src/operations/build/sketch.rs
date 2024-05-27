@@ -36,6 +36,20 @@ pub trait BuildSketch {
             core,
         )
     }
+
+    /// Build a polygon
+    fn polygon<P, Ps>(points: Ps, core: &mut Core) -> Sketch
+    where
+        P: Into<Point<2>>,
+        Ps: IntoIterator<Item = P>,
+        Ps::IntoIter: Clone + ExactSizeIterator,
+    {
+        let sketch = Sketch::empty(&core.layers.topology);
+        sketch.add_regions(
+            [Region::polygon(points, sketch.surface().clone(), core)],
+            core,
+        )
+    }
 }
 
 impl BuildSketch for Sketch {}
