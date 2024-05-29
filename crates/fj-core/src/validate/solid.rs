@@ -3,8 +3,11 @@ use std::iter::repeat;
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Solid, Vertex},
-    validation::checks::ReferenceCounter,
+    topology::{Cycle, HalfEdge, Solid, Vertex},
+    validation::{
+        checks::{MultipleReferencesToObject, ReferenceCounter},
+        ValidationCheck,
+    },
 };
 use fj_math::Point;
 
@@ -17,6 +20,12 @@ impl Validate for Solid {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
+        errors.extend(
+            MultipleReferencesToObject::<HalfEdge, Cycle>::check(
+                self, geometry, config,
+            )
+            .map(Into::into),
+        );
         SolidValidationError::check_vertices(self, geometry, config, errors);
         SolidValidationError::check_object_references(self, config, errors);
     }
@@ -143,7 +152,6 @@ impl SolidValidationError {
         let mut faces = ReferenceCounter::new();
         let mut regions = ReferenceCounter::new();
         let mut cycles = ReferenceCounter::new();
-        let mut half_edges = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
@@ -151,9 +159,6 @@ impl SolidValidationError {
                 regions.count(f.region().clone(), f.clone());
                 f.region().all_cycles().for_each(|c| {
                     cycles.count(c.clone(), f.region().clone());
-                    c.half_edges().into_iter().for_each(|e| {
-                        half_edges.count(e.clone(), c.clone());
-                    })
                 })
             })
         });
@@ -161,7 +166,6 @@ impl SolidValidationError {
         errors.extend(faces.multiples().map(Into::into));
         errors.extend(regions.multiples().map(Into::into));
         errors.extend(cycles.multiples().map(Into::into));
-        errors.extend(half_edges.multiples().map(Into::into));
     }
 }
 
