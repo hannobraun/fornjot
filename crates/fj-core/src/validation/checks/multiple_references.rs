@@ -305,12 +305,13 @@ mod tests {
             },
             &mut core,
         );
-
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToFace(_)
-        );
+        assert!(MultipleReferencesToObject::<
+            Face,
+            Shell
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -352,12 +353,13 @@ mod tests {
             },
             &mut core,
         );
-
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToRegion(_)
-        );
+        assert!(MultipleReferencesToObject::<
+            Region,
+            Face
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -410,6 +412,13 @@ mod tests {
             },
             &mut core,
         );
+        assert!(MultipleReferencesToObject::<
+            Cycle,
+            Region
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
 
         assert_contains_err!(
             core,
@@ -476,12 +485,13 @@ mod tests {
             },
             &mut core,
         );
-
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToHalfEdge(_)
-        );
+        assert!(MultipleReferencesToObject::<
+            HalfEdge,
+            Cycle
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
