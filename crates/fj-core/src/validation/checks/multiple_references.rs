@@ -73,6 +73,26 @@ impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
     }
 }
 
+impl ValidationCheck<Solid> for MultipleReferencesToObject<Cycle, Region> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut cycles = ReferenceCounter::new();
+
+        for shell in object.shells() {
+            for face in shell.faces() {
+                for cycle in face.region().all_cycles() {
+                    cycles.count(cycle.clone(), face.region().clone());
+                }
+            }
+        }
+
+        cycles.multiples()
+    }
+}
+
 impl ValidationCheck<Solid> for MultipleReferencesToObject<HalfEdge, Cycle> {
     fn check<'r>(
         object: &'r Solid,
