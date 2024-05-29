@@ -187,12 +187,21 @@ impl<T, U> ReferenceCounter<T, U> {
 #[cfg(test)]
 mod tests {
     use crate::{
+        assert_contains_err,
+        geometry::GlobalPath,
         operations::{
-            build::BuildSketch,
+            build::{BuildFace, BuildHalfEdge, BuildSketch, BuildSurface},
+            insert::Insert,
             update::{UpdateRegion, UpdateSketch},
         },
-        topology::{Cycle, HalfEdge, Region, Sketch},
-        validation::{checks::MultipleReferencesToObject, ValidationCheck},
+        topology::{
+            Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
+        },
+        validate::Validate,
+        validation::{
+            checks::MultipleReferencesToObject, ValidationCheck,
+            ValidationError,
+        },
         Core,
     };
 
@@ -259,6 +268,194 @@ mod tests {
             )
             .is_err()
         );
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_face_multiple_references() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 1., 1.],
+            &mut core,
+        );
+
+        let shared_face = Face::new(
+            surface.clone(),
+            Region::new(
+                Cycle::new(vec![HalfEdge::circle(
+                    [0., 0.],
+                    1.,
+                    surface,
+                    &mut core,
+                )])
+                .insert(&mut core),
+                vec![],
+            )
+            .insert(&mut core),
+        )
+        .insert(&mut core);
+
+        let invalid_solid = Solid::new(vec![
+            Shell::new(vec![shared_face.clone()]).insert(&mut core),
+            Shell::new(vec![
+                shared_face,
+                Face::triangle(
+                    [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
+                    &mut core,
+                )
+                .insert(&mut core)
+                .face,
+            ])
+            .insert(&mut core),
+        ])
+        .insert(&mut core);
+
+        assert_contains_err!(
+            core,
+            invalid_solid,
+            ValidationError::MultipleReferencesToFace(_)
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_region_multiple_references() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
+        let shared_region = Region::new(
+            Cycle::new(vec![HalfEdge::circle(
+                [0., 0.],
+                1.,
+                surface.clone(),
+                &mut core,
+            )])
+            .insert(&mut core),
+            vec![],
+        )
+        .insert(&mut core);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![
+            Face::new(surface.clone(), shared_region.clone()).insert(&mut core),
+            Face::new(surface, shared_region.clone()).insert(&mut core),
+        ])
+        .insert(&mut core)])
+        .insert(&mut core);
+
+        assert_contains_err!(
+            core,
+            invalid_solid,
+            ValidationError::MultipleReferencesToRegion(_)
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
+        let shared_cycle = Cycle::new(vec![HalfEdge::circle(
+            [0., 0.],
+            1.,
+            surface.clone(),
+            &mut core,
+        )])
+        .insert(&mut core);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![
+            Face::new(
+                surface.clone(),
+                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
+            )
+            .insert(&mut core),
+            Face::new(
+                surface,
+                Region::new(shared_cycle, vec![]).insert(&mut core),
+            )
+            .insert(&mut core),
+        ])
+        .insert(&mut core)])
+        .insert(&mut core);
+
+        assert_contains_err!(
+            core,
+            invalid_solid,
+            ValidationError::MultipleReferencesToCycle(_)
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let surface = Surface::from_uv(
+            GlobalPath::circle_from_radius(1.),
+            [0., 0., 1.],
+            &mut core,
+        );
+
+        let shared_edge =
+            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
+
+        let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
+            surface,
+            Region::new(
+                Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
+                vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
+            )
+            .insert(&mut core),
+        )
+        .insert(&mut core)])
+        .insert(&mut core)])
+        .insert(&mut core);
+
+        assert_contains_err!(
+            core,
+            invalid_solid,
+            ValidationError::MultipleReferencesToHalfEdge(_)
+        );
+
+        let valid_solid = Solid::new(vec![]).insert(&mut core);
+        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }
