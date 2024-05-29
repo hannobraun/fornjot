@@ -1,9 +1,10 @@
 use std::{any::type_name_of_val, collections::HashMap, fmt};
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
     topology::{Cycle, HalfEdge, Region, Sketch},
-    validation::ValidationCheck,
+    validation::{ValidationCheck, ValidationConfig},
 };
 
 /// Object that should be exclusively owned by another, is not
@@ -37,8 +38,8 @@ where
 impl ValidationCheck<Sketch> for MultipleReferencesToObject<Cycle, Region> {
     fn check<'r>(
         object: &'r Sketch,
-        _: &'r crate::geometry::Geometry,
-        _: &'r crate::validation::ValidationConfig,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
         let mut cycles = ReferenceCounter::new();
 
@@ -55,8 +56,8 @@ impl ValidationCheck<Sketch> for MultipleReferencesToObject<Cycle, Region> {
 impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
     fn check<'r>(
         object: &'r Sketch,
-        _: &'r crate::geometry::Geometry,
-        _: &'r crate::validation::ValidationConfig,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
         let mut half_edges = ReferenceCounter::new();
 
