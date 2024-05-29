@@ -151,17 +151,9 @@ impl ValidationCheck<Solid> for MultipleReferencesToObject<HalfEdge, Cycle> {
     }
 }
 
-// Warnings are temporarily silenced, until this struct can be made private.
-// This can happen once this validation check has been fully ported from the old
-// infrastructure.
-#[allow(missing_docs)]
 #[derive(Default)]
-pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
+struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
 
-// Warnings are temporarily silenced, until this struct can be made private.
-// This can happen once this validation check has been fully ported from the old
-// infrastructure.
-#[allow(missing_docs)]
 impl<T, U> ReferenceCounter<T, U> {
     pub fn new() -> Self {
         Self(HashMap::new())
