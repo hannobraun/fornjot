@@ -190,7 +190,9 @@ mod tests {
         assert_contains_err,
         geometry::GlobalPath,
         operations::{
-            build::{BuildFace, BuildHalfEdge, BuildSketch, BuildSurface},
+            build::{
+                BuildFace, BuildHalfEdge, BuildSketch, BuildSolid, BuildSurface,
+            },
             insert::Insert,
             update::{UpdateRegion, UpdateSketch},
         },
@@ -276,6 +278,11 @@ mod tests {
     fn multiple_references_to_face_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
 
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
             [0., 1., 1.],
@@ -319,8 +326,9 @@ mod tests {
             ValidationError::MultipleReferencesToFace(_)
         );
 
-        let valid = Solid::new(vec![]).insert(&mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        valid
+            .solid
+            .validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -331,6 +339,11 @@ mod tests {
     #[test]
     fn multiple_references_to_region_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -363,8 +376,9 @@ mod tests {
             ValidationError::MultipleReferencesToRegion(_)
         );
 
-        let valid = Solid::new(vec![]).insert(&mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        valid
+            .solid
+            .validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -375,6 +389,11 @@ mod tests {
     #[test]
     fn multiple_references_to_cycle_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -411,8 +430,9 @@ mod tests {
             ValidationError::MultipleReferencesToCycle(_)
         );
 
-        let valid = Solid::new(vec![]).insert(&mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        valid
+            .solid
+            .validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -423,6 +443,11 @@ mod tests {
     #[test]
     fn multiple_references_to_half_edge_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -451,8 +476,9 @@ mod tests {
             ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
-        let valid = Solid::new(vec![]).insert(&mut core);
-        valid.validate_and_return_first_error(&core.layers.geometry)?;
+        valid
+            .solid
+            .validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
