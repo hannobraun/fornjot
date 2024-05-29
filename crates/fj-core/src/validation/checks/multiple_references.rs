@@ -191,10 +191,11 @@ mod tests {
         geometry::GlobalPath,
         operations::{
             build::{
-                BuildFace, BuildHalfEdge, BuildSketch, BuildSolid, BuildSurface,
+                BuildHalfEdge, BuildShell, BuildSketch, BuildSolid,
+                BuildSurface,
             },
             insert::Insert,
-            update::{UpdateRegion, UpdateSketch},
+            update::{UpdateRegion, UpdateShell, UpdateSketch, UpdateSolid},
         },
         topology::{
             Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
@@ -290,42 +291,24 @@ mod tests {
             &core.layers.geometry,
         )?;
 
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 1., 1.],
-            &mut core,
-        );
-
-        let shared_face = Face::new(
-            surface.clone(),
-            Region::new(
-                Cycle::new(vec![HalfEdge::circle(
-                    [0., 0.],
-                    1.,
-                    surface,
-                    &mut core,
-                )])
-                .insert(&mut core),
-                vec![],
-            )
-            .insert(&mut core),
-        )
-        .insert(&mut core);
-
-        let invalid = Solid::new(vec![
-            Shell::new(vec![shared_face.clone()]).insert(&mut core),
-            Shell::new(vec![
-                shared_face,
-                Face::triangle(
-                    [[0., 0., 0.], [1., 0., 0.], [1., 1., 0.]],
+        let invalid = valid.solid.add_shells(
+            {
+                let shell = Shell::tetrahedron(
+                    [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
                     &mut core,
                 )
-                .insert(&mut core)
-                .face,
-            ])
-            .insert(&mut core),
-        ])
-        .insert(&mut core);
+                .shell;
+
+                [shell.update_face(
+                    shell.faces().first(),
+                    |_, _| {
+                        [valid.solid.shells().first().faces().first().clone()]
+                    },
+                    &mut core,
+                )]
+            },
+            &mut core,
+        );
 
         assert_contains_err!(
             core,
