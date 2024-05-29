@@ -388,34 +388,35 @@ mod tests {
             &core.layers.geometry,
         )?;
 
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |region, core| {
+                                region.update_exterior(
+                                    |_, _| {
+                                        shell
+                                            .faces()
+                                            .nth(1)
+                                            .unwrap()
+                                            .region()
+                                            .exterior()
+                                            .clone()
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
             &mut core,
         );
-
-        let shared_cycle = Cycle::new(vec![HalfEdge::circle(
-            [0., 0.],
-            1.,
-            surface.clone(),
-            &mut core,
-        )])
-        .insert(&mut core);
-
-        let invalid = Solid::new(vec![Shell::new(vec![
-            Face::new(
-                surface.clone(),
-                Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
-            )
-            .insert(&mut core),
-            Face::new(
-                surface,
-                Region::new(shared_cycle, vec![]).insert(&mut core),
-            )
-            .insert(&mut core),
-        ])
-        .insert(&mut core)])
-        .insert(&mut core);
 
         assert_contains_err!(
             core,
