@@ -17,5 +17,5 @@ pub use self::{
     face_winding::InteriorCycleHasInvalidWinding,
     half_edge_connection::AdjacentHalfEdgesNotConnected,
     half_edge_has_no_sibling::HalfEdgeHasNoSibling,
-    multiple_references::{MultipleReferencesToObject, ReferenceCounter},
+    multiple_references::MultipleReferencesToObject,
 };

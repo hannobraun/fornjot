@@ -1,9 +1,10 @@
 use std::{any::type_name_of_val, collections::HashMap, fmt};
 
 use crate::{
+    geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, HalfEdge, Region, Sketch},
-    validation::ValidationCheck,
+    topology::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
+    validation::{ValidationCheck, ValidationConfig},
 };
 
 /// Object that should be exclusively owned by another, is not
@@ -37,8 +38,8 @@ where
 impl ValidationCheck<Sketch> for MultipleReferencesToObject<Cycle, Region> {
     fn check<'r>(
         object: &'r Sketch,
-        _: &'r crate::geometry::Geometry,
-        _: &'r crate::validation::ValidationConfig,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
         let mut cycles = ReferenceCounter::new();
 
@@ -55,8 +56,8 @@ impl ValidationCheck<Sketch> for MultipleReferencesToObject<Cycle, Region> {
 impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
     fn check<'r>(
         object: &'r Sketch,
-        _: &'r crate::geometry::Geometry,
-        _: &'r crate::validation::ValidationConfig,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
         let mut half_edges = ReferenceCounter::new();
 
@@ -72,17 +73,87 @@ impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
     }
 }
 
-// Warnings are temporarily silenced, until this struct can be made private.
-// This can happen once this validation check has been fully ported from the old
-// infrastructure.
-#[allow(missing_docs)]
-#[derive(Default)]
-pub struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
+impl ValidationCheck<Solid> for MultipleReferencesToObject<Face, Shell> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut faces = ReferenceCounter::new();
 
-// Warnings are temporarily silenced, until this struct can be made private.
-// This can happen once this validation check has been fully ported from the old
-// infrastructure.
-#[allow(missing_docs)]
+        for shell in object.shells() {
+            for face in shell.faces() {
+                faces.count(face.clone(), shell.clone());
+            }
+        }
+
+        faces.multiples()
+    }
+}
+
+impl ValidationCheck<Solid> for MultipleReferencesToObject<Region, Face> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut regions = ReferenceCounter::new();
+
+        for shell in object.shells() {
+            for face in shell.faces() {
+                regions.count(face.region().clone(), face.clone());
+            }
+        }
+
+        regions.multiples()
+    }
+}
+
+impl ValidationCheck<Solid> for MultipleReferencesToObject<Cycle, Region> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut cycles = ReferenceCounter::new();
+
+        for shell in object.shells() {
+            for face in shell.faces() {
+                for cycle in face.region().all_cycles() {
+                    cycles.count(cycle.clone(), face.region().clone());
+                }
+            }
+        }
+
+        cycles.multiples()
+    }
+}
+
+impl ValidationCheck<Solid> for MultipleReferencesToObject<HalfEdge, Cycle> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut half_edges = ReferenceCounter::new();
+
+        for shell in object.shells() {
+            for face in shell.faces() {
+                for cycle in face.region().all_cycles() {
+                    for half_edge in cycle.half_edges() {
+                        half_edges.count(half_edge.clone(), cycle.clone());
+                    }
+                }
+            }
+        }
+
+        half_edges.multiples()
+    }
+}
+
+#[derive(Default)]
+struct ReferenceCounter<T, U>(HashMap<Handle<T>, Vec<Handle<U>>>);
+
 impl<T, U> ReferenceCounter<T, U> {
     pub fn new() -> Self {
         Self(HashMap::new())
@@ -108,17 +179,25 @@ impl<T, U> ReferenceCounter<T, U> {
 #[cfg(test)]
 mod tests {
     use crate::{
+        assert_contains_err,
         operations::{
-            build::BuildSketch,
-            update::{UpdateRegion, UpdateSketch},
+            build::{BuildShell, BuildSketch, BuildSolid},
+            update::{
+                UpdateCycle, UpdateFace, UpdateRegion, UpdateShell,
+                UpdateSketch, UpdateSolid,
+            },
         },
-        topology::{Cycle, HalfEdge, Region, Sketch},
-        validation::{checks::MultipleReferencesToObject, ValidationCheck},
+        topology::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
+        validate::Validate,
+        validation::{
+            checks::MultipleReferencesToObject, ValidationCheck,
+            ValidationError,
+        },
         Core,
     };
 
     #[test]
-    fn multiple_references_to_cycle() -> anyhow::Result<()> {
+    fn multiple_references_to_cycle_within_sketch() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Sketch::circle([0., 0.], 1., &mut core);
@@ -146,7 +225,7 @@ mod tests {
     }
 
     #[test]
-    fn multiple_references_to_half_edge() -> anyhow::Result<()> {
+    fn multiple_references_to_half_edge_within_sketch() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let valid = Sketch::polygon([[0., 0.], [1., 1.], [0., 1.]], &mut core);
@@ -180,6 +259,234 @@ mod tests {
             )
             .is_err()
         );
+
+        Ok(())
+    }
+
+    #[test]
+    fn multiple_references_to_face_within_solid() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        MultipleReferencesToObject::<
+            Face,
+            Shell
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
+
+        let invalid = valid.solid.add_shells(
+            {
+                let shell = Shell::tetrahedron(
+                    [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+                    &mut core,
+                )
+                .shell;
+
+                [shell.update_face(
+                    shell.faces().first(),
+                    |_, _| {
+                        [valid.solid.shells().first().faces().first().clone()]
+                    },
+                    &mut core,
+                )]
+            },
+            &mut core,
+        );
+        assert!(MultipleReferencesToObject::<
+            Face,
+            Shell
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn multiple_references_to_region_within_solid() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        MultipleReferencesToObject::<
+            Region,
+            Face
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
+
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |_, _| {
+                                shell.faces().nth(1).unwrap().region().clone()
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
+            &mut core,
+        );
+        assert!(MultipleReferencesToObject::<
+            Region,
+            Face
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn multiple_references_to_cycle_within_solid() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        MultipleReferencesToObject::<
+            Cycle,
+            Region
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
+
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |region, core| {
+                                region.update_exterior(
+                                    |_, _| {
+                                        shell
+                                            .faces()
+                                            .nth(1)
+                                            .unwrap()
+                                            .region()
+                                            .exterior()
+                                            .clone()
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
+            &mut core,
+        );
+        assert!(MultipleReferencesToObject::<
+            Cycle,
+            Region
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
+
+        assert_contains_err!(
+            core,
+            invalid,
+            ValidationError::MultipleReferencesToCycle(_)
+        );
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
+        Ok(())
+    }
+
+    #[test]
+    fn multiple_references_to_half_edge_within_solid() -> anyhow::Result<()> {
+        let mut core = Core::new();
+
+        let valid = Solid::tetrahedron(
+            [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
+            &mut core,
+        );
+        MultipleReferencesToObject::<
+            HalfEdge,
+            Cycle
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
+
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |region, core| {
+                                region.update_exterior(
+                                    |cycle, core| {
+                                        cycle.update_half_edge(
+                                            cycle.half_edges().first(),
+                                            |_, _| {
+                                                [shell
+                                                    .faces()
+                                                    .nth(1)
+                                                    .unwrap()
+                                                    .region()
+                                                    .exterior()
+                                                    .half_edges()
+                                                    .first()
+                                                    .clone()]
+                                            },
+                                            core,
+                                        )
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
+            &mut core,
+        );
+        assert!(MultipleReferencesToObject::<
+            HalfEdge,
+            Cycle
+        >::check_and_return_first_error(
+            &invalid,
+            &core.layers.geometry,
+        ).is_err());
+
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
 
         Ok(())
     }
