@@ -195,7 +195,10 @@ mod tests {
                 BuildSurface,
             },
             insert::Insert,
-            update::{UpdateRegion, UpdateShell, UpdateSketch, UpdateSolid},
+            update::{
+                UpdateFace, UpdateRegion, UpdateShell, UpdateSketch,
+                UpdateSolid,
+            },
         },
         topology::{
             Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
@@ -338,30 +341,24 @@ mod tests {
             &core.layers.geometry,
         )?;
 
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |_, _| {
+                                shell.faces().nth(1).unwrap().region().clone()
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
             &mut core,
         );
-
-        let shared_region = Region::new(
-            Cycle::new(vec![HalfEdge::circle(
-                [0., 0.],
-                1.,
-                surface.clone(),
-                &mut core,
-            )])
-            .insert(&mut core),
-            vec![],
-        )
-        .insert(&mut core);
-
-        let invalid = Solid::new(vec![Shell::new(vec![
-            Face::new(surface.clone(), shared_region.clone()).insert(&mut core),
-            Face::new(surface, shared_region.clone()).insert(&mut core),
-        ])
-        .insert(&mut core)])
-        .insert(&mut core);
 
         assert_contains_err!(
             core,
