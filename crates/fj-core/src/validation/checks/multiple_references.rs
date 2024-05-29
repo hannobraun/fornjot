@@ -188,21 +188,14 @@ impl<T, U> ReferenceCounter<T, U> {
 mod tests {
     use crate::{
         assert_contains_err,
-        geometry::GlobalPath,
         operations::{
-            build::{
-                BuildHalfEdge, BuildShell, BuildSketch, BuildSolid,
-                BuildSurface,
-            },
-            insert::Insert,
+            build::{BuildShell, BuildSketch, BuildSolid},
             update::{
-                UpdateFace, UpdateRegion, UpdateShell, UpdateSketch,
-                UpdateSolid,
+                UpdateCycle, UpdateFace, UpdateRegion, UpdateShell,
+                UpdateSketch, UpdateSolid,
             },
         },
-        topology::{
-            Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid, Surface,
-        },
+        topology::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
         validate::Validate,
         validation::{
             checks::MultipleReferencesToObject, ValidationCheck,
@@ -446,26 +439,43 @@ mod tests {
             &core.layers.geometry,
         )?;
 
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
+        let invalid = valid.solid.update_shell(
+            valid.solid.shells().first(),
+            |shell, core| {
+                [shell.update_face(
+                    shell.faces().first(),
+                    |face, core| {
+                        [face.update_region(
+                            |region, core| {
+                                region.update_exterior(
+                                    |cycle, core| {
+                                        cycle.update_half_edge(
+                                            cycle.half_edges().first(),
+                                            |_, _| {
+                                                [shell
+                                                    .faces()
+                                                    .nth(1)
+                                                    .unwrap()
+                                                    .region()
+                                                    .exterior()
+                                                    .half_edges()
+                                                    .first()
+                                                    .clone()]
+                                            },
+                                            core,
+                                        )
+                                    },
+                                    core,
+                                )
+                            },
+                            core,
+                        )]
+                    },
+                    core,
+                )]
+            },
             &mut core,
         );
-
-        let shared_edge =
-            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-
-        let invalid = Solid::new(vec![Shell::new(vec![Face::new(
-            surface,
-            Region::new(
-                Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
-                vec![Cycle::new(vec![shared_edge.clone()]).insert(&mut core)],
-            )
-            .insert(&mut core),
-        )
-        .insert(&mut core)])
-        .insert(&mut core)])
-        .insert(&mut core);
 
         assert_contains_err!(
             core,
