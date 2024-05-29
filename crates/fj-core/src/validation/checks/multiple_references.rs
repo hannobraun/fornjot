@@ -319,8 +319,8 @@ mod tests {
             ValidationError::MultipleReferencesToFace(_)
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+        let valid = Solid::new(vec![]).insert(&mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -363,8 +363,8 @@ mod tests {
             ValidationError::MultipleReferencesToRegion(_)
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+        let valid = Solid::new(vec![]).insert(&mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -411,8 +411,8 @@ mod tests {
             ValidationError::MultipleReferencesToCycle(_)
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+        let valid = Solid::new(vec![]).insert(&mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
@@ -451,8 +451,8 @@ mod tests {
             ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
-        let valid_solid = Solid::new(vec![]).insert(&mut core);
-        valid_solid.validate_and_return_first_error(&core.layers.geometry)?;
+        let valid = Solid::new(vec![]).insert(&mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
