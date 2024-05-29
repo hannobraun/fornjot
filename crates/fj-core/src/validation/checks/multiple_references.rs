@@ -3,7 +3,7 @@ use std::{any::type_name_of_val, collections::HashMap, fmt};
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, HalfEdge, Region, Sketch, Solid},
+    topology::{Cycle, Face, HalfEdge, Region, Sketch, Solid},
     validation::{ValidationCheck, ValidationConfig},
 };
 
@@ -70,6 +70,24 @@ impl ValidationCheck<Sketch> for MultipleReferencesToObject<HalfEdge, Cycle> {
         }
 
         half_edges.multiples()
+    }
+}
+
+impl ValidationCheck<Solid> for MultipleReferencesToObject<Region, Face> {
+    fn check<'r>(
+        object: &'r Solid,
+        _: &'r Geometry,
+        _: &'r ValidationConfig,
+    ) -> impl Iterator<Item = Self> + 'r {
+        let mut regions = ReferenceCounter::new();
+
+        for shell in object.shells() {
+            for face in shell.faces() {
+                regions.count(face.region().clone(), face.clone());
+            }
+        }
+
+        regions.multiples()
     }
 }
 

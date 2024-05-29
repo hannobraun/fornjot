@@ -3,7 +3,7 @@ use std::iter::repeat;
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, HalfEdge, Region, Solid, Vertex},
+    topology::{Cycle, Face, HalfEdge, Region, Solid, Vertex},
     validation::{
         checks::{MultipleReferencesToObject, ReferenceCounter},
         ValidationCheck,
@@ -20,6 +20,12 @@ impl Validate for Solid {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
+        errors.extend(
+            MultipleReferencesToObject::<Region, Face>::check(
+                self, geometry, config,
+            )
+            .map(Into::into),
+        );
         errors.extend(
             MultipleReferencesToObject::<Cycle, Region>::check(
                 self, geometry, config,
@@ -156,17 +162,14 @@ impl SolidValidationError {
         errors: &mut Vec<ValidationError>,
     ) {
         let mut faces = ReferenceCounter::new();
-        let mut regions = ReferenceCounter::new();
 
         solid.shells().iter().for_each(|s| {
             s.faces().into_iter().for_each(|f| {
                 faces.count(f.clone(), s.clone());
-                regions.count(f.region().clone(), f.clone());
             })
         });
 
         errors.extend(faces.multiples().map(Into::into));
-        errors.extend(regions.multiples().map(Into::into));
     }
 }
 
