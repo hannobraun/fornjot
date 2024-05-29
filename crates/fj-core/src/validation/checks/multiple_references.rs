@@ -298,7 +298,7 @@ mod tests {
         )
         .insert(&mut core);
 
-        let invalid_solid = Solid::new(vec![
+        let invalid = Solid::new(vec![
             Shell::new(vec![shared_face.clone()]).insert(&mut core),
             Shell::new(vec![
                 shared_face,
@@ -315,7 +315,7 @@ mod tests {
 
         assert_contains_err!(
             core,
-            invalid_solid,
+            invalid,
             ValidationError::MultipleReferencesToFace(_)
         );
 
@@ -350,7 +350,7 @@ mod tests {
         )
         .insert(&mut core);
 
-        let invalid_solid = Solid::new(vec![Shell::new(vec![
+        let invalid = Solid::new(vec![Shell::new(vec![
             Face::new(surface.clone(), shared_region.clone()).insert(&mut core),
             Face::new(surface, shared_region.clone()).insert(&mut core),
         ])
@@ -359,7 +359,7 @@ mod tests {
 
         assert_contains_err!(
             core,
-            invalid_solid,
+            invalid,
             ValidationError::MultipleReferencesToRegion(_)
         );
 
@@ -390,7 +390,7 @@ mod tests {
         )])
         .insert(&mut core);
 
-        let invalid_solid = Solid::new(vec![Shell::new(vec![
+        let invalid = Solid::new(vec![Shell::new(vec![
             Face::new(
                 surface.clone(),
                 Region::new(shared_cycle.clone(), vec![]).insert(&mut core),
@@ -407,7 +407,7 @@ mod tests {
 
         assert_contains_err!(
             core,
-            invalid_solid,
+            invalid,
             ValidationError::MultipleReferencesToCycle(_)
         );
 
@@ -433,7 +433,7 @@ mod tests {
         let shared_edge =
             HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
 
-        let invalid_solid = Solid::new(vec![Shell::new(vec![Face::new(
+        let invalid = Solid::new(vec![Shell::new(vec![Face::new(
             surface,
             Region::new(
                 Cycle::new(vec![shared_edge.clone()]).insert(&mut core),
@@ -447,7 +447,7 @@ mod tests {
 
         assert_contains_err!(
             core,
-            invalid_solid,
+            invalid,
             ValidationError::MultipleReferencesToHalfEdge(_)
         );
 
