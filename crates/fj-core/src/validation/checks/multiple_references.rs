@@ -282,6 +282,13 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut core,
         );
+        MultipleReferencesToObject::<
+            Face,
+            Shell
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -326,10 +333,6 @@ mod tests {
             ValidationError::MultipleReferencesToFace(_)
         );
 
-        valid
-            .solid
-            .validate_and_return_first_error(&core.layers.geometry)?;
-
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
 
@@ -344,6 +347,13 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut core,
         );
+        MultipleReferencesToObject::<
+            Region,
+            Face
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -376,10 +386,6 @@ mod tests {
             ValidationError::MultipleReferencesToRegion(_)
         );
 
-        valid
-            .solid
-            .validate_and_return_first_error(&core.layers.geometry)?;
-
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
 
@@ -394,6 +400,13 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut core,
         );
+        MultipleReferencesToObject::<
+            Cycle,
+            Region
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -430,10 +443,6 @@ mod tests {
             ValidationError::MultipleReferencesToCycle(_)
         );
 
-        valid
-            .solid
-            .validate_and_return_first_error(&core.layers.geometry)?;
-
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
 
@@ -448,6 +457,13 @@ mod tests {
             [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]],
             &mut core,
         );
+        MultipleReferencesToObject::<
+            HalfEdge,
+            Cycle
+        >::check_and_return_first_error(
+            &valid.solid,
+            &core.layers.geometry,
+        )?;
 
         let surface = Surface::from_uv(
             GlobalPath::circle_from_radius(1.),
@@ -475,10 +491,6 @@ mod tests {
             invalid,
             ValidationError::MultipleReferencesToHalfEdge(_)
         );
-
-        valid
-            .solid
-            .validate_and_return_first_error(&core.layers.geometry)?;
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
