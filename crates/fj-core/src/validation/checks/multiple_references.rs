@@ -273,7 +273,7 @@ mod tests {
     }
 
     #[test]
-    fn should_find_face_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_face_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let surface = Surface::from_uv(
@@ -329,7 +329,7 @@ mod tests {
     }
 
     #[test]
-    fn should_find_region_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_region_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let surface = Surface::from_uv(
@@ -373,7 +373,7 @@ mod tests {
     }
 
     #[test]
-    fn should_find_cycle_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_cycle_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let surface = Surface::from_uv(
@@ -421,7 +421,7 @@ mod tests {
     }
 
     #[test]
-    fn should_find_half_edge_multiple_references() -> anyhow::Result<()> {
+    fn multiple_references_to_half_edge_within_solid() -> anyhow::Result<()> {
         let mut core = Core::new();
 
         let surface = Surface::from_uv(
