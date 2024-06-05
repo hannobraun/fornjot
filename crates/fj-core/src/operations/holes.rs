@@ -10,7 +10,6 @@ use crate::{
 
 use super::{
     build::{BuildCycle, BuildRegion},
-    join::JoinCycle,
     sweep::{SweepCache, SweepRegion},
     update::{UpdateFace, UpdateRegion, UpdateShell},
 };
@@ -115,12 +114,7 @@ impl AddHole for Shell {
 
         let hole = swept_region.side_faces.into_iter().collect::<Vec<_>>();
 
-        let exit = swept_region
-            .top_face
-            .region()
-            .exterior()
-            .half_edges()
-            .only();
+        let exit = swept_region.top_face.region().exterior();
 
         self.update_face(
             entry_location.face,
@@ -136,19 +130,7 @@ impl AddHole for Shell {
             exit_location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::empty().add_joined_edges(
-                                [(
-                                    exit.clone(),
-                                    *core.layers.geometry.of_half_edge(exit),
-                                )],
-                                exit_location.face.surface().clone(),
-                                core,
-                            )],
-                            core,
-                        )
-                    },
+                    |region, core| region.add_interiors([exit.clone()], core),
                     core,
                 )]
             },
