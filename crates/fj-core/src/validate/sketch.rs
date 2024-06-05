@@ -165,8 +165,7 @@ mod tests {
         let region = Region::circle([0., 0.], 2., surface.clone(), &mut core)
             .add_interiors(
                 [Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
-                    .reverse(&mut core)
-                    .insert(&mut core)],
+                    .reverse(&mut core)],
                 &mut core,
             )
             .insert(&mut core);
