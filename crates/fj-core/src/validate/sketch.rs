@@ -166,11 +166,9 @@ mod tests {
             Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
                 .reverse(&mut core)
                 .insert(&mut core);
-        let valid_sketch = Sketch::new(
-            surface.clone(),
-            vec![Region::new(exterior.clone(), vec![valid_interior])
-                .insert(&mut core)],
-        );
+        let region = Region::new(exterior.clone(), vec![valid_interior])
+            .insert(&mut core);
+        let valid_sketch = Sketch::new(surface.clone(), vec![region]);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_interior =
