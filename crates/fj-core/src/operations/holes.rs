@@ -4,15 +4,14 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     storage::Handle,
-    topology::{Cycle, Face, HalfEdge, Region, Shell},
+    topology::{Cycle, Face, Region, Shell},
     Core,
 };
 
 use super::{
-    build::{BuildCycle, BuildHalfEdge, BuildRegion},
-    join::JoinCycle,
+    build::{BuildCycle, BuildRegion},
     sweep::{SweepCache, SweepRegion},
-    update::{UpdateCycle, UpdateFace, UpdateRegion, UpdateShell},
+    update::{UpdateFace, UpdateRegion, UpdateShell},
 };
 
 /// Add a hole to a [`Shell`]
@@ -43,17 +42,14 @@ impl AddHole for Shell {
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Self {
-        let entry = HalfEdge::circle(
+        let entry = Cycle::circle(
             location.position,
             radius,
             location.face.surface().clone(),
             core,
         );
         let hole = Region::empty(core)
-            .update_exterior(
-                |_, core| Cycle::empty().add_half_edges([entry.clone()], core),
-                core,
-            )
+            .update_exterior(|_, _| entry.clone(), core)
             .sweep_region(
                 location.face.surface().clone(),
                 None,
@@ -68,19 +64,7 @@ impl AddHole for Shell {
             location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::empty().add_joined_edges(
-                                [(
-                                    entry.clone(),
-                                    *core.layers.geometry.of_half_edge(&entry),
-                                )],
-                                location.face.surface().clone(),
-                                core,
-                            )],
-                            core,
-                        )
-                    },
+                    |region, core| region.add_interiors([entry], core),
                     core,
                 )]
             },
@@ -97,7 +81,7 @@ impl AddHole for Shell {
     ) -> Self {
         let radius = radius.into();
 
-        let entry = HalfEdge::circle(
+        let entry = Cycle::circle(
             entry_location.position,
             radius,
             entry_location.face.surface().clone(),
@@ -119,10 +103,7 @@ impl AddHole for Shell {
         };
 
         let swept_region = Region::empty(core)
-            .update_exterior(
-                |_, core| Cycle::empty().add_half_edges([entry.clone()], core),
-                core,
-            )
+            .update_exterior(|_, _| entry.clone(), core)
             .sweep_region(
                 entry_location.face.surface().clone(),
                 None,
@@ -133,30 +114,13 @@ impl AddHole for Shell {
 
         let hole = swept_region.side_faces.into_iter().collect::<Vec<_>>();
 
-        let exit = swept_region
-            .top_face
-            .region()
-            .exterior()
-            .half_edges()
-            .only();
+        let exit = swept_region.top_face.region().exterior();
 
         self.update_face(
             entry_location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::empty().add_joined_edges(
-                                [(
-                                    entry.clone(),
-                                    *core.layers.geometry.of_half_edge(&entry),
-                                )],
-                                entry_location.face.surface().clone(),
-                                core,
-                            )],
-                            core,
-                        )
-                    },
+                    |region, core| region.add_interiors([entry], core),
                     core,
                 )]
             },
@@ -166,19 +130,7 @@ impl AddHole for Shell {
             exit_location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::empty().add_joined_edges(
-                                [(
-                                    exit.clone(),
-                                    *core.layers.geometry.of_half_edge(exit),
-                                )],
-                                exit_location.face.surface().clone(),
-                                core,
-                            )],
-                            core,
-                        )
-                    },
+                    |region, core| region.add_interiors([exit.clone()], core),
                     core,
                 )]
             },
