@@ -113,7 +113,10 @@ impl SketchValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        operations::{build::BuildHalfEdge, insert::Insert},
+        operations::{
+            build::{BuildHalfEdge, BuildSketch},
+            insert::Insert,
+        },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{SketchValidationError, Validate, ValidationError},
         Core,
@@ -127,12 +130,7 @@ mod tests {
 
         let valid_outer_circle =
             HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let valid_exterior =
-            Cycle::new(vec![valid_outer_circle.clone()]).insert(&mut core);
-        let valid_sketch = Sketch::new(
-            surface.clone(),
-            vec![Region::new(valid_exterior.clone(), vec![]).insert(&mut core)],
-        );
+        let valid_sketch = Sketch::circle([0., 0.], 1., &mut core);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_outer_circle = HalfEdge::from_sibling(
