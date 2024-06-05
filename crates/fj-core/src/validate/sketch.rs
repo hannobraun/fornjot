@@ -113,8 +113,13 @@ impl SketchValidationError {
 mod tests {
     use crate::{
         assert_contains_err,
-        operations::{build::BuildHalfEdge, insert::Insert},
-        topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
+        operations::{
+            build::{BuildCycle, BuildRegion, BuildSketch},
+            insert::Insert,
+            reverse::Reverse,
+            update::{UpdateRegion, UpdateSketch},
+        },
+        topology::{Cycle, Region, Sketch},
         validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
@@ -123,30 +128,16 @@ mod tests {
     fn should_find_clockwise_exterior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.space_2d();
+        let valid = Sketch::circle([0., 0.], 1., &mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
-        let valid_outer_circle =
-            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let valid_exterior =
-            Cycle::new(vec![valid_outer_circle.clone()]).insert(&mut core);
-        let valid_sketch = Sketch::new(
-            surface.clone(),
-            vec![Region::new(valid_exterior.clone(), vec![]).insert(&mut core)],
-        );
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
-
-        let invalid_outer_circle = HalfEdge::from_sibling(
-            &valid_outer_circle,
-            Vertex::new().insert(&mut core),
+        let invalid_sketch = valid.update_region(
+            valid.regions().first(),
+            |region, core| {
+                [region
+                    .update_exterior(|cycle, core| cycle.reverse(core), core)]
+            },
             &mut core,
-        );
-        let invalid_exterior =
-            Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![
-                Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
-            ],
         );
         assert_contains_err!(
             core,
@@ -165,32 +156,26 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.space_2d();
 
-        let outer_circle =
-            HalfEdge::circle([0., 0.], 2., surface.clone(), &mut core);
-        let inner_circle =
-            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let cw_inner_circle = HalfEdge::from_sibling(
-            &inner_circle,
-            Vertex::new().insert(&mut core),
+        let region = Region::circle([0., 0.], 2., surface.clone(), &mut core)
+            .add_interiors(
+                [Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
+                    .reverse(&mut core)],
+                &mut core,
+            )
+            .insert(&mut core);
+        let valid = Sketch::new(surface.clone(), vec![region]);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
+
+        let invalid_sketch = valid.update_region(
+            valid.regions().first(),
+            |region, core| {
+                [region.update_interior(
+                    region.interiors().first(),
+                    |cycle, core| [cycle.reverse(core)],
+                    core,
+                )]
+            },
             &mut core,
-        );
-        let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
-
-        let valid_interior =
-            Cycle::new(vec![cw_inner_circle.clone()]).insert(&mut core);
-        let valid_sketch = Sketch::new(
-            surface.clone(),
-            vec![Region::new(exterior.clone(), vec![valid_interior])
-                .insert(&mut core)],
-        );
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
-
-        let invalid_interior =
-            Cycle::new(vec![inner_circle.clone()]).insert(&mut core);
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![Region::new(exterior.clone(), vec![invalid_interior])
-                .insert(&mut core)],
         );
         assert_contains_err!(
             core,
