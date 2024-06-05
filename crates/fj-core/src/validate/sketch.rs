@@ -114,12 +114,12 @@ mod tests {
     use crate::{
         assert_contains_err,
         operations::{
-            build::{BuildHalfEdge, BuildSketch},
+            build::{BuildCycle, BuildHalfEdge, BuildSketch},
             insert::Insert,
             reverse::Reverse,
             update::{UpdateRegion, UpdateSketch},
         },
-        topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
+        topology::{Cycle, HalfEdge, Region, Sketch},
         validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
@@ -160,15 +160,12 @@ mod tests {
             HalfEdge::circle([0., 0.], 2., surface.clone(), &mut core);
         let inner_circle =
             HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let cw_inner_circle = HalfEdge::from_sibling(
-            &inner_circle,
-            Vertex::new().insert(&mut core),
-            &mut core,
-        );
         let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
 
         let valid_interior =
-            Cycle::new(vec![cw_inner_circle.clone()]).insert(&mut core);
+            Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
+                .reverse(&mut core)
+                .insert(&mut core);
         let valid_sketch = Sketch::new(
             surface.clone(),
             vec![Region::new(exterior.clone(), vec![valid_interior])
