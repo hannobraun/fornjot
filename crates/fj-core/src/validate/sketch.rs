@@ -116,6 +116,8 @@ mod tests {
         operations::{
             build::{BuildHalfEdge, BuildSketch},
             insert::Insert,
+            reverse::Reverse,
+            update::{UpdateRegion, UpdateSketch},
         },
         topology::{Cycle, HalfEdge, Region, Sketch, Vertex},
         validate::{SketchValidationError, Validate, ValidationError},
@@ -126,25 +128,16 @@ mod tests {
     fn should_find_clockwise_exterior_cycle() -> anyhow::Result<()> {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.space_2d();
-
-        let valid_outer_circle =
-            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
         let valid = Sketch::circle([0., 0.], 1., &mut core);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
-        let invalid_outer_circle = HalfEdge::from_sibling(
-            &valid_outer_circle,
-            Vertex::new().insert(&mut core),
+        let invalid_sketch = valid.update_region(
+            valid.regions().first(),
+            |region, core| {
+                [region
+                    .update_exterior(|cycle, core| cycle.reverse(core), core)]
+            },
             &mut core,
-        );
-        let invalid_exterior =
-            Cycle::new(vec![invalid_outer_circle.clone()]).insert(&mut core);
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![
-                Region::new(invalid_exterior.clone(), vec![]).insert(&mut core)
-            ],
         );
         assert_contains_err!(
             core,
