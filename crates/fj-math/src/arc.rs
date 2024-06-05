@@ -3,6 +3,7 @@ use num_traits::Float;
 use crate::{Point, Scalar, Vector};
 
 /// Calculated geometry that is useful when dealing with an arc
+#[derive(Debug)]
 pub struct Arc {
     /// Center of the circle the arc is constructed on
     pub center: Point<2>,
