@@ -3,7 +3,7 @@ use fj_math::Point;
 use super::{CurveBoundary, SurfacePath};
 
 /// The geometry of a half-edge
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct HalfEdgeGeom {
     /// # The path of the half-edge
     ///
