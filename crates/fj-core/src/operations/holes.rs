@@ -43,17 +43,14 @@ impl AddHole for Shell {
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Self {
-        let entry = HalfEdge::circle(
+        let entry = Cycle::circle(
             location.position,
             radius,
             location.face.surface().clone(),
             core,
         );
         let hole = Region::empty(core)
-            .update_exterior(
-                |_, core| Cycle::empty().add_half_edges([entry.clone()], core),
-                core,
-            )
+            .update_exterior(|_, _| entry.clone(), core)
             .sweep_region(
                 location.face.surface().clone(),
                 None,
@@ -68,19 +65,7 @@ impl AddHole for Shell {
             location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| {
-                        region.add_interiors(
-                            [Cycle::empty().add_joined_edges(
-                                [(
-                                    entry.clone(),
-                                    *core.layers.geometry.of_half_edge(&entry),
-                                )],
-                                location.face.surface().clone(),
-                                core,
-                            )],
-                            core,
-                        )
-                    },
+                    |region, core| region.add_interiors([entry], core),
                     core,
                 )]
             },
