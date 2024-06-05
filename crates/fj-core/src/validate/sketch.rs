@@ -114,7 +114,7 @@ mod tests {
     use crate::{
         assert_contains_err,
         operations::{
-            build::{BuildCycle, BuildHalfEdge, BuildSketch},
+            build::{BuildCycle, BuildHalfEdge, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
             update::{UpdateRegion, UpdateSketch},
@@ -166,7 +166,8 @@ mod tests {
             Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
                 .reverse(&mut core)
                 .insert(&mut core);
-        let region = Region::new(exterior.clone(), vec![valid_interior])
+        let region = Region::circle([0., 0.], 2., surface.clone(), &mut core)
+            .add_interiors([valid_interior], &mut core)
             .insert(&mut core);
         let valid_sketch = Sketch::new(surface.clone(), vec![region]);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
