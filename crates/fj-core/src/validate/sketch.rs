@@ -130,8 +130,8 @@ mod tests {
 
         let valid_outer_circle =
             HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let valid_sketch = Sketch::circle([0., 0.], 1., &mut core);
-        valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
+        let valid = Sketch::circle([0., 0.], 1., &mut core);
+        valid.validate_and_return_first_error(&core.layers.geometry)?;
 
         let invalid_outer_circle = HalfEdge::from_sibling(
             &valid_outer_circle,
