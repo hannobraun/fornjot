@@ -162,12 +162,13 @@ mod tests {
             HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
         let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
 
-        let valid_interior =
-            Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
-                .reverse(&mut core)
-                .insert(&mut core);
         let region = Region::circle([0., 0.], 2., surface.clone(), &mut core)
-            .add_interiors([valid_interior], &mut core)
+            .add_interiors(
+                [Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
+                    .reverse(&mut core)
+                    .insert(&mut core)],
+                &mut core,
+            )
             .insert(&mut core);
         let valid_sketch = Sketch::new(surface.clone(), vec![region]);
         valid_sketch.validate_and_return_first_error(&core.layers.geometry)?;
