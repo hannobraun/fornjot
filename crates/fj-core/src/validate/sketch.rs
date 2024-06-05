@@ -114,12 +114,12 @@ mod tests {
     use crate::{
         assert_contains_err,
         operations::{
-            build::{BuildCycle, BuildHalfEdge, BuildRegion, BuildSketch},
+            build::{BuildCycle, BuildRegion, BuildSketch},
             insert::Insert,
             reverse::Reverse,
             update::{UpdateRegion, UpdateSketch},
         },
-        topology::{Cycle, HalfEdge, Region, Sketch},
+        topology::{Cycle, Region, Sketch},
         validate::{SketchValidationError, Validate, ValidationError},
         Core,
     };
@@ -156,12 +156,6 @@ mod tests {
 
         let surface = core.layers.topology.surfaces.space_2d();
 
-        let outer_circle =
-            HalfEdge::circle([0., 0.], 2., surface.clone(), &mut core);
-        let inner_circle =
-            HalfEdge::circle([0., 0.], 1., surface.clone(), &mut core);
-        let exterior = Cycle::new(vec![outer_circle.clone()]).insert(&mut core);
-
         let region = Region::circle([0., 0.], 2., surface.clone(), &mut core)
             .add_interiors(
                 [Cycle::circle([0., 0.], 1., surface.clone(), &mut core)
@@ -172,12 +166,16 @@ mod tests {
         let valid = Sketch::new(surface.clone(), vec![region]);
         valid.validate_and_return_first_error(&core.layers.geometry)?;
 
-        let invalid_interior =
-            Cycle::new(vec![inner_circle.clone()]).insert(&mut core);
-        let invalid_sketch = Sketch::new(
-            surface,
-            vec![Region::new(exterior.clone(), vec![invalid_interior])
-                .insert(&mut core)],
+        let invalid_sketch = valid.update_region(
+            valid.regions().first(),
+            |region, core| {
+                [region.update_interior(
+                    region.interiors().first(),
+                    |cycle, core| [cycle.reverse(core)],
+                    core,
+                )]
+            },
+            &mut core,
         );
         assert_contains_err!(
             core,
