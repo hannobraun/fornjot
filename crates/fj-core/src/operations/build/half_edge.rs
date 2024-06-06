@@ -81,35 +81,6 @@ pub trait BuildHalfEdge {
         half_edge
     }
 
-    /// Create a circle
-    fn circle(
-        center: impl Into<Point<2>>,
-        radius: impl Into<Scalar>,
-        surface: Handle<Surface>,
-        core: &mut Core,
-    ) -> Handle<HalfEdge> {
-        let path = SurfacePath::circle_from_center_and_radius(center, radius);
-        let boundary =
-            [Scalar::ZERO, Scalar::TAU].map(|coord| Point::from([coord]));
-
-        let half_edge = HalfEdge::unjoined(core).insert(core);
-
-        core.layers.geometry.define_curve(
-            half_edge.curve().clone(),
-            surface,
-            LocalCurveGeom { path },
-        );
-        core.layers.geometry.define_half_edge(
-            half_edge.clone(),
-            HalfEdgeGeom {
-                path,
-                boundary: boundary.into(),
-            },
-        );
-
-        half_edge
-    }
-
     /// Create a line segment
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
