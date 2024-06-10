@@ -130,7 +130,23 @@ impl AddHole for Shell {
             exit_location.face,
             |face, core| {
                 [face.update_region(
-                    |region, core| region.add_interiors([exit.clone()], core),
+                    |region, core| {
+                        for half_edge in exit.half_edges() {
+                            let geometry = core
+                                .layers
+                                .geometry
+                                .of_curve(half_edge.curve())
+                                .unwrap()
+                                .local_on(swept_region.top_face.surface())
+                                .unwrap();
+                            core.layers.geometry.define_curve(
+                                half_edge.curve().clone(),
+                                exit_location.face.surface().clone(),
+                                geometry.clone(),
+                            );
+                        }
+                        region.add_interiors([exit.clone()], core)
+                    },
                     core,
                 )]
             },
