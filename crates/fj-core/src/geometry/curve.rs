@@ -5,7 +5,7 @@ use crate::{storage::Handle, topology::Surface};
 use super::SurfacePath;
 
 /// The geometric definition of a curve
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct CurveGeom {
     /// # The redundant local definitions of the curve geometry
     ///
@@ -42,7 +42,7 @@ impl CurveGeom {
 }
 
 /// The geometric definition of a curve in 2D surface coordinates
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
     pub path: SurfacePath,
