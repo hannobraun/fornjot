@@ -6,8 +6,8 @@ use crate::{
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for Handle<HalfEdge> {
-    type Transformed = Self;
+impl TransformObject for &Handle<HalfEdge> {
+    type Transformed = Handle<HalfEdge>;
 
     fn transform_with_cache(
         self,
@@ -31,7 +31,7 @@ impl TransformObject for Handle<HalfEdge> {
 
         core.layers.geometry.define_half_edge(
             transformed_half_edge.clone(),
-            *core.layers.geometry.of_half_edge(&half_edge),
+            *core.layers.geometry.of_half_edge(half_edge),
         );
 
         transformed_half_edge
