@@ -17,9 +17,7 @@ impl TransformObject for Face {
             .surface()
             .clone()
             .transform_with_cache(transform, core, cache);
-        let region = self
-            .region()
-            .clone()
+        let region = (self.region(), self.surface())
             .transform_with_cache(transform, core, cache);
 
         Self::new(surface, region)

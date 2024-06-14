@@ -1,10 +1,13 @@
 use crate::{
-    operations::insert::Insert, storage::Handle, topology::Region, Core,
+    operations::insert::Insert,
+    storage::Handle,
+    topology::{Region, Surface},
+    Core,
 };
 
 use super::TransformObject;
 
-impl TransformObject for &Handle<Region> {
+impl TransformObject for (&Handle<Region>, &Handle<Surface>) {
     type Transformed = Handle<Region>;
 
     fn transform_with_cache(
@@ -13,7 +16,7 @@ impl TransformObject for &Handle<Region> {
         core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self::Transformed {
-        let region = self;
+        let (region, _) = self;
 
         let exterior = region
             .exterior()
