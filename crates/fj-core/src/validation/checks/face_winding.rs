@@ -53,8 +53,8 @@ impl ValidationCheck<Face> for InteriorCycleHasInvalidWinding {
                 return None;
             }
 
-            let exterior_winding = exterior.winding(geometry);
-            let interior_winding = interior.winding(geometry);
+            let exterior_winding = exterior.winding(geometry, object.surface());
+            let interior_winding = interior.winding(geometry, object.surface());
 
             if exterior_winding == interior_winding {
                 return Some(InteriorCycleHasInvalidWinding {

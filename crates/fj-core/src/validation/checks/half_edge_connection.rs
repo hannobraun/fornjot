@@ -3,7 +3,7 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Cycle, Face, HalfEdge, Region, Sketch},
+    topology::{Cycle, Face, HalfEdge, Region, Sketch, Surface},
     validation::{validation_check::ValidationCheck, ValidationConfig},
 };
 
@@ -63,7 +63,7 @@ impl ValidationCheck<Face> for AdjacentHalfEdgesNotConnected {
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
-        check_region(object.region(), geometry, config)
+        check_region(object.region(), object.surface(), geometry, config)
     }
 }
 
@@ -73,26 +73,27 @@ impl ValidationCheck<Sketch> for AdjacentHalfEdgesNotConnected {
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
-        object
-            .regions()
-            .iter()
-            .flat_map(|region| check_region(region, geometry, config))
+        object.regions().iter().flat_map(|region| {
+            check_region(region, object.surface(), geometry, config)
+        })
     }
 }
 
 fn check_region<'r>(
     region: &'r Region,
+    surface: &'r Handle<Surface>,
     geometry: &'r Geometry,
     config: &'r ValidationConfig,
 ) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
     [region.exterior()]
         .into_iter()
         .chain(region.interiors())
-        .flat_map(|cycle| check_cycle(cycle, geometry, config))
+        .flat_map(|cycle| check_cycle(cycle, surface, geometry, config))
 }
 
 fn check_cycle<'r>(
     cycle: &'r Cycle,
+    surface: &'r Handle<Surface>,
     geometry: &'r Geometry,
     config: &'r ValidationConfig,
 ) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
@@ -104,8 +105,18 @@ fn check_cycle<'r>(
                 .path
                 .point_from_path_coords(end)
         };
-        let start_pos_of_second_half_edge =
-            geometry.of_half_edge(second).start_position();
+
+        let Some(local_curve_geometry) =
+            geometry.of_curve(second.curve()).unwrap().local_on(surface)
+        else {
+            // If the curve geometry is not defined for our local surface,
+            // there's nothing we can check.
+            return None;
+        };
+
+        let start_pos_of_second_half_edge = geometry
+            .of_half_edge(second)
+            .start_position(&local_curve_geometry.path);
 
         let distance_between_positions = (end_pos_of_first_half_edge
             - start_pos_of_second_half_edge)

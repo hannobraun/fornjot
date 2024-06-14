@@ -47,12 +47,12 @@ impl HalfEdgeGeom {
     }
 
     /// Compute the surface position where the half-edge starts
-    pub fn start_position(&self) -> Point<2> {
+    pub fn start_position(&self, path: &SurfacePath) -> Point<2> {
         // Computing the surface position from the curve position is fine.
         // `HalfEdge` "owns" its start position. There is no competing code that
         // could compute the surface position from slightly different data.
 
         let [start, _] = self.boundary.inner;
-        self.path.point_from_path_coords(start)
+        path.point_from_path_coords(start)
     }
 }

@@ -106,13 +106,23 @@ impl SolidValidationError {
                     .flat_map(|cycle| cycle.half_edges().iter().cloned())
                     .zip(repeat(face.surface()))
             })
-            .map(|(h, s)| {
-                (
+            .filter_map(|(h, s)| {
+                let Some(local_curve_geometry) =
+                    geometry.of_curve(h.curve()).unwrap().local_on(s)
+                else {
+                    // If the curve geometry has no local definition,
+                    // there's nothing we can check.
+                    return None;
+                };
+
+                Some((
                     geometry.of_surface(s).point_from_surface_coords(
-                        geometry.of_half_edge(&h).start_position(),
+                        geometry
+                            .of_half_edge(&h)
+                            .start_position(&local_curve_geometry.path),
                     ),
                     h.start_vertex().clone(),
-                )
+                ))
             })
             .collect();
 

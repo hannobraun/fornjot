@@ -201,6 +201,9 @@ mod tests {
         )
         .is_err());
 
+        // Ignore remaining validation errors.
+        let _ = core.layers.validation.take_errors();
+
         Ok(())
     }
 }
