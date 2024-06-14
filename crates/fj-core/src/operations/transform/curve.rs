@@ -3,13 +3,13 @@ use fj_math::Transform;
 use crate::{
     operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
-    topology::Curve,
+    topology::{Curve, Surface},
     Core,
 };
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for &Handle<Curve> {
+impl TransformObject for (&Handle<Curve>, &Handle<Surface>) {
     type Transformed = Handle<Curve>;
 
     fn transform_with_cache(
@@ -18,7 +18,7 @@ impl TransformObject for &Handle<Curve> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let curve = self;
+        let (curve, _) = self;
 
         cache
             .entry(curve)
