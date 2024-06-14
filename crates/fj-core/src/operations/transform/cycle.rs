@@ -21,6 +21,6 @@ impl TransformObject for Cycle {
                 .transform_with_cache(transform, core, cache)
         });
 
-        Self::new(half_edges)
+        Cycle::new(half_edges)
     }
 }
