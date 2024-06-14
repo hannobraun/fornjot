@@ -18,8 +18,10 @@ impl TransformObject for Handle<Curve> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
+        let curve = self;
+
         cache
-            .entry(&self)
+            .entry(&curve)
             .or_insert_with(|| {
                 // We don't actually need to transform the curve, as its
                 // geometry is locally defined on a surface. We need to set that
@@ -27,7 +29,7 @@ impl TransformObject for Handle<Curve> {
                 // represent the transformed curve.
                 Curve::new()
                     .insert(core)
-                    .copy_geometry_from(&self, &mut core.layers.geometry)
+                    .copy_geometry_from(&curve, &mut core.layers.geometry)
             })
             .clone()
     }
