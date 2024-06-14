@@ -8,7 +8,7 @@ impl TransformObject for Vertex {
     type Transformed = Self;
 
     fn transform_with_cache(
-        &self,
+        self,
         _: &Transform,
         _: &mut Core,
         _: &mut TransformCache,

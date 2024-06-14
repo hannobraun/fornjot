@@ -39,7 +39,7 @@ pub trait TransformObject: Sized {
 
     /// Transform the object
     fn transform(
-        &self,
+        self,
         transform: &Transform,
         core: &mut Core,
     ) -> Self::Transformed {
@@ -49,7 +49,7 @@ pub trait TransformObject: Sized {
 
     /// Transform the object using the provided cache
     fn transform_with_cache(
-        &self,
+        self,
         transform: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
@@ -59,7 +59,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn translate(
-        &self,
+        self,
         offset: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Self::Transformed {
@@ -70,7 +70,7 @@ pub trait TransformObject: Sized {
     ///
     /// Convenience wrapper around [`TransformObject::transform`].
     fn rotate(
-        &self,
+        self,
         axis_angle: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Self::Transformed {
@@ -89,12 +89,12 @@ where
     type Transformed = Self;
 
     fn transform_with_cache(
-        &self,
+        self,
         transform: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        if let Some(object) = cache.get(self) {
+        if let Some(object) = cache.get(&self) {
             return object.clone();
         }
 
@@ -102,7 +102,7 @@ where
             .clone_object()
             .transform_with_cache(transform, core, cache)
             .insert(core)
-            .derive_from(self, core);
+            .derive_from(&self, core);
 
         cache.insert(self.clone(), transformed.clone());
 
