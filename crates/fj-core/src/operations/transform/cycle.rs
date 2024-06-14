@@ -18,10 +18,10 @@ impl TransformObject for (&Handle<Cycle>, &Handle<Surface>) {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let (cycle, _) = self;
+        let (cycle, surface) = self;
 
         let half_edges = cycle.half_edges().iter().map(|half_edge| {
-            half_edge.transform_with_cache(transform, core, cache)
+            (half_edge, surface).transform_with_cache(transform, core, cache)
         });
 
         Cycle::new(half_edges).insert(core)

@@ -1,12 +1,15 @@
 use fj_math::Transform;
 
 use crate::{
-    operations::insert::Insert, storage::Handle, topology::HalfEdge, Core,
+    operations::insert::Insert,
+    storage::Handle,
+    topology::{HalfEdge, Surface},
+    Core,
 };
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for &Handle<HalfEdge> {
+impl TransformObject for (&Handle<HalfEdge>, &Handle<Surface>) {
     type Transformed = Handle<HalfEdge>;
 
     fn transform_with_cache(
@@ -15,7 +18,7 @@ impl TransformObject for &Handle<HalfEdge> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let half_edge = self;
+        let (half_edge, _) = self;
 
         let curve = half_edge
             .curve()
