@@ -24,13 +24,14 @@ impl TransformObject for Handle<HalfEdge> {
             .clone()
             .transform_with_cache(transform, core, cache);
 
-        let half_edge = HalfEdge::new(curve, start_vertex).insert(core);
+        let transformed_half_edge =
+            HalfEdge::new(curve, start_vertex).insert(core);
 
         core.layers.geometry.define_half_edge(
-            half_edge.clone(),
+            transformed_half_edge.clone(),
             *core.layers.geometry.of_half_edge(&self),
         );
 
-        half_edge
+        transformed_half_edge
     }
 }
