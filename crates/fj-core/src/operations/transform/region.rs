@@ -11,11 +11,13 @@ impl TransformObject for Region {
         core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self::Transformed {
-        let exterior = self
+        let region = self;
+
+        let exterior = region
             .exterior()
             .clone()
             .transform_with_cache(transform, core, cache);
-        let interiors = self.interiors().iter().cloned().map(|interior| {
+        let interiors = region.interiors().iter().cloned().map(|interior| {
             interior.transform_with_cache(transform, core, cache)
         });
 
