@@ -9,8 +9,8 @@ use crate::{
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for Handle<Curve> {
-    type Transformed = Self;
+impl TransformObject for &Handle<Curve> {
+    type Transformed = Handle<Curve>;
 
     fn transform_with_cache(
         self,
@@ -21,7 +21,7 @@ impl TransformObject for Handle<Curve> {
         let curve = self;
 
         cache
-            .entry(&curve)
+            .entry(curve)
             .or_insert_with(|| {
                 // We don't actually need to transform the curve, as its
                 // geometry is locally defined on a surface. We need to set that
@@ -29,7 +29,7 @@ impl TransformObject for Handle<Curve> {
                 // represent the transformed curve.
                 Curve::new()
                     .insert(core)
-                    .copy_geometry_from(&curve, &mut core.layers.geometry)
+                    .copy_geometry_from(curve, &mut core.layers.geometry)
             })
             .clone()
     }
