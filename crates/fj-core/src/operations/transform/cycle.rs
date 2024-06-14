@@ -1,11 +1,16 @@
 use fj_math::Transform;
 
-use crate::{topology::Cycle, Core};
+use crate::{
+    operations::insert::Insert,
+    storage::Handle,
+    topology::{Cycle, Surface},
+    Core,
+};
 
 use super::{TransformCache, TransformObject};
 
-impl TransformObject for Cycle {
-    type Transformed = Self;
+impl TransformObject for (&Handle<Cycle>, &Handle<Surface>) {
+    type Transformed = Handle<Cycle>;
 
     fn transform_with_cache(
         self,
@@ -13,12 +18,12 @@ impl TransformObject for Cycle {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let half_edges = self.half_edges().iter().map(|half_edge| {
-            half_edge
-                .clone()
-                .transform_with_cache(transform, core, cache)
+        let (cycle, surface) = self;
+
+        let half_edges = cycle.half_edges().iter().map(|half_edge| {
+            (half_edge, surface).transform_with_cache(transform, core, cache)
         });
 
-        Self::new(half_edges)
+        Cycle::new(half_edges).insert(core)
     }
 }
