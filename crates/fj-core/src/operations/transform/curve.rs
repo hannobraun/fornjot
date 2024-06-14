@@ -10,12 +10,14 @@ use crate::{
 use super::{TransformCache, TransformObject};
 
 impl TransformObject for Handle<Curve> {
+    type Transformed = Self;
+
     fn transform_with_cache(
         &self,
         _: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
-    ) -> Self {
+    ) -> Self::Transformed {
         cache
             .entry(self)
             .or_insert_with(|| {

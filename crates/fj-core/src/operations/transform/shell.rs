@@ -5,12 +5,14 @@ use crate::{topology::Shell, Core};
 use super::{TransformCache, TransformObject};
 
 impl TransformObject for Shell {
+    type Transformed = Self;
+
     fn transform_with_cache(
         &self,
         transform: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
-    ) -> Self {
+    ) -> Self::Transformed {
         let faces = self
             .faces()
             .iter()

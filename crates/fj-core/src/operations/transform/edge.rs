@@ -7,12 +7,14 @@ use crate::{
 use super::{TransformCache, TransformObject};
 
 impl TransformObject for Handle<HalfEdge> {
+    type Transformed = Self;
+
     fn transform_with_cache(
         &self,
         transform: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
-    ) -> Self {
+    ) -> Self::Transformed {
         let curve = self
             .curve()
             .clone()
