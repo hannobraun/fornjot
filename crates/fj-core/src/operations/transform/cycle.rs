@@ -5,16 +5,20 @@ use crate::{topology::Cycle, Core};
 use super::{TransformCache, TransformObject};
 
 impl TransformObject for Cycle {
+    type Transformed = Self;
+
     fn transform_with_cache(
-        &self,
+        self,
         transform: &Transform,
         core: &mut Core,
         cache: &mut TransformCache,
-    ) -> Self {
-        let edges = self.half_edges().iter().map(|edge| {
-            edge.clone().transform_with_cache(transform, core, cache)
+    ) -> Self::Transformed {
+        let half_edges = self.half_edges().iter().map(|half_edge| {
+            half_edge
+                .clone()
+                .transform_with_cache(transform, core, cache)
         });
 
-        Self::new(edges)
+        Self::new(half_edges)
     }
 }

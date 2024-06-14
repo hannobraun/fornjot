@@ -3,12 +3,14 @@ use crate::{topology::Region, Core};
 use super::TransformObject;
 
 impl TransformObject for Region {
+    type Transformed = Self;
+
     fn transform_with_cache(
-        &self,
+        self,
         transform: &fj_math::Transform,
         core: &mut Core,
         cache: &mut super::TransformCache,
-    ) -> Self {
+    ) -> Self::Transformed {
         let exterior = self
             .exterior()
             .clone()
