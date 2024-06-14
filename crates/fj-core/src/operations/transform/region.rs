@@ -16,13 +16,12 @@ impl TransformObject for (&Handle<Region>, &Handle<Surface>) {
         core: &mut Core,
         cache: &mut super::TransformCache,
     ) -> Self::Transformed {
-        let (region, _) = self;
+        let (region, surface) = self;
 
-        let exterior = region
-            .exterior()
+        let exterior = (region.exterior(), surface)
             .transform_with_cache(transform, core, cache);
         let interiors = region.interiors().iter().map(|interior| {
-            interior.transform_with_cache(transform, core, cache)
+            (interior, surface).transform_with_cache(transform, core, cache)
         });
 
         Region::new(exterior, interiors).insert(core)
