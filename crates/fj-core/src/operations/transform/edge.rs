@@ -15,11 +15,13 @@ impl TransformObject for Handle<HalfEdge> {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let curve = self
+        let half_edge = self;
+
+        let curve = half_edge
             .curve()
             .clone()
             .transform_with_cache(transform, core, cache);
-        let start_vertex = self
+        let start_vertex = half_edge
             .start_vertex()
             .clone()
             .transform_with_cache(transform, core, cache);
@@ -29,7 +31,7 @@ impl TransformObject for Handle<HalfEdge> {
 
         core.layers.geometry.define_half_edge(
             transformed_half_edge.clone(),
-            *core.layers.geometry.of_half_edge(&self),
+            *core.layers.geometry.of_half_edge(&half_edge),
         );
 
         transformed_half_edge
