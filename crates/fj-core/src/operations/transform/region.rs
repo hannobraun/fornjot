@@ -20,9 +20,8 @@ impl TransformObject for (&Handle<Region>, &Handle<Surface>) {
 
         let exterior = region
             .exterior()
-            .clone()
             .transform_with_cache(transform, core, cache);
-        let interiors = region.interiors().iter().cloned().map(|interior| {
+        let interiors = region.interiors().iter().map(|interior| {
             interior.transform_with_cache(transform, core, cache)
         });
 
