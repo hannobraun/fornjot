@@ -22,7 +22,6 @@ impl TransformObject for (&Handle<HalfEdge>, &Handle<Surface>) {
 
         let curve = half_edge
             .curve()
-            .clone()
             .transform_with_cache(transform, core, cache);
         let start_vertex = half_edge
             .start_vertex()
