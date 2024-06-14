@@ -13,7 +13,9 @@ impl TransformObject for Cycle {
         core: &mut Core,
         cache: &mut TransformCache,
     ) -> Self::Transformed {
-        let half_edges = self.half_edges().iter().map(|half_edge| {
+        let cycle = self;
+
+        let half_edges = cycle.half_edges().iter().map(|half_edge| {
             half_edge
                 .clone()
                 .transform_with_cache(transform, core, cache)
