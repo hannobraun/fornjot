@@ -80,6 +80,13 @@ impl SweepCycle for Cycle {
             top_edges.push((
                 top_half_edge,
                 *core.layers.geometry.of_half_edge(bottom_half_edge),
+                core.layers
+                    .geometry
+                    .of_curve(bottom_half_edge.curve())
+                    .unwrap()
+                    .local_on(&bottom_surface)
+                    .unwrap()
+                    .clone(),
             ));
         }
 

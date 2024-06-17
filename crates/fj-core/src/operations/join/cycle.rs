@@ -34,7 +34,9 @@ pub trait JoinCycle {
         core: &mut Core,
     ) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
+        Es: IntoIterator<
+            Item = (Handle<HalfEdge>, HalfEdgeGeom, LocalCurveGeom),
+        >,
         Es::IntoIter: Clone + ExactSizeIterator;
 
     /// Join the cycle to another
@@ -97,32 +99,42 @@ impl JoinCycle for Cycle {
         core: &mut Core,
     ) -> Self
     where
-        Es: IntoIterator<Item = (Handle<HalfEdge>, HalfEdgeGeom)>,
+        Es: IntoIterator<
+            Item = (Handle<HalfEdge>, HalfEdgeGeom, LocalCurveGeom),
+        >,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
         let half_edges = edges
             .into_iter()
             .circular_tuple_windows()
-            .map(|((prev_half_edge, _), (half_edge, half_edge_geom))| {
-                let half_edge = HalfEdge::unjoined(core)
-                    .update_curve(|_, _| half_edge.curve().clone(), core)
-                    .update_start_vertex(
-                        |_, _| prev_half_edge.start_vertex().clone(),
-                        core,
-                    )
-                    .insert(core)
-                    .set_geometry(half_edge_geom, &mut core.layers.geometry);
+            .map(
+                |(
+                    (prev_half_edge, _, _),
+                    (half_edge, half_edge_geom, _curve_geom),
+                )| {
+                    let half_edge = HalfEdge::unjoined(core)
+                        .update_curve(|_, _| half_edge.curve().clone(), core)
+                        .update_start_vertex(
+                            |_, _| prev_half_edge.start_vertex().clone(),
+                            core,
+                        )
+                        .insert(core)
+                        .set_geometry(
+                            half_edge_geom,
+                            &mut core.layers.geometry,
+                        );
 
-                core.layers.geometry.define_curve(
-                    half_edge.curve().clone(),
-                    surface.clone(),
-                    LocalCurveGeom {
-                        path: half_edge_geom.path,
-                    },
-                );
+                    core.layers.geometry.define_curve(
+                        half_edge.curve().clone(),
+                        surface.clone(),
+                        LocalCurveGeom {
+                            path: half_edge_geom.path,
+                        },
+                    );
 
-                half_edge
-            })
+                    half_edge
+                },
+            )
             .collect::<Vec<_>>();
         self.add_half_edges(half_edges, core)
     }
