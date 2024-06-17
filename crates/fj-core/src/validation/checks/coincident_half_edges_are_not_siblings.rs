@@ -177,7 +177,8 @@ fn distances(
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (half_edge, surface): (&Handle<HalfEdge>, &SurfaceGeom),
+        half_edge: &Handle<HalfEdge>,
+        surface: &SurfaceGeom,
         geometry: &Geometry,
     ) -> Point<3> {
         let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
@@ -200,12 +201,14 @@ fn distances(
         let percent = i as f64 * step;
         let sample1 = sample(
             percent,
-            (&half_edge_a, geometry.of_surface(surface_a)),
+            &half_edge_a,
+            geometry.of_surface(surface_a),
             geometry,
         );
         let sample2 = sample(
             1.0 - percent,
-            (&half_edge_b, geometry.of_surface(surface_b)),
+            &half_edge_b,
+            geometry.of_surface(surface_b),
             geometry,
         );
         distances.push(sample1.distance_to(&sample2))
