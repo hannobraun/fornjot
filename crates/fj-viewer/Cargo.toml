@@ -17,7 +17,7 @@ workspace = true
 [dependencies]
 fj-interop.workspace = true
 fj-math.workspace = true
-nalgebra = "0.32.5"
+nalgebra = "0.32.6"
 tobj = "4.0.2"
 raw-window-handle = "0.6.0"
 thiserror = "1.0.61"
