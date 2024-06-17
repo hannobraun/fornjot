@@ -3,12 +3,12 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, SurfaceGeom},
+    geometry::{CurveBoundary, Geometry},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
     storage::Handle,
-    topology::{Curve, HalfEdge, Shell, Vertex},
+    topology::{Curve, HalfEdge, Shell, Surface, Vertex},
     validation::ValidationCheck,
 };
 
@@ -128,9 +128,9 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                 // `distinct_min_distance`, that's a problem.
                 if distances(
                     half_edge_a.clone(),
-                    geometry.of_surface(surface_a),
+                    surface_a,
                     half_edge_b.clone(),
-                    geometry.of_surface(surface_b),
+                    surface_b,
                     geometry,
                 )
                 .all(|d| d < config.distinct_min_distance)
@@ -169,24 +169,25 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    edge_a: Handle<HalfEdge>,
-    surface_a: &SurfaceGeom,
-    edge_b: Handle<HalfEdge>,
-    surface_b: &SurfaceGeom,
+    half_edge_a: Handle<HalfEdge>,
+    surface_a: &Handle<Surface>,
+    half_edge_b: Handle<HalfEdge>,
+    surface_b: &Handle<Surface>,
     geometry: &Geometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
         percent: f64,
-        (edge, surface): (&Handle<HalfEdge>, &SurfaceGeom),
+        half_edge: &Handle<HalfEdge>,
+        surface: &Handle<Surface>,
         geometry: &Geometry,
     ) -> Point<3> {
-        let [start, end] = geometry.of_half_edge(edge).boundary.inner;
+        let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
         let path_coords = start + (end - start) * percent;
-        let surface_coords = geometry
-            .of_half_edge(edge)
-            .path
-            .point_from_path_coords(path_coords);
-        surface.point_from_surface_coords(surface_coords)
+        let path = geometry.of_half_edge(half_edge).path;
+        let surface_coords = path.point_from_path_coords(path_coords);
+        geometry
+            .of_surface(surface)
+            .point_from_surface_coords(surface_coords)
     }
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -198,8 +199,8 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, (&edge_a, surface_a), geometry);
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b), geometry);
+        let sample1 = sample(percent, &half_edge_a, surface_a, geometry);
+        let sample2 = sample(1.0 - percent, &half_edge_b, surface_b, geometry);
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
