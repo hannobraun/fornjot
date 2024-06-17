@@ -3,7 +3,7 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, SurfaceGeom},
+    geometry::{CurveBoundary, Geometry},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
     },
@@ -178,7 +178,7 @@ fn distances(
     fn sample(
         percent: f64,
         half_edge: &Handle<HalfEdge>,
-        surface: &SurfaceGeom,
+        surface: &Handle<Surface>,
         geometry: &Geometry,
     ) -> Point<3> {
         let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
@@ -187,7 +187,9 @@ fn distances(
             .of_half_edge(half_edge)
             .path
             .point_from_path_coords(path_coords);
-        surface.point_from_surface_coords(surface_coords)
+        geometry
+            .of_surface(surface)
+            .point_from_surface_coords(surface_coords)
     }
 
     // Three samples (start, middle, end), are enough to detect weather lines
@@ -199,18 +201,8 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(
-            percent,
-            &half_edge_a,
-            geometry.of_surface(surface_a),
-            geometry,
-        );
-        let sample2 = sample(
-            1.0 - percent,
-            &half_edge_b,
-            geometry.of_surface(surface_b),
-            geometry,
-        );
+        let sample1 = sample(percent, &half_edge_a, surface_a, geometry);
+        let sample2 = sample(1.0 - percent, &half_edge_b, surface_b, geometry);
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
