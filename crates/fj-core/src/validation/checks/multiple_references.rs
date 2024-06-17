@@ -179,7 +179,6 @@ impl<T, U> ReferenceCounter<T, U> {
 #[cfg(test)]
 mod tests {
     use crate::{
-        assert_contains_err,
         operations::{
             build::{BuildShell, BuildSketch, BuildSolid},
             update::{
@@ -188,11 +187,7 @@ mod tests {
             },
         },
         topology::{Cycle, Face, HalfEdge, Region, Shell, Sketch, Solid},
-        validate::Validate,
-        validation::{
-            checks::MultipleReferencesToObject, ValidationCheck,
-            ValidationError,
-        },
+        validation::{checks::MultipleReferencesToObject, ValidationCheck},
         Core,
     };
 
@@ -411,12 +406,6 @@ mod tests {
             &invalid,
             &core.layers.geometry,
         ).is_err());
-
-        assert_contains_err!(
-            core,
-            invalid,
-            ValidationError::MultipleReferencesToCycle(_)
-        );
 
         // Ignore remaining validation errors.
         let _ = core.layers.validation.take_errors();
