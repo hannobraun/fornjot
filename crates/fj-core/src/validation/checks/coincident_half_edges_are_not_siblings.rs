@@ -183,10 +183,8 @@ fn distances(
     ) -> Point<3> {
         let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
         let path_coords = start + (end - start) * percent;
-        let surface_coords = geometry
-            .of_half_edge(half_edge)
-            .path
-            .point_from_path_coords(path_coords);
+        let path = geometry.of_half_edge(half_edge).path;
+        let surface_coords = path.point_from_path_coords(path_coords);
         geometry
             .of_surface(surface)
             .point_from_surface_coords(surface_coords)
