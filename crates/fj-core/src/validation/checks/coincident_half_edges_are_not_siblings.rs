@@ -171,7 +171,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
 fn distances(
     half_edge_a: Handle<HalfEdge>,
     surface_a: &SurfaceGeom,
-    edge_b: Handle<HalfEdge>,
+    half_edge_b: Handle<HalfEdge>,
     surface_b: &SurfaceGeom,
     geometry: &Geometry,
 ) -> impl Iterator<Item = Scalar> {
@@ -199,7 +199,8 @@ fn distances(
     for i in 0..sample_count {
         let percent = i as f64 * step;
         let sample1 = sample(percent, (&half_edge_a, surface_a), geometry);
-        let sample2 = sample(1.0 - percent, (&edge_b, surface_b), geometry);
+        let sample2 =
+            sample(1.0 - percent, (&half_edge_b, surface_b), geometry);
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
