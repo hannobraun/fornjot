@@ -60,9 +60,17 @@ impl SweepHalfEdge for Handle<HalfEdge> {
         let path = path.into();
 
         let half_edge_geom = *core.layers.geometry.of_half_edge(self);
+        let curve_geom = core
+            .layers
+            .geometry
+            .of_curve(self.curve())
+            .unwrap()
+            .local_on(&surface)
+            .unwrap()
+            .clone();
         let surface_geom = *core.layers.geometry.of_surface(&surface);
         let surface =
-            half_edge_geom
+            curve_geom
                 .path
                 .sweep_surface_path(&surface_geom, path, core);
 
