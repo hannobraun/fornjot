@@ -47,11 +47,17 @@ impl Cycle {
                 .expect("Invalid cycle: expected at least one edge");
 
             let half_edge_geom = geometry.of_half_edge(first);
+            let curve_geom = geometry
+                .of_curve(first.curve())
+                .unwrap()
+                .local_on(surface)
+                .unwrap()
+                .clone();
 
             let [a, b] = half_edge_geom.boundary.inner;
             let edge_direction_positive = a < b;
 
-            let circle = match half_edge_geom.path {
+            let circle = match curve_geom.path {
                 SurfacePath::Circle(circle) => circle,
                 SurfacePath::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"
