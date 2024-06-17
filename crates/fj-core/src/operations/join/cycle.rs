@@ -110,7 +110,7 @@ impl JoinCycle for Cycle {
             .map(
                 |(
                     (prev_half_edge, _, _),
-                    (half_edge, half_edge_geom, _curve_geom),
+                    (half_edge, half_edge_geom, curve_geom),
                 )| {
                     let half_edge = HalfEdge::unjoined(core)
                         .update_curve(|_, _| half_edge.curve().clone(), core)
@@ -127,9 +127,7 @@ impl JoinCycle for Cycle {
                     core.layers.geometry.define_curve(
                         half_edge.curve().clone(),
                         surface.clone(),
-                        LocalCurveGeom {
-                            path: half_edge_geom.path,
-                        },
+                        curve_geom,
                     );
 
                     half_edge
