@@ -130,7 +130,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     half_edge_a.clone(),
                     surface_a,
                     half_edge_b.clone(),
-                    geometry.of_surface(surface_b),
+                    surface_b,
                     geometry,
                 )
                 .all(|d| d < config.distinct_min_distance)
@@ -172,7 +172,7 @@ fn distances(
     half_edge_a: Handle<HalfEdge>,
     surface_a: &Handle<Surface>,
     half_edge_b: Handle<HalfEdge>,
-    surface_b: &SurfaceGeom,
+    surface_b: &Handle<Surface>,
     geometry: &Geometry,
 ) -> impl Iterator<Item = Scalar> {
     fn sample(
@@ -203,8 +203,11 @@ fn distances(
             (&half_edge_a, geometry.of_surface(surface_a)),
             geometry,
         );
-        let sample2 =
-            sample(1.0 - percent, (&half_edge_b, surface_b), geometry);
+        let sample2 = sample(
+            1.0 - percent,
+            (&half_edge_b, geometry.of_surface(surface_b)),
+            geometry,
+        );
         distances.push(sample1.distance_to(&sample2))
     }
     distances.into_iter()
