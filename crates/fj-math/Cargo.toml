@@ -16,7 +16,7 @@ workspace = true
 [dependencies]
 approx = "0.5.1"
 decorum = "0.3.1"
-nalgebra = "0.32.5"
+nalgebra = "0.32.6"
 num-traits = "0.2.19"
 parry2d-f64 = "0.15.1"
 parry3d-f64 = "0.15.1"
