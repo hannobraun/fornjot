@@ -124,13 +124,17 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 }
 
-                let mut distances = distances(
+                let Some(mut distances) = distances(
                     half_edge_a.clone(),
                     surface_a,
                     half_edge_b.clone(),
                     surface_b,
                     geometry,
-                );
+                ) else {
+                    // The geometry to compute the distances is not available,
+                    // hence these half-edges can't be coincident.
+                    continue;
+                };
 
                 // If all points on distinct curves are within
                 // `distinct_min_distance`, that's a problem.
@@ -174,7 +178,7 @@ fn distances(
     half_edge_b: Handle<HalfEdge>,
     surface_b: &Handle<Surface>,
     geometry: &Geometry,
-) -> impl Iterator<Item = Scalar> {
+) -> Option<impl Iterator<Item = Scalar>> {
     fn sample(
         percent: f64,
         half_edge: &Handle<HalfEdge>,
@@ -203,7 +207,7 @@ fn distances(
         let sample2 = sample(1.0 - percent, &half_edge_b, surface_b, geometry);
         distances.push(sample1.distance_to(&sample2))
     }
-    distances.into_iter()
+    Some(distances.into_iter())
 }
 
 #[cfg(test)]
