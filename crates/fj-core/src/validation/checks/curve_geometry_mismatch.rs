@@ -70,14 +70,14 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
             .clone()
             .into_iter()
             .cartesian_product(edges_and_surfaces)
-            .filter_map(|((edge_a, surface_a), (edge_b, surface_b))| {
+            .filter_map(|((half_edge_a, surface_a), (edge_b, surface_b))| {
                 // We only care about edges referring to the same curve.
-                if edge_a.curve().id() != edge_b.curve().id() {
+                if half_edge_a.curve().id() != edge_b.curve().id() {
                     return None;
                 }
 
                 // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
+                if half_edge_a.id() == edge_b.id() {
                     return None;
                 }
 
@@ -88,7 +88,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                 // have right now are circles, 3 would be enough to check for
                 // coincidence. But the first and last might be identical, so
                 // let's add an extra one.
-                let [a, d] = geometry.of_half_edge(&edge_a).boundary.inner;
+                let [a, d] = geometry.of_half_edge(&half_edge_a).boundary.inner;
                 let b = a + (d - a) * 1. / 3.;
                 let c = a + (d - a) * 2. / 3.;
 
@@ -96,7 +96,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
 
                 for point_curve in [a, b, c, d] {
                     let a_surface = geometry
-                        .of_half_edge(&edge_a)
+                        .of_half_edge(&half_edge_a)
                         .path
                         .point_from_path_coords(point_curve);
                     let b_surface = geometry
@@ -113,7 +113,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
 
                     if distance > config.identical_max_distance {
                         errors.push(Self {
-                            half_edge_a: edge_a.clone(),
+                            half_edge_a: half_edge_a.clone(),
                             half_edge_b: edge_b.clone(),
                             point_curve,
                             point_a: a_global,
