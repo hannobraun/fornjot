@@ -177,7 +177,7 @@ mod tests {
                                         geometry.boundary =
                                             geometry.boundary.reverse();
 
-                                        [HalfEdge::new(
+                                        let half_edge = HalfEdge::new(
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )
@@ -185,7 +185,9 @@ mod tests {
                                         .set_geometry(
                                             geometry,
                                             &mut core.layers.geometry,
-                                        )]
+                                        );
+
+                                        [half_edge]
                                     },
                                     core,
                                 )
