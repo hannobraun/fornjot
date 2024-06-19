@@ -82,6 +82,47 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                         return None;
                     }
 
+                    let Some(curve_geom) =
+                        geometry.of_curve(half_edge_a.curve())
+                    else {
+                        // No geometry defined for the curve. Nothing to test
+                        // here.
+                        return None;
+                    };
+
+                    let local_curve_geom_a = curve_geom.local_on(&surface_a);
+                    let local_curve_geom_b = curve_geom.local_on(&surface_b);
+
+                    let (local_curve_geom_a, local_curve_geom_b) =
+                        match (local_curve_geom_a, local_curve_geom_b) {
+                            (Some(a), Some(b)) => (a, b),
+                            (None, None) => {
+                                // No geometry defined for the curve on the
+                                // respective surface. Nothing to test here.
+                                return None;
+                            }
+                            _ => {
+                                // This means that geometry is only defined for
+                                // one of the curves, which is a mismatch. But
+                                // it is a mismatch that can't be represented
+                                // with the validation error struct, as
+                                // currently defined.
+                                //
+                                // I don't want to put work into addressing this
+                                // right now, as in the future, curve geometry
+                                // hopefully won't be redundantly defined, and
+                                // this whole validation check will become
+                                // redundant.
+                                //
+                                // For this reason, I'm choosing the easy way
+                                // here, and that should do just fine for now.
+                                panic!(
+                                    "Curve geometry mismatch: Curve not \
+                                    defined on all required surfaces."
+                                );
+                            }
+                        };
+
                     let surface_geom_a = geometry.of_surface(&surface_a);
                     let surface_geom_b = geometry.of_surface(&surface_b);
 
@@ -97,12 +138,10 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                     let mut errors: Vec<Self> = Vec::new();
 
                     for point_curve in [a, b, c, d] {
-                        let a_surface = geometry
-                            .of_half_edge(&half_edge_a)
+                        let a_surface = local_curve_geom_a
                             .path
                             .point_from_path_coords(point_curve);
-                        let b_surface = geometry
-                            .of_half_edge(&half_edge_b)
+                        let b_surface = local_curve_geom_b
                             .path
                             .point_from_path_coords(point_curve);
 
