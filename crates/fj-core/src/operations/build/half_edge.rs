@@ -73,7 +73,6 @@ pub trait BuildHalfEdge {
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeom {
-                path,
                 boundary: boundary.into(),
             },
         );
@@ -100,14 +99,6 @@ pub trait BuildHalfEdge {
         core.layers.geometry.define_half_edge(
             half_edge.clone(),
             HalfEdgeGeom {
-                path: core
-                    .layers
-                    .geometry
-                    .of_curve(half_edge.curve())
-                    .expect("Curve geometry was just defined in same function")
-                    .local_on(&surface)
-                    .expect("Curve geometry was just defined in same function")
-                    .path,
                 boundary: boundary.unwrap_or_default(),
             },
         );
