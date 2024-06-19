@@ -101,7 +101,10 @@ fn check_cycle<'r>(
         let end_pos_of_first_half_edge = {
             let [_, end] = geometry.of_half_edge(first).boundary.inner;
             geometry
-                .of_half_edge(first)
+                .of_curve(first.curve())
+                .unwrap()
+                .local_on(surface)
+                .unwrap()
                 .path
                 .point_from_path_coords(end)
         };

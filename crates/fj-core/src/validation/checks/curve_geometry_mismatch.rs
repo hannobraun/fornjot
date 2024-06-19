@@ -70,61 +70,103 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
             .clone()
             .into_iter()
             .cartesian_product(edges_and_surfaces)
-            .filter_map(|((edge_a, surface_a), (edge_b, surface_b))| {
-                // We only care about edges referring to the same curve.
-                if edge_a.curve().id() != edge_b.curve().id() {
-                    return None;
-                }
-
-                // No need to check an edge against itself.
-                if edge_a.id() == edge_b.id() {
-                    return None;
-                }
-
-                let surface_a = geometry.of_surface(&surface_a);
-                let surface_b = geometry.of_surface(&surface_b);
-
-                // Let's check 4 points. Given that the most complex curves we
-                // have right now are circles, 3 would be enough to check for
-                // coincidence. But the first and last might be identical, so
-                // let's add an extra one.
-                let [a, d] = geometry.of_half_edge(&edge_a).boundary.inner;
-                let b = a + (d - a) * 1. / 3.;
-                let c = a + (d - a) * 2. / 3.;
-
-                let mut errors: Vec<Self> = Vec::new();
-
-                for point_curve in [a, b, c, d] {
-                    let a_surface = geometry
-                        .of_half_edge(&edge_a)
-                        .path
-                        .point_from_path_coords(point_curve);
-                    let b_surface = geometry
-                        .of_half_edge(&edge_b)
-                        .path
-                        .point_from_path_coords(point_curve);
-
-                    let a_global =
-                        surface_a.point_from_surface_coords(a_surface);
-                    let b_global =
-                        surface_b.point_from_surface_coords(b_surface);
-
-                    let distance = (a_global - b_global).magnitude();
-
-                    if distance > config.identical_max_distance {
-                        errors.push(Self {
-                            half_edge_a: edge_a.clone(),
-                            half_edge_b: edge_b.clone(),
-                            point_curve,
-                            point_a: a_global,
-                            point_b: b_global,
-                            distance,
-                        });
+            .filter_map(
+                |((half_edge_a, surface_a), (half_edge_b, surface_b))| {
+                    // We only care about edges referring to the same curve.
+                    if half_edge_a.curve().id() != half_edge_b.curve().id() {
+                        return None;
                     }
-                }
 
-                Some(errors)
-            })
+                    // No need to check an edge against itself.
+                    if half_edge_a.id() == half_edge_b.id() {
+                        return None;
+                    }
+
+                    let Some(curve_geom) =
+                        geometry.of_curve(half_edge_a.curve())
+                    else {
+                        // No geometry defined for the curve. Nothing to test
+                        // here.
+                        return None;
+                    };
+
+                    let local_curve_geom_a = curve_geom.local_on(&surface_a);
+                    let local_curve_geom_b = curve_geom.local_on(&surface_b);
+
+                    let (local_curve_geom_a, local_curve_geom_b) =
+                        match (local_curve_geom_a, local_curve_geom_b) {
+                            (Some(a), Some(b)) => (a, b),
+                            (None, None) => {
+                                // No geometry defined for the curve on the
+                                // respective surface. Nothing to test here.
+                                return None;
+                            }
+                            _ => {
+                                // This means that geometry is only defined for
+                                // one of the curves, which is a mismatch. But
+                                // it is a mismatch that can't be represented
+                                // with the validation error struct, as
+                                // currently defined.
+                                //
+                                // I don't want to put work into addressing this
+                                // right now, as in the future, curve geometry
+                                // hopefully won't be redundantly defined, and
+                                // this whole validation check will become
+                                // redundant.
+                                //
+                                // For this reason, I'm choosing the easy way
+                                // here, and that should do just fine for now.
+                                panic!(
+                                    "Curve geometry mismatch: Curve not \
+                                    defined on all required surfaces."
+                                );
+                            }
+                        };
+
+                    let surface_geom_a = geometry.of_surface(&surface_a);
+                    let surface_geom_b = geometry.of_surface(&surface_b);
+
+                    // Let's check 4 points. Given that the most complex curves
+                    // we have right now are circles, 3 would be enough to check
+                    // for coincidence. But the first and last might be
+                    // identical, so let's add an extra one.
+                    let [a, d] =
+                        geometry.of_half_edge(&half_edge_a).boundary.inner;
+                    let b = a + (d - a) * 1. / 3.;
+                    let c = a + (d - a) * 2. / 3.;
+
+                    let mut errors: Vec<Self> = Vec::new();
+
+                    for point_curve in [a, b, c, d] {
+                        let a_surface = local_curve_geom_a
+                            .path
+                            .point_from_path_coords(point_curve);
+                        let b_surface = local_curve_geom_b
+                            .path
+                            .point_from_path_coords(point_curve);
+
+                        let a_global =
+                            surface_geom_a.point_from_surface_coords(a_surface);
+                        let b_global =
+                            surface_geom_b.point_from_surface_coords(b_surface);
+
+                        let distance = (a_global - b_global).magnitude();
+
+                        if distance > config.identical_max_distance {
+                            errors.push(Self {
+                                half_edge_a: half_edge_a.clone(),
+                                half_edge_b: half_edge_b.clone(),
+                                point_curve,
+                                point_a: a_global,
+                                point_b: b_global,
+                                distance,
+                            });
+                        }
+                    }
+
+                    Some(errors)
+                },
+            )
             .flatten()
     }
 }
@@ -166,23 +208,41 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let mut geometry = *core
+                                        let mut half_edge_geom = *core
                                             .layers
                                             .geometry
                                             .of_half_edge(half_edge);
-                                        geometry.path = geometry.path.reverse();
-                                        geometry.boundary =
-                                            geometry.boundary.reverse();
+                                        half_edge_geom.boundary =
+                                            half_edge_geom.boundary.reverse();
 
-                                        [HalfEdge::new(
+                                        let mut curve_geom = core
+                                            .layers
+                                            .geometry
+                                            .of_curve(half_edge.curve())
+                                            .unwrap()
+                                            .local_on(face.surface())
+                                            .unwrap()
+                                            .clone();
+                                        curve_geom.path =
+                                            curve_geom.path.reverse();
+
+                                        let half_edge = HalfEdge::new(
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )
                                         .insert(core)
                                         .set_geometry(
-                                            geometry,
+                                            half_edge_geom,
                                             &mut core.layers.geometry,
-                                        )]
+                                        );
+
+                                        core.layers.geometry.define_curve(
+                                            half_edge.curve().clone(),
+                                            face.surface().clone(),
+                                            curve_geom,
+                                        );
+
+                                        [half_edge]
                                     },
                                     core,
                                 )

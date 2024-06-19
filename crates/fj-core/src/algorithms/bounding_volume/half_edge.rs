@@ -3,15 +3,20 @@ use fj_math::{Aabb, Vector};
 use crate::{
     geometry::{Geometry, SurfacePath},
     storage::Handle,
-    topology::HalfEdge,
+    topology::{HalfEdge, Surface},
 };
 
-impl super::BoundingVolume<2> for &Handle<HalfEdge> {
+impl super::BoundingVolume<2> for (&Handle<HalfEdge>, &Handle<Surface>) {
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
-        let half_edge = self;
+        let (half_edge, surface) = self;
 
         let half_edge_geom = geometry.of_half_edge(half_edge);
-        let path = half_edge_geom.path;
+        let path = geometry
+            .of_curve(half_edge.curve())
+            .unwrap()
+            .local_on(surface)
+            .unwrap()
+            .path;
 
         match path {
             SurfacePath::Circle(circle) => {

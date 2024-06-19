@@ -102,23 +102,7 @@ pub trait BuildShell {
                                 .update_curve(|_, _| curve.clone(), core)
                                 .insert(core)
                                 .set_geometry(
-                                    HalfEdgeGeom {
-                                        path: core
-                                            .layers
-                                            .geometry
-                                            .of_curve(&curve)
-                                            .expect(
-                                                "Curve geometry was just \
-                                                defined in same function",
-                                            )
-                                            .local_on(&surface)
-                                            .expect(
-                                                "Curve geometry was just \
-                                                defined in same function",
-                                            )
-                                            .path,
-                                        boundary,
-                                    },
+                                    HalfEdgeGeom { boundary },
                                     &mut core.layers.geometry,
                                 )
                         })

@@ -17,7 +17,6 @@ impl ReverseCurveCoordinateSystems for (&Handle<HalfEdge>, &Handle<Surface>) {
         let (half_edge, surface) = self;
 
         let mut half_edge_geom = *core.layers.geometry.of_half_edge(half_edge);
-        half_edge_geom.path = half_edge_geom.path.reverse();
         half_edge_geom.boundary = half_edge_geom.boundary.reverse();
 
         let curve =

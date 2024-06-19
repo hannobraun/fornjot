@@ -31,7 +31,12 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
             Some(approx) => approx,
             None => {
                 let approx = approx_curve(
-                    &half_edge.path,
+                    &geometry
+                        .of_curve(curve)
+                        .unwrap()
+                        .local_on(surface)
+                        .unwrap()
+                        .path,
                     geometry.of_surface(surface),
                     half_edge.boundary,
                     tolerance,
@@ -198,7 +203,7 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { path, boundary };
+        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -221,7 +226,7 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { path, boundary };
+        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -243,7 +248,7 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { path, boundary };
+        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
@@ -274,7 +279,7 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { path, boundary };
+        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
         let approx = (&curve, &half_edge, &surface)
