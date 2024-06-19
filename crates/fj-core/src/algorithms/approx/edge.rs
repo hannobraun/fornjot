@@ -61,7 +61,10 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
 
             approx.points.into_iter().map(|point| {
                 let point_surface = geometry
-                    .of_half_edge(half_edge)
+                    .of_curve(half_edge.curve())
+                    .unwrap()
+                    .local_on(surface)
+                    .unwrap()
                     .path
                     .point_from_path_coords(point.local_form);
 
