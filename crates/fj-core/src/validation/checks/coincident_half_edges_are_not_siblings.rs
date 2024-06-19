@@ -124,17 +124,17 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 }
 
-                // If all points on distinct curves are within
-                // `distinct_min_distance`, that's a problem.
-                if distances(
+                let mut distances = distances(
                     half_edge_a.clone(),
                     surface_a,
                     half_edge_b.clone(),
                     surface_b,
                     geometry,
-                )
-                .all(|d| d < config.distinct_min_distance)
-                {
+                );
+
+                // If all points on distinct curves are within
+                // `distinct_min_distance`, that's a problem.
+                if distances.all(|d| d < config.distinct_min_distance) {
                     let boundaries =
                         [half_edge_a, half_edge_b].map(|half_edge| {
                             geometry.of_half_edge(half_edge).boundary
