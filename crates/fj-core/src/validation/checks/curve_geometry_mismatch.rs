@@ -178,6 +178,17 @@ mod tests {
                                         half_edge_geom.boundary =
                                             half_edge_geom.boundary.reverse();
 
+                                        let mut curve_geom = core
+                                            .layers
+                                            .geometry
+                                            .of_curve(half_edge.curve())
+                                            .unwrap()
+                                            .local_on(face.surface())
+                                            .unwrap()
+                                            .clone();
+                                        curve_geom.path =
+                                            curve_geom.path.reverse();
+
                                         let half_edge = HalfEdge::new(
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
@@ -186,6 +197,12 @@ mod tests {
                                         .set_geometry(
                                             half_edge_geom,
                                             &mut core.layers.geometry,
+                                        );
+
+                                        core.layers.geometry.define_curve(
+                                            half_edge.curve().clone(),
+                                            face.surface().clone(),
+                                            curve_geom,
                                         );
 
                                         [half_edge]
