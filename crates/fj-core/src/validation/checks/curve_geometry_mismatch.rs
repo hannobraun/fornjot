@@ -70,61 +70,64 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
             .clone()
             .into_iter()
             .cartesian_product(edges_and_surfaces)
-            .filter_map(|((half_edge_a, surface_a), (edge_b, surface_b))| {
-                // We only care about edges referring to the same curve.
-                if half_edge_a.curve().id() != edge_b.curve().id() {
-                    return None;
-                }
-
-                // No need to check an edge against itself.
-                if half_edge_a.id() == edge_b.id() {
-                    return None;
-                }
-
-                let surface_a = geometry.of_surface(&surface_a);
-                let surface_b = geometry.of_surface(&surface_b);
-
-                // Let's check 4 points. Given that the most complex curves we
-                // have right now are circles, 3 would be enough to check for
-                // coincidence. But the first and last might be identical, so
-                // let's add an extra one.
-                let [a, d] = geometry.of_half_edge(&half_edge_a).boundary.inner;
-                let b = a + (d - a) * 1. / 3.;
-                let c = a + (d - a) * 2. / 3.;
-
-                let mut errors: Vec<Self> = Vec::new();
-
-                for point_curve in [a, b, c, d] {
-                    let a_surface = geometry
-                        .of_half_edge(&half_edge_a)
-                        .path
-                        .point_from_path_coords(point_curve);
-                    let b_surface = geometry
-                        .of_half_edge(&edge_b)
-                        .path
-                        .point_from_path_coords(point_curve);
-
-                    let a_global =
-                        surface_a.point_from_surface_coords(a_surface);
-                    let b_global =
-                        surface_b.point_from_surface_coords(b_surface);
-
-                    let distance = (a_global - b_global).magnitude();
-
-                    if distance > config.identical_max_distance {
-                        errors.push(Self {
-                            half_edge_a: half_edge_a.clone(),
-                            half_edge_b: edge_b.clone(),
-                            point_curve,
-                            point_a: a_global,
-                            point_b: b_global,
-                            distance,
-                        });
+            .filter_map(
+                |((half_edge_a, surface_a), (half_edge_b, surface_b))| {
+                    // We only care about edges referring to the same curve.
+                    if half_edge_a.curve().id() != half_edge_b.curve().id() {
+                        return None;
                     }
-                }
 
-                Some(errors)
-            })
+                    // No need to check an edge against itself.
+                    if half_edge_a.id() == half_edge_b.id() {
+                        return None;
+                    }
+
+                    let surface_a = geometry.of_surface(&surface_a);
+                    let surface_b = geometry.of_surface(&surface_b);
+
+                    // Let's check 4 points. Given that the most complex curves
+                    // we have right now are circles, 3 would be enough to check
+                    // for coincidence. But the first and last might be
+                    // identical, so let's add an extra one.
+                    let [a, d] =
+                        geometry.of_half_edge(&half_edge_a).boundary.inner;
+                    let b = a + (d - a) * 1. / 3.;
+                    let c = a + (d - a) * 2. / 3.;
+
+                    let mut errors: Vec<Self> = Vec::new();
+
+                    for point_curve in [a, b, c, d] {
+                        let a_surface = geometry
+                            .of_half_edge(&half_edge_a)
+                            .path
+                            .point_from_path_coords(point_curve);
+                        let b_surface = geometry
+                            .of_half_edge(&half_edge_b)
+                            .path
+                            .point_from_path_coords(point_curve);
+
+                        let a_global =
+                            surface_a.point_from_surface_coords(a_surface);
+                        let b_global =
+                            surface_b.point_from_surface_coords(b_surface);
+
+                        let distance = (a_global - b_global).magnitude();
+
+                        if distance > config.identical_max_distance {
+                            errors.push(Self {
+                                half_edge_a: half_edge_a.clone(),
+                                half_edge_b: half_edge_b.clone(),
+                                point_curve,
+                                point_a: a_global,
+                                point_b: b_global,
+                                distance,
+                            });
+                        }
+                    }
+
+                    Some(errors)
+                },
+            )
             .flatten()
     }
 }
