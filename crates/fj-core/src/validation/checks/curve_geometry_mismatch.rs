@@ -82,7 +82,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                         return None;
                     }
 
-                    let surface_a = geometry.of_surface(&surface_a);
+                    let surface_geom_a = geometry.of_surface(&surface_a);
                     let surface_b = geometry.of_surface(&surface_b);
 
                     // Let's check 4 points. Given that the most complex curves
@@ -107,7 +107,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                             .point_from_path_coords(point_curve);
 
                         let a_global =
-                            surface_a.point_from_surface_coords(a_surface);
+                            surface_geom_a.point_from_surface_coords(a_surface);
                         let b_global =
                             surface_b.point_from_surface_coords(b_surface);
 
