@@ -4,16 +4,20 @@ use fj_math::Vector;
 
 use crate::{
     storage::Handle,
-    topology::{Curve, HalfEdge, Surface, Topology},
+    topology::{Curve, HalfEdge, Surface, Topology, Vertex},
 };
 
-use super::{CurveGeom, GlobalPath, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom};
+use super::{
+    CurveGeom, GlobalPath, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom,
+    VertexGeom,
+};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
     half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
+    vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     space_2d: Handle<Surface>,
 
@@ -29,6 +33,7 @@ impl Geometry {
             curve: BTreeMap::new(),
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
+            vertex: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
 
@@ -128,6 +133,11 @@ impl Geometry {
         self.surface
             .get(surface)
             .expect("Expected geometry of surface to be defined")
+    }
+
+    /// # Access the geometry of the provided vertex
+    pub fn of_vertex(&self, vertex: &Handle<Vertex>) -> Option<&VertexGeom> {
+        self.vertex.get(vertex)
     }
 
     /// Access the geometry of the xy-plane
