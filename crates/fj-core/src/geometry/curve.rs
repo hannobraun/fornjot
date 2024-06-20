@@ -40,7 +40,7 @@ impl CurveGeom {
     }
 }
 
-/// The geometric definition of a curve in 2D surface coordinates
+/// The geometric definition of a curve, in 2D surface coordinates
 #[derive(Clone, Debug)]
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
