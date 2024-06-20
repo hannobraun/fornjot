@@ -8,8 +8,8 @@ use crate::{
 };
 
 use super::{
-    CurveGeom, GlobalPath, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom,
-    VertexGeom,
+    vertex::LocalVertexGeom, CurveGeom, GlobalPath, HalfEdgeGeom,
+    LocalCurveGeom, SurfaceGeom, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
@@ -106,6 +106,19 @@ impl Geometry {
         }
 
         self.surface.insert(surface, geometry);
+    }
+
+    pub(crate) fn define_vertex_inner(
+        &mut self,
+        vertex: Handle<Vertex>,
+        curve: Handle<Curve>,
+        geometry: LocalVertexGeom,
+    ) {
+        self.vertex
+            .entry(vertex)
+            .or_default()
+            .definitions
+            .insert(curve, geometry);
     }
 
     /// # Access the geometry of the provided curve

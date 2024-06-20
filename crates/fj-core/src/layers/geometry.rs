@@ -1,9 +1,11 @@
 //! Layer infrastructure for [`Geometry`]
 
 use crate::{
-    geometry::{Geometry, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom},
+    geometry::{
+        Geometry, HalfEdgeGeom, LocalCurveGeom, LocalVertexGeom, SurfaceGeom,
+    },
     storage::Handle,
-    topology::{Curve, HalfEdge, Surface},
+    topology::{Curve, HalfEdge, Surface, Vertex},
 };
 
 use super::{Command, Event, Layer};
@@ -56,6 +58,24 @@ impl Layer<Geometry> {
     ) {
         let mut events = Vec::new();
         self.process(DefineSurface { surface, geometry }, &mut events);
+    }
+
+    /// Define the geometry of the provided vertex
+    pub fn define_vertex(
+        &mut self,
+        vertex: Handle<Vertex>,
+        curve: Handle<Curve>,
+        geometry: LocalVertexGeom,
+    ) {
+        let mut events = Vec::new();
+        self.process(
+            DefineVertex {
+                vertex,
+                curve,
+                geometry,
+            },
+            &mut events,
+        );
     }
 }
 
@@ -136,5 +156,35 @@ impl Command<Geometry> for DefineSurface {
 impl Event<Geometry> for DefineSurface {
     fn evolve(&self, state: &mut Geometry) {
         state.define_surface_inner(self.surface.clone(), self.geometry);
+    }
+}
+
+/// Define the geometry of a curve
+pub struct DefineVertex {
+    vertex: Handle<Vertex>,
+    curve: Handle<Curve>,
+    geometry: LocalVertexGeom,
+}
+
+impl Command<Geometry> for DefineVertex {
+    type Result = ();
+    type Event = Self;
+
+    fn decide(
+        self,
+        _: &Geometry,
+        events: &mut Vec<Self::Event>,
+    ) -> Self::Result {
+        events.push(self);
+    }
+}
+
+impl Event<Geometry> for DefineVertex {
+    fn evolve(&self, state: &mut Geometry) {
+        state.define_vertex_inner(
+            self.vertex.clone(),
+            self.curve.clone(),
+            self.geometry.clone(),
+        );
     }
 }
