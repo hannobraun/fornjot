@@ -4,16 +4,20 @@ use fj_math::Vector;
 
 use crate::{
     storage::Handle,
-    topology::{Curve, HalfEdge, Surface, Topology},
+    topology::{Curve, HalfEdge, Surface, Topology, Vertex},
 };
 
-use super::{CurveGeom, GlobalPath, HalfEdgeGeom, LocalCurveGeom, SurfaceGeom};
+use super::{
+    vertex::LocalVertexGeom, CurveGeom, GlobalPath, HalfEdgeGeom,
+    LocalCurveGeom, SurfaceGeom, VertexGeom,
+};
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
     half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
+    vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     space_2d: Handle<Surface>,
 
@@ -29,6 +33,7 @@ impl Geometry {
             curve: BTreeMap::new(),
             half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
+            vertex: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
 
@@ -103,11 +108,20 @@ impl Geometry {
         self.surface.insert(surface, geometry);
     }
 
+    pub(crate) fn define_vertex_inner(
+        &mut self,
+        vertex: Handle<Vertex>,
+        curve: Handle<Curve>,
+        geometry: LocalVertexGeom,
+    ) {
+        self.vertex
+            .entry(vertex)
+            .or_default()
+            .definitions
+            .insert(curve, geometry);
+    }
+
     /// # Access the geometry of the provided curve
-    ///
-    /// ## Panics
-    ///
-    /// Panics, if the geometry of the curve is not defined.
     pub fn of_curve(&self, curve: &Handle<Curve>) -> Option<&CurveGeom> {
         self.curve.get(curve)
     }
@@ -132,6 +146,11 @@ impl Geometry {
         self.surface
             .get(surface)
             .expect("Expected geometry of surface to be defined")
+    }
+
+    /// # Access the geometry of the provided vertex
+    pub fn of_vertex(&self, vertex: &Handle<Vertex>) -> Option<&VertexGeom> {
+        self.vertex.get(vertex)
     }
 
     /// Access the geometry of the xy-plane

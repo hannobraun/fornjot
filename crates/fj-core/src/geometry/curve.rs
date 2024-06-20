@@ -13,9 +13,8 @@ pub struct CurveGeom {
     ///
     /// Having multiple redundant definitions is undesirable. However, we can't
     /// just use one global definition in 3D, as we need the local 2D
-    /// definitions to approximate and triangulate curves, and we currently
-    /// don't have the tools to project a global definition into a local
-    /// context.
+    /// definitions to triangulate faces, and we currently don't have the tools
+    /// to project a global definition into a local context.
     ///
     /// Eventually, it should be possible to define the geometry of a curve
     /// once, either locally or globally, and then convert that single
@@ -41,7 +40,7 @@ impl CurveGeom {
     }
 }
 
-/// The geometric definition of a curve in 2D surface coordinates
+/// The geometric definition of a curve, in 2D surface coordinates
 #[derive(Clone, Debug)]
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
