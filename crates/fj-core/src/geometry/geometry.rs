@@ -104,10 +104,6 @@ impl Geometry {
     }
 
     /// # Access the geometry of the provided curve
-    ///
-    /// ## Panics
-    ///
-    /// Panics, if the geometry of the curve is not defined.
     pub fn of_curve(&self, curve: &Handle<Curve>) -> Option<&CurveGeom> {
         self.curve.get(curve)
     }
