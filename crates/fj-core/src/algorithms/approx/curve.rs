@@ -177,7 +177,7 @@ impl CurveApproxCache {
 mod tests {
     use std::f64::consts::TAU;
 
-    use fj_math::Circle;
+    use fj_math::{Circle, Point};
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -232,7 +232,8 @@ mod tests {
     fn approx_line_on_curved_surface_along_curve() {
         let mut core = Core::new();
 
-        let global_path = GlobalPath::circle_from_radius(1.);
+        let circle = Circle::from_center_and_radius(Point::origin(), 1.);
+        let global_path = GlobalPath::Circle(circle);
         let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
         let path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
