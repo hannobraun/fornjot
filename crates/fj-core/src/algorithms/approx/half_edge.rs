@@ -2,6 +2,8 @@
 //!
 //! See [`HalfEdgeApprox`].
 
+use std::iter;
+
 use crate::{
     geometry::Geometry,
     storage::Handle,
@@ -48,11 +50,8 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
             geometry,
         );
 
-        let mut points = vec![start];
-        points.extend(rest.points);
-
-        let points = points
-            .into_iter()
+        let points = iter::once(start)
+            .chain(rest.points)
             .map(|point| {
                 let point_surface = geometry
                     .of_curve(half_edge.curve())
