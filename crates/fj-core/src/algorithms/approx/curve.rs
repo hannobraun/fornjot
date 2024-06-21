@@ -26,23 +26,40 @@ impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
     ) -> Self::Approximation {
         let (curve, surface, boundary) = self;
 
-        match cache.get(curve, boundary) {
-            Some(approx) => approx,
-            None => {
-                let approx = approx_curve(
-                    &geometry
-                        .of_curve(curve)
-                        .unwrap()
-                        .local_on(surface)
-                        .unwrap()
-                        .path,
-                    geometry.of_surface(surface),
-                    boundary,
-                    tolerance,
-                );
+        approx_curve_with_cache(
+            curve, surface, boundary, tolerance, cache, geometry,
+        )
+    }
+}
 
-                cache.insert(curve.clone(), boundary, approx)
-            }
+/// Approximate the provided curve
+///
+/// The approximation is cached, and cached approximations are used, where
+/// possible.
+pub fn approx_curve_with_cache(
+    curve: &Handle<Curve>,
+    surface: &Handle<Surface>,
+    boundary: CurveBoundary<Point<1>>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut CurveApproxCache,
+    geometry: &Geometry,
+) -> CurveApprox {
+    match cache.get(curve, boundary) {
+        Some(approx) => approx,
+        None => {
+            let approx = approx_curve(
+                &geometry
+                    .of_curve(curve)
+                    .unwrap()
+                    .local_on(surface)
+                    .unwrap()
+                    .path,
+                geometry.of_surface(surface),
+                boundary,
+                tolerance,
+            );
+
+            cache.insert(curve.clone(), boundary, approx)
         }
     }
 }
