@@ -40,7 +40,6 @@ impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
                     geometry.of_surface(surface),
                     boundary,
                     tolerance,
-                    geometry,
                 );
 
                 cache.insert(curve.clone(), boundary, approx)
@@ -54,7 +53,6 @@ fn approx_curve(
     surface: &SurfaceGeom,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    _: &Geometry,
 ) -> CurveApprox {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
