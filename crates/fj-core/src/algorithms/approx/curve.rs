@@ -10,7 +10,7 @@ use crate::{
     topology::{Curve, Surface},
 };
 
-use super::{Approx, ApproxPoint, Tolerance};
+use super::{path::approx_circle, Approx, ApproxPoint, Tolerance};
 
 impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
     type Approximation = CurveApprox;
@@ -65,9 +65,8 @@ fn approx_curve(
                 "Approximating a circle on a curved surface not supported yet."
             )
         }
-        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (path, boundary)
-                .approx_with_cache(tolerance, &mut (), geometry)
+        (SurfacePath::Circle(circle), GlobalPath::Line(_)) => {
+            approx_circle(circle, boundary, tolerance)
                 .into_iter()
                 .map(|(point_curve, point_surface)| {
                     // We're throwing away `point_surface` here, which is a
