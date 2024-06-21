@@ -4,7 +4,6 @@ pub mod curve;
 pub mod cycle;
 pub mod face;
 pub mod half_edge;
-pub mod path;
 pub mod shell;
 pub mod sketch;
 pub mod solid;
@@ -12,6 +11,7 @@ pub mod tolerance;
 pub mod vertex;
 
 mod circle;
+mod path;
 
 use std::{
     cmp::Ordering,
