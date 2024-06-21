@@ -53,12 +53,6 @@ fn approx_curve(
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> CurveApprox {
-    // There are different cases of varying complexity. Circles are the hard
-    // part here, as they need to be approximated, while lines don't need to be.
-    //
-    // This will probably all be unified eventually, as `SurfacePath` and
-    // `GlobalPath` grow APIs that are better suited to implementing this code
-    // in a more abstract way.
     let points = match (path, surface.u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             approx_circle_on_curved_surface()
