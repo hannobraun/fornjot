@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::{
-    edge::{HalfEdgeApprox, HalfEdgeApproxCache},
+    half_edge::{HalfEdgeApprox, HalfEdgeApproxCache},
     Approx, ApproxPoint, Tolerance,
 };
 

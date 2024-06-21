@@ -1,91 +1,50 @@
-//! # Path approximation
-//!
-//! Since paths are infinite (even circles have an infinite coordinate space,
-//! even though they connect to themselves in global coordinates), a range must
-//! be provided to approximate them. The approximation then returns points
-//! within that range.
-//!
-//! The boundaries of the range are not included in the approximation. This is
-//! done, to give the caller (who knows the boundary anyway) more options on how
-//! to further process the approximation.
-//!
-//! ## Determinism
-//!
-//! Path approximation is carefully designed to produce a deterministic result
-//! for the combination of a given path and a given tolerance, regardless of
-//! what the range is. This is done to prevent invalid meshes from being
-//! generated.
-//!
-//! In specific terms, this means there is an infinite set of points that
-//! approximates a path, and that set is deterministic for a given combination
-//! of path and tolerance. The range that defines where the path is approximated
-//! only influences the result in two ways:
-//!
-//! 1. It controls which points from the infinite set are actually computed.
-//! 2. It defines the order in which the computed points are returned.
-//!
-//! As a result, path approximation is guaranteed to generate points that can
-//! fit together in a valid mesh, no matter which ranges of a path are being
-//! approximated, and how many times.
-
 use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{CurveBoundary, Geometry, GlobalPath, SurfacePath};
+use crate::geometry::CurveBoundary;
 
-use super::{Approx, Tolerance};
+use super::Tolerance;
 
-impl Approx for (&SurfacePath, CurveBoundary<Point<1>>) {
-    type Approximation = Vec<(Point<1>, Point<2>)>;
-    type Cache = ();
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        (): &mut Self::Cache,
-        _: &Geometry,
-    ) -> Self::Approximation {
-        let (path, range) = self;
-
-        match path {
-            SurfacePath::Circle(circle) => {
-                approx_circle(circle, range, tolerance.into())
-            }
-            SurfacePath::Line(_) => vec![],
-        }
-    }
-}
-
-impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
-    type Approximation = Vec<(Point<1>, Point<3>)>;
-    type Cache = ();
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        (): &mut Self::Cache,
-        _: &Geometry,
-    ) -> Self::Approximation {
-        let (path, range) = self;
-
-        match path {
-            GlobalPath::Circle(circle) => {
-                approx_circle(&circle, range, tolerance.into())
-            }
-            GlobalPath::Line(_) => vec![],
-        }
-    }
-}
-
-/// Approximate a circle
+/// # Approximate a circle
 ///
-/// `tolerance` specifies how much the approximation is allowed to deviate
-/// from the circle.
-fn approx_circle<const D: usize>(
+/// ## Arguments
+///
+/// Besides a circle, this method takes two arguments:
+///
+/// - The `boundary` within which the circle should be approximated.
+/// - The `tolerance` that specifies how much the approximation is allowed to
+///   deviate from the actual circle.
+///
+/// ## Return Value
+///
+/// The approximation returns points within the provided boundary. The boundary
+/// points themselves are not included in the approximation. This gives the
+/// caller (who knows the boundary anyway) more options for how to further
+/// process the approximation.
+///
+/// ## Determinism
+///
+/// Circle approximation is carefully designed to produce a deterministic result
+/// for the combination of a given circle and tolerance, regardless of the
+/// boundary. This is done to prevent invalid meshes from being generated.
+///
+/// In specific terms, this means there is an infinite set of points that
+/// approximates a circle (infinite, since the circle's local coordinate space
+/// is infinite). That set is deterministic for a given combination of circle
+/// and tolerance. The boundary that defines where the circle is approximated
+/// only influences the result in two ways:
+///
+/// 1. It controls which points from the infinite set are actually computed.
+/// 2. It defines the order in which the computed points are returned.
+///
+/// As a result, circle approximation is guaranteed to generate points that can
+/// fit together in a valid mesh, no matter which ranges of a path are being
+/// approximated, and how many times.
+pub fn approx_circle<const D: usize>(
     circle: &Circle<D>,
     boundary: impl Into<CurveBoundary<Point<1>>>,
-    tolerance: Tolerance,
+    tolerance: impl Into<Tolerance>,
 ) -> Vec<(Point<1>, Point<D>)> {
     let boundary = boundary.into();
 
@@ -172,7 +131,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::algorithms::approx::{path::CurveBoundary, Tolerance};
+    use crate::{algorithms::approx::Tolerance, geometry::CurveBoundary};
 
     use super::PathApproxParams;
 

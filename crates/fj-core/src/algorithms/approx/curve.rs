@@ -1,50 +1,43 @@
-//! Curve approximation
-
 use std::collections::BTreeMap;
 
-use fj_math::Point;
+use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{
-        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeom, SurfaceGeom,
-        SurfacePath,
-    },
+    geometry::{CurveBoundary, Geometry, GlobalPath, SurfaceGeom, SurfacePath},
     storage::Handle,
     topology::{Curve, Surface},
 };
 
-use super::{Approx, ApproxPoint, Tolerance};
+use super::{circle::approx_circle, line::approx_line, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
-    type Approximation = CurveApprox;
-    type Cache = CurveApproxCache;
+/// Approximate the provided curve
+///
+/// The approximation is cached, and cached approximations are used, where
+/// possible.
+pub fn approx_curve_with_cache(
+    curve: &Handle<Curve>,
+    surface: &Handle<Surface>,
+    boundary: CurveBoundary<Point<1>>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut CurveApproxCache,
+    geometry: &Geometry,
+) -> CurveApprox {
+    match cache.get(curve, boundary) {
+        Some(approx) => approx,
+        None => {
+            let approx = approx_curve(
+                &geometry
+                    .of_curve(curve)
+                    .unwrap()
+                    .local_on(surface)
+                    .unwrap()
+                    .path,
+                geometry.of_surface(surface),
+                boundary,
+                tolerance,
+            );
 
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let (curve, half_edge, surface) = self;
-
-        match cache.get(curve, half_edge.boundary) {
-            Some(approx) => approx,
-            None => {
-                let approx = approx_curve(
-                    &geometry
-                        .of_curve(curve)
-                        .unwrap()
-                        .local_on(surface)
-                        .unwrap()
-                        .path,
-                    geometry.of_surface(surface),
-                    half_edge.boundary,
-                    tolerance,
-                    geometry,
-                );
-
-                cache.insert(curve.clone(), half_edge.boundary, approx)
-            }
+            cache.insert(curve.clone(), boundary, approx)
         }
     }
 }
@@ -54,82 +47,92 @@ fn approx_curve(
     surface: &SurfaceGeom,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    geometry: &Geometry,
 ) -> CurveApprox {
-    // There are different cases of varying complexity. Circles are the hard
-    // part here, as they need to be approximated, while lines don't need to be.
-    //
-    // This will probably all be unified eventually, as `SurfacePath` and
-    // `GlobalPath` grow APIs that are better suited to implementing this code
-    // in a more abstract way.
     let points = match (path, surface.u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
-            todo!(
-                "Approximating a circle on a curved surface not supported yet."
+            approx_circle_on_curved_surface()
+        }
+        (SurfacePath::Circle(circle), GlobalPath::Line(_)) => {
+            approx_circle_on_straight_surface(
+                circle, boundary, surface, tolerance,
             )
         }
-        (SurfacePath::Circle(_), GlobalPath::Line(_)) => {
-            (path, boundary)
-                .approx_with_cache(tolerance, &mut (), geometry)
-                .into_iter()
-                .map(|(point_curve, point_surface)| {
-                    // We're throwing away `point_surface` here, which is a
-                    // bit weird, as we're recomputing it later (outside of
-                    // this function).
-                    //
-                    // It should be fine though:
-                    //
-                    // 1. We're throwing this version away, so there's no
-                    //    danger of inconsistency between this and the later
-                    //    version.
-                    // 2. This version should have been computed using the
-                    //    same path and parameters and the later version
-                    //    will be, so they should be the same anyway.
-                    // 3. Not all other cases handled in this function have
-                    //    a surface point available, so it needs to be
-                    //    computed later anyway, in the general case.
-
-                    let point_global =
-                        surface.point_from_surface_coords(point_surface);
-                    (point_curve, point_global)
-                })
-                .collect()
-        }
         (SurfacePath::Line(line), _) => {
-            let range_u =
-                CurveBoundary::from(boundary.inner.map(|point_curve| {
-                    [path.point_from_path_coords(point_curve).u]
-                }));
-
-            let approx_u = (surface.u, range_u).approx_with_cache(
-                tolerance,
-                &mut (),
-                geometry,
-            );
-
-            let mut points = Vec::new();
-            for (u, _) in approx_u {
-                let t = (u.t - line.origin().u) / line.direction().u;
-                let point_surface = path.point_from_path_coords([t]);
-                let point_global =
-                    surface.point_from_surface_coords(point_surface);
-                points.push((u, point_global));
-            }
-
-            points
+            approx_line_on_any_surface(line, boundary, surface, tolerance)
         }
     };
 
-    let points = points
-        .into_iter()
-        .map(|(point_curve, point_global)| {
-            ApproxPoint::new(point_curve, point_global)
-        })
-        .collect();
     CurveApprox { points }
 }
 
-/// Approximation of [`Curve`], within a specific boundary
+fn approx_circle_on_curved_surface() -> Vec<ApproxPoint<1>> {
+    todo!("Approximating a circle on a curved surface is not supported yet.")
+}
+
+fn approx_circle_on_straight_surface(
+    circle: &Circle<2>,
+    boundary: CurveBoundary<Point<1>>,
+    surface: &SurfaceGeom,
+    tolerance: impl Into<Tolerance>,
+) -> Vec<ApproxPoint<1>> {
+    approx_circle(circle, boundary, tolerance)
+        .into_iter()
+        .map(|(point_curve, point_surface)| {
+            // We're throwing away `point_surface` here, which is a bit weird,
+            // as we're recomputing it later (outside of this function).
+            //
+            // It should be fine though:
+            //
+            // 1. We're throwing this version away, so there's no danger of
+            //    inconsistency between this and the later version.
+            // 2. This version should have been computed using the same path and
+            //    parameters and the later version will be, so they should be
+            //    the same anyway.
+            // 3. Not all other cases handled in this function have a surface
+            //    point available, so it needs to be computed later anyway, in
+            //    the general case.
+
+            let point_global = surface.point_from_surface_coords(point_surface);
+            ApproxPoint::new(point_curve, point_global)
+        })
+        .collect()
+}
+
+fn approx_line_on_any_surface(
+    line: &Line<2>,
+    boundary: CurveBoundary<Point<1>>,
+    surface: &SurfaceGeom,
+    tolerance: impl Into<Tolerance>,
+) -> Vec<ApproxPoint<1>> {
+    let range_u = CurveBoundary::from(
+        boundary
+            .inner
+            .map(|point_curve| [line.point_from_line_coords(point_curve).u]),
+    );
+
+    let approx_u = match surface.u {
+        GlobalPath::Circle(circle) => {
+            approx_circle(&circle, range_u, tolerance)
+        }
+        GlobalPath::Line(line) => approx_line(&line),
+    };
+
+    let mut points = Vec::new();
+    for (u, _) in approx_u {
+        let t = (u.t - line.origin().u) / line.direction().u;
+        let point_surface = line.point_from_line_coords([t]);
+        let point_global = surface.point_from_surface_coords(point_surface);
+        points.push(ApproxPoint::new(u, point_global));
+    }
+
+    points
+}
+
+/// Approximation of a [`Curve`], within a specific boundary
+///
+/// The approximation of the curve only includes points _within_ the boundary,
+/// not those _on_ the boundary. Those boundary points are part of half-edge
+/// approximation, which uses and includes curve approximation.
 #[derive(Clone)]
 pub struct CurveApprox {
     /// The points that approximate the curve within the boundary
@@ -183,54 +186,46 @@ impl CurveApproxCache {
 mod tests {
     use std::f64::consts::TAU;
 
+    use fj_math::{Circle, Point, Vector};
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{Approx, ApproxPoint},
-        geometry::{CurveBoundary, GlobalPath, HalfEdgeGeom, SurfacePath},
-        operations::build::{BuildCurve, BuildSurface},
-        topology::{Curve, Surface},
+        algorithms::approx::{
+            circle::approx_circle, curve::approx_curve, ApproxPoint,
+        },
+        geometry::{CurveBoundary, GlobalPath, SurfaceGeom, SurfacePath},
+        operations::build::BuildSurface,
+        topology::Surface,
         Core,
     };
 
     #[test]
     fn approx_line_on_flat_surface() {
-        let mut core = Core::new();
+        let core = Core::new();
 
-        let surface = core.layers.topology.surfaces.xz_plane();
+        let surface = core.layers.geometry.xz_plane();
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, surface, boundary, tolerance);
 
         assert_eq!(approx.points, vec![]);
     }
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let mut core = Core::new();
-
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
-            &mut core,
-        );
+        let surface = SurfaceGeom {
+            u: GlobalPath::circle_from_radius(1.),
+            v: Vector::from([0., 0., 1.]),
+        };
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface, boundary, tolerance);
 
         assert_eq!(approx.points, vec![]);
     }
@@ -239,23 +234,23 @@ mod tests {
     fn approx_line_on_curved_surface_along_curve() {
         let mut core = Core::new();
 
-        let global_path = GlobalPath::circle_from_radius(1.);
-        let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
+        let circle = Circle::from_center_and_radius(Point::origin(), 1.);
+        let global_path = GlobalPath::Circle(circle);
+        let surface_geom = SurfaceGeom {
+            u: global_path,
+            v: Vector::from([0., 0., 1.]),
+        };
+        let surface = Surface::from_geometry(surface_geom, &mut core);
         let path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
         ]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
 
-        let expected_approx = (global_path, boundary)
-            .approx(tolerance, &core.layers.geometry)
+        let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
@@ -274,19 +269,16 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.xz_plane();
-        let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
+        let surface_geom = *core.layers.geometry.xz_plane();
+        let surface = Surface::from_geometry(surface_geom, &mut core);
+        let circle = Circle::from_center_and_radius([0., 0.], 1.);
+        let path = SurfacePath::Circle(circle);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
 
-        let expected_approx = (&path, boundary)
-            .approx(tolerance, &core.layers.geometry)
+        let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);

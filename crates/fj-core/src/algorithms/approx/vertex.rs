@@ -1,10 +1,44 @@
-//! Vertex approximation
-
 use std::collections::BTreeMap;
 
 use fj_math::Point;
 
-use crate::{storage::Handle, topology::Vertex};
+use crate::{
+    geometry::Geometry,
+    storage::Handle,
+    topology::{Curve, Surface, Vertex},
+};
+
+use super::ApproxPoint;
+
+/// # Approximate a vertex position
+pub fn approx_vertex(
+    vertex: Handle<Vertex>,
+    curve: &Handle<Curve>,
+    surface: &Handle<Surface>,
+    position_curve: Point<1>,
+    cache: &mut VertexApproxCache,
+    geometry: &Geometry,
+) -> ApproxPoint<1> {
+    let position_surface = geometry
+        .of_curve(curve)
+        .unwrap()
+        .local_on(surface)
+        .unwrap()
+        .path
+        .point_from_path_coords(position_curve);
+
+    let position_global = match cache.get(&vertex) {
+        Some(position) => position,
+        None => {
+            let position_global = geometry
+                .of_surface(surface)
+                .point_from_surface_coords(position_surface);
+            cache.insert(vertex, position_global)
+        }
+    };
+
+    ApproxPoint::new(position_curve, position_global)
+}
 
 /// Cache for vertex approximations
 #[derive(Default)]
