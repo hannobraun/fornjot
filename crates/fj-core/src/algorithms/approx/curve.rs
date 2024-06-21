@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-use fj_math::{Line, Point};
+use fj_math::{Circle, Line, Point};
 
 use crate::{
     geometry::{CurveBoundary, Geometry, GlobalPath, SurfaceGeom, SurfacePath},
@@ -66,30 +66,9 @@ fn approx_curve(
             )
         }
         (SurfacePath::Circle(circle), GlobalPath::Line(_)) => {
-            approx_circle(circle, boundary, tolerance)
-                .into_iter()
-                .map(|(point_curve, point_surface)| {
-                    // We're throwing away `point_surface` here, which is a
-                    // bit weird, as we're recomputing it later (outside of
-                    // this function).
-                    //
-                    // It should be fine though:
-                    //
-                    // 1. We're throwing this version away, so there's no
-                    //    danger of inconsistency between this and the later
-                    //    version.
-                    // 2. This version should have been computed using the
-                    //    same path and parameters and the later version
-                    //    will be, so they should be the same anyway.
-                    // 3. Not all other cases handled in this function have
-                    //    a surface point available, so it needs to be
-                    //    computed later anyway, in the general case.
-
-                    let point_global =
-                        surface.point_from_surface_coords(point_surface);
-                    ApproxPoint::new(point_curve, point_global)
-                })
-                .collect()
+            approx_circle_on_straight_surface(
+                circle, boundary, surface, tolerance,
+            )
         }
         (SurfacePath::Line(line), _) => {
             approx_line_on_any_surface(line, boundary, surface, tolerance)
@@ -97,6 +76,35 @@ fn approx_curve(
     };
 
     CurveApprox { points }
+}
+
+fn approx_circle_on_straight_surface(
+    circle: &Circle<2>,
+    boundary: CurveBoundary<Point<1>>,
+    surface: &SurfaceGeom,
+    tolerance: impl Into<Tolerance>,
+) -> Vec<ApproxPoint<1>> {
+    approx_circle(circle, boundary, tolerance)
+        .into_iter()
+        .map(|(point_curve, point_surface)| {
+            // We're throwing away `point_surface` here, which is a bit weird,
+            // as we're recomputing it later (outside of this function).
+            //
+            // It should be fine though:
+            //
+            // 1. We're throwing this version away, so there's no danger of
+            //    inconsistency between this and the later version.
+            // 2. This version should have been computed using the same path and
+            //    parameters and the later version will be, so they should be
+            //    the same anyway.
+            // 3. Not all other cases handled in this function have a surface
+            //    point available, so it needs to be computed later anyway, in
+            //    the general case.
+
+            let point_global = surface.point_from_surface_coords(point_surface);
+            ApproxPoint::new(point_curve, point_global)
+        })
+        .collect()
 }
 
 fn approx_line_on_any_surface(
