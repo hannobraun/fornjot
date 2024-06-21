@@ -102,13 +102,12 @@ fn approx_circle<const D: usize>(
 
 /// Approximate a line
 ///
-/// Since path approximation don't include the end points of the approximation
-/// boundary, and a line does not require any other points to be fully defined,
-/// this method always returns no points.
+/// Since curve approximations don't include the approximation boundary itself,
+/// and a line does not require any other points to be fully defined, this
+/// method always returns no points.
 ///
-/// The method still exists, to make the code that approximates lines easy to
-/// find for anyone reading this module, as well as to provide a place to
-/// document this fact about line approximations.
+/// The method still exists, to make the code that approximates lines, and thus
+/// this piece of documentation, easy to find for anyone who's looking.
 fn approx_line<const D: usize>(line: &Line<D>) -> Vec<(Point<1>, Point<D>)> {
     let _ = line;
     Vec::new()
