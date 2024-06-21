@@ -39,17 +39,21 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
             geometry,
         );
 
-        let rest = {
-            let approx = approx_curve_with_cache(
-                half_edge.curve(),
-                surface,
-                boundary,
-                tolerance,
-                &mut cache.curve,
-                geometry,
-            );
+        let rest = approx_curve_with_cache(
+            half_edge.curve(),
+            surface,
+            boundary,
+            tolerance,
+            &mut cache.curve,
+            geometry,
+        );
 
-            approx.points.into_iter().map(|point| {
+        let mut points = vec![first];
+        points.extend(rest.points);
+
+        let points = points
+            .into_iter()
+            .map(|point| {
                 let point_surface = geometry
                     .of_curve(half_edge.curve())
                     .unwrap()
@@ -60,10 +64,7 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
 
                 ApproxPoint::new(point_surface, point.global_form)
             })
-        };
-
-        let mut points = vec![first];
-        points.extend(rest);
+            .collect();
 
         HalfEdgeApprox { points }
     }

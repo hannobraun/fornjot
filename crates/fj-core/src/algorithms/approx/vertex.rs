@@ -18,7 +18,7 @@ pub fn approx_vertex(
     position_curve: Point<1>,
     cache: &mut VertexApproxCache,
     geometry: &Geometry,
-) -> ApproxPoint<2> {
+) -> ApproxPoint<1> {
     let position_surface = geometry
         .of_curve(curve)
         .unwrap()
@@ -37,7 +37,7 @@ pub fn approx_vertex(
         }
     };
 
-    ApproxPoint::new(position_surface, position_global)
+    ApproxPoint::new(position_curve, position_global)
 }
 
 /// Cache for vertex approximations
