@@ -77,7 +77,7 @@ fn approx_curve(
 }
 
 fn approx_circle_on_curved_surface() -> Vec<ApproxPoint<1>> {
-    todo!("Approximating a circle on a curved surface not supported yet.")
+    todo!("Approximating a circle on a curved surface is not supported yet.")
 }
 
 fn approx_circle_on_straight_surface(
