@@ -30,7 +30,7 @@
 
 use std::iter;
 
-use fj_math::{Circle, Point, Scalar, Sign};
+use fj_math::{Circle, Line, Point, Scalar, Sign};
 
 use crate::geometry::{CurveBoundary, Geometry, GlobalPath, SurfacePath};
 
@@ -52,7 +52,7 @@ impl Approx for (&SurfacePath, CurveBoundary<Point<1>>) {
             SurfacePath::Circle(circle) => {
                 approx_circle(circle, range, tolerance.into())
             }
-            SurfacePath::Line(_) => vec![],
+            SurfacePath::Line(line) => approx_line(line),
         }
     }
 }
@@ -73,7 +73,7 @@ impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
             GlobalPath::Circle(circle) => {
                 approx_circle(&circle, range, tolerance.into())
             }
-            GlobalPath::Line(_) => vec![],
+            GlobalPath::Line(line) => approx_line(&line),
         }
     }
 }
@@ -98,6 +98,20 @@ fn approx_circle<const D: usize>(
     }
 
     points
+}
+
+/// Approximate a line
+///
+/// Since path approximation don't include the end points of the approximation
+/// boundary, and a line does not require any other points to be fully defined,
+/// this method always returns no points.
+///
+/// The method still exists, to make the code that approximates lines easy to
+/// find for anyone reading this module, as well as to provide a place to
+/// document this fact about line approximations.
+fn approx_line<const D: usize>(line: &Line<D>) -> Vec<(Point<1>, Point<D>)> {
+    let _ = line;
+    Vec::new()
 }
 
 struct PathApproxParams {
