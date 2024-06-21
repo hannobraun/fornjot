@@ -14,6 +14,25 @@ use crate::{
 ///
 /// [module-level documentation]: super
 pub trait BuildSurface {
+    /// Build a plane from the provided `u` and `v`
+    fn from_uv(
+        u: impl Into<GlobalPath>,
+        v: impl Into<Vector<3>>,
+        core: &mut Core,
+    ) -> Handle<Surface> {
+        let surface = Surface::new().insert(core);
+
+        core.layers.geometry.define_surface(
+            surface.clone(),
+            SurfaceGeom {
+                u: u.into(),
+                v: v.into(),
+            },
+        );
+
+        surface
+    }
+
     /// Build a plane from the provided points
     fn plane_from_points(
         points: [impl Into<Point<3>>; 3],
@@ -35,25 +54,6 @@ pub trait BuildSurface {
         };
 
         (surface, points_surface)
-    }
-
-    /// Build a plane from the provided `u` and `v`
-    fn from_uv(
-        u: impl Into<GlobalPath>,
-        v: impl Into<Vector<3>>,
-        core: &mut Core,
-    ) -> Handle<Surface> {
-        let surface = Surface::new().insert(core);
-
-        core.layers.geometry.define_surface(
-            surface.clone(),
-            SurfaceGeom {
-                u: u.into(),
-                v: v.into(),
-            },
-        );
-
-        surface
     }
 }
 
