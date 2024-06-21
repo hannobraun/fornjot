@@ -15,7 +15,7 @@ use crate::{
 
 use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
+impl Approx for (&Handle<Curve>, &Handle<Surface>, &HalfEdgeGeom) {
     type Approximation = CurveApprox;
     type Cache = CurveApproxCache;
 
@@ -25,7 +25,7 @@ impl Approx for (&Handle<Curve>, &HalfEdgeGeom, &Handle<Surface>) {
         cache: &mut Self::Cache,
         geometry: &Geometry,
     ) -> Self::Approximation {
-        let (curve, half_edge, surface) = self;
+        let (curve, surface, half_edge) = self;
 
         match cache.get(curve, half_edge.boundary) {
             Some(approx) => approx,
@@ -206,7 +206,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
+        let approx = (&curve, &surface, &half_edge)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -229,7 +229,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
+        let approx = (&curve, &surface, &half_edge)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -251,7 +251,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
+        let approx = (&curve, &surface, &half_edge)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (global_path, boundary)
@@ -282,7 +282,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &half_edge, &surface)
+        let approx = (&curve, &surface, &half_edge)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (&path, boundary)

@@ -56,7 +56,7 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
 
         let rest = {
             let approx =
-                (half_edge.curve(), geometry.of_half_edge(half_edge), surface)
+                (half_edge.curve(), surface, geometry.of_half_edge(half_edge))
                     .approx_with_cache(tolerance, &mut cache.curve, geometry);
 
             approx.points.into_iter().map(|point| {
