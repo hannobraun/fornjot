@@ -28,20 +28,13 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         let tolerance = tolerance.into();
 
         let boundary = geometry.of_half_edge(half_edge).boundary;
+        let [start_position_curve, _] = boundary.inner;
 
-        let start_position_surface =
-            geometry.of_half_edge(half_edge).start_position(
-                &geometry
-                    .of_curve(half_edge.curve())
-                    .unwrap()
-                    .local_on(surface)
-                    .unwrap()
-                    .path,
-            );
         let first = approx_vertex(
             half_edge.start_vertex().clone(),
+            half_edge.curve(),
             surface,
-            start_position_surface,
+            start_position_curve,
             &mut cache.start_position,
             geometry,
         );

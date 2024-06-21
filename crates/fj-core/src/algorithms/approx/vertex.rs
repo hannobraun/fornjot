@@ -5,7 +5,7 @@ use fj_math::Point;
 use crate::{
     geometry::Geometry,
     storage::Handle,
-    topology::{Surface, Vertex},
+    topology::{Curve, Surface, Vertex},
 };
 
 use super::ApproxPoint;
@@ -13,11 +13,20 @@ use super::ApproxPoint;
 /// # Approximate a vertex position
 pub fn approx_vertex(
     vertex: Handle<Vertex>,
+    curve: &Handle<Curve>,
     surface: &Handle<Surface>,
-    position_surface: Point<2>,
+    position_curve: Point<1>,
     cache: &mut VertexApproxCache,
     geometry: &Geometry,
 ) -> ApproxPoint<2> {
+    let position_surface = geometry
+        .of_curve(curve)
+        .unwrap()
+        .local_on(surface)
+        .unwrap()
+        .path
+        .point_from_path_coords(position_curve);
+
     let position_global = match cache.get(&vertex) {
         Some(position) => position,
         None => {
