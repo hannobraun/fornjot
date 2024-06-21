@@ -11,8 +11,7 @@ use crate::{
 };
 
 use super::{
-    path::{approx_circle, approx_line},
-    Approx, ApproxPoint, Tolerance,
+    circle::approx_circle, path::approx_line, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
@@ -183,7 +182,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{path::approx_circle, Approx, ApproxPoint},
+        algorithms::approx::{circle::approx_circle, Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfacePath},
         operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},

@@ -11,6 +11,8 @@ pub mod solid;
 pub mod tolerance;
 pub mod vertex;
 
+mod circle;
+
 use std::{
     cmp::Ordering,
     fmt::Debug,
