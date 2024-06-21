@@ -258,18 +258,19 @@ mod tests {
 
         let circle = Circle::from_center_and_radius(Point::origin(), 1.);
         let global_path = GlobalPath::Circle(circle);
-        let surface = Surface::from_uv(global_path, [0., 0., 1.], &mut core);
+        let surface_geom = SurfaceGeom {
+            u: global_path,
+            v: Vector::from([0., 0., 1.]),
+        };
+        let surface = Surface::from_geometry(surface_geom, &mut core);
         let path = SurfacePath::line_from_points_with_coords([
             ([0.], [0., 1.]),
             ([TAU], [TAU, 1.]),
         ]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, boundary)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
 
         let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
