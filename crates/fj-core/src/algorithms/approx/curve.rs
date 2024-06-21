@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-use fj_math::Point;
+use fj_math::{Line, Point};
 
 use crate::{
     geometry::{CurveBoundary, Geometry, GlobalPath, SurfaceGeom, SurfacePath},
@@ -92,32 +92,41 @@ fn approx_curve(
                 .collect()
         }
         (SurfacePath::Line(line), _) => {
-            let range_u =
-                CurveBoundary::from(boundary.inner.map(|point_curve| {
-                    [line.point_from_line_coords(point_curve).u]
-                }));
-
-            let approx_u = match surface.u {
-                GlobalPath::Circle(circle) => {
-                    approx_circle(&circle, range_u, tolerance)
-                }
-                GlobalPath::Line(line) => approx_line(&line),
-            };
-
-            let mut points = Vec::new();
-            for (u, _) in approx_u {
-                let t = (u.t - line.origin().u) / line.direction().u;
-                let point_surface = line.point_from_line_coords([t]);
-                let point_global =
-                    surface.point_from_surface_coords(point_surface);
-                points.push(ApproxPoint::new(u, point_global));
-            }
-
-            points
+            approx_line_on_any_surface(line, boundary, surface, tolerance)
         }
     };
 
     CurveApprox { points }
+}
+
+fn approx_line_on_any_surface(
+    line: &Line<2>,
+    boundary: CurveBoundary<Point<1>>,
+    surface: &SurfaceGeom,
+    tolerance: impl Into<Tolerance>,
+) -> Vec<ApproxPoint<1>> {
+    let range_u = CurveBoundary::from(
+        boundary
+            .inner
+            .map(|point_curve| [line.point_from_line_coords(point_curve).u]),
+    );
+
+    let approx_u = match surface.u {
+        GlobalPath::Circle(circle) => {
+            approx_circle(&circle, range_u, tolerance)
+        }
+        GlobalPath::Line(line) => approx_line(&line),
+    };
+
+    let mut points = Vec::new();
+    for (u, _) in approx_u {
+        let t = (u.t - line.origin().u) / line.direction().u;
+        let point_surface = line.point_from_line_coords([t]);
+        let point_global = surface.point_from_surface_coords(point_surface);
+        points.push(ApproxPoint::new(u, point_global));
+    }
+
+    points
 }
 
 /// Approximation of a [`Curve`], within a specific boundary
