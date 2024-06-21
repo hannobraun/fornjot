@@ -61,9 +61,7 @@ fn approx_curve(
     // in a more abstract way.
     let points = match (path, surface.u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
-            todo!(
-                "Approximating a circle on a curved surface not supported yet."
-            )
+            approx_circle_on_curved_surface()
         }
         (SurfacePath::Circle(circle), GlobalPath::Line(_)) => {
             approx_circle_on_straight_surface(
@@ -76,6 +74,10 @@ fn approx_curve(
     };
 
     CurveApprox { points }
+}
+
+fn approx_circle_on_curved_surface() -> Vec<ApproxPoint<1>> {
+    todo!("Approximating a circle on a curved surface not supported yet.")
 }
 
 fn approx_circle_on_straight_surface(
