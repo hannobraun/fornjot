@@ -126,7 +126,11 @@ fn approx_curve(
     CurveApprox { points }
 }
 
-/// Approximation of [`Curve`], within a specific boundary
+/// Approximation of a [`Curve`], within a specific boundary
+///
+/// The approximation of the curve only includes points _within_ the boundary,
+/// not those _on_ the boundary. Those boundary points are part of half-edge
+/// approximation, which uses and includes curve approximation.
 #[derive(Clone)]
 pub struct CurveApprox {
     /// The points that approximate the curve within the boundary
