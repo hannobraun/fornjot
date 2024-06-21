@@ -208,14 +208,14 @@ impl CurveApproxCache {
 mod tests {
     use std::f64::consts::TAU;
 
-    use fj_math::{Circle, Point};
+    use fj_math::{Circle, Point, Vector};
     use pretty_assertions::assert_eq;
 
     use crate::{
         algorithms::approx::{
             circle::approx_circle, curve::approx_curve, Approx, ApproxPoint,
         },
-        geometry::{CurveBoundary, GlobalPath, SurfacePath},
+        geometry::{CurveBoundary, GlobalPath, SurfaceGeom, SurfacePath},
         operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},
         Core,
@@ -238,22 +238,16 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let mut core = Core::new();
-
-        let surface = Surface::from_uv(
-            GlobalPath::circle_from_radius(1.),
-            [0., 0., 1.],
-            &mut core,
-        );
+        let surface = SurfaceGeom {
+            u: GlobalPath::circle_from_radius(1.),
+            v: Vector::from([0., 0., 1.]),
+        };
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, boundary)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface, boundary, tolerance);
 
         assert_eq!(approx.points, vec![]);
     }
