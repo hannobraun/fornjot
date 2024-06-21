@@ -27,6 +27,8 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         let (half_edge, surface) = self;
         let tolerance = tolerance.into();
 
+        let boundary = geometry.of_half_edge(half_edge).boundary;
+
         let start_position_surface =
             geometry.of_half_edge(half_edge).start_position(
                 &geometry
@@ -45,7 +47,6 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         );
 
         let rest = {
-            let boundary = geometry.of_half_edge(half_edge).boundary;
             let approx = approx_curve_with_cache(
                 half_edge.curve(),
                 surface,
