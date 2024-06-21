@@ -2,7 +2,34 @@ use std::collections::BTreeMap;
 
 use fj_math::Point;
 
-use crate::{storage::Handle, topology::Vertex};
+use crate::{
+    geometry::Geometry,
+    storage::Handle,
+    topology::{Surface, Vertex},
+};
+
+use super::ApproxPoint;
+
+/// # Approximate a vertex position
+pub fn approx_vertex(
+    vertex: Handle<Vertex>,
+    surface: &Handle<Surface>,
+    position_surface: Point<2>,
+    cache: &mut VertexApproxCache,
+    geometry: &Geometry,
+) -> ApproxPoint<2> {
+    let position_global = match cache.get(&vertex) {
+        Some(position) => position,
+        None => {
+            let position_global = geometry
+                .of_surface(surface)
+                .point_from_surface_coords(position_surface);
+            cache.insert(vertex, position_global)
+        }
+    };
+
+    ApproxPoint::new(position_surface, position_global)
+}
 
 /// Cache for vertex approximations
 #[derive(Default)]

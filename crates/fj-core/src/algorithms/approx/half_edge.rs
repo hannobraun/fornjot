@@ -10,7 +10,7 @@ use crate::{
 
 use super::{
     curve::{approx_curve_with_cache, CurveApproxCache},
-    vertex::VertexApproxCache,
+    vertex::{approx_vertex, VertexApproxCache},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -36,21 +36,13 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
                     .unwrap()
                     .path,
             );
-        let start_position =
-            match cache.start_position.get(half_edge.start_vertex()) {
-                Some(position) => position,
-                None => {
-                    let position_global = geometry
-                        .of_surface(surface)
-                        .point_from_surface_coords(start_position_surface);
-                    cache.start_position.insert(
-                        half_edge.start_vertex().clone(),
-                        position_global,
-                    )
-                }
-            };
-
-        let first = ApproxPoint::new(start_position_surface, start_position);
+        let first = approx_vertex(
+            half_edge.start_vertex().clone(),
+            surface,
+            start_position_surface,
+            &mut cache.start_position,
+            geometry,
+        );
 
         let rest = {
             let boundary = geometry.of_half_edge(half_edge).boundary;
