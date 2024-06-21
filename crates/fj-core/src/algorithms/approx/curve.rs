@@ -212,7 +212,9 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{circle::approx_circle, Approx, ApproxPoint},
+        algorithms::approx::{
+            circle::approx_circle, curve::approx_curve, Approx, ApproxPoint,
+        },
         geometry::{CurveBoundary, GlobalPath, SurfacePath},
         operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},
@@ -221,18 +223,15 @@ mod tests {
 
     #[test]
     fn approx_line_on_flat_surface() {
-        let mut core = Core::new();
+        let core = Core::new();
 
-        let surface = core.layers.topology.surfaces.xz_plane();
+        let surface = core.layers.geometry.xz_plane();
         let (path, boundary) =
             SurfacePath::line_from_points([[1., 1.], [2., 1.]]);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, boundary)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, surface, boundary, tolerance);
 
         assert_eq!(approx.points, vec![]);
     }
