@@ -14,7 +14,7 @@ use crate::{
 ///
 /// [module-level documentation]: super
 pub trait BuildSurface {
-    /// Build a plane from the provided `u` and `v`
+    /// Build a surface from the provided `u` and `v`
     fn from_uv(
         u: impl Into<GlobalPath>,
         v: impl Into<Vector<3>>,
