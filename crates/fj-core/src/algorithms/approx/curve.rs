@@ -1,5 +1,3 @@
-//! Curve approximation
-
 use std::collections::BTreeMap;
 
 use fj_math::{Circle, Line, Point};
