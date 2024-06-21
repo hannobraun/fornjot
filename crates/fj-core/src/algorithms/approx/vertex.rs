@@ -1,5 +1,3 @@
-//! Vertex approximation
-
 use std::collections::BTreeMap;
 
 use fj_math::Point;
