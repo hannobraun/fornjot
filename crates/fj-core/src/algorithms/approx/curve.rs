@@ -181,7 +181,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::{
-        algorithms::approx::{Approx, ApproxPoint},
+        algorithms::approx::{path::approx_circle, Approx, ApproxPoint},
         geometry::{CurveBoundary, GlobalPath, SurfacePath},
         operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},
@@ -277,8 +277,7 @@ mod tests {
         let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
-        let expected_approx = (&path, boundary)
-            .approx(tolerance, &core.layers.geometry)
+        let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
