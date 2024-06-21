@@ -11,7 +11,7 @@ pub mod tolerance;
 pub mod vertex;
 
 mod circle;
-mod path;
+mod line;
 
 use std::{
     cmp::Ordering,

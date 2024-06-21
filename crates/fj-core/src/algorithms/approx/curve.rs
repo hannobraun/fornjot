@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::{
-    circle::approx_circle, path::approx_line, Approx, ApproxPoint, Tolerance,
+    circle::approx_circle, line::approx_line, Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
