@@ -30,7 +30,7 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         let boundary = geometry.of_half_edge(half_edge).boundary;
         let [start_position_curve, _] = boundary.inner;
 
-        let first = approx_vertex(
+        let start = approx_vertex(
             half_edge.start_vertex().clone(),
             half_edge.curve(),
             surface,
@@ -48,7 +48,7 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
             geometry,
         );
 
-        let mut points = vec![first];
+        let mut points = vec![start];
         points.extend(rest.points);
 
         let points = points
