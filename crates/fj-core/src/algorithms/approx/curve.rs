@@ -10,27 +10,7 @@ use crate::{
     topology::{Curve, Surface},
 };
 
-use super::{
-    circle::approx_circle, line::approx_line, Approx, ApproxPoint, Tolerance,
-};
-
-impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
-    type Approximation = CurveApprox;
-    type Cache = CurveApproxCache;
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let (curve, surface, boundary) = self;
-
-        approx_curve_with_cache(
-            curve, surface, boundary, tolerance, cache, geometry,
-        )
-    }
-}
+use super::{circle::approx_circle, line::approx_line, ApproxPoint, Tolerance};
 
 /// Approximate the provided curve
 ///
