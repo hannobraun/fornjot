@@ -247,8 +247,7 @@ mod tests {
         let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
-        let expected_approx = (global_path, boundary)
-            .approx(tolerance, &core.layers.geometry)
+        let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
