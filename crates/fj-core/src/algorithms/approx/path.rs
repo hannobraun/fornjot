@@ -82,7 +82,7 @@ impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
 ///
 /// `tolerance` specifies how much the approximation is allowed to deviate
 /// from the circle.
-fn approx_circle<const D: usize>(
+pub fn approx_circle<const D: usize>(
     circle: &Circle<D>,
     boundary: impl Into<CurveBoundary<Point<1>>>,
     tolerance: Tolerance,
@@ -108,7 +108,9 @@ fn approx_circle<const D: usize>(
 ///
 /// The method still exists, to make the code that approximates lines, and thus
 /// this piece of documentation, easy to find for anyone who's looking.
-fn approx_line<const D: usize>(line: &Line<D>) -> Vec<(Point<1>, Point<D>)> {
+pub fn approx_line<const D: usize>(
+    line: &Line<D>,
+) -> Vec<(Point<1>, Point<D>)> {
     let _ = line;
     Vec::new()
 }
