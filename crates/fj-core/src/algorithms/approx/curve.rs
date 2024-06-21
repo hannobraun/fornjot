@@ -177,6 +177,7 @@ impl CurveApproxCache {
 mod tests {
     use std::f64::consts::TAU;
 
+    use fj_math::Circle;
     use pretty_assertions::assert_eq;
 
     use crate::{
@@ -266,7 +267,8 @@ mod tests {
         let mut core = Core::new();
 
         let surface = core.layers.topology.surfaces.xz_plane();
-        let path = SurfacePath::circle_from_center_and_radius([0., 0.], 1.);
+        let circle = Circle::from_center_and_radius([0., 0.], 1.);
+        let path = SurfacePath::Circle(circle);
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
