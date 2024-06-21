@@ -213,11 +213,11 @@ mod tests {
 
     use crate::{
         algorithms::approx::{
-            circle::approx_circle, curve::approx_curve, Approx, ApproxPoint,
+            circle::approx_circle, curve::approx_curve, ApproxPoint,
         },
         geometry::{CurveBoundary, GlobalPath, SurfaceGeom, SurfacePath},
-        operations::build::{BuildCurve, BuildSurface},
-        topology::{Curve, Surface},
+        operations::build::BuildSurface,
+        topology::Surface,
         Core,
     };
 
@@ -291,16 +291,14 @@ mod tests {
     fn approx_circle_on_flat_surface() {
         let mut core = Core::new();
 
-        let surface = core.layers.topology.surfaces.xz_plane();
+        let surface_geom = *core.layers.geometry.xz_plane();
+        let surface = Surface::from_geometry(surface_geom, &mut core);
         let circle = Circle::from_center_and_radius([0., 0.], 1.);
         let path = SurfacePath::Circle(circle);
-        let curve =
-            Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, boundary)
-            .approx(tolerance, &core.layers.geometry);
+        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
 
         let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
