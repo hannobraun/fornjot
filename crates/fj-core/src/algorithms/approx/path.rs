@@ -85,7 +85,7 @@ impl Approx for (GlobalPath, CurveBoundary<Point<1>>) {
 pub fn approx_circle<const D: usize>(
     circle: &Circle<D>,
     boundary: impl Into<CurveBoundary<Point<1>>>,
-    tolerance: Tolerance,
+    tolerance: impl Into<Tolerance>,
 ) -> Vec<(Point<1>, Point<D>)> {
     let boundary = boundary.into();
 
