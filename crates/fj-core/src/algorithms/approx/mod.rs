@@ -7,11 +7,11 @@ pub mod shell;
 pub mod sketch;
 pub mod solid;
 pub mod tolerance;
-pub mod vertex;
 
 mod circle;
 mod curve;
 mod line;
+mod vertex;
 
 use std::{
     cmp::Ordering,
