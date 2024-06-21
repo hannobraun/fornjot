@@ -117,7 +117,6 @@ fn approx_curve(
         }
     };
 
-    let points = points.into_iter().collect();
     CurveApprox { points }
 }
 
