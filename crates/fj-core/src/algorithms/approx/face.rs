@@ -12,7 +12,7 @@ use crate::{
 };
 
 use super::{
-    cycle::CycleApprox, edge::HalfEdgeApproxCache, Approx, ApproxPoint,
+    cycle::CycleApprox, half_edge::HalfEdgeApproxCache, Approx, ApproxPoint,
     Tolerance,
 };
 

@@ -2,8 +2,8 @@
 
 pub mod curve;
 pub mod cycle;
-pub mod edge;
 pub mod face;
+pub mod half_edge;
 pub mod path;
 pub mod shell;
 pub mod sketch;
