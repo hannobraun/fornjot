@@ -88,7 +88,7 @@ fn approx_curve(
 
                     let point_global =
                         surface.point_from_surface_coords(point_surface);
-                    (point_curve, point_global)
+                    ApproxPoint::new(point_curve, point_global)
                 })
                 .collect()
         }
@@ -110,19 +110,14 @@ fn approx_curve(
                 let point_surface = path.point_from_path_coords([t]);
                 let point_global =
                     surface.point_from_surface_coords(point_surface);
-                points.push((u, point_global));
+                points.push(ApproxPoint::new(u, point_global));
             }
 
             points
         }
     };
 
-    let points = points
-        .into_iter()
-        .map(|(point_curve, point_global)| {
-            ApproxPoint::new(point_curve, point_global)
-        })
-        .collect();
+    let points = points.into_iter().collect();
     CurveApprox { points }
 }
 
