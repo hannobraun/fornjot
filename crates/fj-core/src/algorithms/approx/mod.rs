@@ -1,6 +1,5 @@
 //! Approximation of objects
 
-pub mod curve;
 pub mod cycle;
 pub mod face;
 pub mod half_edge;
@@ -11,6 +10,7 @@ pub mod tolerance;
 pub mod vertex;
 
 mod circle;
+mod curve;
 mod line;
 
 use std::{
