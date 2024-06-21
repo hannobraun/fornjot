@@ -5,17 +5,14 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{
-        CurveBoundary, Geometry, GlobalPath, HalfEdgeGeom, SurfaceGeom,
-        SurfacePath,
-    },
+    geometry::{CurveBoundary, Geometry, GlobalPath, SurfaceGeom, SurfacePath},
     storage::Handle,
     topology::{Curve, Surface},
 };
 
 use super::{Approx, ApproxPoint, Tolerance};
 
-impl Approx for (&Handle<Curve>, &Handle<Surface>, &HalfEdgeGeom) {
+impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
     type Approximation = CurveApprox;
     type Cache = CurveApproxCache;
 
@@ -25,9 +22,9 @@ impl Approx for (&Handle<Curve>, &Handle<Surface>, &HalfEdgeGeom) {
         cache: &mut Self::Cache,
         geometry: &Geometry,
     ) -> Self::Approximation {
-        let (curve, surface, half_edge) = self;
+        let (curve, surface, boundary) = self;
 
-        match cache.get(curve, half_edge.boundary) {
+        match cache.get(curve, boundary) {
             Some(approx) => approx,
             None => {
                 let approx = approx_curve(
@@ -38,12 +35,12 @@ impl Approx for (&Handle<Curve>, &Handle<Surface>, &HalfEdgeGeom) {
                         .unwrap()
                         .path,
                     geometry.of_surface(surface),
-                    half_edge.boundary,
+                    boundary,
                     tolerance,
                     geometry,
                 );
 
-                cache.insert(curve.clone(), half_edge.boundary, approx)
+                cache.insert(curve.clone(), boundary, approx)
             }
         }
     }
@@ -206,7 +203,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, &half_edge)
+        let approx = (&curve, &surface, half_edge.boundary)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -229,7 +226,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, &half_edge)
+        let approx = (&curve, &surface, half_edge.boundary)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -251,7 +248,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, &half_edge)
+        let approx = (&curve, &surface, half_edge.boundary)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (global_path, boundary)
@@ -282,7 +279,7 @@ mod tests {
         let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, &half_edge)
+        let approx = (&curve, &surface, half_edge.boundary)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (&path, boundary)
