@@ -94,7 +94,7 @@ fn approx_curve(
         (SurfacePath::Line(line), _) => {
             let range_u =
                 CurveBoundary::from(boundary.inner.map(|point_curve| {
-                    [path.point_from_path_coords(point_curve).u]
+                    [line.point_from_line_coords(point_curve).u]
                 }));
 
             let approx_u = match surface.u {
@@ -107,7 +107,7 @@ fn approx_curve(
             let mut points = Vec::new();
             for (u, _) in approx_u {
                 let t = (u.t - line.origin().u) / line.direction().u;
-                let point_surface = path.point_from_path_coords([t]);
+                let point_surface = line.point_from_line_coords([t]);
                 let point_global =
                     surface.point_from_surface_coords(point_surface);
                 points.push(ApproxPoint::new(u, point_global));
