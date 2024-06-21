@@ -10,7 +10,10 @@ use crate::{
     topology::{Curve, Surface},
 };
 
-use super::{path::approx_circle, Approx, ApproxPoint, Tolerance};
+use super::{
+    path::{approx_circle, approx_line},
+    Approx, ApproxPoint, Tolerance,
+};
 
 impl Approx for (&Handle<Curve>, &Handle<Surface>, CurveBoundary<Point<1>>) {
     type Approximation = CurveApprox;
@@ -51,7 +54,7 @@ fn approx_curve(
     surface: &SurfaceGeom,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    geometry: &Geometry,
+    _: &Geometry,
 ) -> CurveApprox {
     // There are different cases of varying complexity. Circles are the hard
     // part here, as they need to be approximated, while lines don't need to be.
@@ -97,11 +100,12 @@ fn approx_curve(
                     [path.point_from_path_coords(point_curve).u]
                 }));
 
-            let approx_u = (surface.u, range_u).approx_with_cache(
-                tolerance,
-                &mut (),
-                geometry,
-            );
+            let approx_u = match surface.u {
+                GlobalPath::Circle(circle) => {
+                    approx_circle(&circle, range_u, tolerance)
+                }
+                GlobalPath::Line(line) => approx_line(&line),
+            };
 
             let mut points = Vec::new();
             for (u, _) in approx_u {
