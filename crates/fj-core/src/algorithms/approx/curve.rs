@@ -184,7 +184,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{Approx, ApproxPoint},
-        geometry::{CurveBoundary, GlobalPath, HalfEdgeGeom, SurfacePath},
+        geometry::{CurveBoundary, GlobalPath, SurfacePath},
         operations::build::{BuildCurve, BuildSurface},
         topology::{Curve, Surface},
         Core,
@@ -200,10 +200,9 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, half_edge.boundary)
+        let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -223,10 +222,9 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from(boundary);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, half_edge.boundary)
+        let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
         assert_eq!(approx.points, vec![]);
@@ -245,10 +243,9 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, half_edge.boundary)
+        let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (global_path, boundary)
@@ -276,10 +273,9 @@ mod tests {
         let curve =
             Curve::from_path_and_surface(path, surface.clone(), &mut core);
         let boundary = CurveBoundary::from([[0.], [TAU]]);
-        let half_edge = HalfEdgeGeom { boundary };
 
         let tolerance = 1.;
-        let approx = (&curve, &surface, half_edge.boundary)
+        let approx = (&curve, &surface, boundary)
             .approx(tolerance, &core.layers.geometry);
 
         let expected_approx = (&path, boundary)
