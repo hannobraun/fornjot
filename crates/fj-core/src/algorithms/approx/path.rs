@@ -1,5 +1,3 @@
-//! # Path approximation
-
 use fj_math::{Line, Point};
 
 /// Approximate a line
