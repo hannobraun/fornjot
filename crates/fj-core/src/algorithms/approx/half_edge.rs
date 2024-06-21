@@ -1,9 +1,6 @@
-//! Edge approximation
+//! Half-edge approximation
 //!
-//! The approximation of a curve is its first vertex, combined with the
-//! approximation of its curve. The second vertex is left out, as edge
-//! approximations are usually used to build cycle approximations, and this way,
-//! the caller doesn't have to deal with duplicate vertices.
+//! See [`HalfEdgeApprox`].
 
 use crate::{
     geometry::Geometry,
@@ -80,6 +77,11 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
 }
 
 /// An approximation of a [`HalfEdge`]
+///
+/// The approximation of a half-edge is its first vertex, combined with the
+/// approximation of its curve. The second vertex is left out, as half-edge
+/// approximations are usually used to build cycle approximations, and this way,
+/// the caller doesn't have to deal with duplicate vertices.
 #[derive(Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct HalfEdgeApprox {
     /// The points that approximate the half-edge
