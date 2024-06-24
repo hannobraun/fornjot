@@ -12,8 +12,9 @@ use crate::{
 };
 
 use super::{
-    cycle::CycleApprox, half_edge::HalfEdgeApproxCache, Approx, ApproxPoint,
-    Tolerance,
+    cycle::{approx_cycle, CycleApprox},
+    half_edge::HalfEdgeApproxCache,
+    Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &ObjectSet<Face> {
@@ -90,13 +91,23 @@ impl Approx for Handle<Face> {
         // would need to provide its own approximation, as the edges that bound
         // it have nothing to do with its curvature.
 
-        let exterior = (self.region().exterior().deref(), self.surface())
-            .approx_with_cache(tolerance, cache, geometry);
+        let exterior = approx_cycle(
+            self.region().exterior().deref(),
+            self.surface(),
+            tolerance,
+            cache,
+            geometry,
+        );
 
         let mut interiors = BTreeSet::new();
         for cycle in self.region().interiors() {
-            let cycle = (cycle.deref(), self.surface())
-                .approx_with_cache(tolerance, cache, geometry);
+            let cycle = approx_cycle(
+                cycle.deref(),
+                self.surface(),
+                tolerance,
+                cache,
+                geometry,
+            );
             interiors.insert(cycle);
         }
 
