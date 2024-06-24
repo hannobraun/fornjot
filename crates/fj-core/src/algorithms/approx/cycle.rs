@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::{
-    half_edge::{HalfEdgeApprox, HalfEdgeApproxCache},
+    half_edge::{approx_half_edge, HalfEdgeApprox, HalfEdgeApproxCache},
     Approx, ApproxPoint, Tolerance,
 };
 
@@ -32,8 +32,7 @@ impl Approx for (&Cycle, &Handle<Surface>) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                (half_edge, surface)
-                    .approx_with_cache(tolerance, cache, geometry)
+                approx_half_edge(half_edge, surface, tolerance, cache, geometry)
             })
             .collect();
 
