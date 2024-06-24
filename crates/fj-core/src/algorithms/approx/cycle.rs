@@ -12,23 +12,8 @@ use crate::{
 
 use super::{
     half_edge::{approx_half_edge, HalfEdgeApprox, HalfEdgeApproxCache},
-    Approx, ApproxPoint, Tolerance,
+    ApproxPoint, Tolerance,
 };
-
-impl Approx for (&Cycle, &Handle<Surface>) {
-    type Approximation = CycleApprox;
-    type Cache = HalfEdgeApproxCache;
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let (cycle, surface) = self;
-        approx_cycle(cycle, surface, tolerance, cache, geometry)
-    }
-}
 
 /// Approximate the provided cycle
 pub fn approx_cycle(
