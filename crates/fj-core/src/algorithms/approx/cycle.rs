@@ -11,34 +11,32 @@ use crate::{
 };
 
 use super::{
-    half_edge::{HalfEdgeApprox, HalfEdgeApproxCache},
-    Approx, ApproxPoint, Tolerance,
+    half_edge::{approx_half_edge, HalfEdgeApprox, HalfEdgeApproxCache},
+    ApproxPoint, Tolerance,
 };
 
-impl Approx for (&Cycle, &Handle<Surface>) {
-    type Approximation = CycleApprox;
-    type Cache = HalfEdgeApproxCache;
+/// Approximate the provided cycle
+pub fn approx_cycle(
+    cycle: &Cycle,
+    surface: &Handle<Surface>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut HalfEdgeApproxCache,
+    geometry: &Geometry,
+) -> CycleApprox {
+    let tolerance = tolerance.into();
 
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let (cycle, surface) = self;
-        let tolerance = tolerance.into();
+    let half_edges = cycle
+        .half_edges()
+        .iter()
+        .map(|half_edge| {
+            let boundary = geometry.of_half_edge(half_edge).boundary;
+            approx_half_edge(
+                half_edge, surface, boundary, tolerance, cache, geometry,
+            )
+        })
+        .collect();
 
-        let half_edges = cycle
-            .half_edges()
-            .iter()
-            .map(|half_edge| {
-                (half_edge, surface)
-                    .approx_with_cache(tolerance, cache, geometry)
-            })
-            .collect();
-
-        CycleApprox { half_edges }
-    }
+    CycleApprox { half_edges }
 }
 
 /// An approximation of a [`Cycle`]

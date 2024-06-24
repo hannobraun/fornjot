@@ -12,8 +12,9 @@ use crate::{
 };
 
 use super::{
-    cycle::CycleApprox, half_edge::HalfEdgeApproxCache, Approx, ApproxPoint,
-    Tolerance,
+    cycle::{approx_cycle, CycleApprox},
+    half_edge::HalfEdgeApproxCache,
+    Approx, ApproxPoint, Tolerance,
 };
 
 impl Approx for &ObjectSet<Face> {
@@ -30,9 +31,7 @@ impl Approx for &ObjectSet<Face> {
 
         let approx = self
             .into_iter()
-            .map(|face| {
-                face.clone().approx_with_cache(tolerance, cache, geometry)
-            })
+            .map(|face| approx_face(face.clone(), tolerance, cache, geometry))
             .collect();
 
         let min_distance = ValidationConfig::default().distinct_min_distance;
@@ -65,48 +64,54 @@ impl Approx for &ObjectSet<Face> {
     }
 }
 
-impl Approx for Handle<Face> {
-    type Approximation = FaceApprox;
-    type Cache = HalfEdgeApproxCache;
+/// Approximate the provided face
+pub fn approx_face(
+    face: Handle<Face>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut HalfEdgeApproxCache,
+    geometry: &Geometry,
+) -> FaceApprox {
+    let tolerance = tolerance.into();
 
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let tolerance = tolerance.into();
+    // Curved faces whose curvature is not fully defined by their edges
+    // are not supported yet. For that reason, we can fully ignore `face`'s
+    // `surface` field and just pass the edges to `Self::for_edges`.
+    //
+    // An example of a curved face that is supported, is the cylinder. Its
+    // curvature is fully defined be the edges (circles) that border it. The
+    // circle approximations are sufficient to triangulate the surface.
+    //
+    // An example of a curved face that is currently not supported, and thus
+    // doesn't need to be handled here, is a sphere. A spherical face would
+    // would need to provide its own approximation, as the edges that bound
+    // it have nothing to do with its curvature.
 
-        // Curved faces whose curvature is not fully defined by their edges
-        // are not supported yet. For that reason, we can fully ignore `face`'s
-        // `surface` field and just pass the edges to `Self::for_edges`.
-        //
-        // An example of a curved face that is supported, is the cylinder. Its
-        // curvature is fully defined be the edges (circles) that border it. The
-        // circle approximations are sufficient to triangulate the surface.
-        //
-        // An example of a curved face that is currently not supported, and thus
-        // doesn't need to be handled here, is a sphere. A spherical face would
-        // would need to provide its own approximation, as the edges that bound
-        // it have nothing to do with its curvature.
+    let exterior = approx_cycle(
+        face.region().exterior().deref(),
+        face.surface(),
+        tolerance,
+        cache,
+        geometry,
+    );
 
-        let exterior = (self.region().exterior().deref(), self.surface())
-            .approx_with_cache(tolerance, cache, geometry);
+    let mut interiors = BTreeSet::new();
+    for cycle in face.region().interiors() {
+        let cycle = approx_cycle(
+            cycle.deref(),
+            face.surface(),
+            tolerance,
+            cache,
+            geometry,
+        );
+        interiors.insert(cycle);
+    }
 
-        let mut interiors = BTreeSet::new();
-        for cycle in self.region().interiors() {
-            let cycle = (cycle.deref(), self.surface())
-                .approx_with_cache(tolerance, cache, geometry);
-            interiors.insert(cycle);
-        }
-
-        let coord_handedness = self.coord_handedness(geometry);
-        FaceApprox {
-            face: self,
-            exterior,
-            interiors,
-            coord_handedness,
-        }
+    let coord_handedness = face.coord_handedness(geometry);
+    FaceApprox {
+        face,
+        exterior,
+        interiors,
+        coord_handedness,
     }
 }
 
