@@ -13,23 +13,8 @@ use crate::{
 use super::{
     curve::{approx_curve_with_cache, CurveApproxCache},
     vertex::{approx_vertex, VertexApproxCache},
-    Approx, ApproxPoint, Tolerance,
+    ApproxPoint, Tolerance,
 };
-
-impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
-    type Approximation = HalfEdgeApprox;
-    type Cache = HalfEdgeApproxCache;
-
-    fn approx_with_cache(
-        self,
-        tolerance: impl Into<Tolerance>,
-        cache: &mut Self::Cache,
-        geometry: &Geometry,
-    ) -> Self::Approximation {
-        let (half_edge, surface) = self;
-        approx_half_edge(half_edge, surface, tolerance, cache, geometry)
-    }
-}
 
 /// Approximate the provided half-edge
 pub fn approx_half_edge(
