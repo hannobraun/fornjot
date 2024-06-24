@@ -4,8 +4,10 @@
 
 use std::iter;
 
+use fj_math::Point;
+
 use crate::{
-    geometry::Geometry,
+    geometry::{CurveBoundary, Geometry},
     storage::Handle,
     topology::{HalfEdge, Surface},
 };
@@ -20,13 +22,13 @@ use super::{
 pub fn approx_half_edge(
     half_edge: &Handle<HalfEdge>,
     surface: &Handle<Surface>,
+    boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
     cache: &mut HalfEdgeApproxCache,
     geometry: &Geometry,
 ) -> HalfEdgeApprox {
     let tolerance = tolerance.into();
 
-    let boundary = geometry.of_half_edge(half_edge).boundary;
     let [start_position_curve, _] = boundary.inner;
 
     let start = approx_vertex(

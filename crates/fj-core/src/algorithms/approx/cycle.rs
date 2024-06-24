@@ -32,7 +32,10 @@ impl Approx for (&Cycle, &Handle<Surface>) {
             .half_edges()
             .iter()
             .map(|half_edge| {
-                approx_half_edge(half_edge, surface, tolerance, cache, geometry)
+                let boundary = geometry.of_half_edge(half_edge).boundary;
+                approx_half_edge(
+                    half_edge, surface, boundary, tolerance, cache, geometry,
+                )
             })
             .collect();
 
