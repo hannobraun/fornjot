@@ -26,21 +26,32 @@ impl Approx for (&Cycle, &Handle<Surface>) {
         geometry: &Geometry,
     ) -> Self::Approximation {
         let (cycle, surface) = self;
-        let tolerance = tolerance.into();
-
-        let half_edges = cycle
-            .half_edges()
-            .iter()
-            .map(|half_edge| {
-                let boundary = geometry.of_half_edge(half_edge).boundary;
-                approx_half_edge(
-                    half_edge, surface, boundary, tolerance, cache, geometry,
-                )
-            })
-            .collect();
-
-        CycleApprox { half_edges }
+        approx_cycle(cycle, surface, tolerance, cache, geometry)
     }
+}
+
+/// Approximate the provided cycle
+pub fn approx_cycle(
+    cycle: &Cycle,
+    surface: &Handle<Surface>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut HalfEdgeApproxCache,
+    geometry: &Geometry,
+) -> CycleApprox {
+    let tolerance = tolerance.into();
+
+    let half_edges = cycle
+        .half_edges()
+        .iter()
+        .map(|half_edge| {
+            let boundary = geometry.of_half_edge(half_edge).boundary;
+            approx_half_edge(
+                half_edge, surface, boundary, tolerance, cache, geometry,
+            )
+        })
+        .collect();
+
+    CycleApprox { half_edges }
 }
 
 /// An approximation of a [`Cycle`]
