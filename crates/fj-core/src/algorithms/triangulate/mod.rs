@@ -80,7 +80,9 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::approx::{Approx, Tolerance},
+        algorithms::approx::{
+            face::approx_face, half_edge::HalfEdgeApproxCache, Tolerance,
+        },
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,
@@ -309,8 +311,12 @@ mod tests {
         core: &mut Core,
     ) -> anyhow::Result<Mesh<Point<3>>> {
         let tolerance = Tolerance::from_scalar(Scalar::ONE)?;
-        Ok(face
-            .approx(tolerance, &core.layers.geometry)
-            .triangulate(core))
+        Ok(approx_face(
+            face,
+            tolerance,
+            &mut HalfEdgeApproxCache::default(),
+            &core.layers.geometry,
+        )
+        .triangulate(core))
     }
 }
