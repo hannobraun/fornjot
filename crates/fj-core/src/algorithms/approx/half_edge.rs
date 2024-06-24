@@ -27,46 +27,57 @@ impl Approx for (&Handle<HalfEdge>, &Handle<Surface>) {
         geometry: &Geometry,
     ) -> Self::Approximation {
         let (half_edge, surface) = self;
-        let tolerance = tolerance.into();
-
-        let boundary = geometry.of_half_edge(half_edge).boundary;
-        let [start_position_curve, _] = boundary.inner;
-
-        let start = approx_vertex(
-            half_edge.start_vertex().clone(),
-            half_edge.curve(),
-            surface,
-            start_position_curve,
-            &mut cache.start_position,
-            geometry,
-        );
-
-        let rest = approx_curve_with_cache(
-            half_edge.curve(),
-            surface,
-            boundary,
-            tolerance,
-            &mut cache.curve,
-            geometry,
-        );
-
-        let points = iter::once(start)
-            .chain(rest.points)
-            .map(|point| {
-                let point_surface = geometry
-                    .of_curve(half_edge.curve())
-                    .unwrap()
-                    .local_on(surface)
-                    .unwrap()
-                    .path
-                    .point_from_path_coords(point.local_form);
-
-                ApproxPoint::new(point_surface, point.global_form)
-            })
-            .collect();
-
-        HalfEdgeApprox { points }
+        approx_half_edge(half_edge, surface, tolerance, cache, geometry)
     }
+}
+
+/// Approximate the provided half-edge
+pub fn approx_half_edge(
+    half_edge: &Handle<HalfEdge>,
+    surface: &Handle<Surface>,
+    tolerance: impl Into<Tolerance>,
+    cache: &mut HalfEdgeApproxCache,
+    geometry: &Geometry,
+) -> HalfEdgeApprox {
+    let tolerance = tolerance.into();
+
+    let boundary = geometry.of_half_edge(half_edge).boundary;
+    let [start_position_curve, _] = boundary.inner;
+
+    let start = approx_vertex(
+        half_edge.start_vertex().clone(),
+        half_edge.curve(),
+        surface,
+        start_position_curve,
+        &mut cache.start_position,
+        geometry,
+    );
+
+    let rest = approx_curve_with_cache(
+        half_edge.curve(),
+        surface,
+        boundary,
+        tolerance,
+        &mut cache.curve,
+        geometry,
+    );
+
+    let points = iter::once(start)
+        .chain(rest.points)
+        .map(|point| {
+            let point_surface = geometry
+                .of_curve(half_edge.curve())
+                .unwrap()
+                .local_on(surface)
+                .unwrap()
+                .path
+                .point_from_path_coords(point.local_form);
+
+            ApproxPoint::new(point_surface, point.global_form)
+        })
+        .collect();
+
+    HalfEdgeApprox { points }
 }
 
 /// An approximation of a [`HalfEdge`]
