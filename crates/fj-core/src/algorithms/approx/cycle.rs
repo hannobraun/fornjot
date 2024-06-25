@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::{
-    half_edge::{approx_half_edge, HalfEdgeApprox, HalfEdgeApproxCache},
+    half_edge::{approx_half_edge, HalfEdgeApprox, ApproxCache},
     ApproxPoint, Tolerance,
 };
 
@@ -20,7 +20,7 @@ pub fn approx_cycle(
     cycle: &Cycle,
     surface: &Handle<Surface>,
     tolerance: impl Into<Tolerance>,
-    cache: &mut HalfEdgeApproxCache,
+    cache: &mut ApproxCache,
     geometry: &Geometry,
 ) -> CycleApprox {
     let tolerance = tolerance.into();

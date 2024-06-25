@@ -81,7 +81,7 @@ mod tests {
 
     use crate::{
         algorithms::approx::{
-            face::approx_face, half_edge::HalfEdgeApproxCache, Tolerance,
+            face::approx_face, half_edge::ApproxCache, Tolerance,
         },
         operations::{
             build::{BuildCycle, BuildFace},
@@ -314,7 +314,7 @@ mod tests {
         Ok(approx_face(
             face,
             tolerance,
-            &mut HalfEdgeApproxCache::default(),
+            &mut ApproxCache::default(),
             &core.layers.geometry,
         )
         .triangulate(core))

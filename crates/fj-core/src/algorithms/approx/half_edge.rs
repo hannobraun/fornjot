@@ -24,7 +24,7 @@ pub fn approx_half_edge(
     surface: &Handle<Surface>,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    cache: &mut HalfEdgeApproxCache,
+    cache: &mut ApproxCache,
     geometry: &Geometry,
 ) -> HalfEdgeApprox {
     let tolerance = tolerance.into();
@@ -81,7 +81,7 @@ pub struct HalfEdgeApprox {
 
 /// Cache for half-edge approximations
 #[derive(Default)]
-pub struct HalfEdgeApproxCache {
+pub struct ApproxCache {
     /// Cache for vertex approximations
     pub vertex: VertexApproxCache,
 
