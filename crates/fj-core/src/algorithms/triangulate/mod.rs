@@ -80,9 +80,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::approx::{
-            face::approx_face, half_edge::HalfEdgeApproxCache, Tolerance,
-        },
+        algorithms::approx::{face::approx_face, ApproxCache, Tolerance},
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,
@@ -314,7 +312,7 @@ mod tests {
         Ok(approx_face(
             face,
             tolerance,
-            &mut HalfEdgeApproxCache::default(),
+            &mut ApproxCache::default(),
             &core.layers.geometry,
         )
         .triangulate(core))

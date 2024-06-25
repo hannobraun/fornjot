@@ -4,13 +4,11 @@ use std::collections::BTreeSet;
 
 use crate::{geometry::Geometry, topology::Solid};
 
-use super::{
-    face::FaceApprox, half_edge::HalfEdgeApproxCache, Approx, Tolerance,
-};
+use super::{face::FaceApprox, Approx, ApproxCache, Tolerance};
 
 impl Approx for &Solid {
     type Approximation = BTreeSet<FaceApprox>;
-    type Cache = HalfEdgeApproxCache;
+    type Cache = ApproxCache;
 
     fn approx_with_cache(
         self,
