@@ -36,7 +36,7 @@ pub fn approx_half_edge(
         half_edge.curve(),
         surface,
         start_position_curve,
-        &mut cache.start_position,
+        &mut cache.vertex,
         geometry,
     );
 
@@ -82,6 +82,6 @@ pub struct HalfEdgeApprox {
 /// Cache for half-edge approximations
 #[derive(Default)]
 pub struct HalfEdgeApproxCache {
-    start_position: VertexApproxCache,
+    vertex: VertexApproxCache,
     curve: CurveApproxCache,
 }
