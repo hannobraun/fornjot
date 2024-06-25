@@ -14,7 +14,6 @@ use crate::{
 
 use super::{
     curve::{approx_curve_with_cache, CurveApproxCache},
-    vertex::{approx_vertex, VertexApproxCache},
     ApproxPoint, Tolerance,
 };
 
@@ -22,24 +21,13 @@ use super::{
 pub fn approx_half_edge(
     half_edge: &Handle<HalfEdge>,
     surface: &Handle<Surface>,
+    start: ApproxPoint<1>,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    vertex_cache: &mut VertexApproxCache,
     curve_cache: &mut CurveApproxCache,
     geometry: &Geometry,
 ) -> HalfEdgeApprox {
     let tolerance = tolerance.into();
-
-    let [start_position_curve, _] = boundary.inner;
-
-    let start = approx_vertex(
-        half_edge.start_vertex().clone(),
-        half_edge.curve(),
-        surface,
-        start_position_curve,
-        vertex_cache,
-        geometry,
-    );
 
     let rest = approx_curve_with_cache(
         half_edge.curve(),

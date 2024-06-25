@@ -12,6 +12,7 @@ use crate::{
 
 use super::{
     half_edge::{approx_half_edge, HalfEdgeApprox},
+    vertex::approx_vertex,
     ApproxCache, ApproxPoint, Tolerance,
 };
 
@@ -30,12 +31,23 @@ pub fn approx_cycle(
         .iter()
         .map(|half_edge| {
             let boundary = geometry.of_half_edge(half_edge).boundary;
+            let [start_position_curve, _] = boundary.inner;
+
+            let start = approx_vertex(
+                half_edge.start_vertex().clone(),
+                half_edge.curve(),
+                surface,
+                start_position_curve,
+                &mut cache.vertex,
+                geometry,
+            );
+
             approx_half_edge(
                 half_edge,
                 surface,
+                start,
                 boundary,
                 tolerance,
-                &mut cache.vertex,
                 &mut cache.curve,
                 geometry,
             )
