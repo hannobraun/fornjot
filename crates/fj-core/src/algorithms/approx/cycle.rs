@@ -31,7 +31,13 @@ pub fn approx_cycle(
         .map(|half_edge| {
             let boundary = geometry.of_half_edge(half_edge).boundary;
             approx_half_edge(
-                half_edge, surface, boundary, tolerance, cache, geometry,
+                half_edge,
+                surface,
+                boundary,
+                tolerance,
+                &mut cache.vertex,
+                &mut cache.curve,
+                geometry,
             )
         })
         .collect();
