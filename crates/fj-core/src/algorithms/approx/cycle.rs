@@ -11,8 +11,8 @@ use crate::{
 };
 
 use super::{
-    half_edge::{approx_half_edge, HalfEdgeApprox, ApproxCache},
-    ApproxPoint, Tolerance,
+    half_edge::{approx_half_edge, HalfEdgeApprox},
+    ApproxCache, ApproxPoint, Tolerance,
 };
 
 /// Approximate the provided cycle

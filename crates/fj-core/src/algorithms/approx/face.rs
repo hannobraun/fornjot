@@ -13,8 +13,7 @@ use crate::{
 
 use super::{
     cycle::{approx_cycle, CycleApprox},
-    half_edge::ApproxCache,
-    Approx, ApproxPoint, Tolerance,
+    Approx, ApproxCache, ApproxPoint, Tolerance,
 };
 
 impl Approx for &ObjectSet<Face> {

@@ -19,7 +19,9 @@ use std::{
     hash::{Hash, Hasher},
 };
 
+use curve::CurveApproxCache;
 use fj_math::Point;
+use vertex::VertexApproxCache;
 
 use crate::geometry::Geometry;
 
@@ -56,6 +58,16 @@ pub trait Approx: Sized {
         cache: &mut Self::Cache,
         geometry: &Geometry,
     ) -> Self::Approximation;
+}
+
+/// Cache for half-edge approximations
+#[derive(Default)]
+pub struct ApproxCache {
+    /// Cache for vertex approximations
+    pub vertex: VertexApproxCache,
+
+    /// Cache for curve approximations
+    pub curve: CurveApproxCache,
 }
 
 /// A point from an approximation, with local and global forms

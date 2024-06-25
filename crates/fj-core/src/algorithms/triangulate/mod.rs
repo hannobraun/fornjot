@@ -80,9 +80,7 @@ mod tests {
     use fj_math::{Point, Scalar};
 
     use crate::{
-        algorithms::approx::{
-            face::approx_face, half_edge::ApproxCache, Tolerance,
-        },
+        algorithms::approx::{face::approx_face, ApproxCache, Tolerance},
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,

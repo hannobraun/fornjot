@@ -13,8 +13,7 @@ use crate::{
 };
 
 use super::{
-    curve::{approx_curve_with_cache, CurveApproxCache},
-    vertex::{approx_vertex, VertexApproxCache},
+    curve::approx_curve_with_cache, vertex::approx_vertex, ApproxCache,
     ApproxPoint, Tolerance,
 };
 
@@ -77,14 +76,4 @@ pub fn approx_half_edge(
 pub struct HalfEdgeApprox {
     /// The points that approximate the half-edge
     pub points: Vec<ApproxPoint<2>>,
-}
-
-/// Cache for half-edge approximations
-#[derive(Default)]
-pub struct ApproxCache {
-    /// Cache for vertex approximations
-    pub vertex: VertexApproxCache,
-
-    /// Cache for curve approximations
-    pub curve: CurveApproxCache,
 }
