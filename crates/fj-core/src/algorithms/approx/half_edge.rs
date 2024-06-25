@@ -82,6 +82,9 @@ pub struct HalfEdgeApprox {
 /// Cache for half-edge approximations
 #[derive(Default)]
 pub struct HalfEdgeApproxCache {
-    vertex: VertexApproxCache,
-    curve: CurveApproxCache,
+    /// Cache for vertex approximations
+    pub vertex: VertexApproxCache,
+
+    /// Cache for curve approximations
+    pub curve: CurveApproxCache,
 }
