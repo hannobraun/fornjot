@@ -1,7 +1,9 @@
 use fj_interop::Color;
 use fj_math::Vector;
+use itertools::Itertools;
 
 use crate::{
+    geometry::LocalVertexGeom,
     operations::{
         build::BuildCycle, join::JoinCycle, sweep::half_edge::SweepHalfEdge,
     },
@@ -79,6 +81,7 @@ impl SweepCycle for Cycle {
 
             top_half_edges.push((
                 swept_half_edge.top_half_edge,
+                swept_half_edge.top_boundary,
                 *core.layers.geometry.of_half_edge(bottom_half_edge),
                 core.layers
                     .geometry
@@ -89,6 +92,32 @@ impl SweepCycle for Cycle {
                     .clone(),
             ));
         }
+
+        let top_half_edges = top_half_edges
+            .into_iter()
+            .circular_tuple_windows()
+            .map(
+                |(
+                    (half_edge, boundary, half_edge_geom, curve_geom),
+                    (next_half_edge, _, _, _),
+                )| {
+                    let [start, end] = boundary.inner;
+
+                    for (point, vertex) in [
+                        (start, half_edge.start_vertex()),
+                        (end, next_half_edge.start_vertex()),
+                    ] {
+                        core.layers.geometry.define_vertex(
+                            vertex.clone(),
+                            half_edge.curve().clone(),
+                            LocalVertexGeom { position: point },
+                        );
+                    }
+
+                    (half_edge, half_edge_geom, curve_geom)
+                },
+            )
+            .collect::<Vec<_>>();
 
         let top_cycle =
             Cycle::empty().add_joined_edges(top_half_edges, top_surface, core);
