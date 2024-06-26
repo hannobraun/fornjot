@@ -83,11 +83,10 @@ pub trait BuildHalfEdge {
     /// Create a line segment
     fn line_segment(
         points_surface: [impl Into<Point<2>>; 2],
-        boundary: Option<CurveBoundary<Point<1>>>,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        let boundary = boundary.unwrap_or_default();
+        let boundary = CurveBoundary::default();
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
 

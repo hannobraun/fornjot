@@ -80,12 +80,7 @@ pub trait BuildCycle {
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment(
-                    [start, end],
-                    None,
-                    surface.clone(),
-                    core,
-                )
+                HalfEdge::line_segment([start, end], surface.clone(), core)
             });
 
         Cycle::new(half_edges)

@@ -180,7 +180,6 @@ mod tests {
                             |_, core| {
                                 [HalfEdge::line_segment(
                                     [[0., 0.], [2., 0.]],
-                                    None,
                                     surface,
                                     core,
                                 )]

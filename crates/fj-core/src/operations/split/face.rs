@@ -126,7 +126,6 @@ impl SplitFace for Shell {
                             .path,
                     ),
                 ],
-                None,
                 face.surface().clone(),
                 core,
             );
