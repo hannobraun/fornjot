@@ -60,7 +60,7 @@ impl SweepCycle for Cycle {
         let path = path.into();
 
         let mut faces = Vec::new();
-        let mut top_edges = Vec::new();
+        let mut top_half_edges = Vec::new();
 
         for bottom_half_edge_pair in self.half_edges().pairs() {
             let (bottom_half_edge, bottom_half_edge_next) =
@@ -77,7 +77,7 @@ impl SweepCycle for Cycle {
 
             faces.push(swept_half_edge.face);
 
-            top_edges.push((
+            top_half_edges.push((
                 swept_half_edge.top_half_edge,
                 *core.layers.geometry.of_half_edge(bottom_half_edge),
                 core.layers
@@ -91,7 +91,7 @@ impl SweepCycle for Cycle {
         }
 
         let top_cycle =
-            Cycle::empty().add_joined_edges(top_edges, top_surface, core);
+            Cycle::empty().add_joined_edges(top_half_edges, top_surface, core);
 
         SweptCycle { faces, top_cycle }
     }
