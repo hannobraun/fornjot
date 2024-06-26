@@ -54,12 +54,14 @@ pub trait BuildCycle {
 
         let angle = Scalar::TAU / 4.;
 
-        let ab = HalfEdge::arc(a, b, angle, surface.clone(), core);
-        let bc = HalfEdge::arc(b, c, angle, surface.clone(), core);
-        let cd = HalfEdge::arc(c, d, angle, surface.clone(), core);
-        let da = HalfEdge::arc(d, a, angle, surface.clone(), core);
+        let half_edges =
+            [[a, b], [b, c], [c, d], [d, a]]
+                .into_iter()
+                .map(|[start, end]| {
+                    HalfEdge::arc(start, end, angle, surface.clone(), core)
+                });
 
-        Cycle::new([ab, bc, cd, da])
+        Cycle::new(half_edges)
     }
 
     /// Build a polygon
