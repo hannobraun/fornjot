@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    operations::{build::BuildHalfEdge, update::UpdateCycle},
+    operations::build::BuildHalfEdge,
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
     Core,
@@ -59,7 +59,7 @@ pub trait BuildCycle {
         let cd = HalfEdge::arc(c, d, angle, surface.clone(), core);
         let da = HalfEdge::arc(d, a, angle, surface.clone(), core);
 
-        Cycle::empty().add_half_edges([ab, bc, cd, da], core)
+        Cycle::new([ab, bc, cd, da])
     }
 
     /// Build a polygon
