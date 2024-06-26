@@ -87,6 +87,8 @@ pub trait BuildHalfEdge {
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
+        let boundary = boundary.unwrap_or_default();
+
         let half_edge = HalfEdge::unjoined(core).insert(core);
 
         half_edge.curve().clone().make_line_on_surface(
@@ -96,12 +98,9 @@ pub trait BuildHalfEdge {
             &mut core.layers.geometry,
         );
 
-        core.layers.geometry.define_half_edge(
-            half_edge.clone(),
-            HalfEdgeGeom {
-                boundary: boundary.unwrap_or_default(),
-            },
-        );
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
         half_edge
     }
