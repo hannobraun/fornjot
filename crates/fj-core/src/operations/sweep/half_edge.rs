@@ -133,7 +133,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                     .unwrap_or_else(|| Curve::new().insert(core))
                     .make_line_on_surface(
                         [start, end],
-                        Some(boundary),
+                        boundary,
                         surface.clone(),
                         &mut core.layers.geometry,
                     );

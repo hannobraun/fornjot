@@ -35,7 +35,7 @@ pub trait UpdateCurveGeometry {
     fn make_line_on_surface(
         self,
         points_surface: [impl Into<Point<2>>; 2],
-        points_curve: Option<CurveBoundary<Point<1>>>,
+        points_curve: CurveBoundary<Point<1>>,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self;
@@ -71,11 +71,10 @@ impl UpdateCurveGeometry for Handle<Curve> {
     fn make_line_on_surface(
         self,
         points_surface: [impl Into<Point<2>>; 2],
-        points_curve: Option<CurveBoundary<Point<1>>>,
+        points_curve: CurveBoundary<Point<1>>,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self {
-        let points_curve = points_curve.unwrap_or_default();
         let path = SurfacePath::line_from_points_with_coords(
             points_curve.inner.zip_ext(points_surface),
         );

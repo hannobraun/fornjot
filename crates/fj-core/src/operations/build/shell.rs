@@ -92,7 +92,7 @@ pub trait BuildShell {
 
                             let curve = curve.make_line_on_surface(
                                 positions,
-                                Some(boundary),
+                                boundary,
                                 surface.clone(),
                                 &mut core.layers.geometry,
                             );

@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
+    operations::build::BuildHalfEdge,
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
     Core,
@@ -54,12 +54,14 @@ pub trait BuildCycle {
 
         let angle = Scalar::TAU / 4.;
 
-        let ab = HalfEdge::arc(a, b, angle, surface.clone(), core).insert(core);
-        let bc = HalfEdge::arc(b, c, angle, surface.clone(), core).insert(core);
-        let cd = HalfEdge::arc(c, d, angle, surface.clone(), core).insert(core);
-        let da = HalfEdge::arc(d, a, angle, surface.clone(), core).insert(core);
+        let half_edges =
+            [[a, b], [b, c], [c, d], [d, a]]
+                .into_iter()
+                .map(|[start, end]| {
+                    HalfEdge::arc(start, end, angle, surface.clone(), core)
+                });
 
-        Cycle::empty().add_half_edges([ab, bc, cd, da], core)
+        Cycle::new(half_edges)
     }
 
     /// Build a polygon
@@ -73,20 +75,15 @@ pub trait BuildCycle {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let edges = points
+        let half_edges = points
             .into_iter()
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
-                HalfEdge::line_segment(
-                    [start, end],
-                    None,
-                    surface.clone(),
-                    core,
-                )
+                HalfEdge::line_segment([start, end], surface.clone(), core)
             });
 
-        Cycle::new(edges)
+        Cycle::new(half_edges)
     }
 }
 
