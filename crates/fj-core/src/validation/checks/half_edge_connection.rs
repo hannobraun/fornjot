@@ -182,7 +182,8 @@ mod tests {
                                     [[0., 0.], [2., 0.]],
                                     surface,
                                     core,
-                                )]
+                                )
+                                .0]
                             },
                             core,
                         )

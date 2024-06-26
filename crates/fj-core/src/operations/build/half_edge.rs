@@ -85,7 +85,7 @@ pub trait BuildHalfEdge {
         points_surface: [impl Into<Point<2>>; 2],
         surface: Handle<Surface>,
         core: &mut Core,
-    ) -> Handle<HalfEdge> {
+    ) -> (Handle<HalfEdge>, CurveBoundary<Point<1>>) {
         let boundary = CurveBoundary::default();
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
@@ -101,7 +101,7 @@ pub trait BuildHalfEdge {
             .geometry
             .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
-        half_edge
+        (half_edge, boundary)
     }
 }
 
