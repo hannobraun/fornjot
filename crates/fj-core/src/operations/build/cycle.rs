@@ -73,7 +73,7 @@ pub trait BuildCycle {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let edges = points
+        let half_edges = points
             .into_iter()
             .map(Into::into)
             .circular_tuple_windows()
@@ -86,7 +86,7 @@ pub trait BuildCycle {
                 )
             });
 
-        Cycle::new(edges)
+        Cycle::new(half_edges)
     }
 }
 
