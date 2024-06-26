@@ -3,6 +3,7 @@ use fj_math::Point;
 use itertools::Itertools;
 
 use crate::{
+    geometry::LocalVertexGeom,
     operations::{
         build::{BuildCycle, BuildHalfEdge},
         derive::DeriveFrom,
@@ -103,7 +104,7 @@ impl SplitFace for Shell {
 
         // Build the edge that's going to divide the new faces.
         let dividing_half_edge_a_to_d = {
-            let half_edge = HalfEdge::line_segment(
+            let (half_edge, boundary) = HalfEdge::line_segment(
                 [
                     core.layers.geometry.of_half_edge(&b).start_position(
                         &core
@@ -129,6 +130,22 @@ impl SplitFace for Shell {
                 face.surface().clone(),
                 core,
             );
+
+            core.layers.geometry.define_vertex(
+                b.start_vertex().clone(),
+                half_edge.curve().clone(),
+                LocalVertexGeom {
+                    position: boundary.inner[0],
+                },
+            );
+            core.layers.geometry.define_vertex(
+                d.start_vertex().clone(),
+                half_edge.curve().clone(),
+                LocalVertexGeom {
+                    position: boundary.inner[1],
+                },
+            );
+
             half_edge
                 .update_start_vertex(|_, _| b.start_vertex().clone(), core)
                 .insert(core)

@@ -2,6 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
+    geometry::LocalVertexGeom,
     operations::build::BuildHalfEdge,
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
@@ -75,12 +76,32 @@ pub trait BuildCycle {
         Ps: IntoIterator<Item = P>,
         Ps::IntoIter: Clone + ExactSizeIterator,
     {
-        let half_edges = points
+        let half_edges_and_boundaries = points
             .into_iter()
             .map(Into::into)
             .circular_tuple_windows()
             .map(|(start, end)| {
                 HalfEdge::line_segment([start, end], surface.clone(), core)
+            })
+            .collect::<Vec<_>>();
+        let half_edges = half_edges_and_boundaries
+            .into_iter()
+            .circular_tuple_windows()
+            .map(|((half_edge, boundary), (next_half_edge, _))| {
+                let [start, end] = boundary.inner;
+
+                core.layers.geometry.define_vertex(
+                    half_edge.start_vertex().clone(),
+                    half_edge.curve().clone(),
+                    LocalVertexGeom { position: start },
+                );
+                core.layers.geometry.define_vertex(
+                    next_half_edge.start_vertex().clone(),
+                    half_edge.curve().clone(),
+                    LocalVertexGeom { position: end },
+                );
+
+                half_edge
             });
 
         Cycle::new(half_edges)

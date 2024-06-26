@@ -1,6 +1,7 @@
 use fj_math::Point;
 
 use crate::{
+    geometry::LocalVertexGeom,
     operations::{
         derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
     },
@@ -60,6 +61,12 @@ impl SplitHalfEdge for Handle<HalfEdge> {
                 geometry.with_boundary([point, end]),
                 &mut core.layers.geometry,
             );
+
+        core.layers.geometry.define_vertex(
+            b.start_vertex().clone(),
+            b.curve().clone(),
+            LocalVertexGeom { position: point },
+        );
 
         [a, b]
     }
