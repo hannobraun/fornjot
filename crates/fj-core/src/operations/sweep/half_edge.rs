@@ -190,10 +190,14 @@ impl SweepHalfEdge for Handle<HalfEdge> {
         }
 
         let face = Face::new(surface, region);
+        let [_, _, top_boundary, _] = boundaries;
 
         SweptHalfEdge {
             face,
             top_half_edge: edge_top,
+            top_boundary: CurveBoundary {
+                inner: top_boundary,
+            },
         }
     }
 }
@@ -207,4 +211,7 @@ pub struct SweptHalfEdge {
 
     /// The top half-edge of the created face
     pub top_half_edge: Handle<HalfEdge>,
+
+    /// The boundary of the top half-edge
+    pub top_boundary: CurveBoundary<Point<1>>,
 }
