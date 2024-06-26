@@ -26,6 +26,13 @@ pub struct VertexGeom {
     pub definitions: BTreeMap<Handle<Curve>, LocalVertexGeom>,
 }
 
+impl VertexGeom {
+    /// # Return the local definition on the provided curve
+    pub fn local_on(&self, curve: &Handle<Curve>) -> Option<&LocalVertexGeom> {
+        self.definitions.get(curve)
+    }
+}
+
 /// The geometric definition of a vertex, in 1D curve coordinates
 #[derive(Clone, Debug)]
 pub struct LocalVertexGeom {
