@@ -15,7 +15,7 @@ mod vertex;
 pub use self::{
     cycle::{SweepCycle, SweptCycle},
     face::SweepFace,
-    half_edge::SweepHalfEdge,
+    half_edge::{SweepHalfEdge, SweptHalfEdge},
     path::SweepSurfacePath,
     region::{SweepRegion, SweptRegion},
     shell_face::{ShellExtendedBySweep, SweepFaceOfShell},
