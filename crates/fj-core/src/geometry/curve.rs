@@ -28,10 +28,6 @@ pub struct CurveGeom {
 
 impl CurveGeom {
     /// # Return the local definition on the provided surface
-    ///
-    /// ## Panics
-    ///
-    /// Panics, if the curve has not been defined on that surface.
     pub fn local_on(
         &self,
         surface: &Handle<Surface>,
