@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    operations::{build::BuildHalfEdge, insert::Insert, update::UpdateCycle},
+    operations::{build::BuildHalfEdge, update::UpdateCycle},
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
     Core,
@@ -54,10 +54,10 @@ pub trait BuildCycle {
 
         let angle = Scalar::TAU / 4.;
 
-        let ab = HalfEdge::arc(a, b, angle, surface.clone(), core).insert(core);
-        let bc = HalfEdge::arc(b, c, angle, surface.clone(), core).insert(core);
-        let cd = HalfEdge::arc(c, d, angle, surface.clone(), core).insert(core);
-        let da = HalfEdge::arc(d, a, angle, surface.clone(), core).insert(core);
+        let ab = HalfEdge::arc(a, b, angle, surface.clone(), core);
+        let bc = HalfEdge::arc(b, c, angle, surface.clone(), core);
+        let cd = HalfEdge::arc(c, d, angle, surface.clone(), core);
+        let da = HalfEdge::arc(d, a, angle, surface.clone(), core);
 
         Cycle::empty().add_half_edges([ab, bc, cd, da], core)
     }
