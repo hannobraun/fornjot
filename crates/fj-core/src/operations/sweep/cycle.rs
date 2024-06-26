@@ -10,7 +10,7 @@ use crate::{
     Core,
 };
 
-use super::SweepCache;
+use super::{half_edge::SweptHalfEdge, SweepCache};
 
 /// # Sweep a [`Cycle`]
 ///
@@ -66,7 +66,10 @@ impl SweepCycle for Cycle {
             let (bottom_half_edge, bottom_half_edge_next) =
                 bottom_half_edge_pair;
 
-            let (side_face, top_half_edge) = bottom_half_edge.sweep_half_edge(
+            let SweptHalfEdge {
+                face: side_face,
+                top_half_edge,
+            } = bottom_half_edge.sweep_half_edge(
                 bottom_half_edge_next.start_vertex().clone(),
                 bottom_surface.clone(),
                 color,

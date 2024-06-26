@@ -44,7 +44,7 @@ pub trait SweepHalfEdge {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         core: &mut Core,
-    ) -> (Face, Handle<HalfEdge>);
+    ) -> SweptHalfEdge;
 }
 
 impl SweepHalfEdge for Handle<HalfEdge> {
@@ -56,7 +56,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
         path: impl Into<Vector<3>>,
         cache: &mut SweepCache,
         core: &mut Core,
-    ) -> (Face, Handle<HalfEdge>) {
+    ) -> SweptHalfEdge {
         let path = path.into();
 
         let half_edge_geom = *core.layers.geometry.of_half_edge(self);
@@ -161,6 +161,20 @@ impl SweepHalfEdge for Handle<HalfEdge> {
 
         let face = Face::new(surface, region);
 
-        (face, edge_top)
+        SweptHalfEdge {
+            face,
+            top_half_edge: edge_top,
+        }
     }
+}
+
+/// The result of sweeping a [`HalfEdge`]
+///
+/// See [`SweepHalfEdge`].
+pub struct SweptHalfEdge {
+    /// The face created by sweeping the half-edge
+    pub face: Face,
+
+    /// The top half-edge of the created face
+    pub top_half_edge: Handle<HalfEdge>,
 }
