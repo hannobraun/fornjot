@@ -82,7 +82,7 @@ pub trait BuildShell {
                     });
 
                 let half_edges = {
-                    let vertices = [a, b, c].map(Clone::clone);
+                    let vertices = [a, b, c];
                     let [a, b, c] = [[0., 0.], [1., 0.], [0., 1.]];
                     vertices
                         .zip_ext([[a, b], [b, c], [c, a]])
@@ -98,7 +98,10 @@ pub trait BuildShell {
                             );
 
                             HalfEdge::unjoined(core)
-                                .update_start_vertex(|_, _| vertex, core)
+                                .update_start_vertex(
+                                    |_, _| vertex.clone(),
+                                    core,
+                                )
                                 .update_curve(|_, _| curve.clone(), core)
                                 .insert(core)
                                 .set_geometry(
