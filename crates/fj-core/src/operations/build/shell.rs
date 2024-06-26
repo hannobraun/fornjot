@@ -4,7 +4,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeom},
+    geometry::{CurveBoundary, HalfEdgeGeom, LocalVertexGeom},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
         geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
@@ -82,33 +82,53 @@ pub trait BuildShell {
                     });
 
                 let half_edges = {
-                    let vertices = [a, b, c];
+                    let vertices = [[a, b], [b, c], [c, a]];
                     let [a, b, c] = [[0., 0.], [1., 0.], [0., 1.]];
                     vertices
                         .zip_ext([[a, b], [b, c], [c, a]])
                         .zip_ext(curves_and_boundaries)
-                        .map(|((vertex, positions), (curve, boundary))| {
-                            let boundary = boundary.reverse();
+                        .map(
+                            |(
+                                ([vertex, vertex_next], positions),
+                                (curve, boundary),
+                            )| {
+                                let boundary = boundary.reverse();
 
-                            let curve = curve.make_line_on_surface(
-                                positions,
-                                boundary,
-                                surface.clone(),
-                                &mut core.layers.geometry,
-                            );
-
-                            HalfEdge::unjoined(core)
-                                .update_start_vertex(
-                                    |_, _| vertex.clone(),
-                                    core,
-                                )
-                                .update_curve(|_, _| curve.clone(), core)
-                                .insert(core)
-                                .set_geometry(
-                                    HalfEdgeGeom { boundary },
+                                let curve = curve.make_line_on_surface(
+                                    positions,
+                                    boundary,
+                                    surface.clone(),
                                     &mut core.layers.geometry,
-                                )
-                        })
+                                );
+
+                                core.layers.geometry.define_vertex(
+                                    vertex.clone(),
+                                    curve.clone(),
+                                    LocalVertexGeom {
+                                        position: boundary.inner[0],
+                                    },
+                                );
+                                core.layers.geometry.define_vertex(
+                                    vertex_next.clone(),
+                                    curve.clone(),
+                                    LocalVertexGeom {
+                                        position: boundary.inner[1],
+                                    },
+                                );
+
+                                HalfEdge::unjoined(core)
+                                    .update_start_vertex(
+                                        |_, _| vertex.clone(),
+                                        core,
+                                    )
+                                    .update_curve(|_, _| curve.clone(), core)
+                                    .insert(core)
+                                    .set_geometry(
+                                        HalfEdgeGeom { boundary },
+                                        &mut core.layers.geometry,
+                                    )
+                            },
+                        )
                 };
 
                 Face::unbound(surface, core).update_region(
