@@ -2,12 +2,11 @@ use crate::{
     operations::{
         derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
     },
-    storage::Handle,
-    topology::{Cycle, HalfEdge, Surface},
+    topology::{Cycle, HalfEdge},
     Core,
 };
 
-use super::{Reverse, ReverseCurveCoordinateSystems};
+use super::Reverse;
 
 impl Reverse for Cycle {
     fn reverse(&self, core: &mut Core) -> Self {
@@ -29,24 +28,6 @@ impl Reverse for Cycle {
             .collect::<Vec<_>>();
 
         edges.reverse();
-
-        Cycle::new(edges)
-    }
-}
-
-impl ReverseCurveCoordinateSystems for (&Cycle, &Handle<Surface>) {
-    type Reversed = Cycle;
-
-    fn reverse_curve_coordinate_systems(
-        self,
-        core: &mut Core,
-    ) -> Self::Reversed {
-        let (cycle, surface) = self;
-
-        let edges = cycle
-            .half_edges()
-            .iter()
-            .map(|edge| (edge, surface).reverse_curve_coordinate_systems(core));
 
         Cycle::new(edges)
     }
