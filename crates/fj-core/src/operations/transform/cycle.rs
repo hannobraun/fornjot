@@ -20,9 +20,14 @@ impl TransformObject for (&Handle<Cycle>, &Handle<Surface>) {
     ) -> Self::Transformed {
         let (cycle, surface) = self;
 
-        let half_edges = cycle.half_edges().iter().map(|half_edge| {
-            (half_edge, surface).transform_with_cache(transform, core, cache)
-        });
+        let half_edges = cycle
+            .half_edges()
+            .iter()
+            .map(|half_edge| {
+                (half_edge, surface)
+                    .transform_with_cache(transform, core, cache)
+            })
+            .collect::<Vec<_>>();
 
         Cycle::new(half_edges).insert(core)
     }
