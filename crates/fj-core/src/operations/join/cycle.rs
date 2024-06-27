@@ -189,6 +189,64 @@ impl JoinCycle for Cycle {
                                 );
                             }
 
+                            // The same goes for vertices. We have to move over
+                            // any local definitions we have to the other
+                            // vertices.
+                            let vertex_geom_prev_end = core
+                                .layers
+                                .geometry
+                                .of_vertex(half_edge.start_vertex())
+                                .and_then(|vertex_geom| {
+                                    vertex_geom.local_on(
+                                        self.half_edges()
+                                            .before(half_edge)
+                                            .unwrap()
+                                            .curve(),
+                                    )
+                                })
+                                .cloned();
+                            let vertex_geom_start = core
+                                .layers
+                                .geometry
+                                .of_vertex(half_edge.start_vertex())
+                                .and_then(|vertex_geom| {
+                                    vertex_geom.local_on(half_edge.curve())
+                                })
+                                .cloned();
+                            let vertex_geom_end = core
+                                .layers
+                                .geometry
+                                .of_vertex(half_edge_next.start_vertex())
+                                .and_then(|vertex_geom| {
+                                    vertex_geom.local_on(half_edge.curve())
+                                })
+                                .cloned();
+                            if let Some(vertex_geom) = vertex_geom_prev_end {
+                                core.layers.geometry.define_vertex(
+                                    half_edge_other_next.start_vertex().clone(),
+                                    self.half_edges()
+                                        .before(half_edge)
+                                        .unwrap()
+                                        .curve()
+                                        .clone(),
+                                    vertex_geom,
+                                );
+                            }
+                            if let Some(vertex_geom_start) = vertex_geom_start {
+                                core.layers.geometry.define_vertex(
+                                    half_edge_other_next.start_vertex().clone(),
+                                    half_edge_other.curve().clone(),
+                                    vertex_geom_start,
+                                );
+                            }
+                            if let Some(vertex_geom_end) = vertex_geom_end {
+                                core.layers.geometry.define_vertex(
+                                    half_edge_other.start_vertex().clone(),
+                                    half_edge_other.curve().clone(),
+                                    vertex_geom_end,
+                                );
+                            }
+
                             [half_edge
                                 .update_curve(
                                     |_, _| half_edge_other.curve().clone(),
@@ -216,6 +274,24 @@ impl JoinCycle for Cycle {
                     .update_half_edge(
                         half_edge_next,
                         |half_edge, core| {
+                            // And we need to move over the geometry for this
+                            // vertex too.
+                            let vertex_geom = core
+                                .layers
+                                .geometry
+                                .of_vertex(half_edge_next.start_vertex())
+                                .and_then(|vertex_geom| {
+                                    vertex_geom.local_on(half_edge_next.curve())
+                                })
+                                .cloned();
+                            if let Some(vertex_geom) = vertex_geom {
+                                core.layers.geometry.define_vertex(
+                                    half_edge_other.start_vertex().clone(),
+                                    half_edge.curve().clone(),
+                                    vertex_geom,
+                                );
+                            }
+
                             [half_edge
                                 .update_start_vertex(
                                     |_, _| {
