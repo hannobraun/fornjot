@@ -142,6 +142,7 @@ fn check_cycle<'r>(
 mod tests {
 
     use crate::{
+        geometry::LocalVertexGeom,
         operations::{
             build::{BuildFace, BuildHalfEdge},
             update::{UpdateCycle, UpdateFace, UpdateRegion},
@@ -178,10 +179,44 @@ mod tests {
                         cycle.update_half_edge(
                             cycle.half_edges().first(),
                             |_, core| {
-                                let (half_edge, _) = HalfEdge::line_segment(
-                                    [[0., 0.], [2., 0.]],
-                                    surface,
-                                    core,
+                                let (half_edge, boundary) =
+                                    HalfEdge::line_segment(
+                                        [[0., 0.], [2., 0.]],
+                                        surface,
+                                        core,
+                                    );
+
+                                let half_edge_prev =
+                                    cycle.half_edges().nth(2).unwrap();
+                                let half_edge_next = cycle
+                                    .half_edges()
+                                    .nth(1)
+                                    .unwrap()
+                                    .start_vertex()
+                                    .clone();
+
+                                core.layers.geometry.define_vertex(
+                                    half_edge.start_vertex().clone(),
+                                    half_edge_prev.curve().clone(),
+                                    core.layers
+                                        .geometry
+                                        .of_vertex(
+                                            cycle
+                                                .half_edges()
+                                                .first()
+                                                .start_vertex(),
+                                        )
+                                        .unwrap()
+                                        .local_on(half_edge_prev.curve())
+                                        .unwrap()
+                                        .clone(),
+                                );
+                                core.layers.geometry.define_vertex(
+                                    half_edge_next,
+                                    half_edge.curve().clone(),
+                                    LocalVertexGeom {
+                                        position: boundary.inner[1],
+                                    },
                                 );
 
                                 [half_edge]
