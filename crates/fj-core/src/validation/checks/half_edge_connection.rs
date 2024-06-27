@@ -178,12 +178,13 @@ mod tests {
                         cycle.update_half_edge(
                             cycle.half_edges().first(),
                             |_, core| {
-                                [HalfEdge::line_segment(
+                                let (half_edge, _) = HalfEdge::line_segment(
                                     [[0., 0.], [2., 0.]],
                                     surface,
                                     core,
-                                )
-                                .0]
+                                );
+
+                                [half_edge]
                             },
                             core,
                         )
