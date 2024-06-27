@@ -154,12 +154,13 @@ impl JoinCycle for Cycle {
         range.zip(range_other).fold(
             self.clone(),
             |cycle, (index, index_other)| {
+                let half_edge = self.half_edges().nth_circular(index);
                 let half_edge_other =
                     other.half_edges().nth_circular(index_other);
 
                 cycle
                     .update_half_edge(
-                        self.half_edges().nth_circular(index),
+                        half_edge,
                         |half_edge, core| {
                             // The curve of the other half-edge we're joining
                             // this one to already has a curve geometry,
