@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, ops::Deref};
+use std::borrow::Borrow;
 
 use crate::{
     operations::{
@@ -10,7 +10,7 @@ use crate::{
     Core,
 };
 
-use super::{Reverse, ReverseCurveCoordinateSystems};
+use super::Reverse;
 
 impl Reverse for Face {
     fn reverse(&self, core: &mut Core) -> Self {
@@ -39,20 +39,5 @@ impl<const D: usize> Reverse for Polygon<D, IsInsertedYes> {
             .derive_from(&self.face, core);
 
         self.replace_face(face)
-    }
-}
-
-impl ReverseCurveCoordinateSystems for &Face {
-    type Reversed = Face;
-
-    fn reverse_curve_coordinate_systems(
-        self,
-        core: &mut Core,
-    ) -> Self::Reversed {
-        let region = (self.region().deref(), self.surface())
-            .reverse_curve_coordinate_systems(core)
-            .insert(core)
-            .derive_from(self.region(), core);
-        Face::new(self.surface().clone(), region)
     }
 }
