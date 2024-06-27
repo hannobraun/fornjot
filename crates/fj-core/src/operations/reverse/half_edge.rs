@@ -1,20 +1,22 @@
 use crate::{
     operations::{derive::DeriveFrom, insert::Insert},
     storage::Handle,
-    topology::{HalfEdge, Surface},
+    topology::{HalfEdge, Surface, Vertex},
     Core,
 };
 
 use super::ReverseCurveCoordinateSystems;
 
-impl ReverseCurveCoordinateSystems for (&Handle<HalfEdge>, &Handle<Surface>) {
+impl ReverseCurveCoordinateSystems
+    for (&Handle<HalfEdge>, &Handle<Vertex>, &Handle<Surface>)
+{
     type Reversed = Handle<HalfEdge>;
 
     fn reverse_curve_coordinate_systems(
         self,
         core: &mut Core,
     ) -> Self::Reversed {
-        let (half_edge, surface) = self;
+        let (half_edge, _end_vertex, surface) = self;
 
         let mut half_edge_geom = *core.layers.geometry.of_half_edge(half_edge);
         half_edge_geom.boundary = half_edge_geom.boundary.reverse();

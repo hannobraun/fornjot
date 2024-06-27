@@ -183,7 +183,14 @@ pub trait BuildShell {
                                 .update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        [(half_edge, bad.face.surface())
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(1)
+                                                .start_vertex(),
+                                            bad.face.surface(),
+                                        )
                                             .reverse_curve_coordinate_systems(
                                                 core,
                                             )]
@@ -204,111 +211,154 @@ pub trait BuildShell {
                 core,
             )
         };
-        let dac =
-            {
-                let dac = Face::triangle([d, a, c], core);
-                dac.update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(1),
-                                        |half_edge, core| {
-                                            [(half_edge, dac.face.surface())
-                                        .reverse_curve_coordinate_systems(core)]
-                                        },
-                                        core,
-                                    )
-                                    .join_to(
-                                        abc.face.region().exterior(),
-                                        1..=1,
-                                        2..=2,
-                                        dac.face.surface().clone(),
-                                        core,
-                                    )
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |half_edge, core| {
-                                            [(half_edge, dac.face.surface())
-                                        .reverse_curve_coordinate_systems(core)]
-                                        },
-                                        core,
-                                    )
-                                    .join_to(
-                                        bad.face.region().exterior(),
-                                        0..=0,
-                                        1..=1,
-                                        dac.face.surface().clone(),
-                                        core,
-                                    )
-                            },
-                            core,
-                        )
-                    },
-                    core,
-                )
-            };
-        let cbd =
-            {
-                let cbd = Face::triangle([c, b, d], core);
-                cbd.update_region(
-                    |region, core| {
-                        region.update_exterior(
-                            |cycle, core| {
-                                cycle
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(0),
-                                        |half_edge, core| {
-                                            [(half_edge, cbd.face.surface())
-                                        .reverse_curve_coordinate_systems(core)]
-                                        },
-                                        core,
-                                    )
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(1),
-                                        |half_edge, core| {
-                                            [(half_edge, cbd.face.surface())
-                                        .reverse_curve_coordinate_systems(core)]
-                                        },
-                                        core,
-                                    )
-                                    .update_half_edge(
-                                        cycle.half_edges().nth_circular(2),
-                                        |half_edge, core| {
-                                            [(half_edge, cbd.face.surface())
-                                        .reverse_curve_coordinate_systems(core)]
-                                        },
-                                        core,
-                                    )
-                                    .join_to(
-                                        abc.face.region().exterior(),
-                                        0..=0,
-                                        1..=1,
-                                        cbd.face.surface().clone(),
-                                        core,
-                                    )
-                                    .join_to(
-                                        bad.face.region().exterior(),
-                                        1..=1,
-                                        2..=2,
-                                        cbd.face.surface().clone(),
-                                        core,
-                                    )
-                                    .join_to(
-                                        dac.face.region().exterior(),
-                                        2..=2,
-                                        2..=2,
-                                        cbd.face.surface().clone(),
-                                        core,
-                                    )
-                            },
-                            core,
-                        )
-                    },
-                    core,
-                )
-            };
+        let dac = {
+            let dac = Face::triangle([d, a, c], core);
+            dac.update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |cycle, core| {
+                            cycle
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(1),
+                                    |half_edge, core| {
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(2)
+                                                .start_vertex(),
+                                            dac.face.surface(),
+                                        )
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
+                                    },
+                                    core,
+                                )
+                                .join_to(
+                                    abc.face.region().exterior(),
+                                    1..=1,
+                                    2..=2,
+                                    dac.face.surface().clone(),
+                                    core,
+                                )
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |half_edge, core| {
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(1)
+                                                .start_vertex(),
+                                            dac.face.surface(),
+                                        )
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
+                                    },
+                                    core,
+                                )
+                                .join_to(
+                                    bad.face.region().exterior(),
+                                    0..=0,
+                                    1..=1,
+                                    dac.face.surface().clone(),
+                                    core,
+                                )
+                        },
+                        core,
+                    )
+                },
+                core,
+            )
+        };
+        let cbd = {
+            let cbd = Face::triangle([c, b, d], core);
+            cbd.update_region(
+                |region, core| {
+                    region.update_exterior(
+                        |cycle, core| {
+                            cycle
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(0),
+                                    |half_edge, core| {
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(1)
+                                                .start_vertex(),
+                                            cbd.face.surface(),
+                                        )
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
+                                    },
+                                    core,
+                                )
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(1),
+                                    |half_edge, core| {
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(2)
+                                                .start_vertex(),
+                                            cbd.face.surface(),
+                                        )
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
+                                    },
+                                    core,
+                                )
+                                .update_half_edge(
+                                    cycle.half_edges().nth_circular(2),
+                                    |half_edge, core| {
+                                        [(
+                                            half_edge,
+                                            cycle
+                                                .half_edges()
+                                                .nth_circular(3)
+                                                .start_vertex(),
+                                            cbd.face.surface(),
+                                        )
+                                            .reverse_curve_coordinate_systems(
+                                                core,
+                                            )]
+                                    },
+                                    core,
+                                )
+                                .join_to(
+                                    abc.face.region().exterior(),
+                                    0..=0,
+                                    1..=1,
+                                    cbd.face.surface().clone(),
+                                    core,
+                                )
+                                .join_to(
+                                    bad.face.region().exterior(),
+                                    1..=1,
+                                    2..=2,
+                                    cbd.face.surface().clone(),
+                                    core,
+                                )
+                                .join_to(
+                                    dac.face.region().exterior(),
+                                    2..=2,
+                                    2..=2,
+                                    cbd.face.surface().clone(),
+                                    core,
+                                )
+                        },
+                        core,
+                    )
+                },
+                core,
+            )
+        };
 
         let triangles =
             [abc, bad, dac, cbd].map(|triangle| triangle.insert(core));
