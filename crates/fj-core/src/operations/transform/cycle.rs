@@ -22,8 +22,8 @@ impl TransformObject for (&Handle<Cycle>, &Handle<Surface>) {
 
         let half_edges = cycle
             .half_edges()
-            .iter()
-            .map(|half_edge| {
+            .pairs()
+            .map(|(half_edge, _)| {
                 (half_edge, surface)
                     .transform_with_cache(transform, core, cache)
             })
