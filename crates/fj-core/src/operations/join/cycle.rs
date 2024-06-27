@@ -154,7 +154,8 @@ impl JoinCycle for Cycle {
         range.zip(range_other).fold(
             self.clone(),
             |cycle, (index, index_other)| {
-                let edge_other = other.half_edges().nth_circular(index_other);
+                let half_edge_other =
+                    other.half_edges().nth_circular(index_other);
 
                 cycle
                     .update_half_edge(
@@ -178,7 +179,7 @@ impl JoinCycle for Cycle {
                                 });
                             if let Some(curve_geom) = curve_geom {
                                 core.layers.geometry.define_curve(
-                                    edge_other.curve().clone(),
+                                    half_edge_other.curve().clone(),
                                     surface_self.clone(),
                                     curve_geom.clone(),
                                 );
@@ -186,7 +187,7 @@ impl JoinCycle for Cycle {
 
                             [half_edge
                                 .update_curve(
-                                    |_, _| edge_other.curve().clone(),
+                                    |_, _| half_edge_other.curve().clone(),
                                     core,
                                 )
                                 .update_start_vertex(
@@ -215,7 +216,9 @@ impl JoinCycle for Cycle {
                         |half_edge, core| {
                             [half_edge
                                 .update_start_vertex(
-                                    |_, _| edge_other.start_vertex().clone(),
+                                    |_, _| {
+                                        half_edge_other.start_vertex().clone()
+                                    },
                                     core,
                                 )
                                 .insert(core)
