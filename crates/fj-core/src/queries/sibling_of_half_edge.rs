@@ -33,11 +33,9 @@ impl SiblingOfHalfEdge for Shell {
         &self,
         a: &Handle<HalfEdge>,
         b: &Handle<HalfEdge>,
-        geometry: &Geometry,
+        _: &Geometry,
     ) -> bool {
         let same_curve = a.curve().id() == b.curve().id();
-        let same_boundary = geometry.of_half_edge(a).boundary
-            == geometry.of_half_edge(b).boundary.reverse();
         let same_vertices = {
             let Some(a_vertices) = self.bounding_vertices_of_half_edge(a)
             else {
@@ -51,7 +49,7 @@ impl SiblingOfHalfEdge for Shell {
             a_vertices == b_vertices.reverse()
         };
 
-        same_curve && same_boundary && same_vertices
+        same_curve && same_vertices
     }
 
     fn get_sibling_of(
