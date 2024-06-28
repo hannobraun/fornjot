@@ -35,10 +35,7 @@ impl<T> ObjectSet<T> {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
 
-        // TASK: Inline.
-        let handles = handles.into_iter();
-
-        for handle in handles {
+        for handle in handles.into_iter() {
             if added.contains(&handle) {
                 panic!(
                     "Constructing `ObjectSet` with duplicate handle: {:?}",
