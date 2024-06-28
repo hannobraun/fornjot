@@ -121,6 +121,14 @@ impl<T> ObjectSet<T> {
         self.inner.iter().position(|h| h.id() == handle.id())
     }
 
+    /// Access the item before the provided one
+    ///
+    /// Returns `None`, if the provided item is not in this set.
+    pub fn before(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
+        self.index_of(handle)
+            .map(|index| self.nth_circular(index + self.len() - 1))
+    }
+
     /// Access the item after the provided one
     ///
     /// Returns `None`, if the provided item is not in this set.
