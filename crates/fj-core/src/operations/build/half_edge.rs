@@ -60,8 +60,10 @@ pub trait BuildHalfEdge {
 
         let path =
             SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
-        let boundary =
-            [arc.start_angle, arc.end_angle].map(|coord| Point::from([coord]));
+        let boundary = CurveBoundary {
+            inner: [arc.start_angle, arc.end_angle]
+                .map(|coord| Point::from([coord])),
+        };
 
         let half_edge = HalfEdge::unjoined(core).insert(core);
 
@@ -70,12 +72,9 @@ pub trait BuildHalfEdge {
             surface,
             LocalCurveGeom { path },
         );
-        core.layers.geometry.define_half_edge(
-            half_edge.clone(),
-            HalfEdgeGeom {
-                boundary: boundary.into(),
-            },
-        );
+        core.layers
+            .geometry
+            .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
         half_edge
     }
