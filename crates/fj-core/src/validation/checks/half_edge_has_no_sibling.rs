@@ -52,8 +52,7 @@ impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(object
-                                .are_siblings(half_edge, sibling, geometry));
+                            assert!(object.are_siblings(half_edge, sibling));
                         }
                         None => {
                             // If this half-edge has a sibling, we haven't seen

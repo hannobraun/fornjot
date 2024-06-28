@@ -117,7 +117,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 }
 
-                if object.are_siblings(half_edge_a, half_edge_b, geometry) {
+                if object.are_siblings(half_edge_a, half_edge_b) {
                     // If the half-edges are siblings, they are allowed to be
                     // coincident. Must be, in fact. There's another validation
                     // check that takes care of that.
