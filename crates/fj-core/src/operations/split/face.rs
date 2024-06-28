@@ -114,21 +114,19 @@ impl SplitFace for Shell {
                     .unwrap()
                     .path,
             );
+            let end = core.layers.geometry.of_half_edge(&d).start_position(
+                &core
+                    .layers
+                    .geometry
+                    .of_curve(d.curve())
+                    .unwrap()
+                    .local_on(face.surface())
+                    .unwrap()
+                    .path,
+            );
 
             let (half_edge, boundary) = HalfEdge::line_segment(
-                [
-                    start,
-                    core.layers.geometry.of_half_edge(&d).start_position(
-                        &core
-                            .layers
-                            .geometry
-                            .of_curve(d.curve())
-                            .unwrap()
-                            .local_on(face.surface())
-                            .unwrap()
-                            .path,
-                    ),
-                ],
+                [start, end],
                 face.surface().clone(),
                 core,
             );
