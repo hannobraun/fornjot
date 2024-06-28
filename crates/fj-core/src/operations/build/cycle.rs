@@ -87,16 +87,14 @@ pub trait BuildCycle {
 
         let angle = Scalar::TAU / 4.;
 
-        let half_edges =
-            [[a, b], [b, c], [c, d], [d, a]]
-                .into_iter()
-                .map(|[start, end]| {
-                    let (half_edge, _) =
-                        HalfEdge::arc(start, end, angle, surface.clone(), core);
-                    half_edge
-                });
+        let half_edges_and_boundaries = [[a, b], [b, c], [c, d], [d, a]]
+            .into_iter()
+            .map(|[start, end]| {
+                HalfEdge::arc(start, end, angle, surface.clone(), core)
+            })
+            .collect::<Vec<_>>();
 
-        Cycle::new(half_edges)
+        Self::from_half_edges_and_boundaries(half_edges_and_boundaries, core)
     }
 
     /// Build a polygon
