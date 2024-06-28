@@ -59,7 +59,9 @@ pub trait BuildCycle {
             [[a, b], [b, c], [c, d], [d, a]]
                 .into_iter()
                 .map(|[start, end]| {
-                    HalfEdge::arc(start, end, angle, surface.clone(), core)
+                    let (half_edge, _) =
+                        HalfEdge::arc(start, end, angle, surface.clone(), core);
+                    half_edge
                 });
 
         Cycle::new(half_edges)

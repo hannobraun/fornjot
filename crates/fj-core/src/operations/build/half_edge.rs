@@ -50,7 +50,7 @@ pub trait BuildHalfEdge {
         angle_rad: impl Into<Scalar>,
         surface: Handle<Surface>,
         core: &mut Core,
-    ) -> Handle<HalfEdge> {
+    ) -> (Handle<HalfEdge>, CurveBoundary<Point<1>>) {
         let angle_rad = angle_rad.into();
         if angle_rad <= -Scalar::TAU || angle_rad >= Scalar::TAU {
             panic!("arc angle must be in the range (-2pi, 2pi) radians");
@@ -76,7 +76,7 @@ pub trait BuildHalfEdge {
             .geometry
             .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
-        half_edge
+        (half_edge, boundary)
     }
 
     /// Create a line segment
