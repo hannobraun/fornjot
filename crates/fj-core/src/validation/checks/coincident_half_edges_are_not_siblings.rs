@@ -266,6 +266,37 @@ mod tests {
                                                 &mut core.layers.geometry,
                                             );
 
+                                        let start_vertex =
+                                            half_edge.start_vertex();
+                                        let end_vertex = cycle
+                                            .half_edges()
+                                            .after(half_edge)
+                                            .unwrap()
+                                            .start_vertex();
+
+                                        core.layers.geometry.define_vertex(
+                                            start_vertex.clone(),
+                                            curve.clone(),
+                                            core.layers
+                                                .geometry
+                                                .of_vertex(start_vertex)
+                                                .unwrap()
+                                                .local_on(half_edge.curve())
+                                                .unwrap()
+                                                .clone(),
+                                        );
+                                        core.layers.geometry.define_vertex(
+                                            end_vertex.clone(),
+                                            curve.clone(),
+                                            core.layers
+                                                .geometry
+                                                .of_vertex(end_vertex)
+                                                .unwrap()
+                                                .local_on(half_edge.curve())
+                                                .unwrap()
+                                                .clone(),
+                                        );
+
                                         [half_edge
                                             .update_curve(|_, _| curve, core)
                                             .insert(core)

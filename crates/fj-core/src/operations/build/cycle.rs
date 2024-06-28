@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 use itertools::Itertools;
 
 use crate::{
-    geometry::LocalVertexGeom,
+    geometry::{CurveBoundary, LocalVertexGeom},
     operations::build::BuildHalfEdge,
     storage::Handle,
     topology::{Cycle, HalfEdge, Surface},
@@ -18,6 +18,38 @@ pub trait BuildCycle {
     /// Build an empty cycle
     fn empty() -> Cycle {
         Cycle::new([])
+    }
+
+    /// # Build a cycle from half-edges and associated curve boundaries
+    fn from_half_edges_and_boundaries<I>(
+        half_edges_and_boundaries: I,
+        core: &mut Core,
+    ) -> Cycle
+    where
+        I: IntoIterator<Item = (Handle<HalfEdge>, CurveBoundary<Point<1>>)>,
+        I::IntoIter: Clone + ExactSizeIterator,
+    {
+        let half_edges = half_edges_and_boundaries
+            .into_iter()
+            .circular_tuple_windows()
+            .map(|((half_edge, boundary), (next_half_edge, _))| {
+                let [start, end] = boundary.inner;
+
+                core.layers.geometry.define_vertex(
+                    half_edge.start_vertex().clone(),
+                    half_edge.curve().clone(),
+                    LocalVertexGeom { position: start },
+                );
+                core.layers.geometry.define_vertex(
+                    next_half_edge.start_vertex().clone(),
+                    half_edge.curve().clone(),
+                    LocalVertexGeom { position: end },
+                );
+
+                half_edge
+            });
+
+        Cycle::new(half_edges)
     }
 
     /// # Build a circle
@@ -55,14 +87,14 @@ pub trait BuildCycle {
 
         let angle = Scalar::TAU / 4.;
 
-        let half_edges =
-            [[a, b], [b, c], [c, d], [d, a]]
-                .into_iter()
-                .map(|[start, end]| {
-                    HalfEdge::arc(start, end, angle, surface.clone(), core)
-                });
+        let half_edges_and_boundaries = [[a, b], [b, c], [c, d], [d, a]]
+            .into_iter()
+            .map(|[start, end]| {
+                HalfEdge::arc(start, end, angle, surface.clone(), core)
+            })
+            .collect::<Vec<_>>();
 
-        Cycle::new(half_edges)
+        Self::from_half_edges_and_boundaries(half_edges_and_boundaries, core)
     }
 
     /// Build a polygon
@@ -84,27 +116,8 @@ pub trait BuildCycle {
                 HalfEdge::line_segment([start, end], surface.clone(), core)
             })
             .collect::<Vec<_>>();
-        let half_edges = half_edges_and_boundaries
-            .into_iter()
-            .circular_tuple_windows()
-            .map(|((half_edge, boundary), (next_half_edge, _))| {
-                let [start, end] = boundary.inner;
 
-                core.layers.geometry.define_vertex(
-                    half_edge.start_vertex().clone(),
-                    half_edge.curve().clone(),
-                    LocalVertexGeom { position: start },
-                );
-                core.layers.geometry.define_vertex(
-                    next_half_edge.start_vertex().clone(),
-                    half_edge.curve().clone(),
-                    LocalVertexGeom { position: end },
-                );
-
-                half_edge
-            });
-
-        Cycle::new(half_edges)
+        Self::from_half_edges_and_boundaries(half_edges_and_boundaries, core)
     }
 }
 
