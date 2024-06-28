@@ -35,10 +35,7 @@ impl<T> ObjectSet<T> {
         let mut added = BTreeSet::new();
         let mut inner = Vec::new();
 
-        // TASK: Inline.
-        let handles = handles.into_iter();
-
-        for handle in handles {
+        for handle in handles.into_iter() {
             if added.contains(&handle) {
                 panic!(
                     "Constructing `ObjectSet` with duplicate handle: {:?}",
@@ -124,9 +121,17 @@ impl<T> ObjectSet<T> {
         self.inner.iter().position(|h| h.id() == handle.id())
     }
 
+    /// Access the item before the provided one
+    ///
+    /// Returns `None`, if the provided item is not in this set.
+    pub fn before(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
+        self.index_of(handle)
+            .map(|index| self.nth_circular(index + self.len() - 1))
+    }
+
     /// Access the item after the provided one
     ///
-    /// Returns `None`, if the provided item is not in this iterator.
+    /// Returns `None`, if the provided item is not in this set.
     pub fn after(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
         self.index_of(handle)
             .map(|index| self.nth_circular(index + 1))
