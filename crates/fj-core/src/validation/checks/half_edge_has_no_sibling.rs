@@ -27,7 +27,7 @@ pub struct HalfEdgeHasNoSibling {
 impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
     fn check<'r>(
         object: &'r Shell,
-        geometry: &'r Geometry,
+        _: &'r Geometry,
         _: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
         let mut unmatched_half_edges = BTreeMap::new();
@@ -36,15 +36,13 @@ impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
             for cycle in face.region().all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve = half_edge.curve().clone();
-                    let boundary = geometry.of_half_edge(half_edge).boundary;
                     let vertices =
                         cycle.bounding_vertices_of_half_edge(half_edge).expect(
                             "`half_edge` came from `cycle`, must exist there",
                         );
 
-                    let key = (curve.clone(), boundary, vertices.clone());
-                    let key_reversed =
-                        (curve, boundary.reverse(), vertices.reverse());
+                    let key = (curve.clone(), vertices.clone());
+                    let key_reversed = (curve, vertices.reverse());
 
                     match unmatched_half_edges.remove(&key_reversed) {
                         Some(sibling) => {
@@ -52,8 +50,7 @@ impl ValidationCheck<Shell> for HalfEdgeHasNoSibling {
                             // currently looking at. Let's make sure the logic
                             // we use here to determine that matches the
                             // "official" definition.
-                            assert!(object
-                                .are_siblings(half_edge, sibling, geometry));
+                            assert!(object.are_siblings(half_edge, sibling));
                         }
                         None => {
                             // If this half-edge has a sibling, we haven't seen

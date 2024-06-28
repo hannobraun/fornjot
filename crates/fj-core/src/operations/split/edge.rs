@@ -37,7 +37,7 @@ impl SplitEdge for Shell {
         let point = point.into();
 
         let sibling = self
-            .get_sibling_of(half_edge, &core.layers.geometry)
+            .get_sibling_of(half_edge)
             .expect("Expected half-edge and its sibling to be part of shell");
 
         let [half_edge_a, half_edge_b] = half_edge.split_half_edge(point, core);
