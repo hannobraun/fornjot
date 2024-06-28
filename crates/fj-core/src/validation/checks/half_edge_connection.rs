@@ -122,9 +122,18 @@ fn check_cycle<'r>(
             return None;
         };
 
-        let start_pos_of_second_half_edge = geometry
-            .of_half_edge(second)
-            .start_position(&local_curve_geometry.path);
+        let start_pos_of_second_half_edge = {
+            let point_curve = geometry
+                .of_vertex(second.start_vertex())
+                .unwrap()
+                .local_on(second.curve())
+                .unwrap()
+                .position;
+
+            local_curve_geometry
+                .path
+                .point_from_path_coords(point_curve)
+        };
 
         let distance_between_positions = (end_pos_of_first_half_edge
             - start_pos_of_second_half_edge)
