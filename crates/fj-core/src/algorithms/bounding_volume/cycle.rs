@@ -12,8 +12,8 @@ impl super::BoundingVolume<2> for (&Cycle, &Handle<Surface>) {
 
         let mut aabb: Option<Aabb<2>> = None;
 
-        for half_edge in cycle.half_edges() {
-            let new_aabb = (half_edge, surface)
+        for (half_edge, half_edge_next) in cycle.half_edges().pairs() {
+            let new_aabb = (half_edge, half_edge_next.start_vertex(), surface)
                 .aabb(geometry)
                 .expect("`HalfEdge` can always compute AABB");
             aabb = Some(aabb.map_or(new_aabb, |aabb| aabb.merged(&new_aabb)));
