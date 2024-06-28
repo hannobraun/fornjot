@@ -123,7 +123,7 @@ impl<T> ObjectSet<T> {
 
     /// Access the item after the provided one
     ///
-    /// Returns `None`, if the provided item is not in this iterator.
+    /// Returns `None`, if the provided item is not in this set.
     pub fn after(&self, handle: &Handle<T>) -> Option<&Handle<T>> {
         self.index_of(handle)
             .map(|index| self.nth_circular(index + 1))
