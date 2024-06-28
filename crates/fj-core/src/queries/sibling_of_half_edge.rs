@@ -1,5 +1,4 @@
 use crate::{
-    geometry::Geometry,
     storage::Handle,
     topology::{HalfEdge, Shell},
 };
@@ -19,7 +18,6 @@ pub trait SiblingOfHalfEdge {
     fn get_sibling_of(
         &self,
         half_edge: &Handle<HalfEdge>,
-        geometry: &Geometry,
     ) -> Option<Handle<HalfEdge>>;
 }
 
@@ -45,7 +43,6 @@ impl SiblingOfHalfEdge for Shell {
     fn get_sibling_of(
         &self,
         half_edge: &Handle<HalfEdge>,
-        _: &Geometry,
     ) -> Option<Handle<HalfEdge>> {
         for face in self.faces() {
             for cycle in face.region().all_cycles() {
