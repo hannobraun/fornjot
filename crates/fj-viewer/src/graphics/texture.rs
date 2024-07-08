@@ -2,7 +2,6 @@ use image::{GenericImageView, ImageError};
 
 #[derive(Debug)]
 pub struct Texture {
-    pub texture: wgpu::Texture,
     pub view: wgpu::TextureView,
     pub sampler: wgpu::Sampler,
 }
@@ -77,10 +76,6 @@ impl Texture {
             ..Default::default()
         });
 
-        Self {
-            texture,
-            view,
-            sampler,
-        }
+        Self { view, sampler }
     }
 }
