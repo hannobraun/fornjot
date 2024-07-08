@@ -212,6 +212,13 @@ mod tests {
                                         .clone(),
                                 );
                                 core.layers.geometry.define_vertex(
+                                    half_edge.start_vertex().clone(),
+                                    half_edge.curve().clone(),
+                                    LocalVertexGeom {
+                                        position: boundary.inner[0],
+                                    },
+                                );
+                                core.layers.geometry.define_vertex(
                                     half_edge_next,
                                     half_edge.curve().clone(),
                                     LocalVertexGeom {
