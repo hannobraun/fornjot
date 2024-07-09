@@ -1,6 +1,6 @@
 use fj_math::Point;
 
-use super::{CurveBoundary, SurfacePath};
+use super::CurveBoundary;
 
 /// The geometry of a half-edge
 #[derive(Copy, Clone, Debug)]
@@ -17,15 +17,5 @@ impl HalfEdgeGeom {
     ) -> Self {
         self.boundary = boundary.into();
         self
-    }
-
-    /// Compute the surface position where the half-edge starts
-    pub fn start_position(&self, path: &SurfacePath) -> Point<2> {
-        // Computing the surface position from the curve position is fine.
-        // `HalfEdge` "owns" its start position. There is no competing code that
-        // could compute the surface position from slightly different data.
-
-        let [start, _] = self.boundary.inner;
-        path.point_from_path_coords(start)
     }
 }
