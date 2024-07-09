@@ -1,6 +1,6 @@
 use crate::{
     storage::Handle,
-    topology::{HalfEdge, Shell},
+    topology::{Cycle, Face, HalfEdge, Shell},
 };
 
 use super::BoundingVerticesOfHalfEdge;
@@ -42,7 +42,11 @@ impl SiblingOfHalfEdge for Shell {
             for cycle in face.region().all_cycles() {
                 for h in cycle.half_edges() {
                     if self.are_siblings(half_edge, h) {
-                        return Some(Sibling { sibling: h.clone() });
+                        return Some(Sibling {
+                            sibling: h.clone(),
+                            cycle: cycle.clone(),
+                            face: face.clone(),
+                        });
                     }
                 }
             }
@@ -56,4 +60,10 @@ impl SiblingOfHalfEdge for Shell {
 pub struct Sibling {
     /// The sibling
     pub sibling: Handle<HalfEdge>,
+
+    /// The cycle in which the sibling was found
+    pub cycle: Handle<Cycle>,
+
+    /// The face in which the sibling was found
+    pub face: Handle<Face>,
 }
