@@ -43,7 +43,8 @@ impl SplitEdge for Shell {
         let [half_edge_a, half_edge_b] = half_edge.split_half_edge(point, core);
 
         let siblings = {
-            let [sibling_a, sibling_b] = sibling.split_half_edge(point, core);
+            let [sibling_a, sibling_b] =
+                sibling.sibling.split_half_edge(point, core);
             let sibling_b = sibling_b
                 .update_start_vertex(
                     |_, _| half_edge_b.start_vertex().clone(),
@@ -65,7 +66,7 @@ impl SplitEdge for Shell {
                 core,
             )
             .into_inner()
-            .replace_half_edge(&sibling, siblings.clone(), core)
+            .replace_half_edge(&sibling.sibling, siblings.clone(), core)
             .into_inner();
 
         (shell, [[half_edge_a, half_edge_b], siblings])

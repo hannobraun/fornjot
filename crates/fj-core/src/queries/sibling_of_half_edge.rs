@@ -15,10 +15,7 @@ pub trait SiblingOfHalfEdge {
     /// Returns `None`, if the provided half-edge is not part of the object this
     /// method is called on, or if the provided half-edge has no sibling within
     /// the object.
-    fn get_sibling_of(
-        &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> Option<Handle<HalfEdge>>;
+    fn get_sibling_of(&self, half_edge: &Handle<HalfEdge>) -> Option<Sibling>;
 }
 
 impl SiblingOfHalfEdge for Shell {
@@ -40,15 +37,12 @@ impl SiblingOfHalfEdge for Shell {
         same_curve && same_vertices
     }
 
-    fn get_sibling_of(
-        &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> Option<Handle<HalfEdge>> {
+    fn get_sibling_of(&self, half_edge: &Handle<HalfEdge>) -> Option<Sibling> {
         for face in self.faces() {
             for cycle in face.region().all_cycles() {
                 for h in cycle.half_edges() {
                     if self.are_siblings(half_edge, h) {
-                        return Some(h.clone());
+                        return Some(Sibling { sibling: h.clone() });
                     }
                 }
             }
@@ -56,4 +50,10 @@ impl SiblingOfHalfEdge for Shell {
 
         None
     }
+}
+
+/// The sibling of a half-edge, plus some extra information
+pub struct Sibling {
+    /// The sibling
+    pub sibling: Handle<HalfEdge>,
 }
