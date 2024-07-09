@@ -165,12 +165,10 @@ fn distances(
     ) -> Option<Point<3>> {
         let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
         let path_coords = start + (end - start) * percent;
-        // let path = geometry.of_half_edge(half_edge).path;
         let path = geometry
             .of_curve(half_edge.curve())?
             .local_on(surface)?
             .path;
-        // assert_eq!(path, path_from_curve);
         let surface_coords = path.point_from_path_coords(path_coords);
         Some(
             geometry
