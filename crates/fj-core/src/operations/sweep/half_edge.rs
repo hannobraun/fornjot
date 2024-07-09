@@ -59,7 +59,22 @@ impl SweepHalfEdge for Handle<HalfEdge> {
     ) -> SweptHalfEdge {
         let path = path.into();
 
-        let boundary = core.layers.geometry.of_half_edge(self).boundary.inner;
+        let boundary = [
+            core.layers
+                .geometry
+                .of_vertex(self.start_vertex())
+                .unwrap()
+                .local_on(self.curve())
+                .unwrap()
+                .position,
+            core.layers
+                .geometry
+                .of_vertex(&end_vertex)
+                .unwrap()
+                .local_on(self.curve())
+                .unwrap()
+                .position,
+        ];
         let curve_geom = core
             .layers
             .geometry
