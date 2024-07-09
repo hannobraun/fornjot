@@ -5,7 +5,7 @@ use crate::{
         geometry::UpdateHalfEdgeGeometry, insert::Insert,
         replace::ReplaceHalfEdge, split::SplitHalfEdge, update::UpdateHalfEdge,
     },
-    queries::SiblingOfHalfEdge,
+    queries::{CycleOfHalfEdge, SiblingOfHalfEdge},
     storage::Handle,
     topology::{HalfEdge, Shell},
     Core,
@@ -40,11 +40,14 @@ impl SplitEdge for Shell {
             .get_sibling_of(half_edge)
             .expect("Expected half-edge and its sibling to be part of shell");
 
-        let [half_edge_a, half_edge_b] = half_edge.split_half_edge(point, core);
+        let [half_edge_a, half_edge_b] = self
+            .find_cycle_of_half_edge(half_edge)
+            .expect("Expected half-edge to be part of shell")
+            .split_half_edge(half_edge, point, core);
 
         let siblings = {
             let [sibling_a, sibling_b] =
-                sibling.sibling.split_half_edge(point, core);
+                sibling.cycle.split_half_edge(&sibling.sibling, point, core);
             let sibling_b = sibling_b
                 .update_start_vertex(
                     |_, _| half_edge_b.start_vertex().clone(),
