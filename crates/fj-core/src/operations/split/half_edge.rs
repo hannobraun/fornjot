@@ -46,7 +46,27 @@ impl SplitHalfEdge for Cycle {
         let point = point.into();
 
         let geometry = *core.layers.geometry.of_half_edge(half_edge);
-        let [start, end] = geometry.boundary.inner;
+        let [start, end] = [
+            core.layers
+                .geometry
+                .of_vertex(half_edge.start_vertex())
+                .unwrap()
+                .local_on(half_edge.curve())
+                .unwrap()
+                .position,
+            core.layers
+                .geometry
+                .of_vertex(
+                    self.half_edges()
+                        .after(half_edge)
+                        .expect("Expected half-edge to be in cycle")
+                        .start_vertex(),
+                )
+                .unwrap()
+                .local_on(half_edge.curve())
+                .unwrap()
+                .position,
+        ];
 
         let a = HalfEdge::new(
             half_edge.curve().clone(),
