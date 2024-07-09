@@ -80,14 +80,20 @@ impl Cycle {
 
         for (a, b) in self.half_edges().pairs() {
             let [a, b] = [a, b].map(|half_edge| {
-                geometry.of_half_edge(half_edge).start_position(
-                    &geometry
-                        .of_curve(half_edge.curve())
-                        .unwrap()
-                        .local_on(surface)
-                        .unwrap()
-                        .path,
-                )
+                geometry
+                    .of_curve(half_edge.curve())
+                    .unwrap()
+                    .local_on(surface)
+                    .unwrap()
+                    .path
+                    .point_from_path_coords(
+                        geometry
+                            .of_vertex(half_edge.start_vertex())
+                            .unwrap()
+                            .local_on(half_edge.curve())
+                            .unwrap()
+                            .position,
+                    )
             });
 
             sum += (b.u - a.u) * (b.v + a.v);
