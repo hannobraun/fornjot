@@ -46,7 +46,6 @@ impl Cycle {
                 .next()
                 .expect("Invalid cycle: expected at least one edge");
 
-            let half_edge_geom = geometry.of_half_edge(first);
             let curve_geom = geometry
                 .of_curve(first.curve())
                 .unwrap()
@@ -54,7 +53,29 @@ impl Cycle {
                 .unwrap()
                 .clone();
 
-            let [a, b] = half_edge_geom.boundary.inner;
+            let [a, b] = [
+                curve_geom.path.point_from_path_coords(
+                    geometry
+                        .of_vertex(first.start_vertex())
+                        .unwrap()
+                        .local_on(first.curve())
+                        .unwrap()
+                        .position,
+                ),
+                curve_geom.path.point_from_path_coords(
+                    geometry
+                        .of_vertex(
+                            self.half_edges()
+                                .after(first)
+                                .expect("Just got half-edge from this cycle")
+                                .start_vertex(),
+                        )
+                        .unwrap()
+                        .local_on(first.curve())
+                        .unwrap()
+                        .position,
+                ),
+            ];
             let edge_direction_positive = a < b;
 
             let circle = match curve_geom.path {
