@@ -6,7 +6,7 @@ use crate::{
         derive::DeriveFrom, geometry::UpdateHalfEdgeGeometry, insert::Insert,
     },
     storage::Handle,
-    topology::{HalfEdge, Vertex},
+    topology::{Cycle, HalfEdge, Vertex},
     Core,
 };
 
@@ -30,18 +30,19 @@ pub trait SplitHalfEdge {
     #[must_use]
     fn split_half_edge(
         &self,
+        half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         core: &mut Core,
     ) -> [Handle<HalfEdge>; 2];
 }
 
-impl SplitHalfEdge for Handle<HalfEdge> {
+impl SplitHalfEdge for Cycle {
     fn split_half_edge(
         &self,
+        half_edge: &Handle<HalfEdge>,
         point: impl Into<Point<1>>,
         core: &mut Core,
     ) -> [Handle<HalfEdge>; 2] {
-        let half_edge = self;
         let point = point.into();
 
         let geometry = *core.layers.geometry.of_half_edge(half_edge);
