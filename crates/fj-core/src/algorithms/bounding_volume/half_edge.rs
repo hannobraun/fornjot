@@ -3,14 +3,15 @@ use fj_math::{Aabb, Vector};
 use crate::{
     geometry::{Geometry, SurfacePath},
     storage::Handle,
-    topology::{HalfEdge, Surface},
+    topology::{HalfEdge, Surface, Vertex},
 };
 
-impl super::BoundingVolume<2> for (&Handle<HalfEdge>, &Handle<Surface>) {
+impl super::BoundingVolume<2>
+    for (&Handle<HalfEdge>, &Handle<Vertex>, &Handle<Surface>)
+{
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<2>> {
-        let (half_edge, surface) = self;
+        let (half_edge, end_vertex, surface) = self;
 
-        let half_edge_geom = geometry.of_half_edge(half_edge);
         let path = geometry
             .of_curve(half_edge.curve())
             .unwrap()
@@ -32,9 +33,17 @@ impl super::BoundingVolume<2> for (&Handle<HalfEdge>, &Handle<Surface>) {
                 })
             }
             SurfacePath::Line(_) => {
-                let points = half_edge_geom.boundary.inner.map(|point_curve| {
-                    path.point_from_path_coords(point_curve)
-                });
+                let points =
+                    [half_edge.start_vertex(), end_vertex].map(|vertex| {
+                        let point_curve = geometry
+                            .of_vertex(vertex)
+                            .unwrap()
+                            .local_on(half_edge.curve())
+                            .unwrap()
+                            .position;
+
+                        path.point_from_path_coords(point_curve)
+                    });
 
                 Some(Aabb::<2>::from_points(points))
             }

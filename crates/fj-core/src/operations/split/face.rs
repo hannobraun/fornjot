@@ -104,29 +104,43 @@ impl SplitFace for Shell {
 
         // Build the edge that's going to divide the new faces.
         let dividing_half_edge_a_to_d = {
+            let start = core
+                .layers
+                .geometry
+                .of_curve(b.curve())
+                .unwrap()
+                .local_on(face.surface())
+                .unwrap()
+                .path
+                .point_from_path_coords(
+                    core.layers
+                        .geometry
+                        .of_vertex(b.start_vertex())
+                        .unwrap()
+                        .local_on(b.curve())
+                        .unwrap()
+                        .position,
+                );
+            let end = core
+                .layers
+                .geometry
+                .of_curve(d.curve())
+                .unwrap()
+                .local_on(face.surface())
+                .unwrap()
+                .path
+                .point_from_path_coords(
+                    core.layers
+                        .geometry
+                        .of_vertex(d.start_vertex())
+                        .unwrap()
+                        .local_on(d.curve())
+                        .unwrap()
+                        .position,
+                );
+
             let (half_edge, boundary) = HalfEdge::line_segment(
-                [
-                    core.layers.geometry.of_half_edge(&b).start_position(
-                        &core
-                            .layers
-                            .geometry
-                            .of_curve(b.curve())
-                            .unwrap()
-                            .local_on(face.surface())
-                            .unwrap()
-                            .path,
-                    ),
-                    core.layers.geometry.of_half_edge(&d).start_position(
-                        &core
-                            .layers
-                            .geometry
-                            .of_curve(d.curve())
-                            .unwrap()
-                            .local_on(face.surface())
-                            .unwrap()
-                            .path,
-                    ),
-                ],
+                [start, end],
                 face.surface().clone(),
                 core,
             );

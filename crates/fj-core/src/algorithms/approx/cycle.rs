@@ -5,7 +5,7 @@
 use fj_math::Segment;
 
 use crate::{
-    geometry::Geometry,
+    geometry::{CurveBoundary, Geometry},
     storage::Handle,
     topology::{Cycle, Surface},
 };
@@ -28,9 +28,24 @@ pub fn approx_cycle(
 
     let half_edges = cycle
         .half_edges()
-        .iter()
-        .map(|half_edge| {
-            let boundary = geometry.of_half_edge(half_edge).boundary;
+        .pairs()
+        .map(|(half_edge, next_half_edge)| {
+            let boundary = CurveBoundary {
+                inner: [
+                    geometry
+                        .of_vertex(half_edge.start_vertex())
+                        .unwrap()
+                        .local_on(half_edge.curve())
+                        .unwrap()
+                        .position,
+                    geometry
+                        .of_vertex(next_half_edge.start_vertex())
+                        .unwrap()
+                        .local_on(half_edge.curve())
+                        .unwrap()
+                        .position,
+                ],
+            };
             let [start_position_curve, _] = boundary.inner;
 
             let start = approx_vertex(

@@ -5,7 +5,8 @@ use fj_math::{Point, Scalar};
 use crate::{
     geometry::{CurveBoundary, Geometry},
     queries::{
-        AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, SiblingOfHalfEdge,
+        AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
+        SiblingOfHalfEdge,
     },
     storage::Handle,
     topology::{Curve, HalfEdge, Shell, Surface, Vertex},
@@ -109,8 +110,22 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
 
                 let Some(mut distances) = distances(
                     half_edge_a.clone(),
+                    object
+                        .find_cycle_of_half_edge(half_edge_a)
+                        .unwrap()
+                        .half_edges()
+                        .after(half_edge_a)
+                        .unwrap()
+                        .start_vertex(),
                     surface_a,
                     half_edge_b.clone(),
+                    object
+                        .find_cycle_of_half_edge(half_edge_b)
+                        .unwrap()
+                        .half_edges()
+                        .after(half_edge_b)
+                        .unwrap()
+                        .start_vertex(),
                     surface_b,
                     geometry,
                 ) else {
@@ -152,25 +167,39 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
     half_edge_a: Handle<HalfEdge>,
+    end_vertex_a: &Handle<Vertex>,
     surface_a: &Handle<Surface>,
     half_edge_b: Handle<HalfEdge>,
+    end_vertex_b: &Handle<Vertex>,
     surface_b: &Handle<Surface>,
     geometry: &Geometry,
 ) -> Option<impl Iterator<Item = Scalar>> {
     fn sample(
         percent: f64,
         half_edge: &Handle<HalfEdge>,
+        end_vertex: &Handle<Vertex>,
         surface: &Handle<Surface>,
         geometry: &Geometry,
     ) -> Option<Point<3>> {
-        let [start, end] = geometry.of_half_edge(half_edge).boundary.inner;
+        let [start, end] = [
+            geometry
+                .of_vertex(half_edge.start_vertex())
+                .unwrap()
+                .local_on(half_edge.curve())
+                .unwrap()
+                .position,
+            geometry
+                .of_vertex(end_vertex)
+                .unwrap()
+                .local_on(half_edge.curve())
+                .unwrap()
+                .position,
+        ];
         let path_coords = start + (end - start) * percent;
-        // let path = geometry.of_half_edge(half_edge).path;
         let path = geometry
             .of_curve(half_edge.curve())?
             .local_on(surface)?
             .path;
-        // assert_eq!(path, path_from_curve);
         let surface_coords = path.point_from_path_coords(path_coords);
         Some(
             geometry
@@ -188,8 +217,15 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 = sample(percent, &half_edge_a, surface_a, geometry)?;
-        let sample2 = sample(1.0 - percent, &half_edge_b, surface_b, geometry)?;
+        let sample1 =
+            sample(percent, &half_edge_a, end_vertex_a, surface_a, geometry)?;
+        let sample2 = sample(
+            1.0 - percent,
+            &half_edge_b,
+            end_vertex_b,
+            surface_b,
+            geometry,
+        )?;
         distances.push(sample1.distance_to(&sample2))
     }
     Some(distances.into_iter())

@@ -99,7 +99,12 @@ fn check_cycle<'r>(
 ) -> impl Iterator<Item = AdjacentHalfEdgesNotConnected> + 'r {
     cycle.half_edges().pairs().filter_map(|(first, second)| {
         let end_pos_of_first_half_edge = {
-            let [_, end] = geometry.of_half_edge(first).boundary.inner;
+            let end = geometry
+                .of_vertex(second.start_vertex())
+                .unwrap()
+                .local_on(first.curve())
+                .unwrap()
+                .position;
             geometry
                 .of_curve(first.curve())
                 .unwrap()
@@ -117,9 +122,18 @@ fn check_cycle<'r>(
             return None;
         };
 
-        let start_pos_of_second_half_edge = geometry
-            .of_half_edge(second)
-            .start_position(&local_curve_geometry.path);
+        let start_pos_of_second_half_edge = {
+            let point_curve = geometry
+                .of_vertex(second.start_vertex())
+                .unwrap()
+                .local_on(second.curve())
+                .unwrap()
+                .position;
+
+            local_curve_geometry
+                .path
+                .point_from_path_coords(point_curve)
+        };
 
         let distance_between_positions = (end_pos_of_first_half_edge
             - start_pos_of_second_half_edge)

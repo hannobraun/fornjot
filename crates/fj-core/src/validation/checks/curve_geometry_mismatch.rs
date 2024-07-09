@@ -3,7 +3,7 @@ use itertools::Itertools;
 
 use crate::{
     geometry::Geometry,
-    queries::AllHalfEdgesWithSurface,
+    queries::{AllHalfEdgesWithSurface, CycleOfHalfEdge},
     storage::Handle,
     topology::{HalfEdge, Shell},
     validation::{ValidationCheck, ValidationConfig},
@@ -130,8 +130,28 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                     // we have right now are circles, 3 would be enough to check
                     // for coincidence. But the first and last might be
                     // identical, so let's add an extra one.
-                    let [a, d] =
-                        geometry.of_half_edge(&half_edge_a).boundary.inner;
+                    let [a, d] = [
+                        geometry
+                            .of_vertex(half_edge_a.start_vertex())
+                            .unwrap()
+                            .local_on(half_edge_a.curve())
+                            .unwrap()
+                            .position,
+                        geometry
+                            .of_vertex(
+                                object
+                                    .find_cycle_of_half_edge(&half_edge_a)
+                                    .unwrap()
+                                    .half_edges()
+                                    .after(&half_edge_a)
+                                    .unwrap()
+                                    .start_vertex(),
+                            )
+                            .unwrap()
+                            .local_on(half_edge_a.curve())
+                            .unwrap()
+                            .position,
+                    ];
                     let b = a + (d - a) * 1. / 3.;
                     let c = a + (d - a) * 2. / 3.;
 
