@@ -11,10 +11,12 @@
 
 mod all_half_edges_with_surface;
 mod bounding_vertices_of_half_edge;
+mod cycle_of_half_edge;
 mod sibling_of_half_edge;
 
 pub use self::{
     all_half_edges_with_surface::AllHalfEdgesWithSurface,
     bounding_vertices_of_half_edge::BoundingVerticesOfHalfEdge,
+    cycle_of_half_edge::CycleOfHalfEdge,
     sibling_of_half_edge::{Sibling, SiblingOfHalfEdge},
 };
