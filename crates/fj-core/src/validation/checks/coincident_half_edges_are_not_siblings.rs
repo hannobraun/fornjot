@@ -14,14 +14,11 @@ use crate::{
 
 /// A [`Shell`] contains two [`HalfEdge`]s that are coincident but not siblings
 ///
-/// Coincident half-edges must reference the same curve, and have the same
-/// boundaries on that curve. This provides clear, topological information,
-/// which is important to handle the shell geometry in a robust way.
+/// Coincident half-edges must reference the same curve, and must have opposite
+/// start and end vertices (i.e. the start vertex of one must be the end vertex
+/// of the other, respectively).
 #[derive(Clone, Debug, thiserror::Error)]
 pub struct CoincidentHalfEdgesAreNotSiblings {
-    /// The boundaries of the half-edges
-    pub boundaries: [CurveBoundary<Point<1>>; 2],
-
     /// The curves of the half-edges
     pub curves: [Handle<Curve>; 2],
 
@@ -42,20 +39,6 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             "`Shell` contains `HalfEdge`s that are coincident but are not \
             siblings",
         )?;
-
-        {
-            let [a, b] = &self.boundaries;
-
-            if a != &b.reverse() {
-                writeln!(
-                    f,
-                    "Boundaries don't match.\n\
-                    \tHalf-edge 1 has boundary `{a:?}`\n\
-                    \tHalf-edge 2 has boundary `{b:?}`\n\
-                    \t(expecting same boundary, but reversed)"
-                )?;
-            }
-        }
 
         {
             let [a, b] = &self.curves;
@@ -139,10 +122,6 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                 // If all points on distinct curves are within
                 // `distinct_min_distance`, that's a problem.
                 if distances.all(|d| d < config.distinct_min_distance) {
-                    let boundaries =
-                        [half_edge_a, half_edge_b].map(|half_edge| {
-                            geometry.of_half_edge(half_edge).boundary
-                        });
                     let curves = [half_edge_a, half_edge_b]
                         .map(|half_edge| half_edge.curve().clone());
                     let vertices =
@@ -155,7 +134,6 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                         });
 
                     errors.push(CoincidentHalfEdgesAreNotSiblings {
-                        boundaries,
                         curves,
                         vertices,
                         half_edge_a: half_edge_a.clone(),
