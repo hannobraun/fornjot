@@ -117,9 +117,14 @@ impl SolidValidationError {
 
                 Some((
                     geometry.of_surface(s).point_from_surface_coords(
-                        geometry
-                            .of_half_edge(&h)
-                            .start_position(&local_curve_geometry.path),
+                        local_curve_geometry.path.point_from_path_coords(
+                            geometry
+                                .of_vertex(h.start_vertex())
+                                .unwrap()
+                                .local_on(h.curve())
+                                .unwrap()
+                                .position,
+                        ),
                     ),
                     h.start_vertex().clone(),
                 ))
