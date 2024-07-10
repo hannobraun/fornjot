@@ -80,14 +80,6 @@ impl Geometry {
             .insert(surface, geometry);
     }
 
-    pub(crate) fn define_half_edge_inner(
-        &mut self,
-        half_edge: Handle<HalfEdge>,
-        geometry: HalfEdgeGeom,
-    ) {
-        self.half_edge.insert(half_edge, geometry);
-    }
-
     pub(crate) fn define_surface_inner(
         &mut self,
         surface: Handle<Surface>,
