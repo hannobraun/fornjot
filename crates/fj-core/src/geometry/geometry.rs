@@ -4,18 +4,17 @@ use fj_math::Vector;
 
 use crate::{
     storage::Handle,
-    topology::{Curve, HalfEdge, Surface, Topology, Vertex},
+    topology::{Curve, Surface, Topology, Vertex},
 };
 
 use super::{
-    vertex::LocalVertexGeom, CurveGeom, GlobalPath, HalfEdgeGeom,
-    LocalCurveGeom, SurfaceGeom, VertexGeom,
+    vertex::LocalVertexGeom, CurveGeom, GlobalPath, LocalCurveGeom,
+    SurfaceGeom, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
-    half_edge: BTreeMap<Handle<HalfEdge>, HalfEdgeGeom>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
@@ -31,7 +30,6 @@ impl Geometry {
     pub fn new(topology: &Topology) -> Self {
         let mut self_ = Self {
             curve: BTreeMap::new(),
-            half_edge: BTreeMap::new(),
             surface: BTreeMap::new(),
             vertex: BTreeMap::new(),
 
@@ -116,18 +114,6 @@ impl Geometry {
     /// # Access the geometry of the provided curve
     pub fn of_curve(&self, curve: &Handle<Curve>) -> Option<&CurveGeom> {
         self.curve.get(curve)
-    }
-
-    /// # Access the geometry of the provided half-edge
-    ///
-    /// ## Panics
-    ///
-    /// Panics, if the geometry of the half-edge is not defined.
-    pub fn of_half_edge(
-        &self,
-        half_edge: &Handle<HalfEdge>,
-    ) -> Option<&HalfEdgeGeom> {
-        self.half_edge.get(half_edge)
     }
 
     /// # Access the geometry of the provided surface
