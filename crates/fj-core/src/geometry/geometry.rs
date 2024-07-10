@@ -131,10 +131,11 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the half-edge is not defined.
-    pub fn of_half_edge(&self, half_edge: &Handle<HalfEdge>) -> &HalfEdgeGeom {
-        self.half_edge
-            .get(half_edge)
-            .expect("Expected geometry of half-edge to be defined")
+    pub fn of_half_edge(
+        &self,
+        half_edge: &Handle<HalfEdge>,
+    ) -> Option<&HalfEdgeGeom> {
+        self.half_edge.get(half_edge)
     }
 
     /// # Access the geometry of the provided surface

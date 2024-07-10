@@ -265,7 +265,8 @@ impl JoinCycle for Cycle {
                                     *core
                                         .layers
                                         .geometry
-                                        .of_half_edge(half_edge),
+                                        .of_half_edge(half_edge)
+                                        .unwrap(),
                                     &mut core.layers.geometry,
                                 )]
                         },
@@ -304,7 +305,8 @@ impl JoinCycle for Cycle {
                                     *core
                                         .layers
                                         .geometry
-                                        .of_half_edge(half_edge),
+                                        .of_half_edge(half_edge)
+                                        .unwrap(),
                                     &mut core.layers.geometry,
                                 )]
                         },

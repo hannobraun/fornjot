@@ -45,7 +45,7 @@ impl SplitHalfEdge for Cycle {
     ) -> [Handle<HalfEdge>; 2] {
         let point = point.into();
 
-        let geometry = *core.layers.geometry.of_half_edge(half_edge);
+        let geometry = *core.layers.geometry.of_half_edge(half_edge).unwrap();
         let [start, end] = [
             core.layers
                 .geometry

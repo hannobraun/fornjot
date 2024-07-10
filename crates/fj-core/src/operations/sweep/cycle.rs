@@ -82,7 +82,7 @@ impl SweepCycle for Cycle {
             top_half_edges.push((
                 swept_half_edge.top_half_edge,
                 swept_half_edge.top_boundary,
-                *core.layers.geometry.of_half_edge(bottom_half_edge),
+                *core.layers.geometry.of_half_edge(bottom_half_edge).unwrap(),
                 core.layers
                     .geometry
                     .of_curve(bottom_half_edge.curve())

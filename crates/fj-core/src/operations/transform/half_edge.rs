@@ -32,7 +32,7 @@ impl TransformObject for (&Handle<HalfEdge>, &Handle<Surface>) {
 
         core.layers.geometry.define_half_edge(
             transformed_half_edge.clone(),
-            *core.layers.geometry.of_half_edge(half_edge),
+            *core.layers.geometry.of_half_edge(half_edge).unwrap(),
         );
 
         transformed_half_edge

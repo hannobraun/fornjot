@@ -15,7 +15,7 @@ impl Reverse for Cycle {
             .pairs()
             .map(|(current, next)| {
                 let mut half_edge_geom =
-                    *core.layers.geometry.of_half_edge(current);
+                    *core.layers.geometry.of_half_edge(current).unwrap();
                 half_edge_geom.boundary = half_edge_geom.boundary.reverse();
 
                 HalfEdge::new(

@@ -164,7 +164,7 @@ impl SplitFace for Shell {
                 .update_start_vertex(|_, _| b.start_vertex().clone(), core)
                 .insert(core)
                 .set_geometry(
-                    *core.layers.geometry.of_half_edge(&half_edge),
+                    *core.layers.geometry.of_half_edge(&half_edge).unwrap(),
                     &mut core.layers.geometry,
                 )
         };
