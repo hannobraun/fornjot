@@ -30,10 +30,14 @@ impl TransformObject for (&Handle<HalfEdge>, &Handle<Surface>) {
         let transformed_half_edge =
             HalfEdge::new(curve, start_vertex).insert(core);
 
-        core.layers.geometry.define_half_edge(
-            transformed_half_edge.clone(),
-            *core.layers.geometry.of_half_edge(half_edge).unwrap(),
-        );
+        if let Some(half_edge_geom) =
+            core.layers.geometry.of_half_edge(half_edge)
+        {
+            core.layers.geometry.define_half_edge(
+                transformed_half_edge.clone(),
+                *half_edge_geom,
+            );
+        }
 
         transformed_half_edge
     }
