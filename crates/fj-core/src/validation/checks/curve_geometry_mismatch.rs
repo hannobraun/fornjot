@@ -5,7 +5,7 @@ use crate::{
     geometry::Geometry,
     queries::{AllHalfEdgesWithSurface, CycleOfHalfEdge},
     storage::Handle,
-    topology::{HalfEdge, Shell},
+    topology::{Curve, Shell},
     validation::{ValidationCheck, ValidationConfig},
 };
 
@@ -38,11 +38,8 @@ use crate::{
 #[derive(Clone, Debug, thiserror::Error)]
 #[error("Curve coordinate system mismatch: {:#?}", self)]
 pub struct CurveGeometryMismatch {
-    /// One of the half-edges, whose curves have mismatching geometry
-    pub half_edge_a: Handle<HalfEdge>,
-
-    /// The other of the half-edges, whose curves have mismatching geometry
-    pub half_edge_b: Handle<HalfEdge>,
+    /// The curve for which mismatching geometry has been defined
+    pub curve: Handle<Curve>,
 
     /// The point on the curves, where they don't match
     pub point_curve: Point<1>,
@@ -174,8 +171,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
 
                         if distance > config.identical_max_distance {
                             errors.push(Self {
-                                half_edge_a: half_edge_a.clone(),
-                                half_edge_b: half_edge_b.clone(),
+                                curve: half_edge_a.curve().clone(),
                                 point_curve,
                                 point_a: a_global,
                                 point_b: b_global,
