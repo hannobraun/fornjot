@@ -2,10 +2,10 @@ use fj_interop::{ext::ArrayExt, Color};
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeom, LocalVertexGeom},
+    geometry::{CurveBoundary, LocalVertexGeom},
     operations::{
         build::{BuildCycle, BuildHalfEdge},
-        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
+        geometry::UpdateCurveGeometry,
         insert::Insert,
         presentation::SetColor,
         update::{UpdateCycle, UpdateHalfEdge},
@@ -184,11 +184,7 @@ impl SweepHalfEdge for Handle<HalfEdge> {
                     let half_edge = HalfEdge::unjoined(core)
                         .update_start_vertex(|_, _| start_vertex, core)
                         .update_curve(|_, _| curve.clone(), core)
-                        .insert(core)
-                        .set_geometry(
-                            HalfEdgeGeom { boundary },
-                            &mut core.layers.geometry,
-                        );
+                        .insert(core);
 
                     exterior =
                         exterior.add_half_edges([half_edge.clone()], core);

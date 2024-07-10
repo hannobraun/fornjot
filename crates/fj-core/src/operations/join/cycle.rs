@@ -6,7 +6,6 @@ use crate::{
     geometry::LocalCurveGeom,
     operations::{
         build::BuildHalfEdge,
-        geometry::UpdateHalfEdgeGeometry,
         insert::Insert,
         update::{UpdateCycle, UpdateHalfEdge},
     },
@@ -247,15 +246,7 @@ impl JoinCycle for Cycle {
                                     },
                                     core,
                                 )
-                                .insert(core)
-                                .set_geometry(
-                                    *core
-                                        .layers
-                                        .geometry
-                                        .of_half_edge(half_edge)
-                                        .unwrap(),
-                                    &mut core.layers.geometry,
-                                )]
+                                .insert(core)]
                         },
                         core,
                     )
@@ -287,15 +278,7 @@ impl JoinCycle for Cycle {
                                     },
                                     core,
                                 )
-                                .insert(core)
-                                .set_geometry(
-                                    *core
-                                        .layers
-                                        .geometry
-                                        .of_half_edge(half_edge)
-                                        .unwrap(),
-                                    &mut core.layers.geometry,
-                                )]
+                                .insert(core)]
                         },
                         core,
                     )

@@ -27,18 +27,6 @@ impl TransformObject for (&Handle<HalfEdge>, &Handle<Surface>) {
             .clone()
             .transform_with_cache(transform, core, cache);
 
-        let transformed_half_edge =
-            HalfEdge::new(curve, start_vertex).insert(core);
-
-        if let Some(half_edge_geom) =
-            core.layers.geometry.of_half_edge(half_edge)
-        {
-            core.layers.geometry.define_half_edge(
-                transformed_half_edge.clone(),
-                *half_edge_geom,
-            );
-        }
-
-        transformed_half_edge
+        HalfEdge::new(curve, start_vertex).insert(core)
     }
 }
