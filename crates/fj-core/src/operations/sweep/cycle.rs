@@ -82,7 +82,6 @@ impl SweepCycle for Cycle {
             top_half_edges.push((
                 swept_half_edge.top_half_edge,
                 swept_half_edge.top_boundary,
-                *core.layers.geometry.of_half_edge(bottom_half_edge).unwrap(),
                 core.layers
                     .geometry
                     .of_curve(bottom_half_edge.curve())
@@ -98,8 +97,8 @@ impl SweepCycle for Cycle {
             .circular_tuple_windows()
             .map(
                 |(
-                    (half_edge, boundary, _, curve_geom),
-                    (next_half_edge, _, _, _),
+                    (half_edge, boundary, curve_geom),
+                    (next_half_edge, _, _),
                 )| {
                     let [start, end] = boundary.inner;
 
