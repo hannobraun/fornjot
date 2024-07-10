@@ -35,9 +35,6 @@ impl ReverseCurveCoordinateSystems
             .unwrap()
             .clone();
 
-        let mut half_edge_geom = *core.layers.geometry.of_half_edge(half_edge);
-        half_edge_geom.boundary = half_edge_geom.boundary.reverse();
-
         let curve =
             (half_edge.curve(), surface).reverse_curve_coordinate_systems(core);
 
@@ -55,10 +52,6 @@ impl ReverseCurveCoordinateSystems
             half_edge.curve().clone(),
             vertex_geom_start,
         );
-
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), half_edge_geom);
 
         half_edge
     }

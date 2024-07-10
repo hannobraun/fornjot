@@ -236,7 +236,7 @@ mod tests {
     use crate::{
         operations::{
             build::BuildShell,
-            geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
+            geometry::UpdateCurveGeometry,
             insert::Insert,
             update::{
                 UpdateCycle, UpdateFace, UpdateHalfEdge, UpdateRegion,
@@ -313,14 +313,7 @@ mod tests {
 
                                         [half_edge
                                             .update_curve(|_, _| curve, core)
-                                            .insert(core)
-                                            .set_geometry(
-                                                *core
-                                                    .layers
-                                                    .geometry
-                                                    .of_half_edge(half_edge),
-                                                &mut core.layers.geometry,
-                                            )]
+                                            .insert(core)]
                                     },
                                     core,
                                 )

@@ -1,11 +1,8 @@
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeom, LocalCurveGeom, SurfacePath},
-    operations::{
-        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
-        insert::Insert,
-    },
+    geometry::{CurveBoundary, LocalCurveGeom, SurfacePath},
+    operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, HalfEdge, Surface, Vertex},
     Core,
@@ -31,12 +28,7 @@ pub trait BuildHalfEdge {
         start_vertex: Handle<Vertex>,
         core: &mut Core,
     ) -> Handle<HalfEdge> {
-        let mut geometry = *core.layers.geometry.of_half_edge(sibling);
-        geometry.boundary = geometry.boundary.reverse();
-
-        HalfEdge::new(sibling.curve().clone(), start_vertex)
-            .insert(core)
-            .set_geometry(geometry, &mut core.layers.geometry)
+        HalfEdge::new(sibling.curve().clone(), start_vertex).insert(core)
     }
 
     /// Create an arc
@@ -72,9 +64,6 @@ pub trait BuildHalfEdge {
             surface,
             LocalCurveGeom { path },
         );
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
         (half_edge, boundary)
     }
@@ -95,10 +84,6 @@ pub trait BuildHalfEdge {
             surface.clone(),
             &mut core.layers.geometry,
         );
-
-        core.layers
-            .geometry
-            .define_half_edge(half_edge.clone(), HalfEdgeGeom { boundary });
 
         (half_edge, boundary)
     }

@@ -192,7 +192,6 @@ mod tests {
     use crate::{
         operations::{
             build::BuildShell,
-            geometry::UpdateHalfEdgeGeometry,
             insert::Insert,
             update::{UpdateCycle, UpdateFace, UpdateRegion, UpdateShell},
         },
@@ -224,13 +223,6 @@ mod tests {
                                 cycle.update_half_edge(
                                     cycle.half_edges().nth_circular(0),
                                     |half_edge, core| {
-                                        let mut half_edge_geom = *core
-                                            .layers
-                                            .geometry
-                                            .of_half_edge(half_edge);
-                                        half_edge_geom.boundary =
-                                            half_edge_geom.boundary.reverse();
-
                                         let mut curve_geom = core
                                             .layers
                                             .geometry
@@ -246,11 +238,7 @@ mod tests {
                                             half_edge.curve().clone(),
                                             half_edge.start_vertex().clone(),
                                         )
-                                        .insert(core)
-                                        .set_geometry(
-                                            half_edge_geom,
-                                            &mut core.layers.geometry,
-                                        );
+                                        .insert(core);
 
                                         core.layers.geometry.define_curve(
                                             half_edge.curve().clone(),

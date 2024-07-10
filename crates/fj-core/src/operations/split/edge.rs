@@ -2,8 +2,8 @@ use fj_math::Point;
 
 use crate::{
     operations::{
-        geometry::UpdateHalfEdgeGeometry, insert::Insert,
-        replace::ReplaceHalfEdge, split::SplitHalfEdge, update::UpdateHalfEdge,
+        insert::Insert, replace::ReplaceHalfEdge, split::SplitHalfEdge,
+        update::UpdateHalfEdge,
     },
     queries::{CycleOfHalfEdge, SiblingOfHalfEdge},
     storage::Handle,
@@ -53,11 +53,7 @@ impl SplitEdge for Shell {
                     |_, _| half_edge_b.start_vertex().clone(),
                     core,
                 )
-                .insert(core)
-                .set_geometry(
-                    *core.layers.geometry.of_half_edge(&sibling_b),
-                    &mut core.layers.geometry,
-                );
+                .insert(core);
 
             [sibling_a, sibling_b]
         };

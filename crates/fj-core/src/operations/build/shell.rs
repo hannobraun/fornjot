@@ -4,10 +4,10 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, HalfEdgeGeom, LocalVertexGeom},
+    geometry::{CurveBoundary, LocalVertexGeom},
     operations::{
         build::{BuildFace, BuildHalfEdge, BuildSurface, Polygon},
-        geometry::{UpdateCurveGeometry, UpdateHalfEdgeGeometry},
+        geometry::UpdateCurveGeometry,
         insert::{Insert, IsInserted, IsInsertedNo, IsInsertedYes},
         join::JoinCycle,
         reverse::ReverseCurveCoordinateSystems,
@@ -123,10 +123,6 @@ pub trait BuildShell {
                                     )
                                     .update_curve(|_, _| curve.clone(), core)
                                     .insert(core)
-                                    .set_geometry(
-                                        HalfEdgeGeom { boundary },
-                                        &mut core.layers.geometry,
-                                    )
                             },
                         )
                 };
