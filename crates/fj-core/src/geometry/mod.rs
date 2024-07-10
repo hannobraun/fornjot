@@ -1,4 +1,4 @@
-//! Types that are tied to objects, but aren't objects themselves
+//! Geometry that is applied to the topological object graph
 
 mod boundary;
 mod curve;
