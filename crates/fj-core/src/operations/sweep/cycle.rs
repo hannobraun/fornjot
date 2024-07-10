@@ -98,7 +98,7 @@ impl SweepCycle for Cycle {
             .circular_tuple_windows()
             .map(
                 |(
-                    (half_edge, boundary, half_edge_geom, curve_geom),
+                    (half_edge, boundary, _, curve_geom),
                     (next_half_edge, _, _, _),
                 )| {
                     let [start, end] = boundary.inner;
@@ -114,7 +114,7 @@ impl SweepCycle for Cycle {
                         );
                     }
 
-                    (half_edge, half_edge_geom, curve_geom)
+                    (half_edge, curve_geom)
                 },
             )
             .collect::<Vec<_>>();
