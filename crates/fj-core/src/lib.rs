@@ -81,6 +81,30 @@
 //!
 //! [Fornjot]: https://www.fornjot.app/
 
+// This Clippy lint warns about keys in maps and sets whose types have interior
+// mutability. This applies to `Handle`, which is why this lint triggers in
+// multiple places in this crate.
+//
+// These are false positives, however. As per the documentation of the lint[1],
+// These types are specifically okay to use, if their `Hash` and `Ord`
+// implementations do not rely on any fields that are not mutable. And for
+// `Handle`, those implementations only rely on the `Handle`s ID, which is
+// constant.
+//
+// I don't think I have ever personally encountered a bug that this lint would
+// have warned against. So I think it makes sense to, as a matter of
+// convenience, just disable the lint for the whole crate, instead of doing so
+// for every single false positive.
+//
+// It might be an even better option to configure Clippy to ignore `Handle`
+// specifically for this lint, which should be possible according to the lint
+// documentation.[1] For some reason this didn't work when I tried it, and I
+// couldn't figure out why. In the end, I decided it wasn't worth spending more
+// time on this, so this is the situation I ended up with.
+//
+// [1] https://rust-lang.github.io/rust-clippy/master/index.html#/mutable_key_type
+#![allow(clippy::mutable_key_type)]
+
 pub mod algorithms;
 pub mod geometry;
 pub mod layers;
