@@ -30,39 +30,47 @@ impl Device {
     pub async fn try_from_all_adapters(
         instance: &wgpu::Instance,
     ) -> Result<(Self, wgpu::Adapter, wgpu::Features), DeviceError> {
-        let mut all_adapters = instance
-            .enumerate_adapters(wgpu::Backends::all())
-            .into_iter();
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            let mut all_adapters = instance
+                .enumerate_adapters(wgpu::Backends::all())
+                .into_iter();
 
-        let result = loop {
-            let Some(adapter) = all_adapters.next() else {
-                debug!("No more adapters to try");
-                break None;
+            let result = loop {
+                let Some(adapter) = all_adapters.next() else {
+                    debug!("No more adapters to try");
+                    break None;
+                };
+
+                let (device, features) = match Device::new(&adapter).await {
+                    Ok((device, adapter)) => (device, adapter),
+                    Err(err) => {
+                        error!(
+                            "Failed to get device from adapter {:?}: {:?}",
+                            adapter.get_info(),
+                            err,
+                        );
+                        continue;
+                    }
+                };
+
+                break Some((device, adapter, features));
             };
 
-            let (device, features) = match Device::new(&adapter).await {
-                Ok((device, adapter)) => (device, adapter),
-                Err(err) => {
-                    error!(
-                        "Failed to get device from adapter {:?}: {:?}",
-                        adapter.get_info(),
-                        err,
-                    );
-                    continue;
-                }
-            };
+            for adapter in all_adapters {
+                debug!(
+                    "Remaining adapter that wasn't tried: {:?}",
+                    adapter.get_info()
+                );
+            }
 
-            break Some((device, adapter, features));
-        };
-
-        for adapter in all_adapters {
-            debug!(
-                "Remaining adapter that wasn't tried: {:?}",
-                adapter.get_info()
-            );
+            result.ok_or(DeviceError::FoundNoWorkingAdapter)
         }
-
-        result.ok_or(DeviceError::FoundNoWorkingAdapter)
+        #[cfg(target_arch = "wasm32")]
+        {
+            _ = instance;
+            Err(DeviceError::FoundNoWorkingAdapter)
+        }
     }
 
     pub async fn new(
@@ -101,6 +109,9 @@ impl Device {
                     label: None,
                     required_features,
                     required_limits,
+                    // Here we give a memory hint to preserve memory usage.
+                    // This should allow us to run in as much devices as possible.
+                    memory_hints: wgpu::MemoryHints::MemoryUsage,
                 },
                 None,
             )

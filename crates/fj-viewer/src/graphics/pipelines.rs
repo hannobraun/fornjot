@@ -128,6 +128,7 @@ impl Pipeline {
                     })],
                 }),
                 multiview: None,
+                cache: None,
             });
 
         Self(pipeline)
