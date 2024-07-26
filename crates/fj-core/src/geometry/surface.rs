@@ -38,7 +38,8 @@ impl SurfaceGeom {
     }
 
     fn path_to_line(&self) -> Line<3> {
-        Line::from_origin_and_direction(self.u.origin(), self.v)
+        let Self { u, v } = self;
+        Line::from_origin_and_direction(u.origin(), *v)
     }
 
     /// Project the global point into the surface
