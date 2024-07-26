@@ -21,7 +21,8 @@ impl SurfaceGeom {
         point: impl Into<Point<2>>,
     ) -> Point<3> {
         let point = point.into();
-        self.u.point_from_path_coords([point.u])
+        let Self { u, .. } = self;
+        u.point_from_path_coords([point.u])
             + self.path_to_line().vector_from_line_coords([point.v])
     }
 
@@ -31,7 +32,8 @@ impl SurfaceGeom {
         vector: impl Into<Vector<2>>,
     ) -> Vector<3> {
         let vector = vector.into();
-        self.u.vector_from_path_coords([vector.u])
+        let Self { u, .. } = self;
+        u.vector_from_path_coords([vector.u])
             + self.path_to_line().vector_from_line_coords([vector.v])
     }
 
