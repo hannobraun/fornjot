@@ -1,7 +1,7 @@
 use std::{io, mem::size_of, vec};
 
 use thiserror::Error;
-use tracing::{debug, error, trace};
+use tracing::{error, trace};
 use wgpu::util::DeviceExt as _;
 
 use crate::{
@@ -46,8 +46,9 @@ impl Renderer {
         // This is sound, as `window` is an object to create a surface upon.
         let surface = instance.create_surface(screen.window())?;
 
+        #[cfg(not(target_arch = "wasm32"))]
         for adapter in instance.enumerate_adapters(wgpu::Backends::all()) {
-            debug!("Available adapter: {:?}", adapter.get_info());
+            tracing::debug!("Available adapter: {:?}", adapter.get_info());
         }
 
         let result = Device::from_preferred_adapter(&instance, &surface).await;
