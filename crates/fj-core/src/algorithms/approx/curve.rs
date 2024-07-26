@@ -111,11 +111,10 @@ fn approx_line_on_any_surface(
             .map(|point_curve| [line.point_from_line_coords(point_curve).u]),
     );
 
-    let approx_u = match surface.u {
-        GlobalPath::Circle(circle) => {
-            approx_circle(&circle, range_u, tolerance)
-        }
-        GlobalPath::Line(line) => approx_line(&line),
+    let SurfaceGeom { u, .. } = surface;
+    let approx_u = match u {
+        GlobalPath::Circle(circle) => approx_circle(circle, range_u, tolerance),
+        GlobalPath::Line(line) => approx_line(line),
     };
 
     let mut points = Vec::new();
