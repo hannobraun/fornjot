@@ -56,8 +56,10 @@ impl SurfaceGeom {
     /// Transform the surface geometry
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let u = self.u.transform(transform);
-        let v = transform.transform_vector(&self.v);
+        let Self { u, v } = self;
+
+        let u = u.transform(transform);
+        let v = transform.transform_vector(&v);
         Self { u, v }
     }
 }
