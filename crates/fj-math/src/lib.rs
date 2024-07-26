@@ -36,7 +36,6 @@ mod arc;
 mod circle;
 mod coordinates;
 mod line;
-mod plane;
 mod point;
 mod poly_chain;
 mod scalar;
@@ -51,7 +50,6 @@ pub use self::{
     circle::Circle,
     coordinates::{Uv, Xyz, T},
     line::Line,
-    plane::Plane,
     point::Point,
     poly_chain::PolyChain,
     scalar::{Scalar, Sign},
