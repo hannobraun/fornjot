@@ -1,6 +1,6 @@
 //! The geometry that defines a surface
 
-use fj_math::{Line, Plane, Point, Transform, Vector};
+use fj_math::{Line, Point, Transform, Vector};
 
 use super::GlobalPath;
 
@@ -51,18 +51,6 @@ impl SurfaceGeom {
     fn path_to_line(&self) -> Line<3> {
         let Self::Basic { u, v } = self;
         Line::from_origin_and_direction(u.origin(), *v)
-    }
-
-    /// Project the global point into the surface
-    pub fn project_global_point(&self, point: impl Into<Point<3>>) -> Point<2> {
-        let Self::Basic { u, v } = self;
-
-        let GlobalPath::Line(line) = u else {
-            todo!("Projecting point into non-plane surface is not supported")
-        };
-
-        let plane = Plane::from_parametric(line.origin(), line.direction(), *v);
-        plane.project_point(point)
     }
 
     /// Transform the surface geometry
