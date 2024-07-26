@@ -42,21 +42,21 @@ impl Geometry {
 
         self_.define_surface_inner(
             self_.xy_plane.clone(),
-            SurfaceGeom {
+            SurfaceGeom::Basic {
                 u: GlobalPath::x_axis(),
                 v: Vector::unit_y(),
             },
         );
         self_.define_surface_inner(
             self_.xz_plane.clone(),
-            SurfaceGeom {
+            SurfaceGeom::Basic {
                 u: GlobalPath::x_axis(),
                 v: Vector::unit_z(),
             },
         );
         self_.define_surface_inner(
             self_.yz_plane.clone(),
-            SurfaceGeom {
+            SurfaceGeom::Basic {
                 u: GlobalPath::y_axis(),
                 v: Vector::unit_z(),
             },

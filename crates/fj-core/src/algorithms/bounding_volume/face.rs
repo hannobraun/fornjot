@@ -3,7 +3,7 @@ use std::ops::Deref;
 use fj_math::Aabb;
 
 use crate::{
-    geometry::{Geometry, GlobalPath},
+    geometry::{Geometry, GlobalPath, SurfaceGeom},
     topology::Face,
 };
 
@@ -14,7 +14,8 @@ impl super::BoundingVolume<3> for &Face {
             .map(|aabb2| {
                 let surface = geometry.of_surface(self.surface());
 
-                match surface.u {
+                let SurfaceGeom::Basic { u, v } = surface;
+                match u {
                     GlobalPath::Circle(circle) => {
                         // This is not the most precise way to calculate the
                         // AABB, doing it for the whole circle, but it should
@@ -22,8 +23,8 @@ impl super::BoundingVolume<3> for &Face {
 
                         let aabb_bottom = circle.aabb();
                         let aabb_top = Aabb {
-                            min: aabb_bottom.min + surface.v,
-                            max: aabb_bottom.max + surface.v,
+                            min: aabb_bottom.min + *v,
+                            max: aabb_bottom.max + *v,
                         };
 
                         aabb_bottom.merged(&aabb_top)

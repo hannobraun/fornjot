@@ -1,7 +1,7 @@
 use fj_math::{Scalar, Vector};
 
 use crate::{
-    geometry::GlobalPath,
+    geometry::{GlobalPath, SurfaceGeom},
     operations::{derive::DeriveFrom, insert::Insert, reverse::Reverse},
     storage::Handle,
     topology::{Face, Sketch, Solid, Surface},
@@ -45,17 +45,19 @@ impl SweepSketch for Sketch {
                     .winding(&core.layers.geometry, self.surface())
                     .is_ccw());
 
+                let SurfaceGeom::Basic { u, v } =
+                    core.layers.geometry.of_surface(&surface);
+
                 let is_negative_sweep = {
-                    let u = match core.layers.geometry.of_surface(&surface).u {
+                    let u = match u {
                         GlobalPath::Circle(_) => todo!(
                             "Sweeping sketch from a rounded surfaces is not \
                             supported"
                         ),
                         GlobalPath::Line(line) => line.direction(),
                     };
-                    let v = core.layers.geometry.of_surface(&surface).v;
 
-                    let normal = u.cross(&v);
+                    let normal = u.cross(v);
 
                     normal.dot(&path) < Scalar::ZERO
                 };
