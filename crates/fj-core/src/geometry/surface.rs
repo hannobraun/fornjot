@@ -44,12 +44,13 @@ impl SurfaceGeom {
 
     /// Project the global point into the surface
     pub fn project_global_point(&self, point: impl Into<Point<3>>) -> Point<2> {
-        let GlobalPath::Line(line) = self.u else {
+        let Self { u, v } = self;
+
+        let GlobalPath::Line(line) = u else {
             todo!("Projecting point into non-plane surface is not supported")
         };
 
-        let plane =
-            Plane::from_parametric(line.origin(), line.direction(), self.v);
+        let plane = Plane::from_parametric(line.origin(), line.direction(), *v);
         plane.project_point(point)
     }
 
