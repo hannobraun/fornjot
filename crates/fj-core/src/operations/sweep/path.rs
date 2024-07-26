@@ -50,7 +50,7 @@ impl SweepSurfacePath for SurfacePath {
                 // What definitely won't work, is computing the bottom edge of
                 // the sweep. The edge sweeping code currently assumes that the
                 // bottom edge is a line (which is true when sweeping from a
-                // flat surface). But is the surface we're sweeping from is
+                // flat surface). But if the surface we're sweeping from is
                 // curved, there's simply no way to represent the curve of the
                 // resulting bottom edge.
                 todo!(
