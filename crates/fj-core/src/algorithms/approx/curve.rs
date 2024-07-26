@@ -48,7 +48,7 @@ fn approx_curve(
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> CurveApprox {
-    let SurfaceGeom { u, .. } = surface;
+    let SurfaceGeom::Basic { u, .. } = surface;
     let points = match (path, u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             approx_circle_on_curved_surface()
@@ -111,7 +111,7 @@ fn approx_line_on_any_surface(
             .map(|point_curve| [line.point_from_line_coords(point_curve).u]),
     );
 
-    let SurfaceGeom { u, .. } = surface;
+    let SurfaceGeom::Basic { u, .. } = surface;
     let approx_u = match u {
         GlobalPath::Circle(circle) => approx_circle(circle, range_u, tolerance),
         GlobalPath::Line(line) => approx_line(line),
@@ -216,7 +216,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let surface = SurfaceGeom {
+        let surface = SurfaceGeom::Basic {
             u: GlobalPath::circle_from_radius(1.),
             v: Vector::from([0., 0., 1.]),
         };
@@ -236,7 +236,7 @@ mod tests {
 
         let circle = Circle::from_center_and_radius(Point::origin(), 1.);
         let global_path = GlobalPath::Circle(circle);
-        let surface_geom = SurfaceGeom {
+        let surface_geom = SurfaceGeom::Basic {
             u: global_path,
             v: Vector::from([0., 0., 1.]),
         };

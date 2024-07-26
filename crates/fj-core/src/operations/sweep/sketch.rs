@@ -45,7 +45,7 @@ impl SweepSketch for Sketch {
                     .winding(&core.layers.geometry, self.surface())
                     .is_ccw());
 
-                let SurfaceGeom { u, v } =
+                let SurfaceGeom::Basic { u, v } =
                     core.layers.geometry.of_surface(&surface);
 
                 let is_negative_sweep = {
