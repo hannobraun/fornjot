@@ -48,7 +48,8 @@ fn approx_curve(
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> CurveApprox {
-    let points = match (path, surface.u) {
+    let SurfaceGeom { u, .. } = surface;
+    let points = match (path, u) {
         (SurfacePath::Circle(_), GlobalPath::Circle(_)) => {
             approx_circle_on_curved_surface()
         }
