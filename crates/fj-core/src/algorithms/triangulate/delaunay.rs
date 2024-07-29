@@ -47,13 +47,13 @@ pub fn triangulate(
     let mut triangles = Vec::new();
     for triangle in triangulation.inner_faces() {
         let [v0, v1, v2] = triangle.vertices().map(|vertex| *vertex.data());
-        let triangle_winding = Triangle::<2>::from_points([
+        let triangle = Triangle::<2>::from_points([
             v0.point_surface,
             v1.point_surface,
             v2.point_surface,
         ])
-        .expect("invalid triangle")
-        .winding();
+        .expect("invalid triangle");
+        let triangle_winding = triangle.winding();
 
         let required_winding = match coord_handedness {
             Handedness::LeftHanded => Winding::Cw,
