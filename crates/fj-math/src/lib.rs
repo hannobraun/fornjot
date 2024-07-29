@@ -33,6 +33,7 @@
 
 mod aabb;
 mod arc;
+mod bivector;
 mod circle;
 mod coordinates;
 mod line;
@@ -47,6 +48,7 @@ mod vector;
 pub use self::{
     aabb::Aabb,
     arc::Arc,
+    bivector::Bivector,
     circle::Circle,
     coordinates::{Uv, Xyz, T},
     line::Line,
