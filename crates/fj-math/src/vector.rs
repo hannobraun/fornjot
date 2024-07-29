@@ -87,6 +87,11 @@ impl<const D: usize> Vector<D> {
         self.to_na().normalize().into()
     }
 
+    /// Compute the angle between this vector and another
+    pub fn angle_to(&self, other: &Self) -> Scalar {
+        (self.dot(other) / (self.magnitude() * other.magnitude())).acos()
+    }
+
     /// Compute the dot product with another vector
     pub fn dot(&self, other: &Self) -> Scalar {
         self.to_na().dot(&other.to_na()).into()
