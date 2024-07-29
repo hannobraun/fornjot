@@ -42,7 +42,7 @@ impl Polygon {
     }
 
     pub fn contains_triangle(&self, triangle: impl Into<Triangle<2>>) -> bool {
-        let [a, b, c] = triangle.into().points();
+        let [a, b, c] = triangle.into().points;
 
         let mut might_be_hole = true;
 

@@ -23,11 +23,6 @@ impl<const D: usize> Triangle<D> {
         Self { points }
     }
 
-    /// Access the triangle's points
-    pub fn points(&self) -> [Point<D>; 3] {
-        self.points
-    }
-
     /// # Determine whether the triangle is valid
     ///
     /// A triangle is valid, if it is not degenerate. In a degenerate triangle,
@@ -88,7 +83,7 @@ impl Triangle<2> {
 impl Triangle<3> {
     /// Convert the triangle to a Parry triangle
     pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
-        self.points().map(|vertex| vertex.to_na()).into()
+        self.points.map(|vertex| vertex.to_na()).into()
     }
 
     /// Cast a ray against the Triangle

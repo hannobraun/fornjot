@@ -78,7 +78,7 @@ impl Transform {
 
     /// Transform the given triangle
     pub fn transform_triangle(&self, triangle: &Triangle<3>) -> Triangle<3> {
-        let [a, b, c] = &triangle.points();
+        let [a, b, c] = &triangle.points;
         Triangle::from([
             self.transform_point(a),
             self.transform_point(b),
