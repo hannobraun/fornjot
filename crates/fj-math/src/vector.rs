@@ -90,7 +90,11 @@ impl<const D: usize> Vector<D> {
     /// Compute the angle between this vector and another
     pub fn angle_to(&self, other: &Self) -> Scalar {
         let product = self.magnitude() * other.magnitude();
-        (self.dot(other) / product).acos()
+        if product.is_zero() {
+            Scalar::ZERO
+        } else {
+            (self.dot(other) / product).acos()
+        }
     }
 
     /// Compute the dot product with another vector
