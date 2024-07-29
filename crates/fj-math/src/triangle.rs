@@ -17,8 +17,6 @@ pub struct Triangle<const D: usize> {
 
 impl<const D: usize> Triangle<D> {
     /// Construct a triangle from three points
-    ///
-    /// Returns an error, if the points don't form a triangle.
     pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
         let points = points.map(Into::into);
         Self { points }
