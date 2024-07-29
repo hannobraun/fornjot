@@ -12,7 +12,8 @@ use super::{Point, Scalar};
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Triangle<const D: usize> {
-    points: [Point<D>; 3],
+    /// The points that make up the triangle
+    pub points: [Point<D>; 3],
 }
 
 impl<const D: usize> Triangle<D> {
