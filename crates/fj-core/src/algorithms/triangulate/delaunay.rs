@@ -53,6 +53,10 @@ pub fn triangulate(
             v2.point_surface,
         ])
         .expect("invalid triangle");
+        assert!(
+            triangle.is_valid(),
+            "Expecting triangles created by triangulation to be valid.",
+        );
 
         let required_winding = match coord_handedness {
             Handedness::LeftHanded => Winding::Cw,
