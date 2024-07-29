@@ -19,11 +19,9 @@ impl<const D: usize> Triangle<D> {
     /// Construct a triangle from three points
     ///
     /// Returns an error, if the points don't form a triangle.
-    pub fn from_points(
-        points: [impl Into<Point<D>>; 3],
-    ) -> Result<Self, NotATriangle<D>> {
+    pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
         let points = points.map(Into::into);
-        Ok(Self { points })
+        Self { points }
     }
 
     /// Access the triangle's points
@@ -127,7 +125,7 @@ where
     P: Into<Point<D>>,
 {
     fn from(points: [P; 3]) -> Self {
-        Self::from_points(points).expect("invalid triangle")
+        Self::from_points(points)
     }
 }
 
@@ -171,7 +169,7 @@ mod tests {
         let b = Point::from([1.0, 0.0]);
         let c = Point::from([0.0, 1.0]);
 
-        assert!(Triangle::from_points([a, b, c]).unwrap().is_valid());
+        assert!(Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
@@ -180,7 +178,7 @@ mod tests {
         let b = Point::from([0.0, 1.0, 0.0]);
         let c = Point::from([1.0, 0.0, 0.0]);
 
-        assert!(Triangle::from_points([a, b, c]).unwrap().is_valid());
+        assert!(Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
@@ -189,7 +187,7 @@ mod tests {
         let b = Point::from([1.0, 0.0]);
         let c = Point::from([2.0, 0.0]);
 
-        assert!(!Triangle::from_points([a, b, c]).unwrap().is_valid());
+        assert!(!Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
@@ -198,7 +196,7 @@ mod tests {
         let b = Point::from([1.0, 0.0, 0.0]);
         let c = Point::from([2.0, 0.0, 0.0]);
 
-        assert!(!Triangle::from_points([a, b, c]).unwrap().is_valid());
+        assert!(!Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]

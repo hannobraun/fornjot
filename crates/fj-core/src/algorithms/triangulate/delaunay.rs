@@ -51,8 +51,7 @@ pub fn triangulate(
             v0.point_surface,
             v1.point_surface,
             v2.point_surface,
-        ])
-        .expect("invalid triangle");
+        ]);
         assert!(
             triangle.is_valid(),
             "Expecting triangles created by triangulation to be valid.",
