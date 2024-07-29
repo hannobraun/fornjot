@@ -23,18 +23,7 @@ impl<const D: usize> Triangle<D> {
         points: [impl Into<Point<D>>; 3],
     ) -> Result<Self, NotATriangle<D>> {
         let points = points.map(Into::into);
-
-        let area = {
-            let [a, b, c] = points.map(Point::to_xyz);
-            (b - a).cross(&(c - a)).magnitude()
-        };
-
-        // A triangle is not valid if it doesn't span any area
-        if area != Scalar::from(0.0) {
-            Ok(Self { points })
-        } else {
-            Err(NotATriangle { points })
-        }
+        Ok(Self { points })
     }
 
     /// Access the triangle's points
@@ -182,7 +171,7 @@ mod tests {
         let b = Point::from([1.0, 0.0]);
         let c = Point::from([0.0, 1.0]);
 
-        assert!(Triangle::from_points([a, b, c]).is_ok());
+        assert!(Triangle::from_points([a, b, c]).unwrap().is_valid());
     }
 
     #[test]
@@ -191,7 +180,7 @@ mod tests {
         let b = Point::from([0.0, 1.0, 0.0]);
         let c = Point::from([1.0, 0.0, 0.0]);
 
-        assert!(Triangle::from_points([a, b, c]).is_ok());
+        assert!(Triangle::from_points([a, b, c]).unwrap().is_valid());
     }
 
     #[test]
@@ -200,7 +189,7 @@ mod tests {
         let b = Point::from([1.0, 0.0]);
         let c = Point::from([2.0, 0.0]);
 
-        assert!(Triangle::from_points([a, b, c]).is_err());
+        assert!(!Triangle::from_points([a, b, c]).unwrap().is_valid());
     }
 
     #[test]
@@ -209,7 +198,7 @@ mod tests {
         let b = Point::from([1.0, 0.0, 0.0]);
         let c = Point::from([2.0, 0.0, 0.0]);
 
-        assert!(Triangle::from_points([a, b, c]).is_err());
+        assert!(!Triangle::from_points([a, b, c]).unwrap().is_valid());
     }
 
     #[test]
