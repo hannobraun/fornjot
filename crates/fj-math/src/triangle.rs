@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use parry3d_f64::query::{Ray, RayCast as _};
 
 use crate::Vector;
@@ -39,6 +40,26 @@ impl<const D: usize> Triangle<D> {
     /// Access the triangle's points
     pub fn points(&self) -> [Point<D>; 3] {
         self.points
+    }
+
+    /// # Determine whether the triangle is valid
+    ///
+    /// A triangle is valid, if it is not degenerate. In a degenerate triangle,
+    /// the three points do not form an actual triangle, but a line or even a
+    /// single point.
+    ///
+    /// ## Implementation Note
+    ///
+    /// Right now, this function computes the area of the triangle, and compares
+    /// it against [`Scalar`]'s default epsilon value. This might not be
+    /// flexible enough for all use cases.
+    ///
+    /// Long-term, it might become necessary to add some way to override the
+    /// epsilon value used within this function.
+    pub fn is_valid(&self) -> bool {
+        let [a, b, c] = self.points;
+        let area = (b - a).outer(&(c - a)).magnitude();
+        area > Scalar::default_epsilon()
     }
 
     /// Normalize the triangle
