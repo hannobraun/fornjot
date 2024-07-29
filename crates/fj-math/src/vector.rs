@@ -88,8 +88,15 @@ impl<const D: usize> Vector<D> {
     }
 
     /// Compute the angle between this vector and another
+    ///
+    /// Returns a zero angle, if the magnitude of `self` or `other` is zero.
     pub fn angle_to(&self, other: &Self) -> Scalar {
-        (self.dot(other) / (self.magnitude() * other.magnitude())).acos()
+        let product = self.magnitude() * other.magnitude();
+        if product.is_zero() {
+            Scalar::ZERO
+        } else {
+            (self.dot(other) / product).acos()
+        }
     }
 
     /// Compute the dot product with another vector
