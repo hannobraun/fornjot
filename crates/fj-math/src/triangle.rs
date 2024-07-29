@@ -123,12 +123,6 @@ where
     }
 }
 
-/// Returned by [`Triangle::from_points`], if the points don't form a triangle
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct NotATriangle<const D: usize> {
-    pub points: [Point<D>; 3],
-}
-
 /// Winding direction of a triangle.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Winding {
