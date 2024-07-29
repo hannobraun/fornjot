@@ -1,4 +1,4 @@
-use crate::Vector;
+use crate::{Scalar, Vector};
 
 /// # An n-dimensional bivector
 ///
@@ -26,4 +26,13 @@ pub struct Bivector<const D: usize> {
 
     /// The second of the vectors whose outer product defines this bivector
     pub b: Vector<D>,
+}
+
+impl<const D: usize> Bivector<D> {
+    /// Compute the magnitude of the bivector
+    pub fn magnitude(&self) -> Scalar {
+        self.a.angle_to(&self.b).sin().abs()
+            * self.a.magnitude()
+            * self.b.magnitude()
+    }
 }
