@@ -4,7 +4,7 @@
 
 use fj_math::Scalar;
 
-/// A tolerance value
+/// # A tolerance value
 ///
 /// A tolerance value is used during approximation. It defines the maximum
 /// allowed deviation of the approximation from the actual shape.
@@ -12,7 +12,7 @@ use fj_math::Scalar;
 /// The `Tolerance` type enforces that the tolerance value is always larger than
 /// zero, which is an attribute that the approximation code relies on.
 ///
-/// # Failing [`From`]/[`Into`] implementation
+/// ## Failing [`From`]/[`Into`] implementation
 ///
 /// The [`From`]/[`Into`] implementations of tolerance are fallible, which goes
 /// against the explicit mandate of those traits, as stated in their
