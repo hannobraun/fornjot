@@ -29,7 +29,7 @@ impl From<&Mesh<fj_math::Point<3>>> for Vertices {
         let mut m = Mesh::new();
 
         for triangle in mesh.triangles() {
-            let [a, b, c] = triangle.inner.points();
+            let [a, b, c] = triangle.inner.points;
 
             let normal = (b - a).cross(&(c - a)).normalize();
             let color = triangle.color;

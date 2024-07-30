@@ -80,7 +80,7 @@ impl Mesh<Point<3>> {
     ) {
         let triangle = triangle.into();
 
-        for point in triangle.points() {
+        for point in triangle.points {
             self.push_vertex(point);
         }
 

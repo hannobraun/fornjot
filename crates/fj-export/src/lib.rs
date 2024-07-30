@@ -89,7 +89,7 @@ pub fn export_stl(
 ) -> Result<(), Error> {
     let points = mesh
         .triangles()
-        .map(|triangle| triangle.inner.points())
+        .map(|triangle| triangle.inner.points)
         .collect::<Vec<_>>();
 
     let vertices = points.iter().map(|points| {
@@ -136,7 +136,7 @@ pub fn export_obj(
 ) -> Result<(), Error> {
     for (cnt, t) in mesh.triangles().enumerate() {
         // write each point of the triangle
-        for v in t.inner.points() {
+        for v in t.inner.points {
             wavefront_rs::obj::writer::Writer { auto_newline: true }
                 .write(
                     &mut write,

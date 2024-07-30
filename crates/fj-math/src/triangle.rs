@@ -1,3 +1,4 @@
+use approx::AbsDiffEq;
 use parry3d_f64::query::{Ray, RayCast as _};
 
 use crate::Vector;
@@ -11,34 +12,35 @@ use super::{Point, Scalar};
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct Triangle<const D: usize> {
-    points: [Point<D>; 3],
+    /// The points that make up the triangle
+    pub points: [Point<D>; 3],
 }
 
 impl<const D: usize> Triangle<D> {
     /// Construct a triangle from three points
-    ///
-    /// Returns an error, if the points don't form a triangle.
-    pub fn from_points(
-        points: [impl Into<Point<D>>; 3],
-    ) -> Result<Self, NotATriangle<D>> {
+    pub fn from_points(points: [impl Into<Point<D>>; 3]) -> Self {
         let points = points.map(Into::into);
-
-        let area = {
-            let [a, b, c] = points.map(Point::to_xyz);
-            (b - a).cross(&(c - a)).magnitude()
-        };
-
-        // A triangle is not valid if it doesn't span any area
-        if area != Scalar::from(0.0) {
-            Ok(Self { points })
-        } else {
-            Err(NotATriangle { points })
-        }
+        Self { points }
     }
 
-    /// Access the triangle's points
-    pub fn points(&self) -> [Point<D>; 3] {
-        self.points
+    /// # Determine whether the triangle is valid
+    ///
+    /// A triangle is valid, if it is not degenerate. In a degenerate triangle,
+    /// the three points do not form an actual triangle, but a line or even a
+    /// single point.
+    ///
+    /// ## Implementation Note
+    ///
+    /// Right now, this function computes the area of the triangle, and compares
+    /// it against [`Scalar`]'s default epsilon value. This might not be
+    /// flexible enough for all use cases.
+    ///
+    /// Long-term, it might become necessary to add some way to override the
+    /// epsilon value used within this function.
+    pub fn is_valid(&self) -> bool {
+        let [a, b, c] = self.points;
+        let area = (b - a).outer(&(c - a)).magnitude();
+        area > Scalar::default_epsilon()
     }
 
     /// Normalize the triangle
@@ -81,7 +83,7 @@ impl Triangle<2> {
 impl Triangle<3> {
     /// Convert the triangle to a Parry triangle
     pub fn to_parry(self) -> parry3d_f64::shape::Triangle {
-        self.points().map(|vertex| vertex.to_na()).into()
+        self.points.map(|vertex| vertex.to_na()).into()
     }
 
     /// Cast a ray against the Triangle
@@ -117,14 +119,8 @@ where
     P: Into<Point<D>>,
 {
     fn from(points: [P; 3]) -> Self {
-        Self::from_points(points).expect("invalid triangle")
+        Self::from_points(points)
     }
-}
-
-/// Returned by [`Triangle::from_points`], if the points don't form a triangle
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct NotATriangle<const D: usize> {
-    pub points: [Point<D>; 3],
 }
 
 /// Winding direction of a triangle.
@@ -158,35 +154,37 @@ mod tests {
     #[test]
     fn valid_triangle_2d() {
         let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([1.0, 2.0]);
-        let _triangle = Triangle::from([a, b, c]);
+        let b = Point::from([1.0, 0.0]);
+        let c = Point::from([0.0, 1.0]);
+
+        assert!(Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
     fn valid_triangle_3d() {
         let a = Point::from([0.0, 0.0, 0.0]);
-        let b = Point::from([1.0, 1.0, 0.0]);
-        let c = Point::from([1.0, 2.0, 0.0]);
-        let _triangle = Triangle::from([a, b, c]);
+        let b = Point::from([0.0, 1.0, 0.0]);
+        let c = Point::from([1.0, 0.0, 0.0]);
+
+        assert!(Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
-    #[should_panic]
     fn invalid_triangle_2d() {
         let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([2.0, 2.0]);
-        let _triangle = Triangle::from([a, b, c]);
+        let b = Point::from([1.0, 0.0]);
+        let c = Point::from([2.0, 0.0]);
+
+        assert!(!Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
-    #[should_panic]
     fn invalid_triangle_3d() {
         let a = Point::from([0.0, 0.0, 0.0]);
-        let b = Point::from([1.0, 1.0, 1.0]);
-        let c = Point::from([2.0, 2.0, 2.0]);
-        let _triangle = Triangle::from([a, b, c]);
+        let b = Point::from([1.0, 0.0, 0.0]);
+        let c = Point::from([2.0, 0.0, 0.0]);
+
+        assert!(!Triangle::from_points([a, b, c]).is_valid());
     }
 
     #[test]
