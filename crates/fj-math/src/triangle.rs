@@ -179,8 +179,8 @@ mod tests {
     #[test]
     fn valid_triangle_2d() {
         let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([1.0, 2.0]);
+        let b = Point::from([1.0, 0.0]);
+        let c = Point::from([0.0, 1.0]);
 
         assert!(Triangle::from_points([a, b, c]).is_ok());
     }
@@ -188,8 +188,8 @@ mod tests {
     #[test]
     fn valid_triangle_3d() {
         let a = Point::from([0.0, 0.0, 0.0]);
-        let b = Point::from([1.0, 1.0, 0.0]);
-        let c = Point::from([1.0, 2.0, 0.0]);
+        let b = Point::from([0.0, 1.0, 0.0]);
+        let c = Point::from([1.0, 0.0, 0.0]);
 
         assert!(Triangle::from_points([a, b, c]).is_ok());
     }
@@ -197,8 +197,8 @@ mod tests {
     #[test]
     fn invalid_triangle_2d() {
         let a = Point::from([0.0, 0.0]);
-        let b = Point::from([1.0, 1.0]);
-        let c = Point::from([2.0, 2.0]);
+        let b = Point::from([1.0, 0.0]);
+        let c = Point::from([2.0, 0.0]);
 
         assert!(Triangle::from_points([a, b, c]).is_err());
     }
@@ -206,8 +206,8 @@ mod tests {
     #[test]
     fn invalid_triangle_3d() {
         let a = Point::from([0.0, 0.0, 0.0]);
-        let b = Point::from([1.0, 1.0, 1.0]);
-        let c = Point::from([2.0, 2.0, 2.0]);
+        let b = Point::from([1.0, 0.0, 0.0]);
+        let c = Point::from([2.0, 0.0, 0.0]);
 
         assert!(Triangle::from_points([a, b, c]).is_err());
     }
