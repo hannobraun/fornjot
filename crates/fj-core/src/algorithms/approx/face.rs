@@ -72,19 +72,6 @@ pub fn approx_face(
 ) -> FaceApprox {
     let tolerance = tolerance.into();
 
-    // Curved faces whose curvature is not fully defined by their edges
-    // are not supported yet. For that reason, we can fully ignore `face`'s
-    // `surface` field and just pass the edges to `Self::for_edges`.
-    //
-    // An example of a curved face that is supported, is the cylinder. Its
-    // curvature is fully defined be the edges (circles) that border it. The
-    // circle approximations are sufficient to triangulate the surface.
-    //
-    // An example of a curved face that is currently not supported, and thus
-    // doesn't need to be handled here, is a sphere. A spherical face would
-    // would need to provide its own approximation, as the edges that bound
-    // it have nothing to do with its curvature.
-
     let exterior = approx_cycle(
         face.region().exterior().deref(),
         face.surface(),
