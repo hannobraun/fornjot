@@ -59,11 +59,13 @@ pub fn approx_circle<const D: usize>(
     points
 }
 
+/// Path approximation parameters for a circle
 struct PathApproxParams {
     increment: Scalar,
 }
 
 impl PathApproxParams {
+    /// Compute path approximation parameters for the given circle and tolerance
     pub fn for_circle<const D: usize>(
         circle: &Circle<D>,
         tolerance: impl Into<Tolerance>,
@@ -82,10 +84,12 @@ impl PathApproxParams {
         Self { increment }
     }
 
+    /// Return the increment
     pub fn increment(&self) -> Scalar {
         self.increment
     }
 
+    /// Generate points to approximate the circle within the boundary
     pub fn points(
         &self,
         boundary: impl Into<CurveBoundary<Point<1>>>,
