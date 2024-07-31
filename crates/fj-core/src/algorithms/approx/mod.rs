@@ -25,7 +25,10 @@ use vertex::VertexApproxCache;
 
 use crate::geometry::Geometry;
 
-pub use self::tolerance::{InvalidTolerance, Tolerance};
+pub use self::{
+    circle::PathApproxParams,
+    tolerance::{InvalidTolerance, Tolerance},
+};
 
 /// Approximate an object
 pub trait Approx: Sized {

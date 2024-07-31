@@ -60,7 +60,7 @@ pub fn approx_circle<const D: usize>(
 }
 
 /// Path approximation parameters for a circle
-struct PathApproxParams {
+pub struct PathApproxParams {
     increment: Scalar,
 }
 
