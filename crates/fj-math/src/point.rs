@@ -200,14 +200,6 @@ impl<const D: usize> ops::Sub<Point<D>> for &Point<D> {
     }
 }
 
-impl<const D: usize> ops::Mul<f64> for Point<D> {
-    type Output = Self;
-
-    fn mul(self, rhs: f64) -> Self::Output {
-        self.to_na().mul(rhs).into()
-    }
-}
-
 impl<const D: usize> fmt::Debug for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.coords.fmt(f)
