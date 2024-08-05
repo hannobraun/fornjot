@@ -24,7 +24,7 @@ thiserror = "1.0.63"
 tracing = "0.1.40"
 
 [dependencies.bytemuck]
-version = "1.16.1"
+version = "1.16.3"
 features = ["derive"]
 
 [dependencies.image]
@@ -33,7 +33,7 @@ default-features = false
 features = ["png", "jpeg"]
 
 [dependencies.wgpu]
-version = "22.0.0"
+version = "22.1.0"
 features = ["webgl"]
 
 # We don't depend on `getrandom` directly, but we need this to enable the `js`
