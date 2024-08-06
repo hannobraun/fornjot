@@ -13,14 +13,14 @@ pub struct Core {
 }
 
 impl Core {
-    /// Construct an instance of `Instance`
+    /// Construct an instance of `Core`
     pub fn new() -> Self {
         Self {
             layers: Layers::default(),
         }
     }
 
-    /// Construct an instance of `Instance`, using the provided configuration
+    /// Construct an instance of `Core`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         let layers = Layers::with_validation_config(config);
         Self { layers }
