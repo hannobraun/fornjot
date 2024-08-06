@@ -76,6 +76,8 @@ fn approx_circle_on_straight_surface(
     surface: &SurfaceGeom,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
+    let tolerance = tolerance.into();
+
     approx_circle(circle, boundary, tolerance)
         .into_iter()
         .map(|(point_curve, point_surface)| {
@@ -105,6 +107,8 @@ fn approx_line_on_any_surface(
     surface: &SurfaceGeom,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
+    let tolerance = tolerance.into();
+
     let range_u = CurveBoundary::from(
         boundary
             .inner
