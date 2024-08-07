@@ -1,5 +1,7 @@
 use fj_math::Scalar;
 
+use crate::algorithms::approx::Tolerance;
+
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]
 pub struct ValidationConfig {
@@ -18,6 +20,9 @@ pub struct ValidationConfig {
     ///
     /// Defaults to `false`.
     pub panic_on_error: bool,
+
+    /// The tolerance value used for intermediate geometry representation
+    pub tolerance: Tolerance,
 
     /// The minimum distance between distinct objects
     ///
@@ -39,6 +44,8 @@ impl Default for ValidationConfig {
         Self {
             panic_on_error: false,
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
+            tolerance: Tolerance::from_scalar(0.001)
+                .expect("Tolerance provided is larger than zero"),
 
             // This value was chosen pretty arbitrarily. Seems small enough to
             // catch errors. If it turns out it's too small (because it produces
