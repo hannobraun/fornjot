@@ -195,7 +195,7 @@ fn distances(
         &Handle<Vertex>,
         &Handle<Surface>,
     ),
-    _: Tolerance,
+    tolerance: Tolerance,
     geometry: &Geometry,
 ) -> Option<Vec<([Point<3>; 2], Scalar)>> {
     fn sample(
@@ -203,6 +203,7 @@ fn distances(
         half_edge: &Handle<HalfEdge>,
         end_vertex: &Handle<Vertex>,
         surface: &Handle<Surface>,
+        _: Tolerance,
         geometry: &Geometry,
     ) -> Option<Point<3>> {
         let [start, end] = [
@@ -241,13 +242,20 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 =
-            sample(percent, &half_edge_a, end_vertex_a, surface_a, geometry)?;
+        let sample1 = sample(
+            percent,
+            &half_edge_a,
+            end_vertex_a,
+            surface_a,
+            tolerance,
+            geometry,
+        )?;
         let sample2 = sample(
             1.0 - percent,
             &half_edge_b,
             end_vertex_b,
             surface_b,
+            tolerance,
             geometry,
         )?;
         distances.push(([sample1, sample2], sample1.distance_to(&sample2)))
