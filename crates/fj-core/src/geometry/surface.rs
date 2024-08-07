@@ -118,12 +118,10 @@ impl SurfaceGeom {
     pub fn point_from_surface_coords(
         &self,
         point: impl Into<Point<2>>,
-        _: impl Into<Tolerance>,
+        tolerance: impl Into<Tolerance>,
     ) -> Point<3> {
-        let point = point.into();
-        let Self::Basic { u, .. } = self;
-        u.point_from_path_coords([point.u])
-            + self.path_to_line().vector_from_line_coords([point.v])
+        let (triangle, barycentric_coords) = self.triangle_at(point, tolerance);
+        triangle.point_from_barycentric_coords(barycentric_coords)
     }
 
     /// Convert a vector in surface coordinates to model coordinates
