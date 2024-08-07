@@ -17,16 +17,13 @@ pub struct Core {
 impl Core {
     /// Construct an instance of `Core`
     pub fn new() -> Self {
-        Self::from_layers(Layers::default())
+        let layers = Layers::default();
+        Self { layers }
     }
 
     /// Construct an instance of `Core`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
         let layers = Layers::with_validation_config(config);
-        Self::from_layers(layers)
-    }
-
-    fn from_layers(layers: Layers) -> Self {
         Self { layers }
     }
 
