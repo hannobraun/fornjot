@@ -203,7 +203,7 @@ fn distances(
         half_edge: &Handle<HalfEdge>,
         end_vertex: &Handle<Vertex>,
         surface: &Handle<Surface>,
-        _: Tolerance,
+        tolerance: Tolerance,
         geometry: &Geometry,
     ) -> Option<Point<3>> {
         let [start, end] = [
@@ -229,7 +229,7 @@ fn distances(
         Some(
             geometry
                 .of_surface(surface)
-                .point_from_surface_coords(surface_coords),
+                .point_from_surface_coords(surface_coords, tolerance),
         )
     }
 

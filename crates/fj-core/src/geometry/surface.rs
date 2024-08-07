@@ -118,6 +118,7 @@ impl SurfaceGeom {
     pub fn point_from_surface_coords(
         &self,
         point: impl Into<Point<2>>,
+        _: impl Into<Tolerance>,
     ) -> Point<3> {
         let point = point.into();
         let Self::Basic { u, .. } = self;
@@ -157,7 +158,10 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{GlobalPath, SurfaceGeom};
+    use crate::{
+        algorithms::approx::Tolerance,
+        geometry::{GlobalPath, SurfaceGeom},
+    };
 
     #[test]
     fn point_from_surface_coords() {
@@ -169,8 +173,11 @@ mod tests {
             v: Vector::from([0., 0., 2.]),
         };
 
+        // Value doesn't matter; we're dealing with a plane.
+        let tolerance = Tolerance::from_scalar(1.).unwrap();
+
         assert_eq!(
-            surface.point_from_surface_coords([2., 4.]),
+            surface.point_from_surface_coords([2., 4.], tolerance),
             Point::from([1., 5., 9.]),
         );
     }

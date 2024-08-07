@@ -180,32 +180,32 @@ mod tests {
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(a);
+            .point_from_surface_coords(a, core.tolerance());
         let b = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(b);
+            .point_from_surface_coords(b, core.tolerance());
         let e = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(e);
+            .point_from_surface_coords(e, core.tolerance());
         let f = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(f);
+            .point_from_surface_coords(f, core.tolerance());
         let g = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(g);
+            .point_from_surface_coords(g, core.tolerance());
         let h = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(h);
+            .point_from_surface_coords(h, core.tolerance());
 
         // Let's test that some correct triangles are present. We don't need to
         // test them all.
@@ -275,27 +275,27 @@ mod tests {
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(a);
+            .point_from_surface_coords(a, core.tolerance());
         let b = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(b);
+            .point_from_surface_coords(b, core.tolerance());
         let c = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(c);
+            .point_from_surface_coords(c, core.tolerance());
         let d = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(d);
+            .point_from_surface_coords(d, core.tolerance());
         let e = core
             .layers
             .geometry
             .of_surface(&surface)
-            .point_from_surface_coords(e);
+            .point_from_surface_coords(e, core.tolerance());
 
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([a, d, e]));

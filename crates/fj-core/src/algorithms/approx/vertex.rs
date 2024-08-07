@@ -16,7 +16,7 @@ pub fn approx_vertex(
     curve: &Handle<Curve>,
     surface: &Handle<Surface>,
     position_curve: Point<1>,
-    _: impl Into<Tolerance>,
+    tolerance: impl Into<Tolerance>,
     cache: &mut VertexApproxCache,
     geometry: &Geometry,
 ) -> ApproxPoint<1> {
@@ -33,7 +33,7 @@ pub fn approx_vertex(
         None => {
             let position_global = geometry
                 .of_surface(surface)
-                .point_from_surface_coords(position_surface);
+                .point_from_surface_coords(position_surface, tolerance);
             cache.insert(vertex, position_global)
         }
     };
