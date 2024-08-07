@@ -38,6 +38,11 @@ impl Core {
             default_tolerance,
         }
     }
+
+    /// Access the tolerance value used for intermediate geometry representation
+    pub fn tolerance(&self) -> Tolerance {
+        self.default_tolerance
+    }
 }
 
 impl Default for Core {
