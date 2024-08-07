@@ -3,6 +3,7 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
+    algorithms::approx::Tolerance,
     geometry::{CurveBoundary, Geometry},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
@@ -139,6 +140,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                             .start_vertex(),
                         surface_b,
                     ),
+                    config.tolerance,
                     geometry,
                 ) else {
                     // The geometry to compute the distances is not available,
@@ -193,6 +195,7 @@ fn distances(
         &Handle<Vertex>,
         &Handle<Surface>,
     ),
+    _: Tolerance,
     geometry: &Geometry,
 ) -> Option<Vec<([Point<3>; 2], Scalar)>> {
     fn sample(
