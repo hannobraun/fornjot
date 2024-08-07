@@ -41,7 +41,7 @@ impl Core {
 
     /// Access the tolerance value used for intermediate geometry representation
     pub fn tolerance(&self) -> Tolerance {
-        self.default_tolerance
+        self.layers.validation.config.tolerance
     }
 }
 
