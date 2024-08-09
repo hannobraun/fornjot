@@ -138,6 +138,9 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 };
 
+                let (_, distances): (Vec<_>, Vec<_>) =
+                    distances.into_iter().unzip();
+
                 // If all points on distinct curves are within
                 // `distinct_min_distance`, that's a problem.
                 if distances.iter().all(|d| *d < config.distinct_min_distance) {
@@ -178,7 +181,7 @@ fn distances(
     end_vertex_b: &Handle<Vertex>,
     surface_b: &Handle<Surface>,
     geometry: &Geometry,
-) -> Option<Vec<Scalar>> {
+) -> Option<Vec<([Point<3>; 2], Scalar)>> {
     fn sample(
         percent: f64,
         half_edge: &Handle<HalfEdge>,
@@ -231,7 +234,7 @@ fn distances(
             surface_b,
             geometry,
         )?;
-        distances.push(sample1.distance_to(&sample2))
+        distances.push(([sample1, sample2], sample1.distance_to(&sample2)))
     }
     Some(distances)
 }
