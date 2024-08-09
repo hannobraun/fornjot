@@ -112,7 +112,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 }
 
-                let Some(distances) = distances(
+                let Some(points_and_distances) = distances(
                     half_edge_a.clone(),
                     object
                         .find_cycle_of_half_edge(half_edge_a)
@@ -139,7 +139,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                 };
 
                 let (_, distances): (Vec<_>, Vec<_>) =
-                    distances.into_iter().unzip();
+                    points_and_distances.into_iter().unzip();
 
                 // If all points on distinct curves are within
                 // `distinct_min_distance`, that's a problem.
