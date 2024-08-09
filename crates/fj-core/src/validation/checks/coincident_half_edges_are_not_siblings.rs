@@ -31,6 +31,9 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
 
     /// The second half-edge
     pub half_edge_b: Handle<HalfEdge>,
+
+    /// The distances between the points on the half-edges that were checked
+    pub distances: Vec<Scalar>,
 }
 
 impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
@@ -72,8 +75,9 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
         write!(
             f,
             "Half-edge 1: {:#?}\n\
-            Half-edge 2: {:#?}",
-            self.half_edge_a, self.half_edge_b,
+            Half-edge 2: {:#?}\n\
+            Distances: {:#?}",
+            self.half_edge_a, self.half_edge_b, self.distances
         )?;
 
         Ok(())
@@ -108,7 +112,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 }
 
-                let Some(mut distances) = distances(
+                let Some(distances) = distances(
                     half_edge_a.clone(),
                     object
                         .find_cycle_of_half_edge(half_edge_a)
@@ -133,10 +137,11 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     // hence these half-edges can't be coincident.
                     continue;
                 };
+                let distances = distances.collect::<Vec<_>>();
 
                 // If all points on distinct curves are within
                 // `distinct_min_distance`, that's a problem.
-                if distances.all(|d| d < config.distinct_min_distance) {
+                if distances.iter().all(|d| *d < config.distinct_min_distance) {
                     let curves = [half_edge_a, half_edge_b]
                         .map(|half_edge| half_edge.curve().clone());
                     let vertices =
@@ -153,6 +158,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                         vertices,
                         half_edge_a: half_edge_a.clone(),
                         half_edge_b: half_edge_b.clone(),
+                        distances,
                     })
                 }
             }
