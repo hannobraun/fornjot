@@ -32,6 +32,9 @@ pub struct CoincidentHalfEdgesAreNotSiblings {
     /// The second half-edge
     pub half_edge_b: Handle<HalfEdge>,
 
+    /// The points on the half-edges that were checked
+    pub points: Vec<[Point<3>; 2]>,
+
     /// The distances between the points on the half-edges that were checked
     pub distances: Vec<Scalar>,
 }
@@ -138,7 +141,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                     continue;
                 };
 
-                let (_, distances): (Vec<_>, Vec<_>) =
+                let (points, distances): (Vec<_>, Vec<_>) =
                     points_and_distances.into_iter().unzip();
 
                 // If all points on distinct curves are within
@@ -160,6 +163,7 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                         vertices,
                         half_edge_a: half_edge_a.clone(),
                         half_edge_b: half_edge_b.clone(),
+                        points,
                         distances,
                     })
                 }
