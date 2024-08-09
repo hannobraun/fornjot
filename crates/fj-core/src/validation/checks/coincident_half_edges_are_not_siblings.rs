@@ -79,8 +79,9 @@ impl fmt::Display for CoincidentHalfEdgesAreNotSiblings {
             f,
             "Half-edge 1: {:#?}\n\
             Half-edge 2: {:#?}\n\
+            Points: {:#?}\n\
             Distances: {:#?}",
-            self.half_edge_a, self.half_edge_b, self.distances
+            self.half_edge_a, self.half_edge_b, self.points, self.distances
         )?;
 
         Ok(())
