@@ -32,7 +32,7 @@ pub trait JoinCycle {
     #[must_use]
     fn add_joined_edges<Es>(
         &self,
-        edges: Es,
+        half_edges: Es,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Self
@@ -95,7 +95,7 @@ pub trait JoinCycle {
 impl JoinCycle for Cycle {
     fn add_joined_edges<Es>(
         &self,
-        edges: Es,
+        half_edges: Es,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Self
@@ -103,7 +103,7 @@ impl JoinCycle for Cycle {
         Es: IntoIterator<Item = (Handle<HalfEdge>, LocalCurveGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
-        let half_edges = edges
+        let half_edges = half_edges
             .into_iter()
             .circular_tuple_windows()
             .map(|((prev_half_edge, _), (half_edge, curve_geom))| {
