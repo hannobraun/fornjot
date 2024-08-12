@@ -106,6 +106,10 @@ impl JoinCycle for Cycle {
         let half_edges = half_edges
             .into_iter()
             .circular_tuple_windows()
+            // If you're confused about the naming of `next_half_edge` and/or
+            // the relative order of `half_edge`/`next_half_edge`, please refer
+            // to the documentation of this method. This matches the order it
+            // expects half-edges in.
             .map(|((next_half_edge, _), (half_edge, curve_geom))| {
                 let half_edge = HalfEdge::unjoined(core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
