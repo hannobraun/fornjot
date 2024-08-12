@@ -44,10 +44,9 @@ impl ValidationConfig {
     pub fn from_tolerance(tolerance: impl Into<Tolerance>) -> Self {
         let tolerance = tolerance.into();
 
-        // This value was chosen pretty arbitrarily. Seems small enough to catch
-        // errors. If it turns out it's too small (because it produces false
-        // positives due to floating-point accuracy issues), we can adjust it.
-        let identical_max_distance = Scalar::from_f64(5e-14);
+        // This value can't be smaller than the tolerance. If it is, we'll get
+        // validation errors everywhere, just from numerical noise.
+        let identical_max_distance = tolerance.inner() * 10.;
 
         // This value can't be smaller than `identical_max_distance`. Otherwise
         // we can have distinct points that satisfy this constraint, but must be
