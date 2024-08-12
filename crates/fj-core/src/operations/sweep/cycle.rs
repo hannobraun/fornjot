@@ -79,6 +79,24 @@ impl SweepCycle for Cycle {
 
             faces.push(swept_half_edge.face);
 
+            // The order of these top half-edges is going to be important later,
+            // so let's make sure we understand what's going on:
+            //
+            // - We are iterating through the bottom half-edges here. That means
+            //   the order of those bottom half-edges is natural, as we'd expect
+            //   it:
+            //   - We see them in the order that they appear in the cycle.
+            //   - Each half-edge we see ends where the next one starts.
+            // - By sweeping the bottom half-edges, we are creating a top half-
+            //   edges that have opposite orientation.
+            // - And yet we're adding them to a list, in the same order that we
+            //   iterate over the bottom half-edges.
+            // - As a result, the order of the list is unnatural, going against
+            //   expectations:
+            //   - This is the opposite order than the one in which they'll
+            //     appear within a cycle eventually.
+            //   - Each half-edge ends where the _previous_ one (in the list)
+            //     starts.
             top_half_edges.push((
                 swept_half_edge.top_half_edge,
                 swept_half_edge.top_boundary,
@@ -118,8 +136,15 @@ impl SweepCycle for Cycle {
             )
             .collect::<Vec<_>>();
 
-        let top_cycle =
-            Cycle::empty().add_joined_edges(top_half_edges, top_surface, core);
+        // The half-edges within `top_half_edges` which we're passing into
+        // `add_joined_edges` are in unnatural order, as per the comment above.
+        // This happens to be exactly the order that `add_joined_edges` wants
+        // them to be in, so it works out.
+        let top_cycle = Cycle::empty().add_joined_half_edges(
+            top_half_edges,
+            top_surface,
+            core,
+        );
 
         SweptCycle { faces, top_cycle }
     }

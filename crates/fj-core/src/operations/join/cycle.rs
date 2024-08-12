@@ -22,13 +22,17 @@ pub trait JoinCycle {
     /// joins the new half-edge to the provided one, and adds the new half-edge
     /// to the cycle.
     ///
-    /// The geometry for each new half-edge needs to be provided as well.
+    /// Expects the provided half-edges to be in an unnatural order:
     ///
-    /// Also requires the surface that the cycle is defined in.
+    /// - This is the opposite order that they would appear in, in a cycle.
+    /// - Meaning each half-edge ends where the _previous_ one starts.
+    ///
+    /// The geometry for each new half-edge needs to be provided as well. Also
+    /// requires the surface that the cycle is defined in.
     #[must_use]
-    fn add_joined_edges<Es>(
+    fn add_joined_half_edges<Es>(
         &self,
-        edges: Es,
+        half_edges: Es,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Self
@@ -89,9 +93,9 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(
+    fn add_joined_half_edges<Es>(
         &self,
-        edges: Es,
+        half_edges: Es,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Self
@@ -99,14 +103,18 @@ impl JoinCycle for Cycle {
         Es: IntoIterator<Item = (Handle<HalfEdge>, LocalCurveGeom)>,
         Es::IntoIter: Clone + ExactSizeIterator,
     {
-        let half_edges = edges
+        let half_edges = half_edges
             .into_iter()
             .circular_tuple_windows()
-            .map(|((prev_half_edge, _), (half_edge, curve_geom))| {
+            // If you're confused about the naming of `next_half_edge` and/or
+            // the relative order of `half_edge`/`next_half_edge`, please refer
+            // to the documentation of this method. This matches the order it
+            // expects half-edges in.
+            .map(|((next_half_edge, _), (half_edge, curve_geom))| {
                 let half_edge = HalfEdge::unjoined(core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
-                        |_, _| prev_half_edge.start_vertex().clone(),
+                        |_, _| next_half_edge.start_vertex().clone(),
                         core,
                     )
                     .insert(core);
