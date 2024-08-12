@@ -30,7 +30,7 @@ pub trait JoinCycle {
     /// The geometry for each new half-edge needs to be provided as well. Also
     /// requires the surface that the cycle is defined in.
     #[must_use]
-    fn add_joined_edges<Es>(
+    fn add_joined_half_edges<Es>(
         &self,
         half_edges: Es,
         surface: Handle<Surface>,
@@ -93,7 +93,7 @@ pub trait JoinCycle {
 }
 
 impl JoinCycle for Cycle {
-    fn add_joined_edges<Es>(
+    fn add_joined_half_edges<Es>(
         &self,
         half_edges: Es,
         surface: Handle<Surface>,

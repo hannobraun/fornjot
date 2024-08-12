@@ -118,8 +118,11 @@ impl SweepCycle for Cycle {
             )
             .collect::<Vec<_>>();
 
-        let top_cycle =
-            Cycle::empty().add_joined_edges(top_half_edges, top_surface, core);
+        let top_cycle = Cycle::empty().add_joined_half_edges(
+            top_half_edges,
+            top_surface,
+            core,
+        );
 
         SweptCycle { faces, top_cycle }
     }
