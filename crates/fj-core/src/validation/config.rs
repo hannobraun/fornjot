@@ -43,9 +43,9 @@ impl Default for ValidationConfig {
     fn default() -> Self {
         Self {
             panic_on_error: false,
-            distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
             tolerance: Tolerance::from_scalar(0.001)
                 .expect("Tolerance provided is larger than zero"),
+            distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
 
             // This value was chosen pretty arbitrarily. Seems small enough to
             // catch errors. If it turns out it's too small (because it produces
