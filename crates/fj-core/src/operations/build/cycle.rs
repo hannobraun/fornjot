@@ -59,7 +59,7 @@ pub trait BuildCycle {
     /// ## Implementation Note
     ///
     /// The cycle can't be built out of a single half-edge. That would be
-    /// invalid although there's not validation check to document and enforce
+    /// invalid although there's no validation check to document and enforce
     /// that yet. Please refer to the following issue for more information:
     /// <https://github.com/hannobraun/fornjot/issues/2374>
     ///
