@@ -106,11 +106,11 @@ impl JoinCycle for Cycle {
         let half_edges = half_edges
             .into_iter()
             .circular_tuple_windows()
-            .map(|((prev_half_edge, _), (half_edge, curve_geom))| {
+            .map(|((next_half_edge, _), (half_edge, curve_geom))| {
                 let half_edge = HalfEdge::unjoined(core)
                     .update_curve(|_, _| half_edge.curve().clone(), core)
                     .update_start_vertex(
-                        |_, _| prev_half_edge.start_vertex().clone(),
+                        |_, _| next_half_edge.start_vertex().clone(),
                         core,
                     )
                     .insert(core);
