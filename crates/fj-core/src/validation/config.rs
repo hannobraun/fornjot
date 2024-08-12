@@ -49,7 +49,12 @@ impl ValidationConfig {
         // positives due to floating-point accuracy issues), we can adjust it.
         let identical_max_distance = Scalar::from_f64(5e-14);
 
-        let distinct_min_distance = Scalar::from_f64(5e-7); // 0.5 µm
+        // This value can't be smaller than `identical_max_distance`. Otherwise
+        // we can have distinct points that satisfy this constraint, but must be
+        // considered identical according to the other.
+        //
+        // This factor was chosen pretty arbitrarily and might need to be tuned.
+        let distinct_min_distance = identical_max_distance * 2.;
 
         Self {
             panic_on_error: false,
