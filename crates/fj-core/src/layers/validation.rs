@@ -38,10 +38,7 @@ impl Command<Validation> for ValidateObject<'_> {
                 panic!("{:#?}", err);
             }
 
-            events.push(ValidationFailed {
-                object: self.object.clone(),
-                err,
-            });
+            events.push(ValidationFailed { err });
         }
     }
 }
@@ -83,9 +80,6 @@ impl Event<Validation> for TakeErrors {
 /// Event produced by `Layer<Validation>`.
 #[derive(Clone)]
 pub struct ValidationFailed {
-    /// The object for which validation failed
-    pub object: AnyObject<Stored>,
-
     /// The validation error
     pub err: ValidationError,
 }
