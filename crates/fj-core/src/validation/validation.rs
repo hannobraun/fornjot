@@ -1,6 +1,4 @@
-use std::{collections::HashMap, error::Error, thread};
-
-use crate::storage::ObjectId;
+use std::{error::Error, thread};
 
 use super::{ValidationConfig, ValidationError};
 
@@ -8,7 +6,7 @@ use super::{ValidationConfig, ValidationError};
 #[derive(Default)]
 pub struct Validation {
     /// All unhandled validation errors
-    pub errors: HashMap<ObjectId, ValidationError>,
+    pub errors: Vec<ValidationError>,
 
     /// Validation configuration for the validation service
     pub config: ValidationConfig,
@@ -17,7 +15,7 @@ pub struct Validation {
 impl Validation {
     /// Construct an instance of `Validation`, using the provided configuration
     pub fn with_validation_config(config: ValidationConfig) -> Self {
-        let errors = HashMap::new();
+        let errors = Vec::new();
         Self { errors, config }
     }
 }
@@ -31,7 +29,7 @@ impl Drop for Validation {
                 errors:"
             );
 
-            for err in self.errors.values() {
+            for err in self.errors.iter() {
                 println!("{}", err);
 
                 // Once `Report` is stable, we can replace this:

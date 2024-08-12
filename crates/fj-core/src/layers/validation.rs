@@ -60,7 +60,7 @@ impl Command<Validation> for TakeErrors {
         state: &Validation,
         events: &mut Vec<Self::Event>,
     ) -> Self::Result {
-        let errors = ValidationErrors(state.errors.values().cloned().collect());
+        let errors = ValidationErrors(state.errors.to_vec());
 
         events.push(self);
 
@@ -92,6 +92,6 @@ pub struct ValidationFailed {
 
 impl Event<Validation> for ValidationFailed {
     fn evolve(&self, state: &mut Validation) {
-        state.errors.insert(self.object.id(), self.err.clone());
+        state.errors.push(self.err.clone());
     }
 }
