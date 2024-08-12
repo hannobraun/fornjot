@@ -38,10 +38,7 @@ impl Command<Validation> for ValidateObject<'_> {
                 panic!("{:#?}", err);
             }
 
-            events.push(ValidationFailed {
-                object: self.object.clone(),
-                err,
-            });
+            events.push(ValidationFailed { err });
         }
     }
 }
@@ -60,7 +57,7 @@ impl Command<Validation> for TakeErrors {
         state: &Validation,
         events: &mut Vec<Self::Event>,
     ) -> Self::Result {
-        let errors = ValidationErrors(state.errors.values().cloned().collect());
+        let errors = ValidationErrors(state.errors.to_vec());
 
         events.push(self);
 
@@ -83,15 +80,12 @@ impl Event<Validation> for TakeErrors {
 /// Event produced by `Layer<Validation>`.
 #[derive(Clone)]
 pub struct ValidationFailed {
-    /// The object for which validation failed
-    pub object: AnyObject<Stored>,
-
     /// The validation error
     pub err: ValidationError,
 }
 
 impl Event<Validation> for ValidationFailed {
     fn evolve(&self, state: &mut Validation) {
-        state.errors.insert(self.object.id(), self.err.clone());
+        state.errors.push(self.err.clone());
     }
 }
