@@ -39,12 +39,14 @@ pub struct ValidationConfig {
     pub identical_max_distance: Scalar,
 }
 
-impl Default for ValidationConfig {
-    fn default() -> Self {
+impl ValidationConfig {
+    /// Compute validation config from a tolerance value
+    pub fn from_tolerance(tolerance: impl Into<Tolerance>) -> Self {
+        let tolerance = tolerance.into();
+
         Self {
             panic_on_error: false,
-            tolerance: Tolerance::from_scalar(0.001)
-                .expect("Tolerance provided is larger than zero"),
+            tolerance,
             distinct_min_distance: Scalar::from_f64(5e-7), // 0.5 µm,
 
             // This value was chosen pretty arbitrarily. Seems small enough to
@@ -53,5 +55,11 @@ impl Default for ValidationConfig {
             // adjust it.
             identical_max_distance: Scalar::from_f64(5e-14),
         }
+    }
+}
+
+impl Default for ValidationConfig {
+    fn default() -> Self {
+        Self::from_tolerance(0.001)
     }
 }
