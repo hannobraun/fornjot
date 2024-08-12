@@ -24,12 +24,6 @@ pub struct ValidationConfig {
     /// The tolerance value used for intermediate geometry representation
     pub tolerance: Tolerance,
 
-    /// The minimum distance between distinct objects
-    ///
-    /// Objects whose distance is less than the value defined in this field, are
-    /// considered identical.
-    pub distinct_min_distance: Scalar,
-
     /// The maximum distance between identical objects
     ///
     /// Objects that are considered identical might still have a distance
@@ -37,6 +31,12 @@ pub struct ValidationConfig {
     /// that distance is less than the one defined in this field, can not be
     /// considered identical.
     pub identical_max_distance: Scalar,
+
+    /// The minimum distance between distinct objects
+    ///
+    /// Objects whose distance is less than the value defined in this field, are
+    /// considered identical.
+    pub distinct_min_distance: Scalar,
 }
 
 impl ValidationConfig {
@@ -58,8 +58,8 @@ impl ValidationConfig {
         Self {
             panic_on_error: false,
             tolerance,
-            distinct_min_distance,
             identical_max_distance,
+            distinct_min_distance,
         }
     }
 }
