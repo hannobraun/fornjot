@@ -22,9 +22,13 @@ pub trait JoinCycle {
     /// joins the new half-edge to the provided one, and adds the new half-edge
     /// to the cycle.
     ///
-    /// The geometry for each new half-edge needs to be provided as well.
+    /// Expects the provided half-edges to be in an unnatural order:
     ///
-    /// Also requires the surface that the cycle is defined in.
+    /// - This is the opposite order that they would appear in, in a cycle.
+    /// - Meaning each half-edge ends where the _previous_ one starts.
+    ///
+    /// The geometry for each new half-edge needs to be provided as well. Also
+    /// requires the surface that the cycle is defined in.
     #[must_use]
     fn add_joined_edges<Es>(
         &self,
