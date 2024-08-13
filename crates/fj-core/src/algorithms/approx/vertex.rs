@@ -8,7 +8,7 @@ use crate::{
     topology::{Curve, Surface, Vertex},
 };
 
-use super::ApproxPoint;
+use super::{ApproxPoint, Tolerance};
 
 /// # Approximate a vertex position
 pub fn approx_vertex(
@@ -16,6 +16,7 @@ pub fn approx_vertex(
     curve: &Handle<Curve>,
     surface: &Handle<Surface>,
     position_curve: Point<1>,
+    tolerance: impl Into<Tolerance>,
     cache: &mut VertexApproxCache,
     geometry: &Geometry,
 ) -> ApproxPoint<1> {
@@ -32,7 +33,7 @@ pub fn approx_vertex(
         None => {
             let position_global = geometry
                 .of_surface(surface)
-                .point_from_surface_coords(position_surface);
+                .point_from_surface_coords(position_surface, tolerance);
             cache.insert(vertex, position_global)
         }
     };

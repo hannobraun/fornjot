@@ -1,8 +1,9 @@
 use std::ops::Deref;
 
-use fj_math::Aabb;
+use fj_math::{Aabb, Vector};
 
 use crate::{
+    algorithms::approx::Tolerance,
     geometry::{Geometry, GlobalPath, SurfaceGeom},
     topology::Face,
 };
@@ -29,10 +30,28 @@ impl super::BoundingVolume<3> for &Face {
 
                         aabb_bottom.merged(&aabb_top)
                     }
-                    GlobalPath::Line(_) => Aabb {
-                        min: surface.point_from_surface_coords(aabb2.min),
-                        max: surface.point_from_surface_coords(aabb2.max),
-                    },
+                    GlobalPath::Line(_) => {
+                        // A bounding volume must include the body it bounds,
+                        // but does not need to match it precisely. So it's
+                        // okay, if it's a bit larger.
+                        //
+                        // Let's just choose a reasonable tolerance value here,
+                        // then make sure we enlarge the AABB accordingly, to
+                        // make sure it fits.
+                        let tolerance_f64 = 0.001;
+                        let tolerance = Tolerance::from_scalar(tolerance_f64)
+                            .expect("Tolerance provided is larger than zero");
+                        let offset = Vector::from([tolerance_f64; 3]);
+
+                        Aabb {
+                            min: surface.point_from_surface_coords(
+                                aabb2.min, tolerance,
+                            ) - offset,
+                            max: surface.point_from_surface_coords(
+                                aabb2.max, tolerance,
+                            ) + offset,
+                        }
+                    }
                 }
             })
     }

@@ -162,10 +162,16 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                             .path
                             .point_from_path_coords(point_curve);
 
-                        let a_global =
-                            surface_geom_a.point_from_surface_coords(a_surface);
-                        let b_global =
-                            surface_geom_b.point_from_surface_coords(b_surface);
+                        let a_global = surface_geom_a
+                            .point_from_surface_coords(
+                                a_surface,
+                                config.tolerance,
+                            );
+                        let b_global = surface_geom_b
+                            .point_from_surface_coords(
+                                b_surface,
+                                config.tolerance,
+                            );
 
                         let distance = (a_global - b_global).magnitude();
 

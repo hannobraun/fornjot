@@ -3,6 +3,7 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
+    algorithms::approx::Tolerance,
     geometry::{CurveBoundary, Geometry},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
@@ -117,24 +118,29 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
                 }
 
                 let Some(points_and_distances) = distances(
-                    half_edge_a.clone(),
-                    object
-                        .find_cycle_of_half_edge(half_edge_a)
-                        .unwrap()
-                        .half_edges()
-                        .after(half_edge_a)
-                        .unwrap()
-                        .start_vertex(),
-                    surface_a,
-                    half_edge_b.clone(),
-                    object
-                        .find_cycle_of_half_edge(half_edge_b)
-                        .unwrap()
-                        .half_edges()
-                        .after(half_edge_b)
-                        .unwrap()
-                        .start_vertex(),
-                    surface_b,
+                    (
+                        half_edge_a.clone(),
+                        object
+                            .find_cycle_of_half_edge(half_edge_a)
+                            .unwrap()
+                            .half_edges()
+                            .after(half_edge_a)
+                            .unwrap()
+                            .start_vertex(),
+                        surface_a,
+                    ),
+                    (
+                        half_edge_b.clone(),
+                        object
+                            .find_cycle_of_half_edge(half_edge_b)
+                            .unwrap()
+                            .half_edges()
+                            .after(half_edge_b)
+                            .unwrap()
+                            .start_vertex(),
+                        surface_b,
+                    ),
+                    config.tolerance,
                     geometry,
                 ) else {
                     // The geometry to compute the distances is not available,
@@ -179,12 +185,17 @@ impl ValidationCheck<Shell> for CoincidentHalfEdgesAreNotSiblings {
 ///
 /// Returns an [`Iterator`] of the distance at each sample.
 fn distances(
-    half_edge_a: Handle<HalfEdge>,
-    end_vertex_a: &Handle<Vertex>,
-    surface_a: &Handle<Surface>,
-    half_edge_b: Handle<HalfEdge>,
-    end_vertex_b: &Handle<Vertex>,
-    surface_b: &Handle<Surface>,
+    (half_edge_a, end_vertex_a, surface_a): (
+        Handle<HalfEdge>,
+        &Handle<Vertex>,
+        &Handle<Surface>,
+    ),
+    (half_edge_b, end_vertex_b, surface_b): (
+        Handle<HalfEdge>,
+        &Handle<Vertex>,
+        &Handle<Surface>,
+    ),
+    tolerance: Tolerance,
     geometry: &Geometry,
 ) -> Option<Vec<([Point<3>; 2], Scalar)>> {
     fn sample(
@@ -192,6 +203,7 @@ fn distances(
         half_edge: &Handle<HalfEdge>,
         end_vertex: &Handle<Vertex>,
         surface: &Handle<Surface>,
+        tolerance: Tolerance,
         geometry: &Geometry,
     ) -> Option<Point<3>> {
         let [start, end] = [
@@ -217,7 +229,7 @@ fn distances(
         Some(
             geometry
                 .of_surface(surface)
-                .point_from_surface_coords(surface_coords),
+                .point_from_surface_coords(surface_coords, tolerance),
         )
     }
 
@@ -230,13 +242,20 @@ fn distances(
     let mut distances = Vec::new();
     for i in 0..sample_count {
         let percent = i as f64 * step;
-        let sample1 =
-            sample(percent, &half_edge_a, end_vertex_a, surface_a, geometry)?;
+        let sample1 = sample(
+            percent,
+            &half_edge_a,
+            end_vertex_a,
+            surface_a,
+            tolerance,
+            geometry,
+        )?;
         let sample2 = sample(
             1.0 - percent,
             &half_edge_b,
             end_vertex_b,
             surface_b,
+            tolerance,
             geometry,
         )?;
         distances.push(([sample1, sample2], sample1.distance_to(&sample2)))

@@ -125,6 +125,7 @@ impl SolidValidationError {
                                 .unwrap()
                                 .position,
                         ),
+                        config.tolerance,
                     ),
                     h.start_vertex().clone(),
                 ))

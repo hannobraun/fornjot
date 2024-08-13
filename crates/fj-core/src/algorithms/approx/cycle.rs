@@ -53,6 +53,7 @@ pub fn approx_cycle(
                 half_edge.curve(),
                 surface,
                 start_position_curve,
+                tolerance,
                 &mut cache.vertex,
                 geometry,
             );

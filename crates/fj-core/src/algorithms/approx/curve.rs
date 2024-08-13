@@ -76,6 +76,8 @@ fn approx_circle_on_straight_surface(
     surface: &SurfaceGeom,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
+    let tolerance = tolerance.into();
+
     approx_circle(circle, boundary, tolerance)
         .into_iter()
         .map(|(point_curve, point_surface)| {
@@ -93,7 +95,8 @@ fn approx_circle_on_straight_surface(
             //    point available, so it needs to be computed later anyway, in
             //    the general case.
 
-            let point_global = surface.point_from_surface_coords(point_surface);
+            let point_global =
+                surface.point_from_surface_coords(point_surface, tolerance);
             ApproxPoint::new(point_curve, point_global)
         })
         .collect()
@@ -105,6 +108,8 @@ fn approx_line_on_any_surface(
     surface: &SurfaceGeom,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
+    let tolerance = tolerance.into();
+
     let range_u = CurveBoundary::from(
         boundary
             .inner
@@ -121,7 +126,8 @@ fn approx_line_on_any_surface(
     for (u, _) in approx_u {
         let t = (u.t - line.origin().u) / line.direction().u;
         let point_surface = line.point_from_line_coords([t]);
-        let point_global = surface.point_from_surface_coords(point_surface);
+        let point_global =
+            surface.point_from_surface_coords(point_surface, tolerance);
         points.push(ApproxPoint::new(u, point_global));
     }
 
@@ -258,7 +264,7 @@ mod tests {
                     .layers
                     .geometry
                     .of_surface(&surface)
-                    .point_from_surface_coords(point_surface);
+                    .point_from_surface_coords(point_surface, tolerance);
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();
@@ -286,7 +292,7 @@ mod tests {
                     .layers
                     .geometry
                     .of_surface(&surface)
-                    .point_from_surface_coords(point_surface);
+                    .point_from_surface_coords(point_surface, tolerance);
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();

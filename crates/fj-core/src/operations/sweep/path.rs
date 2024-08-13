@@ -66,18 +66,26 @@ impl SweepSurfacePath for SurfacePath {
 
         let u = match self {
             SurfacePath::Circle(circle) => {
-                let center = surface.point_from_surface_coords(circle.center());
-                let a = surface.vector_from_surface_coords(circle.a());
-                let b = surface.vector_from_surface_coords(circle.b());
+                let center = surface.point_from_surface_coords(
+                    circle.center(),
+                    core.tolerance(),
+                );
+                let a = surface
+                    .vector_from_surface_coords(circle.a(), core.tolerance());
+                let b = surface
+                    .vector_from_surface_coords(circle.b(), core.tolerance());
 
                 let circle = Circle::new(center, a, b);
 
                 GlobalPath::Circle(circle)
             }
             SurfacePath::Line(line) => {
-                let origin = surface.point_from_surface_coords(line.origin());
-                let direction =
-                    surface.vector_from_surface_coords(line.direction());
+                let origin = surface
+                    .point_from_surface_coords(line.origin(), core.tolerance());
+                let direction = surface.vector_from_surface_coords(
+                    line.direction(),
+                    core.tolerance(),
+                );
 
                 let line = Line::from_origin_and_direction(origin, direction);
 

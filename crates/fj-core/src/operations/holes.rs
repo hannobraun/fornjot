@@ -93,7 +93,10 @@ impl AddHole for Shell {
                 core.layers
                     .geometry
                     .of_surface(location.face.surface())
-                    .point_from_surface_coords(location.position)
+                    .point_from_surface_coords(
+                        location.position,
+                        core.tolerance(),
+                    )
             };
 
             let entry_point = point(&entry_location);
