@@ -1,6 +1,6 @@
 //! The geometry that defines a surface
 
-use fj_math::{Line, Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::algorithms::approx::{PathApproxParams, Tolerance};
 
@@ -137,17 +137,12 @@ impl SurfaceGeom {
     pub fn vector_from_surface_coords(
         &self,
         vector: impl Into<Vector<2>>,
-        _: impl Into<Tolerance>,
+        tolerance: impl Into<Tolerance>,
     ) -> Vector<3> {
         let vector = vector.into();
-        let Self::Basic { u, .. } = self;
-        u.vector_from_path_coords([vector.u])
-            + self.path_to_line().vector_from_line_coords([vector.v])
-    }
-
-    fn path_to_line(&self) -> Line<3> {
-        let Self::Basic { u, v } = self;
-        Line::from_origin_and_direction(u.origin(), *v)
+        let point =
+            self.point_from_surface_coords(Point { coords: vector }, tolerance);
+        point - self.origin()
     }
 
     /// Transform the surface geometry
