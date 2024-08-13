@@ -128,6 +128,7 @@ impl SurfaceGeom {
     pub fn vector_from_surface_coords(
         &self,
         vector: impl Into<Vector<2>>,
+        _: impl Into<Tolerance>,
     ) -> Vector<3> {
         let vector = vector.into();
         let Self::Basic { u, .. } = self;
@@ -190,8 +191,11 @@ mod tests {
             v: Vector::from([0., 0., 2.]),
         };
 
+        // Value doesn't matter; we're dealing with a plane.
+        let tolerance = Tolerance::from_scalar(1.).unwrap();
+
         assert_eq!(
-            surface.vector_from_surface_coords([2., 4.]),
+            surface.vector_from_surface_coords([2., 4.], tolerance),
             Vector::from([0., 4., 8.]),
         );
     }
