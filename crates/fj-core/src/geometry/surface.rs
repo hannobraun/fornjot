@@ -28,6 +28,15 @@ pub enum SurfaceGeom {
 }
 
 impl SurfaceGeom {
+    /// # Access the origin of the surface
+    pub fn origin(&self) -> Point<3> {
+        let Self::Basic { u, .. } = self;
+        match u {
+            GlobalPath::Circle(circle) => circle.center(),
+            GlobalPath::Line(line) => line.origin(),
+        }
+    }
+
     /// # Return the triangle at the provided point on the surface
     ///
     /// Select a triangle of the surface's triangle mesh representation, the one
