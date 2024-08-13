@@ -43,6 +43,16 @@ impl<const D: usize> Triangle<D> {
         area > Scalar::default_epsilon()
     }
 
+    /// Convert barycentric coordinates to a point
+    pub fn point_from_barycentric_coords(
+        &self,
+        [wa, wb, wc]: [Scalar; 3],
+    ) -> Point<D> {
+        let [a, b, c] = self.points;
+        let coords = a.coords * wa + b.coords * wb + c.coords * wc;
+        Point { coords }
+    }
+
     /// Normalize the triangle
     ///
     /// Returns a new `Triangle` instance with the same points, but the points
