@@ -1,8 +1,7 @@
-use fj_math::{Scalar, Vector};
+use fj_math::Vector;
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeom},
-    operations::{derive::DeriveFrom, insert::Insert, reverse::Reverse},
+    operations::insert::Insert,
     storage::Handle,
     topology::{Face, Sketch, Solid, Surface},
     Core,
@@ -37,38 +36,6 @@ impl SweepSketch for Sketch {
 
         let mut shells = Vec::new();
         for region in self.regions() {
-            let region = {
-                // The following code assumes that the sketch is wound counter-
-                // clockwise. Let's check that real quick.
-                assert!(region
-                    .exterior()
-                    .winding(&core.layers.geometry, self.surface())
-                    .is_ccw());
-
-                let SurfaceGeom::Basic { u, v } =
-                    core.layers.geometry.of_surface(&surface);
-
-                let is_negative_sweep = {
-                    let u = match u {
-                        GlobalPath::Circle(_) => todo!(
-                            "Sweeping sketch from a rounded surfaces is not \
-                            supported"
-                        ),
-                        GlobalPath::Line(line) => line.direction(),
-                    };
-
-                    let normal = u.cross(v);
-
-                    normal.dot(&path) < Scalar::ZERO
-                };
-
-                if is_negative_sweep {
-                    region.clone()
-                } else {
-                    region.reverse(core).insert(core).derive_from(region, core)
-                }
-            };
-
             for cycle in region.all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve_geom = core
