@@ -16,6 +16,27 @@ use super::{face::SweepFace, SweepCache};
 /// [module documentation]: super
 pub trait SweepSketch {
     /// # Sweep the [`Sketch`]
+    ///
+    /// Requires `path` to point towards the back of `surface`. If one of them
+    /// is fixed, make sure to adapt the other one accordingly.
+    ///
+    /// Not following this requirement will produce an invalid shape that
+    /// _should_ fail validation.
+    ///
+    /// ## Implementation Note
+    ///
+    /// The above requirement is a bit draconian. It would be much nicer, if
+    /// this operation just worked, regardless of the relation of `path` and
+    /// `surface`, and in fact, a previous version of it did.
+    ///
+    /// However, this previous version also made some undocumented assumption
+    /// that didn't hold in the general case. It was also getting in the way of
+    /// introducing the new geometry system.
+    ///
+    /// The decision was made that, for now, simplifying this operation and
+    /// putting more requirements on the caller, was the right call. Once the
+    /// new geometry system is in place, we'll hopefully be in a position to
+    /// improve the sweep operation substantially.
     fn sweep_sketch(
         &self,
         surface: Handle<Surface>,
