@@ -1,8 +1,7 @@
-use fj_math::{Scalar, Vector};
+use fj_math::Vector;
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeom},
-    operations::{derive::DeriveFrom, insert::Insert, reverse::Reverse},
+    operations::insert::Insert,
     storage::Handle,
     topology::{Face, Sketch, Solid, Surface},
     Core,
@@ -17,6 +16,27 @@ use super::{face::SweepFace, SweepCache};
 /// [module documentation]: super
 pub trait SweepSketch {
     /// # Sweep the [`Sketch`]
+    ///
+    /// Requires `path` to point towards the back of `surface`. If one of them
+    /// is fixed, make sure to adapt the other one accordingly.
+    ///
+    /// Not following this requirement will produce an invalid shape that
+    /// _should_ fail validation.
+    ///
+    /// ## Implementation Note
+    ///
+    /// The above requirement is a bit draconian. It would be much nicer, if
+    /// this operation just worked, regardless of the relation of `path` and
+    /// `surface`, and in fact, a previous version of it did.
+    ///
+    /// However, this previous version also made some undocumented assumption
+    /// that didn't hold in the general case. It was also getting in the way of
+    /// introducing the new geometry system.
+    ///
+    /// The decision was made that, for now, simplifying this operation and
+    /// putting more requirements on the caller, was the right call. Once the
+    /// new geometry system is in place, we'll hopefully be in a position to
+    /// improve the sweep operation substantially.
     fn sweep_sketch(
         &self,
         surface: Handle<Surface>,
@@ -37,38 +57,6 @@ impl SweepSketch for Sketch {
 
         let mut shells = Vec::new();
         for region in self.regions() {
-            let region = {
-                // The following code assumes that the sketch is wound counter-
-                // clockwise. Let's check that real quick.
-                assert!(region
-                    .exterior()
-                    .winding(&core.layers.geometry, self.surface())
-                    .is_ccw());
-
-                let SurfaceGeom::Basic { u, v } =
-                    core.layers.geometry.of_surface(&surface);
-
-                let is_negative_sweep = {
-                    let u = match u {
-                        GlobalPath::Circle(_) => todo!(
-                            "Sweeping sketch from a rounded surfaces is not \
-                            supported"
-                        ),
-                        GlobalPath::Line(line) => line.direction(),
-                    };
-
-                    let normal = u.cross(v);
-
-                    normal.dot(&path) < Scalar::ZERO
-                };
-
-                if is_negative_sweep {
-                    region.clone()
-                } else {
-                    region.reverse(core).insert(core).derive_from(region, core)
-                }
-            };
-
             for cycle in region.all_cycles() {
                 for half_edge in cycle.half_edges() {
                     let curve_geom = core

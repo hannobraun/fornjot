@@ -18,7 +18,10 @@ pub fn model(radius: impl Into<Scalar>, core: &mut fj::core::Core) -> Solid {
     cuboid.update_shell(
         cuboid.shells().only(),
         |shell, core| {
-            let bottom_face = shell.faces().first();
+            let bottom_face = shell
+                .faces()
+                .nth(5)
+                .expect("Expected shell to have bottom face");
             let offset = size / 2.;
             let depth = size / 2.;
 
@@ -32,11 +35,11 @@ pub fn model(radius: impl Into<Scalar>, core: &mut fj::core::Core) -> Solid {
                 core,
             );
 
-            let bottom_face = shell.faces().first();
-            let top_face = shell
+            let bottom_face = shell
                 .faces()
                 .nth(5)
-                .expect("Expected shell to have top face");
+                .expect("Expected shell to have bottom face");
+            let top_face = shell.faces().first();
 
             [shell.add_through_hole(
                 [

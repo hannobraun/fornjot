@@ -41,7 +41,7 @@ pub fn model(
     }
 
     let bottom_surface = core.layers.topology.surfaces.xy_plane();
-    let sweep_path = Vector::from([0., 0., h]);
+    let sweep_path = Vector::from([0., 0., -h]);
 
     Sketch::empty(&core.layers.topology)
         .add_regions(
