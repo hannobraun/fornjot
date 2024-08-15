@@ -80,7 +80,7 @@ impl Path<2> {
 }
 
 impl Path<3> {
-    /// Construct a `GlobalPath` that represents the x-axis
+    /// Construct a `Path` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(
             Point::origin(),
@@ -88,7 +88,7 @@ impl Path<3> {
         ))
     }
 
-    /// Construct a `GlobalPath` that represents the y-axis
+    /// Construct a `Path` that represents the y-axis
     pub fn y_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(
             Point::origin(),
@@ -96,7 +96,7 @@ impl Path<3> {
         ))
     }
 
-    /// Construct a `GlobalPath` that represents the z-axis
+    /// Construct a `Path` that represents the z-axis
     pub fn z_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(
             Point::origin(),
