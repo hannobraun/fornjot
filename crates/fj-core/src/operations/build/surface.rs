@@ -50,7 +50,7 @@ pub trait BuildSurface {
     ) -> (Handle<Surface>, [Point<2>; 3]) {
         let [a, b, c] = points.map(Into::into);
 
-        let (u, u_line) = Path::<3>::line_from_points([a, b]);
+        let (u, u_line) = Path::line_from_points([a, b]);
         let v = c - a;
 
         let surface = Surface::from_uv(u, v, core);
