@@ -1,6 +1,6 @@
 //! Paths through 2D and 3D space
 //!
-//! See [`Path`] and [`GlobalPath`].
+//! See [`Path`].
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
@@ -79,17 +79,7 @@ impl Path<2> {
     }
 }
 
-/// A path through global (3D) space
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum GlobalPath {
-    /// A circle
-    Circle(Circle<3>),
-
-    /// A line
-    Line(Line<3>),
-}
-
-impl GlobalPath {
+impl Path<3> {
     /// Construct a `GlobalPath` that represents the x-axis
     pub fn x_axis() -> Self {
         Self::Line(Line::from_origin_and_direction(

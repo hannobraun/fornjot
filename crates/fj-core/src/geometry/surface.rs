@@ -4,13 +4,13 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::algorithms::approx::{PathApproxParams, Tolerance};
 
-use super::GlobalPath;
+use super::Path;
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SurfaceGeom {
     /// The u-axis of the surface
-    pub u: GlobalPath,
+    pub u: Path<3>,
 
     /// The v-axis of the surface
     pub v: Vector<3>,
@@ -21,8 +21,8 @@ impl SurfaceGeom {
     pub fn origin(&self) -> Point<3> {
         let Self { u, .. } = self;
         match u {
-            GlobalPath::Circle(circle) => circle.center(),
-            GlobalPath::Line(line) => line.origin(),
+            Path::Circle(circle) => circle.center(),
+            Path::Line(line) => line.origin(),
         }
     }
 
@@ -71,7 +71,7 @@ impl SurfaceGeom {
 
         let Self { u, v } = self;
         match u {
-            GlobalPath::Circle(circle) => {
+            Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
                 let a = point_surface.u - params.increment();
@@ -93,7 +93,7 @@ impl SurfaceGeom {
 
                 (triangle, barycentric_coords)
             }
-            GlobalPath::Line(line) => {
+            Path::Line(line) => {
                 let a = line.direction();
                 let b = *v;
 
@@ -152,13 +152,13 @@ mod tests {
 
     use crate::{
         algorithms::approx::Tolerance,
-        geometry::{GlobalPath, SurfaceGeom},
+        geometry::{Path, SurfaceGeom},
     };
 
     #[test]
     fn point_from_surface_coords() {
         let surface = SurfaceGeom {
-            u: GlobalPath::Line(Line::from_origin_and_direction(
+            u: Path::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
             )),
@@ -177,7 +177,7 @@ mod tests {
     #[test]
     fn vector_from_surface_coords() {
         let surface = SurfaceGeom {
-            u: GlobalPath::Line(Line::from_origin_and_direction(
+            u: Path::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
             )),

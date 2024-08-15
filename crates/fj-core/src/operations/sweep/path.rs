@@ -1,7 +1,7 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{GlobalPath, Path, SurfaceGeom},
+    geometry::{Path, SurfaceGeom},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
@@ -41,7 +41,7 @@ impl SweepSurfacePath for Path<2> {
     ) -> Handle<Surface> {
         let SurfaceGeom { u, .. } = surface;
         match u {
-            GlobalPath::Circle(_) => {
+            Path::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
                 // `Surface` is a `GlobalPath`, which we are computing below.
                 // That computation might or might not work with an arbitrary
@@ -58,7 +58,7 @@ impl SweepSurfacePath for Path<2> {
                     not supported yet."
                 )
             }
-            GlobalPath::Line(_) => {
+            Path::Line(_) => {
                 // We're sweeping from a curve on a flat surface, which is
                 // supported. Carry on.
             }
@@ -77,7 +77,7 @@ impl SweepSurfacePath for Path<2> {
 
                 let circle = Circle::new(center, a, b);
 
-                GlobalPath::Circle(circle)
+                Path::Circle(circle)
             }
             Path::Line(line) => {
                 let origin = surface
@@ -89,7 +89,7 @@ impl SweepSurfacePath for Path<2> {
 
                 let line = Line::from_origin_and_direction(origin, direction);
 
-                GlobalPath::Line(line)
+                Path::Line(line)
             }
         };
 

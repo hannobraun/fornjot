@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeom},
+    geometry::{Path, SurfaceGeom},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -30,7 +30,7 @@ pub trait BuildSurface {
 
     /// Build a surface from the provided `u` and `v`
     fn from_uv(
-        u: impl Into<GlobalPath>,
+        u: impl Into<Path<3>>,
         v: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Handle<Surface> {
@@ -50,7 +50,7 @@ pub trait BuildSurface {
     ) -> (Handle<Surface>, [Point<2>; 3]) {
         let [a, b, c] = points.map(Into::into);
 
-        let (u, u_line) = GlobalPath::line_from_points([a, b]);
+        let (u, u_line) = Path::<3>::line_from_points([a, b]);
         let v = c - a;
 
         let surface = Surface::from_uv(u, v, core);

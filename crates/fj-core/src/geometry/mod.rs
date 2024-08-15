@@ -11,7 +11,7 @@ pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
     curve::{CurveGeom, LocalCurveGeom},
     geometry::Geometry,
-    path::{GlobalPath, Path},
+    path::Path,
     surface::SurfaceGeom,
     vertex::{LocalVertexGeom, VertexGeom},
 };

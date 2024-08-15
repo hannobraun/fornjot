@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, GlobalPath, Path, SurfaceGeom},
+    geometry::{CurveBoundary, Geometry, Path, SurfaceGeom},
     storage::Handle,
     topology::{Curve, Surface},
 };
@@ -50,10 +50,8 @@ fn approx_curve(
 ) -> CurveApprox {
     let SurfaceGeom { u, .. } = surface;
     let points = match (path, u) {
-        (Path::Circle(_), GlobalPath::Circle(_)) => {
-            approx_circle_on_curved_surface()
-        }
-        (Path::Circle(circle), GlobalPath::Line(_)) => {
+        (Path::Circle(_), Path::Circle(_)) => approx_circle_on_curved_surface(),
+        (Path::Circle(circle), Path::Line(_)) => {
             approx_circle_on_straight_surface(
                 circle, boundary, surface, tolerance,
             )
@@ -118,8 +116,8 @@ fn approx_line_on_any_surface(
 
     let SurfaceGeom { u, .. } = surface;
     let approx_u = match u {
-        GlobalPath::Circle(circle) => approx_circle(circle, range_u, tolerance),
-        GlobalPath::Line(line) => approx_line(line),
+        Path::Circle(circle) => approx_circle(circle, range_u, tolerance),
+        Path::Line(line) => approx_line(line),
     };
 
     let mut points = Vec::new();
@@ -199,7 +197,7 @@ mod tests {
         algorithms::approx::{
             circle::approx_circle, curve::approx_curve, ApproxPoint,
         },
-        geometry::{CurveBoundary, GlobalPath, Path, SurfaceGeom},
+        geometry::{CurveBoundary, Path, SurfaceGeom},
         operations::build::BuildSurface,
         topology::Surface,
         Core,
@@ -210,7 +208,8 @@ mod tests {
         let core = Core::new();
 
         let surface = core.layers.geometry.xz_plane();
-        let (path, boundary) = Path::line_from_points([[1., 1.], [2., 1.]]);
+        let (path, boundary) =
+            Path::<2>::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
@@ -222,10 +221,11 @@ mod tests {
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
         let surface = SurfaceGeom {
-            u: GlobalPath::circle_from_radius(1.),
+            u: Path::circle_from_radius(1.),
             v: Vector::from([0., 0., 1.]),
         };
-        let (path, boundary) = Path::line_from_points([[1., 1.], [2., 1.]]);
+        let (path, boundary) =
+            Path::<2>::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
@@ -239,7 +239,7 @@ mod tests {
         let mut core = Core::new();
 
         let circle = Circle::from_center_and_radius(Point::origin(), 1.);
-        let global_path = GlobalPath::Circle(circle);
+        let global_path = Path::Circle(circle);
         let surface_geom = SurfaceGeom {
             u: global_path,
             v: Vector::from([0., 0., 1.]),

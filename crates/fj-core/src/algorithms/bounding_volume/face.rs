@@ -4,7 +4,7 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     algorithms::approx::Tolerance,
-    geometry::{Geometry, GlobalPath, SurfaceGeom},
+    geometry::{Geometry, Path, SurfaceGeom},
     topology::Face,
 };
 
@@ -17,7 +17,7 @@ impl super::BoundingVolume<3> for &Face {
 
                 let SurfaceGeom { u, v } = surface;
                 match u {
-                    GlobalPath::Circle(circle) => {
+                    Path::Circle(circle) => {
                         // This is not the most precise way to calculate the
                         // AABB, doing it for the whole circle, but it should
                         // do.
@@ -30,7 +30,7 @@ impl super::BoundingVolume<3> for &Face {
 
                         aabb_bottom.merged(&aabb_top)
                     }
-                    GlobalPath::Line(_) => {
+                    Path::Line(_) => {
                         // A bounding volume must include the body it bounds,
                         // but does not need to match it precisely. So it's
                         // okay, if it's a bit larger.
