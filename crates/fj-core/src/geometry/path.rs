@@ -4,7 +4,7 @@
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
-/// A path through surface (2D) space
+/// A path through surface (2D) or global (3D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Path<const D: usize> {
     /// A circle
