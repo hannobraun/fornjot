@@ -2,7 +2,7 @@ use fj_interop::ext::ArrayExt;
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, LocalCurveGeom, SurfacePath},
+    geometry::{CurveBoundary, Geometry, LocalCurveGeom, Path},
     layers::Layer,
     storage::Handle,
     topology::{Curve, Surface},
@@ -20,7 +20,7 @@ pub trait UpdateCurveGeometry {
     /// Define the geometry as a path on a surface
     fn make_path_on_surface(
         self,
-        path: SurfacePath,
+        path: Path,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self;
@@ -59,7 +59,7 @@ impl UpdateCurveGeometry for Handle<Curve> {
 
     fn make_path_on_surface(
         self,
-        path: SurfacePath,
+        path: Path,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self {
@@ -75,7 +75,7 @@ impl UpdateCurveGeometry for Handle<Curve> {
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self {
-        let path = SurfacePath::line_from_points_with_coords(
+        let path = Path::line_from_points_with_coords(
             points_curve.inner.zip_ext(points_surface),
         );
 

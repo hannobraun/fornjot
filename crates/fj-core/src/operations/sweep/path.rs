@@ -1,14 +1,14 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeom, SurfacePath},
+    geometry::{GlobalPath, Path, SurfaceGeom},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
     Core,
 };
 
-/// # Sweep a [`SurfacePath`]
+/// # Sweep a [`Path`]
 ///
 /// See [module documentation] for more information.
 ///
@@ -32,7 +32,7 @@ pub trait SweepSurfacePath {
     ) -> Handle<Surface>;
 }
 
-impl SweepSurfacePath for SurfacePath {
+impl SweepSurfacePath for Path {
     fn sweep_surface_path(
         &self,
         surface: &SurfaceGeom,
@@ -65,7 +65,7 @@ impl SweepSurfacePath for SurfacePath {
         }
 
         let u = match self {
-            SurfacePath::Circle(circle) => {
+            Path::Circle(circle) => {
                 let center = surface.point_from_surface_coords(
                     circle.center(),
                     core.tolerance(),
@@ -79,7 +79,7 @@ impl SweepSurfacePath for SurfacePath {
 
                 GlobalPath::Circle(circle)
             }
-            SurfacePath::Line(line) => {
+            Path::Line(line) => {
                 let origin = surface
                     .point_from_surface_coords(line.origin(), core.tolerance());
                 let direction = surface.vector_from_surface_coords(
