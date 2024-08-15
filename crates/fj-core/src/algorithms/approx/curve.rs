@@ -208,8 +208,7 @@ mod tests {
         let core = Core::new();
 
         let surface = core.layers.geometry.xz_plane();
-        let (path, boundary) =
-            Path::<2>::line_from_points([[1., 1.], [2., 1.]]);
+        let (path, boundary) = Path::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
@@ -224,8 +223,7 @@ mod tests {
             u: Path::circle_from_radius(1.),
             v: Vector::from([0., 0., 1.]),
         };
-        let (path, boundary) =
-            Path::<2>::line_from_points([[1., 1.], [2., 1.]]);
+        let (path, boundary) = Path::line_from_points([[1., 1.], [2., 1.]]);
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
