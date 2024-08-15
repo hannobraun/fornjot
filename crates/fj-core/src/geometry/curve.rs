@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use crate::{storage::Handle, topology::Surface};
 
-use super::SurfacePath;
+use super::Path;
 
 /// The geometric definition of a curve
 #[derive(Clone, Debug, Default)]
@@ -40,5 +40,5 @@ impl CurveGeom {
 #[derive(Clone, Debug)]
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
-    pub path: SurfacePath,
+    pub path: Path<2>,
 }

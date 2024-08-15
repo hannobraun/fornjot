@@ -1,7 +1,7 @@
 use fj_math::{Scalar, Winding};
 
 use crate::{
-    geometry::{Geometry, SurfacePath},
+    geometry::{Geometry, Path},
     storage::Handle,
     topology::{HalfEdge, ObjectSet},
 };
@@ -79,8 +79,8 @@ impl Cycle {
             let edge_direction_positive = a < b;
 
             let circle = match curve_geom.path {
-                SurfacePath::Circle(circle) => circle,
-                SurfacePath::Line(_) => unreachable!(
+                Path::Circle(circle) => circle,
+                Path::Line(_) => unreachable!(
                     "Invalid cycle: less than 3 edges, but not all are circles"
                 ),
             };

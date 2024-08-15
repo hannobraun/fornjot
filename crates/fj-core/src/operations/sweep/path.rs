@@ -1,14 +1,14 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{GlobalPath, SurfaceGeom, SurfacePath},
+    geometry::{Path, SurfaceGeom},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
     Core,
 };
 
-/// # Sweep a [`SurfacePath`]
+/// # Sweep a [`Path`]
 ///
 /// See [module documentation] for more information.
 ///
@@ -32,7 +32,7 @@ pub trait SweepSurfacePath {
     ) -> Handle<Surface>;
 }
 
-impl SweepSurfacePath for SurfacePath {
+impl SweepSurfacePath for Path<2> {
     fn sweep_surface_path(
         &self,
         surface: &SurfaceGeom,
@@ -41,10 +41,10 @@ impl SweepSurfacePath for SurfacePath {
     ) -> Handle<Surface> {
         let SurfaceGeom { u, .. } = surface;
         match u {
-            GlobalPath::Circle(_) => {
+            Path::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
-                // `Surface` is a `GlobalPath`, which we are computing below.
-                // That computation might or might not work with an arbitrary
+                // `Surface` is a `Path<3>`, which we are computing below. That
+                // computation might or might not work with an arbitrary
                 // surface. Probably not, but I'm not sure.
                 //
                 // What definitely won't work, is computing the bottom edge of
@@ -58,14 +58,14 @@ impl SweepSurfacePath for SurfacePath {
                     not supported yet."
                 )
             }
-            GlobalPath::Line(_) => {
+            Path::Line(_) => {
                 // We're sweeping from a curve on a flat surface, which is
                 // supported. Carry on.
             }
         }
 
         let u = match self {
-            SurfacePath::Circle(circle) => {
+            Path::Circle(circle) => {
                 let center = surface.point_from_surface_coords(
                     circle.center(),
                     core.tolerance(),
@@ -77,9 +77,9 @@ impl SweepSurfacePath for SurfacePath {
 
                 let circle = Circle::new(center, a, b);
 
-                GlobalPath::Circle(circle)
+                Path::Circle(circle)
             }
-            SurfacePath::Line(line) => {
+            Path::Line(line) => {
                 let origin = surface
                     .point_from_surface_coords(line.origin(), core.tolerance());
                 let direction = surface.vector_from_surface_coords(
@@ -89,7 +89,7 @@ impl SweepSurfacePath for SurfacePath {
 
                 let line = Line::from_origin_and_direction(origin, direction);
 
-                GlobalPath::Line(line)
+                Path::Line(line)
             }
         };
 

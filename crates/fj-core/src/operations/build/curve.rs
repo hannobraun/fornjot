@@ -1,5 +1,5 @@
 use crate::{
-    geometry::SurfacePath,
+    geometry::Path,
     operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, Surface},
@@ -14,7 +14,7 @@ use crate::{
 pub trait BuildCurve {
     /// Build a curve from the provided path and surface
     fn from_path_and_surface(
-        path: SurfacePath,
+        path: Path<2>,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<Curve> {

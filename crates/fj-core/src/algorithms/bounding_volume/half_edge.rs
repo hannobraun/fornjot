@@ -1,7 +1,7 @@
 use fj_math::{Aabb, Vector};
 
 use crate::{
-    geometry::{Geometry, SurfacePath},
+    geometry::{Geometry, Path},
     storage::Handle,
     topology::{HalfEdge, Surface, Vertex},
 };
@@ -20,7 +20,7 @@ impl super::BoundingVolume<2>
             .path;
 
         match path {
-            SurfacePath::Circle(circle) => {
+            Path::Circle(circle) => {
                 // Just calculate the AABB of the whole circle. This is not the
                 // most precise, but it should do for now.
 
@@ -32,7 +32,7 @@ impl super::BoundingVolume<2>
                     max: circle.center() + center_to_min_max,
                 })
             }
-            SurfacePath::Line(_) => {
+            Path::Line(_) => {
                 let points =
                     [half_edge.start_vertex(), end_vertex].map(|vertex| {
                         let point_curve = geometry

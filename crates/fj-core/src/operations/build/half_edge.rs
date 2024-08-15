@@ -1,7 +1,7 @@
 use fj_math::{Arc, Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, LocalCurveGeom, SurfacePath},
+    geometry::{CurveBoundary, LocalCurveGeom, Path},
     operations::{geometry::UpdateCurveGeometry, insert::Insert},
     storage::Handle,
     topology::{Curve, HalfEdge, Surface, Vertex},
@@ -50,8 +50,7 @@ pub trait BuildHalfEdge {
 
         let arc = Arc::from_endpoints_and_angle(start, end, angle_rad);
 
-        let path =
-            SurfacePath::circle_from_center_and_radius(arc.center, arc.radius);
+        let path = Path::circle_from_center_and_radius(arc.center, arc.radius);
         let boundary = CurveBoundary {
             inner: [arc.start_angle, arc.end_angle]
                 .map(|coord| Point::from([coord])),

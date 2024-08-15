@@ -8,8 +8,8 @@ use crate::{
 };
 
 use super::{
-    vertex::LocalVertexGeom, CurveGeom, GlobalPath, LocalCurveGeom,
-    SurfaceGeom, VertexGeom,
+    vertex::LocalVertexGeom, CurveGeom, LocalCurveGeom, Path, SurfaceGeom,
+    VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
@@ -43,21 +43,21 @@ impl Geometry {
         self_.define_surface_inner(
             self_.xy_plane.clone(),
             SurfaceGeom {
-                u: GlobalPath::x_axis(),
+                u: Path::x_axis(),
                 v: Vector::unit_y(),
             },
         );
         self_.define_surface_inner(
             self_.xz_plane.clone(),
             SurfaceGeom {
-                u: GlobalPath::x_axis(),
+                u: Path::x_axis(),
                 v: Vector::unit_z(),
             },
         );
         self_.define_surface_inner(
             self_.yz_plane.clone(),
             SurfaceGeom {
-                u: GlobalPath::y_axis(),
+                u: Path::y_axis(),
                 v: Vector::unit_z(),
             },
         );
