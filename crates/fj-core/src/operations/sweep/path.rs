@@ -43,8 +43,8 @@ impl SweepSurfacePath for Path<2> {
         match u {
             Path::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that
-                // `Surface` is a `GlobalPath`, which we are computing below.
-                // That computation might or might not work with an arbitrary
+                // `Surface` is a `Path<3>`, which we are computing below. That
+                // computation might or might not work with an arbitrary
                 // surface. Probably not, but I'm not sure.
                 //
                 // What definitely won't work, is computing the bottom edge of
