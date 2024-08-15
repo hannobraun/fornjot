@@ -35,7 +35,7 @@ pub trait BuildSurface {
         core: &mut Core,
     ) -> Handle<Surface> {
         Self::from_geometry(
-            SurfaceGeom::Basic {
+            SurfaceGeom {
                 u: u.into(),
                 v: v.into(),
             },

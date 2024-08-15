@@ -39,7 +39,7 @@ impl SweepSurfacePath for SurfacePath {
         path: impl Into<Vector<3>>,
         core: &mut Core,
     ) -> Handle<Surface> {
-        let SurfaceGeom::Basic { u, .. } = surface;
+        let SurfaceGeom { u, .. } = surface;
         match u {
             GlobalPath::Circle(_) => {
                 // Sweeping a `Curve` creates a `Surface`. The u-axis of that

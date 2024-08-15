@@ -8,29 +8,18 @@ use super::GlobalPath;
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum SurfaceGeom {
-    /// # Basic definition of surface geometry
-    ///
-    /// ## Implementation Note
-    ///
-    /// At the time of writing, this is the sole variant of `SurfaceGeom`.
-    /// `SurfaceGeom` simply used to be a struct, identical to this variant.
-    ///
-    /// This was changed as part of a transition to a new, less basic and more
-    /// flexible, representation of surface geometry.
-    Basic {
-        /// The u-axis of the surface
-        u: GlobalPath,
+pub struct SurfaceGeom {
+    /// The u-axis of the surface
+    pub u: GlobalPath,
 
-        /// The v-axis of the surface
-        v: Vector<3>,
-    },
+    /// The v-axis of the surface
+    pub v: Vector<3>,
 }
 
 impl SurfaceGeom {
     /// # Access the origin of the surface
     pub fn origin(&self) -> Point<3> {
-        let Self::Basic { u, .. } = self;
+        let Self { u, .. } = self;
         match u {
             GlobalPath::Circle(circle) => circle.center(),
             GlobalPath::Line(line) => line.origin(),
@@ -80,7 +69,7 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        let Self::Basic { u, v } = self;
+        let Self { u, v } = self;
         match u {
             GlobalPath::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
@@ -148,11 +137,11 @@ impl SurfaceGeom {
     /// Transform the surface geometry
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {
-        let Self::Basic { u, v } = self;
+        let Self { u, v } = self;
 
         let u = u.transform(transform);
         let v = transform.transform_vector(&v);
-        Self::Basic { u, v }
+        Self { u, v }
     }
 }
 
@@ -168,7 +157,7 @@ mod tests {
 
     #[test]
     fn point_from_surface_coords() {
-        let surface = SurfaceGeom::Basic {
+        let surface = SurfaceGeom {
             u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
@@ -187,7 +176,7 @@ mod tests {
 
     #[test]
     fn vector_from_surface_coords() {
-        let surface = SurfaceGeom::Basic {
+        let surface = SurfaceGeom {
             u: GlobalPath::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),

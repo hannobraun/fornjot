@@ -15,7 +15,7 @@ impl super::BoundingVolume<3> for &Face {
             .map(|aabb2| {
                 let surface = geometry.of_surface(self.surface());
 
-                let SurfaceGeom::Basic { u, v } = surface;
+                let SurfaceGeom { u, v } = surface;
                 match u {
                     GlobalPath::Circle(circle) => {
                         // This is not the most precise way to calculate the
