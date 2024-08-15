@@ -14,7 +14,7 @@ use crate::{
 pub trait BuildCurve {
     /// Build a curve from the provided path and surface
     fn from_path_and_surface(
-        path: Path,
+        path: Path<2>,
         surface: Handle<Surface>,
         core: &mut Core,
     ) -> Handle<Curve> {

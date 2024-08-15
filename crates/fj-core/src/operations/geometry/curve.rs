@@ -20,7 +20,7 @@ pub trait UpdateCurveGeometry {
     /// Define the geometry as a path on a surface
     fn make_path_on_surface(
         self,
-        path: Path,
+        path: Path<2>,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self;
@@ -59,7 +59,7 @@ impl UpdateCurveGeometry for Handle<Curve> {
 
     fn make_path_on_surface(
         self,
-        path: Path,
+        path: Path<2>,
         surface: Handle<Surface>,
         geometry: &mut Layer<Geometry>,
     ) -> Self {

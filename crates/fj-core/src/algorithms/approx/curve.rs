@@ -43,7 +43,7 @@ pub fn approx_curve_with_cache(
 }
 
 fn approx_curve(
-    path: &Path,
+    path: &Path<2>,
     surface: &SurfaceGeom,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,

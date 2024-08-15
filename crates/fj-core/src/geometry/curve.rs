@@ -40,5 +40,5 @@ impl CurveGeom {
 #[derive(Clone, Debug)]
 pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
-    pub path: Path,
+    pub path: Path<2>,
 }

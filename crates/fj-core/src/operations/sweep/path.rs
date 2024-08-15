@@ -32,7 +32,7 @@ pub trait SweepSurfacePath {
     ) -> Handle<Surface>;
 }
 
-impl SweepSurfacePath for Path {
+impl SweepSurfacePath for Path<2> {
     fn sweep_surface_path(
         &self,
         surface: &SurfaceGeom,

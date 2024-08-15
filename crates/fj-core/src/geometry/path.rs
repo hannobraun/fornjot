@@ -6,15 +6,15 @@ use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
 /// A path through surface (2D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub enum Path {
+pub enum Path<const D: usize> {
     /// A circle
-    Circle(Circle<2>),
+    Circle(Circle<D>),
 
     /// A line
-    Line(Line<2>),
+    Line(Line<D>),
 }
 
-impl Path {
+impl Path<2> {
     /// Build a circle from the given radius
     pub fn circle_from_center_and_radius(
         center: impl Into<Point<2>>,
