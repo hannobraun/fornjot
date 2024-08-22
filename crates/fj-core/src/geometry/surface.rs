@@ -19,8 +19,7 @@ pub struct SurfaceGeom {
 impl SurfaceGeom {
     /// # Access the origin of the surface
     pub fn origin(&self) -> Point<3> {
-        let Self { u, .. } = self;
-        u.origin()
+        self.u.origin()
     }
 
     /// # Return the triangle at the provided point on the surface
