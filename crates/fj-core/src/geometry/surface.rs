@@ -86,11 +86,9 @@ impl SurfaceGeom {
                 Triangle::from(triangle_points_in_global_space)
             }
             Path::Line(line) => {
-                let b = self.v;
-
                 let point_global = line.origin()
                     + line.direction() * point_surface.u
-                    + b * point_surface.v;
+                    + self.v * point_surface.v;
 
                 // We don't need to approximate a plane, so our triangle can be
                 // arbitrarily large or small. Here we choose the smallest
