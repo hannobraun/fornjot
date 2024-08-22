@@ -65,23 +65,18 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        let triangle = match &self.u {
+        let [a, b] = match &self.u {
             Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
                 let a = point_surface.u - params.increment();
                 let b = point_surface.u + params.increment();
 
-                let [a, b] = [a, b]
+                [a, b]
                     .map(|point_circle| {
                         circle.point_from_circle_coords([point_circle])
                     })
-                    .map(|point_global| {
-                        point_global + self.v * point_surface.v
-                    });
-
-                let c = a + (b - a) / 2.;
-                Triangle::from([a, b, c])
+                    .map(|point_global| point_global + self.v * point_surface.v)
             }
             Path::Line(line) => {
                 // We don't need to approximate a line. So instead of creating a
@@ -91,9 +86,12 @@ impl SurfaceGeom {
                     + line.direction() * point_surface.u
                     + self.v * point_surface.v;
 
-                Triangle::from([point; 3])
+                [point, point]
             }
         };
+
+        let c = a + (b - a) / 2.;
+        let triangle = Triangle::from([a, b, c]);
 
         let barycentric_coords = [1. / 3.; 3].map(Into::into);
         (triangle, barycentric_coords)
