@@ -69,14 +69,14 @@ impl SurfaceGeom {
             Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
-                let a = point_surface.u - params.increment();
-                let b = point_surface.u + params.increment();
-
-                [a, b]
-                    .map(|point_circle| {
-                        circle.point_from_circle_coords([point_circle])
-                    })
-                    .map(|point_global| point_global + self.v * point_surface.v)
+                [
+                    point_surface.u - params.increment(),
+                    point_surface.u + params.increment(),
+                ]
+                .map(|point_circle| {
+                    circle.point_from_circle_coords([point_circle])
+                })
+                .map(|point_global| point_global + self.v * point_surface.v)
             }
             Path::Line(line) => {
                 // We don't need to approximate a line. So instead of creating a
