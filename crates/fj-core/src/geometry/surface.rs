@@ -71,19 +71,18 @@ impl SurfaceGeom {
 
                 let a = point_surface.u - params.increment();
                 let b = point_surface.u + params.increment();
-                let c = point_surface.u; // triangle is degenerate, as per docs
 
-                let triangle_points_in_circle_space = [a, b, c];
-                let triangle_points_in_global_space =
-                    triangle_points_in_circle_space
-                        .map(|point_circle| {
-                            circle.point_from_circle_coords([point_circle])
-                        })
-                        .map(|point_global| {
-                            point_global + self.v * point_surface.v
-                        });
+                let triangle_points_in_circle_space = [a, b];
+                let [a, b] = triangle_points_in_circle_space
+                    .map(|point_circle| {
+                        circle.point_from_circle_coords([point_circle])
+                    })
+                    .map(|point_global| {
+                        point_global + self.v * point_surface.v
+                    });
 
-                Triangle::from(triangle_points_in_global_space)
+                let c = a + (b - a) / 2.;
+                Triangle::from([a, b, c])
             }
             Path::Line(line) => {
                 // We don't need to approximate a line. So instead of creating a
