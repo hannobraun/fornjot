@@ -65,8 +65,7 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        let Self { u, v } = self;
-        match u {
+        match &self.u {
             Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
@@ -81,7 +80,7 @@ impl SurfaceGeom {
                             circle.point_from_circle_coords([point_circle])
                         })
                         .map(|point_global| {
-                            point_global + *v * point_surface.v
+                            point_global + self.v * point_surface.v
                         });
 
                 let triangle = Triangle::from(triangle_points_in_global_space);
@@ -91,7 +90,7 @@ impl SurfaceGeom {
             }
             Path::Line(line) => {
                 let a = line.direction();
-                let b = *v;
+                let b = self.v;
 
                 let point_global =
                     line.origin() + a * point_surface.u + b * point_surface.v;
