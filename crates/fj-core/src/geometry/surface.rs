@@ -72,8 +72,7 @@ impl SurfaceGeom {
                 let a = point_surface.u - params.increment();
                 let b = point_surface.u + params.increment();
 
-                let triangle_points_in_circle_space = [a, b];
-                let [a, b] = triangle_points_in_circle_space
+                let [a, b] = [a, b]
                     .map(|point_circle| {
                         circle.point_from_circle_coords([point_circle])
                     })
