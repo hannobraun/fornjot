@@ -71,7 +71,7 @@ impl SurfaceGeom {
 
                 let a = point_surface.u - params.increment();
                 let b = point_surface.u + params.increment();
-                let c = a; // triangle is degenerate, as per function docs
+                let c = point_surface.u; // triangle is degenerate, as per docs
 
                 let triangle_points_in_circle_space = [a, b, c];
                 let triangle_points_in_global_space =
@@ -84,7 +84,7 @@ impl SurfaceGeom {
                         });
 
                 let triangle = Triangle::from(triangle_points_in_global_space);
-                let barycentric_coords = [0.5, 0.5, 0.0].map(Into::into);
+                let barycentric_coords = [1. / 3.; 3].map(Into::into);
 
                 (triangle, barycentric_coords)
             }
