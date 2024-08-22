@@ -65,7 +65,7 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        match &self.u {
+        let triangle = match &self.u {
             Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
@@ -83,10 +83,7 @@ impl SurfaceGeom {
                             point_global + self.v * point_surface.v
                         });
 
-                let triangle = Triangle::from(triangle_points_in_global_space);
-                let barycentric_coords = [1. / 3.; 3].map(Into::into);
-
-                (triangle, barycentric_coords)
+                Triangle::from(triangle_points_in_global_space)
             }
             Path::Line(line) => {
                 let a = line.direction();
@@ -99,12 +96,12 @@ impl SurfaceGeom {
                 // arbitrarily large or small. Here we choose the smallest
                 // possible size (it is collapsed to a point), as per the
                 // documentation of this function.
-                let triangle = Triangle::from([point_global; 3]);
-                let barycentric_coords = [1. / 3.; 3].map(Into::into);
-
-                (triangle, barycentric_coords)
+                Triangle::from([point_global; 3])
             }
-        }
+        };
+
+        let barycentric_coords = [1. / 3.; 3].map(Into::into);
+        (triangle, barycentric_coords)
     }
 
     /// Convert a point in surface coordinates to model coordinates
