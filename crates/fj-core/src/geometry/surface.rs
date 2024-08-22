@@ -86,14 +86,13 @@ impl SurfaceGeom {
                 Triangle::from(triangle_points_in_global_space)
             }
             Path::Line(line) => {
+                // We don't need to approximate a line. So instead of creating a
+                // line segment to represent the line at this point, we just
+                // need this single point.
                 let point_global = line.origin()
                     + line.direction() * point_surface.u
                     + self.v * point_surface.v;
 
-                // We don't need to approximate a plane, so our triangle can be
-                // arbitrarily large or small. Here we choose the smallest
-                // possible size (it is collapsed to a point), as per the
-                // documentation of this function.
                 Triangle::from([point_global; 3])
             }
         };
