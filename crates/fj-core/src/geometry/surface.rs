@@ -89,11 +89,11 @@ impl SurfaceGeom {
                 // We don't need to approximate a line. So instead of creating a
                 // line segment to represent the line at this point, we just
                 // need this single point.
-                let point_global = line.origin()
+                let point = line.origin()
                     + line.direction() * point_surface.u
                     + self.v * point_surface.v;
 
-                Triangle::from([point_global; 3])
+                Triangle::from([point; 3])
             }
         };
 
