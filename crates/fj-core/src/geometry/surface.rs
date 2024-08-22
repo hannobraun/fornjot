@@ -20,10 +20,7 @@ impl SurfaceGeom {
     /// # Access the origin of the surface
     pub fn origin(&self) -> Point<3> {
         let Self { u, .. } = self;
-        match u {
-            Path::Circle(circle) => circle.center(),
-            Path::Line(line) => line.origin(),
-        }
+        u.origin()
     }
 
     /// # Return the triangle at the provided point on the surface
