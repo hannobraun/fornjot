@@ -2,7 +2,11 @@ use std::collections::BTreeMap;
 
 use fj_math::{Circle, Line, Point};
 
-use crate::{storage::Handle, topology::Surface};
+use crate::{
+    algorithms::approx::{PathApproxParams, Tolerance},
+    storage::Handle,
+    topology::Surface,
+};
 
 use super::Path;
 
@@ -68,17 +72,53 @@ pub struct LocalCurveGeom {
 pub trait CurveGeom2<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
+
+    /// # Compute a line segment to approximate the curve at this point
+    ///
+    /// If the curve requires no approximation (meaning it is a line), then per
+    /// convention, a degenerate line segment is returned, that collapses to the
+    /// provided point.
+    fn line_segment_at(
+        &self,
+        point: impl Into<Point<1>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> [Point<D>; 2];
 }
 
 impl<const D: usize> CurveGeom2<D> for Circle<D> {
     fn origin(&self) -> Point<D> {
         self.center() + self.a()
     }
+
+    fn line_segment_at(
+        &self,
+        point: impl Into<Point<1>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> [Point<D>; 2] {
+        let point = point.into();
+        let params = PathApproxParams::for_circle(self, tolerance);
+
+        [point.t - params.increment(), point.t + params.increment()]
+            .map(|point_circle| self.point_from_circle_coords([point_circle]))
+    }
 }
 
 impl<const D: usize> CurveGeom2<D> for Line<D> {
     fn origin(&self) -> Point<D> {
         self.origin()
+    }
+
+    fn line_segment_at(
+        &self,
+        point: impl Into<Point<1>>,
+        _: impl Into<Tolerance>,
+    ) -> [Point<D>; 2] {
+        let point = point.into();
+
+        // Collapse line segment into a point, as per documentation.
+        let point = self.origin() + self.direction() * point.t;
+
+        [point, point]
     }
 }
 
@@ -89,6 +129,17 @@ impl<const D: usize> CurveGeom2<D> for Path<D> {
         match self {
             Self::Circle(circle) => circle.origin(),
             Self::Line(line) => line.origin(),
+        }
+    }
+
+    fn line_segment_at(
+        &self,
+        point: impl Into<Point<1>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> [Point<D>; 2] {
+        match self {
+            Self::Circle(circle) => circle.line_segment_at(point, tolerance),
+            Self::Line(line) => line.line_segment_at(point, tolerance),
         }
     }
 }

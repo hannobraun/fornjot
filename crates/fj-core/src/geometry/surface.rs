@@ -2,7 +2,7 @@
 
 use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
-use crate::algorithms::approx::{PathApproxParams, Tolerance};
+use crate::algorithms::approx::Tolerance;
 
 use super::{CurveGeom2, Path};
 
@@ -67,23 +67,10 @@ impl SurfaceGeom {
 
         let line_segment = match &self.u {
             Path::Circle(circle) => {
-                let params = PathApproxParams::for_circle(circle, tolerance);
-
-                [
-                    point_surface.u - params.increment(),
-                    point_surface.u + params.increment(),
-                ]
-                .map(|point_circle| {
-                    circle.point_from_circle_coords([point_circle])
-                })
+                circle.line_segment_at([point_surface.u], tolerance)
             }
             Path::Line(line) => {
-                // We don't need to approximate a line. So instead of creating a
-                // line segment to represent the line at this point, we just
-                // need this single point.
-                let point = line.origin() + line.direction() * point_surface.u;
-
-                [point, point]
+                line.line_segment_at([point_surface.u], tolerance)
             }
         };
 
