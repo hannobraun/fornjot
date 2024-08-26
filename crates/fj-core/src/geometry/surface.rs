@@ -65,8 +65,9 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        let line_segment = self.u.line_segment_at([point_surface.u], tolerance);
-        let [a, b] = line_segment
+        let [a, b] = self
+            .u
+            .line_segment_at([point_surface.u], tolerance)
             .map(|point_global| point_global + self.v * point_surface.v);
 
         let c = a + (b - a) / 2.;
