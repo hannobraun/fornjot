@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
 use crate::algorithms::approx::{PathApproxParams, Tolerance};
 
-use super::Path;
+use super::{CurveGeom2, Path};
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

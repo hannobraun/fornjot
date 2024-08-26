@@ -86,6 +86,9 @@ impl<const D: usize> CurveGeom2<D> for Line<D> {
 // geometry trait. Eventually, `CurveGeom2` is expected to replace `Path`.
 impl<const D: usize> CurveGeom2<D> for Path<D> {
     fn origin(&self) -> Point<D> {
-        self.origin()
+        match self {
+            Self::Circle(circle) => circle.origin(),
+            Self::Line(line) => line.origin(),
+        }
     }
 }
