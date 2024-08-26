@@ -76,19 +76,19 @@ impl SurfaceGeom {
                 .map(|point_circle| {
                     circle.point_from_circle_coords([point_circle])
                 })
-                .map(|point_global| point_global + self.v * point_surface.v)
             }
             Path::Line(line) => {
                 // We don't need to approximate a line. So instead of creating a
                 // line segment to represent the line at this point, we just
                 // need this single point.
-                let point = line.origin()
-                    + line.direction() * point_surface.u
-                    + self.v * point_surface.v;
+                let point = line.origin() + line.direction() * point_surface.u;
 
                 [point, point]
             }
         };
+
+        let [a, b] =
+            [a, b].map(|point_global| point_global + self.v * point_surface.v);
 
         let c = a + (b - a) / 2.;
         let triangle = Triangle::from([a, b, c]);
