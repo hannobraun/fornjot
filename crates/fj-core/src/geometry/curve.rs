@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 
+use fj_math::{Circle, Line};
+
 use crate::{storage::Handle, topology::Surface};
 
 use super::Path;
@@ -42,3 +44,33 @@ pub struct LocalCurveGeom {
     /// The path that defines the curve on its surface
     pub path: Path<2>,
 }
+
+/// # Uniform representation of curve geometry
+///
+/// This trait provides a generic and uniform interface to curve geometry. It is
+/// implemented by types that represent specific kinds of curve geometry.
+///
+/// It is generic over the dimensionality of the generated polyline. Typically,
+/// two variants should be implemented per curve geometry type:
+///
+/// - `CurveGeom2<2>` for surface-local geometry.
+/// - `CurveGeom2<3>` for global 3D geometry.
+///
+/// ## Implementation Note
+///
+/// The name, `CurveGeom2`, is a placeholder. A `CurveGeom` struct already
+/// exists. It is currently unclear if and in what form such a struct will still
+/// exist, once the new geometry system is in place.
+///
+/// We'll have a much clearer image of the situation then. Hopefully, by then it
+/// will be clearer what specific role this trait will play in relation to other
+/// curve geometry types, and a better name will reveal itself.
+pub trait CurveGeom2<const D: usize> {}
+
+impl<const D: usize> CurveGeom2<D> for Circle<D> {}
+
+impl<const D: usize> CurveGeom2<D> for Line<D> {}
+
+// This implementation is temporary, to ease the transition towards a curve
+// geometry trait. Eventually, `CurveGeom2` is expected to replace `Path`.
+impl<const D: usize> CurveGeom2<D> for Path<D> {}
