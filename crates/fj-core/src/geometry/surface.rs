@@ -65,47 +65,36 @@ impl SurfaceGeom {
     ) -> (Triangle<3>, [Scalar; 3]) {
         let point_surface = point_surface.into();
 
-        let Self { u, v } = self;
-        match u {
+        let [a, b] = match &self.u {
             Path::Circle(circle) => {
                 let params = PathApproxParams::for_circle(circle, tolerance);
 
-                let a = point_surface.u - params.increment();
-                let b = point_surface.u + params.increment();
-                let c = a; // triangle is degenerate, as per function docs
-
-                let triangle_points_in_circle_space = [a, b, c];
-                let triangle_points_in_global_space =
-                    triangle_points_in_circle_space
-                        .map(|point_circle| {
-                            circle.point_from_circle_coords([point_circle])
-                        })
-                        .map(|point_global| {
-                            point_global + *v * point_surface.v
-                        });
-
-                let triangle = Triangle::from(triangle_points_in_global_space);
-                let barycentric_coords = [0.5, 0.5, 0.0].map(Into::into);
-
-                (triangle, barycentric_coords)
+                [
+                    point_surface.u - params.increment(),
+                    point_surface.u + params.increment(),
+                ]
+                .map(|point_circle| {
+                    circle.point_from_circle_coords([point_circle])
+                })
+                .map(|point_global| point_global + self.v * point_surface.v)
             }
             Path::Line(line) => {
-                let a = line.direction();
-                let b = *v;
+                // We don't need to approximate a line. So instead of creating a
+                // line segment to represent the line at this point, we just
+                // need this single point.
+                let point = line.origin()
+                    + line.direction() * point_surface.u
+                    + self.v * point_surface.v;
 
-                let point_global =
-                    line.origin() + a * point_surface.u + b * point_surface.v;
-
-                // We don't need to approximate a plane, so our triangle can be
-                // arbitrarily large or small. Here we choose the smallest
-                // possible size (it is collapsed to a point), as per the
-                // documentation of this function.
-                let triangle = Triangle::from([point_global; 3]);
-                let barycentric_coords = [1. / 3.; 3].map(Into::into);
-
-                (triangle, barycentric_coords)
+                [point, point]
             }
-        }
+        };
+
+        let c = a + (b - a) / 2.;
+        let triangle = Triangle::from([a, b, c]);
+
+        let barycentric_coords = [1. / 3.; 3].map(Into::into);
+        (triangle, barycentric_coords)
     }
 
     /// Convert a point in surface coordinates to model coordinates
