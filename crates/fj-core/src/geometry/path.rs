@@ -4,6 +4,8 @@
 
 use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
+use super::CurveGeom2;
+
 /// A path through surface (2D) or global (3D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub enum Path<const D: usize> {
@@ -107,7 +109,7 @@ impl<const D: usize> Path<D> {
     /// Access the origin of the path's coordinate system
     pub fn origin(&self) -> Point<D> {
         match self {
-            Self::Circle(circle) => circle.center() + circle.a(),
+            Self::Circle(circle) => circle.origin(),
             Self::Line(line) => line.origin(),
         }
     }
