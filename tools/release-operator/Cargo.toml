@@ -6,14 +6,14 @@ publish = false
 
 
 [dependencies]
-anyhow = "1.0.86"
+anyhow = "1.0.87"
 cargo_metadata = "0.18.1"
 cmd_lib = "1.9.4"
 env_logger = "0.11.5"
 log = "0.4.22"
 secstr = "0.5.0"
 semver = "1.0.23"
-serde_json = "1.0.127"
+serde_json = "1.0.128"
 thiserror = "1.0.63"
 
 [dependencies.autolib]
@@ -24,10 +24,10 @@ version = "0.12.7"
 features = ["blocking"]
 
 [dependencies.clap]
-version = "4.5.16"
+version = "4.5.17"
 features = ["std", "derive", "env"]
 default-features = false
 
 [dependencies.serde]
-version = "1.0.209"
+version = "1.0.210"
 features = ["derive"]
