@@ -10,7 +10,7 @@ mod vertex;
 
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
-    curve::{CurveGeom, CurveGeom2, LocalCurveGeom},
+    curve::{CurveGeom, GenPolyline, LocalCurveGeom},
     geometry::Geometry,
     path::Path,
     surface::SurfaceGeom,

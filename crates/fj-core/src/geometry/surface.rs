@@ -2,7 +2,7 @@
 
 use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
-use super::{CurveGeom2, Path, Tolerance};
+use super::{GenPolyline, Path, Tolerance};
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

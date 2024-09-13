@@ -67,7 +67,7 @@ pub struct LocalCurveGeom {
 /// We'll have a much clearer image of the situation then. Hopefully, by then it
 /// will be clearer what specific role this trait will play in relation to other
 /// curve geometry types, and a better name will reveal itself.
-pub trait CurveGeom2<const D: usize> {
+pub trait GenPolyline<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
 
@@ -83,7 +83,7 @@ pub trait CurveGeom2<const D: usize> {
     ) -> [Point<D>; 2];
 }
 
-impl<const D: usize> CurveGeom2<D> for Circle<D> {
+impl<const D: usize> GenPolyline<D> for Circle<D> {
     fn origin(&self) -> Point<D> {
         self.center() + self.a()
     }
@@ -101,7 +101,7 @@ impl<const D: usize> CurveGeom2<D> for Circle<D> {
     }
 }
 
-impl<const D: usize> CurveGeom2<D> for Line<D> {
+impl<const D: usize> GenPolyline<D> for Line<D> {
     fn origin(&self) -> Point<D> {
         self.origin()
     }
@@ -122,7 +122,7 @@ impl<const D: usize> CurveGeom2<D> for Line<D> {
 
 // This implementation is temporary, to ease the transition towards a curve
 // geometry trait. Eventually, `CurveGeom2` is expected to replace `Path`.
-impl<const D: usize> CurveGeom2<D> for Path<D> {
+impl<const D: usize> GenPolyline<D> for Path<D> {
     fn origin(&self) -> Point<D> {
         match self {
             Self::Circle(circle) => circle.origin(),
