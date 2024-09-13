@@ -47,7 +47,7 @@ pub struct LocalCurveGeom {
     pub path: Path<2>,
 }
 
-/// # Uniform representation of curve geometry
+/// # Generate polylines, the uniform representation of curve geometry
 ///
 /// This trait provides a generic and uniform interface to curve geometry. It is
 /// implemented by types that represent specific kinds of curve geometry.
@@ -57,16 +57,6 @@ pub struct LocalCurveGeom {
 ///
 /// - `CurveGeom2<2>` for surface-local geometry.
 /// - `CurveGeom2<3>` for global 3D geometry.
-///
-/// ## Implementation Note
-///
-/// The name, `CurveGeom2`, is a placeholder. A `CurveGeom` struct already
-/// exists. It is currently unclear if and in what form such a struct will still
-/// exist, once the new geometry system is in place.
-///
-/// We'll have a much clearer image of the situation then. Hopefully, by then it
-/// will be clearer what specific role this trait will play in relation to other
-/// curve geometry types, and a better name will reveal itself.
 pub trait GenPolyline<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
