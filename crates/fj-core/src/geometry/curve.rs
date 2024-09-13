@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::Arc};
 
 use fj_math::{Circle, Line, Point};
 
@@ -62,7 +62,7 @@ pub enum CurveGeom2 {
     /// # The curve is defined locally on a surface
     Surface {
         /// # The geometric representation of the curve
-        geometry: Box<dyn GenPolyline<2>>,
+        geometry: Arc<dyn GenPolyline<2>>,
 
         /// # The surface that the curve geometry is defined on
         surface: Handle<Surface>,
@@ -71,7 +71,7 @@ pub enum CurveGeom2 {
     /// # The curve is defined globally in 3D space
     Global {
         /// # The geometric representation of the curve
-        geometry: Box<dyn GenPolyline<3>>,
+        geometry: Arc<dyn GenPolyline<3>>,
     },
 }
 
