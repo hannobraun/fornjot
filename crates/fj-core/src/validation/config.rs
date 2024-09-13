@@ -1,6 +1,6 @@
 use fj_math::Scalar;
 
-use crate::algorithms::approx::Tolerance;
+use crate::geometry::Tolerance;
 
 /// Configuration required for the validation process
 #[derive(Debug, Clone, Copy)]

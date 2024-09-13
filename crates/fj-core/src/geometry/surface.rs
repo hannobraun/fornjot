@@ -2,9 +2,7 @@
 
 use fj_math::{Point, Scalar, Transform, Triangle, Vector};
 
-use crate::algorithms::approx::Tolerance;
-
-use super::{CurveGeom2, Path};
+use super::{CurveGeom2, Path, Tolerance};
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -115,10 +113,7 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::{
-        algorithms::approx::Tolerance,
-        geometry::{Path, SurfaceGeom},
-    };
+    use crate::geometry::{Path, SurfaceGeom, Tolerance};
 
     #[test]
     fn point_from_surface_coords() {

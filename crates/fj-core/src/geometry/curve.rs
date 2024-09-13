@@ -3,12 +3,10 @@ use std::collections::BTreeMap;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    algorithms::approx::{PathApproxParams, Tolerance},
-    storage::Handle,
-    topology::Surface,
+    algorithms::approx::PathApproxParams, storage::Handle, topology::Surface,
 };
 
-use super::Path;
+use super::{Path, Tolerance};
 
 /// The geometric definition of a curve
 #[derive(Clone, Debug, Default)]

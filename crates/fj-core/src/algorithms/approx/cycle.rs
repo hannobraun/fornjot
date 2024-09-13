@@ -5,7 +5,7 @@
 use fj_math::Segment;
 
 use crate::{
-    geometry::{CurveBoundary, Geometry},
+    geometry::{CurveBoundary, Geometry, Tolerance},
     storage::Handle,
     topology::{Cycle, Surface},
 };
@@ -13,7 +13,7 @@ use crate::{
 use super::{
     half_edge::{approx_half_edge, HalfEdgeApprox},
     vertex::approx_vertex,
-    ApproxCache, ApproxPoint, Tolerance,
+    ApproxCache, ApproxPoint,
 };
 
 /// Approximate the provided cycle

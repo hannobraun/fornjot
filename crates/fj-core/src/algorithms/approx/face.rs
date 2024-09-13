@@ -5,7 +5,7 @@
 use std::{collections::BTreeSet, ops::Deref};
 
 use crate::{
-    geometry::Geometry,
+    geometry::{Geometry, Tolerance},
     storage::Handle,
     topology::{Face, Handedness, ObjectSet},
     validation::ValidationConfig,
@@ -13,7 +13,7 @@ use crate::{
 
 use super::{
     cycle::{approx_cycle, CycleApprox},
-    Approx, ApproxCache, ApproxPoint, Tolerance,
+    Approx, ApproxCache, ApproxPoint,
 };
 
 impl Approx for &ObjectSet<Face> {

@@ -3,7 +3,7 @@
 //! See [`Core`].
 
 use crate::{
-    algorithms::approx::Tolerance, layers::Layers, validation::ValidationConfig,
+    geometry::Tolerance, layers::Layers, validation::ValidationConfig,
 };
 
 /// An instance of the Fornjot core

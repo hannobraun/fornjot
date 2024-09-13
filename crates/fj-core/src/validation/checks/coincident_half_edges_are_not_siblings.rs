@@ -3,8 +3,7 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    algorithms::approx::Tolerance,
-    geometry::{CurveBoundary, Geometry},
+    geometry::{CurveBoundary, Geometry, Tolerance},
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
         SiblingOfHalfEdge,

@@ -3,12 +3,12 @@ use std::collections::BTreeMap;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, Path, SurfaceGeom},
+    geometry::{CurveBoundary, Geometry, Path, SurfaceGeom, Tolerance},
     storage::Handle,
     topology::{Curve, Surface},
 };
 
-use super::{circle::approx_circle, line::approx_line, ApproxPoint, Tolerance};
+use super::{circle::approx_circle, line::approx_line, ApproxPoint};
 
 /// Approximate the provided curve
 ///

@@ -1,6 +1,6 @@
 use std::{num::ParseFloatError, path::PathBuf, str::FromStr};
 
-use fj_core::algorithms::approx::{InvalidTolerance, Tolerance};
+use fj_core::geometry::{InvalidTolerance, Tolerance};
 use fj_math::Scalar;
 
 /// Standardized CLI for Fornjot models

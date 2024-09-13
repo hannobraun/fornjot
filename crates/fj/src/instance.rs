@@ -1,11 +1,8 @@
 use std::{error::Error as _, fmt};
 
 use fj_core::{
-    algorithms::{
-        approx::{InvalidTolerance, Tolerance},
-        bounding_volume::BoundingVolume,
-        triangulate::Triangulate,
-    },
+    algorithms::{bounding_volume::BoundingVolume, triangulate::Triangulate},
+    geometry::{InvalidTolerance, Tolerance},
     validation::{ValidationConfig, ValidationErrors},
     Core,
 };

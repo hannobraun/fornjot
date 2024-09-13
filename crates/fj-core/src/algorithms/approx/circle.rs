@@ -2,9 +2,7 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::CurveBoundary;
-
-use super::Tolerance;
+use crate::geometry::{CurveBoundary, Tolerance};
 
 /// # Approximate a circle
 ///
@@ -135,7 +133,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::{algorithms::approx::Tolerance, geometry::CurveBoundary};
+    use crate::geometry::{CurveBoundary, Tolerance};
 
     use super::PathApproxParams;
 

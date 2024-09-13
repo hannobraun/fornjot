@@ -3,8 +3,7 @@ use std::ops::Deref;
 use fj_math::{Aabb, Vector};
 
 use crate::{
-    algorithms::approx::Tolerance,
-    geometry::{Geometry, Path, SurfaceGeom},
+    geometry::{Geometry, Path, SurfaceGeom, Tolerance},
     topology::Face,
 };
 

@@ -7,14 +7,14 @@ use std::iter;
 use fj_math::Point;
 
 use crate::{
-    geometry::{CurveBoundary, Geometry},
+    geometry::{CurveBoundary, Geometry, Tolerance},
     storage::Handle,
     topology::{HalfEdge, Surface},
 };
 
 use super::{
     curve::{approx_curve_with_cache, CurveApproxCache},
-    ApproxPoint, Tolerance,
+    ApproxPoint,
 };
 
 /// Approximate the provided half-edge
