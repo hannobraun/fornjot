@@ -47,6 +47,34 @@ pub struct LocalCurveGeom {
     pub path: Path<2>,
 }
 
+/// # The geometric definition of a curve
+///
+/// Curves are represented by polylines, their uniform intermediate
+/// representation. However, this representation can be 2D (local to a surface)
+/// or 3D. This enum distinguishes between the two cases.
+///
+/// ## Implementation Note
+///
+/// The name, `CurveGeom2`, is a placeholder. As of this writing, there is an
+/// ongoing transition to a new geometry system, and the name `CurveGeom` is
+/// still taken by an old-style type.
+pub enum CurveGeom2 {
+    /// # The curve is defined locally on a surface
+    Surface {
+        /// # The geometric representation of the curve
+        geometry: Box<dyn GenPolyline<2>>,
+
+        /// # The surface that the curve geometry is defined on
+        surface: Handle<Surface>,
+    },
+
+    /// # The curve is defined globally in 3D space
+    Global {
+        /// # The geometric representation of the curve
+        geometry: Box<dyn GenPolyline<3>>,
+    },
+}
+
 /// # Generate polylines, the uniform representation of curve geometry
 ///
 /// This trait provides a generic and uniform interface to curve geometry. It is
