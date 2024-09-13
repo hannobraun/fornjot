@@ -69,7 +69,7 @@ pub trait GenPolyline<const D: usize> {
     fn line_segment_at(
         &self,
         point: Point<1>,
-        tolerance: impl Into<Tolerance>,
+        tolerance: Tolerance,
     ) -> [Point<D>; 2];
 }
 
@@ -81,7 +81,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
     fn line_segment_at(
         &self,
         point: Point<1>,
-        tolerance: impl Into<Tolerance>,
+        tolerance: Tolerance,
     ) -> [Point<D>; 2] {
         let params = PathApproxParams::for_circle(self, tolerance);
 
@@ -95,11 +95,7 @@ impl<const D: usize> GenPolyline<D> for Line<D> {
         self.origin()
     }
 
-    fn line_segment_at(
-        &self,
-        point: Point<1>,
-        _: impl Into<Tolerance>,
-    ) -> [Point<D>; 2] {
+    fn line_segment_at(&self, point: Point<1>, _: Tolerance) -> [Point<D>; 2] {
         // Collapse line segment into a point, as per documentation.
         let point = self.origin() + self.direction() * point.t;
 
@@ -120,7 +116,7 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
     fn line_segment_at(
         &self,
         point: Point<1>,
-        tolerance: impl Into<Tolerance>,
+        tolerance: Tolerance,
     ) -> [Point<D>; 2] {
         match self {
             Self::Circle(circle) => circle.line_segment_at(point, tolerance),
