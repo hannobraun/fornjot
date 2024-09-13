@@ -8,13 +8,14 @@ use crate::{
 };
 
 use super::{
-    vertex::LocalVertexGeom, CurveGeom, LocalCurveGeom, Path, SurfaceGeom,
-    VertexGeom,
+    vertex::LocalVertexGeom, CurveGeom, CurveGeom2, LocalCurveGeom, Path,
+    SurfaceGeom, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
+    curve2: BTreeMap<Handle<Curve>, CurveGeom2>,
     surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
@@ -30,6 +31,7 @@ impl Geometry {
     pub fn new(topology: &Topology) -> Self {
         let mut self_ = Self {
             curve: BTreeMap::new(),
+            curve2: BTreeMap::new(),
             surface: BTreeMap::new(),
             vertex: BTreeMap::new(),
 
@@ -114,6 +116,18 @@ impl Geometry {
     /// # Access the geometry of the provided curve
     pub fn of_curve(&self, curve: &Handle<Curve>) -> Option<&CurveGeom> {
         self.curve.get(curve)
+    }
+
+    /// # Access the geometry of the provided curve
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method returns the new-style geometry. Its name is temporary, while the
+    /// method returning the old-style geometry is still taking up the more
+    /// concise name.
+    pub fn of_curve_2(&self, curve: &Handle<Curve>) -> Option<&CurveGeom2> {
+        self.curve2.get(curve)
     }
 
     /// # Access the geometry of the provided surface
