@@ -58,6 +58,7 @@ pub struct LocalCurveGeom {
 /// The name, `CurveGeom2`, is a placeholder. As of this writing, there is an
 /// ongoing transition to a new geometry system, and the name `CurveGeom` is
 /// still taken by an old-style type.
+#[derive(Clone)]
 pub enum CurveGeom2 {
     /// # The curve is defined locally on a surface
     Surface {
