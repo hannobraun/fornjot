@@ -6,7 +6,6 @@ pub mod half_edge;
 pub mod shell;
 pub mod sketch;
 pub mod solid;
-pub mod tolerance;
 
 mod circle;
 mod curve;
@@ -25,10 +24,8 @@ use vertex::VertexApproxCache;
 
 use crate::geometry::Geometry;
 
-pub use self::{
-    circle::PathApproxParams,
-    tolerance::{InvalidTolerance, Tolerance},
-};
+pub use self::circle::PathApproxParams;
+pub use crate::geometry::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
 pub trait Approx: Sized {

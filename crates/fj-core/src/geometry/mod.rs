@@ -5,6 +5,7 @@ mod curve;
 mod geometry;
 mod path;
 mod surface;
+mod tolerance;
 mod vertex;
 
 pub use self::{
@@ -13,5 +14,6 @@ pub use self::{
     geometry::Geometry,
     path::Path,
     surface::SurfaceGeom,
+    tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},
 };
