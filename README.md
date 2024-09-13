@@ -39,7 +39,7 @@ Fornjot is supported by [**@reivilibre**](https://github.com/reivilibre), [**@kr
 
 ## Status
 
-Fornjot is usable for simple models (see [examples](examples/)), but currently lacks the features for anything more advanced. Work to change that is underway.
+Fornjot is usable for simple models (see [`models/` directory](models)), but currently lacks the features for anything more advanced. Work to change that is underway.
 
 
 ## Overview
