@@ -80,6 +80,14 @@ impl Geometry {
             .insert(surface, geometry);
     }
 
+    pub(crate) fn define_curve_inner_2(
+        &mut self,
+        curve: Handle<Curve>,
+        geometry: CurveGeom2,
+    ) {
+        self.curve2.insert(curve, geometry);
+    }
+
     pub(crate) fn define_surface_inner(
         &mut self,
         surface: Handle<Surface>,

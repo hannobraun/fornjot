@@ -1,7 +1,9 @@
 //! Layer infrastructure for [`Geometry`]
 
 use crate::{
-    geometry::{Geometry, LocalCurveGeom, LocalVertexGeom, SurfaceGeom},
+    geometry::{
+        CurveGeom2, Geometry, LocalCurveGeom, LocalVertexGeom, SurfaceGeom,
+    },
     storage::Handle,
     topology::{Curve, Surface, Vertex},
 };
@@ -25,6 +27,23 @@ impl Layer<Geometry> {
             },
             &mut events,
         );
+    }
+
+    /// # Define the geometry of the provided curve
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method defines new-style geometry. Its name is temporary, while the
+    /// method defining the old-style geometry is still taking up the more
+    /// concise name.
+    pub fn define_curve_2(
+        &mut self,
+        curve: Handle<Curve>,
+        geometry: CurveGeom2,
+    ) {
+        let mut events = Vec::new();
+        self.process(DefineCurve2 { curve, geometry }, &mut events);
     }
 
     /// # Define the geometry of the provided surface
@@ -88,6 +107,40 @@ impl Event<Geometry> for DefineCurve {
             self.surface.clone(),
             self.geometry.clone(),
         );
+    }
+}
+
+/// # Define the geometry of a curve
+///
+/// ## Implementation Note
+///
+/// There currently is an ongoing transition to a new geometry representation.
+/// This type is involved in defining the new-style geometry. Its name is
+/// temporary, while the respective type that defines old-style geometry is
+/// still taking up the more compact name.
+pub struct DefineCurve2 {
+    curve: Handle<Curve>,
+    geometry: CurveGeom2,
+}
+
+impl Command<Geometry> for DefineCurve2 {
+    type Result = ();
+    type Event = Self;
+
+    fn decide(
+        self,
+        _: &Geometry,
+        events: &mut Vec<Self::Event>,
+    ) -> Self::Result {
+        events.push(self);
+    }
+}
+
+impl Event<Geometry> for DefineCurve2 {
+    fn evolve(&self, state: &mut Geometry) {
+        // TASK: This can't work, as designed. I need to clone the geometry
+        //       here, but I can't just clone a `Box`.
+        state.define_curve_inner_2(self.curve.clone(), self.geometry.clone());
     }
 }
 
