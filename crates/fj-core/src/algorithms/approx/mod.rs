@@ -22,10 +22,9 @@ use curve::CurveApproxCache;
 use fj_math::Point;
 use vertex::VertexApproxCache;
 
-use crate::geometry::Geometry;
+use crate::geometry::{Geometry, Tolerance};
 
 pub use self::circle::PathApproxParams;
-pub use crate::geometry::{InvalidTolerance, Tolerance};
 
 /// Approximate an object
 pub trait Approx: Sized {
