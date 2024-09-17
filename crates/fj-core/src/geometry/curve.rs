@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, sync::Arc};
 
-use fj_math::{Line, Point};
+use fj_math::Point;
 
 use crate::{storage::Handle, topology::Surface};
 
@@ -115,27 +115,6 @@ pub trait GenPolyline<const D: usize> {
         boundary: CurveBoundary<Point<1>>,
         tolerance: Tolerance,
     ) -> Vec<Point<1>>;
-}
-
-impl<const D: usize> GenPolyline<D> for Line<D> {
-    fn origin(&self) -> Point<D> {
-        self.origin()
-    }
-
-    fn line_segment_at(&self, point: Point<1>, _: Tolerance) -> [Point<D>; 2] {
-        // Collapse line segment into a point, as per documentation.
-        let point = self.origin() + self.direction() * point.t;
-
-        [point, point]
-    }
-
-    fn generate_polyline(
-        &self,
-        boundary: CurveBoundary<Point<1>>,
-        _: Tolerance,
-    ) -> Vec<Point<1>> {
-        boundary.inner.into()
-    }
 }
 
 // This implementation is temporary, to ease the transition towards a curve
