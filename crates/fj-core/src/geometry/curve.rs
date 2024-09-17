@@ -6,7 +6,7 @@ use crate::{
     algorithms::approx::PathApproxParams, storage::Handle, topology::Surface,
 };
 
-use super::{Path, Tolerance};
+use super::{CurveBoundary, Path, Tolerance};
 
 /// The geometric definition of a curve
 #[derive(Clone, Debug, Default)]
@@ -110,6 +110,13 @@ pub trait GenPolyline<const D: usize> {
         point: Point<1>,
         tolerance: Tolerance,
     ) -> [Point<D>; 2];
+
+    /// # Generate a polyline within the provided boundary
+    fn generate_polyline(
+        &self,
+        boundary: CurveBoundary<Point<1>>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>>;
 }
 
 impl<const D: usize> GenPolyline<D> for Circle<D> {
@@ -147,6 +154,15 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         points_curve
             .map(|point_curve| self.point_from_circle_coords([point_curve]))
     }
+
+    fn generate_polyline(
+        &self,
+        boundary: CurveBoundary<Point<1>>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        let params = PathApproxParams::for_circle(self, tolerance);
+        params.points(boundary).collect()
+    }
 }
 
 impl<const D: usize> GenPolyline<D> for Line<D> {
@@ -159,6 +175,14 @@ impl<const D: usize> GenPolyline<D> for Line<D> {
         let point = self.origin() + self.direction() * point.t;
 
         [point, point]
+    }
+
+    fn generate_polyline(
+        &self,
+        boundary: CurveBoundary<Point<1>>,
+        _: Tolerance,
+    ) -> Vec<Point<1>> {
+        boundary.inner.into()
     }
 }
 
@@ -180,6 +204,19 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
         match self {
             Self::Circle(circle) => circle.line_segment_at(point, tolerance),
             Self::Line(line) => line.line_segment_at(point, tolerance),
+        }
+    }
+
+    fn generate_polyline(
+        &self,
+        boundary: CurveBoundary<Point<1>>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        match self {
+            Self::Circle(circle) => {
+                circle.generate_polyline(boundary, tolerance)
+            }
+            Self::Line(line) => line.generate_polyline(boundary, tolerance),
         }
     }
 }
