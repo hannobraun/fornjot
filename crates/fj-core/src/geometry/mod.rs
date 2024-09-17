@@ -18,6 +18,5 @@ pub use self::{
     path::Path,
     surface::SurfaceGeom,
     tolerance::{InvalidTolerance, Tolerance},
-    traits::GenPolyline,
     vertex::{LocalVertexGeom, VertexGeom},
 };
