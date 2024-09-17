@@ -2,11 +2,11 @@ use std::{collections::BTreeMap, sync::Arc};
 
 use fj_math::{Circle, Line, Point};
 
-use crate::{
-    algorithms::approx::CircleApproxParams, storage::Handle, topology::Surface,
-};
+use crate::{storage::Handle, topology::Surface};
 
-use super::{CurveBoundary, Path, Tolerance};
+use super::{
+    curves::circle::CircleApproxParams, CurveBoundary, Path, Tolerance,
+};
 
 /// The geometric definition of a curve
 #[derive(Clone, Debug, Default)]
