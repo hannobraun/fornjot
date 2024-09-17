@@ -92,6 +92,8 @@ pub trait GenPolyline<const D: usize> {
 
     /// # Compute a line segment to approximate the curve at this point
     ///
+    /// ## Degenerate Case
+    ///
     /// If the curve requires no approximation (meaning it is a line), then per
     /// convention, a degenerate line segment is returned, that collapses to the
     /// provided point.
