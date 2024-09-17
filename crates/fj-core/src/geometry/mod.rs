@@ -13,10 +13,11 @@ mod vertex;
 
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
-    curve::{CurveGeom, CurveGeom2, GenPolyline, LocalCurveGeom},
+    curve::{CurveGeom, CurveGeom2, LocalCurveGeom},
     geometry::Geometry,
     path::Path,
     surface::SurfaceGeom,
     tolerance::{InvalidTolerance, Tolerance},
+    traits::GenPolyline,
     vertex::{LocalVertexGeom, VertexGeom},
 };
