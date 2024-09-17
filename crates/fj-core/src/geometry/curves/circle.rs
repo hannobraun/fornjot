@@ -129,7 +129,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::geometry::{CurveBoundary, Tolerance};
+    use crate::geometry::{CurveBoundary, GenPolyline, Tolerance};
 
     use super::CircleApproxParams;
 
@@ -199,5 +199,35 @@ mod tests {
                 .collect::<Vec<_>>();
             assert_eq!(points, expected_points);
         }
+    }
+
+    #[test]
+    fn curve_representation_must_be_deterministic() -> anyhow::Result<()> {
+        let circle = Circle::from_center_and_radius([0., 0.], 1.);
+
+        // Deliberately choose a very coarse tolerance, so the circle
+        // representation degenerates to a predictable triangle.
+        let tolerance = Tolerance::from_scalar(1.)?;
+
+        // Sample the circle at two points that are close together, relative to
+        // our tolerance. The intent here is to each time sample the same
+        // triangle edge, so also make sure they're not around zero, or another
+        // point where two edges are likely to meet.
+        //
+        // Where those edges meet is implementation-dependent of course, so this
+        // test might break if that implementation changes. But I don't think
+        // that really matters. We just need to make sure that this test doesn't
+        // accidentally hit such a point. Where specifically those points are,
+        // doesn't matter.
+        let a = circle.line_segment_at(Point::from([0.2]), tolerance);
+        let b = circle.line_segment_at(Point::from([0.3]), tolerance);
+
+        assert_eq!(
+            a, b,
+            "Expecting representation of the curve to be deterministic; it \
+            must not depend on the specific points that were sampled.",
+        );
+
+        Ok(())
     }
 }
