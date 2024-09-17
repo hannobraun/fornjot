@@ -86,6 +86,14 @@ pub enum CurveGeom2 {
 ///
 /// - `CurveGeom2<2>` for surface-local geometry.
 /// - `CurveGeom2<3>` for global 3D geometry.
+///
+///
+/// ## Determinism
+///
+/// For a given curve and a given tolerance, the uniform representation of a
+/// curve must be deterministic. This means that the same representation must be
+/// returned, regardless of which points on the curve are queried, and in what
+/// order.
 pub trait GenPolyline<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
