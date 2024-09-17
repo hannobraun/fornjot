@@ -4,7 +4,53 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{CurveBoundary, Tolerance};
+use crate::geometry::{CurveBoundary, GenPolyline, Tolerance};
+
+impl<const D: usize> GenPolyline<D> for Circle<D> {
+    fn origin(&self) -> Point<D> {
+        self.center() + self.a()
+    }
+
+    fn line_segment_at(
+        &self,
+        point: Point<1>,
+        tolerance: Tolerance,
+    ) -> [Point<D>; 2] {
+        let params = CircleApproxParams::new(self, tolerance);
+
+        // The approximation parameters have an increment, in curve coordinates,
+        // that determines the distance between points on the polyline. Let's
+        // figure out where `point` is on the curve, in units of this increment.
+        let t = point.t / params.increment();
+
+        // Now pick two points on the curve, again in units of approximation
+        // increment, where the locations of the two closest approximation
+        // points to the provided point are.
+        //
+        // Since we are calculating this in increment units, those are integer
+        // numbers.
+        let a = t.floor();
+        let b = t.ceil();
+
+        // Next, convert them into actual curve coordinates.
+        let points_curve = [a, b].map(|point_curve_in_increment_units| {
+            point_curve_in_increment_units * params.increment()
+        });
+
+        // And finally, convert those into points of the desired dimensionality.
+        points_curve
+            .map(|point_curve| self.point_from_circle_coords([point_curve]))
+    }
+
+    fn generate_polyline(
+        &self,
+        boundary: CurveBoundary<Point<1>>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<1>> {
+        let params = CircleApproxParams::new(self, tolerance);
+        params.approx_circle(boundary).collect()
+    }
+}
 
 /// Path approximation parameters for a circle
 #[derive(Debug)]
