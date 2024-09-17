@@ -1,8 +1,6 @@
 use fj_math::{Circle, Point};
 
-use crate::geometry::{
-    curves::circle::CircleApproxParams, CurveBoundary, Tolerance,
-};
+use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
 /// # Approximate a circle
 ///
@@ -47,10 +45,9 @@ pub fn approx_circle<const D: usize>(
     let boundary = boundary.into();
     let tolerance = tolerance.into();
 
-    let params = CircleApproxParams::new(circle, tolerance);
     let mut points = Vec::new();
 
-    for point_curve in params.approx_circle(boundary) {
+    for point_curve in circle.generate_polyline(boundary, tolerance) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push((point_curve, point_global));
     }
