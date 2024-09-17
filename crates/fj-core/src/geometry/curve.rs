@@ -124,8 +124,28 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
     ) -> [Point<D>; 2] {
         let params = PathApproxParams::for_circle(self, tolerance);
 
-        [point.t - params.increment(), point.t + params.increment()]
-            .map(|point_circle| self.point_from_circle_coords([point_circle]))
+        // The approximation parameters have an increment, in curve coordinates,
+        // that determines the distance between points on the polyline. Let's
+        // figure out where `point` is on the curve, in units of this increment.
+        let t = dbg!(point.t) / dbg!(params.increment());
+
+        // Now pick two points on the curve, again in units of approximation
+        // increment, where the locations of the two closest approximation
+        // points to the provided point are.
+        //
+        // Since we are calculating this in increment units, those are integer
+        // numbers.
+        let a = t.floor();
+        let b = t.ceil();
+
+        // Next, convert them into actual curve coordinates.
+        let points_curve = [a, b].map(|point_curve_in_increment_units| {
+            point_curve_in_increment_units * params.increment()
+        });
+
+        // And finally, convert those into points of the desired dimensionality.
+        points_curve
+            .map(|point_curve| self.point_from_circle_coords([point_curve]))
     }
 }
 
@@ -161,5 +181,44 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
             Self::Circle(circle) => circle.line_segment_at(point, tolerance),
             Self::Line(line) => line.line_segment_at(point, tolerance),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use fj_math::{Circle, Point};
+
+    use crate::geometry::Tolerance;
+
+    use super::GenPolyline;
+
+    #[test]
+    fn curve_representation_must_be_deterministic() -> anyhow::Result<()> {
+        let circle = Circle::from_center_and_radius([0., 0.], 1.);
+
+        // Deliberately choose a very coarse tolerance, so the circle
+        // representation degenerates to a predictable triangle.
+        let tolerance = Tolerance::from_scalar(1.)?;
+
+        // Sample the circle at two points that are close together, relative to
+        // our tolerance. The intent here is to each time sample the same
+        // triangle edge, so also make sure they're not around zero, or another
+        // point where two edges are likely to meet.
+        //
+        // Where those edges meet is implementation-dependent of course, so this
+        // test might break if that implementation changes. But I don't think
+        // that really matters. We just need to make sure that this test doesn't
+        // accidentally hit such a point. Where specifically those points are,
+        // doesn't matter.
+        let a = circle.line_segment_at(Point::from([0.2]), tolerance);
+        let b = circle.line_segment_at(Point::from([0.3]), tolerance);
+
+        assert_eq!(
+            a, b,
+            "Expecting representation of the curve to be deterministic; it \
+            must not depend on the specific points that were sampled.",
+        );
+
+        Ok(())
     }
 }
