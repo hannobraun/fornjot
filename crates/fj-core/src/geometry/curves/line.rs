@@ -2,7 +2,7 @@
 
 use fj_math::{Line, Point};
 
-use crate::geometry::{CurveBoundary, GenPolyline, Tolerance};
+use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
 impl<const D: usize> GenPolyline<D> for Line<D> {
     fn origin(&self) -> Point<D> {

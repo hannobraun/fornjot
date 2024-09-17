@@ -4,7 +4,7 @@ use std::iter;
 
 use fj_math::{Circle, Point, Scalar, Sign};
 
-use crate::geometry::{CurveBoundary, GenPolyline, Tolerance};
+use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
 impl<const D: usize> GenPolyline<D> for Circle<D> {
     fn origin(&self) -> Point<D> {
@@ -129,7 +129,7 @@ mod tests {
 
     use fj_math::{Circle, Point, Scalar};
 
-    use crate::geometry::{CurveBoundary, GenPolyline, Tolerance};
+    use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
     use super::CircleApproxParams;
 
