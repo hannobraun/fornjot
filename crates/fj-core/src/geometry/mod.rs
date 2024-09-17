@@ -1,5 +1,7 @@
 //! Geometry that is applied to the topological object graph
 
+pub mod curves;
+
 mod boundary;
 mod curve;
 mod geometry;
