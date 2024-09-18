@@ -110,7 +110,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                                 // right now, as in the future, curve geometry
                                 // hopefully won't be redundantly defined, and
                                 // this whole validation check will become
-                                // redundant.
+                                // obsolete.
                                 //
                                 // For this reason, I'm choosing the easy way
                                 // here, and that should do just fine for now.
