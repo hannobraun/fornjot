@@ -70,7 +70,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
             .filter_map(
                 |((half_edge_a, surface_a), (half_edge_b, surface_b))| {
                     // We only care about edges referring to the same curve.
-                    if half_edge_a.curve().id() != half_edge_b.curve().id() {
+                    if half_edge_a.curve() != half_edge_b.curve() {
                         return None;
                     }
 
