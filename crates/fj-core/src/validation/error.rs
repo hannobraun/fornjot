@@ -7,8 +7,8 @@ use crate::{
 
 use super::checks::{
     AdjacentHalfEdgesNotConnected, CoincidentHalfEdgesAreNotSiblings,
-    CurveGeometryMismatch, FaceHasNoBoundary, HalfEdgeHasNoSibling,
-    InteriorCycleHasInvalidWinding, MultipleReferencesToObject,
+    FaceHasNoBoundary, HalfEdgeHasNoSibling, InteriorCycleHasInvalidWinding,
+    MultipleReferencesToObject,
 };
 
 /// An error that can occur during a validation
@@ -23,10 +23,6 @@ pub enum ValidationError {
     CoincidentHalfEdgesAreNotSiblings(
         #[from] CoincidentHalfEdgesAreNotSiblings,
     ),
-
-    /// Curve geometry mismatch
-    #[error(transparent)]
-    CurveGeometryMismatch(#[from] CurveGeometryMismatch),
 
     /// Face has no boundary
     #[error(transparent)]

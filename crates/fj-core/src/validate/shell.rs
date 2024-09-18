@@ -2,10 +2,7 @@ use crate::{
     geometry::Geometry,
     topology::Shell,
     validation::{
-        checks::{
-            CoincidentHalfEdgesAreNotSiblings, CurveGeometryMismatch,
-            HalfEdgeHasNoSibling,
-        },
+        checks::{CoincidentHalfEdgesAreNotSiblings, HalfEdgeHasNoSibling},
         ValidationCheck,
     },
 };
@@ -19,10 +16,6 @@ impl Validate for Shell {
         errors: &mut Vec<ValidationError>,
         geometry: &Geometry,
     ) {
-        errors.extend(
-            CurveGeometryMismatch::check(self, geometry, config)
-                .map(Into::into),
-        );
         errors.extend(
             HalfEdgeHasNoSibling::check(self, geometry, config).map(Into::into),
         );
