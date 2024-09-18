@@ -69,12 +69,13 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
             .cartesian_product(half_edges_and_surfaces)
             .filter_map(
                 |((half_edge_a, surface_a), (half_edge_b, surface_b))| {
-                    // We only care about edges referring to the same curve.
+                    // We only care about half-edges referring to the same
+                    // curve.
                     if half_edge_a.curve() != half_edge_b.curve() {
                         return None;
                     }
 
-                    // No need to check an edge against itself.
+                    // No need to check a half-edge against itself.
                     if half_edge_a == half_edge_b {
                         return None;
                     }
