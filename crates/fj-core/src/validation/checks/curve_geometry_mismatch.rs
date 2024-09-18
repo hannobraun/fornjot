@@ -96,7 +96,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                             (Some(a), Some(b)) => (a, b),
                             (None, None) => {
                                 // No geometry defined for the curve on the
-                                // respective surface. Nothing to test here.
+                                // respective surfaces. Nothing to test here.
                                 return None;
                             }
                             _ => {
