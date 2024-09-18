@@ -75,7 +75,7 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
                     }
 
                     // No need to check an edge against itself.
-                    if half_edge_a.id() == half_edge_b.id() {
+                    if half_edge_a == half_edge_b {
                         return None;
                     }
 
