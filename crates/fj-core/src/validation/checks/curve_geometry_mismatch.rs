@@ -36,7 +36,7 @@ use crate::{
 ///
 /// [`Curve`]: crate::topology::Curve
 #[derive(Clone, Debug, thiserror::Error)]
-#[error("Curve coordinate system mismatch: {:#?}", self)]
+#[error("Curve geometry mismatch: {:#?}", self)]
 pub struct CurveGeometryMismatch {
     /// The curve for which mismatching geometry has been defined
     pub curve: Handle<Curve>,
