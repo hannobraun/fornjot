@@ -60,13 +60,13 @@ impl ValidationCheck<Shell> for CurveGeometryMismatch {
         geometry: &'r Geometry,
         config: &'r ValidationConfig,
     ) -> impl Iterator<Item = Self> + 'r {
-        let edges_and_surfaces =
+        let half_edges_and_surfaces =
             object.all_half_edges_with_surface().collect::<Vec<_>>();
 
-        edges_and_surfaces
+        half_edges_and_surfaces
             .clone()
             .into_iter()
-            .cartesian_product(edges_and_surfaces)
+            .cartesian_product(half_edges_and_surfaces)
             .filter_map(
                 |((half_edge_a, surface_a), (half_edge_b, surface_b))| {
                     // We only care about edges referring to the same curve.
