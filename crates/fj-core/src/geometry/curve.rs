@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, sync::Arc};
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    algorithms::approx::PathApproxParams, storage::Handle, topology::Surface,
+    algorithms::approx::CircleApproxParams, storage::Handle, topology::Surface,
 };
 
 use super::{CurveBoundary, Path, Tolerance};
@@ -129,7 +129,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         point: Point<1>,
         tolerance: Tolerance,
     ) -> [Point<D>; 2] {
-        let params = PathApproxParams::for_circle(self, tolerance);
+        let params = CircleApproxParams::for_circle(self, tolerance);
 
         // The approximation parameters have an increment, in curve coordinates,
         // that determines the distance between points on the polyline. Let's
@@ -160,7 +160,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         boundary: CurveBoundary<Point<1>>,
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let params = PathApproxParams::for_circle(self, tolerance);
+        let params = CircleApproxParams::for_circle(self, tolerance);
         params.points(boundary).collect()
     }
 }
