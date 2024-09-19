@@ -1,4 +1,3 @@
-
 use fj_math::{Circle, Point};
 
 use crate::geometry::{
@@ -46,6 +45,7 @@ pub fn approx_circle<const D: usize>(
     tolerance: impl Into<Tolerance>,
 ) -> Vec<(Point<1>, Point<D>)> {
     let boundary = boundary.into();
+    let tolerance = tolerance.into();
 
     let params = CircleApproxParams::new(circle, tolerance);
     let mut points = Vec::new();
