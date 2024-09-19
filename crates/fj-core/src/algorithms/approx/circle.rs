@@ -49,7 +49,7 @@ pub fn approx_circle<const D: usize>(
     let params = CircleApproxParams::new(circle, tolerance);
     let mut points = Vec::new();
 
-    for point_curve in params.points(boundary) {
+    for point_curve in params.approx_circle(boundary) {
         let point_global = circle.point_from_circle_coords(point_curve);
         points.push((point_curve, point_global));
     }
@@ -89,7 +89,7 @@ impl CircleApproxParams {
     }
 
     /// Generate points to approximate the circle within the boundary
-    pub fn points(
+    pub fn approx_circle(
         &self,
         boundary: impl Into<CurveBoundary<Point<1>>>,
     ) -> impl Iterator<Item = Point<1>> + '_ {
@@ -196,7 +196,7 @@ mod tests {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
             let params = CircleApproxParams::new(&circle, tolerance);
 
-            let points = params.points(boundary).collect::<Vec<_>>();
+            let points = params.approx_circle(boundary).collect::<Vec<_>>();
 
             let expected_points = expected_coords
                 .into_iter()
