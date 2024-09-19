@@ -46,7 +46,7 @@ pub fn approx_circle<const D: usize>(
 ) -> Vec<(Point<1>, Point<D>)> {
     let boundary = boundary.into();
 
-    let params = CircleApproxParams::for_circle(circle, tolerance);
+    let params = CircleApproxParams::new(circle, tolerance);
     let mut points = Vec::new();
 
     for point_curve in params.points(boundary) {
@@ -65,7 +65,7 @@ pub struct CircleApproxParams {
 
 impl CircleApproxParams {
     /// Compute path approximation parameters for the given circle and tolerance
-    pub fn for_circle<const D: usize>(
+    pub fn new<const D: usize>(
         circle: &Circle<D>,
         tolerance: impl Into<Tolerance>,
     ) -> Self {
@@ -150,7 +150,7 @@ mod tests {
             expected_num_vertices: impl Into<Scalar>,
         ) {
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::for_circle(&circle, tolerance);
+            let params = CircleApproxParams::new(&circle, tolerance);
 
             let expected_increment = Scalar::TAU / expected_num_vertices;
             assert_eq!(params.increment(), expected_increment);
@@ -194,7 +194,7 @@ mod tests {
             let tolerance = 0.375;
 
             let circle = Circle::from_center_and_radius([0., 0.], radius);
-            let params = CircleApproxParams::for_circle(&circle, tolerance);
+            let params = CircleApproxParams::new(&circle, tolerance);
 
             let points = params.points(boundary).collect::<Vec<_>>();
 

@@ -129,7 +129,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         point: Point<1>,
         tolerance: Tolerance,
     ) -> [Point<D>; 2] {
-        let params = CircleApproxParams::for_circle(self, tolerance);
+        let params = CircleApproxParams::new(self, tolerance);
 
         // The approximation parameters have an increment, in curve coordinates,
         // that determines the distance between points on the polyline. Let's
@@ -160,7 +160,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         boundary: CurveBoundary<Point<1>>,
         tolerance: Tolerance,
     ) -> Vec<Point<1>> {
-        let params = CircleApproxParams::for_circle(self, tolerance);
+        let params = CircleApproxParams::new(self, tolerance);
         params.points(boundary).collect()
     }
 }
