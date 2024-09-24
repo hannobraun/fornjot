@@ -166,7 +166,11 @@ impl<const D: usize> Circle<D> {
 impl Circle<3> {
     /// # Transform the circle
     pub fn transform(&self, transform: &Transform) -> Self {
-        transform.transform_circle(self)
+        Circle::new(
+            transform.transform_point(&self.center()),
+            transform.transform_vector(&self.a()),
+            transform.transform_vector(&self.b()),
+        )
     }
 }
 
