@@ -950,6 +950,7 @@ name = "fj-core"
 version = "0.49.0"
 dependencies = [
  "anyhow",
+ "approx 0.5.1",
  "fj-interop",
  "fj-math",
  "itertools",
