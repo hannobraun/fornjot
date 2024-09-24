@@ -1,7 +1,7 @@
-use fj_math::{Circle, Line, Vector};
+use fj_math::{Line, Vector};
 
 use crate::{
-    geometry::{Path, SurfaceGeom},
+    geometry::{curves::circle::Circle, Path, SurfaceGeom},
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
