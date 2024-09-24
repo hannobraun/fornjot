@@ -1,6 +1,6 @@
 use approx::AbsDiffEq;
 
-use crate::{Aabb, Point, Scalar, Vector};
+use crate::{Aabb, Point, Scalar, Transform, Vector};
 
 /// An n-dimensional circle
 ///
@@ -160,6 +160,13 @@ impl<const D: usize> Circle<D> {
             min: self.center() - center_to_min_max,
             max: self.center() + center_to_min_max,
         }
+    }
+}
+
+impl Circle<3> {
+    /// # Transform the circle
+    pub fn transform(&self, transform: &Transform) -> Self {
+        transform.transform_circle(self)
     }
 }
 
