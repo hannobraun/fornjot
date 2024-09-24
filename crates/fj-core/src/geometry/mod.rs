@@ -2,6 +2,7 @@
 
 pub mod curves;
 pub mod traits;
+pub mod util;
 
 mod boundary;
 mod curve;
