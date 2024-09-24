@@ -179,20 +179,6 @@ impl Circle<3> {
     }
 }
 
-impl<const D: usize> approx::AbsDiffEq for Circle<D> {
-    type Epsilon = <Scalar as approx::AbsDiffEq>::Epsilon;
-
-    fn default_epsilon() -> Self::Epsilon {
-        Scalar::default_epsilon()
-    }
-
-    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.center.abs_diff_eq(&other.center, epsilon)
-            && self.a.abs_diff_eq(&other.a, epsilon)
-            && self.b.abs_diff_eq(&other.b, epsilon)
-    }
-}
-
 impl<const D: usize> GenPolyline<D> for Circle<D> {
     fn origin(&self) -> Point<D> {
         self.center() + self.a()
