@@ -67,7 +67,9 @@ where
     P: Into<Point<D>>,
 {
     fn from(points: [P; 2]) -> Self {
-        Self::from_points(points)
+        Self {
+            points: points.map(Into::into),
+        }
     }
 }
 
