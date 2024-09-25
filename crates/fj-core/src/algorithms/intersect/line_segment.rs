@@ -24,7 +24,7 @@ impl LineSegmentIntersection {
         // Algorithm adapted from Real-Time Collision Detection by Christer
         // Ericson. See section 5.1.9.1, 2D Segment Intersection.
 
-        let [a, b] = segment.points();
+        let [a, b] = segment.points;
 
         // Find vector that is orthogonal to `segment`.
         let n = {
@@ -42,7 +42,7 @@ impl LineSegmentIntersection {
                 // `line` and `segment` are not just parallel, but coincident!
                 return Some(Self::Coincident {
                     points_on_line: segment
-                        .points()
+                        .points
                         .map(|point| line.point_to_line_coords(point)),
                 });
             }
@@ -54,7 +54,7 @@ impl LineSegmentIntersection {
         // line defined by `segment`'s points.
         let t = n_dot_origin / n_dot_direction;
 
-        let point_is_on_segment = Aabb::<2>::from_points(segment.points())
+        let point_is_on_segment = Aabb::<2>::from_points(segment.points)
             .contains(line.point_from_line_coords([t]));
         if !point_is_on_segment {
             return None;
