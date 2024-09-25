@@ -92,3 +92,10 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
         }
     }
 }
+
+/// # A line segment
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
+pub struct LineSegment<const D: usize> {
+    /// # The points that bound the line segment
+    pub points: [Point<D>; 2],
+}
