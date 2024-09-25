@@ -171,19 +171,6 @@ impl Line<3> {
     }
 }
 
-impl<const D: usize> approx::AbsDiffEq for Line<D> {
-    type Epsilon = <Scalar as approx::AbsDiffEq>::Epsilon;
-
-    fn default_epsilon() -> Self::Epsilon {
-        Scalar::default_epsilon()
-    }
-
-    fn abs_diff_eq(&self, other: &Self, epsilon: Self::Epsilon) -> bool {
-        self.origin.abs_diff_eq(&other.origin, epsilon)
-            && self.direction.abs_diff_eq(&other.direction, epsilon)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use approx::assert_abs_diff_eq;
