@@ -37,7 +37,7 @@ impl<const D: usize> LineSegment<D> {
 
     /// Compute the center point of the segment
     pub fn center(&self) -> Point<D> {
-        let [a, b] = self.points();
+        let [a, b] = self.points;
         a + (b - a) / Scalar::TWO
     }
 
