@@ -67,7 +67,7 @@ impl Transform {
         &self,
         segment: &LineSegment<3>,
     ) -> LineSegment<3> {
-        let [a, b] = &segment.points();
+        let [a, b] = &segment.points;
         LineSegment::from([self.transform_point(a), self.transform_point(b)])
     }
 
