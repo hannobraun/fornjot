@@ -64,10 +64,7 @@ impl Transform {
 
     /// Transform the given line
     pub fn transform_line(&self, line: &Line<3>) -> Line<3> {
-        Line::from_origin_and_direction(
-            self.transform_point(&line.origin()),
-            self.transform_vector(&line.direction()),
-        )
+        line.transform(self)
     }
 
     /// Transform the given segment

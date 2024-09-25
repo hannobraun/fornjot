@@ -66,7 +66,7 @@ impl Path<3> {
     pub fn transform(self, transform: &Transform) -> Self {
         match self {
             Self::Circle(curve) => Self::Circle(curve.transform(transform)),
-            Self::Line(curve) => Self::Line(transform.transform_line(&curve)),
+            Self::Line(curve) => Self::Line(curve.transform(transform)),
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::{Point, Scalar, Triangle, Vector};
+use crate::{Point, Scalar, Transform, Triangle, Vector};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///
@@ -158,6 +158,16 @@ impl<const D: usize> Line<D> {
         vector: impl Into<Vector<1>>,
     ) -> Vector<D> {
         self.direction * vector.into().t
+    }
+}
+
+impl Line<3> {
+    /// # Transform the line
+    pub fn transform(&self, transform: &Transform) -> Self {
+        Self::from_origin_and_direction(
+            transform.transform_point(&self.origin()),
+            transform.transform_vector(&self.direction()),
+        )
     }
 }
 
