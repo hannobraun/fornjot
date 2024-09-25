@@ -5,6 +5,12 @@
 //! traits in this module provide the interface between this uniform
 //! representation and specific geometry code.
 //!
+//! ## Determinism
+//!
+//! Uniform representation must be deterministic. That means a given geometric
+//! curve or surface, at a given tolerance, must generate the same uniform
+//! representation, regardless of where it is queried, and in which order.
+//!
 //! ## Implementation Note
 //!
 //! As of this writing, the transition from the previous, more limited, geometry
@@ -25,14 +31,6 @@ use super::{CurveBoundary, Path, Tolerance};
 ///
 /// - `CurveGeom2<2>` for surface-local geometry.
 /// - `CurveGeom2<3>` for global 3D geometry.
-///
-///
-/// ## Determinism
-///
-/// For a given curve and a given tolerance, the uniform representation of a
-/// curve must be deterministic. This means that the same representation must be
-/// returned, regardless of which points on the curve are queried, and in what
-/// order.
 pub trait GenPolyline<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
