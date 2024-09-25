@@ -11,7 +11,8 @@ use super::Point;
 #[derive(Clone, Copy, Eq, Default, PartialEq, Hash, Ord, PartialOrd)]
 #[repr(C)]
 pub struct LineSegment<const D: usize> {
-    points: [Point<D>; 2],
+    /// # The end points of the line segment
+    pub points: [Point<D>; 2],
 }
 
 impl<const D: usize> LineSegment<D> {
