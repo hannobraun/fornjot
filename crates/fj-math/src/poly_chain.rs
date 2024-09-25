@@ -47,7 +47,7 @@ impl<const D: usize> PolyChain<D> {
             // once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let segment = LineSegment::from_points(points);
+            let segment = LineSegment { points };
             segments.push(segment);
         }
 
