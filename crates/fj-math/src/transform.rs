@@ -4,7 +4,7 @@ use nalgebra::Perspective3;
 
 use crate::Scalar;
 
-use super::{Aabb, Point, LineSegment, Triangle, Vector};
+use super::{Aabb, LineSegment, Point, Triangle, Vector};
 
 /// An affine transform
 #[repr(C)]
@@ -63,7 +63,10 @@ impl Transform {
     }
 
     /// Transform the given segment
-    pub fn transform_segment(&self, segment: &LineSegment<3>) -> LineSegment<3> {
+    pub fn transform_segment(
+        &self,
+        segment: &LineSegment<3>,
+    ) -> LineSegment<3> {
         let [a, b] = &segment.points();
         LineSegment::from([self.transform_point(a), self.transform_point(b)])
     }

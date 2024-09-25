@@ -105,8 +105,9 @@ impl CycleApprox {
             // up, once `array_windows` is stable.
             let segment = [&segment[0], &segment[1]];
 
-            segments
-                .push(LineSegment::from(segment.map(|point| point.global_form)));
+            segments.push(LineSegment::from(
+                segment.map(|point| point.global_form),
+            ));
         }
 
         segments

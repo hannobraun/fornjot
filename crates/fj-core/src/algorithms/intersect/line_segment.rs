@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Point, Scalar, LineSegment, Vector};
+use fj_math::{Aabb, LineSegment, Point, Scalar, Vector};
 
 use crate::geometry::curves::line::Line;
 
@@ -68,7 +68,7 @@ impl LineSegmentIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar, LineSegment, Vector};
+    use fj_math::{LineSegment, Point, Scalar, Vector};
 
     use crate::geometry::curves::line::Line;
 
