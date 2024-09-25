@@ -2,7 +2,7 @@
 //!
 //! See [`CycleApprox`].
 
-use fj_math::Segment;
+use fj_math::LineSegment;
 
 use crate::{
     geometry::{CurveBoundary, Geometry, Tolerance},
@@ -97,7 +97,7 @@ impl CycleApprox {
     }
 
     /// Construct the segments that approximate the cycle
-    pub fn segments(&self) -> Vec<Segment<3>> {
+    pub fn segments(&self) -> Vec<LineSegment<3>> {
         let mut segments = Vec::new();
 
         for segment in self.points().windows(2) {
@@ -106,7 +106,7 @@ impl CycleApprox {
             let segment = [&segment[0], &segment[1]];
 
             segments
-                .push(Segment::from(segment.map(|point| point.global_form)));
+                .push(LineSegment::from(segment.map(|point| point.global_form)));
         }
 
         segments

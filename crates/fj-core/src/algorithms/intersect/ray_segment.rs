@@ -1,10 +1,10 @@
 //! Intersection between a ray and a line segment in 2D
 
-use fj_math::Segment;
+use fj_math::LineSegment;
 
 use super::{HorizontalRayToTheRight, Intersect};
 
-impl Intersect for (&HorizontalRayToTheRight<2>, &Segment<2>) {
+impl Intersect for (&HorizontalRayToTheRight<2>, &LineSegment<2>) {
     type Intersection = RaySegmentIntersection;
 
     fn intersect(self) -> Option<Self::Intersection> {
@@ -115,7 +115,7 @@ pub enum RaySegmentIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::Segment;
+    use fj_math::LineSegment;
 
     use crate::algorithms::intersect::Intersect;
 
@@ -125,9 +125,9 @@ mod tests {
     fn ray_is_left_of_segment() {
         let ray = HorizontalRayToTheRight::from([0., 2.]);
 
-        let below = Segment::from([[1., 0.], [1., 1.]]);
-        let above = Segment::from([[1., 3.], [1., 4.]]);
-        let same_level = Segment::from([[1., 1.], [1., 3.]]);
+        let below = LineSegment::from([[1., 0.], [1., 1.]]);
+        let above = LineSegment::from([[1., 3.], [1., 4.]]);
+        let same_level = LineSegment::from([[1., 1.], [1., 3.]]);
 
         assert!((&ray, &below).intersect().is_none());
         assert!((&ray, &above).intersect().is_none());
@@ -141,7 +141,7 @@ mod tests {
     fn ray_is_right_of_segment() {
         let ray = HorizontalRayToTheRight::from([1., 2.]);
 
-        let same_level = Segment::from([[0., 1.], [0., 3.]]);
+        let same_level = LineSegment::from([[0., 1.], [0., 3.]]);
         assert!((&ray, &same_level).intersect().is_none());
     }
 
@@ -149,11 +149,11 @@ mod tests {
     fn ray_overlaps_with_segment_along_x_axis() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
-        let no_hit = Segment::from([[0., 0.], [2., 3.]]);
+        let no_hit = LineSegment::from([[0., 0.], [2., 3.]]);
 
-        let hit_segment = Segment::from([[0., 0.], [3., 2.]]);
-        let hit_upper = Segment::from([[0., 0.], [2., 1.]]);
-        let hit_lower = Segment::from([[0., 2.], [2., 1.]]);
+        let hit_segment = LineSegment::from([[0., 0.], [3., 2.]]);
+        let hit_upper = LineSegment::from([[0., 0.], [2., 1.]]);
+        let hit_lower = LineSegment::from([[0., 2.], [2., 1.]]);
 
         assert!((&ray, &no_hit).intersect().is_none());
         assert!(matches!(
@@ -174,9 +174,9 @@ mod tests {
     fn ray_starts_on_segment() {
         let ray = HorizontalRayToTheRight::from([1., 1.]);
 
-        let hit_segment = Segment::from([[0., 0.], [2., 2.]]);
-        let hit_upper = Segment::from([[0., 0.], [1., 1.]]);
-        let hit_lower = Segment::from([[1., 1.], [2., 2.]]);
+        let hit_segment = LineSegment::from([[0., 0.], [2., 2.]]);
+        let hit_upper = LineSegment::from([[0., 0.], [1., 1.]]);
+        let hit_lower = LineSegment::from([[1., 1.], [2., 2.]]);
 
         assert!(matches!(
             (&ray, &hit_segment).intersect(),
@@ -196,8 +196,8 @@ mod tests {
     fn ray_and_segment_are_parallel_and_on_same_level() {
         let ray = HorizontalRayToTheRight::from([2., 0.]);
 
-        let left = Segment::from([[0., 0.], [1., 0.]]);
-        let right = Segment::from([[3., 0.], [4., 0.]]);
+        let left = LineSegment::from([[0., 0.], [1., 0.]]);
+        let right = LineSegment::from([[3., 0.], [4., 0.]]);
 
         assert!((&ray, &left).intersect().is_none());
         assert!(matches!(
@@ -210,9 +210,9 @@ mod tests {
     fn ray_starts_on_parallel_segment() {
         let ray = HorizontalRayToTheRight::from([2., 0.]);
 
-        let left = Segment::from([[0., 0.], [2., 0.]]);
-        let overlapping = Segment::from([[1., 0.], [3., 0.]]);
-        let right = Segment::from([[2., 0.], [4., 0.]]);
+        let left = LineSegment::from([[0., 0.], [2., 0.]]);
+        let overlapping = LineSegment::from([[1., 0.], [3., 0.]]);
+        let right = LineSegment::from([[2., 0.], [4., 0.]]);
 
         assert!(matches!(
             (&ray, &left).intersect(),

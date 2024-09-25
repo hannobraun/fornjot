@@ -1,4 +1,4 @@
-use crate::{Point, Segment};
+use crate::{LineSegment, Point};
 
 /// A polygonal chain
 ///
@@ -39,7 +39,7 @@ impl<const D: usize> PolyChain<D> {
     }
 
     /// Access the segments of the polygonal chain
-    pub fn segments(&self) -> Vec<Segment<D>> {
+    pub fn segments(&self) -> Vec<LineSegment<D>> {
         let mut segments = Vec::new();
 
         for points in self.points.windows(2) {
@@ -47,7 +47,7 @@ impl<const D: usize> PolyChain<D> {
             // once `array_windows` is stable.
             let points = [points[0], points[1]];
 
-            let segment = Segment::from_points(points);
+            let segment = LineSegment::from_points(points);
             segments.push(segment);
         }
 

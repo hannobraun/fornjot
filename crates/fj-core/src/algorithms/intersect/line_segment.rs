@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Point, Scalar, Segment, Vector};
+use fj_math::{Aabb, Point, Scalar, LineSegment, Vector};
 
 use crate::geometry::curves::line::Line;
 
@@ -20,7 +20,7 @@ pub enum LineSegmentIntersection {
 
 impl LineSegmentIntersection {
     /// Determine the intersection between a [`Line`] and a [`Segment`]
-    pub fn compute(line: &Line<2>, segment: &Segment<2>) -> Option<Self> {
+    pub fn compute(line: &Line<2>, segment: &LineSegment<2>) -> Option<Self> {
         // Algorithm adapted from Real-Time Collision Detection by Christer
         // Ericson. See section 5.1.9.1, 2D Segment Intersection.
 
@@ -68,7 +68,7 @@ impl LineSegmentIntersection {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Scalar, Segment, Vector};
+    use fj_math::{Point, Scalar, LineSegment, Vector};
 
     use crate::geometry::curves::line::Line;
 
@@ -82,7 +82,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &Segment::from_points([[1., -1.], [1., 1.]]),
+                &LineSegment::from_points([[1., -1.], [1., 1.]]),
             ),
             Some(LineSegmentIntersection::Point {
                 point_on_line: Point::from([Scalar::ONE])
@@ -98,7 +98,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &Segment::from_points([[1., 0.], [2., 0.]]),
+                &LineSegment::from_points([[1., 0.], [2., 0.]]),
             ),
             Some(LineSegmentIntersection::Coincident {
                 points_on_line: [Point::from([1.]), Point::from([2.])],
@@ -114,7 +114,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &Segment::from_points([[1., 1.], [1., 2.]]),
+                &LineSegment::from_points([[1., 1.], [1., 2.]]),
             ),
             None,
         );
@@ -128,7 +128,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &Segment::from_points([[1., -2.], [1., -1.]]),
+                &LineSegment::from_points([[1., -2.], [1., -1.]]),
             ),
             None,
         );
@@ -142,7 +142,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &Segment::from_points([[-1., 1.], [1., 1.]]),
+                &LineSegment::from_points([[-1., 1.], [1., 1.]]),
             ),
             None,
         );

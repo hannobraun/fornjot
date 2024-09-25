@@ -1,5 +1,5 @@
 use fj_interop::ext::SliceExt;
-use fj_math::{Point, PolyChain, Segment, Triangle};
+use fj_math::{LineSegment, Point, PolyChain, Triangle};
 
 use crate::algorithms::intersect::{
     ray_segment::RaySegmentIntersection, HorizontalRayToTheRight, Intersect,
@@ -47,7 +47,7 @@ impl Polygon {
         let mut might_be_hole = true;
 
         for &edge in [a, b, c, a].as_slice().array_windows_ext() {
-            let edge = Segment::from(edge);
+            let edge = LineSegment::from(edge);
 
             let is_exterior_edge = self.contains_exterior_edge(edge);
             let is_interior_edge = self.contains_interior_edge(edge);
@@ -90,12 +90,12 @@ impl Polygon {
         true
     }
 
-    fn contains_exterior_edge(&self, edge: Segment<2>) -> bool {
+    fn contains_exterior_edge(&self, edge: LineSegment<2>) -> bool {
         self.exterior.segments().contains(&edge)
             || self.exterior.segments().contains(&edge.reverse())
     }
 
-    fn contains_interior_edge(&self, edge: Segment<2>) -> bool {
+    fn contains_interior_edge(&self, edge: LineSegment<2>) -> bool {
         let mut contains = false;
 
         for chain in &self.interiors {

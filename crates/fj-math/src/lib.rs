@@ -51,7 +51,7 @@ pub use self::{
     point::Point,
     poly_chain::PolyChain,
     scalar::{Scalar, Sign},
-    segment::Segment,
+    segment::LineSegment,
     transform::Transform,
     triangle::{Triangle, Winding},
     vector::Vector,
