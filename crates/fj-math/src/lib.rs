@@ -35,10 +35,10 @@ mod aabb;
 mod arc;
 mod bivector;
 mod coordinates;
+mod line_segment;
 mod point;
 mod poly_chain;
 mod scalar;
-mod segment;
 mod transform;
 mod triangle;
 mod vector;
@@ -48,10 +48,10 @@ pub use self::{
     arc::Arc,
     bivector::Bivector,
     coordinates::{Uv, Xyz, T},
+    line_segment::LineSegment,
     point::Point,
     poly_chain::PolyChain,
     scalar::{Scalar, Sign},
-    segment::LineSegment,
     transform::Transform,
     triangle::{Triangle, Winding},
     vector::Vector,
