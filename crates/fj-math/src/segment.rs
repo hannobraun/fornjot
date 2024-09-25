@@ -16,25 +16,6 @@ pub struct LineSegment<const D: usize> {
 }
 
 impl<const D: usize> LineSegment<D> {
-    /// Construct a segment from two points
-    ///
-    /// # Panics
-    ///
-    /// Panics, if the points are coincident.
-    pub fn from_points(points: [impl Into<Point<D>>; 2]) -> Self {
-        let points = points.map(Into::into);
-        let [a, b] = points;
-
-        assert!(a != b, "Invalid segment; both points are identical: {a:?}");
-
-        Self { points }
-    }
-
-    /// Access the points of the segment
-    pub fn points(&self) -> [Point<D>; 2] {
-        self.points
-    }
-
     /// Compute the center point of the segment
     pub fn center(&self) -> Point<D> {
         let [a, b] = self.points;
