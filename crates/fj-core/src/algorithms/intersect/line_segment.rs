@@ -82,7 +82,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &LineSegment::from_points([[1., -1.], [1., 1.]]),
+                &LineSegment::from([[1., -1.], [1., 1.]]),
             ),
             Some(LineSegmentIntersection::Point {
                 point_on_line: Point::from([Scalar::ONE])
@@ -98,7 +98,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &LineSegment::from_points([[1., 0.], [2., 0.]]),
+                &LineSegment::from([[1., 0.], [2., 0.]]),
             ),
             Some(LineSegmentIntersection::Coincident {
                 points_on_line: [Point::from([1.]), Point::from([2.])],
@@ -114,7 +114,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &LineSegment::from_points([[1., 1.], [1., 2.]]),
+                &LineSegment::from([[1., 1.], [1., 2.]]),
             ),
             None,
         );
@@ -128,7 +128,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &LineSegment::from_points([[1., -2.], [1., -1.]]),
+                &LineSegment::from([[1., -2.], [1., -1.]]),
             ),
             None,
         );
@@ -142,7 +142,7 @@ mod tests {
         assert_eq!(
             LineSegmentIntersection::compute(
                 &line,
-                &LineSegment::from_points([[-1., 1.], [1., 1.]]),
+                &LineSegment::from([[-1., 1.], [1., 1.]]),
             ),
             None,
         );
