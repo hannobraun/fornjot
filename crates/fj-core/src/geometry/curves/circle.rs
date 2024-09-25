@@ -5,7 +5,10 @@ use std::iter;
 use approx::AbsDiffEq;
 use fj_math::{Aabb, Point, Scalar, Sign, Transform, Vector};
 
-use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
+use crate::geometry::{
+    traits::{GenPolyline, LineSegment},
+    CurveBoundary, Tolerance,
+};
 
 /// An n-dimensional circle
 ///
@@ -188,7 +191,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         &self,
         point: Point<1>,
         tolerance: Tolerance,
-    ) -> [Point<D>; 2] {
+    ) -> LineSegment<D> {
         let params = CircleApproxParams::new(self, tolerance);
 
         // The approximation parameters have an increment, in curve coordinates,
@@ -211,8 +214,10 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         });
 
         // And finally, convert those into points of the desired dimensionality.
-        points_curve
-            .map(|point_curve| self.point_from_circle_coords([point_curve]))
+        let points = points_curve
+            .map(|point_curve| self.point_from_circle_coords([point_curve]));
+
+        LineSegment { points }
     }
 
     fn generate_polyline(

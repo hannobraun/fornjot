@@ -48,7 +48,7 @@ pub trait GenPolyline<const D: usize> {
         &self,
         point: Point<1>,
         tolerance: Tolerance,
-    ) -> [Point<D>; 2];
+    ) -> LineSegment<D>;
 
     /// # Generate a polyline within the provided boundary
     fn generate_polyline(
@@ -72,7 +72,7 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
         &self,
         point: Point<1>,
         tolerance: Tolerance,
-    ) -> [Point<D>; 2] {
+    ) -> LineSegment<D> {
         match self {
             Self::Circle(circle) => circle.line_segment_at(point, tolerance),
             Self::Line(line) => line.line_segment_at(point, tolerance),

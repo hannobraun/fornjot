@@ -66,6 +66,7 @@ impl SurfaceGeom {
         let [a, b] = self
             .u
             .line_segment_at(Point::from([point_surface.u]), tolerance.into())
+            .points
             .map(|point_global| point_global + self.v * point_surface.v);
 
         let c = a + (b - a) / 2.;
