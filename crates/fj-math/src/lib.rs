@@ -35,7 +35,6 @@ mod aabb;
 mod arc;
 mod bivector;
 mod coordinates;
-mod line;
 mod point;
 mod poly_chain;
 mod scalar;
@@ -49,7 +48,6 @@ pub use self::{
     arc::Arc,
     bivector::Bivector,
     coordinates::{Uv, Xyz, T},
-    line::Line,
     point::Point,
     poly_chain::PolyChain,
     scalar::{Scalar, Sign},
