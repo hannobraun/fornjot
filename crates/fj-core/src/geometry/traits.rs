@@ -17,7 +17,7 @@
 //! system to the new one based on uniform representation is still ongoing. As a
 //! result of that, this module might still be incomplete.
 
-use fj_math::Point;
+use fj_math::{LineSegment, Point};
 
 use super::{CurveBoundary, Path, Tolerance};
 
@@ -89,11 +89,4 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
             Self::Line(line) => line.generate_polyline(boundary, tolerance),
         }
     }
-}
-
-/// # A line segment
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct LineSegment<const D: usize> {
-    /// # The points that bound the line segment
-    pub points: [Point<D>; 2],
 }

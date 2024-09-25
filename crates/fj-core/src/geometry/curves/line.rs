@@ -1,11 +1,8 @@
 //! # Geometry code specific to lines
 
-use fj_math::{Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{LineSegment, Point, Scalar, Transform, Triangle, Vector};
 
-use crate::geometry::{
-    traits::{GenPolyline, LineSegment},
-    CurveBoundary, Tolerance,
-};
+use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
 /// An n-dimensional line, defined by an origin and a direction
 ///

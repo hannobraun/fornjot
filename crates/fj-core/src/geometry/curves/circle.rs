@@ -3,12 +3,9 @@
 use std::iter;
 
 use approx::AbsDiffEq;
-use fj_math::{Aabb, Point, Scalar, Sign, Transform, Vector};
+use fj_math::{Aabb, LineSegment, Point, Scalar, Sign, Transform, Vector};
 
-use crate::geometry::{
-    traits::{GenPolyline, LineSegment},
-    CurveBoundary, Tolerance,
-};
+use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
 /// An n-dimensional circle
 ///
