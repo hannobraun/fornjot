@@ -10,7 +10,7 @@ impl Intersect for (&HorizontalRayToTheRight<2>, &LineSegment<2>) {
     fn intersect(self) -> Option<Self::Intersection> {
         let (ray, segment) = self;
 
-        let [a, b] = segment.points();
+        let [a, b] = segment.points;
         let [lower, upper] = if a.v <= b.v { [a, b] } else { [b, a] };
         let [left, right] = if a.u <= b.u { [a, b] } else { [b, a] };
 
