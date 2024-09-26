@@ -43,7 +43,10 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         let points = points_curve
             .map(|point_curve| self.point_from_circle_coords(point_curve));
 
-        LineSegment { points }
+        LineSegment {
+            points,
+            points_line: points_curve,
+        }
     }
 
     fn generate_polyline(

@@ -13,6 +13,9 @@ use super::Point;
 pub struct LineSegment<const D: usize> {
     /// # The end points of the line segment
     pub points: [Point<D>; 2],
+
+    /// # The end points of the line segment, in line coordinates
+    pub points_line: [Point<1>; 2],
 }
 
 impl<const D: usize> LineSegment<D> {
@@ -50,6 +53,7 @@ where
     fn from(points: [P; 2]) -> Self {
         Self {
             points: points.map(Into::into),
+            points_line: [[0.], [1.]].map(Into::into),
         }
     }
 }

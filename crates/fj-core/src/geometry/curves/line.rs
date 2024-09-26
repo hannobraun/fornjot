@@ -19,6 +19,7 @@ impl<const D: usize> GenPolyline<D> for Line<D> {
 
         LineSegment {
             points: [point, point],
+            points_line: [point_curve; 2],
         }
     }
 
