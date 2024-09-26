@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::Scalar;
+use crate::{Line, Scalar};
 
 use super::Point;
 
@@ -29,6 +29,16 @@ impl<const D: usize> LineSegment<D> {
     pub fn reverse(mut self) -> Self {
         self.points.reverse();
         self
+    }
+
+    /// # Convert this `LineSegment` into a [`Line`]
+    ///
+    /// This provides access to various utility methods.
+    pub fn to_line(&self) -> Line<D> {
+        let [a, b] = self.points;
+        let [a_line, b_line] = self.points_line;
+
+        Line::from_points_with_line_coords([(a_line, a), (b_line, b)])
     }
 }
 
