@@ -44,7 +44,7 @@ pub trait GenPolyline<const D: usize> {
     /// provided point.
     fn line_segment_at(
         &self,
-        point: Point<1>,
+        point_curve: Point<1>,
         tolerance: Tolerance,
     ) -> LineSegment<D>;
 
