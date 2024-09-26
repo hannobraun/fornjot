@@ -1,6 +1,4 @@
-use fj_math::Point;
-
-use crate::geometry::curves::line::Line;
+use fj_math::{Line, Point};
 
 /// Approximate a line
 ///

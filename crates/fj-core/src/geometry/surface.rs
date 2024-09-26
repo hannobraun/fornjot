@@ -111,10 +111,10 @@ impl SurfaceGeom {
 
 #[cfg(test)]
 mod tests {
-    use fj_math::{Point, Vector};
+    use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{curves::line::Line, Path, SurfaceGeom, Tolerance};
+    use crate::geometry::{Path, SurfaceGeom, Tolerance};
 
     #[test]
     fn point_from_surface_coords() {

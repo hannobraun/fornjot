@@ -2,9 +2,7 @@
 //!
 //! See [`Path`].
 
-use fj_math::{Circle, Point, Scalar, Transform, Vector};
-
-use super::curves::line::Line;
+use fj_math::{Circle, Line, Point, Scalar, Transform, Vector};
 
 /// A path through surface (2D) or global (3D) space
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]

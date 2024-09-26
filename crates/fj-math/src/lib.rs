@@ -36,6 +36,7 @@ mod arc;
 mod bivector;
 mod circle;
 mod coordinates;
+mod line;
 mod line_segment;
 mod point;
 mod poly_chain;
@@ -50,6 +51,7 @@ pub use self::{
     bivector::Bivector,
     circle::Circle,
     coordinates::{Uv, Xyz, T},
+    line::Line,
     line_segment::LineSegment,
     point::Point,
     poly_chain::PolyChain,

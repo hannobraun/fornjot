@@ -1,12 +1,9 @@
 use std::collections::BTreeMap;
 
-use fj_math::{Circle, Point};
+use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{
-        curves::line::Line, CurveBoundary, Geometry, Path, SurfaceGeom,
-        Tolerance,
-    },
+    geometry::{CurveBoundary, Geometry, Path, SurfaceGeom, Tolerance},
     storage::Handle,
     topology::{Curve, Surface},
 };
