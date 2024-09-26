@@ -34,12 +34,12 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
 
         // Next, convert them into actual curve coordinates.
         let points_curve = [a, b].map(|point_curve_in_increment_units| {
-            point_curve_in_increment_units * params.increment()
+            [point_curve_in_increment_units * params.increment()]
         });
 
         // And finally, convert those into points of the desired dimensionality.
         let points = points_curve
-            .map(|point_curve| self.point_from_circle_coords([point_curve]));
+            .map(|point_curve| self.point_from_circle_coords(point_curve));
 
         LineSegment { points }
     }
