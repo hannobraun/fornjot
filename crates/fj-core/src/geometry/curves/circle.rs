@@ -33,9 +33,11 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         let b = t.ceil();
 
         // Next, convert them into actual curve coordinates.
-        let points_curve = [a, b].map(|point_curve_in_increment_units| {
-            [point_curve_in_increment_units * params.increment()]
-        });
+        let points_curve = [a, b]
+            .map(|point_curve_in_increment_units| {
+                [point_curve_in_increment_units * params.increment()]
+            })
+            .map(Point::from);
 
         // And finally, convert those into points of the desired dimensionality.
         let points = points_curve
