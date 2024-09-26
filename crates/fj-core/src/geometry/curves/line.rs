@@ -18,7 +18,7 @@ impl<const D: usize> GenPolyline<D> for Line<D> {
         let point = self.origin() + self.direction() * point_curve.t;
 
         LineSegment {
-            points: [point, point],
+            points: [point; 2],
             points_line: [point_curve; 2],
         }
     }
