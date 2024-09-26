@@ -2,7 +2,7 @@ use fj_math::{Aabb, LineSegment, Point, Scalar, Vector};
 
 use crate::geometry::curves::line::Line;
 
-/// An intersection between a [`Line`] and a [`Segment`]
+/// An intersection between a [`Line`] and a [`LineSegment`]
 #[derive(Debug, Eq, PartialEq)]
 pub enum LineSegmentIntersection {
     /// Line and segment intersect at a point
@@ -19,7 +19,7 @@ pub enum LineSegmentIntersection {
 }
 
 impl LineSegmentIntersection {
-    /// Determine the intersection between a [`Line`] and a [`Segment`]
+    /// Determine the intersection between a [`Line`] and a [`LineSegment`]
     pub fn compute(line: &Line<2>, segment: &LineSegment<2>) -> Option<Self> {
         // Algorithm adapted from Real-Time Collision Detection by Christer
         // Ericson. See section 5.1.9.1, 2D Segment Intersection.
