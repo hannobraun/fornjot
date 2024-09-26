@@ -13,7 +13,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
 
     fn line_segment_at(
         &self,
-        point: Point<1>,
+        point_curve: Point<1>,
         tolerance: Tolerance,
     ) -> LineSegment<D> {
         let params = CircleApproxParams::new(self, tolerance);
@@ -21,7 +21,7 @@ impl<const D: usize> GenPolyline<D> for Circle<D> {
         // The approximation parameters have an increment, in curve coordinates,
         // that determines the distance between points on the polyline. Let's
         // figure out where `point` is on the curve, in units of this increment.
-        let t = point.t / params.increment();
+        let t = point_curve.t / params.increment();
 
         // Now pick two points on the curve, again in units of approximation
         // increment, where the locations of the two closest approximation
