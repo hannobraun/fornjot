@@ -68,12 +68,14 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
 
     fn line_segment_at(
         &self,
-        point: Point<1>,
+        point_curve: Point<1>,
         tolerance: Tolerance,
     ) -> LineSegment<D> {
         match self {
-            Self::Circle(circle) => circle.line_segment_at(point, tolerance),
-            Self::Line(line) => line.line_segment_at(point, tolerance),
+            Self::Circle(circle) => {
+                circle.line_segment_at(point_curve, tolerance)
+            }
+            Self::Line(line) => line.line_segment_at(point_curve, tolerance),
         }
     }
 
