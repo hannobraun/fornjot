@@ -38,6 +38,9 @@ const pi: f32 = 3.14159265359;
 @fragment
 fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
+    let distance_from_camera = length(in.position.xyz);
+
+    let darkening_factor = 0.5 + 1.0/ (1.0 + exp(distance_from_camera));
 
     let angle = acos(dot(light, -in.normal));
     let f_angle = angle / (pi * 0.75);
@@ -45,7 +48,7 @@ fn frag_model(in: VertexOutput) -> FragmentOutput {
     let f_normal = max(1.0 - f_angle, 0.0);
 
     var out: FragmentOutput;
-    out.color = vec4<f32>(in.color.rgb * f_normal, in.color.a);
+    out.color = vec4<f32>(in.color.rgb * f_normal * darkening_factor, in.color.a);
 
     return out;
 }
