@@ -40,7 +40,7 @@ fn frag_model(in: VertexOutput) -> FragmentOutput {
     let light = vec3<f32>(0.0, 0.0, -1.0);
     let distance_from_camera = length(in.position.xyz);
 
-    let darkening_factor = 0.5 + 1.0/ (1.0 + exp(distance_from_camera));
+    let darkening_factor = 560.0 / (560.0 + exp(0.006 * distance_from_camera));
 
     let angle = acos(dot(light, -in.normal));
     let f_angle = angle / (pi * 0.75);
