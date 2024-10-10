@@ -1,6 +1,6 @@
 //! The geometry that defines a surface
 
-use fj_math::{Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
 use super::{traits::GenPolyline, Path, Tolerance};
 
@@ -74,6 +74,30 @@ impl SurfaceGeom {
 
         let barycentric_coords = [1. / 3.; 3].map(Into::into);
         (triangle, barycentric_coords)
+    }
+
+    /// # Generated a triangle mesh within the provided boundary
+    pub fn generate_tri_mesh(
+        &self,
+        boundary: Aabb<2>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<2>> {
+        let boundary_curve = [[boundary.min.u], [boundary.max.u]];
+        let points_curve =
+            self.u.generate_polyline(boundary_curve.into(), tolerance);
+
+        points_curve
+            .iter()
+            .copied()
+            .map(|point| [point.t, Scalar::ZERO])
+            .chain(
+                points_curve
+                    .iter()
+                    .copied()
+                    .map(|point| [point.t, self.v.magnitude()]),
+            )
+            .map(Point::from)
+            .collect()
     }
 
     /// Convert a point in surface coordinates to model coordinates
