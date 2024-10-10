@@ -29,8 +29,8 @@ use super::{CurveBoundary, Path, Tolerance};
 /// It is generic over the dimensionality of the generated polyline. Typically,
 /// two variants should be implemented per curve geometry type:
 ///
-/// - `CurveGeom2<2>` for surface-local geometry.
-/// - `CurveGeom2<3>` for global 3D geometry.
+/// - `GenPolyline<2>` for surface-local geometry.
+/// - `GenPolyline<3>` for global 3D geometry.
 pub trait GenPolyline<const D: usize> {
     /// # Access the origin of the curve
     fn origin(&self) -> Point<D>;
