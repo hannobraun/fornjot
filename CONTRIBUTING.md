@@ -102,8 +102,6 @@ There are a lot of open issues, however. If you need some more guidance, there a
 - Some issues that need extra attention are labeled as [`help wanted`](https://github.com/hannobraun/Fornjot/labels/help%20wanted). Don't take that too seriously though. Help is welcome everywhere, not just on issues explicitly labeled as such.
 - Issues are typically labeled by topic to indicate which part of the project they affect. Check out the [list of labels](https://github.com/hannobraun/Fornjot/labels), specifically the various `topic: ` labels.
 
-There's also the [feature wishlist](https://github.com/hannobraun/fornjot/discussions/146), for things that are not as actionable right now, or that I didn't want to track as issues for other reasons.
-
 Finally, feel free to just ask. If you have a specific issue in mind, just comment there. Or direct your query to [Matrix] or [Discussions].
 
 If you're not a programmer, or are looking for some variety, you can also work on [the website](https://github.com/hannobraun/www.fornjot.app).
