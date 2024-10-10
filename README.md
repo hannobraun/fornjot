@@ -41,6 +41,12 @@ Fornjot is supported by [**@reivilibre**](https://github.com/reivilibre), [**@kr
 
 Fornjot is usable for simple models (see [`models/` directory](models)), but currently lacks the features for anything more advanced. Work to change that is underway.
 
+Despite this, there are some experimental projects that are build on top of Fornjot:
+
+- [CommandCAD](https://github.com/IamTheCarl/CommandCAD)
+- [`fj-text`](https://github.com/samgoldman/fj-text)
+- [`bevy_mod_fornjot`](https://github.com/TotalKrill/bevy_mod_fornjot)
+
 
 ## Overview
 
