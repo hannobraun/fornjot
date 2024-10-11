@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Path, SurfaceGeom},
+    geometry::{Path, SweptCurve},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -16,7 +16,7 @@ use crate::{
 pub trait BuildSurface {
     /// Build a surface from the provided geometry
     fn from_geometry(
-        surface_geom: SurfaceGeom,
+        surface_geom: SweptCurve,
         core: &mut Core,
     ) -> Handle<Surface> {
         let surface = Surface::new().insert(core);
@@ -35,7 +35,7 @@ pub trait BuildSurface {
         core: &mut Core,
     ) -> Handle<Surface> {
         Self::from_geometry(
-            SurfaceGeom {
+            SweptCurve {
                 u: u.into(),
                 v: v.into(),
             },

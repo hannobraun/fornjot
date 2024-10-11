@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, Path, SurfaceGeom, Tolerance},
+    geometry::{CurveBoundary, Geometry, Path, SweptCurve, Tolerance},
     storage::Handle,
     topology::{Curve, Surface},
 };
@@ -44,11 +44,11 @@ pub fn approx_curve_with_cache(
 
 fn approx_curve(
     path: &Path<2>,
-    surface: &SurfaceGeom,
+    surface: &SweptCurve,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
 ) -> CurveApprox {
-    let SurfaceGeom { u, .. } = surface;
+    let SweptCurve { u, .. } = surface;
     let points = match (path, u) {
         (Path::Circle(_), Path::Circle(_)) => approx_circle_on_curved_surface(),
         (Path::Circle(circle), Path::Line(_)) => {
@@ -71,7 +71,7 @@ fn approx_circle_on_curved_surface() -> Vec<ApproxPoint<1>> {
 fn approx_circle_on_straight_surface(
     circle: &Circle<2>,
     boundary: CurveBoundary<Point<1>>,
-    surface: &SurfaceGeom,
+    surface: &SweptCurve,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
     let tolerance = tolerance.into();
@@ -103,7 +103,7 @@ fn approx_circle_on_straight_surface(
 fn approx_line_on_any_surface(
     line: &Line<2>,
     boundary: CurveBoundary<Point<1>>,
-    surface: &SurfaceGeom,
+    surface: &SweptCurve,
     tolerance: impl Into<Tolerance>,
 ) -> Vec<ApproxPoint<1>> {
     let tolerance = tolerance.into();
@@ -114,7 +114,7 @@ fn approx_line_on_any_surface(
             .map(|point_curve| [line.point_from_line_coords(point_curve).u]),
     );
 
-    let SurfaceGeom { u, .. } = surface;
+    let SweptCurve { u, .. } = surface;
     let approx_u = match u {
         Path::Circle(circle) => approx_circle(circle, range_u, tolerance),
         Path::Line(line) => approx_line(line),
@@ -197,7 +197,7 @@ mod tests {
         algorithms::approx::{
             circle::approx_circle, curve::approx_curve, ApproxPoint,
         },
-        geometry::{CurveBoundary, Path, SurfaceGeom},
+        geometry::{CurveBoundary, Path, SweptCurve},
         operations::build::BuildSurface,
         topology::Surface,
         Core,
@@ -219,7 +219,7 @@ mod tests {
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
-        let surface = SurfaceGeom {
+        let surface = SweptCurve {
             u: Path::circle_from_radius(1.),
             v: Vector::from([0., 0., 1.]),
         };
@@ -238,7 +238,7 @@ mod tests {
 
         let circle = Circle::from_center_and_radius(Point::origin(), 1.);
         let global_path = Path::Circle(circle);
-        let surface_geom = SurfaceGeom {
+        let surface_geom = SweptCurve {
             u: global_path,
             v: Vector::from([0., 0., 1.]),
         };

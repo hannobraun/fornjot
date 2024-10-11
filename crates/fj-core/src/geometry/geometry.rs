@@ -9,14 +9,14 @@ use crate::{
 
 use super::{
     vertex::LocalVertexGeom, CurveGeom, CurveGeom2, LocalCurveGeom, Path,
-    SurfaceGeom, VertexGeom,
+    SweptCurve, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
     curve2: BTreeMap<Handle<Curve>, CurveGeom2>,
-    surface: BTreeMap<Handle<Surface>, SurfaceGeom>,
+    surface: BTreeMap<Handle<Surface>, SweptCurve>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     space_2d: Handle<Surface>,
@@ -44,21 +44,21 @@ impl Geometry {
 
         self_.define_surface_inner(
             self_.xy_plane.clone(),
-            SurfaceGeom {
+            SweptCurve {
                 u: Path::x_axis(),
                 v: Vector::unit_y(),
             },
         );
         self_.define_surface_inner(
             self_.xz_plane.clone(),
-            SurfaceGeom {
+            SweptCurve {
                 u: Path::x_axis(),
                 v: Vector::unit_z(),
             },
         );
         self_.define_surface_inner(
             self_.yz_plane.clone(),
-            SurfaceGeom {
+            SweptCurve {
                 u: Path::y_axis(),
                 v: Vector::unit_z(),
             },
@@ -91,7 +91,7 @@ impl Geometry {
     pub(crate) fn define_surface_inner(
         &mut self,
         surface: Handle<Surface>,
-        geometry: SurfaceGeom,
+        geometry: SweptCurve,
     ) {
         if surface == self.space_2d {
             panic!("Attempting to define geometry for 2D space");
@@ -143,7 +143,7 @@ impl Geometry {
     /// ## Panics
     ///
     /// Panics, if the geometry of the surface is not defined.
-    pub fn of_surface(&self, surface: &Handle<Surface>) -> &SurfaceGeom {
+    pub fn of_surface(&self, surface: &Handle<Surface>) -> &SweptCurve {
         self.surface
             .get(surface)
             .expect("Expected geometry of surface to be defined")
@@ -155,17 +155,17 @@ impl Geometry {
     }
 
     /// Access the geometry of the xy-plane
-    pub fn xy_plane(&self) -> &SurfaceGeom {
+    pub fn xy_plane(&self) -> &SweptCurve {
         self.of_surface(&self.xy_plane)
     }
 
     /// Access the geometry of the xz-plane
-    pub fn xz_plane(&self) -> &SurfaceGeom {
+    pub fn xz_plane(&self) -> &SweptCurve {
         self.of_surface(&self.xz_plane)
     }
 
     /// Access the geometry of the yz-plane
-    pub fn yz_plane(&self) -> &SurfaceGeom {
+    pub fn yz_plane(&self) -> &SweptCurve {
         self.of_surface(&self.yz_plane)
     }
 }

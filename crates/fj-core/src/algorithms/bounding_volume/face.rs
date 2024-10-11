@@ -3,7 +3,7 @@ use std::ops::Deref;
 use fj_math::{Aabb, Vector};
 
 use crate::{
-    geometry::{Geometry, Path, SurfaceGeom, Tolerance},
+    geometry::{Geometry, Path, SweptCurve, Tolerance},
     topology::Face,
 };
 
@@ -14,7 +14,7 @@ impl super::BoundingVolume<3> for &Face {
             .map(|aabb2| {
                 let surface = geometry.of_surface(self.surface());
 
-                let SurfaceGeom { u, v } = surface;
+                let SweptCurve { u, v } = surface;
                 match u {
                     Path::Circle(circle) => {
                         // This is not the most precise way to calculate the

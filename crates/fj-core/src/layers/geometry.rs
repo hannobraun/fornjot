@@ -2,7 +2,7 @@
 
 use crate::{
     geometry::{
-        CurveGeom2, Geometry, LocalCurveGeom, LocalVertexGeom, SurfaceGeom,
+        CurveGeom2, Geometry, LocalCurveGeom, LocalVertexGeom, SweptCurve,
     },
     storage::Handle,
     topology::{Curve, Surface, Vertex},
@@ -55,7 +55,7 @@ impl Layer<Geometry> {
     pub fn define_surface(
         &mut self,
         surface: Handle<Surface>,
-        geometry: SurfaceGeom,
+        geometry: SweptCurve,
     ) {
         let mut events = Vec::new();
         self.process(DefineSurface { surface, geometry }, &mut events);
@@ -147,7 +147,7 @@ impl Event<Geometry> for DefineCurve2 {
 /// Define the geometry of a surface
 pub struct DefineSurface {
     surface: Handle<Surface>,
-    geometry: SurfaceGeom,
+    geometry: SweptCurve,
 }
 
 impl Command<Geometry> for DefineSurface {

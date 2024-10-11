@@ -6,7 +6,7 @@ use super::{traits::GenPolyline, Path, Tolerance};
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
-pub struct SurfaceGeom {
+pub struct SweptCurve {
     /// The u-axis of the surface
     pub u: Path<3>,
 
@@ -14,7 +14,7 @@ pub struct SurfaceGeom {
     pub v: Vector<3>,
 }
 
-impl SurfaceGeom {
+impl SweptCurve {
     /// # Access the origin of the surface
     pub fn origin(&self) -> Point<3> {
         self.u.origin()
@@ -138,11 +138,11 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{Path, SurfaceGeom, Tolerance};
+    use crate::geometry::{Path, SweptCurve, Tolerance};
 
     #[test]
     fn point_from_surface_coords() {
-        let surface = SurfaceGeom {
+        let surface = SweptCurve {
             u: Path::Line(Line::from_origin_and_direction(
                 Point::from([1., 1., 1.]),
                 Vector::from([0., 2., 0.]),
@@ -161,7 +161,7 @@ mod tests {
 
     #[test]
     fn vector_from_surface_coords() {
-        let surface = SurfaceGeom {
+        let surface = SweptCurve {
             u: Path::Line(Line::from_origin_and_direction(
                 Point::from([1., 0., 0.]),
                 Vector::from([0., 2., 0.]),
