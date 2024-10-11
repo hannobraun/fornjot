@@ -36,8 +36,10 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::geometry::{
-        util::tri_mesh::convert_point_surface_to_global, Path, SweptCurve,
-        Tolerance,
+        util::tri_mesh::{
+            convert_point_surface_to_global, convert_vector_surface_to_global,
+        },
+        Path, SweptCurve, Tolerance,
     };
 
     #[test]
@@ -73,7 +75,7 @@ mod tests {
         let tolerance = Tolerance::from_scalar(1.).unwrap();
 
         assert_eq!(
-            surface.vector_from_surface_coords([2., 4.], tolerance),
+            convert_vector_surface_to_global(&surface, [2., 4.], tolerance),
             Vector::from([0., 4., 8.]),
         );
     }

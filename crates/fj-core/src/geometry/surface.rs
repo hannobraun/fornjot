@@ -4,7 +4,6 @@ use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
 use super::{
     traits::{GenPolyline, GenTriMesh},
-    util::tri_mesh::convert_vector_surface_to_global,
     Path, Tolerance,
 };
 
@@ -19,15 +18,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// Convert a vector in surface coordinates to model coordinates
-    pub fn vector_from_surface_coords(
-        &self,
-        vector: impl Into<Vector<2>>,
-        tolerance: impl Into<Tolerance>,
-    ) -> Vector<3> {
-        convert_vector_surface_to_global(self, vector, tolerance)
-    }
-
     /// Transform the surface geometry
     #[must_use]
     pub fn transform(self, transform: &Transform) -> Self {

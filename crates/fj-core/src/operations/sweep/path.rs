@@ -2,7 +2,10 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     geometry::{
-        util::tri_mesh::convert_point_surface_to_global, Path, SweptCurve,
+        util::tri_mesh::{
+            convert_point_surface_to_global, convert_vector_surface_to_global,
+        },
+        Path, SweptCurve,
     },
     operations::build::BuildSurface,
     storage::Handle,
@@ -73,10 +76,16 @@ impl SweepSurfacePath for Path<2> {
                     circle.center(),
                     core.tolerance(),
                 );
-                let a = surface
-                    .vector_from_surface_coords(circle.a(), core.tolerance());
-                let b = surface
-                    .vector_from_surface_coords(circle.b(), core.tolerance());
+                let a = convert_vector_surface_to_global(
+                    surface,
+                    circle.a(),
+                    core.tolerance(),
+                );
+                let b = convert_vector_surface_to_global(
+                    surface,
+                    circle.b(),
+                    core.tolerance(),
+                );
 
                 let circle = Circle::new(center, a, b);
 
@@ -88,7 +97,8 @@ impl SweepSurfacePath for Path<2> {
                     line.origin(),
                     core.tolerance(),
                 );
-                let direction = surface.vector_from_surface_coords(
+                let direction = convert_vector_surface_to_global(
+                    surface,
                     line.direction(),
                     core.tolerance(),
                 );
