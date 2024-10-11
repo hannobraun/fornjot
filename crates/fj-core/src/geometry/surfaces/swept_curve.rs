@@ -1,5 +1,3 @@
-//! # Geometry code specific to curves, swept along a path, to define a surface
-
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
 use crate::geometry::{
