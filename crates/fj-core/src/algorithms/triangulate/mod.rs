@@ -177,36 +177,12 @@ mod tests {
 
         let triangles = triangulate(face, &mut core)?;
 
-        let a = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(a, core.tolerance());
-        let b = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(b, core.tolerance());
-        let e = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(e, core.tolerance());
-        let f = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(f, core.tolerance());
-        let g = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(g, core.tolerance());
-        let h = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(h, core.tolerance());
+        let [a, b, e, f, g, h] = [a, b, e, f, g, h].map(|point| {
+            core.layers
+                .geometry
+                .of_surface(&surface)
+                .point_from_surface_coords(point, core.tolerance())
+        });
 
         // Let's test that some correct triangles are present. We don't need to
         // test them all.
