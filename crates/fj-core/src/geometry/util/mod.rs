@@ -8,3 +8,4 @@
 //! do with them long-term.
 
 pub mod polyline;
+pub mod tri_mesh;

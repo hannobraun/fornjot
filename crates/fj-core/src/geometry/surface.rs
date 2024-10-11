@@ -4,6 +4,7 @@ use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
 use super::{
     traits::{GenPolyline, GenTriMesh},
+    util::tri_mesh::convert_point_surface_to_global,
     Path, Tolerance,
 };
 
@@ -24,9 +25,7 @@ impl SweptCurve {
         point: impl Into<Point<2>>,
         tolerance: impl Into<Tolerance>,
     ) -> Point<3> {
-        let (triangle, barycentric_coords) =
-            self.triangle_at(point.into(), tolerance.into());
-        triangle.point_from_barycentric_coords(barycentric_coords)
+        convert_point_surface_to_global(self, point, tolerance)
     }
 
     /// Convert a vector in surface coordinates to model coordinates
