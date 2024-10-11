@@ -24,7 +24,8 @@ impl SweptCurve {
         point: impl Into<Point<2>>,
         tolerance: impl Into<Tolerance>,
     ) -> Point<3> {
-        let (triangle, barycentric_coords) = self.triangle_at(point, tolerance);
+        let (triangle, barycentric_coords) =
+            self.triangle_at(point.into(), tolerance);
         triangle.point_from_barycentric_coords(barycentric_coords)
     }
 
@@ -58,11 +59,9 @@ impl GenTriMesh for SweptCurve {
 
     fn triangle_at(
         &self,
-        point_surface: impl Into<Point<2>>,
+        point_surface: Point<2>,
         tolerance: impl Into<Tolerance>,
     ) -> (Triangle<3>, [Scalar; 3]) {
-        let point_surface = point_surface.into();
-
         let [a, b] = self
             .u
             .line_segment_at(Point::from([point_surface.u]), tolerance.into())

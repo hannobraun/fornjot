@@ -136,7 +136,7 @@ pub trait GenTriMesh {
     /// added, it would make sense to return that here.
     fn triangle_at(
         &self,
-        point_surface: impl Into<Point<2>>,
+        point_surface: Point<2>,
         tolerance: impl Into<Tolerance>,
     ) -> (Triangle<3>, [Scalar; 3]);
 
