@@ -2,7 +2,10 @@
 
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
-use super::{traits::GenPolyline, Path, Tolerance};
+use super::{
+    traits::{GenPolyline, GenTriMesh},
+    Path, Tolerance,
+};
 
 /// The geometry that defines a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -15,91 +18,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// # Access the origin of the surface
-    pub fn origin(&self) -> Point<3> {
-        self.u.origin()
-    }
-
-    /// # Return the triangle at the provided point on the surface
-    ///
-    /// Select a triangle of the surface's triangle mesh representation, the one
-    /// at the provided surface point. Return that triangle, as well as the
-    /// barycentric coordinates of the provided point on the triangle.
-    ///
-    /// ## Triangle Size and Validity
-    ///
-    /// If a surface is curved along both axes, the triangle's size is chosen
-    /// such, that it approximates the surface, with the maximum allowed
-    /// deviation of the actual surface defined by the provided tolerance
-    /// argument.
-    ///
-    /// Otherwise, the size of the returned triangle is at least partially
-    /// arbitrary. Take the extreme case of a plane: Since it is not curved at
-    /// all, the returned triangle can be arbitrarily large.
-    ///
-    /// However, since surfaces are infinite, and we can't represent infinite
-    /// triangles, there is no sensible upper bound for the size. Instead, to
-    /// prevent an arbitrary choice for the size of triangles, which would imply
-    /// properties of the surface that are not true, and might therefore be
-    /// confusing, the triangles returned by this function have a length of zero
-    /// along axes that do not require approximation.
-    ///
-    /// The most extreme case would be a plane, for which the returned triangle
-    /// is collapsed to a point. For a cylinder, the triangle would have the
-    /// appropriate width to approximate the curved axis given the provided
-    /// tolerance, while having zero height.
-    ///
-    /// ## Implementation Note
-    ///
-    /// At the time this was written, there was no dedicated type to represent
-    /// barycentric coordinates. Nor any other code that used them, I think.
-    ///
-    /// If this changes, and a special type for barycentric coordinates is
-    /// added, it would make sense to return that here.
-    pub fn triangle_at(
-        &self,
-        point_surface: impl Into<Point<2>>,
-        tolerance: impl Into<Tolerance>,
-    ) -> (Triangle<3>, [Scalar; 3]) {
-        let point_surface = point_surface.into();
-
-        let [a, b] = self
-            .u
-            .line_segment_at(Point::from([point_surface.u]), tolerance.into())
-            .points
-            .map(|point_global| point_global + self.v * point_surface.v);
-
-        let c = a + (b - a) / 2.;
-        let triangle = Triangle::from([a, b, c]);
-
-        let barycentric_coords = [1. / 3.; 3].map(Into::into);
-        (triangle, barycentric_coords)
-    }
-
-    /// # Generated a triangle mesh within the provided boundary
-    pub fn generate_tri_mesh(
-        &self,
-        boundary: Aabb<2>,
-        tolerance: Tolerance,
-    ) -> Vec<Point<2>> {
-        let boundary_curve = [[boundary.min.u], [boundary.max.u]];
-        let points_curve =
-            self.u.generate_polyline(boundary_curve.into(), tolerance);
-
-        points_curve
-            .iter()
-            .copied()
-            .map(|point| [point.t, Scalar::ZERO])
-            .chain(
-                points_curve
-                    .iter()
-                    .copied()
-                    .map(|point| [point.t, self.v.magnitude()]),
-            )
-            .map(Point::from)
-            .collect()
-    }
-
     /// Convert a point in surface coordinates to model coordinates
     pub fn point_from_surface_coords(
         &self,
@@ -130,6 +48,55 @@ impl SweptCurve {
         let u = u.transform(transform);
         let v = transform.transform_vector(&v);
         Self { u, v }
+    }
+}
+
+impl GenTriMesh for SweptCurve {
+    fn origin(&self) -> Point<3> {
+        self.u.origin()
+    }
+
+    fn triangle_at(
+        &self,
+        point_surface: impl Into<Point<2>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> (Triangle<3>, [Scalar; 3]) {
+        let point_surface = point_surface.into();
+
+        let [a, b] = self
+            .u
+            .line_segment_at(Point::from([point_surface.u]), tolerance.into())
+            .points
+            .map(|point_global| point_global + self.v * point_surface.v);
+
+        let c = a + (b - a) / 2.;
+        let triangle = Triangle::from([a, b, c]);
+
+        let barycentric_coords = [1. / 3.; 3].map(Into::into);
+        (triangle, barycentric_coords)
+    }
+
+    fn generate_tri_mesh(
+        &self,
+        boundary: Aabb<2>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<2>> {
+        let boundary_curve = [[boundary.min.u], [boundary.max.u]];
+        let points_curve =
+            self.u.generate_polyline(boundary_curve.into(), tolerance);
+
+        points_curve
+            .iter()
+            .copied()
+            .map(|point| [point.t, Scalar::ZERO])
+            .chain(
+                points_curve
+                    .iter()
+                    .copied()
+                    .map(|point| [point.t, self.v.magnitude()]),
+            )
+            .map(Point::from)
+            .collect()
     }
 }
 

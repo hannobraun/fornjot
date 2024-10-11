@@ -17,7 +17,7 @@
 //! system to the new one based on uniform representation is still ongoing. As a
 //! result of that, this module might still be incomplete.
 
-use fj_math::{LineSegment, Point};
+use fj_math::{Aabb, LineSegment, Point, Scalar, Triangle};
 
 use super::{CurveBoundary, Path, Tolerance};
 
@@ -91,4 +91,59 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
             Self::Line(line) => line.generate_polyline(boundary, tolerance),
         }
     }
+}
+
+/// # Generate triangle meshes, the uniform representation of surface geometry
+pub trait GenTriMesh {
+    /// # Access the origin of the surface
+    fn origin(&self) -> Point<3>;
+
+    /// # Return the triangle at the provided point on the surface
+    ///
+    /// Select a triangle of the surface's triangle mesh representation, the one
+    /// at the provided surface point. Return that triangle, as well as the
+    /// barycentric coordinates of the provided point on the triangle.
+    ///
+    /// ## Triangle Size and Validity
+    ///
+    /// If a surface is curved along both axes, the triangle's size is chosen
+    /// such, that it approximates the surface, with the maximum allowed
+    /// deviation of the actual surface defined by the provided tolerance
+    /// argument.
+    ///
+    /// Otherwise, the size of the returned triangle is at least partially
+    /// arbitrary. Take the extreme case of a plane: Since it is not curved at
+    /// all, the returned triangle can be arbitrarily large.
+    ///
+    /// However, since surfaces are infinite, and we can't represent infinite
+    /// triangles, there is no sensible upper bound for the size. Instead, to
+    /// prevent an arbitrary choice for the size of triangles, which would imply
+    /// properties of the surface that are not true, and might therefore be
+    /// confusing, the triangles returned by this function have a length of zero
+    /// along axes that do not require approximation.
+    ///
+    /// The most extreme case would be a plane, for which the returned triangle
+    /// is collapsed to a point. For a cylinder, the triangle would have the
+    /// appropriate width to approximate the curved axis given the provided
+    /// tolerance, while having zero height.
+    ///
+    /// ## Implementation Note
+    ///
+    /// At the time this was written, there was no dedicated type to represent
+    /// barycentric coordinates. Nor any other code that used them, I think.
+    ///
+    /// If this changes, and a special type for barycentric coordinates is
+    /// added, it would make sense to return that here.
+    fn triangle_at(
+        &self,
+        point_surface: impl Into<Point<2>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> (Triangle<3>, [Scalar; 3]);
+
+    /// # Generated a triangle mesh within the provided boundary
+    fn generate_tri_mesh(
+        &self,
+        boundary: Aabb<2>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<2>>;
 }
