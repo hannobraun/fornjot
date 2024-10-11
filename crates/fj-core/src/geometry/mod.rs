@@ -1,6 +1,7 @@
 //! Geometry that is applied to the topological object graph
 
 pub mod curves;
+pub mod surfaces;
 pub mod traits;
 pub mod util;
 
@@ -8,7 +9,6 @@ mod boundary;
 mod curve;
 mod geometry;
 mod path;
-mod surface;
 mod tolerance;
 mod vertex;
 
@@ -17,7 +17,7 @@ pub use self::{
     curve::{CurveGeom, CurveGeom2, LocalCurveGeom},
     geometry::Geometry,
     path::Path,
-    surface::SweptCurve,
+    surfaces::swept_curve::SweptCurve,
     tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},
 };

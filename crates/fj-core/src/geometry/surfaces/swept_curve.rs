@@ -2,7 +2,7 @@
 
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
-use super::{
+use crate::geometry::{
     traits::{GenPolyline, GenTriMesh},
     Path, Tolerance,
 };
