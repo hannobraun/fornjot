@@ -248,31 +248,12 @@ mod tests {
 
         let triangles = triangulate(face, &mut core)?;
 
-        let a = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(a, core.tolerance());
-        let b = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(b, core.tolerance());
-        let c = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(c, core.tolerance());
-        let d = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(d, core.tolerance());
-        let e = core
-            .layers
-            .geometry
-            .of_surface(&surface)
-            .point_from_surface_coords(e, core.tolerance());
+        let [a, b, c, d, e] = [a, b, c, d, e].map(|point| {
+            core.layers
+                .geometry
+                .of_surface(&surface)
+                .point_from_surface_coords(point, core.tolerance())
+        });
 
         assert!(triangles.contains_triangle([a, b, d]));
         assert!(triangles.contains_triangle([a, d, e]));
