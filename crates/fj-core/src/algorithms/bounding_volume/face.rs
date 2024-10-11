@@ -4,8 +4,8 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{
-        surfaces::SweptCurve, util::tri_mesh::convert_point_surface_to_global,
-        Geometry, Path, Tolerance,
+        traits::GenTriMesh, util::tri_mesh::convert_point_surface_to_global,
+        Geometry, Tolerance,
     },
     topology::Face,
 };
@@ -24,35 +24,19 @@ impl super::BoundingVolume<3> for &Face {
             .aabb(geometry)
             .map(|aabb2| {
                 let surface = geometry.of_surface(self.surface());
+                let tri_mesh = surface.generate_tri_mesh(aabb2, tolerance);
+                let tri_mesh = tri_mesh.into_iter().map(|point| {
+                    convert_point_surface_to_global(surface, point, tolerance)
+                });
 
-                let SweptCurve { u, v } = surface;
-                match u {
-                    Path::Circle(circle) => {
-                        // This is not the most precise way to calculate the
-                        // AABB, doing it for the whole circle, but it should
-                        // do.
+                let mut aabb3 = Aabb::<3>::from_points(tri_mesh);
 
-                        let aabb_bottom = circle.aabb();
-                        let aabb_top = Aabb {
-                            min: aabb_bottom.min + *v,
-                            max: aabb_bottom.max + *v,
-                        };
+                let offset = Vector::from([tolerance.inner(); 3]);
 
-                        aabb_bottom.merged(&aabb_top)
-                    }
-                    Path::Line(_) => {
-                        let offset = Vector::from([tolerance.inner(); 3]);
+                aabb3.min -= offset;
+                aabb3.max += offset;
 
-                        Aabb {
-                            min: convert_point_surface_to_global(
-                                surface, aabb2.min, tolerance,
-                            ) - offset,
-                            max: convert_point_surface_to_global(
-                                surface, aabb2.max, tolerance,
-                            ) + offset,
-                        }
-                    }
-                }
+                aabb3
             })
     }
 }
