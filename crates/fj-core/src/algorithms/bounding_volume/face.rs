@@ -43,7 +43,7 @@ impl super::BoundingVolume<3> for &Face {
                         let tolerance_f64 = 0.001;
                         let tolerance = Tolerance::from_scalar(tolerance_f64)
                             .expect("Tolerance provided is larger than zero");
-                        let offset = Vector::from([tolerance_f64; 3]);
+                        let offset = Vector::from([tolerance.inner(); 3]);
 
                         Aabb {
                             min: convert_point_surface_to_global(
