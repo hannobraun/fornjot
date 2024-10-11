@@ -5,7 +5,7 @@ use crate::geometry::{
     Path, Tolerance,
 };
 
-/// # A curve, swept along a path, to define a surface
+/// # A surface that is a curve, swept along a path
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SweptCurve {
     /// The u-axis of the surface
