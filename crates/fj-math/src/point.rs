@@ -200,6 +200,15 @@ impl<const D: usize> ops::Sub<Point<D>> for &Point<D> {
     }
 }
 
+impl<V, const D: usize> ops::SubAssign<V> for Point<D>
+where
+    V: Into<Vector<D>>,
+{
+    fn sub_assign(&mut self, v: V) {
+        *self = *self - v.into();
+    }
+}
+
 impl<const D: usize> fmt::Debug for Point<D> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.coords.fmt(f)
