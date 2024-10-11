@@ -17,7 +17,6 @@ pub use self::{
     curve::{CurveGeom, CurveGeom2, LocalCurveGeom},
     geometry::Geometry,
     path::Path,
-    surfaces::swept_curve::SweptCurve,
     tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},
 };
