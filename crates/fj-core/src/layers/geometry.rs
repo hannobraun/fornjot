@@ -2,7 +2,8 @@
 
 use crate::{
     geometry::{
-        CurveGeom2, Geometry, LocalCurveGeom, LocalVertexGeom, SweptCurve,
+        surfaces::swept_curve::SweptCurve, CurveGeom2, Geometry,
+        LocalCurveGeom, LocalVertexGeom,
     },
     storage::Handle,
     topology::{Curve, Surface, Vertex},

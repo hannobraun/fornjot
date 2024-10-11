@@ -4,8 +4,9 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{
+        surfaces::swept_curve::SweptCurve,
         util::tri_mesh::convert_point_surface_to_global, Geometry, Path,
-        SweptCurve, Tolerance,
+        Tolerance,
     },
     topology::Face,
 };

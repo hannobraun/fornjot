@@ -36,10 +36,11 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     use crate::geometry::{
+        surfaces::swept_curve::SweptCurve,
         util::tri_mesh::{
             convert_point_surface_to_global, convert_vector_surface_to_global,
         },
-        Path, SweptCurve, Tolerance,
+        Path, Tolerance,
     };
 
     #[test]

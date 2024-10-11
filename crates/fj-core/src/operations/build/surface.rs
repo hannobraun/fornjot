@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{Path, SweptCurve},
+    geometry::{surfaces::swept_curve::SweptCurve, Path},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
