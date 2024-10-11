@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::Geometry,
+    geometry::{util::tri_mesh::convert_point_surface_to_global, Geometry},
     storage::Handle,
     topology::{Curve, Surface, Vertex},
 };
@@ -31,9 +31,11 @@ pub fn approx_vertex(
     let position_global = match cache.get(&vertex) {
         Some(position) => position,
         None => {
-            let position_global = geometry
-                .of_surface(surface)
-                .point_from_surface_coords(position_surface, tolerance);
+            let position_global = convert_point_surface_to_global(
+                geometry.of_surface(surface),
+                position_surface,
+                tolerance,
+            );
             cache.insert(vertex, position_global)
         }
     };

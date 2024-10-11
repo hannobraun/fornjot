@@ -1,7 +1,7 @@
 use std::iter::repeat;
 
 use crate::{
-    geometry::Geometry,
+    geometry::{util::tri_mesh::convert_point_surface_to_global, Geometry},
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Vertex},
     validation::{checks::MultipleReferencesToObject, ValidationCheck},
@@ -116,7 +116,8 @@ impl SolidValidationError {
                 };
 
                 Some((
-                    geometry.of_surface(s).point_from_surface_coords(
+                    convert_point_surface_to_global(
+                        geometry.of_surface(s),
                         local_curve_geometry.path.point_from_path_coords(
                             geometry
                                 .of_vertex(h.start_vertex())

@@ -3,6 +3,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
+    geometry::util::tri_mesh::convert_point_surface_to_global,
     storage::Handle,
     topology::{Cycle, Face, Region, Shell},
     Core,
@@ -90,13 +91,11 @@ impl AddHole for Shell {
 
         let path = {
             let point = |location: &HoleLocation| {
-                core.layers
-                    .geometry
-                    .of_surface(location.face.surface())
-                    .point_from_surface_coords(
-                        location.position,
-                        core.tolerance(),
-                    )
+                convert_point_surface_to_global(
+                    core.layers.geometry.of_surface(location.face.surface()),
+                    location.position,
+                    core.tolerance(),
+                )
             };
 
             let entry_point = point(&entry_location);

@@ -1,7 +1,9 @@
 use fj_math::{Circle, Line, Vector};
 
 use crate::{
-    geometry::{Path, SweptCurve},
+    geometry::{
+        util::tri_mesh::convert_point_surface_to_global, Path, SweptCurve,
+    },
     operations::build::BuildSurface,
     storage::Handle,
     topology::Surface,
@@ -66,7 +68,8 @@ impl SweepSurfacePath for Path<2> {
 
         let u = match self {
             Path::Circle(circle) => {
-                let center = surface.point_from_surface_coords(
+                let center = convert_point_surface_to_global(
+                    surface,
                     circle.center(),
                     core.tolerance(),
                 );
@@ -80,8 +83,11 @@ impl SweepSurfacePath for Path<2> {
                 Path::Circle(circle)
             }
             Path::Line(line) => {
-                let origin = surface
-                    .point_from_surface_coords(line.origin(), core.tolerance());
+                let origin = convert_point_surface_to_global(
+                    surface,
+                    line.origin(),
+                    core.tolerance(),
+                );
                 let direction = surface.vector_from_surface_coords(
                     line.direction(),
                     core.tolerance(),

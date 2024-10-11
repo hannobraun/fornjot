@@ -3,7 +3,10 @@ use std::collections::BTreeMap;
 use fj_math::{Circle, Line, Point};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, Path, SweptCurve, Tolerance},
+    geometry::{
+        util::tri_mesh::convert_point_surface_to_global, CurveBoundary,
+        Geometry, Path, SweptCurve, Tolerance,
+    },
     storage::Handle,
     topology::{Curve, Surface},
 };
@@ -93,8 +96,11 @@ fn approx_circle_on_straight_surface(
             //    point available, so it needs to be computed later anyway, in
             //    the general case.
 
-            let point_global =
-                surface.point_from_surface_coords(point_surface, tolerance);
+            let point_global = convert_point_surface_to_global(
+                surface,
+                point_surface,
+                tolerance,
+            );
             ApproxPoint::new(point_curve, point_global)
         })
         .collect()
@@ -125,7 +131,7 @@ fn approx_line_on_any_surface(
         let t = (u.t - line.origin().u) / line.direction().u;
         let point_surface = line.point_from_line_coords([t]);
         let point_global =
-            surface.point_from_surface_coords(point_surface, tolerance);
+            convert_point_surface_to_global(surface, point_surface, tolerance);
         points.push(ApproxPoint::new(u, point_global));
     }
 
@@ -197,7 +203,10 @@ mod tests {
         algorithms::approx::{
             circle::approx_circle, curve::approx_curve, ApproxPoint,
         },
-        geometry::{CurveBoundary, Path, SweptCurve},
+        geometry::{
+            util::tri_mesh::convert_point_surface_to_global, CurveBoundary,
+            Path, SweptCurve,
+        },
         operations::build::BuildSurface,
         topology::Surface,
         Core,
@@ -256,11 +265,11 @@ mod tests {
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
-                let point_global = core
-                    .layers
-                    .geometry
-                    .of_surface(&surface)
-                    .point_from_surface_coords(point_surface, tolerance);
+                let point_global = convert_point_surface_to_global(
+                    core.layers.geometry.of_surface(&surface),
+                    point_surface,
+                    tolerance,
+                );
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();
@@ -284,11 +293,11 @@ mod tests {
             .into_iter()
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
-                let point_global = core
-                    .layers
-                    .geometry
-                    .of_surface(&surface)
-                    .point_from_surface_coords(point_surface, tolerance);
+                let point_global = convert_point_surface_to_global(
+                    core.layers.geometry.of_surface(&surface),
+                    point_surface,
+                    tolerance,
+                );
                 ApproxPoint::new(point_local, point_global)
             })
             .collect::<Vec<_>>();

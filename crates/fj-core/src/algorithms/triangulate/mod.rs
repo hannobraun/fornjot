@@ -81,7 +81,9 @@ mod tests {
 
     use crate::{
         algorithms::approx::{face::approx_face, ApproxCache},
-        geometry::Tolerance,
+        geometry::{
+            util::tri_mesh::convert_point_surface_to_global, Tolerance,
+        },
         operations::{
             build::{BuildCycle, BuildFace},
             insert::Insert,
@@ -178,10 +180,11 @@ mod tests {
         let triangles = triangulate(face, &mut core)?;
 
         let [a, b, e, f, g, h] = [a, b, e, f, g, h].map(|point| {
-            core.layers
-                .geometry
-                .of_surface(&surface)
-                .point_from_surface_coords(point, core.tolerance())
+            convert_point_surface_to_global(
+                core.layers.geometry.of_surface(&surface),
+                point,
+                core.tolerance(),
+            )
         });
 
         // Let's test that some correct triangles are present. We don't need to
@@ -249,10 +252,11 @@ mod tests {
         let triangles = triangulate(face, &mut core)?;
 
         let [a, b, c, d, e] = [a, b, c, d, e].map(|point| {
-            core.layers
-                .geometry
-                .of_surface(&surface)
-                .point_from_surface_coords(point, core.tolerance())
+            convert_point_surface_to_global(
+                core.layers.geometry.of_surface(&surface),
+                point,
+                core.tolerance(),
+            )
         });
 
         assert!(triangles.contains_triangle([a, b, d]));

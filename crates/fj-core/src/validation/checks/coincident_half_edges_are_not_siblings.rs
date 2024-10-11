@@ -3,7 +3,10 @@ use std::fmt;
 use fj_math::{Point, Scalar};
 
 use crate::{
-    geometry::{CurveBoundary, Geometry, Tolerance},
+    geometry::{
+        util::tri_mesh::convert_point_surface_to_global, CurveBoundary,
+        Geometry, Tolerance,
+    },
     queries::{
         AllHalfEdgesWithSurface, BoundingVerticesOfHalfEdge, CycleOfHalfEdge,
         SiblingOfHalfEdge,
@@ -225,11 +228,11 @@ fn distances(
             .local_on(surface)?
             .path;
         let surface_coords = path.point_from_path_coords(path_coords);
-        Some(
-            geometry
-                .of_surface(surface)
-                .point_from_surface_coords(surface_coords, tolerance),
-        )
+        Some(convert_point_surface_to_global(
+            geometry.of_surface(surface),
+            surface_coords,
+            tolerance,
+        ))
     }
 
     // Three samples (start, middle, end), are enough to detect weather lines

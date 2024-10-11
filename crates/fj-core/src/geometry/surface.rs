@@ -19,15 +19,6 @@ pub struct SweptCurve {
 }
 
 impl SweptCurve {
-    /// Convert a point in surface coordinates to model coordinates
-    pub fn point_from_surface_coords(
-        &self,
-        point: impl Into<Point<2>>,
-        tolerance: impl Into<Tolerance>,
-    ) -> Point<3> {
-        convert_point_surface_to_global(self, point, tolerance)
-    }
-
     /// Convert a vector in surface coordinates to model coordinates
     pub fn vector_from_surface_coords(
         &self,
@@ -35,8 +26,11 @@ impl SweptCurve {
         tolerance: impl Into<Tolerance>,
     ) -> Vector<3> {
         let vector = vector.into();
-        let point =
-            self.point_from_surface_coords(Point { coords: vector }, tolerance);
+        let point = convert_point_surface_to_global(
+            self,
+            Point { coords: vector },
+            tolerance,
+        );
         point - self.origin()
     }
 
@@ -103,7 +97,10 @@ mod tests {
     use fj_math::{Line, Point, Vector};
     use pretty_assertions::assert_eq;
 
-    use crate::geometry::{Path, SweptCurve, Tolerance};
+    use crate::geometry::{
+        util::tri_mesh::convert_point_surface_to_global, Path, SweptCurve,
+        Tolerance,
+    };
 
     #[test]
     fn point_from_surface_coords() {
@@ -119,7 +116,7 @@ mod tests {
         let tolerance = Tolerance::from_scalar(1.).unwrap();
 
         assert_eq!(
-            surface.point_from_surface_coords([2., 4.], tolerance),
+            convert_point_surface_to_global(&surface, [2., 4.], tolerance),
             Point::from([1., 5., 9.]),
         );
     }

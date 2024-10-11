@@ -3,7 +3,10 @@ use std::ops::Deref;
 use fj_math::{Aabb, Vector};
 
 use crate::{
-    geometry::{Geometry, Path, SweptCurve, Tolerance},
+    geometry::{
+        util::tri_mesh::convert_point_surface_to_global, Geometry, Path,
+        SweptCurve, Tolerance,
+    },
     topology::Face,
 };
 
@@ -43,11 +46,11 @@ impl super::BoundingVolume<3> for &Face {
                         let offset = Vector::from([tolerance_f64; 3]);
 
                         Aabb {
-                            min: surface.point_from_surface_coords(
-                                aabb2.min, tolerance,
+                            min: convert_point_surface_to_global(
+                                surface, aabb2.min, tolerance,
                             ) - offset,
-                            max: surface.point_from_surface_coords(
-                                aabb2.max, tolerance,
+                            max: convert_point_surface_to_global(
+                                surface, aabb2.max, tolerance,
                             ) + offset,
                         }
                     }
