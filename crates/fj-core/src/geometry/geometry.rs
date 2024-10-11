@@ -8,8 +8,8 @@ use crate::{
 };
 
 use super::{
-    surfaces::swept_curve::SweptCurve, vertex::LocalVertexGeom, CurveGeom,
-    CurveGeom2, LocalCurveGeom, Path, VertexGeom,
+    surfaces::SweptCurve, vertex::LocalVertexGeom, CurveGeom, CurveGeom2,
+    LocalCurveGeom, Path, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
