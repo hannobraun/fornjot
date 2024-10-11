@@ -137,7 +137,7 @@ pub trait GenTriMesh {
     fn triangle_at(
         &self,
         point_surface: Point<2>,
-        tolerance: impl Into<Tolerance>,
+        tolerance: Tolerance,
     ) -> (Triangle<3>, [Scalar; 3]);
 
     /// # Generated a triangle mesh within the provided boundary
