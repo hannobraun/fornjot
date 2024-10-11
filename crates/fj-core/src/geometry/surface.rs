@@ -4,7 +4,7 @@ use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
 use super::{
     traits::{GenPolyline, GenTriMesh},
-    util::tri_mesh::convert_point_surface_to_global,
+    util::tri_mesh::convert_vector_surface_to_global,
     Path, Tolerance,
 };
 
@@ -25,13 +25,7 @@ impl SweptCurve {
         vector: impl Into<Vector<2>>,
         tolerance: impl Into<Tolerance>,
     ) -> Vector<3> {
-        let vector = vector.into();
-        let point = convert_point_surface_to_global(
-            self,
-            Point { coords: vector },
-            tolerance,
-        );
-        point - self.origin()
+        convert_vector_surface_to_global(self, vector, tolerance)
     }
 
     /// Transform the surface geometry
