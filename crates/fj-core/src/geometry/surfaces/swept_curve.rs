@@ -1,4 +1,4 @@
-//! The geometry that defines a surface
+//! # Geometry code specific to curves, swept along a path, to define a surface
 
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
 
@@ -7,7 +7,7 @@ use crate::geometry::{
     Path, Tolerance,
 };
 
-/// The geometry that defines a surface
+/// # A curve, swept along a path, to define a surface
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 pub struct SweptCurve {
     /// The u-axis of the surface
