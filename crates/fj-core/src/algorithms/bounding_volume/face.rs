@@ -12,6 +12,14 @@ use crate::{
 
 impl super::BoundingVolume<3> for &Face {
     fn aabb(self, geometry: &Geometry) -> Option<Aabb<3>> {
+        // A bounding volume must include the body it bounds, but does not need
+        // to match it precisely. So it's okay, if it's a bit larger.
+        //
+        // Let's just choose a reasonable tolerance value here, then make sure
+        // we enlarge the AABB accordingly, to make sure it fits.
+        let tolerance = Tolerance::from_scalar(0.001)
+            .expect("Tolerance provided is larger than zero");
+
         (self.region().exterior().deref(), self.surface())
             .aabb(geometry)
             .map(|aabb2| {
@@ -33,15 +41,6 @@ impl super::BoundingVolume<3> for &Face {
                         aabb_bottom.merged(&aabb_top)
                     }
                     Path::Line(_) => {
-                        // A bounding volume must include the body it bounds,
-                        // but does not need to match it precisely. So it's
-                        // okay, if it's a bit larger.
-                        //
-                        // Let's just choose a reasonable tolerance value here,
-                        // then make sure we enlarge the AABB accordingly, to
-                        // make sure it fits.
-                        let tolerance = Tolerance::from_scalar(0.001)
-                            .expect("Tolerance provided is larger than zero");
                         let offset = Vector::from([tolerance.inner(); 3]);
 
                         Aabb {
