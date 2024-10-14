@@ -267,7 +267,12 @@ mod tests {
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
                 let point_global = convert_point_surface_to_global(
-                    core.layers.geometry.of_surface(&surface),
+                    &core
+                        .layers
+                        .geometry
+                        .of_surface_2(&surface)
+                        .unwrap()
+                        .geometry,
                     point_surface,
                     tolerance,
                 );
@@ -295,7 +300,12 @@ mod tests {
             .map(|(point_local, _)| {
                 let point_surface = path.point_from_path_coords(point_local);
                 let point_global = convert_point_surface_to_global(
-                    core.layers.geometry.of_surface(&surface),
+                    &core
+                        .layers
+                        .geometry
+                        .of_surface_2(&surface)
+                        .unwrap()
+                        .geometry,
                     point_surface,
                     tolerance,
                 );

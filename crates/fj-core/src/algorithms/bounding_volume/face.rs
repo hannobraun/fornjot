@@ -23,7 +23,8 @@ impl super::BoundingVolume<3> for &Face {
         (self.region().exterior().deref(), self.surface())
             .aabb(geometry)
             .map(|aabb2| {
-                let surface = geometry.of_surface(self.surface());
+                let surface =
+                    &geometry.of_surface_2(self.surface()).unwrap().geometry;
                 let tri_mesh = surface.generate_tri_mesh(aabb2, tolerance);
                 let tri_mesh = tri_mesh.into_iter().map(|point| {
                     convert_point_surface_to_global(surface, point, tolerance)

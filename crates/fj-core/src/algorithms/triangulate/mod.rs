@@ -181,7 +181,12 @@ mod tests {
 
         let [a, b, e, f, g, h] = [a, b, e, f, g, h].map(|point| {
             convert_point_surface_to_global(
-                core.layers.geometry.of_surface(&surface),
+                &core
+                    .layers
+                    .geometry
+                    .of_surface_2(&surface)
+                    .unwrap()
+                    .geometry,
                 point,
                 core.tolerance(),
             )
@@ -253,7 +258,12 @@ mod tests {
 
         let [a, b, c, d, e] = [a, b, c, d, e].map(|point| {
             convert_point_surface_to_global(
-                core.layers.geometry.of_surface(&surface),
+                &core
+                    .layers
+                    .geometry
+                    .of_surface_2(&surface)
+                    .unwrap()
+                    .geometry,
                 point,
                 core.tolerance(),
             )

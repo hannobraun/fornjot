@@ -92,7 +92,12 @@ impl AddHole for Shell {
         let path = {
             let point = |location: &HoleLocation| {
                 convert_point_surface_to_global(
-                    core.layers.geometry.of_surface(location.face.surface()),
+                    &core
+                        .layers
+                        .geometry
+                        .of_surface_2(location.face.surface())
+                        .unwrap()
+                        .geometry,
                     location.position,
                     core.tolerance(),
                 )
