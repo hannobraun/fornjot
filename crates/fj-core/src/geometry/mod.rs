@@ -6,7 +6,6 @@ pub mod traits;
 pub mod util;
 
 mod boundary;
-mod curve;
 mod geometry;
 mod path;
 mod tolerance;
@@ -14,8 +13,7 @@ mod vertex;
 
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
-    curve::{CurveGeom, CurveGeom2, LocalCurveGeom},
-    geometry::Geometry,
+    geometry::{CurveGeom, CurveGeom2, Geometry, LocalCurveGeom},
     path::Path,
     tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},
