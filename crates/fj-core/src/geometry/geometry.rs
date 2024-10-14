@@ -201,6 +201,21 @@ impl Geometry {
             .expect("Expected geometry of surface to be defined")
     }
 
+    /// # Access the geometry of the provided surface
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method returns the new-style geometry. Its name is temporary, while the
+    /// method returning the old-style geometry is still taking up the more
+    /// concise name.
+    pub fn of_surface_2(
+        &self,
+        surface: &Handle<Surface>,
+    ) -> Option<&SurfaceGeom> {
+        self.surface2.get(surface)
+    }
+
     /// # Access the geometry of the provided vertex
     pub fn of_vertex(&self, vertex: &Handle<Vertex>) -> Option<&VertexGeom> {
         self.vertex.get(vertex)
