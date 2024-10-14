@@ -1,7 +1,9 @@
+use std::sync::Arc;
+
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{surfaces::SweptCurve, Path},
+    geometry::{surfaces::SweptCurve, Path, SurfaceGeom},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -24,6 +26,12 @@ pub trait BuildSurface {
         core.layers
             .geometry
             .define_surface(surface.clone(), surface_geom);
+        core.layers.geometry.define_surface_2(
+            surface.clone(),
+            SurfaceGeom {
+                geometry: Arc::new(surface_geom),
+            },
+        );
 
         surface
     }
