@@ -1,4 +1,4 @@
-use fj_math::{Aabb, Point, Scalar, Transform, Triangle, Vector};
+use fj_math::{Aabb, Point, Scalar, Triangle, Vector};
 
 use crate::geometry::{
     traits::{GenPolyline, GenTriMesh},
@@ -13,18 +13,6 @@ pub struct SweptCurve {
 
     /// The v-axis of the surface
     pub v: Vector<3>,
-}
-
-impl SweptCurve {
-    /// Transform the surface geometry
-    #[must_use]
-    pub fn transform(self, transform: &Transform) -> Self {
-        let Self { u, v } = self;
-
-        let u = u.transform(transform);
-        let v = transform.transform_vector(&v);
-        Self { u, v }
-    }
 }
 
 impl GenTriMesh for SweptCurve {
