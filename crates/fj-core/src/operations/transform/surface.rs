@@ -3,7 +3,10 @@ use std::rc::Rc;
 use fj_math::Transform;
 
 use crate::{
-    geometry::{surfaces::SweptCurve, SurfaceGeom},
+    geometry::{
+        surfaces::{SweptCurve, TransformedSurface},
+        SurfaceGeom,
+    },
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -39,10 +42,19 @@ impl TransformObject for &Handle<Surface> {
                 core.layers
                     .geometry
                     .define_surface(surface.clone(), geometry);
+
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
                     SurfaceGeom {
-                        geometry: Rc::new(geometry),
+                        geometry: Rc::new(TransformedSurface {
+                            surface: core
+                                .layers
+                                .geometry
+                                .of_surface_2(self)
+                                .unwrap()
+                                .clone(),
+                            transform: *transform,
+                        }),
                     },
                 );
 
