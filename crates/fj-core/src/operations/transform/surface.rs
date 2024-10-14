@@ -1,7 +1,10 @@
+use std::sync::Arc;
+
 use fj_math::Transform;
 
 use crate::{
-    operations::insert::Insert, storage::Handle, topology::Surface, Core,
+    geometry::SurfaceGeom, operations::insert::Insert, storage::Handle,
+    topology::Surface, Core,
 };
 
 use super::{TransformCache, TransformObject};
@@ -25,6 +28,12 @@ impl TransformObject for &Handle<Surface> {
                 core.layers
                     .geometry
                     .define_surface(surface.clone(), geometry);
+                core.layers.geometry.define_surface_2(
+                    surface.clone(),
+                    SurfaceGeom {
+                        geometry: Arc::new(geometry),
+                    },
+                );
 
                 surface
             })
