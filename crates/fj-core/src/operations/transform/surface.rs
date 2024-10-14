@@ -38,7 +38,6 @@ impl TransformObject for &Handle<Surface> {
                         v: transform.transform_vector(v),
                     }
                 };
-
                 core.layers
                     .geometry
                     .define_surface(surface.clone(), geometry);
