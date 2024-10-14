@@ -17,6 +17,8 @@
 //! system to the new one based on uniform representation is still ongoing. As a
 //! result of that, this module might still be incomplete.
 
+use std::ops::Deref;
+
 use fj_math::{Aabb, LineSegment, Point, Scalar, Triangle};
 
 use super::{CurveBoundary, Path, Tolerance};
@@ -146,4 +148,30 @@ pub trait GenTriMesh {
         boundary: Aabb<2>,
         tolerance: Tolerance,
     ) -> Vec<Point<2>>;
+}
+
+impl<T> GenTriMesh for T
+where
+    T: Deref,
+    T::Target: GenTriMesh,
+{
+    fn origin(&self) -> Point<3> {
+        self.deref().origin()
+    }
+
+    fn triangle_at(
+        &self,
+        point_surface: Point<2>,
+        tolerance: Tolerance,
+    ) -> (Triangle<3>, [Scalar; 3]) {
+        self.deref().triangle_at(point_surface, tolerance)
+    }
+
+    fn generate_tri_mesh(
+        &self,
+        boundary: Aabb<2>,
+        tolerance: Tolerance,
+    ) -> Vec<Point<2>> {
+        self.deref().generate_tri_mesh(boundary, tolerance)
+    }
 }
