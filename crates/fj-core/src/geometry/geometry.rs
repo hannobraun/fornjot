@@ -8,8 +8,10 @@ use crate::{
 };
 
 use super::{
-    surfaces::SweptCurve, traits::GenPolyline, vertex::LocalVertexGeom, Path,
-    VertexGeom,
+    surfaces::SweptCurve,
+    traits::{GenPolyline, GenTriMesh},
+    vertex::LocalVertexGeom,
+    Path, VertexGeom,
 };
 
 /// Geometric data that is associated with topological objects
@@ -236,4 +238,14 @@ pub enum CurveGeom2 {
         /// # The geometric representation of the curve
         geometry: Arc<dyn GenPolyline<3>>,
     },
+}
+
+/// # The geometric definition of a surface
+///
+/// Surface are represented by triangle meshes, their uniform intermediate
+/// representation.
+#[derive(Clone)]
+pub struct SurfaceGeom {
+    /// # The geometric representation of the surface
+    pub geometry: Arc<dyn GenTriMesh>,
 }
