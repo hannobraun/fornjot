@@ -3,7 +3,7 @@
 use crate::{
     geometry::{
         surfaces::SweptCurve, CurveGeom2, Geometry, LocalCurveGeom,
-        LocalVertexGeom,
+        LocalVertexGeom, SurfaceGeom,
     },
     storage::Handle,
     topology::{Curve, Surface, Vertex},
@@ -60,6 +60,28 @@ impl Layer<Geometry> {
     ) {
         let mut events = Vec::new();
         self.process(DefineSurface { surface, geometry }, &mut events);
+    }
+
+    /// # Define the geometry of the provided surface
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if the surface is a special pre-defined plane, like the basis
+    /// planes (xy-, xz-, or yz-plane).
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method defines new-style geometry. Its name is temporary, while the
+    /// method defining the old-style geometry is still taking up the more
+    /// concise name.
+    pub fn define_surface_2(
+        &mut self,
+        surface: Handle<Surface>,
+        geometry: SurfaceGeom,
+    ) {
+        let mut events = Vec::new();
+        self.process(DefineSurface2 { surface, geometry }, &mut events);
     }
 
     /// Define the geometry of the provided vertex
@@ -167,6 +189,34 @@ impl Command<Geometry> for DefineSurface {
 impl Event<Geometry> for DefineSurface {
     fn evolve(&self, state: &mut Geometry) {
         state.define_surface_inner(self.surface.clone(), self.geometry);
+    }
+}
+
+/// Define the geometry of a surface
+pub struct DefineSurface2 {
+    surface: Handle<Surface>,
+    geometry: SurfaceGeom,
+}
+
+impl Command<Geometry> for DefineSurface2 {
+    type Result = ();
+    type Event = Self;
+
+    fn decide(
+        self,
+        _: &Geometry,
+        events: &mut Vec<Self::Event>,
+    ) -> Self::Result {
+        events.push(self);
+    }
+}
+
+impl Event<Geometry> for DefineSurface2 {
+    fn evolve(&self, state: &mut Geometry) {
+        state.define_surface_inner_2(
+            self.surface.clone(),
+            self.geometry.clone(),
+        );
     }
 }
 

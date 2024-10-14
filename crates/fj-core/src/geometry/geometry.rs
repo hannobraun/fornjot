@@ -19,6 +19,7 @@ pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
     curve2: BTreeMap<Handle<Curve>, CurveGeom2>,
     surface: BTreeMap<Handle<Surface>, SweptCurve>,
+    surface2: BTreeMap<Handle<Surface>, SurfaceGeom>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     space_2d: Handle<Surface>,
@@ -35,6 +36,7 @@ impl Geometry {
             curve: BTreeMap::new(),
             curve2: BTreeMap::new(),
             surface: BTreeMap::new(),
+            surface2: BTreeMap::new(),
             vertex: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
@@ -63,6 +65,34 @@ impl Geometry {
             SweptCurve {
                 u: Path::y_axis(),
                 v: Vector::unit_z(),
+            },
+        );
+
+        self_.define_surface_inner_2(
+            self_.xy_plane.clone(),
+            SurfaceGeom {
+                geometry: Arc::new(SweptCurve {
+                    u: Path::x_axis(),
+                    v: Vector::unit_y(),
+                }),
+            },
+        );
+        self_.define_surface_inner_2(
+            self_.xz_plane.clone(),
+            SurfaceGeom {
+                geometry: Arc::new(SweptCurve {
+                    u: Path::x_axis(),
+                    v: Vector::unit_z(),
+                }),
+            },
+        );
+        self_.define_surface_inner_2(
+            self_.yz_plane.clone(),
+            SurfaceGeom {
+                geometry: Arc::new(SweptCurve {
+                    u: Path::y_axis(),
+                    v: Vector::unit_z(),
+                }),
             },
         );
 
@@ -108,6 +138,26 @@ impl Geometry {
         }
 
         self.surface.insert(surface, geometry);
+    }
+
+    pub(crate) fn define_surface_inner_2(
+        &mut self,
+        surface: Handle<Surface>,
+        geometry: SurfaceGeom,
+    ) {
+        if surface == self.space_2d {
+            panic!("Attempting to define geometry for 2D space");
+        }
+
+        if self.surface2.contains_key(&surface)
+            && (surface == self.xy_plane
+                || surface == self.xz_plane
+                || surface == self.yz_plane)
+        {
+            panic!("Attempting to redefine basis plane.");
+        }
+
+        self.surface2.insert(surface, geometry);
     }
 
     pub(crate) fn define_vertex_inner(
