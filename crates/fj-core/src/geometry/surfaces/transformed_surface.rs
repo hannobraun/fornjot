@@ -1,13 +1,11 @@
-use std::sync::Arc;
-
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle};
 
-use crate::geometry::{traits::GenTriMesh, Tolerance};
+use crate::geometry::{traits::GenTriMesh, SurfaceGeom, Tolerance};
 
 /// # A surface that is a transformation of another surface
 pub struct TransformedSurface {
     /// # The original surface that is being transformed
-    pub surface: Arc<dyn GenTriMesh>,
+    pub surface: SurfaceGeom,
 
     /// # The transform that is applied to the original surface
     pub transform: Transform,
@@ -15,7 +13,8 @@ pub struct TransformedSurface {
 
 impl GenTriMesh for TransformedSurface {
     fn origin(&self) -> Point<3> {
-        self.transform.transform_point(&self.surface.origin())
+        self.transform
+            .transform_point(&self.surface.geometry.origin())
     }
 
     fn triangle_at(
@@ -24,7 +23,7 @@ impl GenTriMesh for TransformedSurface {
         tolerance: Tolerance,
     ) -> (Triangle<3>, [Scalar; 3]) {
         let (triangle, barycentric_coords) =
-            self.surface.triangle_at(point_surface, tolerance);
+            self.surface.geometry.triangle_at(point_surface, tolerance);
 
         let triangle = self.transform.transform_triangle(&triangle);
 
@@ -38,6 +37,6 @@ impl GenTriMesh for TransformedSurface {
     ) -> Vec<Point<2>> {
         // The triangle mesh is generated in 2D surface coordinates. No need to
         // transform that.
-        self.surface.generate_tri_mesh(boundary, tolerance)
+        self.surface.geometry.generate_tri_mesh(boundary, tolerance)
     }
 }
