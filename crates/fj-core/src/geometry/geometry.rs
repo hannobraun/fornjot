@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, sync::Arc};
+use std::{collections::BTreeMap, rc::Rc, sync::Arc};
 
 use fj_math::Vector;
 
@@ -71,7 +71,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.xy_plane.clone(),
             SurfaceGeom {
-                geometry: Arc::new(SweptCurve {
+                geometry: Rc::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_y(),
                 }),
@@ -80,7 +80,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.xz_plane.clone(),
             SurfaceGeom {
-                geometry: Arc::new(SweptCurve {
+                geometry: Rc::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_z(),
                 }),
@@ -89,7 +89,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.yz_plane.clone(),
             SurfaceGeom {
-                geometry: Arc::new(SweptCurve {
+                geometry: Rc::new(SweptCurve {
                     u: Path::y_axis(),
                     v: Vector::unit_z(),
                 }),
@@ -312,5 +312,5 @@ pub enum CurveGeom2 {
 #[derive(Clone)]
 pub struct SurfaceGeom {
     /// # The geometric representation of the surface
-    pub geometry: Arc<dyn GenTriMesh>,
+    pub geometry: Rc<dyn GenTriMesh>,
 }

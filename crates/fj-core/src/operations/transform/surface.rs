@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use fj_math::Transform;
 
@@ -42,7 +42,7 @@ impl TransformObject for &Handle<Surface> {
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
                     SurfaceGeom {
-                        geometry: Arc::new(geometry),
+                        geometry: Rc::new(geometry),
                     },
                 );
 

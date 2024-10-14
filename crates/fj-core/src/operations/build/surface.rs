@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
 use fj_math::{Point, Scalar, Vector};
 
@@ -29,7 +29,7 @@ pub trait BuildSurface {
         core.layers.geometry.define_surface_2(
             surface.clone(),
             SurfaceGeom {
-                geometry: Arc::new(surface_geom),
+                geometry: Rc::new(surface_geom),
             },
         );
 
