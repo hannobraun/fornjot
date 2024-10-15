@@ -16,7 +16,7 @@ pub struct Polyline<const D: usize> {
 }
 
 /// # Convert a point on a curve from curve coordinates to surface coordinates
-pub fn curve_point_to_surface_point(
+pub fn convert_from_curve_point(
     curve: &dyn GenPolyline<2>,
     point_curve: impl Into<Point<1>>,
     tolerance: impl Into<Tolerance>,
@@ -41,7 +41,7 @@ pub fn surface_aabb_from_bounded_curve(
 
     let points_curve = curve.generate_polyline(boundary, tolerance);
     let points_surface = points_curve.into_iter().map(|point_curve| {
-        curve_point_to_surface_point(curve, point_curve, tolerance)
+        convert_from_curve_point(curve, point_curve, tolerance)
     });
 
     Aabb::<2>::from_points(points_surface)
