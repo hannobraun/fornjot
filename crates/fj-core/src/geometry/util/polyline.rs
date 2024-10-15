@@ -16,11 +16,11 @@ pub struct Polyline<const D: usize> {
 }
 
 /// # Convert a point on a curve from curve coordinates to surface coordinates
-pub fn convert_from_curve_point(
-    curve: &dyn GenPolyline<2>,
+pub fn convert_from_curve_point<const D: usize>(
+    curve: &dyn GenPolyline<D>,
     point_curve: impl Into<Point<1>>,
     tolerance: impl Into<Tolerance>,
-) -> Point<2> {
+) -> Point<D> {
     let point_curve = point_curve.into();
     let tolerance = tolerance.into();
 
