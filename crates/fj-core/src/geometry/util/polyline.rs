@@ -8,10 +8,10 @@ use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 ///
 /// Can be 2- or 3-dimensional, as specified by the `D` type parameter.
 pub struct Polyline<const D: usize> {
-    /// # The points that make up the vertices between the line segments
+    /// # The connecting points between line segments
     pub points: Vec<Point<D>>,
 
-    /// # The same points as the ones in the `points` field, but in curve coords
+    /// # The connecting points between line segments, in curve coordinates
     pub points_curve: Vec<Point<1>>,
 }
 
