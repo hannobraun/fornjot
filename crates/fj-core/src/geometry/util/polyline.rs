@@ -4,6 +4,17 @@ use fj_math::{Aabb, Point};
 
 use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
+/// # A polyline, the uniform representation of curve geometry
+///
+/// Can be 2- or 3-dimensional, as specified by the `D` type parameter.
+pub struct Polyline<const D: usize> {
+    /// # The points that make up the vertices between the line segments
+    pub points: Vec<Point<D>>,
+
+    /// # The same points as the ones in the `points` field, but in curve coords
+    pub points_curve: Vec<Point<1>>,
+}
+
 /// # Convert a point on a curve from curve coordinates to surface coordinates
 pub fn curve_point_to_surface_point(
     curve: &dyn GenPolyline<2>,
