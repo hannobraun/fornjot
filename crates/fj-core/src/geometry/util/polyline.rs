@@ -15,6 +15,31 @@ pub struct Polyline<const D: usize> {
     pub points_curve: Vec<Point<1>>,
 }
 
+impl<const D: usize> Polyline<D> {
+    /// # Create an instance of `Polyline` from a curve
+    pub fn from_curve(
+        curve: &dyn GenPolyline<D>,
+        boundary: impl Into<CurveBoundary<Point<1>>>,
+        tolerance: impl Into<Tolerance>,
+    ) -> Self {
+        let boundary = boundary.into();
+        let tolerance = tolerance.into();
+
+        let points_curve = curve.generate_polyline(boundary, tolerance);
+        let points = points_curve
+            .iter()
+            .map(|&point_curve| {
+                convert_from_curve_point(curve, point_curve, tolerance)
+            })
+            .collect();
+
+        Self {
+            points,
+            points_curve,
+        }
+    }
+}
+
 /// # Convert a point on a curve from curve coordinates to surface coordinates
 pub fn convert_from_curve_point<const D: usize>(
     curve: &dyn GenPolyline<D>,
