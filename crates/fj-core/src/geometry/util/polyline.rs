@@ -1,6 +1,8 @@
 //! # Geometric utility code based on polylines
 
-use fj_math::{Aabb, Point};
+use std::iter;
+
+use fj_math::{Aabb, LineSegment, Point};
 
 use crate::geometry::{traits::GenPolyline, CurveBoundary, Tolerance};
 
@@ -37,6 +39,24 @@ impl<const D: usize> Polyline<D> {
             points,
             points_curve,
         }
+    }
+
+    /// # Iterate over the line segments of this polyline
+    pub fn line_segments(&self) -> impl Iterator<Item = LineSegment<D>> + '_ {
+        let mut i = 0;
+
+        iter::from_fn(move || {
+            let points = [*self.points.get(i)?, *self.points.get(i + 1)?];
+            let points_line =
+                [*self.points_curve.get(i)?, *self.points_curve.get(i + 1)?];
+
+            i += 1;
+
+            Some(LineSegment {
+                points,
+                points_line,
+            })
+        })
     }
 }
 
