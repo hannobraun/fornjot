@@ -188,7 +188,10 @@ impl Geometry {
     /// method returns the new-style geometry. Its name is temporary, while the
     /// method returning the old-style geometry is still taking up the more
     /// concise name.
-    pub fn of_curve_2(&self, curve: &Handle<Curve>) -> Option<&CurveGeom2> {
+    pub fn generator_for_curve(
+        &self,
+        curve: &Handle<Curve>,
+    ) -> Option<&CurveGeom2> {
         self.curve_generators.get(curve)
     }
 
