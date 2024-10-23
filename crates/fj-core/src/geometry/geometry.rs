@@ -267,17 +267,11 @@ pub struct LocalCurveGeom {
     pub path: Path<2>,
 }
 
-/// # The geometric definition of a curve
+/// # A generator for curve geometry
 ///
 /// Curves are represented by polylines, their uniform intermediate
 /// representation. However, this representation can be 2D (local to a surface)
 /// or 3D. This enum distinguishes between the two cases.
-///
-/// ## Implementation Note
-///
-/// The name, `CurveGeom2`, is a placeholder. As of this writing, there is an
-/// ongoing transition to a new geometry system, and the name `CurveGeom` is
-/// still taken by an old-style type.
 pub enum CurveGenerator {
     /// # The curve is defined locally on a surface
     Surface {
@@ -295,7 +289,7 @@ pub enum CurveGenerator {
     },
 }
 
-/// # The geometric definition of a surface
+/// # A generator for surface geometry
 ///
 /// Surface are represented by triangle meshes, their uniform intermediate
 /// representation.
