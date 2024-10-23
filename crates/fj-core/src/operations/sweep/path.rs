@@ -76,6 +76,7 @@ impl SweepSurfacePath for Path<2> {
                     surface,
                     circle.center(),
                     core.tolerance(),
+                    &core.layers.geometry,
                 );
                 let a = convert_vector_surface_to_global(
                     surface,
@@ -99,6 +100,7 @@ impl SweepSurfacePath for Path<2> {
                     surface,
                     line.origin(),
                     core.tolerance(),
+                    &core.layers.geometry,
                 );
                 let direction = convert_vector_surface_to_global(
                     surface,

@@ -100,6 +100,7 @@ impl AddHole for Shell {
                         .geometry,
                     location.position,
                     core.tolerance(),
+                    &core.layers.geometry,
                 )
             };
 

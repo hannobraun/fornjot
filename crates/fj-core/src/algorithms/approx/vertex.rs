@@ -35,6 +35,7 @@ pub fn approx_vertex(
                 &geometry.of_surface_2(surface).unwrap().geometry,
                 position_surface,
                 tolerance,
+                geometry,
             );
             cache.insert(vertex, position_global)
         }

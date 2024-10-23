@@ -78,7 +78,7 @@ fn approx_circle_on_straight_surface(
     boundary: CurveBoundary<Point<1>>,
     surface: &SweptCurve,
     tolerance: impl Into<Tolerance>,
-    _: &Geometry,
+    geometry: &Geometry,
 ) -> Vec<ApproxPoint<1>> {
     let tolerance = tolerance.into();
 
@@ -103,6 +103,7 @@ fn approx_circle_on_straight_surface(
                 surface,
                 point_surface,
                 tolerance,
+                geometry,
             );
             ApproxPoint::new(point_curve, point_global)
         })
@@ -114,7 +115,7 @@ fn approx_line_on_any_surface(
     boundary: CurveBoundary<Point<1>>,
     surface: &SweptCurve,
     tolerance: impl Into<Tolerance>,
-    _: &Geometry,
+    geometry: &Geometry,
 ) -> Vec<ApproxPoint<1>> {
     let tolerance = tolerance.into();
 
@@ -134,8 +135,12 @@ fn approx_line_on_any_surface(
     for (u, _) in approx_u {
         let t = (u.t - line.origin().u) / line.direction().u;
         let point_surface = line.point_from_line_coords([t]);
-        let point_global =
-            convert_point_surface_to_global(surface, point_surface, tolerance);
+        let point_global = convert_point_surface_to_global(
+            surface,
+            point_surface,
+            tolerance,
+            geometry,
+        );
         points.push(ApproxPoint::new(u, point_global));
     }
 
@@ -299,6 +304,7 @@ mod tests {
                         .geometry,
                     point_surface,
                     tolerance,
+                    &core.layers.geometry,
                 );
                 ApproxPoint::new(point_local, point_global)
             })
@@ -338,6 +344,7 @@ mod tests {
                         .geometry,
                     point_surface,
                     tolerance,
+                    &core.layers.geometry,
                 );
                 ApproxPoint::new(point_local, point_global)
             })

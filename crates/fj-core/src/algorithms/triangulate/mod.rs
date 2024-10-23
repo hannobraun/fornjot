@@ -189,6 +189,7 @@ mod tests {
                     .geometry,
                 point,
                 core.tolerance(),
+                &core.layers.geometry,
             )
         });
 
@@ -266,6 +267,7 @@ mod tests {
                     .geometry,
                 point,
                 core.tolerance(),
+                &core.layers.geometry,
             )
         });
 

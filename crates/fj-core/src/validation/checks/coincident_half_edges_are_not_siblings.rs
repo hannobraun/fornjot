@@ -232,6 +232,7 @@ fn distances(
             &geometry.of_surface_2(surface).unwrap().geometry,
             surface_coords,
             tolerance,
+            geometry,
         ))
     }
 
