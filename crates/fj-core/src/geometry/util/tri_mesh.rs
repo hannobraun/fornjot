@@ -2,7 +2,7 @@
 
 use fj_math::{Point, Vector};
 
-use crate::geometry::{traits::GenTriMesh, Tolerance};
+use crate::geometry::{traits::GenTriMesh, Geometry, Tolerance};
 
 /// # Convert a point in surface coordinates to global coordinates
 pub fn convert_point_surface_to_global(
@@ -20,6 +20,7 @@ pub fn convert_vector_surface_to_global(
     surface: &dyn GenTriMesh,
     vector: impl Into<Vector<2>>,
     tolerance: impl Into<Tolerance>,
+    _: &Geometry,
 ) -> Vector<3> {
     let vector = vector.into();
     let point = convert_point_surface_to_global(

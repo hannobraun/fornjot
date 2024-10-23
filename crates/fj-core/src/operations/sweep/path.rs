@@ -81,11 +81,13 @@ impl SweepSurfacePath for Path<2> {
                     surface,
                     circle.a(),
                     core.tolerance(),
+                    &core.layers.geometry,
                 );
                 let b = convert_vector_surface_to_global(
                     surface,
                     circle.b(),
                     core.tolerance(),
+                    &core.layers.geometry,
                 );
 
                 let circle = Circle::new(center, a, b);
@@ -102,6 +104,7 @@ impl SweepSurfacePath for Path<2> {
                     surface,
                     line.direction(),
                     core.tolerance(),
+                    &core.layers.geometry,
                 );
 
                 let line = Line::from_origin_and_direction(origin, direction);
