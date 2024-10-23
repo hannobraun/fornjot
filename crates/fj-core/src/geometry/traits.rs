@@ -21,7 +21,7 @@ use std::ops::Deref;
 
 use fj_math::{Aabb, LineSegment, Point, Scalar, Triangle};
 
-use super::{CurveBoundary, Path, Tolerance};
+use super::{CurveBoundary, Geometry, Path, Tolerance};
 
 /// # Generate polylines, the uniform representation of curve geometry
 ///
@@ -98,7 +98,7 @@ impl<const D: usize> GenPolyline<D> for Path<D> {
 /// # Generate triangle meshes, the uniform representation of surface geometry
 pub trait GenTriMesh {
     /// # Access the origin of the surface
-    fn origin(&self) -> Point<3>;
+    fn origin(&self, geometry: &Geometry) -> Point<3>;
 
     /// # Return the triangle at the provided point on the surface
     ///
@@ -155,8 +155,8 @@ where
     T: Deref,
     T::Target: GenTriMesh,
 {
-    fn origin(&self) -> Point<3> {
-        self.deref().origin()
+    fn origin(&self, geometry: &Geometry) -> Point<3> {
+        self.deref().origin(geometry)
     }
 
     fn triangle_at(

@@ -2,7 +2,7 @@ use fj_math::{Aabb, Point, Scalar, Triangle, Vector};
 
 use crate::geometry::{
     traits::{GenPolyline, GenTriMesh},
-    Path, Tolerance,
+    Geometry, Path, Tolerance,
 };
 
 /// # A surface that is a curve, swept along a path
@@ -16,7 +16,7 @@ pub struct SweptCurve {
 }
 
 impl GenTriMesh for SweptCurve {
-    fn origin(&self) -> Point<3> {
+    fn origin(&self, _: &Geometry) -> Point<3> {
         self.u.origin()
     }
 

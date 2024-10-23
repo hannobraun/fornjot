@@ -1,6 +1,6 @@
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle};
 
-use crate::geometry::{traits::GenTriMesh, SurfaceGeom, Tolerance};
+use crate::geometry::{traits::GenTriMesh, Geometry, SurfaceGeom, Tolerance};
 
 /// # A surface that is a transformation of another surface
 pub struct TransformedSurface {
@@ -12,9 +12,9 @@ pub struct TransformedSurface {
 }
 
 impl GenTriMesh for TransformedSurface {
-    fn origin(&self) -> Point<3> {
+    fn origin(&self, geometry: &Geometry) -> Point<3> {
         self.transform
-            .transform_point(&self.surface.geometry.origin())
+            .transform_point(&self.surface.geometry.origin(geometry))
     }
 
     fn triangle_at(
