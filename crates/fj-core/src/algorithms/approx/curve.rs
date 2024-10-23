@@ -301,7 +301,7 @@ mod tests {
                         .geometry
                         .generator_for_surface(&surface)
                         .unwrap()
-                        .geometry,
+                        .generator,
                     point_surface,
                     tolerance,
                     &core.layers.geometry,
@@ -341,7 +341,7 @@ mod tests {
                         .geometry
                         .generator_for_surface(&surface)
                         .unwrap()
-                        .geometry,
+                        .generator,
                     point_surface,
                     tolerance,
                     &core.layers.geometry,

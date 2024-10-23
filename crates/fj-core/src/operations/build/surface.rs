@@ -27,7 +27,7 @@ pub trait BuildSurface {
         core.layers.geometry.define_surface_2(
             surface.clone(),
             SurfaceGenerator {
-                geometry: Box::new(surface_geom),
+                generator: Box::new(surface_geom),
             },
         );
 

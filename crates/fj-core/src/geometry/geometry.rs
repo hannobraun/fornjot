@@ -73,7 +73,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.xy_plane.clone(),
             SurfaceGenerator {
-                geometry: Box::new(SweptCurve {
+                generator: Box::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_y(),
                 }),
@@ -82,7 +82,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.xz_plane.clone(),
             SurfaceGenerator {
-                geometry: Box::new(SweptCurve {
+                generator: Box::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_z(),
                 }),
@@ -91,7 +91,7 @@ impl Geometry {
         self_.define_surface_inner_2(
             self_.yz_plane.clone(),
             SurfaceGenerator {
-                geometry: Box::new(SweptCurve {
+                generator: Box::new(SweptCurve {
                     u: Path::y_axis(),
                     v: Vector::unit_z(),
                 }),
@@ -301,5 +301,5 @@ pub enum CurveGenerator {
 /// representation.
 pub struct SurfaceGenerator {
     /// # The geometric representation of the surface
-    pub geometry: Box<dyn GenTriMesh>,
+    pub generator: Box<dyn GenTriMesh>,
 }

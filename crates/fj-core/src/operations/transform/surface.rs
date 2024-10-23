@@ -43,7 +43,7 @@ impl TransformObject for &Handle<Surface> {
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
                     SurfaceGenerator {
-                        geometry: Box::new(TransformedSurface {
+                        generator: Box::new(TransformedSurface {
                             surface: self.clone(),
                             transform: *transform,
                         }),

@@ -19,7 +19,7 @@ impl GenTriMesh for TransformedSurface {
     fn origin(&self, geometry: &Geometry) -> Point<3> {
         let surface = geometry.generator_for_surface(&self.surface).unwrap();
         self.transform
-            .transform_point(&surface.geometry.origin(geometry))
+            .transform_point(&surface.generator.origin(geometry))
     }
 
     fn triangle_at(
@@ -31,7 +31,7 @@ impl GenTriMesh for TransformedSurface {
         let surface = geometry.generator_for_surface(&self.surface).unwrap();
         let (triangle, barycentric_coords) =
             surface
-                .geometry
+                .generator
                 .triangle_at(point_surface, tolerance, geometry);
 
         let triangle = self.transform.transform_triangle(&triangle);
@@ -49,7 +49,7 @@ impl GenTriMesh for TransformedSurface {
         // transform that.
         let surface = geometry.generator_for_surface(&self.surface).unwrap();
         surface
-            .geometry
+            .generator
             .generate_tri_mesh(boundary, tolerance, geometry)
     }
 }

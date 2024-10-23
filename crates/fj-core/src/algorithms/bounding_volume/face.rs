@@ -26,7 +26,7 @@ impl super::BoundingVolume<3> for &Face {
                 let surface = &geometry
                     .generator_for_surface(self.surface())
                     .unwrap()
-                    .geometry;
+                    .generator;
                 let tri_mesh =
                     surface.generate_tri_mesh(aabb2, tolerance, geometry);
                 let tri_mesh = tri_mesh.into_iter().map(|point| {

@@ -32,7 +32,7 @@ pub fn approx_vertex(
         Some(position) => position,
         None => {
             let position_global = convert_point_surface_to_global(
-                &geometry.generator_for_surface(surface).unwrap().geometry,
+                &geometry.generator_for_surface(surface).unwrap().generator,
                 position_surface,
                 tolerance,
                 geometry,
