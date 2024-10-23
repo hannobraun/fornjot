@@ -13,7 +13,9 @@ mod vertex;
 
 pub use self::{
     boundary::{CurveBoundary, CurveBoundaryElement},
-    geometry::{CurveGeom, CurveGeom2, Geometry, LocalCurveGeom, SurfaceGeom},
+    geometry::{
+        CurveGenerator, CurveGeom, Geometry, LocalCurveGeom, SurfaceGeom,
+    },
     path::Path,
     tolerance::{InvalidTolerance, Tolerance},
     vertex::{LocalVertexGeom, VertexGeom},

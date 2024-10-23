@@ -20,7 +20,7 @@ pub struct Geometry {
     surface: BTreeMap<Handle<Surface>, SweptCurve>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
-    curve_generators: BTreeMap<Handle<Curve>, CurveGeom2>,
+    curve_generators: BTreeMap<Handle<Curve>, CurveGenerator>,
     surface_generators: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
     space_2d: Handle<Surface>,
@@ -117,7 +117,7 @@ impl Geometry {
     pub(crate) fn define_curve_inner_2(
         &mut self,
         curve: Handle<Curve>,
-        geometry: CurveGeom2,
+        geometry: CurveGenerator,
     ) {
         self.curve_generators.insert(curve, geometry);
     }
@@ -200,7 +200,7 @@ impl Geometry {
     pub fn generator_for_curve(
         &self,
         curve: &Handle<Curve>,
-    ) -> Option<&CurveGeom2> {
+    ) -> Option<&CurveGenerator> {
         self.curve_generators.get(curve)
     }
 
@@ -278,7 +278,7 @@ pub struct LocalCurveGeom {
 /// The name, `CurveGeom2`, is a placeholder. As of this writing, there is an
 /// ongoing transition to a new geometry system, and the name `CurveGeom` is
 /// still taken by an old-style type.
-pub enum CurveGeom2 {
+pub enum CurveGenerator {
     /// # The curve is defined locally on a surface
     Surface {
         /// # The geometric representation of the curve
