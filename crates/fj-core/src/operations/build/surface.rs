@@ -16,18 +16,18 @@ use crate::{
 pub trait BuildSurface {
     /// Build a surface from the provided geometry
     fn from_geometry(
-        surface_geom: SweptCurve,
+        generator: SweptCurve,
         core: &mut Core,
     ) -> Handle<Surface> {
         let surface = Surface::new().insert(core);
 
         core.layers
             .geometry
-            .define_surface(surface.clone(), surface_geom);
+            .define_surface(surface.clone(), generator);
         core.layers.geometry.define_surface_2(
             surface.clone(),
             SurfaceGenerator {
-                generator: Box::new(surface_geom),
+                generator: Box::new(generator),
             },
         );
 
