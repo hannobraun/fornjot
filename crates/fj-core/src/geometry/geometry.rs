@@ -282,7 +282,7 @@ pub enum CurveGenerator {
     /// # The curve is defined locally on a surface
     Surface {
         /// # The geometric representation of the curve
-        geometry: Box<dyn GenPolyline<2>>,
+        generator: Box<dyn GenPolyline<2>>,
 
         /// # The surface that the curve geometry is defined on
         surface: Handle<Surface>,
