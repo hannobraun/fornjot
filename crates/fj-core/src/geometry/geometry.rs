@@ -180,14 +180,7 @@ impl Geometry {
         self.curve.get(curve)
     }
 
-    /// # Access the geometry of the provided curve
-    ///
-    /// ## Implementation Note
-    ///
-    /// There currently is an ongoing transition to a new geometry system. This
-    /// method returns the new-style geometry. Its name is temporary, while the
-    /// method returning the old-style geometry is still taking up the more
-    /// concise name.
+    /// # Access the geometry generator for the provided curve
     pub fn generator_for_curve(
         &self,
         curve: &Handle<Curve>,
@@ -206,14 +199,7 @@ impl Geometry {
             .expect("Expected geometry of surface to be defined")
     }
 
-    /// # Access the geometry of the provided surface
-    ///
-    /// ## Implementation Note
-    ///
-    /// There currently is an ongoing transition to a new geometry system. This
-    /// method returns the new-style geometry. Its name is temporary, while the
-    /// method returning the old-style geometry is still taking up the more
-    /// concise name.
+    /// # Access the geometry generator for the provided surface
     pub fn generator_for_surface(
         &self,
         surface: &Handle<Surface>,
