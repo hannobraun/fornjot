@@ -161,8 +161,6 @@ impl Command<Geometry> for DefineCurve2 {
 
 impl Event<Geometry> for DefineCurve2 {
     fn evolve(&self, state: &mut Geometry) {
-        // TASK: This can't work, as designed. I need to clone the geometry
-        //       here, but I can't just clone a `Box`.
         state.define_curve_inner_2(self.curve.clone(), self.geometry.clone());
     }
 }
