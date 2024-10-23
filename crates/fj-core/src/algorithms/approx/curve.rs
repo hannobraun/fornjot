@@ -38,6 +38,7 @@ pub fn approx_curve_with_cache(
                 geometry.of_surface(surface),
                 boundary,
                 tolerance,
+                geometry,
             );
 
             cache.insert(curve.clone(), boundary, approx)
@@ -50,6 +51,7 @@ fn approx_curve(
     surface: &SweptCurve,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
+    _: &Geometry,
 ) -> CurveApprox {
     let SweptCurve { u, .. } = surface;
     let points = match (path, u) {
@@ -222,13 +224,21 @@ mod tests {
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
-        let approx = approx_curve(&path, surface, boundary, tolerance);
+        let approx = approx_curve(
+            &path,
+            surface,
+            boundary,
+            tolerance,
+            &core.layers.geometry,
+        );
 
         assert_eq!(approx.points, vec![]);
     }
 
     #[test]
     fn approx_line_on_curved_surface_but_not_along_curve() {
+        let core = Core::new();
+
         let surface = SweptCurve {
             u: Path::circle_from_radius(1.),
             v: Vector::from([0., 0., 1.]),
@@ -237,7 +247,13 @@ mod tests {
         let boundary = CurveBoundary::from(boundary);
 
         let tolerance = 1.;
-        let approx = approx_curve(&path, &surface, boundary, tolerance);
+        let approx = approx_curve(
+            &path,
+            &surface,
+            boundary,
+            tolerance,
+            &core.layers.geometry,
+        );
 
         assert_eq!(approx.points, vec![]);
     }
@@ -260,7 +276,13 @@ mod tests {
         let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let tolerance = 1.;
-        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
+        let approx = approx_curve(
+            &path,
+            &surface_geom,
+            boundary,
+            tolerance,
+            &core.layers.geometry,
+        );
 
         let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
@@ -293,7 +315,13 @@ mod tests {
         let boundary = CurveBoundary::from([[0.], [TAU]]);
 
         let tolerance = 1.;
-        let approx = approx_curve(&path, &surface_geom, boundary, tolerance);
+        let approx = approx_curve(
+            &path,
+            &surface_geom,
+            boundary,
+            tolerance,
+            &core.layers.geometry,
+        );
 
         let expected_approx = approx_circle(&circle, boundary, tolerance)
             .into_iter()
