@@ -14,7 +14,10 @@ impl Layer<Presentation> {
     /// Set the color of a region
     pub fn set_color(&mut self, region: Handle<Region>, color: Color) {
         let mut events = Vec::new();
-        self.process(SetColor { region, color }, &mut events);
+        self.process_command_and_capture_events(
+            SetColor { region, color },
+            &mut events,
+        );
     }
 
     /// Mark an object as being derived from another
@@ -24,7 +27,10 @@ impl Layer<Presentation> {
         derived: AnyObject<Stored>,
     ) {
         let mut events = Vec::new();
-        self.process(DeriveObject { original, derived }, &mut events);
+        self.process_command_and_capture_events(
+            DeriveObject { original, derived },
+            &mut events,
+        );
     }
 }
 

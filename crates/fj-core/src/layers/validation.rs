@@ -11,7 +11,7 @@ use super::{Command, Event, Layer};
 impl Layer<Validation> {
     /// Take all errors stored in the validation layer
     pub fn take_errors(&mut self) -> Result<(), ValidationErrors> {
-        self.process(TakeErrors, &mut Vec::new())
+        self.process_command_and_capture_events(TakeErrors, &mut Vec::new())
     }
 }
 

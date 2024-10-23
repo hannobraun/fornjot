@@ -27,7 +27,7 @@ impl<S> Layer<S> {
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
-    pub fn process<C>(
+    pub fn process_command_and_capture_events<C>(
         &mut self,
         command: C,
         events: &mut Vec<C::Event>,

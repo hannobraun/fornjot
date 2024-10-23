@@ -19,14 +19,18 @@ impl Layer<Topology> {
         validation: &mut Layer<Validation>,
     ) {
         let mut events = Vec::new();
-        self.process(InsertObject { object }, &mut events);
+        self.process_command_and_capture_events(
+            InsertObject { object },
+            &mut events,
+        );
 
         for event in events {
             let event = ValidateObject {
                 object: event.object.into(),
                 geometry,
             };
-            validation.process(event, &mut Vec::new());
+            validation
+                .process_command_and_capture_events(event, &mut Vec::new());
         }
     }
 }

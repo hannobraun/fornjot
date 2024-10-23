@@ -20,7 +20,7 @@ impl Layer<Geometry> {
         geometry: LocalCurveGeom,
     ) {
         let mut events = Vec::new();
-        self.process(
+        self.process_command_and_capture_events(
             DefineCurve {
                 curve,
                 surface,
@@ -44,7 +44,10 @@ impl Layer<Geometry> {
         geometry: CurveGeom2,
     ) {
         let mut events = Vec::new();
-        self.process(DefineCurve2 { curve, geometry }, &mut events);
+        self.process_command_and_capture_events(
+            DefineCurve2 { curve, geometry },
+            &mut events,
+        );
     }
 
     /// # Define the geometry of the provided surface
@@ -59,7 +62,10 @@ impl Layer<Geometry> {
         geometry: SweptCurve,
     ) {
         let mut events = Vec::new();
-        self.process(DefineSurface { surface, geometry }, &mut events);
+        self.process_command_and_capture_events(
+            DefineSurface { surface, geometry },
+            &mut events,
+        );
     }
 
     /// # Define the geometry of the provided surface
@@ -81,7 +87,10 @@ impl Layer<Geometry> {
         geometry: SurfaceGeom,
     ) {
         let mut events = Vec::new();
-        self.process(DefineSurface2 { surface, geometry }, &mut events);
+        self.process_command_and_capture_events(
+            DefineSurface2 { surface, geometry },
+            &mut events,
+        );
     }
 
     /// Define the geometry of the provided vertex
@@ -92,7 +101,7 @@ impl Layer<Geometry> {
         geometry: LocalVertexGeom,
     ) {
         let mut events = Vec::new();
-        self.process(
+        self.process_command_and_capture_events(
             DefineVertex {
                 vertex,
                 curve,
