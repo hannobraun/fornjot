@@ -1,11 +1,15 @@
 use fj_math::{Aabb, Point, Scalar, Transform, Triangle};
 
-use crate::geometry::{traits::GenTriMesh, Geometry, SurfaceGeom, Tolerance};
+use crate::{
+    geometry::{traits::GenTriMesh, Geometry, Tolerance},
+    storage::Handle,
+    topology::Surface,
+};
 
 /// # A surface that is a transformation of another surface
 pub struct TransformedSurface {
     /// # The original surface that is being transformed
-    pub surface: SurfaceGeom,
+    pub surface: Handle<Surface>,
 
     /// # The transform that is applied to the original surface
     pub transform: Transform,
@@ -13,8 +17,9 @@ pub struct TransformedSurface {
 
 impl GenTriMesh for TransformedSurface {
     fn origin(&self, geometry: &Geometry) -> Point<3> {
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
         self.transform
-            .transform_point(&self.surface.geometry.origin(geometry))
+            .transform_point(&surface.geometry.origin(geometry))
     }
 
     fn triangle_at(
@@ -23,11 +28,11 @@ impl GenTriMesh for TransformedSurface {
         tolerance: Tolerance,
         geometry: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]) {
-        let (triangle, barycentric_coords) = self.surface.geometry.triangle_at(
-            point_surface,
-            tolerance,
-            geometry,
-        );
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
+        let (triangle, barycentric_coords) =
+            surface
+                .geometry
+                .triangle_at(point_surface, tolerance, geometry);
 
         let triangle = self.transform.transform_triangle(&triangle);
 
@@ -42,7 +47,8 @@ impl GenTriMesh for TransformedSurface {
     ) -> Vec<Point<2>> {
         // The triangle mesh is generated in 2D surface coordinates. No need to
         // transform that.
-        self.surface
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
+        surface
             .geometry
             .generate_tri_mesh(boundary, tolerance, geometry)
     }

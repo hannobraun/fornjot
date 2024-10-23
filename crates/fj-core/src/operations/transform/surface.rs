@@ -46,12 +46,7 @@ impl TransformObject for &Handle<Surface> {
                     surface.clone(),
                     SurfaceGeom {
                         geometry: Rc::new(TransformedSurface {
-                            surface: core
-                                .layers
-                                .geometry
-                                .of_surface_2(self)
-                                .unwrap()
-                                .clone(),
+                            surface: self.clone(),
                             transform: *transform,
                         }),
                     },
