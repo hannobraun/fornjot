@@ -52,6 +52,7 @@ impl<S> Layer<S> {
     ) -> C::Result
     where
         C: Command<S>,
+        C::Event: Clone,
     {
         let result = command.decide(&self.state, events);
 
