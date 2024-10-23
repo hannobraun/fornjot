@@ -51,14 +51,14 @@ fn approx_curve(
     surface: &SweptCurve,
     boundary: CurveBoundary<Point<1>>,
     tolerance: impl Into<Tolerance>,
-    _: &Geometry,
+    geometry: &Geometry,
 ) -> CurveApprox {
     let SweptCurve { u, .. } = surface;
     let points = match (path, u) {
         (Path::Circle(_), Path::Circle(_)) => approx_circle_on_curved_surface(),
         (Path::Circle(circle), Path::Line(_)) => {
             approx_circle_on_straight_surface(
-                circle, boundary, surface, tolerance,
+                circle, boundary, surface, tolerance, geometry,
             )
         }
         (Path::Line(line), _) => {
@@ -78,6 +78,7 @@ fn approx_circle_on_straight_surface(
     boundary: CurveBoundary<Point<1>>,
     surface: &SweptCurve,
     tolerance: impl Into<Tolerance>,
+    _: &Geometry,
 ) -> Vec<ApproxPoint<1>> {
     let tolerance = tolerance.into();
 
