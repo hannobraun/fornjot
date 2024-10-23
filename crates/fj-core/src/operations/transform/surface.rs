@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use fj_math::Transform;
 
 use crate::{
@@ -45,7 +43,7 @@ impl TransformObject for &Handle<Surface> {
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
                     SurfaceGeom {
-                        geometry: Rc::new(TransformedSurface {
+                        geometry: Box::new(TransformedSurface {
                             surface: self.clone(),
                             transform: *transform,
                         }),

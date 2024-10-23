@@ -1,5 +1,3 @@
-use std::rc::Rc;
-
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
@@ -29,7 +27,7 @@ pub trait BuildSurface {
         core.layers.geometry.define_surface_2(
             surface.clone(),
             SurfaceGeom {
-                geometry: Rc::new(surface_geom),
+                geometry: Box::new(surface_geom),
             },
         );
 
