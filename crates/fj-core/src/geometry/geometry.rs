@@ -291,7 +291,7 @@ pub enum CurveGenerator {
     /// # The curve is defined globally in 3D space
     Global {
         /// # The geometric representation of the curve
-        geometry: Box<dyn GenPolyline<3>>,
+        generator: Box<dyn GenPolyline<3>>,
     },
 }
 
