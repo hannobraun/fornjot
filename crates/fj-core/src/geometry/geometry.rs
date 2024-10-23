@@ -214,7 +214,7 @@ impl Geometry {
     /// method returns the new-style geometry. Its name is temporary, while the
     /// method returning the old-style geometry is still taking up the more
     /// concise name.
-    pub fn of_surface_2(
+    pub fn generator_for_surface(
         &self,
         surface: &Handle<Surface>,
     ) -> Option<&SurfaceGeom> {

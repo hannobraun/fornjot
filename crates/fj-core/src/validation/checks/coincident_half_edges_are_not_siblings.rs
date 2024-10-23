@@ -229,7 +229,7 @@ fn distances(
             .path;
         let surface_coords = path.point_from_path_coords(path_coords);
         Some(convert_point_surface_to_global(
-            &geometry.of_surface_2(surface).unwrap().geometry,
+            &geometry.generator_for_surface(surface).unwrap().geometry,
             surface_coords,
             tolerance,
             geometry,

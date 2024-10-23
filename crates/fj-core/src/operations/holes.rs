@@ -95,7 +95,7 @@ impl AddHole for Shell {
                     &core
                         .layers
                         .geometry
-                        .of_surface_2(location.face.surface())
+                        .generator_for_surface(location.face.surface())
                         .unwrap()
                         .geometry,
                     location.position,
