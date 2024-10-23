@@ -17,10 +17,11 @@ use super::{
 /// Geometric data that is associated with topological objects
 pub struct Geometry {
     curve: BTreeMap<Handle<Curve>, CurveGeom>,
-    curve2: BTreeMap<Handle<Curve>, CurveGeom2>,
     surface: BTreeMap<Handle<Surface>, SweptCurve>,
-    surface2: BTreeMap<Handle<Surface>, SurfaceGeom>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
+
+    curve2: BTreeMap<Handle<Curve>, CurveGeom2>,
+    surface2: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
     space_2d: Handle<Surface>,
 
@@ -34,10 +35,11 @@ impl Geometry {
     pub fn new(topology: &Topology) -> Self {
         let mut self_ = Self {
             curve: BTreeMap::new(),
-            curve2: BTreeMap::new(),
             surface: BTreeMap::new(),
-            surface2: BTreeMap::new(),
             vertex: BTreeMap::new(),
+
+            curve2: BTreeMap::new(),
+            surface2: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
 
