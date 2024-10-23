@@ -23,7 +23,7 @@ impl<S> Layer<S> {
         Self { state }
     }
 
-    /// Process a command
+    /// # Process a command and capture the events that produces
     ///
     /// The command is processed synchronously. When this method returns, the
     /// state has been updated.
