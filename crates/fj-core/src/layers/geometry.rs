@@ -19,15 +19,11 @@ impl Layer<Geometry> {
         surface: Handle<Surface>,
         geometry: LocalCurveGeom,
     ) {
-        let mut events = Vec::new();
-        self.process_command_and_capture_events(
-            DefineCurve {
-                curve,
-                surface,
-                geometry,
-            },
-            &mut events,
-        );
+        self.process_command(DefineCurve {
+            curve,
+            surface,
+            geometry,
+        });
     }
 
     /// # Define the geometry of the provided curve
@@ -43,11 +39,7 @@ impl Layer<Geometry> {
         curve: Handle<Curve>,
         geometry: CurveGeom2,
     ) {
-        let mut events = Vec::new();
-        self.process_command_and_capture_events(
-            DefineCurve2 { curve, geometry },
-            &mut events,
-        );
+        self.process_command(DefineCurve2 { curve, geometry });
     }
 
     /// # Define the geometry of the provided surface
@@ -61,11 +53,7 @@ impl Layer<Geometry> {
         surface: Handle<Surface>,
         geometry: SweptCurve,
     ) {
-        let mut events = Vec::new();
-        self.process_command_and_capture_events(
-            DefineSurface { surface, geometry },
-            &mut events,
-        );
+        self.process_command(DefineSurface { surface, geometry });
     }
 
     /// # Define the geometry of the provided surface
@@ -86,11 +74,7 @@ impl Layer<Geometry> {
         surface: Handle<Surface>,
         geometry: SurfaceGeom,
     ) {
-        let mut events = Vec::new();
-        self.process_command_and_capture_events(
-            DefineSurface2 { surface, geometry },
-            &mut events,
-        );
+        self.process_command(DefineSurface2 { surface, geometry });
     }
 
     /// Define the geometry of the provided vertex
@@ -100,15 +84,11 @@ impl Layer<Geometry> {
         curve: Handle<Curve>,
         geometry: LocalVertexGeom,
     ) {
-        let mut events = Vec::new();
-        self.process_command_and_capture_events(
-            DefineVertex {
-                vertex,
-                curve,
-                geometry,
-            },
-            &mut events,
-        );
+        self.process_command(DefineVertex {
+            vertex,
+            curve,
+            geometry,
+        });
     }
 }
 

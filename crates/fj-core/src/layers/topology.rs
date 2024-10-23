@@ -29,8 +29,7 @@ impl Layer<Topology> {
                 object: event.object.into(),
                 geometry,
             };
-            validation
-                .process_command_and_capture_events(event, &mut Vec::new());
+            validation.process_command(event);
         }
     }
 }
