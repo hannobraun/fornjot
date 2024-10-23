@@ -74,7 +74,10 @@ impl Layer<Geometry> {
         surface: Handle<Surface>,
         geometry: SurfaceGenerator,
     ) {
-        self.process_command(DefineSurface2 { surface, geometry });
+        self.process_command(DefineSurface2 {
+            surface,
+            generator: geometry,
+        });
     }
 
     /// Define the geometry of the provided vertex
@@ -178,7 +181,7 @@ impl Event<Geometry> for DefineSurface {
 /// Define the geometry of a surface
 pub struct DefineSurface2 {
     surface: Handle<Surface>,
-    geometry: SurfaceGenerator,
+    generator: SurfaceGenerator,
 }
 
 impl Command<Geometry> for DefineSurface2 {
@@ -196,7 +199,7 @@ impl Command<Geometry> for DefineSurface2 {
 
 impl Event<Geometry> for DefineSurface2 {
     fn evolve(self, state: &mut Geometry) {
-        state.define_surface_inner_2(self.surface, self.geometry);
+        state.define_surface_inner_2(self.surface, self.generator);
     }
 }
 
