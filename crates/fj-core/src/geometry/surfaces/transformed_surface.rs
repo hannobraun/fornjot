@@ -38,9 +38,12 @@ impl GenTriMesh for TransformedSurface {
         &self,
         boundary: Aabb<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> Vec<Point<2>> {
         // The triangle mesh is generated in 2D surface coordinates. No need to
         // transform that.
-        self.surface.geometry.generate_tri_mesh(boundary, tolerance)
+        self.surface
+            .geometry
+            .generate_tri_mesh(boundary, tolerance, geometry)
     }
 }

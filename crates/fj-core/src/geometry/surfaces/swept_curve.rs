@@ -43,6 +43,7 @@ impl GenTriMesh for SweptCurve {
         &self,
         boundary: Aabb<2>,
         tolerance: Tolerance,
+        _: &Geometry,
     ) -> Vec<Point<2>> {
         let boundary_curve = [[boundary.min.u], [boundary.max.u]];
         let points_curve =

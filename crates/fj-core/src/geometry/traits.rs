@@ -148,6 +148,7 @@ pub trait GenTriMesh {
         &self,
         boundary: Aabb<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> Vec<Point<2>>;
 }
 
@@ -173,7 +174,9 @@ where
         &self,
         boundary: Aabb<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> Vec<Point<2>> {
-        self.deref().generate_tri_mesh(boundary, tolerance)
+        self.deref()
+            .generate_tri_mesh(boundary, tolerance, geometry)
     }
 }
