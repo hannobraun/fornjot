@@ -37,12 +37,9 @@ impl Layer<Geometry> {
     pub fn define_curve_2(
         &mut self,
         curve: Handle<Curve>,
-        geometry: CurveGenerator,
+        generator: CurveGenerator,
     ) {
-        self.process_command(DefineCurve2 {
-            curve,
-            generator: geometry,
-        });
+        self.process_command(DefineCurve2 { curve, generator });
     }
 
     /// # Define the geometry of the provided surface
