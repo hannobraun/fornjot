@@ -21,9 +21,13 @@ impl GenTriMesh for TransformedSurface {
         &self,
         point_surface: Point<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]) {
-        let (triangle, barycentric_coords) =
-            self.surface.geometry.triangle_at(point_surface, tolerance);
+        let (triangle, barycentric_coords) = self.surface.geometry.triangle_at(
+            point_surface,
+            tolerance,
+            geometry,
+        );
 
         let triangle = self.transform.transform_triangle(&triangle);
 

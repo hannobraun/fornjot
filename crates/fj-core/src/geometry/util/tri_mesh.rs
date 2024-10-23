@@ -9,10 +9,10 @@ pub fn convert_point_surface_to_global(
     surface: &dyn GenTriMesh,
     point: impl Into<Point<2>>,
     tolerance: impl Into<Tolerance>,
-    _: &Geometry,
+    geometry: &Geometry,
 ) -> Point<3> {
     let (triangle, barycentric_coords) =
-        surface.triangle_at(point.into(), tolerance.into());
+        surface.triangle_at(point.into(), tolerance.into(), geometry);
     triangle.point_from_barycentric_coords(barycentric_coords)
 }
 

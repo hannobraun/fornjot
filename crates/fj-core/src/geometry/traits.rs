@@ -140,6 +140,7 @@ pub trait GenTriMesh {
         &self,
         point_surface: Point<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]);
 
     /// # Generated a triangle mesh within the provided boundary
@@ -163,8 +164,9 @@ where
         &self,
         point_surface: Point<2>,
         tolerance: Tolerance,
+        geometry: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]) {
-        self.deref().triangle_at(point_surface, tolerance)
+        self.deref().triangle_at(point_surface, tolerance, geometry)
     }
 
     fn generate_tri_mesh(

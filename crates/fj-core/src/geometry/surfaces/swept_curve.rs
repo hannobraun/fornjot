@@ -24,6 +24,7 @@ impl GenTriMesh for SweptCurve {
         &self,
         point_surface: Point<2>,
         tolerance: Tolerance,
+        _: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]) {
         let [a, b] = self
             .u
