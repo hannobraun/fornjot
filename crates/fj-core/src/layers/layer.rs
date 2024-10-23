@@ -23,6 +23,24 @@ impl<S> Layer<S> {
         Self { state }
     }
 
+    /// # Process a command without capturing any events
+    ///
+    /// The command is processed synchronously. When this method returns, the
+    /// state has been updated.
+    pub fn process_command<C>(&mut self, command: C) -> C::Result
+    where
+        C: Command<S>,
+    {
+        let mut events = Vec::new();
+        let result = command.decide(&self.state, &mut events);
+
+        for event in events {
+            event.evolve(&mut self.state);
+        }
+
+        result
+    }
+
     /// # Process a command and capture the events that produces
     ///
     /// The command is processed synchronously. When this method returns, the
