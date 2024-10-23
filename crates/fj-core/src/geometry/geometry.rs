@@ -275,7 +275,7 @@ pub struct LocalCurveGeom {
 pub enum CurveGenerator {
     /// # The curve is defined locally on a surface
     Surface {
-        /// # The geometric representation of the curve
+        /// # A generator for local curve geometry
         generator: Box<dyn GenPolyline<2>>,
 
         /// # The surface that the curve geometry is defined on
@@ -284,7 +284,7 @@ pub enum CurveGenerator {
 
     /// # The curve is defined globally in 3D space
     Global {
-        /// # The geometric representation of the curve
+        /// # A generator for global curve geometry
         generator: Box<dyn GenPolyline<3>>,
     },
 }
@@ -294,6 +294,6 @@ pub enum CurveGenerator {
 /// Surface are represented by triangle meshes, their uniform intermediate
 /// representation.
 pub struct SurfaceGenerator {
-    /// # The geometric representation of the surface
+    /// # A generator for surface geometry
     pub generator: Box<dyn GenTriMesh>,
 }
