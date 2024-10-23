@@ -51,7 +51,7 @@ impl Command<Topology> for InsertObject {
 }
 
 impl Event<Topology> for InsertObject {
-    fn evolve(&self, state: &mut Topology) {
+    fn evolve(self, state: &mut Topology) {
         self.object.clone().insert(state);
     }
 }

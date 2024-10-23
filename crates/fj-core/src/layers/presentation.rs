@@ -49,7 +49,7 @@ impl Command<Presentation> for SetColor {
 }
 
 impl Event<Presentation> for SetColor {
-    fn evolve(&self, state: &mut Presentation) {
+    fn evolve(self, state: &mut Presentation) {
         state.color.insert(self.region.clone(), self.color);
     }
 }

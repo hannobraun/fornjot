@@ -56,7 +56,7 @@ impl<S> Layer<S> {
     {
         let result = command.decide(&self.state, events);
 
-        for event in events {
+        for event in events.iter().cloned() {
             event.evolve(&mut self.state);
         }
 
@@ -119,5 +119,5 @@ pub trait Event<S> {
     /// Implementations of this method are supposed to be relatively dumb. Any
     /// decisions that go into updating the state should be made in
     /// [`Command::decide`], and encoded into the event.
-    fn evolve(&self, state: &mut S);
+    fn evolve(self, state: &mut S);
 }

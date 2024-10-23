@@ -70,7 +70,7 @@ impl Command<Validation> for TakeErrors {
 }
 
 impl Event<Validation> for TakeErrors {
-    fn evolve(&self, state: &mut Validation) {
+    fn evolve(self, state: &mut Validation) {
         state.errors.clear();
     }
 }
@@ -85,7 +85,7 @@ pub struct ValidationFailed {
 }
 
 impl Event<Validation> for ValidationFailed {
-    fn evolve(&self, state: &mut Validation) {
+    fn evolve(self, state: &mut Validation) {
         state.errors.push(self.err.clone());
     }
 }

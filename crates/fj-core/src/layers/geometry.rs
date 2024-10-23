@@ -113,7 +113,7 @@ impl Command<Geometry> for DefineCurve {
 }
 
 impl Event<Geometry> for DefineCurve {
-    fn evolve(&self, state: &mut Geometry) {
+    fn evolve(self, state: &mut Geometry) {
         state.define_curve_inner(
             self.curve.clone(),
             self.surface.clone(),
@@ -149,7 +149,7 @@ impl Command<Geometry> for DefineCurve2 {
 }
 
 impl Event<Geometry> for DefineCurve2 {
-    fn evolve(&self, state: &mut Geometry) {
+    fn evolve(self, state: &mut Geometry) {
         state.define_curve_inner_2(self.curve.clone(), self.geometry.clone());
     }
 }
@@ -174,7 +174,7 @@ impl Command<Geometry> for DefineSurface {
 }
 
 impl Event<Geometry> for DefineSurface {
-    fn evolve(&self, state: &mut Geometry) {
+    fn evolve(self, state: &mut Geometry) {
         state.define_surface_inner(self.surface.clone(), self.geometry);
     }
 }
@@ -199,7 +199,7 @@ impl Command<Geometry> for DefineSurface2 {
 }
 
 impl Event<Geometry> for DefineSurface2 {
-    fn evolve(&self, state: &mut Geometry) {
+    fn evolve(self, state: &mut Geometry) {
         state.define_surface_inner_2(
             self.surface.clone(),
             self.geometry.clone(),
@@ -228,7 +228,7 @@ impl Command<Geometry> for DefineVertex {
 }
 
 impl Event<Geometry> for DefineVertex {
-    fn evolve(&self, state: &mut Geometry) {
+    fn evolve(self, state: &mut Geometry) {
         state.define_vertex_inner(
             self.vertex.clone(),
             self.curve.clone(),
