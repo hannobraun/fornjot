@@ -180,14 +180,6 @@ impl Geometry {
         self.curve.get(curve)
     }
 
-    /// # Access the geometry generator for the provided curve
-    pub fn generator_for_curve(
-        &self,
-        curve: &Handle<Curve>,
-    ) -> Option<&CurveGeom2> {
-        self.curve_generators.get(curve)
-    }
-
     /// # Access the geometry of the provided surface
     ///
     /// ## Panics
@@ -199,17 +191,25 @@ impl Geometry {
             .expect("Expected geometry of surface to be defined")
     }
 
+    /// # Access the geometry of the provided vertex
+    pub fn of_vertex(&self, vertex: &Handle<Vertex>) -> Option<&VertexGeom> {
+        self.vertex.get(vertex)
+    }
+
+    /// # Access the geometry generator for the provided curve
+    pub fn generator_for_curve(
+        &self,
+        curve: &Handle<Curve>,
+    ) -> Option<&CurveGeom2> {
+        self.curve_generators.get(curve)
+    }
+
     /// # Access the geometry generator for the provided surface
     pub fn generator_for_surface(
         &self,
         surface: &Handle<Surface>,
     ) -> Option<&SurfaceGeom> {
         self.surface_generators.get(surface)
-    }
-
-    /// # Access the geometry of the provided vertex
-    pub fn of_vertex(&self, vertex: &Handle<Vertex>) -> Option<&VertexGeom> {
-        self.vertex.get(vertex)
     }
 
     /// Access the geometry of the xy-plane
