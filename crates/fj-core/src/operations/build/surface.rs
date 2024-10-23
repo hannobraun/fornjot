@@ -1,7 +1,7 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{surfaces::SweptCurve, Path, SurfaceGeom},
+    geometry::{surfaces::SweptCurve, Path, SurfaceGenerator},
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -26,7 +26,7 @@ pub trait BuildSurface {
             .define_surface(surface.clone(), surface_geom);
         core.layers.geometry.define_surface_2(
             surface.clone(),
-            SurfaceGeom {
+            SurfaceGenerator {
                 geometry: Box::new(surface_geom),
             },
         );

@@ -3,7 +3,7 @@ use fj_math::Transform;
 use crate::{
     geometry::{
         surfaces::{SweptCurve, TransformedSurface},
-        SurfaceGeom,
+        SurfaceGenerator,
     },
     operations::insert::Insert,
     storage::Handle,
@@ -42,7 +42,7 @@ impl TransformObject for &Handle<Surface> {
 
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
-                    SurfaceGeom {
+                    SurfaceGenerator {
                         geometry: Box::new(TransformedSurface {
                             surface: self.clone(),
                             transform: *transform,

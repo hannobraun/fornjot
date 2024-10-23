@@ -21,7 +21,7 @@ pub struct Geometry {
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     curve_generators: BTreeMap<Handle<Curve>, CurveGenerator>,
-    surface_generators: BTreeMap<Handle<Surface>, SurfaceGeom>,
+    surface_generators: BTreeMap<Handle<Surface>, SurfaceGenerator>,
 
     space_2d: Handle<Surface>,
 
@@ -72,7 +72,7 @@ impl Geometry {
 
         self_.define_surface_inner_2(
             self_.xy_plane.clone(),
-            SurfaceGeom {
+            SurfaceGenerator {
                 geometry: Box::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_y(),
@@ -81,7 +81,7 @@ impl Geometry {
         );
         self_.define_surface_inner_2(
             self_.xz_plane.clone(),
-            SurfaceGeom {
+            SurfaceGenerator {
                 geometry: Box::new(SweptCurve {
                     u: Path::x_axis(),
                     v: Vector::unit_z(),
@@ -90,7 +90,7 @@ impl Geometry {
         );
         self_.define_surface_inner_2(
             self_.yz_plane.clone(),
-            SurfaceGeom {
+            SurfaceGenerator {
                 geometry: Box::new(SweptCurve {
                     u: Path::y_axis(),
                     v: Vector::unit_z(),
@@ -145,7 +145,7 @@ impl Geometry {
     pub(crate) fn define_surface_inner_2(
         &mut self,
         surface: Handle<Surface>,
-        geometry: SurfaceGeom,
+        geometry: SurfaceGenerator,
     ) {
         if surface == self.space_2d {
             panic!("Attempting to define geometry for 2D space");
@@ -208,7 +208,7 @@ impl Geometry {
     pub fn generator_for_surface(
         &self,
         surface: &Handle<Surface>,
-    ) -> Option<&SurfaceGeom> {
+    ) -> Option<&SurfaceGenerator> {
         self.surface_generators.get(surface)
     }
 
@@ -299,7 +299,7 @@ pub enum CurveGenerator {
 ///
 /// Surface are represented by triangle meshes, their uniform intermediate
 /// representation.
-pub struct SurfaceGeom {
+pub struct SurfaceGenerator {
     /// # The geometric representation of the surface
     pub geometry: Box<dyn GenTriMesh>,
 }
