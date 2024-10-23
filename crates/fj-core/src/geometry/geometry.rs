@@ -308,7 +308,6 @@ pub enum CurveGeom2 {
 ///
 /// Surface are represented by triangle meshes, their uniform intermediate
 /// representation.
-#[derive(Clone)]
 pub struct SurfaceGeom {
     /// # The geometric representation of the surface
     pub geometry: Rc<dyn GenTriMesh>,
