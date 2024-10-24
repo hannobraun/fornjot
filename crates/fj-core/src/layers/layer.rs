@@ -7,8 +7,8 @@ use std::ops::Deref;
 /// direct write access.
 ///
 /// Instead, each write access to state is reified as a command, which are
-/// processed by [`Layer::process`]. Processing a command can result in any
-/// number of events, which can then be used as commands for other layers.
+/// processed by [`Layer::process_command`]. Processing a command can result in
+/// any number of events, which can then be used as commands for other layers.
 ///
 /// This design takes inspiration from, and uses the nomenclature of, this
 /// article:
