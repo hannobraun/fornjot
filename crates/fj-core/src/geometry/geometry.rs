@@ -21,7 +21,7 @@ pub struct Geometry {
     surface: BTreeMap<Handle<Surface>, SweptCurve>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
-    curve_generators: BTreeMap<Handle<Curve>, CurveGenerator>,
+    curve_generators: BTreeMap<Handle<Curve>, CurveGeom2>,
     surface_generators: BTreeMap<Handle<Surface>, SurfaceGenerator>,
 
     space_2d: Handle<Surface>,
@@ -118,7 +118,7 @@ impl Geometry {
     pub(crate) fn define_curve_inner_2(
         &mut self,
         curve: Handle<Curve>,
-        geometry: CurveGenerator,
+        geometry: CurveGeom2,
     ) {
         self.curve_generators.insert(curve, geometry);
     }
@@ -201,7 +201,7 @@ impl Geometry {
     pub fn generator_for_curve(
         &self,
         curve: &Handle<Curve>,
-    ) -> Option<&CurveGenerator> {
+    ) -> Option<&CurveGeom2> {
         self.curve_generators.get(curve)
     }
 
@@ -273,7 +273,7 @@ pub struct LocalCurveGeom {
 /// Curves are represented by polylines, their uniform intermediate
 /// representation. However, this representation can be 2D (local to a surface)
 /// or 3D. This enum distinguishes between the two cases.
-pub enum CurveGenerator {
+pub enum CurveGeom2 {
     /// # The curve is defined locally on a surface
     Surface {
         /// # A generator for local curve geometry

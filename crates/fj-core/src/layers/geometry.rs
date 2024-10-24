@@ -2,7 +2,7 @@
 
 use crate::{
     geometry::{
-        surfaces::SweptCurve, CurveGenerator, Geometry, LocalCurveGeom,
+        surfaces::SweptCurve, CurveGeom2, Geometry, LocalCurveGeom,
         LocalVertexGeom, SurfaceGenerator,
     },
     storage::Handle,
@@ -37,7 +37,7 @@ impl Layer<Geometry> {
     pub fn define_curve_2(
         &mut self,
         curve: Handle<Curve>,
-        generator: CurveGenerator,
+        generator: CurveGeom2,
     ) {
         self.process_command(DefineCurve2 { curve, generator });
     }
@@ -128,7 +128,7 @@ impl Event<Geometry> for DefineCurve {
 /// still taking up the more compact name.
 pub struct DefineCurve2 {
     curve: Handle<Curve>,
-    generator: CurveGenerator,
+    generator: CurveGeom2,
 }
 
 impl Command<Geometry> for DefineCurve2 {
