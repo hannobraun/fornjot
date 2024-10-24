@@ -10,6 +10,7 @@ use crate::{
 use super::{
     surfaces::SweptCurve,
     traits::{GenPolyline, GenTriMesh},
+    util::polyline::Polyline,
     vertex::LocalVertexGeom,
     Path, VertexGeom,
 };
@@ -278,6 +279,9 @@ pub enum CurveGenerator {
         /// # A generator for local curve geometry
         generator: Box<dyn GenPolyline<2>>,
 
+        /// # The local representation of curve geometry
+        geometry: Polyline<2>,
+
         /// # The surface that the curve geometry is defined on
         surface: Handle<Surface>,
     },
@@ -286,6 +290,9 @@ pub enum CurveGenerator {
     Global {
         /// # A generator for global curve geometry
         generator: Box<dyn GenPolyline<3>>,
+
+        /// # The global representation of curve geometry
+        geometry: Polyline<3>,
     },
 }
 
