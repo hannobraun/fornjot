@@ -72,12 +72,9 @@ impl Layer<Geometry> {
     pub fn define_surface_2(
         &mut self,
         surface: Handle<Surface>,
-        generator: SurfaceGeom,
+        geometry: SurfaceGeom,
     ) {
-        self.process_command(DefineSurface2 {
-            surface,
-            geometry: generator,
-        });
+        self.process_command(DefineSurface2 { surface, geometry });
     }
 
     /// Define the geometry of the provided vertex
