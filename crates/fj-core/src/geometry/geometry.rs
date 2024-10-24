@@ -21,7 +21,7 @@ pub struct Geometry {
     surface: BTreeMap<Handle<Surface>, SweptCurve>,
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
-    curve_generators: BTreeMap<Handle<Curve>, CurveGeom2>,
+    curves: BTreeMap<Handle<Curve>, CurveGeom2>,
     surface_generators: BTreeMap<Handle<Surface>, SurfaceGenerator>,
 
     space_2d: Handle<Surface>,
@@ -39,7 +39,7 @@ impl Geometry {
             surface: BTreeMap::new(),
             vertex: BTreeMap::new(),
 
-            curve_generators: BTreeMap::new(),
+            curves: BTreeMap::new(),
             surface_generators: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
@@ -120,7 +120,7 @@ impl Geometry {
         curve: Handle<Curve>,
         geometry: CurveGeom2,
     ) {
-        self.curve_generators.insert(curve, geometry);
+        self.curves.insert(curve, geometry);
     }
 
     pub(crate) fn define_surface_inner(
@@ -202,7 +202,7 @@ impl Geometry {
         &self,
         curve: &Handle<Curve>,
     ) -> Option<&CurveGeom2> {
-        self.curve_generators.get(curve)
+        self.curves.get(curve)
     }
 
     /// # Access the geometry generator for the provided surface
