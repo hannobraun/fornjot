@@ -310,7 +310,7 @@ pub enum CurveGeom2 {
     },
 }
 
-/// # A generator for surface geometry
+/// # The representation of a surface's geometry
 ///
 /// Surface are represented by triangle meshes, their uniform intermediate
 /// representation.
