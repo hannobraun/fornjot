@@ -212,7 +212,14 @@ impl Geometry {
         self.curves.get(curve)
     }
 
-    /// # Access the geometry generator for the provided surface
+    /// # Access the geometry of the provided surface
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method returns new-style geometry. Its name is temporary, while the
+    /// method returning the old-style geometry is still taking up the more
+    /// concise name.
     pub fn of_surface_2(
         &self,
         surface: &Handle<Surface>,
