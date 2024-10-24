@@ -39,7 +39,10 @@ impl Layer<Geometry> {
         curve: Handle<Curve>,
         generator: CurveGeom2,
     ) {
-        self.process_command(DefineCurve2 { curve, generator });
+        self.process_command(DefineCurve2 {
+            curve,
+            geometry: generator,
+        });
     }
 
     /// # Define the geometry of the provided surface
@@ -128,7 +131,7 @@ impl Event<Geometry> for DefineCurve {
 /// still taking up the more compact name.
 pub struct DefineCurve2 {
     curve: Handle<Curve>,
-    generator: CurveGeom2,
+    geometry: CurveGeom2,
 }
 
 impl Command<Geometry> for DefineCurve2 {
@@ -146,7 +149,7 @@ impl Command<Geometry> for DefineCurve2 {
 
 impl Event<Geometry> for DefineCurve2 {
     fn evolve(self, state: &mut Geometry) {
-        state.define_curve_inner_2(self.curve, self.generator);
+        state.define_curve_inner_2(self.curve, self.geometry);
     }
 }
 
