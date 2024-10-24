@@ -82,7 +82,7 @@ mod tests {
     use crate::{
         algorithms::approx::{face::approx_face, ApproxCache},
         geometry::{
-            util::tri_mesh::convert_point_surface_to_global, Tolerance,
+            repr::tri_mesh::convert_point_surface_to_global, Tolerance,
         },
         operations::{
             build::{BuildCycle, BuildFace},

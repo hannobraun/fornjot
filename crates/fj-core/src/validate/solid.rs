@@ -1,7 +1,7 @@
 use std::iter::repeat;
 
 use crate::{
-    geometry::{util::tri_mesh::convert_point_surface_to_global, Geometry},
+    geometry::{repr::tri_mesh::convert_point_surface_to_global, Geometry},
     storage::Handle,
     topology::{Cycle, Face, HalfEdge, Region, Shell, Solid, Vertex},
     validation::{checks::MultipleReferencesToObject, ValidationCheck},

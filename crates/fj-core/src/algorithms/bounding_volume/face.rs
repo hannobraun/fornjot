@@ -4,7 +4,7 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{
-        traits::GenTriMesh, util::tri_mesh::convert_point_surface_to_global,
+        traits::GenTriMesh, repr::tri_mesh::convert_point_surface_to_global,
         Geometry, Tolerance,
     },
     topology::Face,

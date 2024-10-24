@@ -10,7 +10,7 @@ use crate::{
 use super::{
     surfaces::SweptCurve,
     traits::{GenPolyline, GenTriMesh},
-    util::polyline::Polyline,
+    repr::polyline::Polyline,
     vertex::LocalVertexGeom,
     Path, VertexGeom,
 };

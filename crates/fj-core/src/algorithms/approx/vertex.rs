@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use fj_math::Point;
 
 use crate::{
-    geometry::{util::tri_mesh::convert_point_surface_to_global, Geometry},
+    geometry::{repr::tri_mesh::convert_point_surface_to_global, Geometry},
     storage::Handle,
     topology::{Curve, Surface, Vertex},
 };

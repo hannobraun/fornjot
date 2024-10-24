@@ -1,9 +1,9 @@
 //! Geometry that is applied to the topological object graph
 
 pub mod curves;
+pub mod repr;
 pub mod surfaces;
 pub mod traits;
-pub mod util;
 
 mod boundary;
 mod geometry;

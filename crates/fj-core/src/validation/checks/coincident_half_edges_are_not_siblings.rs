@@ -4,7 +4,7 @@ use fj_math::{Point, Scalar};
 
 use crate::{
     geometry::{
-        util::tri_mesh::convert_point_surface_to_global, CurveBoundary,
+        repr::tri_mesh::convert_point_surface_to_global, CurveBoundary,
         Geometry, Tolerance,
     },
     queries::{
