@@ -8,9 +8,9 @@ use crate::{
 };
 
 use super::{
+    repr::{polyline::Polyline, tri_mesh::TriMesh},
     surfaces::SweptCurve,
     traits::{GenPolyline, GenTriMesh},
-    repr::polyline::Polyline,
     vertex::LocalVertexGeom,
     Path, VertexGeom,
 };
@@ -78,6 +78,7 @@ impl Geometry {
                     u: Path::x_axis(),
                     v: Vector::unit_y(),
                 }),
+                geometry: TriMesh::empty(),
             },
         );
         self_.define_surface_inner_2(
@@ -87,6 +88,7 @@ impl Geometry {
                     u: Path::x_axis(),
                     v: Vector::unit_z(),
                 }),
+                geometry: TriMesh::empty(),
             },
         );
         self_.define_surface_inner_2(
@@ -96,6 +98,7 @@ impl Geometry {
                     u: Path::y_axis(),
                     v: Vector::unit_z(),
                 }),
+                geometry: TriMesh::empty(),
             },
         );
 
@@ -314,4 +317,7 @@ pub enum CurveGeom2 {
 pub struct SurfaceGenerator {
     /// # A generator for surface geometry
     pub generator: Box<dyn GenTriMesh>,
+
+    /// # The generated surface geometry
+    pub geometry: TriMesh,
 }

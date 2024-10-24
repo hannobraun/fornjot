@@ -2,6 +2,7 @@ use fj_math::Transform;
 
 use crate::{
     geometry::{
+        repr::tri_mesh::TriMesh,
         surfaces::{SweptCurve, TransformedSurface},
         SurfaceGenerator,
     },
@@ -47,6 +48,7 @@ impl TransformObject for &Handle<Surface> {
                             surface: self.clone(),
                             transform: *transform,
                         }),
+                        geometry: TriMesh::empty(),
                     },
                 );
 

@@ -1,7 +1,9 @@
 use fj_math::{Point, Scalar, Vector};
 
 use crate::{
-    geometry::{surfaces::SweptCurve, Path, SurfaceGenerator},
+    geometry::{
+        repr::tri_mesh::TriMesh, surfaces::SweptCurve, Path, SurfaceGenerator,
+    },
     operations::insert::Insert,
     storage::Handle,
     topology::Surface,
@@ -28,6 +30,7 @@ pub trait BuildSurface {
             surface.clone(),
             SurfaceGenerator {
                 generator: Box::new(generator),
+                geometry: TriMesh::empty(),
             },
         );
 
