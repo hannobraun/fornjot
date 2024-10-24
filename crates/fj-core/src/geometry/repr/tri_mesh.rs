@@ -4,6 +4,14 @@ use fj_math::{Point, Vector};
 
 use crate::geometry::{traits::GenTriMesh, Geometry, Tolerance};
 
+/// # A triangle mesh, the uniform intermediate representation of a surface
+///
+/// ## Implementation
+///
+/// This struct is currently a placeholder, while the transition to the new
+/// geometry system is ongoing.
+pub struct TriMesh {}
+
 /// # Convert a point in surface coordinates to global coordinates
 pub fn convert_point_surface_to_global(
     surface: &dyn GenTriMesh,
