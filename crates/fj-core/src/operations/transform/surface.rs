@@ -4,7 +4,7 @@ use crate::{
     geometry::{
         repr::tri_mesh::TriMesh,
         surfaces::{SweptCurve, TransformedSurface},
-        SurfaceGenerator,
+        SurfaceGeom,
     },
     operations::insert::Insert,
     storage::Handle,
@@ -43,7 +43,7 @@ impl TransformObject for &Handle<Surface> {
 
                 core.layers.geometry.define_surface_2(
                     surface.clone(),
-                    SurfaceGenerator {
+                    SurfaceGeom {
                         generator: Box::new(TransformedSurface {
                             surface: self.clone(),
                             transform: *transform,

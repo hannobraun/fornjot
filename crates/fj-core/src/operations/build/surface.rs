@@ -2,7 +2,7 @@ use fj_math::{Point, Scalar, Vector};
 
 use crate::{
     geometry::{
-        repr::tri_mesh::TriMesh, surfaces::SweptCurve, Path, SurfaceGenerator,
+        repr::tri_mesh::TriMesh, surfaces::SweptCurve, Path, SurfaceGeom,
     },
     operations::insert::Insert,
     storage::Handle,
@@ -28,7 +28,7 @@ pub trait BuildSurface {
             .define_surface(surface.clone(), generator);
         core.layers.geometry.define_surface_2(
             surface.clone(),
-            SurfaceGenerator {
+            SurfaceGeom {
                 generator: Box::new(generator),
                 geometry: TriMesh::empty(),
             },
