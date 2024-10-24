@@ -12,6 +12,13 @@ use crate::geometry::{traits::GenTriMesh, Geometry, Tolerance};
 /// geometry system is ongoing.
 pub struct TriMesh {}
 
+impl TriMesh {
+    /// # Construct an empty triangle mesh
+    pub fn empty() -> Self {
+        Self {}
+    }
+}
+
 /// # Convert a point in surface coordinates to global coordinates
 pub fn convert_point_surface_to_global(
     surface: &dyn GenTriMesh,
