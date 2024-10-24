@@ -197,7 +197,14 @@ impl Geometry {
         self.vertex.get(vertex)
     }
 
-    /// # Access the geometry generator for the provided curve
+    /// # Access the geometry of the provided curve
+    ///
+    /// ## Implementation Note
+    ///
+    /// There currently is an ongoing transition to a new geometry system. This
+    /// method returns new-style geometry. Its name is temporary, while the
+    /// method returning the old-style geometry is still taking up the more
+    /// concise name.
     pub fn of_curve_2(&self, curve: &Handle<Curve>) -> Option<&CurveGeom2> {
         self.curves.get(curve)
     }
