@@ -22,7 +22,7 @@ pub struct Geometry {
     vertex: BTreeMap<Handle<Vertex>, VertexGeom>,
 
     curves: BTreeMap<Handle<Curve>, CurveGeom2>,
-    surface_generators: BTreeMap<Handle<Surface>, SurfaceGeom>,
+    surfaces: BTreeMap<Handle<Surface>, SurfaceGeom>,
 
     space_2d: Handle<Surface>,
 
@@ -40,7 +40,7 @@ impl Geometry {
             vertex: BTreeMap::new(),
 
             curves: BTreeMap::new(),
-            surface_generators: BTreeMap::new(),
+            surfaces: BTreeMap::new(),
 
             space_2d: topology.surfaces.space_2d(),
 
@@ -155,7 +155,7 @@ impl Geometry {
             panic!("Attempting to define geometry for 2D space");
         }
 
-        if self.surface_generators.contains_key(&surface)
+        if self.surfaces.contains_key(&surface)
             && (surface == self.xy_plane
                 || surface == self.xz_plane
                 || surface == self.yz_plane)
@@ -163,7 +163,7 @@ impl Geometry {
             panic!("Attempting to redefine basis plane.");
         }
 
-        self.surface_generators.insert(surface, geometry);
+        self.surfaces.insert(surface, geometry);
     }
 
     pub(crate) fn define_vertex_inner(
@@ -217,7 +217,7 @@ impl Geometry {
         &self,
         surface: &Handle<Surface>,
     ) -> Option<&SurfaceGeom> {
-        self.surface_generators.get(surface)
+        self.surfaces.get(surface)
     }
 
     /// Access the geometry of the xy-plane
