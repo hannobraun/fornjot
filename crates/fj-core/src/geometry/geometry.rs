@@ -198,10 +198,7 @@ impl Geometry {
     }
 
     /// # Access the geometry generator for the provided curve
-    pub fn generator_for_curve(
-        &self,
-        curve: &Handle<Curve>,
-    ) -> Option<&CurveGeom2> {
+    pub fn of_curve_2(&self, curve: &Handle<Curve>) -> Option<&CurveGeom2> {
         self.curves.get(curve)
     }
 
