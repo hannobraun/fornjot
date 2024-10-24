@@ -4,7 +4,7 @@ use fj_math::{Aabb, Vector};
 
 use crate::{
     geometry::{
-        traits::GenTriMesh, repr::tri_mesh::convert_point_surface_to_global,
+        repr::tri_mesh::convert_point_surface_to_global, traits::GenTriMesh,
         Geometry, Tolerance,
     },
     topology::Face,
@@ -23,10 +23,8 @@ impl super::BoundingVolume<3> for &Face {
         (self.region().exterior().deref(), self.surface())
             .aabb(geometry)
             .map(|aabb2| {
-                let surface = &geometry
-                    .generator_for_surface(self.surface())
-                    .unwrap()
-                    .generator;
+                let surface =
+                    &geometry.of_surface_2(self.surface()).unwrap().generator;
                 let tri_mesh =
                     surface.generate_tri_mesh(aabb2, tolerance, geometry);
                 let tri_mesh = tri_mesh.into_iter().map(|point| {

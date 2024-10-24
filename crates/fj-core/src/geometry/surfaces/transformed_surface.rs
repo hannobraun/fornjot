@@ -17,7 +17,7 @@ pub struct TransformedSurface {
 
 impl GenTriMesh for TransformedSurface {
     fn origin(&self, geometry: &Geometry) -> Point<3> {
-        let surface = geometry.generator_for_surface(&self.surface).unwrap();
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
         self.transform
             .transform_point(&surface.generator.origin(geometry))
     }
@@ -28,7 +28,7 @@ impl GenTriMesh for TransformedSurface {
         tolerance: Tolerance,
         geometry: &Geometry,
     ) -> (Triangle<3>, [Scalar; 3]) {
-        let surface = geometry.generator_for_surface(&self.surface).unwrap();
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
         let (triangle, barycentric_coords) =
             surface
                 .generator
@@ -47,7 +47,7 @@ impl GenTriMesh for TransformedSurface {
     ) -> Vec<Point<2>> {
         // The triangle mesh is generated in 2D surface coordinates. No need to
         // transform that.
-        let surface = geometry.generator_for_surface(&self.surface).unwrap();
+        let surface = geometry.of_surface_2(&self.surface).unwrap();
         surface
             .generator
             .generate_tri_mesh(boundary, tolerance, geometry)

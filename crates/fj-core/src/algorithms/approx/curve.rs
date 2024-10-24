@@ -299,7 +299,7 @@ mod tests {
                     &core
                         .layers
                         .geometry
-                        .generator_for_surface(&surface)
+                        .of_surface_2(&surface)
                         .unwrap()
                         .generator,
                     point_surface,
@@ -339,7 +339,7 @@ mod tests {
                     &core
                         .layers
                         .geometry
-                        .generator_for_surface(&surface)
+                        .of_surface_2(&surface)
                         .unwrap()
                         .generator,
                     point_surface,

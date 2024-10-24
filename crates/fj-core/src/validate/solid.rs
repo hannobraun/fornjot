@@ -117,7 +117,7 @@ impl SolidValidationError {
 
                 Some((
                     convert_point_surface_to_global(
-                        &geometry.generator_for_surface(s).unwrap().generator,
+                        &geometry.of_surface_2(s).unwrap().generator,
                         local_curve_geometry.path.point_from_path_coords(
                             geometry
                                 .of_vertex(h.start_vertex())

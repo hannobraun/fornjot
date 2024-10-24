@@ -213,7 +213,7 @@ impl Geometry {
     }
 
     /// # Access the geometry generator for the provided surface
-    pub fn generator_for_surface(
+    pub fn of_surface_2(
         &self,
         surface: &Handle<Surface>,
     ) -> Option<&SurfaceGeom> {
