@@ -2,10 +2,10 @@ use fj_math::{Circle, Line, Vector};
 
 use crate::{
     geometry::{
-        surfaces::SweptCurve,
         repr::tri_mesh::{
             convert_point_surface_to_global, convert_vector_surface_to_global,
         },
+        surfaces::SweptCurve,
         Path,
     },
     operations::build::BuildSurface,

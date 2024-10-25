@@ -4,7 +4,7 @@ use fj_math::{Circle, Line, Point};
 
 use crate::{
     geometry::{
-        surfaces::SweptCurve, repr::tri_mesh::convert_point_surface_to_global,
+        repr::tri_mesh::convert_point_surface_to_global, surfaces::SweptCurve,
         CurveBoundary, Geometry, Path, Tolerance,
     },
     storage::Handle,
@@ -213,9 +213,8 @@ mod tests {
             circle::approx_circle, curve::approx_curve, ApproxPoint,
         },
         geometry::{
-            surfaces::SweptCurve,
-            repr::tri_mesh::convert_point_surface_to_global, CurveBoundary,
-            Path,
+            repr::tri_mesh::convert_point_surface_to_global,
+            surfaces::SweptCurve, CurveBoundary, Path,
         },
         operations::build::BuildSurface,
         topology::Surface,
