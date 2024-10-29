@@ -3,3 +3,6 @@
 [package]
 name = "fj"
 edition = "2021"
+
+[dependencies]
+threemf = "*"
