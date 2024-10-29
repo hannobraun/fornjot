@@ -42,7 +42,7 @@ macro_rules! impl_insert {
                     let object = (handle.clone(), self).into();
                     core.layers.topology.insert(
                         object,
-                        &core.layers.geometry,
+                        &mut core.layers.geometry,
                         &mut core.layers.validation,
                     );
                     handle

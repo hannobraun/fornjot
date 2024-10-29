@@ -15,7 +15,7 @@ impl Layer<Topology> {
     pub fn insert(
         &mut self,
         object: AnyObject<AboutToBeStored>,
-        geometry: &Geometry,
+        geometry: &mut Layer<Geometry>,
         validation: &mut Layer<Validation>,
     ) {
         let mut events = Vec::new();
