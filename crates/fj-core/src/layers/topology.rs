@@ -25,11 +25,10 @@ impl Layer<Topology> {
         );
 
         for event in events {
-            let command = ValidateObject {
+            validation.process_command(ValidateObject {
                 object: event.object.into(),
                 geometry,
-            };
-            validation.process_command(command);
+            });
         }
     }
 }
