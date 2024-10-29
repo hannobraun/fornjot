@@ -1,0 +1,5 @@
+[workspace]
+
+[package]
+name = "fj"
+edition = "2021"
