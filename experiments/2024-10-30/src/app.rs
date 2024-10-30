@@ -26,11 +26,13 @@ struct App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = Arc::new(
-            event_loop
+        let window = {
+            let window = event_loop
                 .create_window(WindowAttributes::default())
-                .unwrap(),
-        );
+                .unwrap();
+
+            Arc::new(window)
+        };
         let renderer =
             pollster::block_on(Renderer::new(window.clone())).unwrap();
 
