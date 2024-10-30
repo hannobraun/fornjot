@@ -88,7 +88,7 @@ fn init(
         let window = event_loop.create_window(WindowAttributes::default())?;
         Arc::new(window)
     };
-    let renderer = pollster::block_on(Renderer::new(window.clone())).unwrap();
+    let renderer = pollster::block_on(Renderer::new(window.clone()))?;
 
     Ok((window, renderer))
 }
