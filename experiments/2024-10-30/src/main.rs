@@ -1,6 +1,6 @@
+mod export;
 mod mesh;
 mod model;
-mod export;
 
 fn main() -> anyhow::Result<()> {
     let mesh = model::model()?;
