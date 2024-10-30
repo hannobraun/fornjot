@@ -29,7 +29,7 @@ impl ApplicationHandler for App {
         let (window, renderer) = match init(event_loop) {
             Ok(ok) => ok,
             Err(err) => {
-                eprintln!("Failed to create window: `{err:?}`");
+                eprintln!("Initialization error: `{err:?}`");
                 event_loop.exit();
                 return;
             }
