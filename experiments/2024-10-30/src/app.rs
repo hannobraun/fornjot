@@ -26,21 +26,14 @@ struct App {
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = {
-            let window =
-                match event_loop.create_window(WindowAttributes::default()) {
-                    Ok(window) => window,
-                    Err(err) => {
-                        eprintln!("Failed to create window: `{err:?}`");
-                        event_loop.exit();
-                        return;
-                    }
-                };
-
-            Arc::new(window)
+        let (window, renderer) = match init(event_loop) {
+            Ok(ok) => ok,
+            Err(err) => {
+                eprintln!("Failed to create window: `{err:?}`");
+                event_loop.exit();
+                return;
+            }
         };
-        let renderer =
-            pollster::block_on(Renderer::new(window.clone())).unwrap();
 
         self.window = Some(window);
         self.renderer = Some(renderer);
@@ -86,4 +79,16 @@ impl ApplicationHandler for App {
             _ => {}
         }
     }
+}
+
+fn init(
+    event_loop: &ActiveEventLoop,
+) -> anyhow::Result<(Arc<Window>, Renderer)> {
+    let window = {
+        let window = event_loop.create_window(WindowAttributes::default())?;
+        Arc::new(window)
+    };
+    let renderer = pollster::block_on(Renderer::new(window.clone())).unwrap();
+
+    Ok((window, renderer))
 }
