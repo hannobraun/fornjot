@@ -4,6 +4,6 @@ mod model;
 
 fn main() -> anyhow::Result<()> {
     let mesh = model::model()?;
-    export::export(mesh)?;
+    export::export(&mesh)?;
     Ok(())
 }

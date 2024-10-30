@@ -2,7 +2,7 @@ use std::fs::File;
 
 use crate::mesh::Mesh;
 
-pub fn export(mesh: Mesh) -> anyhow::Result<()> {
+pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh
         .vertices
         .iter()
