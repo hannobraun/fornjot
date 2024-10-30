@@ -1,7 +1,7 @@
 use crate::{export::export, mesh::Mesh};
 
 pub fn model() -> anyhow::Result<()> {
-    let vertices = [
+    let vertices = vec![
         [-0.5, -0.5, -0.5], // 0
         [0.5, -0.5, -0.5],  // 1
         [-0.5, 0.5, -0.5],  // 2
@@ -12,7 +12,7 @@ pub fn model() -> anyhow::Result<()> {
         [0.5, 0.5, 0.5],    // 7
     ];
 
-    let triangles = [
+    let triangles = vec![
         [0, 4, 6], // left
         [0, 6, 2],
         [1, 3, 7], // right
