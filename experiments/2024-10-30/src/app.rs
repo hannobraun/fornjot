@@ -32,7 +32,7 @@ impl ApplicationHandler for App {
                 .unwrap(),
         );
 
-        let renderer = Renderer::new(window.clone());
+        let renderer = Renderer::new(window.clone()).unwrap();
 
         self.window = Some(window);
         self.renderer = Some(renderer);
