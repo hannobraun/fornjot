@@ -23,7 +23,15 @@ impl Renderer {
             .await
             .ok_or_else(|| anyhow!("Failed to request adapter"))?;
         let (device, queue) = adapter
-            .request_device(&wgpu::DeviceDescriptor::default(), None)
+            .request_device(
+                &wgpu::DeviceDescriptor {
+                    label: None,
+                    required_features: wgpu::Features::default(),
+                    required_limits: wgpu::Limits::default(),
+                    memory_hints: wgpu::MemoryHints::default(),
+                },
+                None,
+            )
             .await?;
 
         let size = window.inner_size();
