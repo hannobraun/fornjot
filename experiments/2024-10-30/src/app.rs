@@ -2,8 +2,9 @@ use std::sync::Arc;
 
 use winit::{
     application::ApplicationHandler,
-    event::WindowEvent,
+    event::{KeyEvent, WindowEvent},
     event_loop::{ActiveEventLoop, EventLoop},
+    keyboard::{Key, NamedKey},
     window::{Window, WindowAttributes, WindowId},
 };
 
@@ -51,6 +52,16 @@ impl ApplicationHandler for App {
 
         match event {
             WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
+            WindowEvent::KeyboardInput {
+                event:
+                    KeyEvent {
+                        logical_key: Key::Named(NamedKey::Escape),
+                        ..
+                    },
+                ..
+            } => {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
