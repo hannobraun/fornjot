@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -17,14 +19,16 @@ pub fn render(_: &Mesh) -> anyhow::Result<()> {
 }
 
 struct App {
-    window: Option<Window>,
+    window: Option<Arc<Window>>,
 }
 
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = event_loop
-            .create_window(WindowAttributes::default())
-            .unwrap();
+        let window = Arc::new(
+            event_loop
+                .create_window(WindowAttributes::default())
+                .unwrap(),
+        );
         self.window = Some(window);
     }
 
