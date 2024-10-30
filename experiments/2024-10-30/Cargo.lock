@@ -465,6 +465,7 @@ name = "fj"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "bytemuck",
  "pollster",
  "threemf",
  "wgpu",

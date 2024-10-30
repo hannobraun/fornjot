@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "*"
+bytemuck = "*"
 pollster = "*"
 threemf = "*"
 wgpu = "22.1.0" # pinned for compatibility with `egui`
