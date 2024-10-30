@@ -8,5 +8,5 @@ edition = "2021"
 anyhow = "*"
 pollster = "*"
 threemf = "*"
-wgpu = "*"
+wgpu = "22.1.0" # pinned for compatibility with `egui`
 winit = "*"
