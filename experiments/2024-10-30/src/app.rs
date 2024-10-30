@@ -7,7 +7,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::mesh::Mesh;
+use crate::{mesh::Mesh, render::Renderer};
 
 pub fn run(_: Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
@@ -21,9 +21,7 @@ pub fn run(_: Mesh) -> anyhow::Result<()> {
 #[derive(Default)]
 struct App {
     window: Option<Arc<Window>>,
-    surface: Option<wgpu::Surface<'static>>,
-    device: Option<wgpu::Device>,
-    queue: Option<wgpu::Queue>,
+    renderer: Option<Renderer>,
 }
 
 impl ApplicationHandler for App {
@@ -55,9 +53,11 @@ impl ApplicationHandler for App {
         surface.configure(&device, &config);
 
         self.window = Some(window);
-        self.surface = Some(surface);
-        self.device = Some(device);
-        self.queue = Some(queue);
+        self.renderer = Some(Renderer {
+            surface,
+            device,
+            queue,
+        });
     }
 
     fn window_event(
@@ -66,23 +66,17 @@ impl ApplicationHandler for App {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let Some(surface) = self.surface.as_ref() else {
-            return;
-        };
-        let Some(device) = self.device.as_ref() else {
-            return;
-        };
-        let Some(queue) = self.queue.as_ref() else {
+        let Some(renderer) = self.renderer.as_ref() else {
             return;
         };
 
         match event {
             WindowEvent::RedrawRequested => {
-                let frame = surface.get_current_texture().unwrap();
+                let frame = renderer.surface.get_current_texture().unwrap();
                 let view = frame
                     .texture
                     .create_view(&wgpu::TextureViewDescriptor::default());
-                let mut encoder = device.create_command_encoder(
+                let mut encoder = renderer.device.create_command_encoder(
                     &wgpu::CommandEncoderDescriptor::default(),
                 );
 
@@ -100,7 +94,7 @@ impl ApplicationHandler for App {
                     ..Default::default()
                 });
 
-                queue.submit(Some(encoder.finish()));
+                renderer.queue.submit(Some(encoder.finish()));
                 frame.present();
             }
             _ => {}

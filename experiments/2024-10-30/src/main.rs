@@ -2,6 +2,7 @@ mod app;
 mod export;
 mod mesh;
 mod model;
+mod render;
 
 fn main() -> anyhow::Result<()> {
     let mesh = model::model()?;
