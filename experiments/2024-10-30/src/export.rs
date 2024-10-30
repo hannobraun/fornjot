@@ -1,15 +1,16 @@
 use std::fs::File;
 
-pub fn export(
-    vertices: impl IntoIterator<Item = [f64; 3]>,
-    triangles: impl IntoIterator<Item = [usize; 3]>,
-) -> anyhow::Result<()> {
-    let vertices = vertices
+use crate::mesh::Mesh;
+
+pub fn export(mesh: Mesh) -> anyhow::Result<()> {
+    let vertices = mesh
+        .vertices
         .into_iter()
         .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
         .collect();
 
-    let triangles = triangles
+    let triangles = mesh
+        .triangles
         .into_iter()
         .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
         .collect();
