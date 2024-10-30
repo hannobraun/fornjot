@@ -13,13 +13,15 @@ use crate::{mesh::Mesh, render::Renderer};
 pub fn run(_: Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
-    let mut app = App::default();
+    let mut app = App {
+        window: None,
+        renderer: None,
+    };
     event_loop.run_app(&mut app)?;
 
     Ok(())
 }
 
-#[derive(Default)]
 struct App {
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
