@@ -3,6 +3,7 @@
 let
   libPath = with pkgs; lib.makeLibraryPath [
     libxkbcommon
+    vulkan-loader
     wayland
   ];
 in
