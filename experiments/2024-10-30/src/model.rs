@@ -1,4 +1,4 @@
-use crate::export::export;
+use crate::{export::export, mesh::Mesh};
 
 pub fn model() -> anyhow::Result<()> {
     let vertices = [
@@ -27,7 +27,12 @@ pub fn model() -> anyhow::Result<()> {
         [4, 7, 6],
     ];
 
-    export(vertices, triangles)?;
+    let mesh = Mesh {
+        vertices: vertices.into_iter().collect(),
+        triangles: triangles.into_iter().collect(),
+    };
+
+    export(mesh.vertices, mesh.triangles)?;
 
     Ok(())
 }

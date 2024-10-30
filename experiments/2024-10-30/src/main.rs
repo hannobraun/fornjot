@@ -1,3 +1,4 @@
+mod mesh;
 mod model;
 mod export;
 
