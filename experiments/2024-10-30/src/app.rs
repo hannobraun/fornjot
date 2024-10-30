@@ -9,7 +9,7 @@ use winit::{
 
 use crate::mesh::Mesh;
 
-pub fn render(_: &Mesh) -> anyhow::Result<()> {
+pub fn run(_: &Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App::default();
