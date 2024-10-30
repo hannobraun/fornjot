@@ -27,9 +27,15 @@ struct App {
 impl ApplicationHandler for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = {
-            let window = event_loop
-                .create_window(WindowAttributes::default())
-                .unwrap();
+            let window =
+                match event_loop.create_window(WindowAttributes::default()) {
+                    Ok(window) => window,
+                    Err(err) => {
+                        eprintln!("Failed to create window: `{err:?}`");
+                        event_loop.exit();
+                        return;
+                    }
+                };
 
             Arc::new(window)
         };
