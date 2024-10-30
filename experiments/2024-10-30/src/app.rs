@@ -31,7 +31,6 @@ impl ApplicationHandler for App {
                 .create_window(WindowAttributes::default())
                 .unwrap(),
         );
-
         let renderer =
             pollster::block_on(Renderer::new(window.clone())).unwrap();
 
