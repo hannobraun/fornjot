@@ -14,6 +14,14 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
         .triangles
         .iter()
         .copied()
+        .map(|triangle| {
+            triangle.map(|index| {
+                index.try_into().expect(
+                    "Converting `u32` to `usize` must work on all platforms \
+                    this software is expected to run on.",
+                )
+            })
+        })
         .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
         .collect();
 
