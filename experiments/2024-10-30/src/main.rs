@@ -6,6 +6,6 @@ mod render;
 fn main() -> anyhow::Result<()> {
     let mesh = model::model()?;
     export::export(&mesh)?;
-    render::render(&mesh);
+    render::render(&mesh)?;
     Ok(())
 }
