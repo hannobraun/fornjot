@@ -3,6 +3,8 @@ use std::sync::Arc;
 use anyhow::anyhow;
 use winit::window::Window;
 
+use crate::mesh::Mesh;
+
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
@@ -37,7 +39,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self) {
+    pub fn render(&self, _: &Mesh) {
         let frame = self.surface.get_current_texture().unwrap();
         let view = frame
             .texture

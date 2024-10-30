@@ -10,10 +10,11 @@ use winit::{
 
 use crate::{mesh::Mesh, render::Renderer};
 
-pub fn run(_: Mesh) -> anyhow::Result<()> {
+pub fn run(mesh: Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
+        mesh,
         window: None,
         renderer: None,
     };
@@ -23,6 +24,7 @@ pub fn run(_: Mesh) -> anyhow::Result<()> {
 }
 
 struct App {
+    mesh: Mesh,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
 }
@@ -67,7 +69,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                renderer.render();
+                renderer.render(&self.mesh);
             }
             _ => {}
         }
