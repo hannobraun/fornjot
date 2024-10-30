@@ -52,12 +52,14 @@ impl ApplicationHandler for App {
             .unwrap();
         surface.configure(&device, &config);
 
-        self.window = Some(window);
-        self.renderer = Some(Renderer {
+        let renderer = Renderer {
             surface,
             device,
             queue,
-        });
+        };
+
+        self.window = Some(window);
+        self.renderer = Some(renderer);
     }
 
     fn window_event(
