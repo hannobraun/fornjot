@@ -10,19 +10,19 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(window: Arc<Window>) -> anyhow::Result<Self> {
+    pub async fn new(window: Arc<Window>) -> anyhow::Result<Self> {
         let instance = wgpu::Instance::default();
         let surface = instance.create_surface(window.clone())?;
-        let adapter = pollster::block_on(instance.request_adapter(
-            &wgpu::RequestAdapterOptions {
+        let adapter = instance
+            .request_adapter(&wgpu::RequestAdapterOptions {
                 compatible_surface: Some(&surface),
                 ..Default::default()
-            },
-        ))
-        .ok_or_else(|| anyhow!("Failed to request adapter"))?;
-        let (device, queue) = pollster::block_on(
-            adapter.request_device(&wgpu::DeviceDescriptor::default(), None),
-        )?;
+            })
+            .await
+            .ok_or_else(|| anyhow!("Failed to request adapter"))?;
+        let (device, queue) = adapter
+            .request_device(&wgpu::DeviceDescriptor::default(), None)
+            .await?;
 
         let size = window.inner_size();
         let config = surface
