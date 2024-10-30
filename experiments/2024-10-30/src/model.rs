@@ -28,8 +28,8 @@ pub fn model() -> anyhow::Result<()> {
     ];
 
     let mesh = Mesh {
-        vertices: vertices.into_iter().collect(),
-        triangles: triangles.into_iter().collect(),
+        vertices,
+        triangles,
     };
 
     export(mesh.vertices, mesh.triangles)?;
