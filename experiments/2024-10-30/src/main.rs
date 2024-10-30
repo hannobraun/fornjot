@@ -10,10 +10,7 @@ fn main() -> anyhow::Result<()> {
         [0.5, -0.5, 0.5],   // 5
         [-0.5, 0.5, 0.5],   // 6
         [0.5, 0.5, 0.5],    // 7
-    ]
-    .into_iter()
-    .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
-    .collect();
+    ];
 
     let triangles = [
         [0, 4, 6], // left
@@ -28,10 +25,26 @@ fn main() -> anyhow::Result<()> {
         [1, 2, 3],
         [4, 5, 7], // top
         [4, 7, 6],
-    ]
-    .into_iter()
-    .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
-    .collect();
+    ];
+
+    export(vertices, triangles)?;
+
+    Ok(())
+}
+
+fn export(
+    vertices: impl IntoIterator<Item = [f64; 3]>,
+    triangles: impl IntoIterator<Item = [usize; 3]>,
+) -> anyhow::Result<()> {
+    let vertices = vertices
+        .into_iter()
+        .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
+        .collect();
+
+    let triangles = triangles
+        .into_iter()
+        .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
+        .collect();
 
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices { vertex: vertices },
