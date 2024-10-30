@@ -41,7 +41,7 @@ impl ApplicationHandler for App {
 
     fn window_event(
         &mut self,
-        _: &ActiveEventLoop,
+        event_loop: &ActiveEventLoop,
         _: WindowId,
         event: WindowEvent,
     ) {
@@ -50,6 +50,9 @@ impl ApplicationHandler for App {
         };
 
         match event {
+            WindowEvent::CloseRequested => {
+                event_loop.exit();
+            }
             WindowEvent::RedrawRequested => {
                 renderer.render();
             }
