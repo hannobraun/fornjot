@@ -3,6 +3,7 @@ mod model;
 mod export;
 
 fn main() -> anyhow::Result<()> {
-    model::model()?;
+    let mesh = model::model()?;
+    export::export(mesh.vertices, mesh.triangles)?;
     Ok(())
 }

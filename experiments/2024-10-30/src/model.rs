@@ -1,6 +1,6 @@
-use crate::{export::export, mesh::Mesh};
+use crate::mesh::Mesh;
 
-pub fn model() -> anyhow::Result<()> {
+pub fn model() -> anyhow::Result<Mesh> {
     let vertices = vec![
         [-0.5, -0.5, -0.5], // 0
         [0.5, -0.5, -0.5],  // 1
@@ -27,12 +27,8 @@ pub fn model() -> anyhow::Result<()> {
         [4, 7, 6],
     ];
 
-    let mesh = Mesh {
+    Ok(Mesh {
         vertices,
         triangles,
-    };
-
-    export(mesh.vertices, mesh.triangles)?;
-
-    Ok(())
+    })
 }
