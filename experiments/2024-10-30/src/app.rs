@@ -51,30 +51,7 @@ impl ApplicationHandler for App {
 
         match event {
             WindowEvent::RedrawRequested => {
-                let frame = renderer.surface.get_current_texture().unwrap();
-                let view = frame
-                    .texture
-                    .create_view(&wgpu::TextureViewDescriptor::default());
-                let mut encoder = renderer.device.create_command_encoder(
-                    &wgpu::CommandEncoderDescriptor::default(),
-                );
-
-                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    color_attachments: &[Some(
-                        wgpu::RenderPassColorAttachment {
-                            view: &view,
-                            resolve_target: None,
-                            ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                                store: wgpu::StoreOp::Store,
-                            },
-                        },
-                    )],
-                    ..Default::default()
-                });
-
-                renderer.queue.submit(Some(encoder.finish()));
-                frame.present();
+                renderer.render();
             }
             _ => {}
         }
