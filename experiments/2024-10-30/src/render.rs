@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use anyhow::anyhow;
+use wgpu::util::DeviceExt;
 use winit::window::Window;
 
 use crate::mesh::Mesh;
@@ -9,6 +10,7 @@ pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
+    pub pipeline: wgpu::RenderPipeline,
 }
 
 impl Renderer {
@@ -40,14 +42,65 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &config);
 
+        let pipeline = {
+            let layout = device.create_pipeline_layout(
+                &wgpu::PipelineLayoutDescriptor {
+                    label: None,
+                    bind_group_layouts: &[],
+                    push_constant_ranges: &[],
+                },
+            );
+
+            let shader =
+                device.create_shader_module(wgpu::include_wgsl!("shader.wgsl"));
+
+            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: None,
+                layout: Some(&layout),
+                vertex: wgpu::VertexState {
+                    module: &shader,
+                    entry_point: "vertex",
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
+                    buffers: &[wgpu::VertexBufferLayout {
+                        array_stride: size_of::<[f32; 3]>()
+                            as wgpu::BufferAddress,
+                        step_mode: wgpu::VertexStepMode::Vertex,
+                        attributes: &[wgpu::VertexAttribute {
+                            format: wgpu::VertexFormat::Float32x3,
+                            offset: 0,
+                            shader_location: 0,
+                        }],
+                    }],
+                },
+                fragment: Some(wgpu::FragmentState {
+                    module: &shader,
+                    entry_point: "fragment",
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
+                    targets: &[Some(wgpu::ColorTargetState {
+                        format: config.format,
+                        blend: Some(wgpu::BlendState::REPLACE),
+                        write_mask: wgpu::ColorWrites::all(),
+                    })],
+                }),
+                primitive: wgpu::PrimitiveState::default(),
+                depth_stencil: None,
+                multisample: wgpu::MultisampleState::default(),
+                multiview: None,
+                cache: None,
+            })
+        };
+
         Ok(Self {
             surface,
             device,
             queue,
+            pipeline,
         })
     }
 
-    pub fn render(&self, _: &Mesh) {
+    pub fn render(&self, mesh: &Mesh) {
         let frame = self.surface.get_current_texture().unwrap();
         let view = frame
             .texture
@@ -56,18 +109,48 @@ impl Renderer {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
+        let index_buffer =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: None,
+                    contents: bytemuck::cast_slice(&mesh.triangles),
+                    usage: wgpu::BufferUsages::INDEX,
+                });
+        let vertex_buffer =
+            self.device
+                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                    label: None,
+                    contents: bytemuck::cast_slice(&mesh.vertices),
+                    usage: wgpu::BufferUsages::VERTEX,
+                });
+
         {
-            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                        store: wgpu::StoreOp::Store,
-                    },
-                })],
-                ..Default::default()
-            });
+            let mut render_pass =
+                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    color_attachments: &[Some(
+                        wgpu::RenderPassColorAttachment {
+                            view: &view,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                                store: wgpu::StoreOp::Store,
+                            },
+                        },
+                    )],
+                    ..Default::default()
+                });
+
+            render_pass.set_index_buffer(
+                index_buffer.slice(..),
+                wgpu::IndexFormat::Uint32,
+            );
+            render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
+            render_pass.set_pipeline(&self.pipeline);
+            render_pass.draw_indexed(
+                0..mesh.triangles.len() as u32 * 3,
+                0,
+                0..1,
+            );
         }
 
         self.queue.submit(Some(encoder.finish()));
