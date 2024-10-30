@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "*"
+pollster = "*"
 threemf = "*"
 wgpu = "*"
 winit = "*"
