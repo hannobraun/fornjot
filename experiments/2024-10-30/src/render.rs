@@ -12,12 +12,13 @@ use crate::mesh::Mesh;
 pub fn render(_: &Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
-    let mut app = App { window: None };
+    let mut app = App::default();
     event_loop.run_app(&mut app)?;
 
     Ok(())
 }
 
+#[derive(Default)]
 struct App {
     window: Option<Arc<Window>>,
 }
