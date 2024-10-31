@@ -162,8 +162,10 @@ impl Renderer {
         let mut vertices = Vec::new();
 
         for triangle in mesh.triangles() {
-            for vertex in triangle.map(|index| mesh.vertices()[index as usize])
-            {
+            let triangle =
+                triangle.map(|index| mesh.vertices()[index as usize]);
+
+            for vertex in triangle {
                 let index = vertices.len() as u32;
                 let vertex = Vertex { position: vertex };
 
