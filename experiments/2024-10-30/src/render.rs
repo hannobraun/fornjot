@@ -46,12 +46,7 @@ impl Renderer {
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(&[
-                    [1.0f32, 0., 0., 0.],
-                    [0., 1., 0., 0.],
-                    [0., 0., 1., 0.],
-                    [0., 0., 0., 1.],
-                ]),
+                contents: bytemuck::cast_slice(&Mat4x4::identity().columns),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
@@ -200,5 +195,22 @@ impl Renderer {
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
+    }
+}
+
+struct Mat4x4 {
+    columns: [[f32; 4]; 4],
+}
+
+impl Mat4x4 {
+    pub fn identity() -> Self {
+        Self {
+            columns: [
+                [1.0f32, 0., 0., 0.],
+                [0., 1., 0., 0.],
+                [0., 0., 1., 0.],
+                [0., 0., 0., 1.],
+            ],
+        }
     }
 }
