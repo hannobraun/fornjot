@@ -217,6 +217,7 @@ impl Mat4x4 {
         Self::perspective()
             * Self::translation([0., 0., -2.])
             * Self::rotation_x(PI / 4.)
+            * Self::rotation_z(PI / 4.)
     }
 
     pub fn perspective() -> Self {
@@ -259,6 +260,19 @@ impl Mat4x4 {
                 [1., 0., 0., 0.],
                 [0., cos, -sin, 0.],
                 [0., sin, cos, 0.],
+                [0., 0., 0., 1.],
+            ],
+        }
+    }
+
+    pub fn rotation_z(angle: f32) -> Self {
+        let (sin, cos) = angle.sin_cos();
+
+        Self {
+            columns: [
+                [cos, -sin, 0., 0.],
+                [sin, cos, 0., 0.],
+                [0., 0., 1., 0.],
                 [0., 0., 0., 1.],
             ],
         }
