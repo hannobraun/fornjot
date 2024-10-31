@@ -2,11 +2,11 @@
 var<uniform> transform: mat4x4<f32>;
 
 struct VertexInput {
-    @location(0) position: vec3<f32>
+    @location(0) position: vec3<f32>,
 }
 
 struct VertexOutput {
-    @builtin(position) position: vec4<f32>
+    @builtin(position) position: vec4<f32>,
 }
 
 @vertex
