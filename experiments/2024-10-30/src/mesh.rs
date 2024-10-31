@@ -9,6 +9,10 @@ impl Mesh {
         &self.vertices
     }
 
+    pub fn triangles(&self) -> &[[u32; 3]] {
+        &self.triangles
+    }
+
     pub fn push_vertex(&mut self, vertex: [f32; 3]) {
         self.vertices.push(vertex);
     }

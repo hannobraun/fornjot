@@ -12,7 +12,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
         .collect();
 
     let triangles = mesh
-        .triangles
+        .triangles()
         .iter()
         .copied()
         .map(|triangle| {

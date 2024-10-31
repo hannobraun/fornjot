@@ -162,7 +162,7 @@ impl Renderer {
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: None,
-                    contents: bytemuck::cast_slice(&mesh.triangles),
+                    contents: bytemuck::cast_slice(&mesh.triangles()),
                     usage: wgpu::BufferUsages::INDEX,
                 });
         let vertex_buffer =
@@ -197,7 +197,7 @@ impl Renderer {
             render_pass.set_pipeline(&self.pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.draw_indexed(
-                0..mesh.triangles.len() as u32 * 3,
+                0..mesh.triangles().len() as u32 * 3,
                 0,
                 0..1,
             );
