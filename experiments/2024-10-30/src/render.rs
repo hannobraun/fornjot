@@ -166,10 +166,10 @@ impl Renderer {
                 coords: mesh.vertices()[index as usize],
             });
 
-            for vertex in triangle {
+            for point in triangle {
                 let index = vertices.len() as u32;
                 let vertex = Vertex {
-                    position: vertex.coords,
+                    position: point.coords,
                 };
 
                 indices.push(index);
