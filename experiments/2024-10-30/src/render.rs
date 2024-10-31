@@ -46,7 +46,7 @@ impl Renderer {
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(&Mat4x4::identity().columns),
+                contents: bytemuck::cast_slice(&Mat4x4::perspective().columns),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
@@ -211,7 +211,7 @@ struct Mat4x4 {
 }
 
 impl Mat4x4 {
-    pub fn identity() -> Self {
+    pub fn perspective() -> Self {
         let fov_y_radians = std::f32::consts::PI / 2.;
         let aspect_ratio = 1.;
         let z_near = 0.;
