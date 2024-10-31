@@ -165,6 +165,7 @@ impl Renderer {
             for vertex in triangle.map(|index| mesh.vertices()[index as usize])
             {
                 let index = vertices.len() as u32;
+                let vertex = Vertex { position: vertex };
 
                 indices.push(index);
                 vertices.push(vertex);
@@ -330,4 +331,10 @@ impl Mul<Self> for Mat4x4 {
             ],
         }
     }
+}
+
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(C)]
+pub struct Vertex {
+    pub position: [f32; 3],
 }
