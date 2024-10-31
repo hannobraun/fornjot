@@ -97,11 +97,19 @@ impl Renderer {
                             array_stride: size_of::<Vertex>()
                                 as wgpu::BufferAddress,
                             step_mode: wgpu::VertexStepMode::Vertex,
-                            attributes: &[wgpu::VertexAttribute {
-                                format: wgpu::VertexFormat::Float32x3,
-                                offset: 0,
-                                shader_location: 0,
-                            }],
+                            attributes: &[
+                                wgpu::VertexAttribute {
+                                    format: wgpu::VertexFormat::Float32x3,
+                                    offset: 0,
+                                    shader_location: 0,
+                                },
+                                wgpu::VertexAttribute {
+                                    format: wgpu::VertexFormat::Float32x3,
+                                    offset: size_of::<[f32; 3]>()
+                                        as wgpu::BufferAddress,
+                                    shader_location: 1,
+                                },
+                            ],
                         }],
                     },
                     fragment: Some(wgpu::FragmentState {
@@ -169,11 +177,26 @@ impl Renderer {
             let triangle = triangle.map(|index| Point {
                 coords: mesh.vertices()[index as usize],
             });
+            let normal = {
+                let [a, b, c] = triangle;
+
+                let ab = b - a;
+                let ac = c - a;
+
+                Vector {
+                    coords: [
+                        ab.y() * ac.z() - ab.z() * ac.y(),
+                        ab.z() * ac.x() - ab.x() * ac.z(),
+                        ab.x() * ac.y() - ab.z() * ac.x(),
+                    ],
+                }
+            };
 
             for point in triangle {
                 let index = vertices.len() as u32;
                 let vertex = Vertex {
                     position: point.coords,
+                    normal: normal.coords,
                 };
 
                 indices.push(index);
@@ -365,8 +388,23 @@ pub struct Vector {
     pub coords: [f32; 3],
 }
 
+impl Vector {
+    pub fn x(&self) -> f32 {
+        self.coords[0]
+    }
+
+    pub fn y(&self) -> f32 {
+        self.coords[1]
+    }
+
+    pub fn z(&self) -> f32 {
+        self.coords[2]
+    }
+}
+
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
 pub struct Vertex {
     pub position: [f32; 3],
+    pub normal: [f32; 3],
 }
