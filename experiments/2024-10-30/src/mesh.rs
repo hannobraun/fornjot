@@ -5,6 +5,10 @@ pub struct Mesh {
 }
 
 impl Mesh {
+    pub fn vertices(&self) -> &[[f32; 3]] {
+        &self.vertices
+    }
+
     pub fn push_vertex(&mut self, vertex: [f32; 3]) {
         self.vertices.push(vertex);
     }

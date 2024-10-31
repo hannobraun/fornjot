@@ -4,7 +4,7 @@ use crate::mesh::Mesh;
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh
-        .vertices
+        .vertices()
         .iter()
         .copied()
         .map(|vertex| vertex.map(Into::into))
