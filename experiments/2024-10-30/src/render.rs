@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{ops::Mul, sync::Arc};
 
 use anyhow::anyhow;
 use wgpu::util::DeviceExt;
@@ -234,6 +234,46 @@ impl Mat4x4 {
                 [0., h, 0., 0.],
                 [0., 0., r, -1.],
                 [0., 0., r * z_near, 0.],
+            ],
+        }
+    }
+}
+
+impl Mul<Self> for Mat4x4 {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        let [[l00, l01, l02, l03], [l10, l11, l12, l13], [l20, l21, l22, l23], [l30, l31, l32, l33]] =
+            self.columns;
+        let [[r00, r01, r02, r03], [r10, r11, r12, r13], [r20, r21, r22, r23], [r30, r31, r32, r33]] =
+            rhs.columns;
+
+        let m00 = l00 * r00 + l10 * r01 + l20 * r02 + l30 * r03;
+        let m01 = l01 * r00 + l11 * r01 + l21 * r02 + l31 * r03;
+        let m02 = l02 * r00 + l12 * r01 + l22 * r02 + l32 * r03;
+        let m03 = l03 * r00 + l13 * r01 + l23 * r02 + l33 * r03;
+
+        let m10 = l00 * r10 + l10 * r11 + l20 * r12 + l30 * r13;
+        let m11 = l01 * r10 + l11 * r11 + l21 * r12 + l31 * r13;
+        let m12 = l02 * r10 + l12 * r11 + l22 * r12 + l32 * r13;
+        let m13 = l03 * r10 + l13 * r11 + l23 * r12 + l33 * r13;
+
+        let m20 = l00 * r20 + l10 * r21 + l20 * r22 + l30 * r23;
+        let m21 = l01 * r20 + l11 * r21 + l21 * r22 + l31 * r23;
+        let m22 = l02 * r20 + l12 * r21 + l22 * r22 + l32 * r23;
+        let m23 = l03 * r20 + l13 * r21 + l23 * r22 + l33 * r23;
+
+        let m30 = l00 * r30 + l10 * r31 + l20 * r32 + l30 * r33;
+        let m31 = l01 * r30 + l11 * r31 + l21 * r32 + l31 * r33;
+        let m32 = l02 * r30 + l12 * r31 + l22 * r32 + l32 * r33;
+        let m33 = l03 * r30 + l13 * r31 + l23 * r32 + l33 * r33;
+
+        Self {
+            columns: [
+                [m00, m01, m02, m03],
+                [m10, m11, m12, m13],
+                [m20, m21, m22, m23],
+                [m30, m31, m32, m33],
             ],
         }
     }
