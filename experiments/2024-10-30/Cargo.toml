@@ -13,3 +13,4 @@ winit = "*"
 
 [dependencies.bytemuck]
 version = "*"
+features = ["derive"]
