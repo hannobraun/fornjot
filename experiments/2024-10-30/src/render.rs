@@ -215,7 +215,7 @@ struct Mat4x4 {
 impl Mat4x4 {
     pub fn default_transform() -> Self {
         Self::perspective()
-            * Self::translation([0., 0., -1.])
+            * Self::translation([0., 0., -2.])
             * Self::rotation_x(PI / 4.)
     }
 
