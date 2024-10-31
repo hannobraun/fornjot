@@ -164,7 +164,9 @@ impl Renderer {
         for triangle in mesh.triangles() {
             for vertex in triangle.map(|index| mesh.vertices()[index as usize])
             {
-                indices.push(vertices.len() as u32);
+                let index = vertices.len() as u32;
+
+                indices.push(index);
                 vertices.push(vertex);
             }
         }
