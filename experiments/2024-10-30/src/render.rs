@@ -212,12 +212,22 @@ struct Mat4x4 {
 
 impl Mat4x4 {
     pub fn identity() -> Self {
+        let fov_y_radians = std::f32::consts::PI / 2.;
+        let aspect_ratio = 1.;
+        let z_near = 0.;
+        let z_far = 10.;
+
+        let (sin_fov, cos_fov) = (fov_y_radians * 0.5).sin_cos();
+        let h = cos_fov / sin_fov;
+        let w = h / aspect_ratio;
+        let r = z_far / (z_near - z_far);
+
         Self {
             columns: [
-                [1., 0., 0., 0.],
-                [0., 1., 0., 0.],
-                [0., 0., 1., 0.],
-                [0., 0., 0., 1.],
+                [w, 0., 0., 0.],
+                [0., h, 0., 0.],
+                [0., 0., r, -1.],
+                [0., 0., r * z_near, 0.],
             ],
         }
     }
