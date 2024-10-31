@@ -162,12 +162,15 @@ impl Renderer {
         let mut vertices = Vec::new();
 
         for triangle in mesh.triangles() {
-            let triangle =
-                triangle.map(|index| mesh.vertices()[index as usize]);
+            let triangle = triangle.map(|index| Point {
+                coords: mesh.vertices()[index as usize],
+            });
 
             for vertex in triangle {
                 let index = vertices.len() as u32;
-                let vertex = Vertex { position: vertex };
+                let vertex = Vertex {
+                    position: vertex.coords,
+                };
 
                 indices.push(index);
                 vertices.push(vertex);
@@ -333,6 +336,10 @@ impl Mul<Self> for Mat4x4 {
             ],
         }
     }
+}
+
+pub struct Point {
+    pub coords: [f32; 3],
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
