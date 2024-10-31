@@ -13,7 +13,7 @@ pub fn model() -> anyhow::Result<Mesh> {
         [-0.5, 0.5, 0.5],   // 6
         [0.5, 0.5, 0.5],    // 7
     ]
-    .map(|vertex| mesh.vertices.push(vertex));
+    .map(|vertex| mesh.push_vertex(vertex));
 
     [
         [0, 4, 6], // left
