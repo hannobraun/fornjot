@@ -220,7 +220,7 @@ impl Mat4x4 {
     pub fn perspective() -> Self {
         let fov_y_radians = std::f32::consts::PI / 2.;
         let aspect_ratio = 1.;
-        let z_near = 0.;
+        let z_near = 0.1;
         let z_far = 10.;
 
         let (sin_fov, cos_fov) = (fov_y_radians * 0.5).sin_cos();
