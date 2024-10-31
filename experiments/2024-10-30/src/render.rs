@@ -214,7 +214,7 @@ struct Mat4x4 {
 
 impl Mat4x4 {
     pub fn default_transform() -> Self {
-        Self::perspective()
+        Self::perspective() * Self::translation([0., 0., -1.])
     }
 
     pub fn perspective() -> Self {
@@ -234,6 +234,17 @@ impl Mat4x4 {
                 [0., h, 0., 0.],
                 [0., 0., r, -1.],
                 [0., 0., r * z_near, 0.],
+            ],
+        }
+    }
+
+    pub fn translation([x, y, z]: [f32; 3]) -> Self {
+        Self {
+            columns: [
+                [1., 0., 0., 0.],
+                [0., 1., 0., 0.],
+                [0., 0., 1., 0.],
+                [x, y, z, 1.],
             ],
         }
     }
