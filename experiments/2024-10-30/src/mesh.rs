@@ -1,7 +1,7 @@
 #[derive(Default)]
 pub struct Mesh {
     vertices: Vec<[f32; 3]>,
-    pub triangles: Vec<[u32; 3]>,
+    triangles: Vec<[u32; 3]>,
 }
 
 impl Mesh {
