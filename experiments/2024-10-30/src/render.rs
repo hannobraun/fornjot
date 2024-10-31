@@ -1,4 +1,8 @@
-use std::{f32::consts::PI, ops::Mul, sync::Arc};
+use std::{
+    f32::consts::PI,
+    ops::{Mul, Sub},
+    sync::Arc,
+};
 
 use anyhow::anyhow;
 use wgpu::util::DeviceExt;
@@ -340,6 +344,24 @@ impl Mul<Self> for Mat4x4 {
 
 #[derive(Clone, Copy)]
 pub struct Point {
+    pub coords: [f32; 3],
+}
+
+impl Sub for Point {
+    type Output = Vector;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let [a_x, a_y, a_z] = self.coords;
+        let [b_x, b_y, b_z] = rhs.coords;
+
+        Vector {
+            coords: [a_x - b_x, a_y - b_y, a_z - b_z],
+        }
+    }
+}
+
+pub struct Vector {
+    #[allow(unused)]
     pub coords: [f32; 3],
 }
 
