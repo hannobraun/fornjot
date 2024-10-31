@@ -46,7 +46,9 @@ impl Renderer {
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(&Mat4x4::perspective().columns),
+                contents: bytemuck::cast_slice(
+                    &Mat4x4::default_transform().columns,
+                ),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
@@ -211,6 +213,10 @@ struct Mat4x4 {
 }
 
 impl Mat4x4 {
+    pub fn default_transform() -> Self {
+        Self::perspective()
+    }
+
     pub fn perspective() -> Self {
         let fov_y_radians = std::f32::consts::PI / 2.;
         let aspect_ratio = 1.;
