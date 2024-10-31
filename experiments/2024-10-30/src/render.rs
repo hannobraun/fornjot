@@ -158,18 +158,29 @@ impl Renderer {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
+        let mut indices = Vec::new();
+        let mut vertices = Vec::new();
+
+        for triangle in mesh.triangles() {
+            for vertex in triangle.map(|index| mesh.vertices()[index as usize])
+            {
+                indices.push(vertices.len() as u32);
+                vertices.push(vertex);
+            }
+        }
+
         let index_buffer =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: None,
-                    contents: bytemuck::cast_slice(&mesh.triangles()),
+                    contents: bytemuck::cast_slice(&indices),
                     usage: wgpu::BufferUsages::INDEX,
                 });
         let vertex_buffer =
             self.device
                 .create_buffer_init(&wgpu::util::BufferInitDescriptor {
                     label: None,
-                    contents: bytemuck::cast_slice(&mesh.vertices()),
+                    contents: bytemuck::cast_slice(&vertices),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
 
