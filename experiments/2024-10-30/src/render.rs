@@ -94,7 +94,7 @@ impl Renderer {
                         compilation_options:
                             wgpu::PipelineCompilationOptions::default(),
                         buffers: &[wgpu::VertexBufferLayout {
-                            array_stride: size_of::<[f32; 3]>()
+                            array_stride: size_of::<Vertex>()
                                 as wgpu::BufferAddress,
                             step_mode: wgpu::VertexStepMode::Vertex,
                             attributes: &[wgpu::VertexAttribute {
