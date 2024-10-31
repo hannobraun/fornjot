@@ -338,6 +338,7 @@ impl Mul<Self> for Mat4x4 {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct Point {
     pub coords: [f32; 3],
 }
