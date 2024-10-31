@@ -384,7 +384,6 @@ impl Sub for Point {
 }
 
 pub struct Vector {
-    #[allow(unused)]
     pub coords: [f32; 3],
 }
 
