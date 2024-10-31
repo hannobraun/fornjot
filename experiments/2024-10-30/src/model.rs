@@ -29,7 +29,7 @@ pub fn model() -> anyhow::Result<Mesh> {
         [4, 5, 7], // top
         [4, 7, 6],
     ]
-    .map(|triangle| mesh.triangles.push(triangle));
+    .map(|triangle| mesh.push_triangle(triangle));
 
     Ok(mesh)
 }
