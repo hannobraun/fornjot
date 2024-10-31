@@ -1,4 +1,4 @@
-use std::{ops::Mul, sync::Arc};
+use std::{f32::consts::PI, ops::Mul, sync::Arc};
 
 use anyhow::anyhow;
 use wgpu::util::DeviceExt;
@@ -214,7 +214,9 @@ struct Mat4x4 {
 
 impl Mat4x4 {
     pub fn default_transform() -> Self {
-        Self::perspective() * Self::translation([0., 0., -1.])
+        Self::perspective()
+            * Self::translation([0., 0., -1.])
+            * Self::rotation_x(PI / 4.)
     }
 
     pub fn perspective() -> Self {
@@ -245,6 +247,19 @@ impl Mat4x4 {
                 [0., 1., 0., 0.],
                 [0., 0., 1., 0.],
                 [x, y, z, 1.],
+            ],
+        }
+    }
+
+    pub fn rotation_x(angle: f32) -> Self {
+        let (sin, cos) = angle.sin_cos();
+
+        Self {
+            columns: [
+                [1., 0., 0., 0.],
+                [0., cos, -sin, 0.],
+                [0., sin, cos, 0.],
+                [0., 0., 0., 1.],
             ],
         }
     }
