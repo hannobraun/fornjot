@@ -169,20 +169,18 @@ impl Renderer {
                 let ab = b - a;
                 let ac = c - a;
 
-                Vector {
-                    coords: [
-                        ab.y * ac.z - ab.z * ac.y,
-                        ab.z * ac.x - ab.x * ac.z,
-                        ab.x * ac.y - ab.z * ac.x,
-                    ],
-                }
+                Vec3::new(
+                    ab.y * ac.z - ab.z * ac.y,
+                    ab.z * ac.x - ab.x * ac.z,
+                    ab.x * ac.y - ab.z * ac.x,
+                )
             };
 
             for point in triangle {
                 let index = vertices.len() as u32;
                 let vertex = Vertex {
                     position: point.coords,
-                    normal: normal.coords,
+                    normal: normal.into(),
                 };
 
                 indices.push(index);
@@ -266,10 +264,6 @@ impl Sub for Point {
 
         Vec3::new(a_x - b_x, a_y - b_y, a_z - b_z)
     }
-}
-
-pub struct Vector {
-    pub coords: [f32; 3],
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
