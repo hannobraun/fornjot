@@ -200,11 +200,7 @@ impl Renderer {
                 let ab = b - a;
                 let ac = c - a;
 
-                Vec3::new(
-                    ab.y * ac.z - ab.z * ac.y,
-                    ab.z * ac.x - ab.x * ac.z,
-                    ab.x * ac.y - ab.z * ac.x,
-                )
+                ab.cross(ac)
             };
 
             for point in triangle {
