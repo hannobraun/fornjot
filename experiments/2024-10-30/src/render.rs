@@ -47,7 +47,7 @@ impl Renderer {
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(&[default_transform()]),
+                contents: bytemuck::cast_slice(&[Uniforms::default()]),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
@@ -234,6 +234,19 @@ impl Renderer {
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
+    }
+}
+
+#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(C)]
+pub struct Uniforms {
+    pub transform: Mat4,
+}
+
+impl Default for Uniforms {
+    fn default() -> Self {
+        let transform = default_transform();
+        Self { transform }
     }
 }
 
