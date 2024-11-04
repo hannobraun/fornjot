@@ -45,7 +45,7 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &config);
 
-        let aspect_ratio = 1.;
+        let aspect_ratio = size.width as f32 / size.height as f32;
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
