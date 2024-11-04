@@ -90,7 +90,7 @@ impl Renderer {
                     layout: Some(&layout),
                     vertex: wgpu::VertexState {
                         module: &shader,
-                        entry_point: "vertex",
+                        entry_point: Some("vertex"),
                         compilation_options:
                             wgpu::PipelineCompilationOptions::default(),
                         buffers: &[wgpu::VertexBufferLayout {
@@ -105,7 +105,7 @@ impl Renderer {
                     },
                     fragment: Some(wgpu::FragmentState {
                         module: &shader,
-                        entry_point: "fragment",
+                        entry_point: Some("fragment"),
                         compilation_options:
                             wgpu::PipelineCompilationOptions::default(),
                         targets: &[Some(wgpu::ColorTargetState {
