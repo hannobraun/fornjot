@@ -285,14 +285,21 @@ pub struct Uniforms {
     pub transform_for_normals: Mat4,
 }
 
-impl Default for Uniforms {
-    fn default() -> Self {
-        let transform = default_transform();
+impl Uniforms {
+    pub fn from_transform(transform: Mat4) -> Self {
         let transform_for_normals = transform.inverse().transpose();
+
         Self {
             transform,
             transform_for_normals,
         }
+    }
+}
+
+impl Default for Uniforms {
+    fn default() -> Self {
+        let transform = default_transform();
+        Self::from_transform(transform)
     }
 }
 
