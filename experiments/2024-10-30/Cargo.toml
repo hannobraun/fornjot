@@ -17,3 +17,4 @@ features = ["derive"]
 
 [dependencies.glam]
 version = "*"
+features = ["bytemuck"]
