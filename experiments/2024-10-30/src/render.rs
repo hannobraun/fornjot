@@ -171,9 +171,9 @@ impl Renderer {
 
                 Vector {
                     coords: [
-                        ab.y() * ac.z() - ab.z() * ac.y(),
-                        ab.z() * ac.x() - ab.x() * ac.z(),
-                        ab.x() * ac.y() - ab.z() * ac.x(),
+                        ab.y * ac.z - ab.z * ac.y,
+                        ab.z * ac.x - ab.x * ac.z,
+                        ab.x * ac.y - ab.z * ac.x,
                     ],
                 }
             };
@@ -258,34 +258,18 @@ pub struct Point {
 }
 
 impl Sub for Point {
-    type Output = Vector;
+    type Output = Vec3;
 
     fn sub(self, rhs: Self) -> Self::Output {
         let [a_x, a_y, a_z] = self.coords;
         let [b_x, b_y, b_z] = rhs.coords;
 
-        Vector {
-            coords: [a_x - b_x, a_y - b_y, a_z - b_z],
-        }
+        Vec3::new(a_x - b_x, a_y - b_y, a_z - b_z)
     }
 }
 
 pub struct Vector {
     pub coords: [f32; 3],
-}
-
-impl Vector {
-    pub fn x(&self) -> f32 {
-        self.coords[0]
-    }
-
-    pub fn y(&self) -> f32 {
-        self.coords[1]
-    }
-
-    pub fn z(&self) -> f32 {
-        self.coords[2]
-    }
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
