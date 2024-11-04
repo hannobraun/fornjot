@@ -205,6 +205,7 @@ impl Renderer {
         {
             let mut render_pass =
                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: None,
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
                             view: &view,
@@ -215,7 +216,9 @@ impl Renderer {
                             },
                         },
                     )],
-                    ..Default::default()
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
                 });
 
             render_pass.set_index_buffer(
