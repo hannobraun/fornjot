@@ -298,8 +298,7 @@ impl Uniforms {
 
 impl Default for Uniforms {
     fn default() -> Self {
-        let transform = default_transform();
-        Self::from_transform(transform)
+        Self::from_transform(default_transform())
     }
 }
 
