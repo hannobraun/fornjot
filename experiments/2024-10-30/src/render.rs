@@ -1,4 +1,4 @@
-use std::{f32::consts::PI, ops::Sub, sync::Arc};
+use std::{f32::consts::PI, sync::Arc};
 
 use anyhow::anyhow;
 use glam::{Mat4, Vec3};
@@ -160,9 +160,8 @@ impl Renderer {
         let mut vertices = Vec::new();
 
         for triangle in mesh.triangles() {
-            let triangle = triangle.map(|index| Point {
-                coords: mesh.vertices()[index as usize],
-            });
+            let triangle = triangle
+                .map(|index| Vec3::from(mesh.vertices()[index as usize]));
             let normal = {
                 let [a, b, c] = triangle;
 
@@ -179,7 +178,7 @@ impl Renderer {
             for point in triangle {
                 let index = vertices.len() as u32;
                 let vertex = Vertex {
-                    position: point.coords,
+                    position: point.into(),
                     normal: normal.into(),
                 };
 
@@ -248,22 +247,6 @@ fn default_transform() -> Mat4 {
         * Mat4::from_translation(Vec3::new(0., 0., -2.))
         * Mat4::from_rotation_x(-PI / 4.)
         * Mat4::from_rotation_z(PI / 4.)
-}
-
-#[derive(Clone, Copy)]
-pub struct Point {
-    pub coords: [f32; 3],
-}
-
-impl Sub for Point {
-    type Output = Vec3;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        let [a_x, a_y, a_z] = self.coords;
-        let [b_x, b_y, b_z] = rhs.coords;
-
-        Vec3::new(a_x - b_x, a_y - b_y, a_z - b_z)
-    }
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
