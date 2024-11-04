@@ -45,11 +45,12 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &config);
 
+        let aspect_ratio = 1.;
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(&[Uniforms::from_transform(
-                    default_transform(),
+                    default_transform(aspect_ratio),
                 )]),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
@@ -298,9 +299,8 @@ impl Uniforms {
     }
 }
 
-fn default_transform() -> Mat4 {
+fn default_transform(aspect_ratio: f32) -> Mat4 {
     let fov_y_radians = std::f32::consts::PI / 2.;
-    let aspect_ratio = 1.;
     let z_near = 0.1;
     let z_far = 10.;
 
