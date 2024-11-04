@@ -241,12 +241,17 @@ impl Renderer {
 #[repr(C)]
 pub struct Uniforms {
     pub transform: Mat4,
+    pub transform_for_normals: Mat4,
 }
 
 impl Default for Uniforms {
     fn default() -> Self {
         let transform = default_transform();
-        Self { transform }
+        let transform_for_normals = transform.inverse().transpose();
+        Self {
+            transform,
+            transform_for_normals,
+        }
     }
 }
 

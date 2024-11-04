@@ -1,5 +1,6 @@
 struct Uniforms {
     transform: mat4x4<f32>,
+    transform_for_normals: mat4x4<f32>,
 };
 
 @group(0) @binding(0)
