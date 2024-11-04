@@ -13,12 +13,15 @@ struct VertexInput {
 
 struct VertexOutput {
     @builtin(position) position: vec4<f32>,
+    @location(0) normal: vec4<f32>,
 }
 
 @vertex
 fn vertex(in: VertexInput) -> VertexOutput {
     var out: VertexOutput;
     out.position = uniforms.transform * vec4(in.position, 1.0);
+    out.normal = uniforms.transform_for_normals * vec4(in.normal, 0.0);
+
     return out;
 }
 
