@@ -48,7 +48,9 @@ impl Renderer {
         let transform_buffer =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
-                contents: bytemuck::cast_slice(&[Uniforms::default()]),
+                contents: bytemuck::cast_slice(&[Uniforms::from_transform(
+                    default_transform(),
+                )]),
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
@@ -293,12 +295,6 @@ impl Uniforms {
             transform,
             transform_for_normals,
         }
-    }
-}
-
-impl Default for Uniforms {
-    fn default() -> Self {
-        Self::from_transform(default_transform())
     }
 }
 
