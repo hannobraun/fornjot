@@ -149,7 +149,7 @@ impl Renderer {
 
     pub fn render(&self, mesh: &Mesh) {
         let frame = self.surface.get_current_texture().unwrap();
-        let view = frame
+        let frame_view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = self
@@ -208,7 +208,7 @@ impl Renderer {
                     label: None,
                     color_attachments: &[Some(
                         wgpu::RenderPassColorAttachment {
-                            view: &view,
+                            view: &frame_view,
                             resolve_target: None,
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
