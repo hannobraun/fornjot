@@ -1,4 +1,4 @@
-use crate::geometry::Mesh;
+use crate::geometry::{Mesh, Vertex};
 
 pub fn model() -> anyhow::Result<Mesh> {
     let mut mesh = Mesh::default();
@@ -13,7 +13,7 @@ pub fn model() -> anyhow::Result<Mesh> {
         [-0.5, 0.5, 0.5],   // 6
         [0.5, 0.5, 0.5],    // 7
     ]
-    .map(|vertex| mesh.push_vertex(vertex));
+    .map(|vertex| mesh.push_vertex(Vertex { point: vertex }));
 
     [
         [0, 4, 6], // left

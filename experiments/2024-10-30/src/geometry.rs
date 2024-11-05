@@ -22,6 +22,10 @@ impl Mesh {
     }
 }
 
-pub type Vertex = [f32; 3];
+#[derive(Clone, Copy)]
+pub struct Vertex {
+    pub point: [f32; 3],
+}
+
 pub type Index = u32;
 pub type Triangle = [Index; 3];

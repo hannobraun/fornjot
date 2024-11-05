@@ -193,7 +193,7 @@ impl Renderer {
 
         for triangle in mesh.triangles() {
             let triangle = triangle
-                .map(|index| Vec3::from(mesh.vertices()[index as usize]));
+                .map(|index| Vec3::from(mesh.vertices()[index as usize].point));
             let normal = {
                 let [a, b, c] = triangle;
 

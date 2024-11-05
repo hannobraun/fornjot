@@ -7,7 +7,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
         .vertices()
         .iter()
         .copied()
-        .map(|vertex| vertex.map(Into::into))
+        .map(|vertex| vertex.point.map(Into::into))
         .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
         .collect();
 
