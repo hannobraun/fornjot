@@ -8,7 +8,8 @@ pub struct Mesh {
 
 impl Mesh {
     pub fn vertex(&mut self, point: Point) {
-        self.vertices.push(Vertex { point });
+        let vertex = Vertex { point };
+        self.vertices.push(vertex);
     }
 
     pub fn triangle(&mut self, triangle: Triangle) {
