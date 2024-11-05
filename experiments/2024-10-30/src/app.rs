@@ -8,7 +8,7 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{mesh::Mesh, render::Renderer};
+use crate::{geometry::Mesh, render::Renderer};
 
 pub fn run(mesh: Mesh) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;

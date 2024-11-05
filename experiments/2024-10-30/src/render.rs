@@ -5,7 +5,7 @@ use glam::{Mat4, Vec3};
 use wgpu::util::DeviceExt;
 use winit::window::Window;
 
-use crate::mesh::Mesh;
+use crate::geometry::Mesh;
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,

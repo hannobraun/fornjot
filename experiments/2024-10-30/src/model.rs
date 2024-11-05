@@ -1,4 +1,4 @@
-use crate::mesh::Mesh;
+use crate::geometry::Mesh;
 
 pub fn model() -> anyhow::Result<Mesh> {
     let mut mesh = Mesh::default();
