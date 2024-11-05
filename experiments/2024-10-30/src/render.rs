@@ -5,7 +5,7 @@ use glam::{Mat4, Vec3};
 use wgpu::util::DeviceExt;
 use winit::window::Window;
 
-use crate::geometry::{Mesh, Operation};
+use crate::geometry::Operation;
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
@@ -179,7 +179,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self, mesh: &Mesh) {
+    pub fn render(&self, mesh: impl Operation) {
         let frame = self.surface.get_current_texture().unwrap();
         let frame_view = frame
             .texture
