@@ -24,7 +24,7 @@ impl Mesh {
 
 #[derive(Clone, Copy)]
 pub struct Vertex {
-    pub point: [f32; 3],
+    pub point: [f64; 3],
 }
 
 pub type Index = u32;
