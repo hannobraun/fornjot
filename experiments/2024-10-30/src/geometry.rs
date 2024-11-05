@@ -31,6 +31,16 @@ pub struct Vertex {
     pub point: Point,
 }
 
+impl Operation for Vertex {
+    fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
+        [*self].into_iter()
+    }
+
+    fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+        [].into_iter()
+    }
+}
+
 pub type Index = u32;
 pub type Triangle = [Index; 3];
 
