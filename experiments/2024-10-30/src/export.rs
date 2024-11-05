@@ -1,14 +1,13 @@
 use std::fs::File;
 
-use crate::geometry::Mesh;
+use crate::geometry::{Mesh, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh
         .vertices()
         .iter()
         .copied()
-        .map(|vertex| vertex.point)
-        .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
+        .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex { x, y, z })
         .collect();
 
     let triangles = mesh
