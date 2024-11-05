@@ -17,7 +17,7 @@ impl Mesh {
         self.vertices.push(vertex);
     }
 
-    pub fn push_triangle(&mut self, triangle: Triangle) {
+    pub fn triangle(&mut self, triangle: Triangle) {
         self.triangles.push(triangle);
     }
 }
