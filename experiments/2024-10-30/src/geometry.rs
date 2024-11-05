@@ -21,7 +21,7 @@ impl Operation for Mesh {
         self.vertices.iter().copied()
     }
 
-    fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+    fn triangles(&self) -> impl Iterator<Item = Triangle> {
         self.triangles.iter().copied()
     }
 }
@@ -36,7 +36,7 @@ impl Operation for Vertex {
         [*self].into_iter()
     }
 
-    fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+    fn triangles(&self) -> impl Iterator<Item = Triangle> {
         [].into_iter()
     }
 }
@@ -46,5 +46,5 @@ pub type Triangle = [Index; 3];
 
 pub trait Operation {
     fn vertices(&self) -> impl Iterator<Item = Vertex>;
-    fn triangles(&self) -> impl Iterator<Item = Triangle> + '_;
+    fn triangles(&self) -> impl Iterator<Item = Triangle>;
 }
