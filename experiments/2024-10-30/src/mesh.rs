@@ -1,11 +1,11 @@
 #[derive(Default)]
 pub struct Mesh {
-    vertices: Vec<[f32; 3]>,
+    vertices: Vec<Vertex>,
     triangles: Vec<[u32; 3]>,
 }
 
 impl Mesh {
-    pub fn vertices(&self) -> &[[f32; 3]] {
+    pub fn vertices(&self) -> &[Vertex] {
         &self.vertices
     }
 
@@ -13,7 +13,7 @@ impl Mesh {
         &self.triangles
     }
 
-    pub fn push_vertex(&mut self, vertex: [f32; 3]) {
+    pub fn push_vertex(&mut self, vertex: Vertex) {
         self.vertices.push(vertex);
     }
 
@@ -21,3 +21,5 @@ impl Mesh {
         self.triangles.push(triangle);
     }
 }
+
+pub type Vertex = [f32; 3];
