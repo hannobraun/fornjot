@@ -48,3 +48,32 @@ pub trait Operation {
     fn vertices(&self) -> Vec<Vertex>;
     fn triangles(&self) -> Vec<Triangle>;
 }
+
+pub struct OperationInSequence {
+    pub operation: Box<dyn Operation>,
+    pub previous: Option<Box<dyn Operation>>,
+}
+
+impl Operation for OperationInSequence {
+    fn vertices(&self) -> Vec<Vertex> {
+        let mut vertices = self
+            .previous
+            .as_ref()
+            .map(|op| op.vertices())
+            .unwrap_or_default();
+        vertices.extend(self.operation.vertices());
+
+        vertices
+    }
+
+    fn triangles(&self) -> Vec<Triangle> {
+        let mut triangles = self
+            .previous
+            .as_ref()
+            .map(|op| op.triangles())
+            .unwrap_or_default();
+        triangles.extend(self.operation.triangles());
+
+        triangles
+    }
+}
