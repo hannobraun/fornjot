@@ -13,7 +13,7 @@ impl Mesh {
         self.triangles.iter().copied()
     }
 
-    pub fn push_vertex(&mut self, vertex: Vertex) {
+    pub fn vertex(&mut self, vertex: Vertex) {
         self.vertices.push(vertex);
     }
 
