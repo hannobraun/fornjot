@@ -5,8 +5,8 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    pub fn vertices(&self) -> &[Vertex] {
-        &self.vertices
+    pub fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
+        self.vertices.iter().copied()
     }
 
     pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {

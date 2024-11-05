@@ -194,7 +194,9 @@ impl Renderer {
         for triangle in mesh.triangles() {
             let triangle = triangle.map(|index| {
                 Vec3::from(
-                    mesh.vertices()[index as usize]
+                    mesh.vertices()
+                        .nth(index as usize)
+                        .unwrap()
                         .point
                         .map(|coord| coord as f32),
                 )
