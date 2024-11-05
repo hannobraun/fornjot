@@ -17,7 +17,7 @@ impl Mesh {
 }
 
 impl Operation for Mesh {
-    fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
+    fn vertices(&self) -> impl Iterator<Item = Vertex> {
         self.vertices.iter().copied()
     }
 
@@ -32,7 +32,7 @@ pub struct Vertex {
 }
 
 impl Operation for Vertex {
-    fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
+    fn vertices(&self) -> impl Iterator<Item = Vertex> {
         [*self].into_iter()
     }
 
@@ -45,6 +45,6 @@ pub type Index = u32;
 pub type Triangle = [Index; 3];
 
 pub trait Operation {
-    fn vertices(&self) -> impl Iterator<Item = Vertex> + '_;
+    fn vertices(&self) -> impl Iterator<Item = Vertex>;
     fn triangles(&self) -> impl Iterator<Item = Triangle> + '_;
 }
