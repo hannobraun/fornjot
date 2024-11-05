@@ -15,8 +15,8 @@ impl Mesh {
         self.triangles.iter().copied()
     }
 
-    pub fn vertex(&mut self, vertex: Vertex) {
-        self.vertices.push(vertex);
+    pub fn vertex(&mut self, point: Point) {
+        self.vertices.push(Vertex { point });
     }
 
     pub fn triangle(&mut self, triangle: Triangle) {
