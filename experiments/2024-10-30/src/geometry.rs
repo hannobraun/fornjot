@@ -16,7 +16,7 @@ impl Mesh {
     }
 }
 
-impl Operation for Mesh {
+impl Operation for &Mesh {
     fn vertices(&self) -> impl Iterator<Item = Vertex> + '_ {
         self.vertices.iter().copied()
     }
