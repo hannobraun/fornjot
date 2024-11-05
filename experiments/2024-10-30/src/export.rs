@@ -1,6 +1,6 @@
 use std::fs::File;
 
-use crate::geometry::{Mesh, Vertex};
+use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh
