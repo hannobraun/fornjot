@@ -179,7 +179,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self, mesh: impl Operation) {
+    pub fn render(&self, mesh: &impl Operation) {
         let frame = self.surface.get_current_texture().unwrap();
         let frame_view = frame
             .texture
