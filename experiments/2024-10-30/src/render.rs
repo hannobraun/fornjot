@@ -271,7 +271,7 @@ impl Renderer {
             render_pass.set_pipeline(&self.pipeline);
             render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.draw_indexed(
-                0..mesh.triangles().len() as u32 * 3,
+                0..mesh.triangles().count() as u32 * 3,
                 0,
                 0..1,
             );

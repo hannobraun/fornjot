@@ -9,8 +9,8 @@ impl Mesh {
         &self.vertices
     }
 
-    pub fn triangles(&self) -> &[Triangle] {
-        &self.triangles
+    pub fn triangles(&self) -> impl Iterator<Item = Triangle> + '_ {
+        self.triangles.iter().copied()
     }
 
     pub fn push_vertex(&mut self, vertex: Vertex) {
