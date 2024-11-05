@@ -1,6 +1,7 @@
 mod app;
 mod export;
 mod geometry;
+mod math;
 mod model;
 mod render;
 

@@ -1,3 +1,5 @@
+use crate::math::Point;
+
 #[derive(Default)]
 pub struct Mesh {
     vertices: Vec<Vertex>,
@@ -24,7 +26,7 @@ impl Mesh {
 
 #[derive(Clone, Copy)]
 pub struct Vertex {
-    pub point: [f64; 3],
+    pub point: Point,
 }
 
 pub type Index = u32;
