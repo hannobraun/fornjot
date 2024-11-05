@@ -21,8 +21,8 @@ impl Operation for Mesh {
         self.vertices.clone()
     }
 
-    fn triangles(&self) -> impl Iterator<Item = Triangle> {
-        self.triangles.iter().copied()
+    fn triangles(&self) -> Vec<Triangle> {
+        self.triangles.clone()
     }
 }
 
@@ -36,8 +36,8 @@ impl Operation for Vertex {
         vec![*self]
     }
 
-    fn triangles(&self) -> impl Iterator<Item = Triangle> {
-        [].into_iter()
+    fn triangles(&self) -> Vec<Triangle> {
+        vec![]
     }
 }
 
@@ -46,5 +46,5 @@ pub type Triangle = [Index; 3];
 
 pub trait Operation {
     fn vertices(&self) -> Vec<Vertex>;
-    fn triangles(&self) -> impl Iterator<Item = Triangle>;
+    fn triangles(&self) -> Vec<Triangle>;
 }

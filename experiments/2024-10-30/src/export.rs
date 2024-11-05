@@ -11,6 +11,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
 
     let triangles = mesh
         .triangles()
+        .into_iter()
         .map(|triangle| {
             triangle.map(|index| {
                 index.try_into().expect(
