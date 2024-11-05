@@ -5,6 +5,7 @@ use crate::geometry::{Mesh, Operation, Vertex};
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh
         .vertices()
+        .into_iter()
         .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex { x, y, z })
         .collect();
 
