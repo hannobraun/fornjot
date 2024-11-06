@@ -1,6 +1,6 @@
 pub type Point = [Scalar; 3];
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, PartialOrd)]
 pub struct Scalar {
     value: f64,
 }
