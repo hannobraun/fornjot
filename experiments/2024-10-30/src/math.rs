@@ -10,6 +10,9 @@ impl Scalar {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
         }
+        if value.is_infinite() {
+            panic!("`Scalar` value must not be infinite. Value: `{value}`");
+        }
 
         Self { value }
     }
