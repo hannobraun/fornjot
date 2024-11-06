@@ -57,8 +57,10 @@ pub struct OperationInSequence {
 
 impl Operation for OperationInSequence {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(self.previous.iter().flat_map(|op| op.vertices.iter()));
-        vertices.extend(self.operation.vertices.clone());
+        if let Some(op) = &self.previous {
+            op.vertices(vertices);
+        }
+        self.operation.vertices(vertices);
     }
 
     fn triangles(&self) -> Vec<Triangle> {
@@ -76,4 +78,14 @@ impl Operation for OperationInSequence {
 pub struct ClonedOperation {
     pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
+}
+
+impl Operation for ClonedOperation {
+    fn vertices(&self, vertices: &mut Vec<Vertex>) {
+        vertices.extend(self.vertices.iter());
+    }
+
+    fn triangles(&self) -> Vec<Triangle> {
+        self.triangles.clone()
+    }
 }
