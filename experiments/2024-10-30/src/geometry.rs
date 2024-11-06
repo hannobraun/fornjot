@@ -76,7 +76,7 @@ pub struct ClonedOperation {
 
 impl Operation for ClonedOperation {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(self.vertices.iter());
+        vertices.extend(&self.vertices);
     }
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
