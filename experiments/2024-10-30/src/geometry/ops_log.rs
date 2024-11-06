@@ -4,7 +4,6 @@ use super::{Operation, Triangle, Vertex};
 
 #[derive(Default)]
 pub struct OpsLog {
-    pub triangles: Vec<Triangle>,
     pub operations: Vec<OperationInSequence>,
 }
 
@@ -35,7 +34,13 @@ impl OpsLog {
     ) -> OperationResult<(Triangle,)> {
         let triangle = triangle.into();
 
-        self.triangles.push(triangle);
+        self.operations.push(OperationInSequence {
+            operation: ClonedOperation::from_op(&triangle),
+            previous: self
+                .operations
+                .last()
+                .map(|op| ClonedOperation::from_op(op)),
+        });
 
         OperationResult {
             operations: self,
@@ -52,7 +57,9 @@ impl Operation for OpsLog {
     }
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
-        triangles.extend(&self.triangles);
+        if let Some(op) = self.operations.last() {
+            op.triangles(triangles);
+        }
     }
 }
 
