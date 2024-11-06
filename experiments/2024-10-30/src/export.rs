@@ -1,8 +1,8 @@
 use std::{collections::BTreeMap, fs::File};
 
-use crate::geometry::{Operation, Operations, Vertex};
+use crate::geometry::{Operation, OpsLog, Vertex};
 
-pub fn export(mesh: &Operations) -> anyhow::Result<()> {
+pub fn export(mesh: &OpsLog) -> anyhow::Result<()> {
     let mut mesh_vertices = Vec::new();
     let mut mesh_triangles = Vec::new();
 

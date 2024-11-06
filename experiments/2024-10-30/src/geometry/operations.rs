@@ -5,12 +5,12 @@ use crate::math::Point;
 use super::{Operation, Triangle, Vertex};
 
 #[derive(Default)]
-pub struct Operations {
+pub struct OpsLog {
     pub triangles: Vec<Triangle>,
     pub operations: Vec<OperationInSequence>,
 }
 
-impl Operations {
+impl OpsLog {
     pub fn vertex(
         &mut self,
         point: impl Into<Point>,
@@ -45,7 +45,7 @@ impl Operations {
     }
 }
 
-impl Operation for Operations {
+impl Operation for OpsLog {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         if let Some(op) = self.operations.last() {
             op.vertices(vertices);
@@ -79,7 +79,7 @@ impl Operation for OperationInSequence {
 }
 
 pub struct OperationResult<'r, T> {
-    operations: &'r mut Operations,
+    operations: &'r mut OpsLog,
     results: T,
 }
 

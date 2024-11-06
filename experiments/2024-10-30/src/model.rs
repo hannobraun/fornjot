@@ -1,6 +1,6 @@
-use crate::geometry::Operations;
+use crate::geometry::OpsLog;
 
-pub fn model(ops: &mut Operations) {
+pub fn model(ops: &mut OpsLog) {
     let (a, b, c, d, e, f, g, h) = ops
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])
