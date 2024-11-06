@@ -31,8 +31,21 @@ impl Scalar {
 
 impl Eq for Scalar {}
 
+impl Ord for Scalar {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let Some(ordering) = self.value.partial_cmp(&other.value) else {
+            unreachable!(
+                "Failed to compare `Scalar` values `{}` and `{}`",
+                self.value, other.value
+            );
+        };
+
+        ordering
+    }
+}
+
 impl PartialOrd for Scalar {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.value.partial_cmp(&other.value)
+        Some(self.cmp(other))
     }
 }
