@@ -14,6 +14,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
             vertex: mesh_vertices
                 .into_iter()
                 .map(|Vertex { point }| point)
+                .map(|point| point.map(|coord| coord.inner))
                 .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
                 .collect(),
         },

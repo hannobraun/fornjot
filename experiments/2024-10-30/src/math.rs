@@ -1,2 +1,6 @@
 pub type Point = [Scalar; 3];
-pub type Scalar = f64;
+
+#[derive(Clone, Copy)]
+pub struct Scalar {
+    pub inner: f64,
+}
