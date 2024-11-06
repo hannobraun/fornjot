@@ -30,9 +30,16 @@ impl Operations {
         }
     }
 
-    pub fn triangle(&mut self, triangle: Triangle) -> &mut Self {
+    pub fn triangle(
+        &mut self,
+        triangle: Triangle,
+    ) -> OperationResult<(Triangle,)> {
         self.triangles.push(triangle);
-        self
+
+        OperationResult {
+            operations: self,
+            results: (triangle,),
+        }
     }
 }
 
@@ -65,6 +72,21 @@ impl<'r, T> OperationResult<'r, T> {
         OperationResult {
             operations: self.operations,
             results: self.results.push_right(vertex),
+        }
+    }
+
+    pub fn triangle(self, triangle: Triangle) -> OperationResult<'r, T::Out>
+    where
+        T: CombinRight<Triangle>,
+    {
+        let OperationResult {
+            results: (triangle,),
+            ..
+        } = self.operations.triangle(triangle);
+
+        OperationResult {
+            operations: self.operations,
+            results: self.results.push_right(triangle),
         }
     }
 
