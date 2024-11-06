@@ -1,1 +1,2 @@
-pub type Point = [f64; 3];
+pub type Point = [Scalar; 3];
+pub type Scalar = f64;
