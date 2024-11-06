@@ -13,11 +13,8 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
         vertices: threemf::model::Vertices {
             vertex: mesh_vertices
                 .into_iter()
-                .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex {
-                    x,
-                    y,
-                    z,
-                })
+                .map(|Vertex { point }| point)
+                .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
                 .collect(),
         },
         triangles: threemf::model::Triangles {
