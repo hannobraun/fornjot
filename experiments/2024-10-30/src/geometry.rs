@@ -51,8 +51,8 @@ pub trait Operation {
 }
 
 pub struct OperationInSequence {
-    pub operation: Box<dyn Operation>,
-    pub previous: Option<Box<dyn Operation>>,
+    pub operation: Box<ClonedOperation>,
+    pub previous: Option<Box<ClonedOperation>>,
 }
 
 impl Operation for OperationInSequence {
@@ -60,9 +60,9 @@ impl Operation for OperationInSequence {
         let mut vertices = self
             .previous
             .as_ref()
-            .map(|op| op.vertices())
+            .map(|op| op.vertices.clone())
             .unwrap_or_default();
-        vertices.extend(self.operation.vertices());
+        vertices.extend(self.operation.vertices.clone());
 
         vertices
     }
@@ -71,10 +71,15 @@ impl Operation for OperationInSequence {
         let mut triangles = self
             .previous
             .as_ref()
-            .map(|op| op.triangles())
+            .map(|op| op.triangles.clone())
             .unwrap_or_default();
-        triangles.extend(self.operation.triangles());
+        triangles.extend(self.operation.triangles.clone());
 
         triangles
     }
+}
+
+pub struct ClonedOperation {
+    pub vertices: Vec<Vertex>,
+    pub triangles: Vec<Triangle>,
 }
