@@ -5,19 +5,7 @@ use crate::geometry::{Mesh, Operation, Vertex};
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh.vertices();
 
-    let triangles = mesh
-        .triangles()
-        .into_iter()
-        .map(|triangle| {
-            triangle.map(|index| {
-                index.try_into().expect(
-                    "Converting `u32` to `usize` must work on all platforms \
-                    this software is expected to run on.",
-                )
-            })
-        })
-        .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
-        .collect();
+    let triangles = mesh.triangles();
 
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices {
@@ -31,7 +19,17 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
                 .collect(),
         },
         triangles: threemf::model::Triangles {
-            triangle: triangles,
+            triangle: triangles.into_iter()
+            .map(|triangle| {
+                triangle.map(|index| {
+                    index.try_into().expect(
+                        "Converting `u32` to `usize` must work on all platforms \
+                        this software is expected to run on.",
+                    )
+                })
+            })
+            .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
+            .collect(),
         },
     };
 
