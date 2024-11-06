@@ -81,13 +81,16 @@ pub struct OperationResult<'r, T> {
 }
 
 impl<'r, T> OperationResult<'r, T> {
-    pub fn vertex(self, point: impl Into<Vertex>) -> OperationResult<'r, T::Out>
+    pub fn vertex(
+        self,
+        vertex: impl Into<Vertex>,
+    ) -> OperationResult<'r, T::Out>
     where
         T: CombinRight<Vertex>,
     {
         let OperationResult {
             results: (vertex,), ..
-        } = self.operations.vertex(point);
+        } = self.operations.vertex(vertex);
 
         OperationResult {
             operations: self.operations,
