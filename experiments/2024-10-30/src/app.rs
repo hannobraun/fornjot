@@ -69,7 +69,9 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                renderer.render(&self.ops);
+                if let Some(op) = self.ops.operations.last() {
+                    renderer.render(op);
+                }
             }
             _ => {}
         }
