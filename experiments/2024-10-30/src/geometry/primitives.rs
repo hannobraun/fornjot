@@ -26,4 +26,18 @@ impl Operation for Vertex {
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 }
 
-pub type Triangle = [Vertex; 3];
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Triangle {
+    pub vertices: [Vertex; 3],
+}
+
+impl<V> From<[V; 3]> for Triangle
+where
+    V: Into<Vertex>,
+{
+    fn from(vertices: [V; 3]) -> Self {
+        Self {
+            vertices: vertices.map(Into::into),
+        }
+    }
+}

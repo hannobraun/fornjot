@@ -195,7 +195,7 @@ impl Renderer {
         mesh.triangles(&mut mesh_triangles);
 
         for triangle in &mesh_triangles {
-            let triangle = triangle.map(|vertex| {
+            let triangle = triangle.vertices.map(|vertex| {
                 Vec3::from(
                     vertex.point.coords.map(|coord| coord.value() as f32),
                 )

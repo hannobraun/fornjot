@@ -15,7 +15,7 @@ pub fn export(mesh: &OpsLog) -> anyhow::Result<()> {
     let mut triangles = Vec::new();
 
     for triangle in mesh_triangles {
-        let triangle = triangle.map(|vertex| {
+        let triangle = triangle.vertices.map(|vertex| {
             *indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = vertices.len();
                 vertices.push(vertex);
