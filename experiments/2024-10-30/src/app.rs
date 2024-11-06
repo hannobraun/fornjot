@@ -53,7 +53,9 @@ impl ApplicationHandler for App {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let Some(renderer) = self.renderer.as_ref() else {
+        let (Some(window), Some(renderer)) =
+            (self.window.as_ref(), self.renderer.as_ref())
+        else {
             return;
         };
 
@@ -70,6 +72,24 @@ impl ApplicationHandler for App {
                 ..
             } => {
                 event_loop.exit();
+            }
+            WindowEvent::KeyboardInput {
+                event: KeyEvent { logical_key, .. },
+                ..
+            } => {
+                match logical_key {
+                    Key::Named(NamedKey::ArrowDown) => {
+                        if self.selected_op < self.ops.operations.len() {
+                            self.selected_op += 1;
+                        }
+                    }
+                    Key::Named(NamedKey::ArrowUp) => {
+                        self.selected_op = self.selected_op.saturating_sub(1);
+                    }
+                    _ => {}
+                }
+
+                window.request_redraw();
             }
             WindowEvent::RedrawRequested => {
                 if let Some(op) = self.ops.operations.get(self.selected_op) {
