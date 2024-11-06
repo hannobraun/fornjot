@@ -8,6 +8,7 @@ edition = "2021"
 anyhow = "*"
 pollster = "*"
 threemf = "*"
+tuples = "*"
 wgpu = "*"
 winit = "*"
 

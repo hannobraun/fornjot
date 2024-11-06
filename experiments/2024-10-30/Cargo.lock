@@ -441,6 +441,7 @@ dependencies = [
  "glam",
  "pollster",
  "threemf",
+ "tuples",
  "wgpu",
  "winit",
 ]
@@ -1568,6 +1569,12 @@ name = "ttf-parser"
 version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5902c5d130972a0000f60860bfbf46f7ca3db5391eddfedd1b8728bd9dc96c0e"
+
+[[package]]
+name = "tuples"
+version = "1.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2588972108c7814c636526f2cf2ba1bf8d975f55680f79da4a7aa9e0810f6b44"
 
 [[package]]
 name = "unicode-ident"
