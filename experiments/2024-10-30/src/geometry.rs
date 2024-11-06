@@ -52,7 +52,7 @@ pub trait Operation {
 
 pub struct OperationInSequence {
     pub operation: ClonedOperation,
-    pub previous: Option<Box<ClonedOperation>>,
+    pub previous: Option<ClonedOperation>,
 }
 
 impl Operation for OperationInSequence {
