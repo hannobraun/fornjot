@@ -5,6 +5,17 @@ pub struct Point {
     pub coords: [Scalar; 3],
 }
 
+impl<S> From<[S; 3]> for Point
+where
+    S: Into<Scalar>,
+{
+    fn from(coords: [S; 3]) -> Self {
+        Self {
+            coords: coords.map(Into::into),
+        }
+    }
+}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scalar {
     value: f64,
