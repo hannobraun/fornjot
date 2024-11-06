@@ -1,8 +1,6 @@
 use crate::geometry::Operations;
 
-pub fn model() -> anyhow::Result<Operations> {
-    let mut ops = Operations::default();
-
+pub fn model(ops: &mut Operations) -> anyhow::Result<()> {
     let (a, b, c, d, e, f, g, h) = ops
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])

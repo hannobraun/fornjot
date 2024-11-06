@@ -6,7 +6,8 @@ mod model;
 mod render;
 
 fn main() -> anyhow::Result<()> {
-    let ops = model::model()?;
+    let mut ops = geometry::Operations::default();
+    model::model(&mut ops)?;
 
     export::export(&ops)?;
     app::run(ops)?;
