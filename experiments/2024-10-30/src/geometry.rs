@@ -22,8 +22,8 @@ impl Operation for Mesh {
         vertices.extend(self.vertices.iter().copied());
     }
 
-    fn triangles(&self) -> Vec<Triangle> {
-        self.triangles.clone()
+    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+        triangles.extend(&self.triangles);
     }
 }
 
@@ -37,9 +37,7 @@ impl Operation for Vertex {
         vertices.push(*self);
     }
 
-    fn triangles(&self) -> Vec<Triangle> {
-        vec![]
-    }
+    fn triangles(&self, _: &mut Vec<Triangle>) {}
 }
 
 pub type Index = u32;
@@ -47,7 +45,7 @@ pub type Triangle = [Index; 3];
 
 pub trait Operation {
     fn vertices(&self, vertices: &mut Vec<Vertex>);
-    fn triangles(&self) -> Vec<Triangle>;
+    fn triangles(&self, triangles: &mut Vec<Triangle>);
 }
 
 pub struct OperationInSequence {
@@ -63,15 +61,11 @@ impl Operation for OperationInSequence {
         self.operation.vertices(vertices);
     }
 
-    fn triangles(&self) -> Vec<Triangle> {
-        let mut triangles = self
-            .previous
-            .as_ref()
-            .map(|op| op.triangles.clone())
-            .unwrap_or_default();
-        triangles.extend(self.operation.triangles.clone());
-
-        triangles
+    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+        if let Some(op) = &self.previous {
+            op.triangles(triangles);
+        }
+        self.operation.triangles(triangles);
     }
 }
 
@@ -85,7 +79,7 @@ impl Operation for ClonedOperation {
         vertices.extend(self.vertices.iter());
     }
 
-    fn triangles(&self) -> Vec<Triangle> {
-        self.triangles.clone()
+    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+        triangles.extend(&self.triangles);
     }
 }
