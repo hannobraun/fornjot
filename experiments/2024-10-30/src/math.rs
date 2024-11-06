@@ -49,3 +49,9 @@ impl PartialOrd for Scalar {
         Some(self.cmp(other))
     }
 }
+
+impl From<f64> for Scalar {
+    fn from(value: f64) -> Self {
+        Self::new(value)
+    }
+}
