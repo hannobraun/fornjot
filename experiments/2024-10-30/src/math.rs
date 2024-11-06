@@ -26,3 +26,5 @@ impl Scalar {
         self.value
     }
 }
+
+impl Eq for Scalar {}
