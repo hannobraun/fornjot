@@ -7,8 +7,10 @@ pub struct Operations {
 }
 
 impl Operations {
-    pub fn vertex(&mut self, point: Point) {
-        let vertex = Vertex { point };
+    pub fn vertex(&mut self, point: impl Into<Point>) {
+        let vertex = Vertex {
+            point: point.into(),
+        };
         self.vertices.push(vertex);
     }
 
