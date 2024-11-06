@@ -19,7 +19,7 @@ impl Mesh {
 
 impl Operation for Mesh {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(self.vertices.iter().copied());
+        vertices.extend(&self.vertices);
     }
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
