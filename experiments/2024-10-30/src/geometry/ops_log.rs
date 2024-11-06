@@ -1,7 +1,5 @@
 use tuples::CombinRight;
 
-use crate::math::Point;
-
 use super::{Operation, Triangle, Vertex};
 
 #[derive(Default)]
@@ -83,7 +81,7 @@ pub struct OperationResult<'r, T> {
 }
 
 impl<'r, T> OperationResult<'r, T> {
-    pub fn vertex(self, point: impl Into<Point>) -> OperationResult<'r, T::Out>
+    pub fn vertex(self, point: impl Into<Vertex>) -> OperationResult<'r, T::Out>
     where
         T: CombinRight<Vertex>,
     {
