@@ -16,6 +16,7 @@ impl OpsLog {
         vertex: impl Into<Vertex>,
     ) -> OperationResult<(Vertex,)> {
         let vertex = vertex.into();
+
         self.operations.push(OperationInSequence {
             operation: ClonedOperation::from_op(&vertex),
             previous: self
