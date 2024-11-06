@@ -57,13 +57,7 @@ pub struct OperationInSequence {
 
 impl Operation for OperationInSequence {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(
-            self.previous
-                .as_ref()
-                .map(|op| op.vertices.clone())
-                .into_iter()
-                .flatten(),
-        );
+        vertices.extend(self.previous.iter().flat_map(|op| op.vertices.iter()));
         vertices.extend(self.operation.vertices.clone());
     }
 
