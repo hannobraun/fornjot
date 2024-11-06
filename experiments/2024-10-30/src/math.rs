@@ -4,3 +4,9 @@ pub type Point = [Scalar; 3];
 pub struct Scalar {
     pub inner: f64,
 }
+
+impl Scalar {
+    pub fn new(value: f64) -> Self {
+        Self { inner: value }
+    }
+}
