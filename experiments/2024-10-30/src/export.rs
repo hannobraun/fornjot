@@ -15,7 +15,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let mut triangles = Vec::new();
 
     for triangle in mesh_triangles {
-        let triangle_indices = triangle.map(|vertex| {
+        let triangle = triangle.map(|vertex| {
             *indices_by_vertex.entry(vertex).or_insert_with(|| {
                 let index = vertices.len();
                 vertices.push(vertex);
@@ -23,7 +23,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
             })
         });
 
-        triangles.push(triangle_indices);
+        triangles.push(triangle);
     }
 
     let mesh = threemf::Mesh {
