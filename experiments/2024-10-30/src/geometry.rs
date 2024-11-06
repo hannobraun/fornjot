@@ -4,8 +4,8 @@ use crate::math::Point;
 
 #[derive(Default)]
 pub struct Operations {
-    pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
+    pub operations: Vec<OperationInSequence>,
 }
 
 impl Operations {
@@ -16,7 +16,13 @@ impl Operations {
         let vertex = Vertex {
             point: point.into(),
         };
-        self.vertices.push(vertex);
+        self.operations.push(OperationInSequence {
+            operation: ClonedOperation::from_op(&vertex),
+            previous: self
+                .operations
+                .last()
+                .map(|op| ClonedOperation::from_op(op)),
+        });
 
         OperationResult {
             operations: self,
@@ -31,7 +37,9 @@ impl Operations {
 
 impl Operation for Operations {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
-        vertices.extend(&self.vertices);
+        if let Some(op) = self.operations.last() {
+            op.vertices(vertices);
+        }
     }
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
@@ -108,6 +116,21 @@ impl Operation for OperationInSequence {
 pub struct ClonedOperation {
     pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
+}
+
+impl ClonedOperation {
+    pub fn from_op(op: &dyn Operation) -> Self {
+        let mut vertices = Vec::new();
+        let mut triangles = Vec::new();
+
+        op.vertices(&mut vertices);
+        op.triangles(&mut triangles);
+
+        Self {
+            vertices,
+            triangles,
+        }
+    }
 }
 
 impl Operation for ClonedOperation {
