@@ -34,7 +34,7 @@ impl Operation for Mesh {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vertex {
     pub point: Point,
 }
