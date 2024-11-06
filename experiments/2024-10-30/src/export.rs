@@ -19,17 +19,18 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
                 .collect(),
         },
         triangles: threemf::model::Triangles {
-            triangle: triangles.into_iter()
-            .map(|triangle| {
-                triangle.map(|index| {
-                    index.try_into().expect(
-                        "Converting `u32` to `usize` must work on all platforms \
-                        this software is expected to run on.",
-                    )
+            triangle: triangles
+                .into_iter()
+                .map(|triangle| {
+                    triangle.map(|index| {
+                        index.try_into().expect(
+                            "Converting `u32` to `usize` must work on all \
+                            platforms this software is expected to run on.",
+                        )
+                    })
                 })
-            })
-            .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
-            .collect(),
+                .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
+                .collect(),
         },
     };
 
