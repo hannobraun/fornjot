@@ -58,6 +58,10 @@ impl<'r, T> OperationResult<'r, T> {
             results: self.results.push_right(vertex),
         }
     }
+
+    pub fn results(self) -> T {
+        self.results
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
