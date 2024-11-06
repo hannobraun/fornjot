@@ -1,3 +1,5 @@
+use tuples::CombinRight;
+
 use crate::math::Point;
 
 #[derive(Default)]
@@ -7,13 +9,19 @@ pub struct Operations {
 }
 
 impl Operations {
-    pub fn vertex(&mut self, point: impl Into<Point>) -> OperationResult {
+    pub fn vertex(
+        &mut self,
+        point: impl Into<Point>,
+    ) -> OperationResult<(Vertex,)> {
         let vertex = Vertex {
             point: point.into(),
         };
         self.vertices.push(vertex);
 
-        OperationResult { operations: self }
+        OperationResult {
+            operations: self,
+            results: (vertex,),
+        }
     }
 
     pub fn triangle(&mut self, triangle: Triangle) {
@@ -31,16 +39,23 @@ impl Operation for Operations {
     }
 }
 
-pub struct OperationResult<'r> {
+pub struct OperationResult<'r, T> {
     operations: &'r mut Operations,
+    results: T,
 }
 
-impl<'r> OperationResult<'r> {
-    pub fn vertex(self, point: impl Into<Point>) -> OperationResult<'r> {
-        self.operations.vertex(point);
+impl<'r, T> OperationResult<'r, T> {
+    pub fn vertex(self, point: impl Into<Point>) -> OperationResult<'r, T::Out>
+    where
+        T: CombinRight<Vertex>,
+    {
+        let OperationResult {
+            results: (vertex,), ..
+        } = self.operations.vertex(point);
 
         OperationResult {
             operations: self.operations,
+            results: self.results.push_right(vertex),
         }
     }
 }
