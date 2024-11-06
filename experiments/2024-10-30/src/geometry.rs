@@ -7,11 +7,13 @@ pub struct Operations {
 }
 
 impl Operations {
-    pub fn vertex(&mut self, point: impl Into<Point>) {
+    pub fn vertex(&mut self, point: impl Into<Point>) -> OperationResult {
         let vertex = Vertex {
             point: point.into(),
         };
         self.vertices.push(vertex);
+
+        OperationResult { operations: self }
     }
 
     pub fn triangle(&mut self, triangle: Triangle) {
@@ -26,6 +28,20 @@ impl Operation for Operations {
 
     fn triangles(&self, triangles: &mut Vec<Triangle>) {
         triangles.extend(&self.triangles);
+    }
+}
+
+pub struct OperationResult<'r> {
+    operations: &'r mut Operations,
+}
+
+impl<'r> OperationResult<'r> {
+    pub fn vertex(self, point: impl Into<Point>) -> OperationResult<'r> {
+        self.operations.vertex(point);
+
+        OperationResult {
+            operations: self.operations,
+        }
     }
 }
 
