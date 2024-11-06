@@ -1,6 +1,7 @@
+mod operation;
 mod operations;
 
-pub use self::operations::Operations;
+pub use self::{operation::Operation, operations::Operations};
 
 use crate::math::Point;
 
@@ -18,8 +19,3 @@ impl Operation for Vertex {
 }
 
 pub type Triangle = [Vertex; 3];
-
-pub trait Operation {
-    fn vertices(&self, vertices: &mut Vec<Vertex>);
-    fn triangles(&self, triangles: &mut Vec<Triangle>);
-}
