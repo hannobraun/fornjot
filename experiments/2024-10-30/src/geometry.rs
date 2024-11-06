@@ -2,8 +2,8 @@ use crate::math::Point;
 
 #[derive(Default)]
 pub struct Mesh {
-    vertices: Vec<Vertex>,
-    triangles: Vec<Triangle>,
+    pub vertices: Vec<Vertex>,
+    pub triangles: Vec<Triangle>,
 }
 
 impl Mesh {
