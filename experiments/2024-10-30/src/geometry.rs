@@ -30,8 +30,9 @@ impl Operations {
         }
     }
 
-    pub fn triangle(&mut self, triangle: Triangle) {
+    pub fn triangle(&mut self, triangle: Triangle) -> &mut Self {
         self.triangles.push(triangle);
+        self
     }
 }
 

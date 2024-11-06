@@ -14,21 +14,18 @@ pub fn model() -> anyhow::Result<Operations> {
         .vertex([0.5, 0.5, 0.5])
         .results();
 
-    [
-        [a, e, g], // left
-        [a, g, c],
-        [b, d, h], // right
-        [b, h, f],
-        [a, b, f], // front
-        [a, f, e],
-        [c, h, d], // back
-        [c, g, h],
-        [a, c, b], // bottom
-        [b, c, d],
-        [e, f, h], // top
-        [e, h, g],
-    ]
-    .map(|triangle| mesh.triangle(triangle));
+    mesh.triangle([a, e, g]) // left
+        .triangle([a, g, c])
+        .triangle([b, d, h]) // right
+        .triangle([b, h, f])
+        .triangle([a, b, f]) // front
+        .triangle([a, f, e])
+        .triangle([c, h, d]) // back
+        .triangle([c, g, h])
+        .triangle([a, c, b]) // bottom
+        .triangle([b, c, d])
+        .triangle([e, f, h]) // top
+        .triangle([e, h, g]);
 
     Ok(mesh)
 }
