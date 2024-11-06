@@ -7,16 +7,9 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    pub fn vertex(&mut self, point: Point) -> Index {
-        let index = self.vertices.len().try_into().expect(
-            "Converting `usize` to `u64` is expected to work on all supported \
-            platforms.",
-        );
-
+    pub fn vertex(&mut self, point: Point) {
         let vertex = Vertex { point };
         self.vertices.push(vertex);
-
-        index
     }
 
     pub fn triangle(&mut self, triangle: Triangle) {
@@ -47,7 +40,6 @@ impl Operation for Vertex {
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 }
 
-pub type Index = u64;
 pub type Triangle = [Vertex; 3];
 
 pub trait Operation {
