@@ -10,11 +10,11 @@ use winit::{
 
 use crate::{geometry::OpsLog, render::Renderer};
 
-pub fn run(mesh: OpsLog) -> anyhow::Result<()> {
+pub fn run(ops: OpsLog) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        ops: mesh,
+        ops,
         window: None,
         renderer: None,
     };
