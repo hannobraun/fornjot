@@ -1,6 +1,8 @@
+use std::cmp::Ordering;
+
 pub type Point = [Scalar; 3];
 
-#[derive(Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct Scalar {
     value: f64,
 }
@@ -28,3 +30,9 @@ impl Scalar {
 }
 
 impl Eq for Scalar {}
+
+impl PartialOrd for Scalar {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.value.partial_cmp(&other.value)
+    }
+}
