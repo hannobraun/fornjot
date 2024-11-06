@@ -195,11 +195,11 @@ impl Renderer {
         mesh.triangles(&mut mesh_triangles);
 
         for triangle in &mesh_triangles {
-            let triangle = triangle.map(|index| {
+            let triangle = triangle.map(|vertex| {
                 let mut mesh_vertices = Vec::new();
                 mesh.vertices(&mut mesh_vertices);
 
-                Vec3::from(index.point.map(|coord| coord.value() as f32))
+                Vec3::from(vertex.point.map(|coord| coord.value() as f32))
             });
             let normal = {
                 let [a, b, c] = triangle;
