@@ -1,9 +1,9 @@
 use crate::geometry::Operations;
 
 pub fn model() -> anyhow::Result<Operations> {
-    let mut mesh = Operations::default();
+    let mut ops = Operations::default();
 
-    let (a, b, c, d, e, f, g, h) = mesh
+    let (a, b, c, d, e, f, g, h) = ops
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])
         .vertex([-0.5, 0.5, -0.5])
@@ -14,7 +14,7 @@ pub fn model() -> anyhow::Result<Operations> {
         .vertex([0.5, 0.5, 0.5])
         .results();
 
-    mesh.triangle([a, e, g]) // left
+    ops.triangle([a, e, g]) // left
         .triangle([a, g, c])
         .triangle([b, d, h]) // right
         .triangle([b, h, f])
@@ -27,5 +27,5 @@ pub fn model() -> anyhow::Result<Operations> {
         .triangle([e, f, h]) // top
         .triangle([e, h, g]);
 
-    Ok(mesh)
+    Ok(ops)
 }
