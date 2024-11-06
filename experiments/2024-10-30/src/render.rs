@@ -204,7 +204,7 @@ impl Renderer {
                         .get(index as usize)
                         .unwrap()
                         .point
-                        .map(|coord| coord.inner as f32),
+                        .map(|coord| coord.value() as f32),
                 )
             });
             let normal = {

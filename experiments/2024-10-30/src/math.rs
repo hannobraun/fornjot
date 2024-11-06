@@ -9,4 +9,8 @@ impl Scalar {
     pub fn new(value: f64) -> Self {
         Self { inner: value }
     }
+
+    pub fn value(&self) -> f64 {
+        self.inner
+    }
 }
