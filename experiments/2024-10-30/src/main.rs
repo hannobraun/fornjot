@@ -6,10 +6,10 @@ mod model;
 mod render;
 
 fn main() -> anyhow::Result<()> {
-    let mesh = model::model()?;
+    let ops = model::model()?;
 
-    export::export(&mesh)?;
-    app::run(mesh)?;
+    export::export(&ops)?;
+    app::run(ops)?;
 
     Ok(())
 }
