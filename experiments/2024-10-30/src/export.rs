@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{collections::BTreeMap, fs::File};
 
 use crate::geometry::{Mesh, Operation, Vertex};
 
@@ -9,9 +9,29 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     mesh.vertices(&mut mesh_vertices);
     mesh.triangles(&mut mesh_triangles);
 
+    let mut indices_by_vertex = BTreeMap::new();
+
+    let mut vertices = Vec::new();
+    let mut triangles = Vec::new();
+
+    for triangle in mesh_triangles {
+        let triangle_vertices =
+            triangle.map(|index| mesh_vertices[index as usize]);
+
+        let triangle_indices = triangle_vertices.map(|vertex| {
+            *indices_by_vertex.entry(vertex).or_insert_with(|| {
+                let index = vertices.len();
+                vertices.push(vertex);
+                index
+            })
+        });
+
+        triangles.push(triangle_indices);
+    }
+
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices {
-            vertex: mesh_vertices
+            vertex: vertices
                 .into_iter()
                 .map(|Vertex { point }| point)
                 .map(|point| point.map(|coord| coord.value()))
@@ -19,16 +39,8 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
                 .collect(),
         },
         triangles: threemf::model::Triangles {
-            triangle: mesh_triangles
+            triangle: triangles
                 .into_iter()
-                .map(|triangle| {
-                    triangle.map(|index| {
-                        index.try_into().expect(
-                            "Converting `u32` to `usize` must work on all \
-                            platforms this software is expected to run on.",
-                        )
-                    })
-                })
                 .map(|[v1, v2, v3]| threemf::model::Triangle { v1, v2, v3 })
                 .collect(),
         },
