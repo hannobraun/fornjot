@@ -4,7 +4,6 @@ use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let vertices = mesh.vertices();
-
     let triangles = mesh.triangles();
 
     let mesh = threemf::Mesh {
