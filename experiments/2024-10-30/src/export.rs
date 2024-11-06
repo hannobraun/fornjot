@@ -4,10 +4,10 @@ use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
     let mut mesh_vertices = Vec::new();
-    let mut triangles = Vec::new();
+    let mut mesh_triangles = Vec::new();
 
     mesh.vertices(&mut mesh_vertices);
-    mesh.triangles(&mut triangles);
+    mesh.triangles(&mut mesh_triangles);
 
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices {
@@ -21,7 +21,7 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
                 .collect(),
         },
         triangles: threemf::model::Triangles {
-            triangle: triangles
+            triangle: mesh_triangles
                 .into_iter()
                 .map(|triangle| {
                     triangle.map(|index| {
