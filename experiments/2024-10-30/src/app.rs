@@ -14,7 +14,7 @@ pub fn run(mesh: OpsLog) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
-        mesh,
+        ops: mesh,
         window: None,
         renderer: None,
     };
@@ -24,7 +24,7 @@ pub fn run(mesh: OpsLog) -> anyhow::Result<()> {
 }
 
 struct App {
-    mesh: OpsLog,
+    ops: OpsLog,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
 }
@@ -69,7 +69,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                renderer.render(&self.mesh);
+                renderer.render(&self.ops);
             }
             _ => {}
         }
