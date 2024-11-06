@@ -3,11 +3,7 @@ use std::fs::File;
 use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
-    let vertices = mesh
-        .vertices()
-        .into_iter()
-        .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex { x, y, z })
-        .collect();
+    let vertices = mesh.vertices();
 
     let triangles = mesh
         .triangles()
@@ -24,7 +20,16 @@ pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
         .collect();
 
     let mesh = threemf::Mesh {
-        vertices: threemf::model::Vertices { vertex: vertices },
+        vertices: threemf::model::Vertices {
+            vertex: vertices
+                .into_iter()
+                .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex {
+                    x,
+                    y,
+                    z,
+                })
+                .collect(),
+        },
         triangles: threemf::model::Triangles {
             triangle: triangles,
         },
