@@ -1,7 +1,7 @@
-use crate::{geometry::Mesh, math::Scalar};
+use crate::{geometry::Operations, math::Scalar};
 
-pub fn model() -> anyhow::Result<Mesh> {
-    let mut mesh = Mesh::default();
+pub fn model() -> anyhow::Result<Operations> {
+    let mut mesh = Operations::default();
 
     [
         [-0.5, -0.5, -0.5], // 0

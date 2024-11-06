@@ -8,9 +8,9 @@ use winit::{
     window::{Window, WindowAttributes, WindowId},
 };
 
-use crate::{geometry::Mesh, render::Renderer};
+use crate::{geometry::Operations, render::Renderer};
 
-pub fn run(mesh: Mesh) -> anyhow::Result<()> {
+pub fn run(mesh: Operations) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let mut app = App {
@@ -24,7 +24,7 @@ pub fn run(mesh: Mesh) -> anyhow::Result<()> {
 }
 
 struct App {
-    mesh: Mesh,
+    mesh: Operations,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
 }

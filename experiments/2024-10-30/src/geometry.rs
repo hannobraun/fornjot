@@ -1,12 +1,12 @@
 use crate::math::Point;
 
 #[derive(Default)]
-pub struct Mesh {
+pub struct Operations {
     pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
 }
 
-impl Mesh {
+impl Operations {
     pub fn vertex(&mut self, point: Point) {
         let vertex = Vertex { point };
         self.vertices.push(vertex);
@@ -17,7 +17,7 @@ impl Mesh {
     }
 }
 
-impl Operation for Mesh {
+impl Operation for Operations {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         vertices.extend(&self.vertices);
     }
