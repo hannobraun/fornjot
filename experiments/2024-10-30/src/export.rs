@@ -3,15 +3,15 @@ use std::fs::File;
 use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
-    let mut vertices = Vec::new();
+    let mut mesh_vertices = Vec::new();
     let mut triangles = Vec::new();
 
-    mesh.vertices(&mut vertices);
+    mesh.vertices(&mut mesh_vertices);
     mesh.triangles(&mut triangles);
 
     let mesh = threemf::Mesh {
         vertices: threemf::model::Vertices {
-            vertex: vertices
+            vertex: mesh_vertices
                 .into_iter()
                 .map(|Vertex { point: [x, y, z] }| threemf::model::Vertex {
                     x,
