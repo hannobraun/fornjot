@@ -41,3 +41,11 @@ where
         }
     }
 }
+
+impl Operation for Triangle {
+    fn vertices(&self, _: &mut Vec<Vertex>) {}
+
+    fn triangles(&self, triangles: &mut Vec<Triangle>) {
+        triangles.push(*self)
+    }
+}
