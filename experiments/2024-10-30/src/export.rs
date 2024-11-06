@@ -3,7 +3,9 @@ use std::fs::File;
 use crate::geometry::{Mesh, Operation, Vertex};
 
 pub fn export(mesh: &Mesh) -> anyhow::Result<()> {
-    let vertices = mesh.vertices();
+    let mut vertices = Vec::new();
+
+    mesh.vertices(&mut vertices);
     let triangles = mesh.triangles();
 
     let mesh = threemf::Mesh {

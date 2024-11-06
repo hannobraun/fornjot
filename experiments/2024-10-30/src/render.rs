@@ -193,7 +193,8 @@ impl Renderer {
 
         for triangle in mesh.triangles() {
             let triangle = triangle.map(|index| {
-                let mesh_vertices = mesh.vertices();
+                let mut mesh_vertices = Vec::new();
+                mesh.vertices(&mut mesh_vertices);
 
                 Vec3::from(
                     mesh_vertices
