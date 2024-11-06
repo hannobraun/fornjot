@@ -13,9 +13,9 @@ pub struct OpsLog {
 impl OpsLog {
     pub fn vertex(
         &mut self,
-        point: impl Into<Vertex>,
+        vertex: impl Into<Vertex>,
     ) -> OperationResult<(Vertex,)> {
-        let vertex = point.into();
+        let vertex = vertex.into();
         self.operations.push(OperationInSequence {
             operation: ClonedOperation::from_op(&vertex),
             previous: self
