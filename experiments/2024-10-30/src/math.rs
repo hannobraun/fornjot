@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 pub type Point = [Scalar; 3];
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scalar {
     value: f64,
 }
