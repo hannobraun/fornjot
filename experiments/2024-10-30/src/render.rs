@@ -191,7 +191,8 @@ impl Renderer {
         let mut indices = Vec::new();
         let mut vertices = Vec::new();
 
-        for triangle in mesh.triangles() {
+        let mesh_triangles = mesh.triangles();
+        for triangle in mesh_triangles {
             let triangle = triangle.map(|index| {
                 let mut mesh_vertices = Vec::new();
                 mesh.vertices(&mut mesh_vertices);
