@@ -40,7 +40,7 @@ impl Operation for Vertex {
     fn triangles(&self, _: &mut Vec<Triangle>) {}
 }
 
-pub type Index = u32;
+pub type Index = u64;
 pub type Triangle = [Index; 3];
 
 pub trait Operation {
