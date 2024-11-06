@@ -2,15 +2,15 @@ pub type Point = [Scalar; 3];
 
 #[derive(Clone, Copy)]
 pub struct Scalar {
-    inner: f64,
+    value: f64,
 }
 
 impl Scalar {
     pub fn new(value: f64) -> Self {
-        Self { inner: value }
+        Self { value }
     }
 
     pub fn value(&self) -> f64 {
-        self.inner
+        self.value
     }
 }
