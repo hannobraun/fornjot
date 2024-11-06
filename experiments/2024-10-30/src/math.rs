@@ -1,6 +1,9 @@
 use std::cmp::Ordering;
 
-pub type Point = [Scalar; 3];
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Point {
+    pub coords: [Scalar; 3],
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Scalar {

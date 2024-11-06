@@ -196,7 +196,9 @@ impl Renderer {
 
         for triangle in &mesh_triangles {
             let triangle = triangle.map(|vertex| {
-                Vec3::from(vertex.point.map(|coord| coord.value() as f32))
+                Vec3::from(
+                    vertex.point.coords.map(|coord| coord.value() as f32),
+                )
             });
             let normal = {
                 let [a, b, c] = triangle;

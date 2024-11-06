@@ -1,4 +1,7 @@
-use crate::{geometry::Operations, math::Scalar};
+use crate::{
+    geometry::Operations,
+    math::{Point, Scalar},
+};
 
 pub fn model() -> anyhow::Result<Operations> {
     let mut mesh = Operations::default();
@@ -13,7 +16,11 @@ pub fn model() -> anyhow::Result<Operations> {
         [-0.5, 0.5, 0.5],   // 6
         [0.5, 0.5, 0.5],    // 7
     ]
-    .map(|point| mesh.vertex(point.map(Scalar::new)));
+    .map(|point| {
+        mesh.vertex(Point {
+            coords: point.map(Scalar::new),
+        })
+    });
 
     [
         [0, 4, 6], // left
