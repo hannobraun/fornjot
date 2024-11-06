@@ -13,8 +13,10 @@ use crate::{geometry::OpsLog, render::Renderer};
 pub fn run(ops: OpsLog) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
+    let selected_op = ops.operations.len().saturating_sub(1);
     let mut app = App {
         ops,
+        selected_op,
         window: None,
         renderer: None,
     };
@@ -25,6 +27,7 @@ pub fn run(ops: OpsLog) -> anyhow::Result<()> {
 
 struct App {
     ops: OpsLog,
+    selected_op: usize,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
 }
@@ -69,7 +72,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::RedrawRequested => {
-                if let Some(op) = self.ops.operations.last() {
+                if let Some(op) = self.ops.operations.get(self.selected_op) {
                     renderer.render(op);
                 }
             }
