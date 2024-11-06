@@ -193,8 +193,10 @@ impl Renderer {
 
         for triangle in mesh.triangles() {
             let triangle = triangle.map(|index| {
+                let mesh_vertices = mesh.vertices();
+
                 Vec3::from(
-                    mesh.vertices()
+                    mesh_vertices
                         .get(index as usize)
                         .unwrap()
                         .point
