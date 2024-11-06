@@ -7,6 +7,10 @@ pub struct Scalar {
 
 impl Scalar {
     pub fn new(value: f64) -> Self {
+        if value.is_nan() {
+            panic!("`Scalar` value must not be NaN");
+        }
+
         Self { value }
     }
 
