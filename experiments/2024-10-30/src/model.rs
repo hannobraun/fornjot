@@ -1,6 +1,6 @@
 use crate::geometry::Operations;
 
-pub fn model(ops: &mut Operations) -> anyhow::Result<()> {
+pub fn model(ops: &mut Operations) {
     let (a, b, c, d, e, f, g, h) = ops
         .vertex([-0.5, -0.5, -0.5])
         .vertex([0.5, -0.5, -0.5])
@@ -24,6 +24,4 @@ pub fn model(ops: &mut Operations) -> anyhow::Result<()> {
         .triangle([b, c, d])
         .triangle([e, f, h]) // top
         .triangle([e, h, g]);
-
-    Ok(ops)
 }
