@@ -199,13 +199,7 @@ impl Renderer {
                 let mut mesh_vertices = Vec::new();
                 mesh.vertices(&mut mesh_vertices);
 
-                Vec3::from(
-                    mesh_vertices
-                        .get(index as usize)
-                        .unwrap()
-                        .point
-                        .map(|coord| coord.value() as f32),
-                )
+                Vec3::from(index.point.map(|coord| coord.value() as f32))
             });
             let normal = {
                 let [a, b, c] = triangle;

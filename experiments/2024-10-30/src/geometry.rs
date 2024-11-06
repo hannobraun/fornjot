@@ -48,7 +48,7 @@ impl Operation for Vertex {
 }
 
 pub type Index = u64;
-pub type Triangle = [Index; 3];
+pub type Triangle = [Vertex; 3];
 
 pub trait Operation {
     fn vertices(&self, vertices: &mut Vec<Vertex>);
