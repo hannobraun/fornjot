@@ -6,6 +6,11 @@ pub struct Scalar {
 }
 
 impl Scalar {
+    /// # Create a new instance of [`Scalar`]
+    ///
+    /// ## Panics
+    ///
+    /// Panics, if `value` is NaN or infinite.
     pub fn new(value: f64) -> Self {
         if value.is_nan() {
             panic!("`Scalar` value must not be NaN");
