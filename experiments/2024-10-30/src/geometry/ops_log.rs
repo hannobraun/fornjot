@@ -100,7 +100,10 @@ impl<'r, T> OperationResult<'r, T> {
         }
     }
 
-    pub fn triangle(self, triangle: Triangle) -> OperationResult<'r, T::Out>
+    pub fn triangle(
+        self,
+        triangle: impl Into<Triangle>,
+    ) -> OperationResult<'r, T::Out>
     where
         T: CombinRight<Triangle>,
     {
