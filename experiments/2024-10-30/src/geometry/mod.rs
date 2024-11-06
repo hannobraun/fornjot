@@ -1,7 +1,7 @@
 mod operation;
-mod operations;
+mod ops_log;
 
-pub use self::{operation::Operation, operations::OpsLog};
+pub use self::{operation::Operation, ops_log::OpsLog};
 
 use crate::math::Point;
 
