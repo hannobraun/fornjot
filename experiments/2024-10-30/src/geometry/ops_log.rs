@@ -31,8 +31,10 @@ impl OpsLog {
 
     pub fn triangle(
         &mut self,
-        triangle: Triangle,
+        triangle: impl Into<Triangle>,
     ) -> OperationResult<(Triangle,)> {
+        let triangle = triangle.into();
+
         self.triangles.push(triangle);
 
         OperationResult {
