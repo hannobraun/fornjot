@@ -1,8 +1,8 @@
-use std::sync::Arc;
+use std::{collections::BTreeSet, sync::Arc};
 
 use winit::{
     application::ApplicationHandler,
-    event::{KeyEvent, WindowEvent},
+    event::{ElementState, KeyEvent, WindowEvent},
     event_loop::{ActiveEventLoop, EventLoop},
     keyboard::{Key, NamedKey},
     window::{Window, WindowAttributes, WindowId},
@@ -19,6 +19,7 @@ pub fn run(ops: OpsLog) -> anyhow::Result<()> {
         selected_op,
         window: None,
         renderer: None,
+        pressed_keys: BTreeSet::new(),
     };
     event_loop.run_app(&mut app)?;
 
@@ -30,6 +31,7 @@ struct App {
     selected_op: usize,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
+    pressed_keys: BTreeSet<Key>,
 }
 
 impl ApplicationHandler for App {
@@ -74,9 +76,24 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::KeyboardInput {
-                event: KeyEvent { logical_key, .. },
+                event:
+                    KeyEvent {
+                        logical_key, state, ..
+                    },
                 ..
             } => {
+                match state {
+                    ElementState::Pressed => {
+                        if self.pressed_keys.contains(&logical_key) {
+                            return;
+                        }
+                    }
+                    ElementState::Released => {
+                        self.pressed_keys.remove(&logical_key);
+                        return;
+                    }
+                }
+
                 match logical_key {
                     Key::Named(NamedKey::ArrowDown) => {
                         if self.selected_op < self.ops.operations.len() {
