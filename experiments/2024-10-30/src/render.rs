@@ -264,18 +264,20 @@ impl Renderer {
                     occlusion_query_set: None,
                 });
 
-            render_pass.set_index_buffer(
-                index_buffer.slice(..),
-                wgpu::IndexFormat::Uint32,
-            );
-            render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
-            render_pass.set_pipeline(&self.pipeline);
-            render_pass.set_bind_group(0, &self.bind_group, &[]);
-            render_pass.draw_indexed(
-                0..mesh_triangles.len() as u32 * 3,
-                0,
-                0..1,
-            );
+            if !indices.is_empty() || !vertices.is_empty() {
+                render_pass.set_index_buffer(
+                    index_buffer.slice(..),
+                    wgpu::IndexFormat::Uint32,
+                );
+                render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
+                render_pass.set_pipeline(&self.pipeline);
+                render_pass.set_bind_group(0, &self.bind_group, &[]);
+                render_pass.draw_indexed(
+                    0..mesh_triangles.len() as u32 * 3,
+                    0,
+                    0..1,
+                );
+            }
         }
 
         self.queue.submit(Some(encoder.finish()));
