@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.92"
+anyhow = "1.0.93"
 chrono = "0.4.38"
 map-macro = "0.3.0"
 octocrab = "0.41.2"
@@ -23,7 +23,7 @@ version = "4.5.19"
 features = ["derive"]
 
 [dependencies.tokio]
-version = "1.41.0"
+version = "1.41.1"
 features = ["full"]
 
 [dependencies.tracing-subscriber]
