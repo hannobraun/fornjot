@@ -75,7 +75,7 @@ impl Pipeline {
                 layout: Some(pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: shader.module,
-                    entry_point: "vertex",
+                    entry_point: Some("vertex"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     buffers: &[wgpu::VertexBufferLayout {
@@ -116,7 +116,7 @@ impl Pipeline {
                 },
                 fragment: Some(wgpu::FragmentState {
                     module: shader.module,
-                    entry_point: shader.frag_entry,
+                    entry_point: Some(shader.frag_entry),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     targets: &[Some(wgpu::ColorTargetState {
