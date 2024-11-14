@@ -34,7 +34,7 @@ impl InputHandler {
     }
 }
 
-pub fn apply_translation(
+fn apply_translation(
     previous: NormalizedScreenPosition,
     current: NormalizedScreenPosition,
     focus_point: FocusPoint,
@@ -57,7 +57,7 @@ pub fn apply_translation(
         ]));
 }
 
-pub fn apply_rotation(
+fn apply_rotation(
     angle_x: f64,
     angle_y: f64,
     focus_point: FocusPoint,
@@ -80,11 +80,7 @@ pub fn apply_rotation(
     camera.translation = transform.extract_translation();
 }
 
-pub fn apply_zoom(
-    zoom_delta: f64,
-    focus_point: FocusPoint,
-    camera: &mut Camera,
-) {
+fn apply_zoom(zoom_delta: f64, focus_point: FocusPoint, camera: &mut Camera) {
     let distance = (focus_point.0 - camera.position()).magnitude();
     let displacement = zoom_delta * distance.into_f64();
     camera.translation = camera.translation
