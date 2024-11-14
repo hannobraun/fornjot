@@ -167,13 +167,11 @@ impl Camera {
             -offset
         };
 
-        let translation = Transform::translation([
+        self.translation = Transform::translation([
             initial_offset.x,
             initial_offset.y,
             -initial_distance,
         ]);
-
-        self.translation = translation;
     }
 
     /// Update the max and minimum rendering distance for this camera.
