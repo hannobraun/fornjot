@@ -53,6 +53,12 @@ impl Transform {
         Vector::from([d[0], d[1], d[2]])
     }
 
+    /// # Extract the "up" vector from the rotational component
+    pub fn up(&self) -> Vector<3> {
+        let d = self.data();
+        Vector::from([d[4], d[5], d[6]])
+    }
+
     /// Transform the given point
     pub fn transform_point(&self, point: &Point<3>) -> Point<3> {
         Point::from(self.0.transform_point(&point.to_na()))
