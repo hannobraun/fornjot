@@ -25,7 +25,7 @@ impl InputHandler {
                 apply_translation(previous, current, focus_point, camera);
             }
             InputEvent::Rotation { angle_x, angle_y } => {
-                apply(angle_x, angle_y, focus_point, camera);
+                apply_rotation(angle_x, angle_y, focus_point, camera);
             }
             InputEvent::Zoom(zoom_delta) => {
                 apply_zoom(zoom_delta, focus_point, camera);
@@ -57,7 +57,7 @@ pub fn apply_translation(
         ]));
 }
 
-pub fn apply(
+pub fn apply_rotation(
     angle_x: f64,
     angle_y: f64,
     focus_point: FocusPoint,
