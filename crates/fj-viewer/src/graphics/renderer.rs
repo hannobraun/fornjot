@@ -42,8 +42,6 @@ impl Renderer {
             backends: wgpu::Backends::all(),
             ..Default::default()
         });
-
-        // This is sound, as `window` is an object to create a surface upon.
         let surface = instance.create_surface(screen.window())?;
 
         #[cfg(not(target_arch = "wasm32"))]
