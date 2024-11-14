@@ -1,4 +1,6 @@
-use super::{movement, rotation::Rotation, zoom::Zoom, InputEvent};
+use super::{
+    movement::apply_translation, rotation::Rotation, zoom::Zoom, InputEvent,
+};
 use crate::camera::{Camera, FocusPoint};
 
 /// Input handling abstraction
@@ -16,12 +18,7 @@ impl InputHandler {
     ) {
         match event {
             InputEvent::Translation { previous, current } => {
-                movement::apply_translation(
-                    previous,
-                    current,
-                    focus_point,
-                    camera,
-                );
+                apply_translation(previous, current, focus_point, camera);
             }
             InputEvent::Rotation { angle_x, angle_y } => {
                 Rotation::apply(angle_x, angle_y, focus_point, camera);
