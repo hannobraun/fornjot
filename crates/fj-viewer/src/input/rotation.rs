@@ -15,10 +15,9 @@ impl Rotation {
 
         // the model rotates not the camera, so invert the transform
         let camera_rotation = camera.rotation.inverse();
-        let right_vector = camera_rotation.right();
         let up_vector = up_vector(&camera_rotation);
 
-        let rotation = Transform::rotation(right_vector * angle_x)
+        let rotation = Transform::rotation(camera_rotation.right() * angle_x)
             * Transform::rotation(up_vector * angle_y);
 
         let transform = camera.camera_to_model()
