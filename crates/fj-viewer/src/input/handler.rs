@@ -1,10 +1,11 @@
 use fj_math::{Point, Scalar, Transform, Vector};
 
-use super::{rotation::Rotation, zoom::Zoom, InputEvent};
 use crate::{
     camera::{Camera, FocusPoint},
     NormalizedScreenPosition,
 };
+
+use super::{rotation::Rotation, zoom::Zoom, InputEvent};
 
 /// Input handling abstraction
 ///
