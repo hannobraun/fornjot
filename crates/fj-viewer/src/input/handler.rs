@@ -16,7 +16,12 @@ impl InputHandler {
     ) {
         match event {
             InputEvent::Translation { previous, current } => {
-                movement::apply(previous, current, focus_point, camera);
+                movement::apply_translation(
+                    previous,
+                    current,
+                    focus_point,
+                    camera,
+                );
             }
             InputEvent::Rotation { angle_x, angle_y } => {
                 Rotation::apply(angle_x, angle_y, focus_point, camera);

@@ -5,7 +5,7 @@ use crate::{
     screen::NormalizedScreenPosition,
 };
 
-pub fn apply(
+pub fn apply_translation(
     previous: NormalizedScreenPosition,
     current: NormalizedScreenPosition,
     focus_point: FocusPoint,
