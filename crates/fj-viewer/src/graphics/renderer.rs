@@ -347,6 +347,7 @@ impl Renderer {
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
             view_formats: &[],
         });
+
         texture.create_view(&wgpu::TextureViewDescriptor::default())
     }
 
