@@ -28,7 +28,7 @@ impl InputHandler {
                 Rotation::apply(angle_x, angle_y, focus_point, camera);
             }
             InputEvent::Zoom(zoom_delta) => {
-                zoom::apply(zoom_delta, focus_point, camera);
+                zoom::apply_zoom(zoom_delta, focus_point, camera);
             }
         }
     }
