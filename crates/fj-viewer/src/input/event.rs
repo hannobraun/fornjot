@@ -6,6 +6,7 @@ pub enum InputEvent {
     Translation {
         /// The normalized position of the cursor before input
         previous: NormalizedScreenPosition,
+
         /// The normalized position of the cursor after input
         current: NormalizedScreenPosition,
     },
@@ -14,6 +15,7 @@ pub enum InputEvent {
     Rotation {
         /// The angle around the screen x axis to rotate (in radians)
         angle_x: f64,
+
         /// The angle around the screen y axis to rotate (in radians)
         angle_y: f64,
     },
