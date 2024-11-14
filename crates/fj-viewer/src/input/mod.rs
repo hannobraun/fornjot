@@ -2,7 +2,6 @@
 
 mod event;
 mod handler;
-mod movement;
 mod rotation;
 mod zoom;
 
