@@ -5,7 +5,7 @@ use crate::{
     NormalizedScreenPosition,
 };
 
-use super::{rotation::Rotation, zoom::Zoom, InputEvent};
+use super::{rotation::Rotation, zoom, InputEvent};
 
 /// Input handling abstraction
 ///
@@ -28,7 +28,7 @@ impl InputHandler {
                 Rotation::apply(angle_x, angle_y, focus_point, camera);
             }
             InputEvent::Zoom(zoom_delta) => {
-                Zoom::apply(zoom_delta, focus_point, camera);
+                zoom::apply(zoom_delta, focus_point, camera);
             }
         }
     }
