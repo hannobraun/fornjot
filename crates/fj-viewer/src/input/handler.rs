@@ -5,7 +5,7 @@ use crate::{
     NormalizedScreenPosition,
 };
 
-use super::{rotation::Rotation, zoom, InputEvent};
+use super::{rotation::Rotation, InputEvent};
 
 /// Input handling abstraction
 ///
@@ -28,7 +28,7 @@ impl InputHandler {
                 Rotation::apply(angle_x, angle_y, focus_point, camera);
             }
             InputEvent::Zoom(zoom_delta) => {
-                zoom::apply_zoom(zoom_delta, focus_point, camera);
+                apply_zoom(zoom_delta, focus_point, camera);
             }
         }
     }
@@ -55,4 +55,15 @@ pub fn apply_translation(
             offset.y,
             Scalar::ZERO,
         ]));
+}
+
+pub fn apply_zoom(
+    zoom_delta: f64,
+    focus_point: FocusPoint,
+    camera: &mut Camera,
+) {
+    let distance = (focus_point.0 - camera.position()).magnitude();
+    let displacement = zoom_delta * distance.into_f64();
+    camera.translation = camera.translation
+        * Transform::translation(Vector::from([0.0, 0.0, displacement]));
 }
