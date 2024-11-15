@@ -4,7 +4,7 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    input::handler::{apply_rotation, apply_zoom},
+    input::handler::apply_zoom,
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize,
 };
@@ -71,7 +71,7 @@ impl Viewer {
                     );
                 }
                 InputEvent::Rotation { angle_x, angle_y } => {
-                    apply_rotation(
+                    Camera::apply_rotation(
                         angle_x,
                         angle_y,
                         focus_point,
