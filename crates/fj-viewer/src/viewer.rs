@@ -4,7 +4,7 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    input::handler::{apply_rotation, apply_translation, apply_zoom},
+    input::handler::{apply_rotation, apply_zoom},
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize,
 };
@@ -64,7 +64,7 @@ impl Viewer {
         if let Some(focus_point) = self.focus_point {
             match event {
                 InputEvent::Translation { previous, current } => {
-                    apply_translation(
+                    Camera::apply_translation(
                         previous,
                         current,
                         focus_point,
