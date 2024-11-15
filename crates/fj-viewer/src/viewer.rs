@@ -84,7 +84,10 @@ impl Viewer {
     /// Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
         self.current_screen_size = new_size;
-        self.renderer.handle_resize(new_size);
+        if new_size.is_valid() {
+            // We should only supply valid screen sizes to the renderer.
+            self.renderer.handle_resize(new_size);
+        }
     }
 
     /// Compute and store a focus point, unless one is already stored

@@ -147,9 +147,7 @@ impl ApplicationHandler for DisplayState {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = self.new_size.take() {
-                    if !self.stop_drawing {
-                        viewer.on_screen_resize(size);
-                    }
+                    viewer.on_screen_resize(size);
                 }
 
                 viewer.draw();
