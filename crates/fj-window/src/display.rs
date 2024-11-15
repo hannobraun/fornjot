@@ -129,6 +129,7 @@ impl ApplicationHandler for DisplayState {
                     width: size.width,
                     height: size.height,
                 };
+                self.stop_drawing = !size.is_valid();
                 self.new_size = Some(size);
             }
             WindowEvent::MouseInput { state, button, .. } => match state {
@@ -146,7 +147,6 @@ impl ApplicationHandler for DisplayState {
                 // Only do a screen resize once per frame. This protects against
                 // spurious resize events that cause issues with the renderer.
                 if let Some(size) = self.new_size.take() {
-                    self.stop_drawing = !size.is_valid();
                     if !self.stop_drawing {
                         viewer.on_screen_resize(size);
                     }
