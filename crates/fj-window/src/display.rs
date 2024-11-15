@@ -29,7 +29,6 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         viewer: None,
         held_mouse_button: None,
         new_size: None,
-        stop_drawing: false,
     };
 
     event_loop.run_app(&mut display_state)?;
@@ -60,7 +59,6 @@ struct DisplayState {
     viewer: Option<Viewer>,
     held_mouse_button: Option<MouseButton>,
     new_size: Option<ScreenSize>,
-    stop_drawing: bool,
 }
 
 impl ApplicationHandler for DisplayState {
@@ -129,7 +127,6 @@ impl ApplicationHandler for DisplayState {
                     width: size.width,
                     height: size.height,
                 };
-                self.stop_drawing = !size.is_valid();
                 self.new_size = Some(size);
             }
             WindowEvent::MouseInput { state, button, .. } => match state {
