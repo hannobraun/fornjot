@@ -243,7 +243,7 @@ impl Camera {
         self.translation = transform.extract_translation();
     }
 
-    /// # Apply a translation to the camera
+    /// # Apply a translation
     pub fn apply_translation(
         &mut self,
         previous: NormalizedScreenPosition,
