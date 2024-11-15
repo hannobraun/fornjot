@@ -28,7 +28,6 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         window: None,
         viewer: None,
         held_mouse_button: None,
-        new_size: None,
     };
 
     event_loop.run_app(&mut display_state)?;
@@ -58,7 +57,6 @@ struct DisplayState {
     window: Option<Window>,
     viewer: Option<Viewer>,
     held_mouse_button: Option<MouseButton>,
-    new_size: Option<ScreenSize>,
 }
 
 impl ApplicationHandler for DisplayState {
@@ -127,7 +125,7 @@ impl ApplicationHandler for DisplayState {
                     width: size.width,
                     height: size.height,
                 };
-                self.new_size = Some(size);
+                viewer.on_screen_resize(size);
             }
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
@@ -141,12 +139,6 @@ impl ApplicationHandler for DisplayState {
             },
             WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
             WindowEvent::RedrawRequested => {
-                // Only do a screen resize once per frame. This protects against
-                // spurious resize events that cause issues with the renderer.
-                if let Some(size) = self.new_size.take() {
-                    viewer.on_screen_resize(size);
-                }
-
                 viewer.draw();
             }
             _ => {}

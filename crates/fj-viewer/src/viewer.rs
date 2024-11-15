@@ -11,6 +11,7 @@ use crate::{
 /// The Fornjot model viewer
 pub struct Viewer {
     current_screen_size: ScreenSize,
+    new_screen_size: Option<ScreenSize>,
 
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
@@ -27,6 +28,7 @@ impl Viewer {
 
         Ok(Self {
             current_screen_size: screen.size(),
+            new_screen_size: None,
             camera: Camera::default(),
             cursor: None,
             draw_config: DrawConfig::default(),
@@ -84,10 +86,7 @@ impl Viewer {
     /// Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
         self.current_screen_size = new_size;
-        if new_size.is_valid() {
-            // We should only supply valid screen sizes to the renderer.
-            self.renderer.handle_resize(new_size);
-        }
+        self.new_screen_size = Some(new_size);
     }
 
     /// Compute and store a focus point, unless one is already stored
@@ -109,6 +108,13 @@ impl Viewer {
     pub fn draw(&mut self) {
         if !self.current_screen_size.is_valid() {
             return;
+        }
+
+        if let Some(new_size) = self.new_screen_size.take() {
+            // We should only supply valid screen sizes to the renderer. But
+            // `self.current_screen_size` has already been updated, and we're
+            // checking if that's valid above. No need to check again.
+            self.renderer.handle_resize(new_size);
         }
 
         let aabb = self
