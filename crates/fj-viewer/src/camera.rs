@@ -221,21 +221,21 @@ impl Camera {
 
     /// # Apply a translation to the camera
     pub fn apply_translation(
+        &mut self,
         previous: NormalizedScreenPosition,
         current: NormalizedScreenPosition,
         focus_point: FocusPoint,
-        camera: &mut Camera,
     ) {
-        let previous = camera.cursor_to_model_space(previous);
-        let cursor = camera.cursor_to_model_space(current);
+        let previous = self.cursor_to_model_space(previous);
+        let cursor = self.cursor_to_model_space(current);
 
-        let d1 = Point::distance_to(&camera.position(), &cursor);
-        let d2 = Point::distance_to(&camera.position(), &focus_point.0);
+        let d1 = Point::distance_to(&self.position(), &cursor);
+        let d2 = Point::distance_to(&self.position(), &focus_point.0);
 
         let diff = (cursor - previous) * d2 / d1;
-        let offset = camera.camera_to_model().transform_vector(&diff);
+        let offset = self.camera_to_model().transform_vector(&diff);
 
-        camera.translation = camera.translation
+        self.translation = self.translation
             * Transform::translation(Vector::from([
                 offset.x,
                 offset.y,

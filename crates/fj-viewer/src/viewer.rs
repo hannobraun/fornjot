@@ -64,11 +64,10 @@ impl Viewer {
         if let Some(focus_point) = self.focus_point {
             match event {
                 InputEvent::Translation { previous, current } => {
-                    Camera::apply_translation(
+                    self.camera.apply_translation(
                         previous,
                         current,
                         focus_point,
-                        &mut self.camera,
                     );
                 }
                 InputEvent::Rotation { angle_x, angle_y } => {
