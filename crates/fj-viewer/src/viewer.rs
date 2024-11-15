@@ -4,7 +4,7 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    input::InputHandler,
+    input::handle_event,
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize,
 };
@@ -62,7 +62,7 @@ impl Viewer {
     /// Handle an input event
     pub fn handle_input_event(&mut self, event: InputEvent) {
         if let Some(focus_point) = self.focus_point {
-            InputHandler::handle_event(event, focus_point, &mut self.camera);
+            handle_event(event, focus_point, &mut self.camera);
         }
     }
 

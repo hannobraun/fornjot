@@ -3,4 +3,4 @@
 mod event;
 mod handler;
 
-pub use self::{event::InputEvent, handler::InputHandler};
+pub use self::{event::InputEvent, handler::handle_event};
