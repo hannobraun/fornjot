@@ -79,7 +79,7 @@ impl Viewer {
     }
 
     /// Handle the screen being resized
-    pub fn handle_screen_resize(&mut self, screen_size: ScreenSize) {
+    pub fn on_screen_resize(&mut self, screen_size: ScreenSize) {
         self.renderer.handle_resize(screen_size);
     }
 

@@ -147,7 +147,7 @@ impl ApplicationHandler for DisplayState {
                 if let Some(size) = self.new_size.take() {
                     self.stop_drawing = size.width == 0 || size.height == 0;
                     if !self.stop_drawing {
-                        viewer.handle_screen_resize(size);
+                        viewer.on_screen_resize(size);
                     }
                 }
 
