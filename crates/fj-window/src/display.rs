@@ -121,11 +121,10 @@ impl ApplicationHandler for DisplayState {
                 _ => {}
             },
             WindowEvent::Resized(size) => {
-                let size = ScreenSize {
+                viewer.on_screen_resize(ScreenSize {
                     width: size.width,
                     height: size.height,
-                };
-                viewer.on_screen_resize(size);
+                });
             }
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
