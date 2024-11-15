@@ -60,23 +60,22 @@ impl Viewer {
 
     /// Handle an input event
     pub fn handle_input_event(&mut self, event: InputEvent) {
-        if let Some(focus_point) = self.focus_point {
-            match event {
-                InputEvent::Translation { previous, current } => {
-                    self.camera.apply_translation(
-                        previous,
-                        current,
-                        focus_point,
-                    );
-                }
-                InputEvent::Rotation { angle_x, angle_y } => {
-                    self.camera.apply_rotation(angle_x, angle_y, focus_point);
-                }
-                InputEvent::Zoom(zoom_delta) => {
-                    self.camera.apply_zoom(zoom_delta, focus_point);
-                }
-            };
-        }
+        let Some(focus_point) = self.focus_point else {
+            return;
+        };
+
+        match event {
+            InputEvent::Translation { previous, current } => {
+                self.camera
+                    .apply_translation(previous, current, focus_point);
+            }
+            InputEvent::Rotation { angle_x, angle_y } => {
+                self.camera.apply_rotation(angle_x, angle_y, focus_point);
+            }
+            InputEvent::Zoom(zoom_delta) => {
+                self.camera.apply_zoom(zoom_delta, focus_point);
+            }
+        };
     }
 
     /// Handle the screen being resized
