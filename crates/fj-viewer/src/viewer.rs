@@ -4,7 +4,7 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    input::handle_event,
+    input::handler::handle_event,
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
     ScreenSize,
 };
