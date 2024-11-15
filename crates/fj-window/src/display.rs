@@ -152,9 +152,7 @@ impl ApplicationHandler for DisplayState {
                     }
                 }
 
-                if !self.stop_drawing {
-                    viewer.draw();
-                }
+                viewer.draw();
             }
             _ => {}
         }

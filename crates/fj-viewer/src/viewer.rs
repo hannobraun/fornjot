@@ -104,6 +104,10 @@ impl Viewer {
 
     /// Draw the graphics
     pub fn draw(&mut self) {
+        if !self.current_screen_size.is_valid() {
+            return;
+        }
+
         let aabb = self
             .model
             .as_ref()
