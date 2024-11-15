@@ -71,12 +71,7 @@ impl Viewer {
                     );
                 }
                 InputEvent::Rotation { angle_x, angle_y } => {
-                    Camera::apply_rotation(
-                        angle_x,
-                        angle_y,
-                        focus_point,
-                        &mut self.camera,
-                    );
+                    self.camera.apply_rotation(angle_x, angle_y, focus_point);
                 }
                 InputEvent::Zoom(zoom_delta) => {
                     apply_zoom(zoom_delta, focus_point, &mut self.camera);
