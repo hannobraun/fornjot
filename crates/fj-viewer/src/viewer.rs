@@ -10,6 +10,8 @@ use crate::{
 
 /// The Fornjot model viewer
 pub struct Viewer {
+    current_screen_size: ScreenSize,
+
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
@@ -24,6 +26,7 @@ impl Viewer {
         let renderer = Renderer::new(screen).await?;
 
         Ok(Self {
+            current_screen_size: screen.size(),
             camera: Camera::default(),
             cursor: None,
             draw_config: DrawConfig::default(),
@@ -80,6 +83,7 @@ impl Viewer {
 
     /// Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
+        self.current_screen_size = new_size;
         self.renderer.handle_resize(new_size);
     }
 
