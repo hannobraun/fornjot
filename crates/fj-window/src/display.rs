@@ -125,10 +125,11 @@ impl ApplicationHandler for DisplayState {
                 _ => {}
             },
             WindowEvent::Resized(size) => {
-                self.new_size = Some(ScreenSize {
+                let size = ScreenSize {
                     width: size.width,
                     height: size.height,
-                });
+                };
+                self.new_size = Some(size);
             }
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
