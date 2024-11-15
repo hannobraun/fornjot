@@ -40,6 +40,14 @@ pub struct ScreenSize {
 }
 
 impl ScreenSize {
+    /// # Indicate whether the screen size is valid
+    ///
+    /// A screen size is valid, if neither of its dimensions is zero. But it can
+    /// be reported as zero by spurious screen resize events.
+    pub fn is_valid(&self) -> bool {
+        self.width > 0 && self.height > 0
+    }
+
     /// Convert size to `f64`
     pub fn as_f64(&self) -> [f64; 2] {
         [self.width, self.height].map(Into::into)
