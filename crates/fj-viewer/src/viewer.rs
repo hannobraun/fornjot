@@ -79,8 +79,8 @@ impl Viewer {
     }
 
     /// Handle the screen being resized
-    pub fn on_screen_resize(&mut self, screen_size: ScreenSize) {
-        self.renderer.handle_resize(screen_size);
+    pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
+        self.renderer.handle_resize(new_size);
     }
 
     /// Compute and store a focus point, unless one is already stored
