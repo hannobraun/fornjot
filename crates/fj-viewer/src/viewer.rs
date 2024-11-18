@@ -121,6 +121,7 @@ impl Viewer {
     /// # Handle a mouse button being pressed
     pub fn on_mouse_button_pressed(&mut self, button: MouseButton) {
         self.most_recent_mouse_button = Some(button);
+        self.add_focus_point();
     }
 
     /// # Handle a mouse button being pressed
@@ -128,6 +129,8 @@ impl Viewer {
         if self.most_recent_mouse_button == Some(button) {
             self.most_recent_mouse_button = None;
         }
+
+        self.remove_focus_point();
     }
 
     /// Handle the screen being resized

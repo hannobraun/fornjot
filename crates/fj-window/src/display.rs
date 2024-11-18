@@ -121,15 +121,6 @@ impl ApplicationHandler for DisplayState {
                 viewer.on_cursor_movement([position.x, position.y]);
             }
             WindowEvent::MouseInput { state, button, .. } => {
-                match state {
-                    ElementState::Pressed => {
-                        viewer.add_focus_point();
-                    }
-                    ElementState::Released => {
-                        viewer.remove_focus_point();
-                    }
-                }
-
                 let button = match button {
                     MouseButton::Left => Some(fj_viewer::MouseButton::Left),
                     MouseButton::Right => Some(fj_viewer::MouseButton::Right),
