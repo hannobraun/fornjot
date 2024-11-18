@@ -5,7 +5,7 @@ use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
     InputEvent, MouseButton, NormalizedScreenPosition, RendererInitError,
-    Screen, ScreenSize,
+    Screen, ScreenSize, DEFAULT_CAMERA_TUNING_CONFIG,
 };
 
 /// The Fornjot model viewer
@@ -97,6 +97,29 @@ impl Viewer {
             x: x / width * 2. - 1.,
             y: -(y / height * 2. - 1.) / aspect_ratio,
         };
+
+        let event = match (self.cursor, self.most_recent_mouse_button) {
+            (Some(cursor_old), Some(button)) => match button {
+                MouseButton::Left => {
+                    let diff_x = cursor_new.x - cursor_old.x;
+                    let diff_y = cursor_new.y - cursor_old.y;
+                    let angle_x = -diff_y
+                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
+                    let angle_y = diff_x
+                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
+
+                    Some(InputEvent::Rotation { angle_x, angle_y })
+                }
+                MouseButton::Right => Some(InputEvent::Translation {
+                    previous: cursor_old,
+                    current: cursor_new,
+                }),
+            },
+            _ => None,
+        };
+        if let Some(event) = event {
+            self.handle_input_event(event);
+        }
 
         self.cursor = Some(cursor_new);
     }

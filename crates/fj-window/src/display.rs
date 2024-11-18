@@ -174,43 +174,12 @@ impl ApplicationHandler for DisplayState {
 
 fn input_event(
     event: &WindowEvent,
-    window: &Window,
-    held_mouse_button: &Option<MouseButton>,
-    previous_cursor: Option<NormalizedScreenPosition>,
+    _: &Window,
+    _: &Option<MouseButton>,
+    _: Option<NormalizedScreenPosition>,
     invert_zoom: bool,
 ) -> Option<InputEvent> {
     match event {
-        WindowEvent::CursorMoved { position, .. } => {
-            let [width, height] = window.size().as_f64();
-            let aspect_ratio = width / height;
-
-            // Cursor position in normalized coordinates (-1 to +1) with
-            // aspect ratio taken into account.
-            let cursor_new = NormalizedScreenPosition {
-                x: position.x / width * 2. - 1.,
-                y: -(position.y / height * 2. - 1.) / aspect_ratio,
-            };
-            match (previous_cursor, held_mouse_button) {
-                (Some(cursor_old), Some(button)) => match button {
-                    MouseButton::Left => {
-                        let diff_x = cursor_new.x - cursor_old.x;
-                        let diff_y = cursor_new.y - cursor_old.y;
-                        let angle_x = -diff_y
-                            * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
-                        let angle_y = diff_x
-                            * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
-
-                        Some(InputEvent::Rotation { angle_x, angle_y })
-                    }
-                    MouseButton::Right => Some(InputEvent::Translation {
-                        previous: cursor_old,
-                        current: cursor_new,
-                    }),
-                    _ => None,
-                },
-                _ => None,
-            }
-        }
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
