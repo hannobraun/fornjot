@@ -1,7 +1,7 @@
 use fj_interop::Model;
 use fj_viewer::{
-    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize, Viewer, DEFAULT_CAMERA_TUNING_CONFIG,
+    InputEvent, RendererInitError, Screen, ScreenSize, Viewer,
+    DEFAULT_CAMERA_TUNING_CONFIG,
 };
 use futures::executor::block_on;
 use winit::{
@@ -80,18 +80,11 @@ impl ApplicationHandler for DisplayState {
         _: WindowId,
         event: WindowEvent,
     ) {
-        let Some(window) = &self.window else { return };
         let Some(viewer) = &mut self.viewer else {
             return;
         };
 
-        let input_event = input_event(
-            &event,
-            window,
-            &self.held_mouse_button,
-            *viewer.cursor(),
-            self.invert_zoom,
-        );
+        let input_event = input_event(&event, self.invert_zoom);
         if let Some(input_event) = input_event {
             viewer.handle_input_event(input_event);
         }
@@ -172,13 +165,7 @@ impl ApplicationHandler for DisplayState {
     }
 }
 
-fn input_event(
-    event: &WindowEvent,
-    _: &Window,
-    _: &Option<MouseButton>,
-    _: Option<NormalizedScreenPosition>,
-    invert_zoom: bool,
-) -> Option<InputEvent> {
+fn input_event(event: &WindowEvent, invert_zoom: bool) -> Option<InputEvent> {
     match event {
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
