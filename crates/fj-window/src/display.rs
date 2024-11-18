@@ -129,16 +129,35 @@ impl ApplicationHandler for DisplayState {
             WindowEvent::CursorMoved { position, .. } => {
                 viewer.on_cursor_movement([position.x, position.y]);
             }
-            WindowEvent::MouseInput { state, button, .. } => match state {
-                ElementState::Pressed => {
-                    self.held_mouse_button = Some(button);
-                    viewer.add_focus_point();
+            WindowEvent::MouseInput { state, button, .. } => {
+                match state {
+                    ElementState::Pressed => {
+                        self.held_mouse_button = Some(button);
+                        viewer.add_focus_point();
+                    }
+                    ElementState::Released => {
+                        self.held_mouse_button = None;
+                        viewer.remove_focus_point();
+                    }
                 }
-                ElementState::Released => {
-                    self.held_mouse_button = None;
-                    viewer.remove_focus_point();
+
+                let button = match button {
+                    MouseButton::Left => Some(fj_viewer::MouseButton::Left),
+                    MouseButton::Right => Some(fj_viewer::MouseButton::Right),
+                    _ => None,
+                };
+
+                if let Some(button) = button {
+                    match state {
+                        ElementState::Pressed => {
+                            viewer.on_mouse_button_pressed(button);
+                        }
+                        ElementState::Released => {
+                            viewer.on_mouse_button_released(button)
+                        }
+                    }
                 }
-            },
+            }
             WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
             WindowEvent::RedrawRequested => {
                 viewer.draw();
