@@ -97,6 +97,12 @@ impl ApplicationHandler for DisplayState {
         }
 
         match event {
+            WindowEvent::Resized(size) => {
+                viewer.on_screen_resize(ScreenSize {
+                    width: size.width,
+                    height: size.height,
+                });
+            }
             WindowEvent::CloseRequested => {
                 event_loop.exit();
             }
@@ -120,12 +126,6 @@ impl ApplicationHandler for DisplayState {
                 }
                 _ => {}
             },
-            WindowEvent::Resized(size) => {
-                viewer.on_screen_resize(ScreenSize {
-                    width: size.width,
-                    height: size.height,
-                });
-            }
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
                     self.held_mouse_button = Some(button);
