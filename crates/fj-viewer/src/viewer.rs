@@ -91,7 +91,7 @@ impl Viewer {
             y: -(y / height * 2. - 1.) / aspect_ratio,
         };
 
-        let event = if let (Some(cursor_old), Some(button)) =
+        if let (Some(cursor_old), Some(button)) =
             (self.cursor, self.most_recent_mouse_button)
         {
             match button {
@@ -110,8 +110,6 @@ impl Viewer {
                             focus_point,
                         );
                     }
-
-                    None
                 }
                 MouseButton::Right => {
                     if let Some(focus_point) = self.focus_point {
@@ -121,14 +119,8 @@ impl Viewer {
                             focus_point,
                         );
                     }
-                    None
                 }
             }
-        } else {
-            None
-        };
-        if let Some(event) = event {
-            self.handle_input_event(event);
         }
 
         self.cursor = Some(cursor_new);
