@@ -12,9 +12,7 @@ use crate::{
 pub struct Viewer {
     current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
-
     most_recent_mouse_button: Option<MouseButton>,
-
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
