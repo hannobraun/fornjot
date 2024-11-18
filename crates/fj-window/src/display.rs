@@ -186,15 +186,15 @@ fn input_event(
 
             // Cursor position in normalized coordinates (-1 to +1) with
             // aspect ratio taken into account.
-            let current = NormalizedScreenPosition {
+            let cursor_new = NormalizedScreenPosition {
                 x: position.x / width * 2. - 1.,
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };
             match (previous_cursor, held_mouse_button) {
                 (Some(previous), Some(button)) => match button {
                     MouseButton::Left => {
-                        let diff_x = current.x - previous.x;
-                        let diff_y = current.y - previous.y;
+                        let diff_x = cursor_new.x - previous.x;
+                        let diff_y = cursor_new.y - previous.y;
                         let angle_x = -diff_y
                             * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
                         let angle_y = diff_x
@@ -202,9 +202,10 @@ fn input_event(
 
                         Some(InputEvent::Rotation { angle_x, angle_y })
                     }
-                    MouseButton::Right => {
-                        Some(InputEvent::Translation { previous, current })
-                    }
+                    MouseButton::Right => Some(InputEvent::Translation {
+                        previous,
+                        current: cursor_new,
+                    }),
                     _ => None,
                 },
                 _ => None,
