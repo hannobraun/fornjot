@@ -27,7 +27,6 @@ pub fn display(model: Model, invert_zoom: bool) -> Result<(), Error> {
         invert_zoom,
         window: None,
         viewer: None,
-        held_mouse_button: None,
     };
 
     event_loop.run_app(&mut display_state)?;
@@ -56,7 +55,6 @@ struct DisplayState {
     invert_zoom: bool,
     window: Option<Window>,
     viewer: Option<Viewer>,
-    held_mouse_button: Option<MouseButton>,
 }
 
 impl ApplicationHandler for DisplayState {
@@ -125,11 +123,9 @@ impl ApplicationHandler for DisplayState {
             WindowEvent::MouseInput { state, button, .. } => {
                 match state {
                     ElementState::Pressed => {
-                        self.held_mouse_button = Some(button);
                         viewer.add_focus_point();
                     }
                     ElementState::Released => {
-                        self.held_mouse_button = None;
                         viewer.remove_focus_point();
                     }
                 }
