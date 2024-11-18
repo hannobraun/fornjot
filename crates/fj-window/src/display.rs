@@ -89,7 +89,7 @@ impl ApplicationHandler for DisplayState {
             &event,
             window,
             &self.held_mouse_button,
-            viewer.cursor(),
+            *viewer.cursor(),
             self.invert_zoom,
         );
         if let Some(input_event) = input_event {
@@ -157,7 +157,7 @@ fn input_event(
     event: &WindowEvent,
     window: &Window,
     held_mouse_button: &Option<MouseButton>,
-    previous_cursor: &mut Option<NormalizedScreenPosition>,
+    previous_cursor: Option<NormalizedScreenPosition>,
     invert_zoom: bool,
 ) -> Option<InputEvent> {
     match event {
@@ -171,7 +171,7 @@ fn input_event(
                 x: position.x / width * 2. - 1.,
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };
-            match (*previous_cursor, held_mouse_button) {
+            match (previous_cursor, held_mouse_button) {
                 (Some(previous), Some(button)) => match button {
                     MouseButton::Left => {
                         let diff_x = current.x - previous.x;
