@@ -211,7 +211,7 @@ fn input_event(
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
-                    f64::from(*y) * ZOOM_FACTOR_LINE
+                    f64::from(*y) * CAMERA_ZOOM_SENSITIVITY_LINE
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..
@@ -230,7 +230,7 @@ fn input_event(
 ///
 /// Given a specific input, smaller values mean that the camera moves less,
 /// larger values mean it moves more.
-const ZOOM_FACTOR_LINE: f64 = 0.075;
+const CAMERA_ZOOM_SENSITIVITY_LINE: f64 = 0.075;
 
 /// # Sensitivity of camera zoom, given scroll wheel input in pixels
 ///
