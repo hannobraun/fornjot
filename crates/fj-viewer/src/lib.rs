@@ -18,6 +18,7 @@ mod viewer;
 pub use self::{
     graphics::{DeviceError, RendererInitError},
     input::InputEvent,
+    input::MouseButton,
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     viewer::Viewer,
 };
