@@ -18,10 +18,7 @@ mod viewer;
 pub use self::{
     graphics::{DeviceError, RendererInitError},
     input::InputEvent,
-    input::{
-        MouseButton, CAMERA_ROTATION_SENSITIVITY, CAMERA_ZOOM_SENSITIVITY_LINE,
-        CAMERA_ZOOM_SENSITIVITY_PIXEL,
-    },
+    input::{CameraTuningConfig, MouseButton, DEFAULT_CAMERA_TUNING_CONFIG},
     screen::{NormalizedScreenPosition, Screen, ScreenSize},
     viewer::Viewer,
 };

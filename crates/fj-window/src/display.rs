@@ -1,8 +1,7 @@
 use fj_interop::Model;
 use fj_viewer::{
     InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize, Viewer, CAMERA_ROTATION_SENSITIVITY,
-    CAMERA_ZOOM_SENSITIVITY_LINE, CAMERA_ZOOM_SENSITIVITY_PIXEL,
+    ScreenSize, Viewer, DEFAULT_CAMERA_TUNING_CONFIG,
 };
 use futures::executor::block_on;
 use winit::{
@@ -196,8 +195,10 @@ fn input_event(
                     MouseButton::Left => {
                         let diff_x = current.x - previous.x;
                         let diff_y = current.y - previous.y;
-                        let angle_x = -diff_y * CAMERA_ROTATION_SENSITIVITY;
-                        let angle_y = diff_x * CAMERA_ROTATION_SENSITIVITY;
+                        let angle_x = -diff_y
+                            * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
+                        let angle_y = diff_x
+                            * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
 
                         Some(InputEvent::Rotation { angle_x, angle_y })
                     }
@@ -212,11 +213,12 @@ fn input_event(
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {
                 MouseScrollDelta::LineDelta(_, y) => {
-                    f64::from(*y) * CAMERA_ZOOM_SENSITIVITY_LINE
+                    f64::from(*y)
+                        * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_line
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..
-                }) => y * CAMERA_ZOOM_SENSITIVITY_PIXEL,
+                }) => y * DEFAULT_CAMERA_TUNING_CONFIG.zoom_sensitivity_pixel,
             };
 
             let delta = if invert_zoom { -delta } else { delta };
