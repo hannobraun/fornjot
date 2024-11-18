@@ -90,10 +90,12 @@ impl Viewer {
 
         // Cursor position in normalized coordinates (-1 to +1) with aspect
         // ratio taken into account.
-        self.cursor = Some(NormalizedScreenPosition {
+        let cursor_new = NormalizedScreenPosition {
             x: x / width * 2. - 1.,
             y: -(y / height * 2. - 1.) / aspect_ratio,
-        });
+        };
+
+        self.cursor = Some(cursor_new);
     }
 
     /// Handle the screen being resized
