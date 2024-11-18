@@ -91,8 +91,10 @@ impl Viewer {
             y: -(y / height * 2. - 1.) / aspect_ratio,
         };
 
-        let event = match (self.cursor, self.most_recent_mouse_button) {
-            (Some(cursor_old), Some(button)) => match button {
+        let event = if let (Some(cursor_old), Some(button)) =
+            (self.cursor, self.most_recent_mouse_button)
+        {
+            match button {
                 MouseButton::Left => {
                     let diff_x = cursor_new.x - cursor_old.x;
                     let diff_y = cursor_new.y - cursor_old.y;
@@ -121,8 +123,9 @@ impl Viewer {
                     }
                     None
                 }
-            },
-            _ => None,
+            }
+        } else {
+            None
         };
         if let Some(event) = event {
             self.handle_input_event(event);
