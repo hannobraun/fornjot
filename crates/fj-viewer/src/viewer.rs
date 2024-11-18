@@ -73,9 +73,6 @@ impl Viewer {
         };
 
         match event {
-            InputEvent::Rotation { angle_x, angle_y } => {
-                self.camera.apply_rotation(angle_x, angle_y, focus_point);
-            }
             InputEvent::Zoom(zoom_delta) => {
                 self.camera.apply_zoom(zoom_delta, focus_point);
             }
@@ -104,7 +101,15 @@ impl Viewer {
                     let angle_y =
                         diff_x * self.camera_tuning_config.rotation_sensitivity;
 
-                    Some(InputEvent::Rotation { angle_x, angle_y })
+                    if let Some(focus_point) = self.focus_point {
+                        self.camera.apply_rotation(
+                            angle_x,
+                            angle_y,
+                            focus_point,
+                        );
+                    }
+
+                    None
                 }
                 MouseButton::Right => {
                     if let Some(focus_point) = self.focus_point {
