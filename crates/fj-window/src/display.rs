@@ -195,8 +195,8 @@ fn input_event(
                     MouseButton::Left => {
                         let diff_x = current.x - previous.x;
                         let diff_y = current.y - previous.y;
-                        let angle_x = -diff_y * ROTATION_SENSITIVITY;
-                        let angle_y = diff_x * ROTATION_SENSITIVITY;
+                        let angle_x = -diff_y * CAMERA_ROTATION_SENSITIVITY;
+                        let angle_y = diff_x * CAMERA_ROTATION_SENSITIVITY;
 
                         Some(InputEvent::Rotation { angle_x, angle_y })
                     }
@@ -242,4 +242,4 @@ const CAMERA_ZOOM_SENSITIVITY_PIXEL: f64 = 0.005;
 ///
 /// Given a specific input, smaller values mean that the camera rotates less,
 /// larger values mean it rotates more.
-const ROTATION_SENSITIVITY: f64 = 5.;
+const CAMERA_ROTATION_SENSITIVITY: f64 = 5.;
