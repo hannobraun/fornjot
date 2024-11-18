@@ -215,7 +215,7 @@ fn input_event(
                 }
                 MouseScrollDelta::PixelDelta(PhysicalPosition {
                     y, ..
-                }) => y * ZOOM_FACTOR_PIXEL,
+                }) => y * CAMERA_ZOOM_SENSITIVITY_PIXEL,
             };
 
             let delta = if invert_zoom { -delta } else { delta };
@@ -236,7 +236,7 @@ const CAMERA_ZOOM_SENSITIVITY_LINE: f64 = 0.075;
 ///
 /// Given a specific input, smaller values mean that the camera moves less,
 /// larger values mean it moves more.
-const ZOOM_FACTOR_PIXEL: f64 = 0.005;
+const CAMERA_ZOOM_SENSITIVITY_PIXEL: f64 = 0.005;
 
 /// # Sensitivity of camera rotation
 ///
