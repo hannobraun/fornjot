@@ -4,14 +4,16 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    InputEvent, NormalizedScreenPosition, RendererInitError, Screen,
-    ScreenSize,
+    InputEvent, MouseButton, NormalizedScreenPosition, RendererInitError,
+    Screen, ScreenSize,
 };
 
 /// The Fornjot model viewer
 pub struct Viewer {
     current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
+
+    most_recent_mouse_button: Option<MouseButton>,
 
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
@@ -29,6 +31,7 @@ impl Viewer {
         Ok(Self {
             current_screen_size: screen.size(),
             new_screen_size: None,
+            most_recent_mouse_button: None,
             camera: Camera::default(),
             cursor: None,
             draw_config: DrawConfig::default(),
@@ -96,6 +99,18 @@ impl Viewer {
         };
 
         self.cursor = Some(cursor_new);
+    }
+
+    /// # Handle a mouse button being pressed
+    pub fn on_mouse_button_pressed(&mut self, button: MouseButton) {
+        self.most_recent_mouse_button = Some(button);
+    }
+
+    /// # Handle a mouse button being pressed
+    pub fn on_mouse_button_released(&mut self, button: MouseButton) {
+        if self.most_recent_mouse_button == Some(button) {
+            self.most_recent_mouse_button = None;
+        }
     }
 
     /// Handle the screen being resized
