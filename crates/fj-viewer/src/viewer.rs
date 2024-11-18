@@ -91,8 +91,8 @@ impl Viewer {
             y: -(y / height * 2. - 1.) / aspect_ratio,
         };
 
-        if let (Some(cursor_old), Some(button)) =
-            (self.cursor, self.most_recent_mouse_button)
+        if let (Some(cursor_old), Some(button), Some(focus_point)) =
+            (self.cursor, self.most_recent_mouse_button, self.focus_point)
         {
             match button {
                 MouseButton::Left => {
@@ -103,22 +103,14 @@ impl Viewer {
                     let angle_y =
                         diff_x * self.camera_tuning_config.rotation_sensitivity;
 
-                    if let Some(focus_point) = self.focus_point {
-                        self.camera.apply_rotation(
-                            angle_x,
-                            angle_y,
-                            focus_point,
-                        );
-                    }
+                    self.camera.apply_rotation(angle_x, angle_y, focus_point);
                 }
                 MouseButton::Right => {
-                    if let Some(focus_point) = self.focus_point {
-                        self.camera.apply_translation(
-                            cursor_old,
-                            cursor_new,
-                            focus_point,
-                        );
-                    }
+                    self.camera.apply_translation(
+                        cursor_old,
+                        cursor_new,
+                        focus_point,
+                    );
                 }
             }
         }
