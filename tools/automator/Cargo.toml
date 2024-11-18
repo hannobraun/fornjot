@@ -8,10 +8,10 @@ publish = false
 anyhow = "1.0.93"
 chrono = "0.4.38"
 map-macro = "0.3.0"
-octocrab = "0.41.2"
+octocrab = "0.42.0"
 semver = "1.0.23"
-serde = "1.0.213"
-serde_json = "1.0.132"
+serde = "1.0.215"
+serde_json = "1.0.133"
 tracing = "0.1.40"
 url = "2.5.3"
 
@@ -19,7 +19,7 @@ url = "2.5.3"
 path = "../autolib"
 
 [dependencies.clap]
-version = "4.5.19"
+version = "4.5.21"
 features = ["derive"]
 
 [dependencies.tokio]
