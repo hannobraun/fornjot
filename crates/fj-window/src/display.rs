@@ -226,20 +226,20 @@ fn input_event(
     }
 }
 
-/// Affects the speed of zoom movement given a scroll wheel input in lines.
+/// # Sensitivity of camera zoom, given scroll wheel input in lines
 ///
-/// Smaller values will move the camera less with the same input.
-/// Larger values will move the camera more with the same input.
+/// Given a specific input, smaller values mean that the camera moves less,
+/// larger values mean it moves more.
 const ZOOM_FACTOR_LINE: f64 = 0.075;
 
-/// Affects the speed of zoom movement given a scroll wheel input in pixels.
+/// # Sensitivity of camera zoom, given scroll wheel input in pixels
 ///
-/// Smaller values will move the camera less with the same input.
-/// Larger values will move the camera more with the same input.
+/// Given a specific input, smaller values mean that the camera moves less,
+/// larger values mean it moves more.
 const ZOOM_FACTOR_PIXEL: f64 = 0.005;
 
-/// Affects the speed of rotation given a change in normalized screen position [-1, 1]
+/// # Sensitivity of camera rotation
 ///
-/// Smaller values will move the camera less with the same input.
-/// Larger values will move the camera more with the same input.
+/// Given a specific input, smaller values mean that the camera rotates less,
+/// larger values mean it rotates more.
 const ROTATION_SENSITIVITY: f64 = 5.;
