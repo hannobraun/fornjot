@@ -126,6 +126,9 @@ impl ApplicationHandler for DisplayState {
                 }
                 _ => {}
             },
+            WindowEvent::CursorMoved { position, .. } => {
+                viewer.on_cursor_movement([position.x, position.y]);
+            }
             WindowEvent::MouseInput { state, button, .. } => match state {
                 ElementState::Pressed => {
                     self.held_mouse_button = Some(button);
@@ -136,9 +139,6 @@ impl ApplicationHandler for DisplayState {
                     viewer.remove_focus_point();
                 }
             },
-            WindowEvent::CursorMoved { position, .. } => {
-                viewer.on_cursor_movement([position.x, position.y]);
-            }
             WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
             WindowEvent::RedrawRequested => {
                 viewer.draw();
