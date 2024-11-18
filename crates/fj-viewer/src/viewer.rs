@@ -4,8 +4,8 @@ use tracing::warn;
 use crate::{
     camera::{Camera, FocusPoint},
     graphics::{DrawConfig, Renderer},
-    InputEvent, MouseButton, NormalizedScreenPosition, RendererInitError,
-    Screen, ScreenSize, DEFAULT_CAMERA_TUNING_CONFIG,
+    CameraTuningConfig, InputEvent, MouseButton, NormalizedScreenPosition,
+    RendererInitError, Screen, ScreenSize, DEFAULT_CAMERA_TUNING_CONFIG,
 };
 
 /// The Fornjot model viewer
@@ -13,6 +13,7 @@ pub struct Viewer {
     current_screen_size: ScreenSize,
     new_screen_size: Option<ScreenSize>,
     most_recent_mouse_button: Option<MouseButton>,
+    camera_tuning_config: CameraTuningConfig,
     camera: Camera,
     cursor: Option<NormalizedScreenPosition>,
     draw_config: DrawConfig,
@@ -30,6 +31,7 @@ impl Viewer {
             current_screen_size: screen.size(),
             new_screen_size: None,
             most_recent_mouse_button: None,
+            camera_tuning_config: DEFAULT_CAMERA_TUNING_CONFIG,
             camera: Camera::default(),
             cursor: None,
             draw_config: DrawConfig::default(),
@@ -102,9 +104,9 @@ impl Viewer {
                     let diff_x = cursor_new.x - cursor_old.x;
                     let diff_y = cursor_new.y - cursor_old.y;
                     let angle_x = -diff_y
-                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
-                    let angle_y = diff_x
-                        * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
+                        * self.camera_tuning_config.rotation_sensitivity;
+                    let angle_y =
+                        diff_x * self.camera_tuning_config.rotation_sensitivity;
 
                     Some(InputEvent::Rotation { angle_x, angle_y })
                 }
