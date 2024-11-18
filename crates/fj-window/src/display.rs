@@ -136,6 +136,9 @@ impl ApplicationHandler for DisplayState {
                     viewer.remove_focus_point();
                 }
             },
+            WindowEvent::CursorMoved { position, .. } => {
+                viewer.on_cursor_movement([position.x, position.y]);
+            }
             WindowEvent::MouseWheel { .. } => viewer.add_focus_point(),
             WindowEvent::RedrawRequested => {
                 viewer.draw();
@@ -168,7 +171,7 @@ fn input_event(
                 x: position.x / width * 2. - 1.,
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };
-            let event = match (*previous_cursor, held_mouse_button) {
+            match (*previous_cursor, held_mouse_button) {
                 (Some(previous), Some(button)) => match button {
                     MouseButton::Left => {
                         let diff_x = current.x - previous.x;
@@ -184,9 +187,7 @@ fn input_event(
                     _ => None,
                 },
                 _ => None,
-            };
-            *previous_cursor = Some(current);
-            event
+            }
         }
         WindowEvent::MouseWheel { delta, .. } => {
             let delta = match delta {

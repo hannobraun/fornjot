@@ -83,6 +83,19 @@ impl Viewer {
         };
     }
 
+    /// # Handle a cursor movement
+    pub fn on_cursor_movement(&mut self, [x, y]: [f64; 2]) {
+        let [width, height] = self.current_screen_size.as_f64();
+        let aspect_ratio = width / height;
+
+        // Cursor position in normalized coordinates (-1 to +1) with aspect
+        // ratio taken into account.
+        self.cursor = Some(NormalizedScreenPosition {
+            x: x / width * 2. - 1.,
+            y: -(y / height * 2. - 1.) / aspect_ratio,
+        });
+    }
+
     /// Handle the screen being resized
     pub fn on_screen_resize(&mut self, new_size: ScreenSize) {
         self.current_screen_size = new_size;
