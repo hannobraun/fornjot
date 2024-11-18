@@ -73,10 +73,6 @@ impl Viewer {
         };
 
         match event {
-            InputEvent::Translation { previous, current } => {
-                self.camera
-                    .apply_translation(previous, current, focus_point);
-            }
             InputEvent::Rotation { angle_x, angle_y } => {
                 self.camera.apply_rotation(angle_x, angle_y, focus_point);
             }
@@ -110,10 +106,16 @@ impl Viewer {
 
                     Some(InputEvent::Rotation { angle_x, angle_y })
                 }
-                MouseButton::Right => Some(InputEvent::Translation {
-                    previous: cursor_old,
-                    current: cursor_new,
-                }),
+                MouseButton::Right => {
+                    if let Some(focus_point) = self.focus_point {
+                        self.camera.apply_translation(
+                            cursor_old,
+                            cursor_new,
+                            focus_point,
+                        );
+                    }
+                    None
+                }
             },
             _ => None,
         };
