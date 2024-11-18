@@ -191,10 +191,10 @@ fn input_event(
                 y: -(position.y / height * 2. - 1.) / aspect_ratio,
             };
             match (previous_cursor, held_mouse_button) {
-                (Some(previous), Some(button)) => match button {
+                (Some(cursor_old), Some(button)) => match button {
                     MouseButton::Left => {
-                        let diff_x = cursor_new.x - previous.x;
-                        let diff_y = cursor_new.y - previous.y;
+                        let diff_x = cursor_new.x - cursor_old.x;
+                        let diff_y = cursor_new.y - cursor_old.y;
                         let angle_x = -diff_y
                             * DEFAULT_CAMERA_TUNING_CONFIG.rotation_sensitivity;
                         let angle_y = diff_x
@@ -203,7 +203,7 @@ fn input_event(
                         Some(InputEvent::Rotation { angle_x, angle_y })
                     }
                     MouseButton::Right => Some(InputEvent::Translation {
-                        previous,
+                        previous: cursor_old,
                         current: cursor_new,
                     }),
                     _ => None,
