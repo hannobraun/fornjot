@@ -10,7 +10,7 @@ impl Pipeline {
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
         shaders: &Shaders,
-        transform_buffer: &wgpu::Buffer,
+        uniforms: &wgpu::Buffer,
     ) -> Self {
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -90,7 +90,7 @@ impl Pipeline {
             layout: &bind_group_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
-                resource: transform_buffer.as_entire_binding(),
+                resource: uniforms.as_entire_binding(),
             }],
         });
 
