@@ -47,10 +47,7 @@ impl Pipeline {
                         array_stride: size_of::<TrianglesVertex>()
                             as wgpu::BufferAddress,
                         step_mode: wgpu::VertexStepMode::Vertex,
-                        attributes: &wgpu::vertex_attr_array![
-                            0 => Float32x3,
-                            1 => Float32x3,
-                        ],
+                        attributes: TrianglesVertex::ATTRIBUTES,
                     }],
                 },
                 fragment: Some(wgpu::FragmentState {
