@@ -89,11 +89,11 @@ impl Renderer {
     }
 
     pub fn render(&self, operation: &impl Operation) {
-        let mut indices = Vec::new();
-        let mut vertices = Vec::new();
-
         let mut mesh_triangles = Vec::new();
         operation.triangles(&mut mesh_triangles);
+
+        let mut indices = Vec::new();
+        let mut vertices = Vec::new();
 
         for triangle in &mesh_triangles {
             let triangle = triangle.vertices.map(|vertex| {
