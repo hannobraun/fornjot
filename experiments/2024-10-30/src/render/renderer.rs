@@ -56,7 +56,7 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
-        let (pipeline, bind_group) = {
+        let pipeline = {
             let bind_group_layout = device.create_bind_group_layout(
                 &wgpu::BindGroupLayoutDescriptor {
                     label: None,
@@ -146,7 +146,10 @@ impl Renderer {
                     }],
                 });
 
-            (pipeline, bind_group)
+            Pipeline {
+                pipeline,
+                bind_group,
+            }
         };
 
         let depth_view = {
@@ -174,10 +177,7 @@ impl Renderer {
             surface,
             device,
             queue,
-            pipeline: Pipeline {
-                pipeline,
-                bind_group,
-            },
+            pipeline,
             depth_view,
         })
     }
