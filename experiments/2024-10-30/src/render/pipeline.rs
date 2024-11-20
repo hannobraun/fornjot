@@ -1,7 +1,7 @@
 use super::renderer::Vertex;
 
 pub struct Pipeline {
-    pipeline: wgpu::RenderPipeline,
+    render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
 }
 
@@ -97,13 +97,13 @@ impl Pipeline {
         });
 
         Pipeline {
-            pipeline,
+            render_pipeline: pipeline,
             bind_group,
         }
     }
 
     pub fn set(&self, render_pass: &mut wgpu::RenderPass) {
-        render_pass.set_pipeline(&self.pipeline);
+        render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(0, &self.bind_group, &[]);
     }
 }
