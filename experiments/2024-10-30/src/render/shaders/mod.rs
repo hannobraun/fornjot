@@ -11,6 +11,20 @@ impl Shaders {
 
         Self { shader_module }
     }
+
+    pub fn vertex_state(&self) -> wgpu::VertexState {
+        wgpu::VertexState {
+            module: &self.shader_module,
+            entry_point: Some("vertex"),
+            compilation_options: wgpu::PipelineCompilationOptions::default(),
+            buffers: &[wgpu::VertexBufferLayout {
+                array_stride: size_of::<TrianglesVertex>()
+                    as wgpu::BufferAddress,
+                step_mode: wgpu::VertexStepMode::Vertex,
+                attributes: TrianglesVertex::ATTRIBUTES,
+            }],
+        }
+    }
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]

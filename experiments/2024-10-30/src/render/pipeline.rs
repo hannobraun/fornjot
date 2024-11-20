@@ -1,4 +1,4 @@
-use super::shaders::{Shaders, TrianglesVertex};
+use super::shaders::Shaders;
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
@@ -38,18 +38,7 @@ impl Pipeline {
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&layout),
-                vertex: wgpu::VertexState {
-                    module: &shaders.shader_module,
-                    entry_point: Some("vertex"),
-                    compilation_options:
-                        wgpu::PipelineCompilationOptions::default(),
-                    buffers: &[wgpu::VertexBufferLayout {
-                        array_stride: size_of::<TrianglesVertex>()
-                            as wgpu::BufferAddress,
-                        step_mode: wgpu::VertexStepMode::Vertex,
-                        attributes: TrianglesVertex::ATTRIBUTES,
-                    }],
-                },
+                vertex: shaders.vertex_state(),
                 fragment: Some(wgpu::FragmentState {
                     module: &shaders.shader_module,
                     entry_point: Some("fragment"),
