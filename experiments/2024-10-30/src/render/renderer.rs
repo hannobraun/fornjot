@@ -7,12 +7,13 @@ use winit::window::Window;
 
 use crate::geometry::Operation;
 
+use super::pipeline::Pipeline;
+
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
-    pub pipeline: wgpu::RenderPipeline,
-    pub bind_group: wgpu::BindGroup,
+    pub pipeline: Pipeline,
     pub depth_view: wgpu::TextureView,
 }
 
@@ -173,8 +174,10 @@ impl Renderer {
             surface,
             device,
             queue,
-            pipeline,
-            bind_group,
+            pipeline: Pipeline {
+                pipeline,
+                bind_group,
+            },
             depth_view,
         })
     }
@@ -270,8 +273,8 @@ impl Renderer {
                     wgpu::IndexFormat::Uint32,
                 );
                 render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                render_pass.set_pipeline(&self.pipeline);
-                render_pass.set_bind_group(0, &self.bind_group, &[]);
+                render_pass.set_pipeline(&self.pipeline.pipeline);
+                render_pass.set_bind_group(0, &self.pipeline.bind_group, &[]);
                 render_pass.draw_indexed(
                     0..mesh_triangles.len() as u32 * 3,
                     0,
