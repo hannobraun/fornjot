@@ -1,4 +1,4 @@
-use super::renderer::Vertex;
+use super::{renderer::Vertex, shaders::Shaders};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
@@ -36,13 +36,16 @@ impl Pipeline {
         let shader = device.create_shader_module(wgpu::include_wgsl!(
             "shaders/triangles.wgsl"
         ));
+        let shaders = Shaders {
+            shader_module: shader,
+        };
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&layout),
                 vertex: wgpu::VertexState {
-                    module: &shader,
+                    module: &shaders.shader_module,
                     entry_point: Some("vertex"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
@@ -57,7 +60,7 @@ impl Pipeline {
                     }],
                 },
                 fragment: Some(wgpu::FragmentState {
-                    module: &shader,
+                    module: &shaders.shader_module,
                     entry_point: Some("fragment"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
