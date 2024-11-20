@@ -1,4 +1,4 @@
-use super::{renderer::Vertex, shaders::Shaders};
+use super::shaders::{Shaders, Vertex};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,

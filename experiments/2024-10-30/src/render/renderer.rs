@@ -7,7 +7,10 @@ use winit::window::Window;
 
 use crate::geometry::Operation;
 
-use super::{pipeline::Pipeline, shaders::Shaders};
+use super::{
+    pipeline::Pipeline,
+    shaders::{Shaders, Vertex},
+};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
@@ -222,11 +225,4 @@ fn default_transform(aspect_ratio: f32) -> Mat4 {
         * Mat4::from_translation(Vec3::new(0., 0., -2.))
         * Mat4::from_rotation_x(-PI / 4.)
         * Mat4::from_rotation_z(PI / 4.)
-}
-
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
-#[repr(C)]
-pub struct Vertex {
-    pub position: [f32; 3],
-    pub normal: [f32; 3],
 }
