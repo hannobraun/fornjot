@@ -89,14 +89,6 @@ impl Renderer {
     }
 
     pub fn render(&self, operation: &impl Operation) {
-        let frame = self.surface.get_current_texture().unwrap();
-        let frame_view = frame
-            .texture
-            .create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
-
         let mut indices = Vec::new();
         let mut vertices = Vec::new();
 
@@ -144,6 +136,14 @@ impl Renderer {
                     contents: bytemuck::cast_slice(&vertices),
                     usage: wgpu::BufferUsages::VERTEX,
                 });
+
+        let frame = self.surface.get_current_texture().unwrap();
+        let frame_view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
         {
             let mut render_pass =
