@@ -101,4 +101,9 @@ impl Pipeline {
             bind_group,
         }
     }
+
+    pub fn set(&self, render_pass: &mut wgpu::RenderPass) {
+        render_pass.set_pipeline(&self.pipeline);
+        render_pass.set_bind_group(0, &self.bind_group, &[]);
+    }
 }

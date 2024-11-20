@@ -179,8 +179,7 @@ impl Renderer {
                     wgpu::IndexFormat::Uint32,
                 );
                 render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
-                render_pass.set_pipeline(&self.pipeline.pipeline);
-                render_pass.set_bind_group(0, &self.pipeline.bind_group, &[]);
+                self.pipeline.set(&mut render_pass);
                 render_pass.draw_indexed(
                     0..mesh_triangles.len() as u32 * 3,
                     0,
