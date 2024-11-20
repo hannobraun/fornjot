@@ -9,7 +9,7 @@ use crate::geometry::Operation;
 
 use super::{
     pipeline::Pipeline,
-    shaders::{Shaders, Uniforms, Vertex},
+    shaders::{Shaders, TrianglesVertex, Uniforms},
 };
 
 pub struct Renderer {
@@ -117,7 +117,7 @@ impl Renderer {
 
             for point in triangle {
                 let index = vertices.len() as u32;
-                let vertex = Vertex {
+                let vertex = TrianglesVertex {
                     position: point.into(),
                     normal: normal.into(),
                 };

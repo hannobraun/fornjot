@@ -1,4 +1,4 @@
-use super::shaders::{Shaders, Vertex};
+use super::shaders::{Shaders, TrianglesVertex};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
@@ -44,7 +44,7 @@ impl Pipeline {
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     buffers: &[wgpu::VertexBufferLayout {
-                        array_stride: size_of::<Vertex>()
+                        array_stride: size_of::<TrianglesVertex>()
                             as wgpu::BufferAddress,
                         step_mode: wgpu::VertexStepMode::Vertex,
                         attributes: &wgpu::vertex_attr_array![

@@ -33,7 +33,7 @@ impl Uniforms {
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
-pub struct Vertex {
+pub struct TrianglesVertex {
     pub position: [f32; 3],
     pub normal: [f32; 3],
 }
