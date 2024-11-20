@@ -33,8 +33,9 @@ impl Pipeline {
                 push_constant_ranges: &[],
             });
 
-        let shader =
-            device.create_shader_module(wgpu::include_wgsl!("shader.wgsl"));
+        let shader = device.create_shader_module(wgpu::include_wgsl!(
+            "shaders/triangles.wgsl"
+        ));
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
