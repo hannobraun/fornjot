@@ -1,8 +1,8 @@
 use super::renderer::Vertex;
 
 pub struct Pipeline {
-    pub pipeline: wgpu::RenderPipeline,
-    pub bind_group: wgpu::BindGroup,
+    pipeline: wgpu::RenderPipeline,
+    bind_group: wgpu::BindGroup,
 }
 
 impl Pipeline {
