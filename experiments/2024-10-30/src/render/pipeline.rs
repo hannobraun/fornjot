@@ -36,7 +36,7 @@ impl Pipeline {
         let shader =
             device.create_shader_module(wgpu::include_wgsl!("shader.wgsl"));
 
-        let pipeline =
+        let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&layout),
@@ -97,7 +97,7 @@ impl Pipeline {
         });
 
         Pipeline {
-            render_pipeline: pipeline,
+            render_pipeline,
             bind_group,
         }
     }
