@@ -9,7 +9,7 @@ use crate::geometry::Operation;
 
 use super::{
     pipeline::Pipeline,
-    shaders::{Shaders, Vertex},
+    shaders::{Shaders, Uniforms, Vertex},
 };
 
 pub struct Renderer {
@@ -195,24 +195,6 @@ impl Renderer {
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
-    }
-}
-
-#[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
-#[repr(C)]
-pub struct Uniforms {
-    pub transform: Mat4,
-    pub transform_for_normals: Mat4,
-}
-
-impl Uniforms {
-    pub fn from_transform(transform: Mat4) -> Self {
-        let transform_for_normals = transform.inverse().transpose();
-
-        Self {
-            transform,
-            transform_for_normals,
-        }
     }
 }
 
