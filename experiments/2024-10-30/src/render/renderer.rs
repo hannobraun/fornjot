@@ -88,7 +88,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self, mesh: &impl Operation) {
+    pub fn render(&self, operation: &impl Operation) {
         let frame = self.surface.get_current_texture().unwrap();
         let frame_view = frame
             .texture
@@ -101,7 +101,7 @@ impl Renderer {
         let mut vertices = Vec::new();
 
         let mut mesh_triangles = Vec::new();
-        mesh.triangles(&mut mesh_triangles);
+        operation.triangles(&mut mesh_triangles);
 
         for triangle in &mesh_triangles {
             let triangle = triangle.vertices.map(|vertex| {
