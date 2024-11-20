@@ -9,6 +9,7 @@ impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
+        shaders: &Shaders,
         transform_buffer: &wgpu::Buffer,
     ) -> Self {
         let bind_group_layout =
@@ -32,8 +33,6 @@ impl Pipeline {
                 bind_group_layouts: &[&bind_group_layout],
                 push_constant_ranges: &[],
             });
-
-        let shaders = Shaders::triangles(device);
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {

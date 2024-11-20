@@ -7,7 +7,7 @@ use winit::window::Window;
 
 use crate::geometry::Operation;
 
-use super::pipeline::Pipeline;
+use super::{pipeline::Pipeline, shaders::Shaders};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
@@ -56,7 +56,9 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
-        let pipeline = Pipeline::new(&device, &config, &transform_buffer);
+        let shaders = Shaders::triangles(&device);
+        let pipeline =
+            Pipeline::new(&device, &config, &shaders, &transform_buffer);
 
         let depth_view = {
             let depth_texture =
