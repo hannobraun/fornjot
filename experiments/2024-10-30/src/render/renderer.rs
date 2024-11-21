@@ -17,7 +17,7 @@ pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
-    pub pipeline: Pipeline,
+    pub triangles_pipeline: Pipeline,
     pub depth_view: wgpu::TextureView,
 }
 
@@ -88,7 +88,7 @@ impl Renderer {
             surface,
             device,
             queue,
-            pipeline,
+            triangles_pipeline: pipeline,
             depth_view,
         })
     }
@@ -133,13 +133,13 @@ impl Renderer {
             });
         }
 
-        self.pipeline.draw(
+        self.triangles_pipeline.draw(
             &mut encoder,
             &color_view,
             &self.depth_view,
             &vertices,
         );
-        self.pipeline.draw(
+        self.triangles_pipeline.draw(
             &mut encoder,
             &color_view,
             &self.depth_view,
