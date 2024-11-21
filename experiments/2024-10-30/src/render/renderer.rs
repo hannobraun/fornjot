@@ -138,6 +138,8 @@ impl Renderer {
             .create_view(&wgpu::TextureViewDescriptor::default());
 
         {
+            // No need to do anything else with the render pass. Creating and
+            // then dropping it is enough to clear the background.
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: None,
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
