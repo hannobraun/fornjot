@@ -165,7 +165,7 @@ impl Renderer {
                     occlusion_query_set: None,
                 });
 
-            if !indices.is_empty() || !vertices.is_empty() {
+            if triangles.num_indices > 0 {
                 render_pass.set_index_buffer(
                     triangles.indices.slice(..),
                     wgpu::IndexFormat::Uint32,
