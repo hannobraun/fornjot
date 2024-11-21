@@ -18,6 +18,19 @@ where
     }
 }
 
+impl<T> ops::Add<T> for Point
+where
+    T: Into<Vector>,
+{
+    type Output = Self;
+
+    fn add(self, other: T) -> Self::Output {
+        let other = other.into();
+        let coords = self.coords + other;
+        Self { coords }
+    }
+}
+
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Vector {
     pub components: [Scalar; 3],
