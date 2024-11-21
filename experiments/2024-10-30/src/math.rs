@@ -5,11 +5,11 @@ pub struct Point {
     pub coords: Vector,
 }
 
-impl<S> From<[S; 3]> for Point
+impl<T> From<T> for Point
 where
-    S: Into<Scalar>,
+    T: Into<Vector>,
 {
-    fn from(coords: [S; 3]) -> Self {
+    fn from(coords: T) -> Self {
         Self {
             coords: coords.into(),
         }
