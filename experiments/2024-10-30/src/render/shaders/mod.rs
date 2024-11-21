@@ -90,7 +90,7 @@ impl Uniforms {
     }
 }
 
-trait Vertex {
+pub trait Vertex {
     const ATTRIBUTES: &[wgpu::VertexAttribute];
 }
 
