@@ -127,7 +127,7 @@ impl Renderer {
             }
         }
 
-        let geometry = Geometry::new(&self.device, &vertices, &indices);
+        let triangles = Geometry::new(&self.device, &vertices, &indices);
 
         let frame = self.surface.get_current_texture().unwrap();
         let frame_view = frame
@@ -167,12 +167,12 @@ impl Renderer {
 
             if !indices.is_empty() || !vertices.is_empty() {
                 render_pass.set_index_buffer(
-                    geometry.indices.slice(..),
+                    triangles.indices.slice(..),
                     wgpu::IndexFormat::Uint32,
                 );
-                render_pass.set_vertex_buffer(0, geometry.vertices.slice(..));
+                render_pass.set_vertex_buffer(0, triangles.vertices.slice(..));
                 self.pipeline.set(&mut render_pass);
-                render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
+                render_pass.draw_indexed(0..triangles.num_indices, 0, 0..1);
             }
         }
 
