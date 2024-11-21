@@ -38,13 +38,7 @@ impl Pipeline {
                 label: None,
                 layout: Some(&layout),
                 vertex: shaders.vertex_state(),
-                fragment: Some(wgpu::FragmentState {
-                    module: &shaders.shader_module,
-                    entry_point: Some("fragment"),
-                    compilation_options:
-                        wgpu::PipelineCompilationOptions::default(),
-                    targets: &shaders.fragment_targets,
-                }),
+                fragment: Some(shaders.fragment_state()),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,
                     strip_index_format: None,

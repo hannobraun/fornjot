@@ -38,6 +38,15 @@ impl Shaders {
             }],
         }
     }
+
+    pub fn fragment_state(&self) -> wgpu::FragmentState {
+        wgpu::FragmentState {
+            module: &self.shader_module,
+            entry_point: Some("fragment"),
+            compilation_options: wgpu::PipelineCompilationOptions::default(),
+            targets: &self.fragment_targets,
+        }
+    }
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
