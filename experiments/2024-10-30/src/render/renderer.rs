@@ -59,8 +59,9 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
-        let shaders = Shaders::triangles(&device, &config);
-        let pipeline = Pipeline::new(&device, &shaders, &transform_buffer);
+        let triangles_shaders = Shaders::triangles(&device, &config);
+        let pipeline =
+            Pipeline::new(&device, &triangles_shaders, &transform_buffer);
 
         let depth_view = {
             let depth_texture =
