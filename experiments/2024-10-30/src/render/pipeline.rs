@@ -98,13 +98,9 @@ impl Pipeline {
                 wgpu::IndexFormat::Uint32,
             );
             render_pass.set_vertex_buffer(0, geometry.vertices.slice(..));
-            self.set(&mut render_pass);
+            render_pass.set_pipeline(&self.render_pipeline);
+            render_pass.set_bind_group(0, &self.bind_group, &[]);
             render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
         }
-    }
-
-    pub fn set(&self, render_pass: &mut wgpu::RenderPass) {
-        render_pass.set_pipeline(&self.render_pipeline);
-        render_pass.set_bind_group(0, &self.bind_group, &[]);
     }
 }
