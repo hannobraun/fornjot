@@ -60,8 +60,7 @@ impl Renderer {
             });
 
         let shaders = Shaders::triangles(&device, &config);
-        let pipeline =
-            Pipeline::new(&device, &config, &shaders, &transform_buffer);
+        let pipeline = Pipeline::new(&device, &shaders, &transform_buffer);
 
         let depth_view = {
             let depth_texture =

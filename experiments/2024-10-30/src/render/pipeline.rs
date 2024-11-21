@@ -8,7 +8,6 @@ pub struct Pipeline {
 impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
-        _: &wgpu::SurfaceConfiguration,
         shaders: &Shaders,
         uniforms: &wgpu::Buffer,
     ) -> Self {
