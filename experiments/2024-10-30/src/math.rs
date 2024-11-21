@@ -1,4 +1,4 @@
-use std::cmp::Ordering;
+use std::{cmp::Ordering, ops};
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point {
@@ -82,6 +82,18 @@ impl PartialOrd for Scalar {
 
 impl From<f64> for Scalar {
     fn from(value: f64) -> Self {
+        Self::new(value)
+    }
+}
+
+impl<T> ops::Add<T> for Scalar
+where
+    T: Into<Scalar>,
+{
+    type Output = Self;
+
+    fn add(self, other: T) -> Self::Output {
+        let value = self.value() + other.into().value();
         Self::new(value)
     }
 }
