@@ -45,23 +45,25 @@ impl Shaders<TrianglesVertex> {
             _vertex: PhantomData,
         }
     }
+}
 
-    pub fn vertex_state(&self) -> wgpu::VertexState {
+impl<V> Shaders<V> {
+    pub fn vertex_state(&self) -> wgpu::VertexState
+    where
+        V: Vertex,
+    {
         wgpu::VertexState {
             module: &self.shader_module,
             entry_point: Some("vertex"),
             compilation_options: wgpu::PipelineCompilationOptions::default(),
             buffers: &[wgpu::VertexBufferLayout {
-                array_stride: size_of::<TrianglesVertex>()
-                    as wgpu::BufferAddress,
+                array_stride: size_of::<V>() as wgpu::BufferAddress,
                 step_mode: wgpu::VertexStepMode::Vertex,
-                attributes: TrianglesVertex::ATTRIBUTES,
+                attributes: V::ATTRIBUTES,
             }],
         }
     }
-}
 
-impl<V> Shaders<V> {
     pub fn fragment_state(&self) -> wgpu::FragmentState {
         wgpu::FragmentState {
             module: &self.shader_module,
