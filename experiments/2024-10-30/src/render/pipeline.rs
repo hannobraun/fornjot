@@ -1,4 +1,4 @@
-use super::shaders::Shaders;
+use super::{geometry::Geometry, shaders::Shaders};
 
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
@@ -57,6 +57,49 @@ impl Pipeline {
         Pipeline {
             render_pipeline,
             bind_group,
+        }
+    }
+
+    pub fn draw(
+        &self,
+        encoder: &mut wgpu::CommandEncoder,
+        frame_view: &wgpu::TextureView,
+        depth_view: &wgpu::TextureView,
+        geometry: &Geometry,
+    ) {
+        let mut render_pass =
+            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: None,
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: frame_view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        store: wgpu::StoreOp::Store,
+                    },
+                })],
+                depth_stencil_attachment: Some(
+                    wgpu::RenderPassDepthStencilAttachment {
+                        view: depth_view,
+                        depth_ops: Some(wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(1.0),
+                            store: wgpu::StoreOp::Store,
+                        }),
+                        stencil_ops: None,
+                    },
+                ),
+                timestamp_writes: None,
+                occlusion_query_set: None,
+            });
+
+        if geometry.num_indices > 0 {
+            render_pass.set_index_buffer(
+                geometry.indices.slice(..),
+                wgpu::IndexFormat::Uint32,
+            );
+            render_pass.set_vertex_buffer(0, geometry.vertices.slice(..));
+            self.set(&mut render_pass);
+            render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
         }
     }
 

@@ -137,44 +137,12 @@ impl Renderer {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
-        {
-            let mut render_pass =
-                encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                    label: None,
-                    color_attachments: &[Some(
-                        wgpu::RenderPassColorAttachment {
-                            view: &frame_view,
-                            resolve_target: None,
-                            ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
-                                store: wgpu::StoreOp::Store,
-                            },
-                        },
-                    )],
-                    depth_stencil_attachment: Some(
-                        wgpu::RenderPassDepthStencilAttachment {
-                            view: &self.depth_view,
-                            depth_ops: Some(wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(1.0),
-                                store: wgpu::StoreOp::Store,
-                            }),
-                            stencil_ops: None,
-                        },
-                    ),
-                    timestamp_writes: None,
-                    occlusion_query_set: None,
-                });
-
-            if triangles.num_indices > 0 {
-                render_pass.set_index_buffer(
-                    triangles.indices.slice(..),
-                    wgpu::IndexFormat::Uint32,
-                );
-                render_pass.set_vertex_buffer(0, triangles.vertices.slice(..));
-                self.pipeline.set(&mut render_pass);
-                render_pass.draw_indexed(0..triangles.num_indices, 0, 0..1);
-            }
-        }
+        self.pipeline.draw(
+            &mut encoder,
+            &frame_view,
+            &self.depth_view,
+            &triangles,
+        );
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
