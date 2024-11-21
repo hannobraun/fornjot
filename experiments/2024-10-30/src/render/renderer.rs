@@ -130,7 +130,7 @@ impl Renderer {
         let triangles = Geometry::new(&self.device, &vertices, &indices);
 
         let frame = self.surface.get_current_texture().unwrap();
-        let frame_view = frame
+        let color_view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
         let mut encoder = self
@@ -139,7 +139,7 @@ impl Renderer {
 
         self.pipeline.draw(
             &mut encoder,
-            &frame_view,
+            &color_view,
             &self.depth_view,
             &triangles,
         );
