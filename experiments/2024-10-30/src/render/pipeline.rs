@@ -63,7 +63,7 @@ impl Pipeline {
     pub fn draw(
         &self,
         encoder: &mut wgpu::CommandEncoder,
-        frame_view: &wgpu::TextureView,
+        color_view: &wgpu::TextureView,
         depth_view: &wgpu::TextureView,
         geometry: &Geometry,
     ) {
@@ -71,7 +71,7 @@ impl Pipeline {
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: None,
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: frame_view,
+                    view: color_view,
                     resolve_target: None,
                     ops: wgpu::Operations {
                         load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
