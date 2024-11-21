@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point {
-    pub coords: [Scalar; 3],
+    pub coords: Vector,
 }
 
 impl<S> From<[S; 3]> for Point
@@ -11,7 +11,23 @@ where
 {
     fn from(coords: [S; 3]) -> Self {
         Self {
-            coords: coords.map(Into::into),
+            coords: coords.into(),
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct Vector {
+    pub components: [Scalar; 3],
+}
+
+impl<S> From<[S; 3]> for Vector
+where
+    S: Into<Scalar>,
+{
+    fn from(components: [S; 3]) -> Self {
+        Self {
+            components: components.map(Into::into),
         }
     }
 }

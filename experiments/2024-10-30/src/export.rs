@@ -31,7 +31,7 @@ pub fn export(mesh: &OpsLog) -> anyhow::Result<()> {
             vertex: vertices
                 .into_iter()
                 .map(|Vertex { point }| point)
-                .map(|point| point.coords.map(|coord| coord.value()))
+                .map(|point| point.coords.components.map(|coord| coord.value()))
                 .map(|[x, y, z]| threemf::model::Vertex { x, y, z })
                 .collect(),
         },
