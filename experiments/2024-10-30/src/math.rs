@@ -1,5 +1,7 @@
 use std::{cmp::Ordering, ops};
 
+use iter_fixed::IntoIteratorFixed;
+
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Point {
     pub coords: Vector,
@@ -29,6 +31,26 @@ where
         Self {
             components: components.map(Into::into),
         }
+    }
+}
+
+impl<T> ops::Add<T> for Vector
+where
+    T: Into<Vector>,
+{
+    type Output = Self;
+
+    fn add(self, other: T) -> Self::Output {
+        let other = other.into();
+
+        let components = self
+            .components
+            .into_iter_fixed()
+            .zip(other.components)
+            .map(|(a, b)| a + b)
+            .collect();
+
+        Self { components }
     }
 }
 
