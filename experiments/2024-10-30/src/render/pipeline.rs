@@ -1,6 +1,6 @@
 use super::{
     geometry::Geometry,
-    shaders::{Shaders, TrianglesVertex},
+    shaders::{Shaders, Vertex},
 };
 
 pub struct Pipeline {
@@ -11,7 +11,7 @@ pub struct Pipeline {
 impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
-        shaders: &Shaders<TrianglesVertex>,
+        shaders: &Shaders<impl Vertex>,
         uniforms: &wgpu::Buffer,
     ) -> Self {
         let layout =
