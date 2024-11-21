@@ -90,6 +90,10 @@ impl Uniforms {
     }
 }
 
+trait Vertex {
+    const ATTRIBUTES: &[wgpu::VertexAttribute];
+}
+
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
 pub struct TrianglesVertex {
@@ -97,8 +101,8 @@ pub struct TrianglesVertex {
     pub normal: [f32; 3],
 }
 
-impl TrianglesVertex {
-    pub const ATTRIBUTES: &[wgpu::VertexAttribute] = &wgpu::vertex_attr_array![
+impl Vertex for TrianglesVertex {
+    const ATTRIBUTES: &[wgpu::VertexAttribute] = &wgpu::vertex_attr_array![
         0 => Float32x3,
         1 => Float32x3,
     ];
