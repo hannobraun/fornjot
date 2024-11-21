@@ -8,7 +8,7 @@ pub struct Pipeline {
 impl Pipeline {
     pub fn new(
         device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
+        _: &wgpu::SurfaceConfiguration,
         shaders: &Shaders,
         uniforms: &wgpu::Buffer,
     ) -> Self {
@@ -44,11 +44,7 @@ impl Pipeline {
                     entry_point: Some("fragment"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
-                    targets: &[Some(wgpu::ColorTargetState {
-                        format: config.format,
-                        blend: Some(wgpu::BlendState::REPLACE),
-                        write_mask: wgpu::ColorWrites::all(),
-                    })],
+                    targets: &shaders.fragment_targets,
                 }),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,

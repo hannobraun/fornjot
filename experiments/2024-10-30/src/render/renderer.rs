@@ -59,7 +59,7 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
-        let shaders = Shaders::triangles(&device);
+        let shaders = Shaders::triangles(&device, &config);
         let pipeline =
             Pipeline::new(&device, &config, &shaders, &transform_buffer);
 

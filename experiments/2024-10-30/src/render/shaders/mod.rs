@@ -2,14 +2,27 @@ use glam::Mat4;
 
 pub struct Shaders {
     pub shader_module: wgpu::ShaderModule,
+    pub fragment_targets: [Option<wgpu::ColorTargetState>; 1],
 }
 
 impl Shaders {
-    pub fn triangles(device: &wgpu::Device) -> Self {
+    pub fn triangles(
+        device: &wgpu::Device,
+        config: &wgpu::SurfaceConfiguration,
+    ) -> Self {
         let shader_module =
             device.create_shader_module(wgpu::include_wgsl!("triangles.wgsl"));
 
-        Self { shader_module }
+        let fragment_targets = [Some(wgpu::ColorTargetState {
+            format: config.format,
+            blend: Some(wgpu::BlendState::REPLACE),
+            write_mask: wgpu::ColorWrites::all(),
+        })];
+
+        Self {
+            shader_module,
+            fragment_targets,
+        }
     }
 
     pub fn vertex_state(&self) -> wgpu::VertexState {
