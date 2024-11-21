@@ -50,7 +50,7 @@ impl Renderer {
         surface.configure(&device, &config);
 
         let aspect_ratio = size.width as f32 / size.height as f32;
-        let transform_buffer =
+        let uniforms =
             device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
                 label: None,
                 contents: bytemuck::cast_slice(&[Uniforms::from_transform(
@@ -60,8 +60,7 @@ impl Renderer {
             });
 
         let triangles_shaders = Shaders::triangles(&device, &config);
-        let pipeline =
-            Pipeline::new(&device, &triangles_shaders, &transform_buffer);
+        let pipeline = Pipeline::new(&device, &triangles_shaders, &uniforms);
 
         let depth_view = {
             let depth_texture =
