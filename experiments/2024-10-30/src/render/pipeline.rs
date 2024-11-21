@@ -74,7 +74,7 @@ impl Pipeline {
                     view: color_view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        load: wgpu::LoadOp::Load,
                         store: wgpu::StoreOp::Store,
                     },
                 })],
@@ -82,7 +82,7 @@ impl Pipeline {
                     wgpu::RenderPassDepthStencilAttachment {
                         view: depth_view,
                         depth_ops: Some(wgpu::Operations {
-                            load: wgpu::LoadOp::Clear(1.0),
+                            load: wgpu::LoadOp::Load,
                             store: wgpu::StoreOp::Store,
                         }),
                         stencil_ops: None,
