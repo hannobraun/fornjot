@@ -59,7 +59,9 @@ impl Shaders<TrianglesVertex> {
             }],
         }
     }
+}
 
+impl<V> Shaders<V> {
     pub fn fragment_state(&self) -> wgpu::FragmentState {
         wgpu::FragmentState {
             module: &self.shader_module,
