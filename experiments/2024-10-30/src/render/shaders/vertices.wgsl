@@ -24,6 +24,6 @@ fn vertex(in: VertexInput) -> VertexOutput {
 
 @fragment
 fn fragment(in: VertexOutput) -> @location(0) vec4<f32> {
-    var color = vec4(0.0, 0.0, 1.0, 1.0);
+    var color = vec4(0.5, 0.5, 0.5, 1.0);
     return color;
 }
