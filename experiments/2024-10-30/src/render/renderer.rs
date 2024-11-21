@@ -10,7 +10,7 @@ use crate::geometry::Operation;
 use super::{
     geometry::Geometry,
     pipeline::Pipeline,
-    shaders::{Shaders, TrianglesVertex, Uniforms},
+    shaders::{Shaders, Uniforms},
 };
 
 pub struct Renderer {
@@ -94,40 +94,7 @@ impl Renderer {
     }
 
     pub fn render(&self, operation: &impl Operation) {
-        let mut mesh_triangles = Vec::new();
-        operation.triangles(&mut mesh_triangles);
-
-        let mut indices = Vec::new();
-        let mut vertices = Vec::new();
-
-        for triangle in &mesh_triangles {
-            let triangle = triangle.vertices.map(|vertex| {
-                Vec3::from(
-                    vertex.point.coords.map(|coord| coord.value() as f32),
-                )
-            });
-            let normal = {
-                let [a, b, c] = triangle;
-
-                let ab = b - a;
-                let ac = c - a;
-
-                ab.cross(ac)
-            };
-
-            for point in triangle {
-                let index = vertices.len() as u32;
-                let vertex = TrianglesVertex {
-                    position: point.into(),
-                    normal: normal.into(),
-                };
-
-                indices.push(index);
-                vertices.push(vertex);
-            }
-        }
-
-        let triangles = Geometry::new(&self.device, &vertices, &indices);
+        let triangles = Geometry::triangles(&self.device, operation);
 
         let mut encoder = self
             .device
