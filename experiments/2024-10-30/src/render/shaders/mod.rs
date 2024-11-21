@@ -17,6 +17,16 @@ impl Shaders<TrianglesVertex> {
         let shader_module =
             device.create_shader_module(wgpu::include_wgsl!("triangles.wgsl"));
 
+        Self::new(device, config, shader_module)
+    }
+}
+
+impl<V> Shaders<V> {
+    pub fn new(
+        device: &wgpu::Device,
+        config: &wgpu::SurfaceConfiguration,
+        shader_module: wgpu::ShaderModule,
+    ) -> Self {
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 label: None,
@@ -45,9 +55,7 @@ impl Shaders<TrianglesVertex> {
             _vertex: PhantomData,
         }
     }
-}
 
-impl<V> Shaders<V> {
     pub fn vertex_state(&self) -> wgpu::VertexState
     where
         V: Vertex,
