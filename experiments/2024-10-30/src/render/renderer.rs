@@ -94,6 +94,7 @@ impl Renderer {
     }
 
     pub fn render(&self, operation: &impl Operation) {
+        let vertices = Geometry::vertices(&self.device, operation);
         let triangles = Geometry::triangles(&self.device, operation);
 
         let mut encoder = self
@@ -132,6 +133,12 @@ impl Renderer {
             });
         }
 
+        self.pipeline.draw(
+            &mut encoder,
+            &color_view,
+            &self.depth_view,
+            &vertices,
+        );
         self.pipeline.draw(
             &mut encoder,
             &color_view,

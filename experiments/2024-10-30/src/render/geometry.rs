@@ -12,6 +12,39 @@ pub struct Geometry {
 }
 
 impl Geometry {
+    pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
+        let mut mesh_vertices = Vec::new();
+        operation.vertices(&mut mesh_vertices);
+
+        let mut vertices = Vec::new();
+        let mut indices = Vec::new();
+
+        for mesh_vertex in mesh_vertices {
+            let s = 0.05;
+
+            let p = mesh_vertex.point;
+            let [a, b, c, d] = [[-s, -s], [s, -s], [-s, s], [s, s]]
+                .map(|[x, y]| p + [x, y, 0.])
+                .map(|point| {
+                    point.coords.components.map(|scalar| scalar.value() as f32)
+                });
+
+            for vertex in [a, b, c, c, b, d] {
+                let index = vertices.len() as u32;
+
+                let vertex = TrianglesVertex {
+                    position: vertex,
+                    normal: [0., 0., 1.],
+                };
+
+                vertices.push(vertex);
+                indices.push(index);
+            }
+        }
+
+        Self::new(device, &vertices, &indices)
+    }
+
     pub fn triangles(
         device: &wgpu::Device,
         operation: &impl Operation,
@@ -58,7 +91,7 @@ impl Geometry {
 
     pub fn new(
         device: &wgpu::Device,
-        vertices: &[TrianglesVertex],
+        vertices: &[impl bytemuck::NoUninit],
         indices: &[u32],
     ) -> Self {
         let Ok(num_indices) = indices.len().try_into() else {
