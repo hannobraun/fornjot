@@ -8,6 +8,7 @@ use winit::window::Window;
 use crate::geometry::Operation;
 
 use super::{
+    geometry::Geometry,
     pipeline::Pipeline,
     shaders::{Shaders, TrianglesVertex, Uniforms},
 };
@@ -126,20 +127,7 @@ impl Renderer {
             }
         }
 
-        let index_buffer =
-            self.device
-                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: None,
-                    contents: bytemuck::cast_slice(&indices),
-                    usage: wgpu::BufferUsages::INDEX,
-                });
-        let vertex_buffer =
-            self.device
-                .create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                    label: None,
-                    contents: bytemuck::cast_slice(&vertices),
-                    usage: wgpu::BufferUsages::VERTEX,
-                });
+        let geometry = Geometry::new(&self.device, &vertices, &indices);
 
         let frame = self.surface.get_current_texture().unwrap();
         let frame_view = frame
@@ -179,16 +167,12 @@ impl Renderer {
 
             if !indices.is_empty() || !vertices.is_empty() {
                 render_pass.set_index_buffer(
-                    index_buffer.slice(..),
+                    geometry.indices.slice(..),
                     wgpu::IndexFormat::Uint32,
                 );
-                render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
+                render_pass.set_vertex_buffer(0, geometry.vertices.slice(..));
                 self.pipeline.set(&mut render_pass);
-                render_pass.draw_indexed(
-                    0..mesh_triangles.len() as u32 * 3,
-                    0,
-                    0..1,
-                );
+                render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
             }
         }
 

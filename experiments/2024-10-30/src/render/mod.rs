@@ -1,3 +1,4 @@
+mod geometry;
 mod pipeline;
 mod renderer;
 mod shaders;
