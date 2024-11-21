@@ -1,12 +1,15 @@
+use std::marker::PhantomData;
+
 use glam::Mat4;
 
-pub struct Shaders {
+pub struct Shaders<V> {
     pub shader_module: wgpu::ShaderModule,
     pub bind_group_layout: wgpu::BindGroupLayout,
     pub fragment_targets: [Option<wgpu::ColorTargetState>; 1],
+    _vertex: PhantomData<V>,
 }
 
-impl Shaders {
+impl Shaders<TrianglesVertex> {
     pub fn triangles(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
@@ -39,6 +42,7 @@ impl Shaders {
             shader_module,
             bind_group_layout,
             fragment_targets,
+            _vertex: PhantomData,
         }
     }
 
