@@ -11,25 +11,10 @@ impl Pipeline {
         shaders: &Shaders,
         uniforms: &wgpu::Buffer,
     ) -> Self {
-        let bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                label: None,
-                entries: &[wgpu::BindGroupLayoutEntry {
-                    binding: 0,
-                    visibility: wgpu::ShaderStages::VERTEX,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Uniform,
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                }],
-            });
-
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
-                bind_group_layouts: &[&bind_group_layout],
+                bind_group_layouts: &[&shaders.bind_group_layout],
                 push_constant_ranges: &[],
             });
 
@@ -62,7 +47,7 @@ impl Pipeline {
 
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: None,
-            layout: &bind_group_layout,
+            layout: &shaders.bind_group_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
                 resource: uniforms.as_entire_binding(),

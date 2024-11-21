@@ -2,6 +2,7 @@ use glam::Mat4;
 
 pub struct Shaders {
     pub shader_module: wgpu::ShaderModule,
+    pub bind_group_layout: wgpu::BindGroupLayout,
     pub fragment_targets: [Option<wgpu::ColorTargetState>; 1],
 }
 
@@ -13,6 +14,21 @@ impl Shaders {
         let shader_module =
             device.create_shader_module(wgpu::include_wgsl!("triangles.wgsl"));
 
+        let bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                label: None,
+                entries: &[wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                }],
+            });
+
         let fragment_targets = [Some(wgpu::ColorTargetState {
             format: config.format,
             blend: Some(wgpu::BlendState::REPLACE),
@@ -21,6 +37,7 @@ impl Shaders {
 
         Self {
             shader_module,
+            bind_group_layout,
             fragment_targets,
         }
     }
