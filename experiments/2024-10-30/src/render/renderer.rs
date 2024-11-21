@@ -17,6 +17,7 @@ pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
+    pub vertices_pipeline: Pipeline,
     pub triangles_pipeline: Pipeline,
     pub depth_view: wgpu::TextureView,
 }
@@ -60,6 +61,10 @@ impl Renderer {
                 usage: wgpu::BufferUsages::UNIFORM,
             });
 
+        let vertices_shaders = Shaders::vertices(&device, &config);
+        let vertices_pipeline =
+            Pipeline::new(&device, &vertices_shaders, &uniforms);
+
         let triangles_shaders = Shaders::triangles(&device, &config);
         let triangles_pipeline =
             Pipeline::new(&device, &triangles_shaders, &uniforms);
@@ -89,6 +94,7 @@ impl Renderer {
             surface,
             device,
             queue,
+            vertices_pipeline,
             triangles_pipeline,
             depth_view,
         })
@@ -134,7 +140,7 @@ impl Renderer {
             });
         }
 
-        self.triangles_pipeline.draw(
+        self.vertices_pipeline.draw(
             &mut encoder,
             &color_view,
             &self.depth_view,

@@ -3,7 +3,7 @@ use wgpu::util::DeviceExt;
 
 use crate::geometry::Operation;
 
-use super::shaders::TrianglesVertex;
+use super::shaders::{TrianglesVertex, VerticesVertex};
 
 pub struct Geometry {
     pub vertices: wgpu::Buffer,
@@ -32,10 +32,7 @@ impl Geometry {
             for vertex in [a, b, c, c, b, d] {
                 let index = vertices.len() as u32;
 
-                let vertex = TrianglesVertex {
-                    position: vertex,
-                    normal: [0., 0., 1.],
-                };
+                let vertex = VerticesVertex { position: vertex };
 
                 vertices.push(vertex);
                 indices.push(index);
