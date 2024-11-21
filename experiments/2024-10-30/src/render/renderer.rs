@@ -129,13 +129,13 @@ impl Renderer {
 
         let triangles = Geometry::new(&self.device, &vertices, &indices);
 
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
         let frame = self.surface.get_current_texture().unwrap();
         let color_view = frame
             .texture
             .create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor::default());
 
         self.pipeline.draw(
             &mut encoder,
