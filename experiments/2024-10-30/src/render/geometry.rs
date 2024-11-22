@@ -14,7 +14,7 @@ pub struct Geometry<V> {
     _vertex: PhantomData<V>,
 }
 
-impl<V> Geometry<V> {
+impl Geometry<VerticesVertex> {
     pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
         let mut mesh_vertices = Vec::new();
         operation.vertices(&mut mesh_vertices);
@@ -48,7 +48,9 @@ impl<V> Geometry<V> {
 
         Self::new(device, &vertices, &indices)
     }
+}
 
+impl<V> Geometry<V> {
     pub fn triangles(
         device: &wgpu::Device,
         operation: &impl Operation,
