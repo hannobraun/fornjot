@@ -1,16 +1,11 @@
-use std::{f32::consts::PI, sync::Arc};
+use std::sync::Arc;
 
 use anyhow::anyhow;
-use glam::{Mat4, Vec3};
-use wgpu::util::DeviceExt;
 use winit::window::Window;
 
 use crate::geometry::Operation;
 
-use super::{
-    geometry::Geometry,
-    pipelines::{Pipelines, Uniforms},
-};
+use super::{geometry::Geometry, pipelines::Pipelines};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
@@ -49,17 +44,7 @@ impl Renderer {
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
         surface.configure(&device, &config);
 
-        let aspect_ratio = size.width as f32 / size.height as f32;
-        let uniforms =
-            device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-                label: None,
-                contents: bytemuck::cast_slice(&[Uniforms::from_transform(
-                    default_transform(aspect_ratio),
-                )]),
-                usage: wgpu::BufferUsages::UNIFORM,
-            });
-
-        let pipelines = Pipelines::new(&device, &config, &uniforms);
+        let pipelines = Pipelines::new(&device, &config);
 
         let depth_view = {
             let depth_texture =
@@ -147,15 +132,4 @@ impl Renderer {
         self.queue.submit(Some(encoder.finish()));
         frame.present();
     }
-}
-
-fn default_transform(aspect_ratio: f32) -> Mat4 {
-    let fov_y_radians = std::f32::consts::PI / 2.;
-    let z_near = 0.1;
-    let z_far = 10.;
-
-    Mat4::perspective_rh(fov_y_radians, aspect_ratio, z_near, z_far)
-        * Mat4::from_translation(Vec3::new(0., 0., -2.))
-        * Mat4::from_rotation_x(-PI / 4.)
-        * Mat4::from_rotation_z(PI / 4.)
 }
