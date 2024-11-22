@@ -4,6 +4,8 @@ use glam::Mat4;
 
 pub use self::pipeline::Pipeline;
 
+use self::pipeline::Vertex;
+
 pub struct Pipelines {
     pub vertices: Pipeline<VerticesVertex>,
     pub triangles: Pipeline<TrianglesVertex>,
@@ -51,10 +53,6 @@ impl Uniforms {
             transform_for_normals,
         }
     }
-}
-
-pub trait Vertex {
-    const ATTRIBUTES: &[wgpu::VertexAttribute];
 }
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]

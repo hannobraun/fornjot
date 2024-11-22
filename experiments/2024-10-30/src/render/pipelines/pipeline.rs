@@ -2,8 +2,6 @@ use std::marker::PhantomData;
 
 use crate::render::geometry::Geometry;
 
-use super::Vertex;
-
 pub struct Pipeline<V> {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
@@ -151,4 +149,8 @@ impl<V> Pipeline<V> {
             render_pass.draw_indexed(0..geometry.num_indices, 0, 0..1);
         }
     }
+}
+
+pub trait Vertex {
+    const ATTRIBUTES: &[wgpu::VertexAttribute];
 }
