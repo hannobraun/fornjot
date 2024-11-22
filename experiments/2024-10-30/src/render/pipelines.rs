@@ -48,7 +48,7 @@ impl Pipeline {
         Self::new(device, &triangles_shaders, uniforms)
     }
 
-    pub fn new(
+    fn new(
         device: &wgpu::Device,
         shaders: &Shaders<impl Vertex>,
         uniforms: &wgpu::Buffer,
