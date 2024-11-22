@@ -32,7 +32,11 @@ impl Geometry {
             for vertex in [a, b, c, c, b, d] {
                 let index = vertices.len() as u32;
 
-                let vertex = VerticesVertex { position: vertex };
+                let vertex = VerticesVertex {
+                    position: vertex,
+                    center: p.coords.components.map(|s| s.value() as f32),
+                    radius: s as f32,
+                };
 
                 vertices.push(vertex);
                 indices.push(index);
