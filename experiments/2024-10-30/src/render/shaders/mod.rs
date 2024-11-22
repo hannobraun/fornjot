@@ -6,7 +6,7 @@ pub struct Shaders<V> {
     pub shader_module: wgpu::ShaderModule,
     pub bind_group_layout: wgpu::BindGroupLayout,
     pub fragment_targets: [Option<wgpu::ColorTargetState>; 1],
-    _vertex: PhantomData<V>,
+    pub _vertex: PhantomData<V>,
 }
 
 impl<V> Shaders<V> {
