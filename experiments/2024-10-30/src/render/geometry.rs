@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use glam::Vec3;
 use wgpu::util::DeviceExt;
 
@@ -5,13 +7,14 @@ use crate::geometry::Operation;
 
 use super::shaders::{TrianglesVertex, VerticesVertex};
 
-pub struct Geometry {
+pub struct Geometry<V> {
     pub vertices: wgpu::Buffer,
     pub indices: wgpu::Buffer,
     pub num_indices: u32,
+    _vertex: PhantomData<V>,
 }
 
-impl Geometry {
+impl<V> Geometry<V> {
     pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
         let mut mesh_vertices = Vec::new();
         operation.vertices(&mut mesh_vertices);
@@ -116,6 +119,7 @@ impl Geometry {
             vertices,
             indices,
             num_indices,
+            _vertex: PhantomData,
         }
     }
 }

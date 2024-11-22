@@ -126,7 +126,7 @@ impl<V> Pipeline<V> {
         encoder: &mut wgpu::CommandEncoder,
         color_view: &wgpu::TextureView,
         depth_view: &wgpu::TextureView,
-        geometry: &Geometry,
+        geometry: &Geometry<V>,
     ) {
         let mut render_pass =
             encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
