@@ -50,7 +50,7 @@ impl Geometry<VerticesVertex> {
     }
 }
 
-impl<V> Geometry<V> {
+impl Geometry<TrianglesVertex> {
     pub fn triangles(
         device: &wgpu::Device,
         operation: &impl Operation,
@@ -94,7 +94,9 @@ impl<V> Geometry<V> {
 
         Self::new(device, &vertices, &indices)
     }
+}
 
+impl<V> Geometry<V> {
     pub fn new(
         device: &wgpu::Device,
         vertices: &[impl bytemuck::NoUninit],
