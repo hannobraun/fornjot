@@ -6,7 +6,7 @@ use wgpu::util::DeviceExt;
 use super::{triangles, vertices, Pipeline};
 
 pub struct Pipelines {
-    pub vertices: Pipeline<vertices::VerticesVertex>,
+    pub vertices: Pipeline<vertices::Vertex>,
     pub triangles: Pipeline<triangles::TrianglesVertex>,
 }
 

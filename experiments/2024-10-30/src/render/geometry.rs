@@ -14,7 +14,7 @@ pub struct Geometry<V> {
     _vertex: PhantomData<V>,
 }
 
-impl Geometry<vertices::VerticesVertex> {
+impl Geometry<vertices::Vertex> {
     pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
         let mut mesh_vertices = Vec::new();
         operation.vertices(&mut mesh_vertices);
@@ -35,7 +35,7 @@ impl Geometry<vertices::VerticesVertex> {
             for vertex in [a, b, c, c, b, d] {
                 let index = vertices.len() as u32;
 
-                let vertex = vertices::VerticesVertex {
+                let vertex = vertices::Vertex {
                     position: vertex,
                     center: p.coords.components.map(|s| s.value() as f32),
                     radius: s as f32,
