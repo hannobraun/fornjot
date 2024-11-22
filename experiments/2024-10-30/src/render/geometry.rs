@@ -97,11 +97,10 @@ impl Geometry<TrianglesVertex> {
 }
 
 impl<V> Geometry<V> {
-    pub fn new(
-        device: &wgpu::Device,
-        vertices: &[impl bytemuck::NoUninit],
-        indices: &[u32],
-    ) -> Self {
+    pub fn new(device: &wgpu::Device, vertices: &[V], indices: &[u32]) -> Self
+    where
+        V: bytemuck::NoUninit,
+    {
         let Ok(num_indices) = indices.len().try_into() else {
             panic!("Unsupported number of indices: `{}`", indices.len());
         };
