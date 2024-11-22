@@ -10,43 +10,6 @@ pub struct Shaders<V> {
 }
 
 impl<V> Shaders<V> {
-    pub fn new(
-        device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
-        shader_module_descriptor: wgpu::ShaderModuleDescriptor,
-    ) -> Self {
-        let shader_module =
-            device.create_shader_module(shader_module_descriptor);
-
-        let bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                label: None,
-                entries: &[wgpu::BindGroupLayoutEntry {
-                    binding: 0,
-                    visibility: wgpu::ShaderStages::VERTEX,
-                    ty: wgpu::BindingType::Buffer {
-                        ty: wgpu::BufferBindingType::Uniform,
-                        has_dynamic_offset: false,
-                        min_binding_size: None,
-                    },
-                    count: None,
-                }],
-            });
-
-        let fragment_targets = [Some(wgpu::ColorTargetState {
-            format: config.format,
-            blend: Some(wgpu::BlendState::REPLACE),
-            write_mask: wgpu::ColorWrites::all(),
-        })];
-
-        Self {
-            shader_module,
-            bind_group_layout,
-            fragment_targets,
-            _vertex: PhantomData,
-        }
-    }
-
     pub fn vertex_state(&self) -> wgpu::VertexState
     where
         V: Vertex,

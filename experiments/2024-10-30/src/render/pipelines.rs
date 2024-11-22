@@ -72,8 +72,39 @@ impl<V> Pipeline<V> {
     where
         V: Vertex,
     {
-        let shaders =
-            Shaders::<V>::new(device, config, shader_module_descriptor);
+        let shaders = {
+            let shader_module =
+                device.create_shader_module(shader_module_descriptor);
+
+            let bind_group_layout = device.create_bind_group_layout(
+                &wgpu::BindGroupLayoutDescriptor {
+                    label: None,
+                    entries: &[wgpu::BindGroupLayoutEntry {
+                        binding: 0,
+                        visibility: wgpu::ShaderStages::VERTEX,
+                        ty: wgpu::BindingType::Buffer {
+                            ty: wgpu::BufferBindingType::Uniform,
+                            has_dynamic_offset: false,
+                            min_binding_size: None,
+                        },
+                        count: None,
+                    }],
+                },
+            );
+
+            let fragment_targets = [Some(wgpu::ColorTargetState {
+                format: config.format,
+                blend: Some(wgpu::BlendState::REPLACE),
+                write_mask: wgpu::ColorWrites::all(),
+            })];
+
+            Shaders::<V> {
+                shader_module,
+                bind_group_layout,
+                fragment_targets,
+                _vertex: PhantomData,
+            }
+        };
 
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
