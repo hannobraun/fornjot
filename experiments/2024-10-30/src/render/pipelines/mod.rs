@@ -18,13 +18,13 @@ impl Pipelines {
         let vertices = Pipeline::<VerticesVertex>::new(
             device,
             config,
-            wgpu::include_wgsl!("../shaders/vertices.wgsl"),
+            wgpu::include_wgsl!("shaders/vertices.wgsl"),
             uniforms,
         );
         let triangles = Pipeline::<TrianglesVertex>::new(
             device,
             config,
-            wgpu::include_wgsl!("../shaders/triangles.wgsl"),
+            wgpu::include_wgsl!("shaders/triangles.wgsl"),
             uniforms,
         );
 
