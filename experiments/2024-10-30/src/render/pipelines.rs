@@ -47,7 +47,7 @@ impl Pipeline<VerticesVertex> {
     }
 }
 
-impl<V> Pipeline<V> {
+impl Pipeline<TrianglesVertex> {
     pub fn triangles(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
@@ -60,7 +60,9 @@ impl<V> Pipeline<V> {
         );
         Self::new(device, &triangles_shaders, uniforms)
     }
+}
 
+impl<V> Pipeline<V> {
     fn new(
         device: &wgpu::Device,
         shaders: &Shaders<impl Vertex>,
