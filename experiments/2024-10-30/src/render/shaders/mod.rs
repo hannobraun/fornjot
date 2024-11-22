@@ -13,9 +13,10 @@ impl<V> Shaders<V> {
     pub fn new(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
-        shader_module: wgpu::ShaderModuleDescriptor,
+        shader_module_descriptor: wgpu::ShaderModuleDescriptor,
     ) -> Self {
-        let shader_module = device.create_shader_module(shader_module);
+        let shader_module =
+            device.create_shader_module(shader_module_descriptor);
 
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
