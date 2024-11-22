@@ -32,7 +32,7 @@ pub struct Pipeline<V> {
     _vertex: PhantomData<V>,
 }
 
-impl<V> Pipeline<V> {
+impl Pipeline<VerticesVertex> {
     pub fn vertices(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
@@ -45,7 +45,9 @@ impl<V> Pipeline<V> {
         );
         Self::new(device, &vertices_shaders, uniforms)
     }
+}
 
+impl<V> Pipeline<V> {
     pub fn triangles(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
