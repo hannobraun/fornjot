@@ -5,7 +5,7 @@ use wgpu::util::DeviceExt;
 
 use crate::geometry::Operation;
 
-use super::pipelines::{triangles::TrianglesVertex, vertices::VerticesVertex};
+use super::pipelines::{triangles, vertices};
 
 pub struct Geometry<V> {
     pub vertices: wgpu::Buffer,
@@ -14,7 +14,7 @@ pub struct Geometry<V> {
     _vertex: PhantomData<V>,
 }
 
-impl Geometry<VerticesVertex> {
+impl Geometry<vertices::VerticesVertex> {
     pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
         let mut mesh_vertices = Vec::new();
         operation.vertices(&mut mesh_vertices);
@@ -35,7 +35,7 @@ impl Geometry<VerticesVertex> {
             for vertex in [a, b, c, c, b, d] {
                 let index = vertices.len() as u32;
 
-                let vertex = VerticesVertex {
+                let vertex = vertices::VerticesVertex {
                     position: vertex,
                     center: p.coords.components.map(|s| s.value() as f32),
                     radius: s as f32,
@@ -50,7 +50,7 @@ impl Geometry<VerticesVertex> {
     }
 }
 
-impl Geometry<TrianglesVertex> {
+impl Geometry<triangles::TrianglesVertex> {
     pub fn triangles(
         device: &wgpu::Device,
         operation: &impl Operation,
@@ -82,7 +82,7 @@ impl Geometry<TrianglesVertex> {
 
             for point in triangle {
                 let index = vertices.len() as u32;
-                let vertex = TrianglesVertex {
+                let vertex = triangles::TrianglesVertex {
                     position: point.into(),
                     normal: normal.into(),
                 };
