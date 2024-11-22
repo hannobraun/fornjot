@@ -42,7 +42,7 @@ impl Pipeline<TrianglesVertex> {
 }
 
 impl<V> Pipeline<V> {
-    fn new(
+    pub fn new(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
         shader_module_descriptor: wgpu::ShaderModuleDescriptor,
