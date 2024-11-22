@@ -41,7 +41,7 @@ impl Pipeline<VerticesVertex> {
         Self::new(
             device,
             config,
-            wgpu::include_wgsl!("shaders/vertices.wgsl"),
+            wgpu::include_wgsl!("../shaders/vertices.wgsl"),
             uniforms,
         )
     }
@@ -56,7 +56,7 @@ impl Pipeline<TrianglesVertex> {
         Self::new(
             device,
             config,
-            wgpu::include_wgsl!("shaders/triangles.wgsl"),
+            wgpu::include_wgsl!("../shaders/triangles.wgsl"),
             uniforms,
         )
     }
