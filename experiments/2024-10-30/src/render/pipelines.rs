@@ -3,6 +3,11 @@ use super::{
     shaders::{Shaders, Vertex},
 };
 
+pub struct Pipelines {
+    pub vertices: Pipeline,
+    pub triangles: Pipeline,
+}
+
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,

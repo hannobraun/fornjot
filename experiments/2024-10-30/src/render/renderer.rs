@@ -9,7 +9,7 @@ use crate::geometry::Operation;
 
 use super::{
     geometry::Geometry,
-    pipelines::Pipeline,
+    pipelines::{Pipeline, Pipelines},
     shaders::{Shaders, Uniforms},
 };
 
@@ -17,8 +17,7 @@ pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
-    pub vertices_pipeline: Pipeline,
-    pub triangles_pipeline: Pipeline,
+    pub pipelines: Pipelines,
     pub depth_view: wgpu::TextureView,
 }
 
@@ -94,8 +93,10 @@ impl Renderer {
             surface,
             device,
             queue,
-            vertices_pipeline,
-            triangles_pipeline,
+            pipelines: Pipelines {
+                vertices: vertices_pipeline,
+                triangles: triangles_pipeline,
+            },
             depth_view,
         })
     }
@@ -140,13 +141,13 @@ impl Renderer {
             });
         }
 
-        self.vertices_pipeline.draw(
+        self.pipelines.vertices.draw(
             &mut encoder,
             &color_view,
             &self.depth_view,
             &vertices,
         );
-        self.triangles_pipeline.draw(
+        self.pipelines.triangles.draw(
             &mut encoder,
             &color_view,
             &self.depth_view,
