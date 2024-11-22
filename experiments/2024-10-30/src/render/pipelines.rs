@@ -90,12 +90,6 @@ impl<V> Pipeline<V> {
                 }],
             });
 
-        let fragment_targets = [Some(wgpu::ColorTargetState {
-            format: config.format,
-            blend: Some(wgpu::BlendState::REPLACE),
-            write_mask: wgpu::ColorWrites::all(),
-        })];
-
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
@@ -123,7 +117,11 @@ impl<V> Pipeline<V> {
                     entry_point: Some("fragment"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
-                    targets: &fragment_targets,
+                    targets: &[Some(wgpu::ColorTargetState {
+                        format: config.format,
+                        blend: Some(wgpu::BlendState::REPLACE),
+                        write_mask: wgpu::ColorWrites::all(),
+                    })],
                 }),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,
