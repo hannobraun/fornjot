@@ -5,7 +5,7 @@ use wgpu::util::DeviceExt;
 
 use crate::geometry::Operation;
 
-use super::pipelines::{TrianglesVertex, VerticesVertex};
+use super::pipelines::{triangles::TrianglesVertex, vertices::VerticesVertex};
 
 pub struct Geometry<V> {
     pub vertices: wgpu::Buffer,
