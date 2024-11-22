@@ -38,12 +38,12 @@ impl Pipeline<VerticesVertex> {
         config: &wgpu::SurfaceConfiguration,
         uniforms: &wgpu::Buffer,
     ) -> Self {
-        let shaders = Shaders::new(
+        Self::new(
             device,
             config,
             wgpu::include_wgsl!("shaders/vertices.wgsl"),
-        );
-        Self::new(device, &shaders, uniforms)
+            uniforms,
+        )
     }
 }
 
@@ -53,24 +53,28 @@ impl Pipeline<TrianglesVertex> {
         config: &wgpu::SurfaceConfiguration,
         uniforms: &wgpu::Buffer,
     ) -> Self {
-        let shaders = Shaders::new(
+        Self::new(
             device,
             config,
             wgpu::include_wgsl!("shaders/triangles.wgsl"),
-        );
-        Self::new(device, &shaders, uniforms)
+            uniforms,
+        )
     }
 }
 
 impl<V> Pipeline<V> {
     fn new(
         device: &wgpu::Device,
-        shaders: &Shaders<V>,
+        config: &wgpu::SurfaceConfiguration,
+        shader_module_descriptor: wgpu::ShaderModuleDescriptor,
         uniforms: &wgpu::Buffer,
     ) -> Self
     where
         V: Vertex,
     {
+        let shaders =
+            Shaders::<V>::new(device, config, shader_module_descriptor);
+
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
