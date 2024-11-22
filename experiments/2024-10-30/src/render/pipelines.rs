@@ -90,7 +90,7 @@ impl<V> Pipeline<V> {
                 }],
             });
 
-        let layout =
+        let pipeline_layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
                 bind_group_layouts: &[&bind_group_layout],
@@ -100,7 +100,7 @@ impl<V> Pipeline<V> {
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
-                layout: Some(&layout),
+                layout: Some(&pipeline_layout),
                 vertex: wgpu::VertexState {
                     module: &shader_module,
                     entry_point: Some("vertex"),
