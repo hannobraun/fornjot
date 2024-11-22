@@ -11,7 +11,7 @@ pub struct Pipeline<V> {
 impl<V> Pipeline<V> {
     pub fn new(
         device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
+        surface_configuration: &wgpu::SurfaceConfiguration,
         shader_module_descriptor: wgpu::ShaderModuleDescriptor,
         uniforms: &wgpu::Buffer,
     ) -> Self
@@ -64,7 +64,7 @@ impl<V> Pipeline<V> {
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
                     targets: &[Some(wgpu::ColorTargetState {
-                        format: config.format,
+                        format: surface_configuration.format,
                         blend: Some(wgpu::BlendState::REPLACE),
                         write_mask: wgpu::ColorWrites::all(),
                     })],
