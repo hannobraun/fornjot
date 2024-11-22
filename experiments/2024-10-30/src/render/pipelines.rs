@@ -36,7 +36,7 @@ impl Pipeline {
         uniforms: &wgpu::Buffer,
     ) -> Self {
         let vertices_shaders = Shaders::vertices(device, config);
-        Pipeline::new(device, &vertices_shaders, uniforms)
+        Self::new(device, &vertices_shaders, uniforms)
     }
 
     pub fn triangles(
@@ -45,7 +45,7 @@ impl Pipeline {
         uniforms: &wgpu::Buffer,
     ) -> Self {
         let triangles_shaders = Shaders::triangles(device, config);
-        Pipeline::new(device, &triangles_shaders, uniforms)
+        Self::new(device, &triangles_shaders, uniforms)
     }
 
     pub fn new(
