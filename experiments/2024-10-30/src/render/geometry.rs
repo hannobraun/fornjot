@@ -50,7 +50,7 @@ impl Geometry<vertices::Vertex> {
     }
 }
 
-impl Geometry<triangles::TrianglesVertex> {
+impl Geometry<triangles::Vertex> {
     pub fn triangles(
         device: &wgpu::Device,
         operation: &impl Operation,
@@ -82,7 +82,7 @@ impl Geometry<triangles::TrianglesVertex> {
 
             for point in triangle {
                 let index = vertices.len() as u32;
-                let vertex = triangles::TrianglesVertex {
+                let vertex = triangles::Vertex {
                     position: point.into(),
                     normal: normal.into(),
                 };

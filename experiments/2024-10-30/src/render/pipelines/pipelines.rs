@@ -7,7 +7,7 @@ use super::{triangles, vertices, Pipeline};
 
 pub struct Pipelines {
     pub vertices: Pipeline<vertices::Vertex>,
-    pub triangles: Pipeline<triangles::TrianglesVertex>,
+    pub triangles: Pipeline<triangles::Vertex>,
 }
 
 impl Pipelines {
