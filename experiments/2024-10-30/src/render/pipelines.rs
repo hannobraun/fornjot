@@ -15,11 +15,11 @@ impl Pipelines {
         uniforms: &wgpu::Buffer,
     ) -> Self {
         let vertices = Pipeline::vertices(device, config, uniforms);
-        let triangles_pipeline = Pipeline::triangles(device, config, uniforms);
+        let triangles = Pipeline::triangles(device, config, uniforms);
 
         Self {
             vertices,
-            triangles: triangles_pipeline,
+            triangles,
         }
     }
 }
