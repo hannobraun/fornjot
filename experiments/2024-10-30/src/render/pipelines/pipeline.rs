@@ -1,44 +1,11 @@
 use std::marker::PhantomData;
 
-use crate::render::{
-    geometry::Geometry,
-    shaders::{TrianglesVertex, Vertex, VerticesVertex},
-};
+use crate::render::{geometry::Geometry, shaders::Vertex};
 
 pub struct Pipeline<V> {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
     _vertex: PhantomData<V>,
-}
-
-impl Pipeline<VerticesVertex> {
-    pub fn vertices(
-        device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
-        uniforms: &wgpu::Buffer,
-    ) -> Self {
-        Self::new(
-            device,
-            config,
-            wgpu::include_wgsl!("../shaders/vertices.wgsl"),
-            uniforms,
-        )
-    }
-}
-
-impl Pipeline<TrianglesVertex> {
-    pub fn triangles(
-        device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
-        uniforms: &wgpu::Buffer,
-    ) -> Self {
-        Self::new(
-            device,
-            config,
-            wgpu::include_wgsl!("../shaders/triangles.wgsl"),
-            uniforms,
-        )
-    }
 }
 
 impl<V> Pipeline<V> {
