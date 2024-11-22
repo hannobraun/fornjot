@@ -68,6 +68,11 @@ impl Renderer {
         let triangles_pipeline =
             Pipeline::new(&device, &triangles_shaders, &uniforms);
 
+        let pipelines = Pipelines {
+            vertices: vertices_pipeline,
+            triangles: triangles_pipeline,
+        };
+
         let depth_view = {
             let depth_texture =
                 device.create_texture(&wgpu::TextureDescriptor {
@@ -93,10 +98,7 @@ impl Renderer {
             surface,
             device,
             queue,
-            pipelines: Pipelines {
-                vertices: vertices_pipeline,
-                triangles: triangles_pipeline,
-            },
+            pipelines,
             depth_view,
         })
     }
