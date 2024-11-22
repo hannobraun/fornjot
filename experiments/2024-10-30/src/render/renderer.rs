@@ -9,7 +9,7 @@ use crate::geometry::Operation;
 
 use super::{
     geometry::Geometry,
-    pipeline::Pipeline,
+    pipelines::Pipeline,
     shaders::{Shaders, Uniforms},
 };
 
