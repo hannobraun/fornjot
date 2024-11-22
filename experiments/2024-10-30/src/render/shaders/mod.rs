@@ -9,30 +9,6 @@ pub struct Shaders<V> {
     _vertex: PhantomData<V>,
 }
 
-impl Shaders<VerticesVertex> {
-    pub fn vertices(
-        device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
-    ) -> Self {
-        let shader_module =
-            device.create_shader_module(wgpu::include_wgsl!("vertices.wgsl"));
-
-        Self::new(device, config, shader_module)
-    }
-}
-
-impl Shaders<TrianglesVertex> {
-    pub fn triangles(
-        device: &wgpu::Device,
-        config: &wgpu::SurfaceConfiguration,
-    ) -> Self {
-        let shader_module =
-            device.create_shader_module(wgpu::include_wgsl!("triangles.wgsl"));
-
-        Self::new(device, config, shader_module)
-    }
-}
-
 impl<V> Shaders<V> {
     pub fn new(
         device: &wgpu::Device,
