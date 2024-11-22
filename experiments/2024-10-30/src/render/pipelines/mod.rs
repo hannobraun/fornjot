@@ -17,13 +17,13 @@ impl Pipelines {
         config: &wgpu::SurfaceConfiguration,
         uniforms: &wgpu::Buffer,
     ) -> Self {
-        let vertices = Pipeline::<VerticesVertex>::new(
+        let vertices = Pipeline::new(
             device,
             config,
             wgpu::include_wgsl!("shaders/vertices.wgsl"),
             uniforms,
         );
-        let triangles = Pipeline::<TrianglesVertex>::new(
+        let triangles = Pipeline::new(
             device,
             config,
             wgpu::include_wgsl!("shaders/triangles.wgsl"),
