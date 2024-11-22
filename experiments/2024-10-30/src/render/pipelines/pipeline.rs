@@ -16,7 +16,7 @@ impl<V> Pipeline<V> {
         uniforms: &wgpu::Buffer,
     ) -> Self
     where
-        V: Vertex,
+        V: IsVertex,
     {
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
@@ -151,6 +151,6 @@ impl<V> Pipeline<V> {
     }
 }
 
-pub trait Vertex {
+pub trait IsVertex {
     const ATTRIBUTES: &[wgpu::VertexAttribute];
 }

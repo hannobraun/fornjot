@@ -1,4 +1,4 @@
-use super::pipeline::Vertex;
+use super::pipeline::IsVertex;
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
@@ -8,7 +8,7 @@ pub struct VerticesVertex {
     pub radius: f32,
 }
 
-impl Vertex for VerticesVertex {
+impl IsVertex for VerticesVertex {
     const ATTRIBUTES: &[wgpu::VertexAttribute] = &wgpu::vertex_attr_array![
         0 => Float32x3,
         1 => Float32x3,
