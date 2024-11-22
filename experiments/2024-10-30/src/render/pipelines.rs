@@ -8,6 +8,27 @@ pub struct Pipelines {
     pub triangles: Pipeline,
 }
 
+impl Pipelines {
+    pub fn new(
+        device: &wgpu::Device,
+        config: &wgpu::SurfaceConfiguration,
+        uniforms: &wgpu::Buffer,
+    ) -> Self {
+        let vertices_shaders = Shaders::vertices(device, config);
+        let vertices_pipeline =
+            Pipeline::new(device, &vertices_shaders, uniforms);
+
+        let triangles_shaders = Shaders::triangles(device, config);
+        let triangles_pipeline =
+            Pipeline::new(device, &triangles_shaders, uniforms);
+
+        Self {
+            vertices: vertices_pipeline,
+            triangles: triangles_pipeline,
+        }
+    }
+}
+
 pub struct Pipeline {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
