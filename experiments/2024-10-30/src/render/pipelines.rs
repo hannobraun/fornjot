@@ -128,7 +128,13 @@ impl<V> Pipeline<V> {
                         attributes: V::ATTRIBUTES,
                     }],
                 },
-                fragment: Some(shaders.fragment_state()),
+                fragment: Some(wgpu::FragmentState {
+                    module: &shaders.shader_module,
+                    entry_point: Some("fragment"),
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
+                    targets: &shaders.fragment_targets,
+                }),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,
                     strip_index_format: None,
