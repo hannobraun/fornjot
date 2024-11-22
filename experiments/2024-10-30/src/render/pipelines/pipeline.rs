@@ -1,6 +1,8 @@
 use std::marker::PhantomData;
 
-use crate::render::{geometry::Geometry, shaders::Vertex};
+use crate::render::geometry::Geometry;
+
+use super::Vertex;
 
 pub struct Pipeline<V> {
     render_pipeline: wgpu::RenderPipeline,

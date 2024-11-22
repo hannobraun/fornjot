@@ -7,7 +7,10 @@ use winit::window::Window;
 
 use crate::geometry::Operation;
 
-use super::{geometry::Geometry, pipelines::Pipelines, shaders::Uniforms};
+use super::{
+    geometry::Geometry,
+    pipelines::{Pipelines, Uniforms},
+};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
