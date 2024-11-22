@@ -117,7 +117,17 @@ impl<V> Pipeline<V> {
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
                 label: None,
                 layout: Some(&layout),
-                vertex: shaders.vertex_state(),
+                vertex: wgpu::VertexState {
+                    module: &shaders.shader_module,
+                    entry_point: Some("vertex"),
+                    compilation_options:
+                        wgpu::PipelineCompilationOptions::default(),
+                    buffers: &[wgpu::VertexBufferLayout {
+                        array_stride: size_of::<V>() as wgpu::BufferAddress,
+                        step_mode: wgpu::VertexStepMode::Vertex,
+                        attributes: V::ATTRIBUTES,
+                    }],
+                },
                 fragment: Some(shaders.fragment_state()),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,
