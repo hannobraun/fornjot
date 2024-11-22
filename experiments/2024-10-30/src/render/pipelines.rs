@@ -65,9 +65,12 @@ impl Pipeline<TrianglesVertex> {
 impl<V> Pipeline<V> {
     fn new(
         device: &wgpu::Device,
-        shaders: &Shaders<impl Vertex>,
+        shaders: &Shaders<V>,
         uniforms: &wgpu::Buffer,
-    ) -> Self {
+    ) -> Self
+    where
+        V: Vertex,
+    {
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
