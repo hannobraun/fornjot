@@ -72,9 +72,6 @@ impl<V> Pipeline<V> {
     where
         V: Vertex,
     {
-        let shader_module =
-            device.create_shader_module(shader_module_descriptor);
-
         let bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
                 label: None,
@@ -96,6 +93,9 @@ impl<V> Pipeline<V> {
                 bind_group_layouts: &[&bind_group_layout],
                 push_constant_ranges: &[],
             });
+
+        let shader_module =
+            device.create_shader_module(shader_module_descriptor);
 
         let render_pipeline =
             device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
