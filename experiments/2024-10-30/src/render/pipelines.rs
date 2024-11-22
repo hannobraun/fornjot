@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 
 use super::{
     geometry::Geometry,
-    shaders::{Shaders, TrianglesVertex, Vertex, VerticesVertex},
+    shaders::{TrianglesVertex, Vertex, VerticesVertex},
 };
 
 pub struct Pipelines {
@@ -72,44 +72,34 @@ impl<V> Pipeline<V> {
     where
         V: Vertex,
     {
-        let shaders = {
-            let shader_module =
-                device.create_shader_module(shader_module_descriptor);
+        let shader_module =
+            device.create_shader_module(shader_module_descriptor);
 
-            let bind_group_layout = device.create_bind_group_layout(
-                &wgpu::BindGroupLayoutDescriptor {
-                    label: None,
-                    entries: &[wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::VERTEX,
-                        ty: wgpu::BindingType::Buffer {
-                            ty: wgpu::BufferBindingType::Uniform,
-                            has_dynamic_offset: false,
-                            min_binding_size: None,
-                        },
-                        count: None,
-                    }],
-                },
-            );
+        let bind_group_layout =
+            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+                label: None,
+                entries: &[wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::VERTEX,
+                    ty: wgpu::BindingType::Buffer {
+                        ty: wgpu::BufferBindingType::Uniform,
+                        has_dynamic_offset: false,
+                        min_binding_size: None,
+                    },
+                    count: None,
+                }],
+            });
 
-            let fragment_targets = [Some(wgpu::ColorTargetState {
-                format: config.format,
-                blend: Some(wgpu::BlendState::REPLACE),
-                write_mask: wgpu::ColorWrites::all(),
-            })];
-
-            Shaders::<V> {
-                shader_module,
-                bind_group_layout,
-                fragment_targets,
-                _vertex: PhantomData,
-            }
-        };
+        let fragment_targets = [Some(wgpu::ColorTargetState {
+            format: config.format,
+            blend: Some(wgpu::BlendState::REPLACE),
+            write_mask: wgpu::ColorWrites::all(),
+        })];
 
         let layout =
             device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
                 label: None,
-                bind_group_layouts: &[&shaders.bind_group_layout],
+                bind_group_layouts: &[&bind_group_layout],
                 push_constant_ranges: &[],
             });
 
@@ -118,7 +108,7 @@ impl<V> Pipeline<V> {
                 label: None,
                 layout: Some(&layout),
                 vertex: wgpu::VertexState {
-                    module: &shaders.shader_module,
+                    module: &shader_module,
                     entry_point: Some("vertex"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
@@ -129,11 +119,11 @@ impl<V> Pipeline<V> {
                     }],
                 },
                 fragment: Some(wgpu::FragmentState {
-                    module: &shaders.shader_module,
+                    module: &shader_module,
                     entry_point: Some("fragment"),
                     compilation_options:
                         wgpu::PipelineCompilationOptions::default(),
-                    targets: &shaders.fragment_targets,
+                    targets: &fragment_targets,
                 }),
                 primitive: wgpu::PrimitiveState {
                     topology: wgpu::PrimitiveTopology::TriangleList,
@@ -158,7 +148,7 @@ impl<V> Pipeline<V> {
 
         let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
             label: None,
-            layout: &shaders.bind_group_layout,
+            layout: &bind_group_layout,
             entries: &[wgpu::BindGroupEntry {
                 binding: 0,
                 resource: uniforms.as_entire_binding(),

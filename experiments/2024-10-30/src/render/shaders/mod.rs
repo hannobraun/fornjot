@@ -1,13 +1,4 @@
-use std::marker::PhantomData;
-
 use glam::Mat4;
-
-pub struct Shaders<V> {
-    pub shader_module: wgpu::ShaderModule,
-    pub bind_group_layout: wgpu::BindGroupLayout,
-    pub fragment_targets: [Option<wgpu::ColorTargetState>; 1],
-    pub _vertex: PhantomData<V>,
-}
 
 #[derive(Clone, Copy, bytemuck::Pod, bytemuck::Zeroable)]
 #[repr(C)]
