@@ -1,11 +1,13 @@
+use std::marker::PhantomData;
+
 use super::{
     geometry::Geometry,
     shaders::{Shaders, TrianglesVertex, Vertex, VerticesVertex},
 };
 
 pub struct Pipelines {
-    pub vertices: Pipeline,
-    pub triangles: Pipeline,
+    pub vertices: Pipeline<VerticesVertex>,
+    pub triangles: Pipeline<TrianglesVertex>,
 }
 
 impl Pipelines {
@@ -24,12 +26,13 @@ impl Pipelines {
     }
 }
 
-pub struct Pipeline {
+pub struct Pipeline<V> {
     render_pipeline: wgpu::RenderPipeline,
     bind_group: wgpu::BindGroup,
+    _vertex: PhantomData<V>,
 }
 
-impl Pipeline {
+impl<V> Pipeline<V> {
     pub fn vertices(
         device: &wgpu::Device,
         config: &wgpu::SurfaceConfiguration,
@@ -107,6 +110,7 @@ impl Pipeline {
         Pipeline {
             render_pipeline,
             bind_group,
+            _vertex: PhantomData,
         }
     }
 
