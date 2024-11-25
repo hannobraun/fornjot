@@ -87,9 +87,12 @@ impl Renderer {
         })
     }
 
-    pub fn render(&mut self, operation: &impl Operation) -> anyhow::Result<()> {
-        let vertices = Geometry::vertices(&self.device, operation);
-        let triangles = Geometry::triangles(&self.device, operation);
+    pub fn render(
+        &mut self,
+        selected_operation: &impl Operation,
+    ) -> anyhow::Result<()> {
+        let vertices = Geometry::vertices(&self.device, selected_operation);
+        let triangles = Geometry::triangles(&self.device, selected_operation);
 
         let mut encoder = self
             .device
