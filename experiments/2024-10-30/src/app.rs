@@ -98,7 +98,7 @@ impl ApplicationHandler for App {
                         self.ops.select_next();
                     }
                     Key::Named(NamedKey::ArrowUp) => {
-                        self.ops.selected = self.ops.selected.saturating_sub(1);
+                        self.ops.select_previous();
                     }
                     _ => {}
                 }

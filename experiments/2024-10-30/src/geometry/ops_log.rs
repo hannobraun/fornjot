@@ -60,6 +60,10 @@ impl OpsLog {
             self.selected += 1;
         }
     }
+
+    pub fn select_previous(&mut self) {
+        self.selected = self.selected.saturating_sub(1);
+    }
 }
 
 impl fmt::Display for OpsLog {
