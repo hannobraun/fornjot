@@ -137,7 +137,6 @@ impl Renderer {
                 &self.device,
                 &self.queue,
                 &self.surface_config,
-                selected_operation,
                 operations,
                 &mut render_pass,
             )?;
