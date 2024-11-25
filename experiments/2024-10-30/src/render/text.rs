@@ -2,6 +2,10 @@ pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
     viewport: glyphon::Viewport,
     text_renderer: glyphon::TextRenderer,
+    font_system: glyphon::FontSystem,
+    buffer: glyphon::Buffer,
+    swash_cache: glyphon::SwashCache,
+    scale_factor: f32,
 }
 
 impl TextRenderer {
@@ -12,7 +16,7 @@ impl TextRenderer {
         scale_factor: f32,
     ) -> Self {
         let cache = glyphon::Cache::new(device);
-        let mut swash_cache = glyphon::SwashCache::new();
+        let swash_cache = glyphon::SwashCache::new();
 
         let mut text_atlas = glyphon::TextAtlas::new(
             device,
@@ -30,7 +34,7 @@ impl TextRenderer {
             },
         );
 
-        let mut text_renderer = glyphon::TextRenderer::new(
+        let text_renderer = glyphon::TextRenderer::new(
             &mut text_atlas,
             device,
             wgpu::MultisampleState::default(),
@@ -59,18 +63,36 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
-        text_renderer
+        Self {
+            text_atlas,
+            viewport,
+            text_renderer,
+            font_system,
+            buffer,
+            swash_cache,
+            scale_factor,
+        }
+    }
+
+    pub fn render(
+        &mut self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        surface_config: &wgpu::SurfaceConfiguration,
+        render_pass: &mut wgpu::RenderPass,
+    ) -> anyhow::Result<()> {
+        self.text_renderer
             .prepare(
                 device,
                 queue,
-                &mut font_system,
-                &mut text_atlas,
-                &viewport,
+                &mut self.font_system,
+                &mut self.text_atlas,
+                &self.viewport,
                 [glyphon::TextArea {
-                    buffer: &buffer,
+                    buffer: &self.buffer,
                     left: 0.,
                     top: 0.,
-                    scale: scale_factor,
+                    scale: self.scale_factor,
                     bounds: glyphon::TextBounds {
                         left: 0,
                         top: 0,
@@ -80,24 +102,10 @@ impl TextRenderer {
                     default_color: glyphon::Color::rgb(0, 0, 0),
                     custom_glyphs: &[],
                 }],
-                &mut swash_cache,
+                &mut self.swash_cache,
             )
             .unwrap();
 
-        Self {
-            text_atlas,
-            viewport,
-            text_renderer,
-        }
-    }
-
-    pub fn render(
-        &mut self,
-        _: &wgpu::Device,
-        _: &wgpu::Queue,
-        _: &wgpu::SurfaceConfiguration,
-        render_pass: &mut wgpu::RenderPass,
-    ) -> anyhow::Result<()> {
         self.text_renderer.render(
             &self.text_atlas,
             &self.viewport,
