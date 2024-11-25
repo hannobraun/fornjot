@@ -76,7 +76,7 @@ impl Renderer {
         })
     }
 
-    pub fn render(&self, operation: &impl Operation) {
+    pub fn render(&self, operation: &impl Operation) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, operation);
         let triangles = Geometry::triangles(&self.device, operation);
 
@@ -122,5 +122,7 @@ impl Renderer {
 
         self.queue.submit(Some(encoder.finish()));
         frame.present();
+
+        Ok(())
     }
 }
