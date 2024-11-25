@@ -65,7 +65,7 @@ impl TextRenderer {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
-        _selected_operation: &impl Operation,
+        _selected_operation: &dyn Operation,
         _all_operations: &OpsLog,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {

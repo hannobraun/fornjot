@@ -15,7 +15,7 @@ pub struct Geometry<V> {
 }
 
 impl Geometry<vertices::Vertex> {
-    pub fn vertices(device: &wgpu::Device, operation: &impl Operation) -> Self {
+    pub fn vertices(device: &wgpu::Device, operation: &dyn Operation) -> Self {
         let mut mesh_vertices = Vec::new();
         operation.vertices(&mut mesh_vertices);
 
@@ -51,10 +51,7 @@ impl Geometry<vertices::Vertex> {
 }
 
 impl Geometry<triangles::Vertex> {
-    pub fn triangles(
-        device: &wgpu::Device,
-        operation: &impl Operation,
-    ) -> Self {
+    pub fn triangles(device: &wgpu::Device, operation: &dyn Operation) -> Self {
         let mut mesh_triangles = Vec::new();
         operation.triangles(&mut mesh_triangles);
 

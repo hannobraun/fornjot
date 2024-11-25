@@ -89,7 +89,7 @@ impl Renderer {
 
     pub fn render(
         &mut self,
-        selected_operation: &impl Operation,
+        selected_operation: &dyn Operation,
         all_operations: &OpsLog,
     ) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, selected_operation);
