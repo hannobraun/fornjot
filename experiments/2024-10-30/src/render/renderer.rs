@@ -68,7 +68,12 @@ impl Renderer {
             depth_texture.create_view(&wgpu::TextureViewDescriptor::default())
         };
 
-        let text_renderer = TextRenderer::new(&device, &queue, &surface_config);
+        let text_renderer = TextRenderer::new(
+            &device,
+            &queue,
+            &surface_config,
+            window.scale_factor() as f32,
+        );
 
         Ok(Self {
             surface,

@@ -9,6 +9,7 @@ impl TextRenderer {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
+        scale_factor: f32,
     ) -> Self {
         let cache = glyphon::Cache::new(device);
         let mut swash_cache = glyphon::SwashCache::new();
@@ -69,7 +70,7 @@ impl TextRenderer {
                     buffer: &buffer,
                     left: 0.,
                     top: 0.,
-                    scale: 1.,
+                    scale: scale_factor,
                     bounds: glyphon::TextBounds {
                         left: 0,
                         top: 0,
