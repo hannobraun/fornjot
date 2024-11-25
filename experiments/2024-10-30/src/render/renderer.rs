@@ -39,20 +39,20 @@ impl Renderer {
             .await?;
 
         let size = window.inner_size();
-        let config = surface
+        let surface_config = surface
             .get_default_config(&adapter, size.width, size.height)
             .ok_or_else(|| anyhow!("Failed to get default surface config"))?;
-        surface.configure(&device, &config);
+        surface.configure(&device, &surface_config);
 
-        let pipelines = Pipelines::new(&device, &config);
+        let pipelines = Pipelines::new(&device, &surface_config);
 
         let depth_view = {
             let depth_texture =
                 device.create_texture(&wgpu::TextureDescriptor {
                     label: None,
                     size: wgpu::Extent3d {
-                        width: config.width,
-                        height: config.height,
+                        width: surface_config.width,
+                        height: surface_config.height,
                         depth_or_array_layers: 1,
                     },
                     mip_level_count: 1,
