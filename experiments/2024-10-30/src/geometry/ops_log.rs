@@ -1,3 +1,5 @@
+use std::fmt;
+
 use tuples::CombinRight;
 
 use super::{Operation, Triangle, Vertex};
@@ -49,6 +51,16 @@ impl OpsLog {
     }
 }
 
+impl fmt::Display for OpsLog {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if let Some(op) = self.operations.last() {
+            op.fmt(f)
+        } else {
+            write!(f, "empty operations log")
+        }
+    }
+}
+
 impl Operation for OpsLog {
     fn vertices(&self, vertices: &mut Vec<Vertex>) {
         if let Some(op) = self.operations.last() {
@@ -81,6 +93,12 @@ impl Operation for OperationInSequence {
             op.triangles(triangles);
         }
         self.operation.triangles(triangles);
+    }
+}
+
+impl fmt::Display for OperationInSequence {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.operation.fmt(f)
     }
 }
 
@@ -131,6 +149,7 @@ impl<'r, T> OperationResult<'r, T> {
 }
 
 pub struct ClonedOperation {
+    pub description: String,
     pub vertices: Vec<Vertex>,
     pub triangles: Vec<Triangle>,
 }
@@ -144,9 +163,16 @@ impl ClonedOperation {
         op.triangles(&mut triangles);
 
         Self {
+            description: op.to_string(),
             vertices,
             triangles,
         }
+    }
+}
+
+impl fmt::Display for ClonedOperation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.description)
     }
 }
 

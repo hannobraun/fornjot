@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::math::Point;
 
 use super::Operation;
@@ -15,6 +17,13 @@ where
         Self {
             point: point.into(),
         }
+    }
+}
+
+impl fmt::Display for Vertex {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [x, y, z] = self.point.coords.components.map(|s| s.value());
+        write!(f, "vertex {x:.2}, {y:.2}, {z:.2}")
     }
 }
 
@@ -39,6 +48,13 @@ where
         Self {
             vertices: vertices.map(Into::into),
         }
+    }
+}
+
+impl fmt::Display for Triangle {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let [a, b, c] = self.vertices;
+        write!(f, "triangle {a} - {b} - {c}")
     }
 }
 
