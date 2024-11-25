@@ -50,6 +50,10 @@ impl OpsLog {
             results: (triangle,),
         }
     }
+
+    pub fn select_last(&mut self) {
+        self.selected = self.operations.len().saturating_sub(1);
+    }
 }
 
 impl fmt::Display for OpsLog {

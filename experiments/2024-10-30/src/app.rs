@@ -13,8 +13,7 @@ use crate::{geometry::OpsLog, render::Renderer};
 pub fn run(mut ops: OpsLog) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
-    let selected_op = ops.operations.len().saturating_sub(1);
-    ops.selected = selected_op;
+    ops.select_last();
 
     let mut app = App {
         ops,
