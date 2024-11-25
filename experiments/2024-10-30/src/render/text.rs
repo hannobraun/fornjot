@@ -66,7 +66,7 @@ impl TextRenderer {
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
         _selected_operation: &impl Operation,
-        _last_operation: &OpsLog,
+        _all_operations: &OpsLog,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
         let mut buffer = glyphon::Buffer::new(
