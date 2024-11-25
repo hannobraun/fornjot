@@ -95,9 +95,7 @@ impl ApplicationHandler for App {
 
                 match logical_key {
                     Key::Named(NamedKey::ArrowDown) => {
-                        if self.ops.selected < self.ops.operations.len() {
-                            self.ops.selected += 1;
-                        }
+                        self.ops.select_next();
                     }
                     Key::Named(NamedKey::ArrowUp) => {
                         self.ops.selected = self.ops.selected.saturating_sub(1);
