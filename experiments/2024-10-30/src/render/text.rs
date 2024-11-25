@@ -62,7 +62,7 @@ impl TextRenderer {
 
     pub fn render(
         &mut self,
-        _all_operations: &OpsLog,
+        _operations: &OpsLog,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
