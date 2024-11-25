@@ -62,7 +62,7 @@ impl TextRenderer {
 
     pub fn render(
         &mut self,
-        _operations: &OpsLog,
+        operations: &OpsLog,
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
@@ -70,7 +70,7 @@ impl TextRenderer {
     ) -> anyhow::Result<()> {
         let mut buffers = Vec::new();
 
-        for op in &_operations.operations {
+        for op in &operations.operations {
             let mut buffer = glyphon::Buffer::new(
                 &mut self.font_system,
                 glyphon::Metrics {
