@@ -10,13 +10,14 @@ use winit::{
 
 use crate::{geometry::OpsLog, render::Renderer};
 
-pub fn run(ops: OpsLog) -> anyhow::Result<()> {
+pub fn run(mut ops: OpsLog) -> anyhow::Result<()> {
     let event_loop = EventLoop::new()?;
 
     let selected_op = ops.operations.len().saturating_sub(1);
+    ops.selected = selected_op;
+
     let mut app = App {
         ops,
-        selected_op,
         window: None,
         renderer: None,
         pressed_keys: BTreeSet::new(),
@@ -28,7 +29,6 @@ pub fn run(ops: OpsLog) -> anyhow::Result<()> {
 
 struct App {
     ops: OpsLog,
-    selected_op: usize,
     window: Option<Arc<Window>>,
     renderer: Option<Renderer>,
     pressed_keys: BTreeSet<Key>,
@@ -96,12 +96,12 @@ impl ApplicationHandler for App {
 
                 match logical_key {
                     Key::Named(NamedKey::ArrowDown) => {
-                        if self.selected_op < self.ops.operations.len() {
-                            self.selected_op += 1;
+                        if self.ops.selected < self.ops.operations.len() {
+                            self.ops.selected += 1;
                         }
                     }
                     Key::Named(NamedKey::ArrowUp) => {
-                        self.selected_op = self.selected_op.saturating_sub(1);
+                        self.ops.selected = self.ops.selected.saturating_sub(1);
                     }
                     _ => {}
                 }
@@ -110,7 +110,7 @@ impl ApplicationHandler for App {
             }
             WindowEvent::RedrawRequested => {
                 if let Some(selected) =
-                    self.ops.operations.get(self.selected_op)
+                    self.ops.operations.get(self.ops.selected)
                 {
                     if let Err(err) = renderer.render(selected, &self.ops) {
                         eprintln!("Render error: {err}");

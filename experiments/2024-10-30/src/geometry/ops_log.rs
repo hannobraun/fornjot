@@ -7,6 +7,7 @@ use super::{Operation, Triangle, Vertex};
 #[derive(Default)]
 pub struct OpsLog {
     pub operations: Vec<OperationInSequence>,
+    pub selected: usize,
 }
 
 impl OpsLog {
