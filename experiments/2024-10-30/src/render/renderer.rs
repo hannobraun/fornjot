@@ -134,10 +134,10 @@ impl Renderer {
             self.pipelines.vertices.draw(&mut render_pass, &vertices);
             self.pipelines.triangles.draw(&mut render_pass, &triangles);
             self.text_renderer.render(
+                operations,
                 &self.device,
                 &self.queue,
                 &self.surface_config,
-                operations,
                 &mut render_pass,
             )?;
         }
