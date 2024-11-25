@@ -11,6 +11,7 @@ pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
     pub device: wgpu::Device,
     pub queue: wgpu::Queue,
+    pub surface_config: wgpu::SurfaceConfiguration,
     pub pipelines: Pipelines,
     pub depth_view: wgpu::TextureView,
     pub text_renderer: TextRenderer,
@@ -79,6 +80,7 @@ impl Renderer {
             surface,
             device,
             queue,
+            surface_config,
             pipelines,
             depth_view,
             text_renderer,
@@ -130,6 +132,7 @@ impl Renderer {
             self.text_renderer.render(
                 &self.device,
                 &self.queue,
+                &self.surface_config,
                 &mut render_pass,
             )?;
         }
