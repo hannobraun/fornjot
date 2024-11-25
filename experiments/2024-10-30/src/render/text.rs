@@ -94,6 +94,7 @@ impl TextRenderer {
     pub fn render(
         &self,
         _: &wgpu::Device,
+        _: &wgpu::Queue,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
         self.text_renderer.render(

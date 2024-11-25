@@ -127,7 +127,11 @@ impl Renderer {
 
             self.pipelines.vertices.draw(&mut render_pass, &vertices);
             self.pipelines.triangles.draw(&mut render_pass, &triangles);
-            self.text_renderer.render(&self.device, &mut render_pass)?;
+            self.text_renderer.render(
+                &self.device,
+                &self.queue,
+                &mut render_pass,
+            )?;
         }
 
         self.queue.submit(Some(encoder.finish()));
