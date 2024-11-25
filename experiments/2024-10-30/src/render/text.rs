@@ -1,3 +1,5 @@
+use crate::geometry::Operation;
+
 pub struct TextRenderer {
     text_atlas: glyphon::TextAtlas,
     viewport: glyphon::Viewport,
@@ -63,6 +65,8 @@ impl TextRenderer {
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         surface_config: &wgpu::SurfaceConfiguration,
+        _selected_operation: &impl Operation,
+        _last_operation: &impl Operation,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
         let mut buffer = glyphon::Buffer::new(
