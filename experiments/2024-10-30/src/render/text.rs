@@ -68,7 +68,7 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
-        let mut text_areas = Vec::new();
+        let mut buffers = Vec::new();
 
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
@@ -84,8 +84,10 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
-        text_areas.push(glyphon::TextArea {
-            buffer: &buffer,
+        buffers.push(buffer);
+
+        let text_areas = buffers.iter().map(|buffer| glyphon::TextArea {
+            buffer,
             left: 0.,
             top: 0.,
             scale: self.scale_factor,
