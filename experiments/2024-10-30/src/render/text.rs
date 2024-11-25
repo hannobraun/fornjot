@@ -92,7 +92,7 @@ impl TextRenderer {
     }
 
     pub fn render(
-        &self,
+        &mut self,
         _: &wgpu::Device,
         _: &wgpu::Queue,
         _: &wgpu::SurfaceConfiguration,
