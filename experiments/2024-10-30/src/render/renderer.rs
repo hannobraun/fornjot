@@ -5,7 +5,7 @@ use winit::window::Window;
 
 use crate::geometry::Operation;
 
-use super::{geometry::Geometry, pipelines::Pipelines};
+use super::{geometry::Geometry, pipelines::Pipelines, text::TextRenderer};
 
 pub struct Renderer {
     pub surface: wgpu::Surface<'static>,
@@ -13,6 +13,7 @@ pub struct Renderer {
     pub queue: wgpu::Queue,
     pub pipelines: Pipelines,
     pub depth_view: wgpu::TextureView,
+    pub text_renderer: TextRenderer,
 }
 
 impl Renderer {
@@ -67,12 +68,15 @@ impl Renderer {
             depth_texture.create_view(&wgpu::TextureViewDescriptor::default())
         };
 
+        let text_renderer = TextRenderer::new(&device, &queue, &surface_config);
+
         Ok(Self {
             surface,
             device,
             queue,
             pipelines,
             depth_view,
+            text_renderer,
         })
     }
 
@@ -118,6 +122,7 @@ impl Renderer {
 
             self.pipelines.vertices.draw(&mut render_pass, &vertices);
             self.pipelines.triangles.draw(&mut render_pass, &triangles);
+            self.text_renderer.render(&mut render_pass)?;
         }
 
         self.queue.submit(Some(encoder.finish()));
