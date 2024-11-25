@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::anyhow;
 use winit::window::Window;
 
-use crate::geometry::Operation;
+use crate::geometry::{Operation, OpsLog};
 
 use super::{geometry::Geometry, pipelines::Pipelines, text::TextRenderer};
 
@@ -90,7 +90,7 @@ impl Renderer {
     pub fn render(
         &mut self,
         selected_operation: &impl Operation,
-        last_operation: &impl Operation,
+        last_operation: &OpsLog,
     ) -> anyhow::Result<()> {
         let vertices = Geometry::vertices(&self.device, selected_operation);
         let triangles = Geometry::triangles(&self.device, selected_operation);
