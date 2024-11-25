@@ -112,8 +112,8 @@ impl ApplicationHandler for App {
                 let selected_operation =
                     self.ops.operations.get(self.selected_op);
 
-                if let Some(op) = selected_operation {
-                    if let Err(err) = renderer.render(op) {
+                if let Some(selected) = selected_operation {
+                    if let Err(err) = renderer.render(selected) {
                         eprintln!("Render error: {err}");
                     }
                 }
