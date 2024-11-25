@@ -87,8 +87,8 @@ impl Renderer {
         })
     }
 
-    pub fn render(&mut self, all_operations: &OpsLog) -> anyhow::Result<()> {
-        let Some(selected_operation) = all_operations.selected() else {
+    pub fn render(&mut self, operations: &OpsLog) -> anyhow::Result<()> {
+        let Some(selected_operation) = operations.selected() else {
             return Ok(());
         };
 
@@ -138,7 +138,7 @@ impl Renderer {
                 &self.queue,
                 &self.surface_config,
                 selected_operation,
-                all_operations,
+                operations,
                 &mut render_pass,
             )?;
         }
