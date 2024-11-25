@@ -108,36 +108,9 @@ impl<V> Pipeline<V> {
 
     pub fn draw(
         &self,
-        encoder: &mut wgpu::CommandEncoder,
-        color_view: &wgpu::TextureView,
-        depth_view: &wgpu::TextureView,
+        render_pass: &mut wgpu::RenderPass,
         geometry: &Geometry<V>,
     ) {
-        let mut render_pass =
-            encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                label: None,
-                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: color_view,
-                    resolve_target: None,
-                    ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Load,
-                        store: wgpu::StoreOp::Store,
-                    },
-                })],
-                depth_stencil_attachment: Some(
-                    wgpu::RenderPassDepthStencilAttachment {
-                        view: depth_view,
-                        depth_ops: Some(wgpu::Operations {
-                            load: wgpu::LoadOp::Load,
-                            store: wgpu::StoreOp::Store,
-                        }),
-                        stencil_ops: None,
-                    },
-                ),
-                timestamp_writes: None,
-                occlusion_query_set: None,
-            });
-
         if geometry.num_indices > 0 {
             render_pass.set_index_buffer(
                 geometry.indices.slice(..),
