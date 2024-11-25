@@ -68,6 +68,8 @@ impl TextRenderer {
         surface_config: &wgpu::SurfaceConfiguration,
         render_pass: &mut wgpu::RenderPass,
     ) -> anyhow::Result<()> {
+        let mut text_areas = Vec::new();
+
         let mut buffer = glyphon::Buffer::new(
             &mut self.font_system,
             glyphon::Metrics {
@@ -82,7 +84,7 @@ impl TextRenderer {
             glyphon::Shaping::Advanced,
         );
 
-        let text_areas = [glyphon::TextArea {
+        text_areas.push(glyphon::TextArea {
             buffer: &buffer,
             left: 0.,
             top: 0.,
@@ -95,7 +97,7 @@ impl TextRenderer {
             },
             default_color: glyphon::Color::rgb(0, 0, 0),
             custom_glyphs: &[],
-        }];
+        });
 
         self.text_renderer
             .prepare(
