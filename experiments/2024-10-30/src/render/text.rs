@@ -19,7 +19,14 @@ impl TextRenderer {
             surface_config.format,
         );
 
-        let viewport = glyphon::Viewport::new(device, &cache);
+        let mut viewport = glyphon::Viewport::new(device, &cache);
+        viewport.update(
+            queue,
+            glyphon::Resolution {
+                width: surface_config.width,
+                height: surface_config.height,
+            },
+        );
 
         let text_renderer = glyphon::TextRenderer::new(
             &mut text_atlas,
